@@ -49,7 +49,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     
     /** Test listeners */
     @Autowired
-    private TestListeners testListener;
+    protected TestListeners testListener;
     
     @Autowired
     private TestContextFactoryBean testContextFactory;
@@ -65,10 +65,10 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      */
     @Before
     public void beforeTest() {
-        testExecutor  = new JUnitTestExecutor(applicationContext, getClass(), testListener);
+        testExecutor  = createExecutor();
         testExecutor.beforeTest(beforeTest, createTestContext());
     }
-    
+
     /**
      * Execute the test case.
      */
@@ -99,5 +99,13 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to create test context", e);
         }
+    }
+
+    /**
+     * Creates the JUnit test executor.
+     * @return
+     */
+    protected JUnitTestExecutor createExecutor() {
+        return new JUnitTestExecutor(applicationContext, getClass(), testListener);
     }
 }

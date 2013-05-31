@@ -65,8 +65,7 @@ public class JUnitTestExecutor {
     }
 
     /**
-     * @param prepareTestContext
-     * @param testListener
+     * @param context
      */
     public void executeTest(TestContext context) {
         TestCase testCase = getTestCase();
@@ -105,9 +104,7 @@ public class JUnitTestExecutor {
         }
         return testCase;
     }
-    
-    
-    
+
     /**
      * Creates the Spring application context.
      * @return

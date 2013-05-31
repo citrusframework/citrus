@@ -48,10 +48,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Citrus test builder implementation offers test building methods to configure a
+ * test case with actions, variables and properties.
+ *
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class CitrusTestBuilder implements ApplicationContextAware {
+public class CitrusTestBuilder implements TestBuilder {
 
     /**
      * This builders test case
@@ -70,10 +73,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
 
     /** Default constructor */
     public CitrusTestBuilder() {
-        variables = new LinkedHashMap<String, Object>();
-        testCase = new TestCase();
-
-        testCase.setVariableDefinitions(variables);
+        init();
     }
 
     /**
@@ -83,14 +83,6 @@ public class CitrusTestBuilder implements ApplicationContextAware {
     public CitrusTestBuilder(ApplicationContext applicationContext) {
         this();
         this.applicationContext = applicationContext;
-    }
-
-    /**
-     * Main entrance method for builder pattern usage. Subclasses may override
-     * this method and call Java DSL builder methods for adding test actions and
-     * basic test case creation.
-     */
-    public void configure() {
     }
 
     /**
@@ -117,10 +109,28 @@ public class CitrusTestBuilder implements ApplicationContextAware {
     }
 
     /**
+     * Initializing method.
+     */
+    public void init() {
+        variables = new LinkedHashMap<String, Object>();
+        testCase = new TestCase();
+
+        testCase.setVariableDefinitions(variables);
+    }
+
+    /**
+     * Main entrance method for builder pattern usage. Subclasses may override
+     * this method and call Java DSL builder methods for adding test actions and
+     * basic test case properties.
+     */
+    protected void configure() {
+    }
+
+    /**
      * Set custom test case name.
      * @param name
      */
-    protected void name(String name) {
+    public void name(String name) {
         testCase.setBeanName(name);
         testCase.setName(name);
     }
@@ -130,7 +140,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param description
      */
-    protected void description(String description) {
+    public void description(String description) {
         testCase.setDescription(description);
     }
 
@@ -139,7 +149,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param author
      */
-    protected void author(String author) {
+    public void author(String author) {
         testCase.getMetaInfo().setAuthor(author);
     }
 
@@ -147,7 +157,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * Sets custom package name for this test case.
      * @param packageName
      */
-    protected void packageName(String packageName) {
+    public void packageName(String packageName) {
         testCase.setPackageName(packageName);
     }
 
@@ -156,7 +166,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param status
      */
-    protected void status(TestCaseMetaInfo.Status status) {
+    public void status(TestCaseMetaInfo.Status status) {
         testCase.getMetaInfo().setStatus(status);
     }
 
@@ -165,7 +175,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param date
      */
-    protected void creationDate(Date date) {
+    public void creationDate(Date date) {
         testCase.getMetaInfo().setCreationDate(date);
     }
 
@@ -176,17 +186,8 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param name
      * @param value
      */
-    protected void variable(String name, Object value) {
+    public void variable(String name, Object value) {
         variables.put(name, value);
-    }
-
-    /**
-     * Get the test variables.
-     *
-     * @return
-     */
-    protected Map<String, Object> getVariables() {
-        return variables;
     }
 
     /**
@@ -194,7 +195,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected CreateVariablesActionDefinition variables() {
+    public CreateVariablesActionDefinition variables() {
         CreateVariablesAction action = new CreateVariablesAction();
 
         testCase.addTestAction(action);
@@ -207,8 +208,31 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param testAction
      */
-    protected void action(TestAction testAction) {
+    public void action(TestAction testAction) {
         testCase.addTestAction(testAction);
+    }
+
+    /**
+     * Apply test apply to this builder.
+     *
+     * @param behavior
+     */
+    public void applyBehavior(TestBehavior behavior) {
+        behavior.setApplicationContext(applicationContext);
+        behavior.init();
+        behavior.apply();
+
+        for (Map.Entry<String, Object> variable : behavior.getVariableDefinitions().entrySet()) {
+            variable(variable.getKey(), variable.getValue());
+        }
+
+        for (TestAction action : behavior.getTestActions()) {
+            action(action);
+        }
+
+        for (TestAction action : behavior.getFinallyActions()) {
+            testCase.getFinallyChain().add(action);
+        }
     }
 
     /**
@@ -218,7 +242,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param buildFilePath
      * @return
      */
-    protected AntRunActionDefinition antrun(String buildFilePath) {
+    public AntRunActionDefinition antrun(String buildFilePath) {
         AntRunAction action = new AntRunAction();
         action.setBuildFilePath(buildFilePath);
         testCase.addTestAction(action);
@@ -231,7 +255,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param message
      * @return
      */
-    protected EchoAction echo(String message) {
+    public EchoAction echo(String message) {
         EchoAction action = new EchoAction();
         action.setMessage(message);
         testCase.addTestAction(action);
@@ -246,7 +270,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param dataSource
      * @return
      */
-    protected ExecutePLSQLActionDefinition plsql(DataSource dataSource) {
+    public ExecutePLSQLActionDefinition plsql(DataSource dataSource) {
         ExecutePLSQLAction action = new ExecutePLSQLAction();
         action.setDataSource(dataSource);
         testCase.addTestAction(action);
@@ -260,7 +284,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param dataSource
      * @return
      */
-    protected ExecuteSQLActionDefinition sql(DataSource dataSource) {
+    public ExecuteSQLActionDefinition sql(DataSource dataSource) {
         ExecuteSQLAction action = new ExecuteSQLAction();
         action.setDataSource(dataSource);
         testCase.addTestAction(action);
@@ -274,7 +298,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param dataSource
      * @return
      */
-    protected ExecuteSQLQueryActionDefinition query(DataSource dataSource) {
+    public ExecuteSQLQueryActionDefinition query(DataSource dataSource) {
         ExecuteSQLQueryAction action = new ExecuteSQLQueryAction();
         action.setDataSource(dataSource);
         testCase.addTestAction(action);
@@ -288,7 +312,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageReceiver
      * @return
      */
-    protected ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver) {
+    public ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver) {
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
         action.setMessageReceiver(messageReceiver);
         testCase.addTestAction(action);
@@ -301,7 +325,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageReceiverName
      * @return
      */
-    protected ReceiveTimeoutActionDefinition expectTimeout(String messageReceiverName) {
+    public ReceiveTimeoutActionDefinition expectTimeout(String messageReceiverName) {
         MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
 
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
@@ -316,7 +340,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param message
      * @return
      */
-    protected FailAction fail(String message) {
+    public FailAction fail(String message) {
         FailAction action = new FailAction();
         action.setMessage(message);
         testCase.addTestAction(action);
@@ -329,7 +353,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected InputActionDefinition input() {
+    public InputActionDefinition input() {
         InputAction action = new InputAction();
         testCase.addTestAction(action);
         return new InputActionDefinition(action);
@@ -341,7 +365,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param className
      * @return
      */
-    protected JavaActionDefinition java(String className) {
+    public JavaActionDefinition java(String className) {
         JavaAction action = new JavaAction();
         action.setClassName(className);
         testCase.addTestAction(action);
@@ -354,7 +378,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param clazz
      * @return
      */
-    protected JavaActionDefinition java(Class<?> clazz) {
+    public JavaActionDefinition java(Class<?> clazz) {
         JavaAction action = new JavaAction();
         action.setClassName(clazz.getSimpleName());
         testCase.addTestAction(action);
@@ -367,7 +391,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param instance
      * @return
      */
-    protected JavaActionDefinition java(Object instance) {
+    public JavaActionDefinition java(Object instance) {
         JavaAction action = new JavaAction();
         action.setInstance(instance);
         testCase.addTestAction(action);
@@ -380,7 +404,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param filePath path to properties file.
      * @return
      */
-    protected LoadPropertiesAction load(String filePath) {
+    public LoadPropertiesAction load(String filePath) {
         LoadPropertiesAction action = new LoadPropertiesAction();
         action.setFilePath(filePath);
         testCase.addTestAction(action);
@@ -394,7 +418,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param connectionFactory
      * @return
      */
-    protected PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
+    public PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
         PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
         action.setConnectionFactory(connectionFactory);
         testCase.addTestAction(action);
@@ -406,7 +430,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected PurgeJMSQueuesActionDefinition purgeQueues() {
+    public PurgeJMSQueuesActionDefinition purgeQueues() {
         PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
         action.setConnectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
         testCase.addTestAction(action);
@@ -419,7 +443,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected PurgeMessageChannelActionDefinition purgeChannels() {
+    public PurgeMessageChannelActionDefinition purgeChannels() {
         PurgeMessageChannelAction action = new PurgeMessageChannelAction();
         testCase.addTestAction(action);
         return new PurgeMessageChannelActionDefinition(action, applicationContext);
@@ -431,7 +455,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageReceiver
      * @return
      */
-    protected ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
+    public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
         action.setMessageReceiver(messageReceiver);
 
@@ -445,7 +469,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageReceiver
      * @return
      */
-    protected ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver) {
+    public ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver) {
         ReceiveMessageAction action = new ReceiveMessageAction();
         action.setMessageReceiver(messageReceiver);
 
@@ -459,7 +483,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageReceiverName
      * @return
      */
-    protected ReceiveMessageActionDefinition receive(String messageReceiverName) {
+    public ReceiveMessageActionDefinition receive(String messageReceiverName) {
         MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
 
         if (messageReceiver instanceof SoapReplyMessageReceiver) {
@@ -483,7 +507,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageSender
      * @return
      */
-    protected SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
+    public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
         SendSoapMessageAction action = new SendSoapMessageAction();
         action.setMessageSender(messageSender);
 
@@ -497,7 +521,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageSender
      * @return
      */
-    protected SendMessageActionDefinition send(MessageSender messageSender) {
+    public SendMessageActionDefinition send(MessageSender messageSender) {
         SendMessageAction action = new SendMessageAction();
         action.setMessageSender(messageSender);
 
@@ -512,7 +536,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageSenderName
      * @return
      */
-    protected SendMessageActionDefinition send(String messageSenderName) {
+    public SendMessageActionDefinition send(String messageSenderName) {
         MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
 
         if (messageSender instanceof WebServiceMessageSender) {
@@ -537,7 +561,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param messageSenderName
      * @return
      */
-    protected SendSoapFaultActionDefinition sendSoapFault(String messageSenderName) {
+    public SendSoapFaultActionDefinition sendSoapFault(String messageSenderName) {
         MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
 
         SendMessageAction action = new SendMessageAction();
@@ -550,7 +574,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
     /**
      * Add sleep action with default delay time.
      */
-    protected SleepAction sleep() {
+    public SleepAction sleep() {
         SleepAction action = new SleepAction();
         testCase.addTestAction(action);
 
@@ -562,7 +586,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param time
      */
-    protected SleepAction sleep(long time) {
+    public SleepAction sleep(long time) {
         SleepAction action = new SleepAction();
         action.setDelay(String.valueOf((double) time / 1000));
 
@@ -576,7 +600,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param time
      */
-    protected SleepAction sleep(double time) {
+    public SleepAction sleep(double time) {
         SleepAction action = new SleepAction();
         action.setDelay(String.valueOf(time));
 
@@ -592,7 +616,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param servers
      * @return
      */
-    protected StartServerAction start(Server... servers) {
+    public StartServerAction start(Server... servers) {
         StartServerAction action = new StartServerAction();
         action.getServerList().addAll(Arrays.asList(servers));
         testCase.addTestAction(action);
@@ -606,7 +630,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param server
      * @return
      */
-    protected StartServerAction start(Server server) {
+    public StartServerAction start(Server server) {
         StartServerAction action = new StartServerAction();
         action.setServer(server);
         testCase.addTestAction(action);
@@ -620,7 +644,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param servers
      * @return
      */
-    protected StopServerAction stop(Server... servers) {
+    public StopServerAction stop(Server... servers) {
         StopServerAction action = new StopServerAction();
         action.getServerList().addAll(Arrays.asList(servers));
         testCase.addTestAction(action);
@@ -634,7 +658,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param server
      * @return
      */
-    protected StopServerAction stop(Server server) {
+    public StopServerAction stop(Server server) {
         StopServerAction action = new StopServerAction();
         action.setServer(server);
         testCase.addTestAction(action);
@@ -646,7 +670,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected StopTimeAction stopTime() {
+    public StopTimeAction stopTime() {
         StopTimeAction action = new StopTimeAction();
         testCase.addTestAction(action);
         return new StopTimeAction();
@@ -658,7 +682,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param id
      * @return
      */
-    protected StopTimeAction stopTime(String id) {
+    public StopTimeAction stopTime(String id) {
         StopTimeAction action = new StopTimeAction();
         action.setId(id);
         testCase.addTestAction(action);
@@ -671,7 +695,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected TraceVariablesAction traceVariables() {
+    public TraceVariablesAction traceVariables() {
         TraceVariablesAction action = new TraceVariablesAction();
 
         testCase.addTestAction(action);
@@ -685,7 +709,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param variables
      * @return
      */
-    protected TraceVariablesAction traceVariables(String... variables) {
+    public TraceVariablesAction traceVariables(String... variables) {
         TraceVariablesAction action = new TraceVariablesAction();
         action.setVariableNames(Arrays.asList(variables));
 
@@ -700,7 +724,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param script
      * @return
      */
-    protected GroovyActionDefinition groovy(String script) {
+    public GroovyActionDefinition groovy(String script) {
         GroovyAction action = new GroovyAction();
         action.setScript(script);
 
@@ -716,7 +740,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param scriptResource
      * @return
      */
-    protected GroovyActionDefinition groovy(Resource scriptResource) {
+    public GroovyActionDefinition groovy(Resource scriptResource) {
         GroovyAction action = new GroovyAction();
         try {
             action.setScript(FileUtils.readToString(scriptResource));
@@ -735,7 +759,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return
      */
-    protected TransformActionDefinition transform() {
+    public TransformActionDefinition transform() {
         TransformAction action = new TransformAction();
         testCase.addTestAction(action);
         return new TransformActionDefinition(action);
@@ -747,7 +771,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param testAction the nested testAction
      * @return
      */
-    protected AssertDefinition assertException(TestAction testAction) {
+    public AssertDefinition assertException(TestAction testAction) {
         Assert action = new Assert();
 
         if (testAction instanceof AbstractActionDefinition<?>) {
@@ -769,7 +793,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions   nested test actions
      * @return
      */
-    protected Catch catchException(String exception, TestAction... actions) {
+    public Catch catchException(String exception, TestAction... actions) {
         Catch container = new Catch();
         container.setException(exception);
 
@@ -795,7 +819,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected Catch catchException(Class<? extends Throwable> exception, TestAction... actions) {
+    public Catch catchException(Class<? extends Throwable> exception, TestAction... actions) {
         return catchException(exception.getName(), actions);
     }
 
@@ -805,7 +829,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected Catch catchException(TestAction... actions) {
+    public Catch catchException(TestAction... actions) {
         return catchException(CitrusRuntimeException.class.getName(), actions);
     }
 
@@ -815,7 +839,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param testAction
      * @return
      */
-    protected AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
+    public AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
         AssertSoapFault action = new AssertSoapFault();
         action.setAction(testAction);
 
@@ -837,7 +861,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected ConditionalDefinition conditional(TestAction... actions) {
+    public ConditionalDefinition conditional(TestAction... actions) {
         Conditional container = new Conditional();
 
         for (TestAction action : actions) {
@@ -861,7 +885,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected IterateDefinition iterate(TestAction... actions) {
+    public IterateDefinition iterate(TestAction... actions) {
         Iterate container = new Iterate();
 
         for (TestAction action : actions) {
@@ -885,7 +909,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected Parallel parallel(TestAction... actions) {
+    public Parallel parallel(TestAction... actions) {
         Parallel container = new Parallel();
 
         for (TestAction action : actions) {
@@ -909,7 +933,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions) {
+    public RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions) {
         RepeatOnErrorUntilTrue container = new RepeatOnErrorUntilTrue();
 
         for (TestAction action : actions) {
@@ -932,7 +956,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected RepeatUntilTrueDefinition repeat(TestAction... actions) {
+    public RepeatUntilTrueDefinition repeat(TestAction... actions) {
         RepeatUntilTrue container = new RepeatUntilTrue();
 
         for (TestAction action : actions) {
@@ -955,7 +979,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param actions
      * @return
      */
-    protected Sequence sequential(TestAction... actions) {
+    public Sequence sequential(TestAction... actions) {
         Sequence container = new Sequence();
 
         for (TestAction action : actions) {
@@ -979,7 +1003,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      * @param name
      * @return
      */
-    protected TemplateDefinition template(String name) {
+    public TemplateDefinition template(String name) {
         Template template = new Template();
         template.setName(name);
 
@@ -999,7 +1023,7 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @param actions
      */
-    protected void doFinally(TestAction... actions) {
+    public void doFinally(TestAction... actions) {
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
@@ -1016,8 +1040,17 @@ public class CitrusTestBuilder implements ApplicationContextAware {
      *
      * @return the testCase the testCase to get.
      */
-    public TestCase getTestCase() {
+    protected TestCase getTestCase() {
         return testCase;
+    }
+
+    /**
+     * Get the test variables.
+     *
+     * @return
+     */
+    protected Map<String, Object> getVariables() {
+        return variables;
     }
 
     /**
