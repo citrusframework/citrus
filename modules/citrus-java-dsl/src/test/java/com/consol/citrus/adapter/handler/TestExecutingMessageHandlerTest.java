@@ -17,8 +17,11 @@
 package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,26 +29,24 @@ import org.testng.annotations.Test;
  * Unit tests for TestExecutingMessageHandler
  * @author Christoph Deppisch
  */
-public class TestExecutingMessageHandlerTest {
+@ContextConfiguration(locations = { "classpath:com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml"})
+public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
+
+    @Autowired
+    private TestExecutingMessageHandler messageHandler;
 
     /**
      * Test for handler routing by node content
      */
     @Test
     public void testRouteMessageByElementTextContent() throws Exception {
-        TestExecutingMessageHandler handler = new TestExecutingMessageHandler();
-        handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml");
-        handler.setXpathMappingExpression("//Test/@name");
-
-        handler.afterPropertiesSet();
-
-        Message<?> response = handler.handleMessage(
+        messageHandler.setXpathMappingExpression("//Test/@name");
+        Message<?> response = messageHandler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"FooTest\"></Test>").build());
 
         Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
 
-        response = handler.handleMessage(
+        response = messageHandler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"BarTest\"></Test>").build());
 
         Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
@@ -56,13 +57,8 @@ public class TestExecutingMessageHandlerTest {
      */
     @Test
     public void testRouteMessageWithoutXpath() throws Exception {
-        TestExecutingMessageHandler handler = new TestExecutingMessageHandler();
-        handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml");
-
-        handler.afterPropertiesSet();
-
-        Message<?> response = handler.handleMessage(
+        messageHandler.setXpathMappingExpression(null);
+        Message<?> response = messageHandler.handleMessage(
                 MessageBuilder.withPayload(
                     "<FooBarTest></FooBarTest>").build());
 
@@ -74,14 +70,8 @@ public class TestExecutingMessageHandlerTest {
      */
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testRouteMessageWithBadXpathExpression() throws Exception {
-        TestExecutingMessageHandler handler = new TestExecutingMessageHandler();
-        handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml");
-
-        handler.setXpathMappingExpression("//I_DO_NOT_EXIST");
-
-        handler.afterPropertiesSet();
-        handler.handleMessage(MessageBuilder.withPayload(
+        messageHandler.setXpathMappingExpression("//I_DO_NOT_EXIST");
+        messageHandler.handleMessage(MessageBuilder.withPayload(
                     "<FooTest>foo test please</FooTest>").build());
     }
 
@@ -90,13 +80,8 @@ public class TestExecutingMessageHandlerTest {
      */
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
-        TestExecutingMessageHandler handler = new TestExecutingMessageHandler();
-        handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml");
-        handler.setXpathMappingExpression("//Test/@name");
-
-        handler.afterPropertiesSet();
-        handler.handleMessage(MessageBuilder.withPayload(
+        messageHandler.setXpathMappingExpression("//Test/@name");
+        messageHandler.handleMessage(MessageBuilder.withPayload(
                     "<Test name=\"UNKNOWN_TEST\"></Test>").build());
     }
 }

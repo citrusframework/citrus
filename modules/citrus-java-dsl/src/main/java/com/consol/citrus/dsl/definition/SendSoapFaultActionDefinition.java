@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.springframework.core.io.Resource;
 
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.dsl.PositionHandle;
+import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;

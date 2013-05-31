@@ -68,8 +68,6 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
      * @throws CitrusRuntimeException
      */
     public Message<?> handleMessage(Message<?> request) {
-        Assert.notNull(messageHandlerContext, "MessageHandler application context must not be empty or null");
-
         try {
             final Reader reader = new StringReader(request.getPayload().toString());
             DOMParser parser = new DOMParser();
@@ -114,6 +112,8 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
      */
     protected Message<?> dispatchMessage(Message<?> request, String mappingName) {
         //TODO support FileSystemContext
+        Assert.notNull(messageHandlerContext, "MessageHandler Spring bean application context must not be empty or null");
+
         ApplicationContext ctx = new ClassPathXmlApplicationContext(messageHandlerContext);
         MessageHandler handler;
 

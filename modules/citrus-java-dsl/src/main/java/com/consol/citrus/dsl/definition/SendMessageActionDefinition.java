@@ -27,7 +27,7 @@ import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
 
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.dsl.PositionHandle;
+import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.MessageUtils;
@@ -105,7 +105,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
     
     /**
      * Adds message payload resource to this definition.
-     * @param payload
+     * @param payloadResource
      * @return
      */
     public SendMessageActionDefinition payload(Resource payloadResource) {

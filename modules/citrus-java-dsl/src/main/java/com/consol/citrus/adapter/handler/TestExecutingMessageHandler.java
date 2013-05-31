@@ -16,8 +16,6 @@
 
 package com.consol.citrus.adapter.handler;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
@@ -27,11 +25,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 
@@ -46,7 +42,7 @@ import org.w3c.dom.Node;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler implements InitializingBean, BeanNameAware {
+public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler implements InitializingBean, BeanNameAware, ApplicationContextAware {
 
     /** Executor start action sequence logic in separate thread task */
     private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
@@ -110,13 +106,6 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
      * @throws Exception
      */
     public void afterPropertiesSet() throws Exception {
-        // Create Citrus application context with custom messageHandlerContext
-        applicationContext = new ClassPathXmlApplicationContext(new String[] {
-                "classpath:com/consol/citrus/spring/root-application-ctx.xml",
-                "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
-                "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml",
-                messageHandlerContext });
-
         if (responseMessageHandler == null) {
             MessageChannelConnectingMessageHandler channelConnectingMessageHandler = new MessageChannelConnectingMessageHandler();
             channelConnectingMessageHandler.setChannelName(name + ".inbound");
@@ -139,5 +128,14 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
      */
     public void setResponseMessageHandler(MessageHandler responseMessageHandler) {
         this.responseMessageHandler = responseMessageHandler;
+    }
+
+    /**
+     * Injects Spring bean application context this handler is managed by.
+     * @param applicationContext
+     * @throws BeansException
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

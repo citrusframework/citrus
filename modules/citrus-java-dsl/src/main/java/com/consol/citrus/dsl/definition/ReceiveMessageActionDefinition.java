@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.PositionHandle;
+import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
@@ -308,7 +308,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     
     /**
      * Adds script validation by file resource.
-     * @param script
+     * @param scriptResource
      * @return
      */
     public ReceiveMessageActionDefinition validateScript(Resource scriptResource) {
@@ -418,7 +418,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     
     /**
      * Adds XPath message element validation.
-     * @param path
+     * @param xPathExpression
      * @param controlValue
      * @return
      */
