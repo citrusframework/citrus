@@ -4,7 +4,7 @@
         
           routes: {
             "": "welcome", // #welcome
-            "welcome": "welcome", // #welcome
+            "project": "welcome", // #welcome
             "config": "config", //#config
             "testcases": "testcases", // #testcases
             "stats": "stats", // #stats
