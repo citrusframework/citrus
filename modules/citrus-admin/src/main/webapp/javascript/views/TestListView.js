@@ -33,11 +33,9 @@
           afterRender: function() {
               $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.tests }));
               
-              var searchNames = _.map(this.tests, function(test){ return test.name; });
-              var searchPackages = _.map(this.tests, function(test){ return test.packageName + ".*"; });
-              var searchKeys = _.union(searchPackages, searchNames);
+              var searchKeys = _.map(this.tests, function(test){ return test.packageName + ".*"; });
               $('#test-name').typeahead({
-                  source: searchKeys,
+                  source: _.uniq(searchKeys),
                   items: 5,
                   minLength: 1
               });
@@ -52,7 +50,6 @@
                   } else {
                       this.searchResults = _.where(this.tests, {name: searchKey});
                   }
-                  
               } else {
                   this.searchResults = this.tests;
               }
