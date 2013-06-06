@@ -47,7 +47,7 @@ a {
 }
 
 .nav-tabs > .active > a, .nav-tabs > .active > a:hover {
-    color: #0088cc;
+    color: #333333;
     background-color: #ffffff;
 }
 
@@ -63,6 +63,10 @@ tr.show-test-details {
 div.test-details-open {
    padding-top: 200px;
    text-align: center;
+}
+
+.test-details h2 {
+    margin-left: 20px;
 }
 
 #test-tabs {
@@ -87,7 +91,7 @@ div.test-details-open {
 
 #test-tab-content {
     padding-left: 10px;
-    padding-top: 20px;
+    padding-top: 5px;
     min-height: 600px;
     border-left: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
