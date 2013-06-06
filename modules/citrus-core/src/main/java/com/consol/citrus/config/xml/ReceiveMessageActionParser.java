@@ -168,7 +168,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
     /**
      * Construct the message validation context builder.
-     * @param messageElement
+     * @param element
      * @return
      */
     private XmlMessageValidationContext getXmlMessageValidationContext(Element element) {

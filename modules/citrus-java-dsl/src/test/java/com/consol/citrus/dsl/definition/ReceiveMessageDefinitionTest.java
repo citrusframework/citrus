@@ -19,9 +19,11 @@ package com.consol.citrus.dsl.definition;
 import static org.easymock.EasyMock.*;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -498,7 +500,15 @@ public class ReceiveMessageDefinitionTest {
                     .extractFromPayload("/TestRequest/Message/@lang", "language");
             }
         };
-        
+
+        builder.setApplicationContext(applicationContext);
+
+        reset(applicationContext);
+
+        expect(applicationContext.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+
+        replay(applicationContext);
+
         builder.run(null, null);
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
@@ -514,6 +524,8 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+
+        verify(applicationContext);
     }
     
     @Test
@@ -558,6 +570,14 @@ public class ReceiveMessageDefinitionTest {
                     .extractFromPayload("/TestRequest/Message/@lang", "language");
             }
         };
+
+        builder.setApplicationContext(applicationContext);
+
+        reset(applicationContext);
+
+        expect(applicationContext.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+
+        replay(applicationContext);
         
         builder.run(null, null);
         
@@ -578,6 +598,8 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+
+        verify(applicationContext);
     }
     
     @Test

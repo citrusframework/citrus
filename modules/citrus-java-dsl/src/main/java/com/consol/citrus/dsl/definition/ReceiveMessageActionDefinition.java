@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import java.io.IOException;
 import java.util.Map;
 
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
@@ -164,7 +165,11 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
     private void initializeXpathVariableExtractor() {
         if (xpathExtractor == null) {
             xpathExtractor = new XpathPayloadVariableExtractor();
-            
+
+            if (applicationContext.getBeansOfType(NamespaceContextBuilder.class).size() > 0) {
+                xpathExtractor.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
+            }
+
             action.getVariableExtractors().add(xpathExtractor);
         }
     }
