@@ -29,6 +29,8 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -83,7 +85,9 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
 
     @Override
     protected String extractMappingName(Node matchingNode) {
-        if (StringUtils.hasText(matchingNode.getNodeValue())) {
+        if (matchingNode.getNodeType() == Node.ELEMENT_NODE && StringUtils.hasText(DomUtils.getTextValue((Element) matchingNode))) {
+            return DomUtils.getTextValue((Element) matchingNode);
+        } else if(matchingNode.getNodeType() == Node.ATTRIBUTE_NODE && StringUtils.hasText(matchingNode.getNodeValue())) {
             return matchingNode.getNodeValue();
         } else {
             return super.extractMappingName(matchingNode);
