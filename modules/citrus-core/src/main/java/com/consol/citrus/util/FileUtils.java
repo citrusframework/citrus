@@ -17,8 +17,11 @@
 package com.consol.citrus.util;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -34,39 +37,68 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public abstract class FileUtils {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(FileUtils.class);
+
     /**
      * Prevent instantiation.
      */
     private FileUtils() {
     }
-    
+
     /**
-     * Read file resource to string value.
+     * Read file resource to string value with default charset settings.
      * @param resource
      * @return
      * @throws IOException
      */
     public static String readToString(Resource resource) throws IOException {
-        return readToString(resource.getInputStream());
+        return readToString(resource.getInputStream(), getDefaultCharset());
     }
-    
+
     /**
-     * Read file input stream to string value.
+     * Read file input stream to string value with default charset settings.
      * @param inputStream
      * @return
      * @throws IOException
      */
     public static String readToString(InputStream inputStream) throws IOException {
+         return readToString(inputStream, getDefaultCharset());
+    }
+    
+    /**
+     * Read file resource to string value.
+     * @param resource
+     * @param charset
+     * @return
+     * @throws IOException
+     */
+    public static String readToString(Resource resource, Charset charset) throws IOException {
+        return readToString(resource.getInputStream(), charset);
+    }
+    
+    /**
+     * Read file input stream to string value.
+     * @param inputStream
+     * @param charset
+     * @return
+     * @throws IOException
+     */
+    public static String readToString(InputStream inputStream, Charset charset) throws IOException {
         BufferedInputStream reader = null;
         StringBuilder builder = new StringBuilder();
-        
+
+        if (log.isDebugEnabled()) {
+            log.debug("Reading file resource (encoding is '" + charset.displayName() + "')");
+        }
+
         try {
             reader = new BufferedInputStream(inputStream);
             
             byte[] contents = new byte[1024];
             int bytesRead=0;
             while( (bytesRead = reader.read(contents)) != -1){
-                builder.append(new String(contents, 0, bytesRead));
+                builder.append(new String(contents, 0, bytesRead, charset));
             }
         } finally {
             if (reader != null) {
@@ -76,7 +108,7 @@ public abstract class FileUtils {
         
         return builder.toString();
     }
-    
+
     /**
      * Method to retrieve all test defining XML files in given directory.
      * Hierarchy of folders is supported.
@@ -135,5 +167,15 @@ public abstract class FileUtils {
     public static Resource getFileResource(String filePath, TestContext context) {
         return new PathMatchingResourcePatternResolver().getResource(
                 context.replaceDynamicContentInString(filePath));
+    }
+
+    /**
+     * Gets the default charset. If set by Citrus system property (citrus.file.encoding) use
+     * this one otherwise use system default.
+     * @return
+     */
+    private static Charset getDefaultCharset() {
+        return Charset.forName(System.getProperty("citrus.file.encoding",
+                    Charset.defaultCharset().displayName()));
     }
 }
