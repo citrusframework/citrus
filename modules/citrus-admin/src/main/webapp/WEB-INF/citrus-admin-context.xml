@@ -79,13 +79,12 @@
     </bean>
     
     <bean class="com.consol.citrus.admin.executor.ProcessLaunchingTestExecutor"/>
-    <bean class="com.consol.citrus.admin.executor.ApplicationContextHolder" scope="singleton"/>
-    
-    <bean class="com.consol.citrus.admin.listener.TestEventListener" scope="singleton"/>
-
-    <bean id="loggingWebSocket" class="com.consol.citrus.admin.websocket.LoggingWebSocket" scope="singleton"/>
-
     <bean id="processMonitor" class="com.consol.citrus.admin.launcher.ProcessMonitorImpl" scope="singleton"/>
+
+    <bean class="com.consol.citrus.admin.executor.ApplicationContextHolder" scope="singleton"/>
+
+    <!-- Central web socket pushes events to connected clients -->
+    <bean id="loggingWebSocket" class="com.consol.citrus.admin.websocket.LoggingWebSocket" scope="singleton"/>
 
     <!-- XML Marshalling -->
     <oxm:jaxb2-marshaller id="jaxbMarshaller">

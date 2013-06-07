@@ -54,7 +54,7 @@ public interface ProcessListener {
      * @param processId the id of the process
      * @param e the exception caught within the ProcessLauncher
      */
-    void fail(String processId, Exception e);
+    void fail(String processId, Throwable e);
 
     /**
      * Invoked on output message event with output data from process

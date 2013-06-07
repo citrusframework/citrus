@@ -19,6 +19,11 @@ package com.consol.citrus.admin.websocket;
 import java.io.IOException;
 import java.util.*;
 
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.report.TestActionListener;
+import com.consol.citrus.report.TestListener;
+import com.consol.citrus.report.TestSuiteListener;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -32,15 +37,22 @@ import com.consol.citrus.admin.launcher.ProcessListener;
  * @author Martin.Maher@consol.de
  * @since 2013.01.28
  */
-public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListener {
+public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListener, TestListener, TestSuiteListener, TestActionListener {
 
     /** Log event types */
-    private enum LogEvent {
+    private enum PushEvent {
         PING,
-        START,
-        MESSAGE,
-        SUCCESS,
-        FAILED;
+        LOG_MESSAGE,
+        TEST_START,
+        TEST_SUCCESS,
+        TEST_FAILED,
+        TEST_SKIP,
+        TEST_ACTION_START,
+        TEST_ACTION_FINISH,
+        TEST_ACTION_SKIP,
+        PROCESS_START,
+        PROCESS_SUCCESS,
+        PROCESS_FAILED;
     }
 
     /**
@@ -101,51 +113,132 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
     }
 
     /**
-     * Invoked on start process event
-     *
-     * @param processId the id of the process
+     * {@inheritDoc}
      */
     public void start(String processId) {
-        logMessage(createMessage(processId, LogEvent.START, "process started"));
+        push(createProcessEvent(processId, PushEvent.PROCESS_START, "process started"));
     }
 
     /**
-     * Invoked on successful completion event
-     *
-     * @param processId the id of the completed process
+     * {@inheritDoc}
      */
     public void success(String processId) {
-        logMessage(createMessage(processId, LogEvent.SUCCESS, "process completed successfully"));
+        push(createProcessEvent(processId, PushEvent.PROCESS_SUCCESS, "process completed successfully"));
     }
 
     /**
-     * Invoked on failed completion event, with the process exit code
-     *
-     * @param processId the id of the process
-     * @param exitCode the exitcode returned from the process
+     * {@inheritDoc}
      */
     public void fail(String processId, int exitCode) {
-        logMessage(createMessage(processId, LogEvent.FAILED, "process failed with exit code " + exitCode));
+        push(createProcessEvent(processId, PushEvent.PROCESS_FAILED, "process failed with exit code " + exitCode));
     }
 
     /**
-     * Invoked on failed completion event, with the exception that was caught
-     *
-     * @param processId the id of the process
-     * @param e the exception caught within the ProcessLauncher
+     * {@inheritDoc}
      */
-    public void fail(String processId, Exception e) {
-        logMessage(createMessage(processId, LogEvent.FAILED, "process failed with exception " + e.getLocalizedMessage()));
+    public void fail(String processId, Throwable e) {
+        push(createProcessEvent(processId, PushEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage()));
     }
 
     /**
-     * Invoked on output message event with output data from process
-     *
-     * @param processId the id of the process
-     * @param output
+     * {@inheritDoc}
      */
     public void output(String processId, String output) {
-        logMessage(createMessage(processId, LogEvent.MESSAGE, output));
+        push(createProcessEvent(processId, PushEvent.LOG_MESSAGE, output));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestActionStart(TestCase testCase, TestAction testAction) {
+        push(createTestEvent(PushEvent.TEST_ACTION_START, testAction.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestActionFinish(TestCase testCase, TestAction testAction) {
+        push(createTestEvent(PushEvent.TEST_ACTION_FINISH, testAction.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
+        push(createTestEvent(PushEvent.TEST_ACTION_SKIP, testAction.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestStart(TestCase test) {
+        push(createTestEvent(PushEvent.TEST_START, test.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestFinish(TestCase test) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestSuccess(TestCase test) {
+        push(createTestEvent(PushEvent.TEST_SUCCESS, test.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestFailure(TestCase test, Throwable cause) {
+        push(createTestEvent(PushEvent.TEST_FAILED, test.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onTestSkipped(TestCase test) {
+        push(createTestEvent(PushEvent.TEST_SKIP, test.getName()));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onStart() {
+        start("");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onStartSuccess() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onStartFailure(Throwable cause) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onFinish() {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onFinishSuccess() {
+        success("0");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onFinishFailure(Throwable cause) {
+        fail("0", cause);
     }
 
     /**
@@ -154,38 +247,52 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
     @SuppressWarnings("unchecked")
     public void ping() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("event", LogEvent.PING.name());
-        logMessage(jsonObject.toString());
+        jsonObject.put("event", PushEvent.PING.name());
+        push(jsonObject);
     }
 
     /**
-     * Creates proper JSON message for log event.
+     * Creates proper JSON message for process related log event.
      * @param processId
-     * @param logEvent
+     * @param pushEvent
      * @param message
      * @return
      */
     @SuppressWarnings("unchecked")
-    private String createMessage(String processId, LogEvent logEvent, String message) {
+    private JSONObject createProcessEvent(String processId, PushEvent pushEvent, String message) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("processId", processId);
-        jsonObject.put("event", logEvent.name());
+        jsonObject.put("event", pushEvent.name());
         jsonObject.put("msg", message);
-        return jsonObject.toString();
+        return jsonObject;
     }
 
     /**
-     * Push log message to connected clients.
+     * Creates proper JSON message for test related log event.
+     * @param pushEvent
      * @param message
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private JSONObject createTestEvent(PushEvent pushEvent, String message) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("event", pushEvent.name());
+        jsonObject.put("msg", message);
+        return jsonObject;
+    }
+
+    /**
+     * Push event to connected clients.
+     * @param event
      */
     @SuppressWarnings({"PMD.CloseResource"})
-    private void logMessage(String message) {
+    private void push(JSONObject event) {
         Iterator<Connection> itor = connections.iterator();
         while (itor.hasNext()) {
             Connection connection = itor.next();
             if (connection != null && connection.isOpen()) {
                 try {
-                    connection.sendMessage(message);
+                    connection.sendMessage(event.toString());
                 } catch (IOException e) {
                     LOG.error("Error sending message", e);
                 }

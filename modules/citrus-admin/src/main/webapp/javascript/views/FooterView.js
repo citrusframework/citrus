@@ -44,7 +44,7 @@
                     var logId = 'div#footer-tab-content-' + idHash + ' pre';
                     var msg = jsMessage.msg;
 
-                    if ("START" == jsMessage.event) {
+                    if ("PROCESS_START" == jsMessage.event) {
                         this.createOrShowTab(processId, idHash);
 
                         if ($('#footer').hasClass('minimized')) {
@@ -52,16 +52,16 @@
                         }
 
                         $(logId).append(msg);
-                    } else if ("MESSAGE" == jsMessage.event) {
-                        $(logId).append(msg)
-                    } else if ("SUCCESS" == jsMessage.event) {
-                        $(logId).append(msg)
-                    } else if ("FAILED" == jsMessage.event) {
-                        $(logId).append(msg)
+                    } else if ("PROCESS_SUCCESS" == jsMessage.event) {
+                        $(logId).append(msg);
+                    } else if ("PROCESS_FAILED" == jsMessage.event) {
+                        $(logId).append(msg);
+                    } else if ("LOG_MESSAGE" == jsMessage.event) {
+                        $(logId).append(msg);
                     } else {
                         return;
                     }
-                    $(logId).append("\n")
+
                     $(logId).scrollTop($(logId)[0].scrollHeight);
                 }
             },
