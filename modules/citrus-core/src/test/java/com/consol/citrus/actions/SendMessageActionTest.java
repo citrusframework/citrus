@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.*;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+import com.consol.citrus.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.integration.Message;
@@ -981,6 +982,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testDisabledSendMessage() {
+        TestCase testCase = new TestCase();
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         
@@ -994,18 +996,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
-        
         expect(messageSender.getActor()).andReturn(null).anyTimes();
-        
         replay(messageSender);
-        
-        sendAction.execute(context);
+
+        testCase.addTestAction(sendAction);
+        testCase.execute(context);
         
         verify(messageSender);
     }
     
     @Test
     public void testDisabledSendMessageByMessageSender() {
+        TestCase testCase = new TestCase();
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setMessageSender(messageSender);
         
@@ -1018,12 +1020,11 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         sendAction.setMessageBuilder(messageBuilder);
         
         reset(messageSender);
-        
         expect(messageSender.getActor()).andReturn(disabledActor).times(2);
-        
         replay(messageSender);
-        
-        sendAction.execute(context);
+
+        testCase.addTestAction(sendAction);
+        testCase.execute(context);
         
         verify(messageSender);
     }

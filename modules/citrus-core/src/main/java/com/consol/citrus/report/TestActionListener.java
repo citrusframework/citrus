@@ -17,6 +17,7 @@
 package com.consol.citrus.report;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
 
 /**
  * Listener invoked on test action execution with success and failure.
@@ -27,31 +28,20 @@ import com.consol.citrus.TestAction;
 public interface TestActionListener {
     /**
      * Invoked when test gets started
-     * @param test
+     * @param testCase
+     * @param testAction
      */
-    void onTestActionStart(TestAction testAction);
+    void onTestActionStart(TestCase testCase, TestAction testAction);
 
     /**
      * Invoked when test gets finished
-     * @param test
+     * @param testAction
      */
-    void onTestActionFinish(TestAction testAction);
-
-    /**
-     * Invoked when test finished with success
-     * @param test
-     */
-    void onTestActionSuccess(TestAction testAction);
-
-    /**
-     * Invoked when test finished with failure
-     * @param test
-     */
-    void onTestActionFailure(TestAction testAction, Throwable cause);
+    void onTestActionFinish(TestCase testCase, TestAction testAction);
 
     /**
      * Invoked when test is skipped
-     * @param test
+     * @param testAction
      */
-    void onTestActionSkipped(TestAction testAction);
+    void onTestActionSkipped(TestCase testCase, TestAction testAction);
 }

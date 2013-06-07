@@ -16,13 +16,9 @@
 
 package com.consol.citrus.actions;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.util.TestActionExecutionLogger;
 
 /**
  * Abstract base class for test acions. Class provides a default name and description.
@@ -39,24 +35,11 @@ public abstract class AbstractTestAction implements TestAction {
     /** This actions explicit test actor */
     private TestActor actor;
     
-    @Autowired
-    private TestActionListeners testActionListeners = new TestActionListeners();
-    
     /**
      * Do basic logging and delegate execution to subclass.
      */
     public void execute(TestContext context) {
-        if (!isDisabled(context)) {
-            TestActionExecutionLogger.logTestAction(this);
-            testActionListeners.onTestActionStart(this);
-            
-            doExecute(context);
-            
-            testActionListeners.onTestActionSuccess(this);
-        } else {
-            TestActionExecutionLogger.logDisabledTestAction(this);
-            testActionListeners.onTestActionSkipped(this);
-        }
+        doExecute(context);
     }
     
     /**

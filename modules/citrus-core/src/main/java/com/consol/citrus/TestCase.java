@@ -19,12 +19,14 @@ package com.consol.citrus;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.consol.citrus.report.TestActionListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -52,6 +54,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     
     /** In case test was called with parameters from outside */
     private String[] parameters = new String[] {};
+
+    @Autowired
+    private TestActionListeners testActionListeners = new TestActionListeners();
     
     /**
      * Logger
@@ -63,7 +68,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public void doExecute(TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug("Initializing TestCase");
+            log.debug("Initializing test case");
         }
 
         this.context = context;
@@ -82,7 +87,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         /* Debug print all variables */
         if (context.hasVariables() && log.isDebugEnabled()) {
-            log.debug("TestCase using the following global variables:");
+            log.debug("Global variables:");
             for (Entry<String, Object> entry : context.getVariables().entrySet()) {
                 log.debug(entry.getKey() + " = " + entry.getValue());
             }
@@ -90,13 +95,16 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         /* execute the test actions */
         for (TestAction action: actions) {
-            log.info("");
-            log.info("TESTACTION " + (getActionIndex(action)+1) + "/" + getActionCount());
+            if (!action.isDisabled(context)) {
+                testActionListeners.onTestActionStart(this, action);
+                setLastExecutedAction(action);
 
-            setLastExecutedAction(action);
-            
-            /* execute the test action and validate its success */
-            action.execute(context);
+                /* execute the test action and validate its success */
+                action.execute(context);
+                testActionListeners.onTestActionFinish(this, action);
+            } else {
+                testActionListeners.onTestActionSkipped(this, action);
+            }
         }
     }
 

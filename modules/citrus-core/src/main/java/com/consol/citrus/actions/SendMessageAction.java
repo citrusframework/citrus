@@ -19,6 +19,8 @@ package com.consol.citrus.actions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
 
@@ -51,6 +53,9 @@ public class SendMessageAction extends AbstractTestAction {
      * message sender is waiting for the synchronous response */
     private boolean forkMode = false;
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SendMessageAction.class);
+
     /**
      * Message is constructed with payload and header entries and sent via
      * {@link MessageSender} instance.
@@ -65,6 +70,8 @@ public class SendMessageAction extends AbstractTestAction {
         }
         
         if (forkMode) {
+            log.info("Forking send message action ...");
+
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(new Runnable() {
                 public void run() {

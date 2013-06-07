@@ -20,6 +20,7 @@ import static org.easymock.EasyMock.*;
 
 import java.util.*;
 
+import com.consol.citrus.TestCase;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -1484,6 +1485,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testDisabledReceiveMessage() {
+        TestCase testCase = new TestCase();
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         
@@ -1505,13 +1507,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
-        receiveAction.execute(context);
+
+        testCase.addTestAction(receiveAction);
+        testCase.execute(context);
         
         verify(messageReceiver);
     }
     
     @Test
     public void testDisabledReceiveMessageByMessageReceiver() {
+        TestCase testCase = new TestCase();
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setMessageReceiver(messageReceiver);
         
@@ -1532,7 +1537,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
-        receiveAction.execute(context);
+
+        testCase.addTestAction(receiveAction);
+        testCase.execute(context);
         
         verify(messageReceiver);
     }

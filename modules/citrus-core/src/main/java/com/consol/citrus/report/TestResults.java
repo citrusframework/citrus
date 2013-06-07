@@ -16,6 +16,8 @@
 
 package com.consol.citrus.report;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,6 +31,15 @@ import com.consol.citrus.report.TestResult.RESULT;
 public class TestResults extends ArrayList<TestResult> {
 
     private static final long serialVersionUID = 1L;
+
+    /** Common decimal format for percentage calculation in report **/
+    private static DecimalFormat decFormat = new DecimalFormat("0.0");
+
+    static {
+        DecimalFormatSymbols symbol = new DecimalFormatSymbols();
+        symbol.setDecimalSeparator('.');
+        decFormat.setDecimalFormatSymbols(symbol);
+    }
 
     /** Is result cached right now */
     private boolean cached = false;
@@ -85,6 +96,14 @@ public class TestResults extends ArrayList<TestResult> {
             return cntSuccess;
         }
     }
+
+    /**
+     * Calculates percentage of success tests.
+     * @return
+     */
+    public String getSuccessPercentage() {
+        return size() > 0 ? decFormat.format((double)getSuccess() / (getFailed() + getSuccess())*100) : "0.0";
+    }
     
     /**
      * Get number of tests failed.
@@ -99,6 +118,14 @@ public class TestResults extends ArrayList<TestResult> {
             return cntFailed;
         }
     }
+
+    /**
+     * Calculates percentage of failed tests.
+     * @return
+     */
+    public String getFailedPercentage() {
+        return size() > 0 ? decFormat.format((double)getFailed() / (getFailed() + getSuccess())*100) : "0.0";
+    }
     
     /**
      * Get number of skipped tests.
@@ -112,6 +139,14 @@ public class TestResults extends ArrayList<TestResult> {
             
             return cntSkipped;
         }
+    }
+
+    /**
+     * Calculates percentage of skipped tests.
+     * @return
+     */
+    public String getSkippedPercentage() {
+        return size() > 0 ? decFormat.format((double)getSkipped() / (size())*100) : "0.0";
     }
     
     /**
@@ -130,4 +165,6 @@ public class TestResults extends ArrayList<TestResult> {
         
         return count;
     }
+
+
 }

@@ -89,21 +89,24 @@ public class TestResult {
                 break;
             case FAILURE:
                 builder.append(" FAILED");
-                
-                if (cause!= null && StringUtils.hasText(cause.getLocalizedMessage())) {
-                    builder.append("\n FAILED! Caused by: \n " + cause.getClass().getName() + ": " +  cause.getLocalizedMessage());
-                } else {
-                    builder.append("\n FAILED! Caused by: Unknown error");
-                }
-                
-                builder.append("\n");
-                
                 break;
             default:
                 break;
         }
 
         return builder.toString();
+    }
+
+    /**
+     * Provide failure cause message for test results.
+     * @return
+     */
+    public String getFailureCause() {
+        if (cause != null && StringUtils.hasText(cause.getLocalizedMessage())) {
+            return " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " +  cause.getLocalizedMessage();
+        } else {
+            return " FAILURE: Caused by: Unknown error";
+        }
     }
 
     /**

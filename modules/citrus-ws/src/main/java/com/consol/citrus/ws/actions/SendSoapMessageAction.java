@@ -18,6 +18,8 @@ package com.consol.citrus.ws.actions;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
 import org.springframework.util.StringUtils;
@@ -48,6 +50,9 @@ public class SendSoapMessageAction extends SendMessageAction {
     
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SendSoapMessageAction.class);
     
     @Override
     public void doExecute(final TestContext context) {
@@ -74,6 +79,8 @@ public class SendSoapMessageAction extends SendMessageAction {
             }
         
             if (isForkMode()) {
+                log.info("Forking send message action ...");
+
                 SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
                 taskExecutor.execute(new Runnable() {
                     public void run() {

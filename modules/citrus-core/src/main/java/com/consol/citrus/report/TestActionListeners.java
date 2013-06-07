@@ -19,6 +19,7 @@ package com.consol.citrus.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.TestAction;
@@ -35,37 +36,34 @@ public class TestActionListeners implements TestActionListener {
     /** List of test action listeners **/
     @Autowired(required = false)
     private List<TestActionListener> testActionListeners = new ArrayList<TestActionListener>();
-   
-    public void onTestActionFailure(TestAction testAction, Throwable cause) {
+
+    /**
+     * @see com.consol.citrus.report.TestActionListener#onTestActionFinish(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
+     */
+    public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionFailure(testAction, cause);
+            listener.onTestActionFinish(testCase, testAction);
         }
     }
 
-    public void onTestActionFinish(TestAction testAction) {
+    /**
+     * @see com.consol.citrus.report.TestActionListener#onTestActionSkipped(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
+     */
+    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionFinish(testAction);
+            listener.onTestActionSkipped(testCase, testAction);
         }
     }
 
-    public void onTestActionSkipped(TestAction testAction) {
+    /**
+     * @see com.consol.citrus.report.TestActionListener#onTestActionStart(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
+     */
+    public void onTestActionStart(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionSkipped(testAction);
+            listener.onTestActionStart(testCase, testAction);
         }
     }
 
-    public void onTestActionStart(TestAction testAction) {
-        for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionStart(testAction);
-        }
-    }
-
-    public void onTestActionSuccess(TestAction testAction) {
-        for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionSuccess(testAction);
-        }
-    }
-    
     /**
      * Adds a new test action listener.
      * @param listener

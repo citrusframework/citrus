@@ -67,22 +67,10 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     /** Format for creation and update date of TestCases */
     private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
     
-    /** Common decimal format for percentage calculation in report */
-    private DecimalFormat decFormat = new DecimalFormat("0.0");
-    
     /** Default logo image resource */
     @Autowired(required = false)
     @Qualifier("HtmlReporter.LOGO")
     private Resource logo = new ClassPathResource("citrus_logo.png", HtmlReporter.class);
-    
-    /**
-     * Default constructor.
-     */
-    public HtmlReporter() {
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols();
-        symbol.setDecimalSeparator('.');
-        decFormat.setDecimalFormatSymbols(symbol);
-    }
     
     /**
      * @see com.consol.citrus.report.TestReporter#clearTestResults()
@@ -128,11 +116,11 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             Properties reportProps = new Properties();
             reportProps.put("test.cnt", Integer.toString(testResults.size()));
             reportProps.put("skipped.test.cnt", Integer.toString(testResults.getSkipped()));
-            reportProps.put("skipped.test.pct", decFormat.format((double)testResults.getSkipped() / testResults.size()*100));
+            reportProps.put("skipped.test.pct", testResults.getSkippedPercentage());
             reportProps.put("failed.test.cnt", Integer.toString(testResults.getFailed()));
-            reportProps.put("failed.test.pct", decFormat.format((double)testResults.getFailed() / testResults.size()*100));
+            reportProps.put("failed.test.pct", testResults.getFailedPercentage());
             reportProps.put("success.test.cnt", Integer.toString(testResults.getSuccess()));
-            reportProps.put("success.test.pct", decFormat.format((double)testResults.getSuccess() / testResults.size()*100));
+            reportProps.put("success.test.pct", testResults.getSuccessPercentage());
             reportProps.put("test.results", reportDetails.toString());
             reportProps.put("logo.data", getLogoImageData());
             report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(REPORT_TEMPLATE), reportProps);
@@ -267,8 +255,6 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     /**
      * Creates the HTML report file
      * @param content The String content of the report file
-     * @param targetPath The directory where the report file is created
-     * @param reportFileName The name of the report file
      */
     private void createReportFile(String content) {
         Writer fileWriter = null;

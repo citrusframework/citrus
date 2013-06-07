@@ -29,7 +29,6 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.TestActionExecutionLogger;
 
 /**
  * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
@@ -65,8 +64,6 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * Do basic logging and delegate execution to subclass.
      */
     public void execute(TestContext context) {
-        TestActionExecutionLogger.logTestAction(this);
-        
         doExecute(context);
     }
     
@@ -83,7 +80,11 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
      * @return
      */
     public boolean isDisabled(TestContext context) {
-        return actor.isDisabled();
+        if (actor != null) {
+            return actor.isDisabled();
+        } else {
+            return false;
+        }
     }
     
     /**
