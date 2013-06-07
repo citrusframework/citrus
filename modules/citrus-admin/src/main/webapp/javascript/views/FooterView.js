@@ -29,12 +29,16 @@
                 // TODO MM change focus to tab on test start
                 // TODO MM add close button to process-log output
                 // TODO MM add clear button to log output
-                // TODO MM rename GENERAL tab to MESSAGES
                 // TODO MM fix bug where selected tab is not preserved when using header navigation
 
-                console.log(message);
-                if (message != undefined) {
+                if (message) {
+                    console.log(message);
                     jsMessage = $.parseJSON(message)
+
+                    if ("PING" == jsMessage.event) {
+                        return;
+                    }
+
                     var processId = jsMessage.processId;
                     var idHash = processId.toLowerCase();
                     var logId = 'div#footer-tab-content-' + idHash + ' pre';

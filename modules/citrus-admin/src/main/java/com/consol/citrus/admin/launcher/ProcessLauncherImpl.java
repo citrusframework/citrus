@@ -27,9 +27,10 @@ import org.slf4j.LoggerFactory;
  * @since 2012.11.30
  */
 public class ProcessLauncherImpl implements ProcessLauncher {
-    
+
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(ProcessLauncherImpl.class);
+    private static final int LOG_CACHE_SIZE = 10;
 
     private boolean processCompleted;
     private String processId;
@@ -148,10 +149,22 @@ public class ProcessLauncherImpl implements ProcessLauncher {
 
                 // Read output
                 br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                StringBuilder lineCache = new StringBuilder();
+                int lineCacheSize = LOG_CACHE_SIZE;
                 String line = null;
                 while ((line = br.readLine()) != null) {
-                    notifyOutput(processId, line);
-                    Thread.sleep(100);
+                    if (lineCacheSize > 0) {
+                        lineCache.append(line + System.getProperty("line.separator"));
+                        lineCacheSize--;
+                    } else {
+                        notifyOutput(processId, lineCache.toString());
+                        lineCacheSize = LOG_CACHE_SIZE;
+                        lineCache = new StringBuilder();
+                    }
+                }
+
+                if (lineCacheSize > 0) {
+                    notifyOutput(processId, lineCache.toString());
                 }
 
                 // store result
