@@ -57,10 +57,22 @@ public interface ProcessListener {
     void onProcessFail(String processId, Throwable e);
 
     /**
-     * Invoked on output message event with output data from process
+     * Invoked on process output with output data from process. This method is called
+     * in cache mode. In contrast to process activity which is called immediately after
+     * process output was detected (@see onProcessActivity).
      *
      * @param processId the id of the process
      * @param output
      */
-    void output(String processId, String output);
+    void onProcessOutput(String processId, String output);
+
+    /**
+     * Invoked on process activity with output data from process. Called immediately
+     * after process activity was detected. In contrast to process output which is cached
+     * first and notified separately with less frequency (@see onProcessOutput).
+     *
+     * @param processId the id of the process
+     * @param output
+     */
+    void onProcessActivity(String processId, String output);
 }

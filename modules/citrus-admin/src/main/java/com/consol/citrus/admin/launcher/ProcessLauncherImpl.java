@@ -155,8 +155,11 @@ public class ProcessLauncherImpl implements ProcessLauncher {
                 int lineCacheSize = LOG_CACHE_SIZE;
                 String line = null;
                 while ((line = br.readLine()) != null) {
+                    notifyActivity(processId, line);
+
+                    lineCache.append(line + System.getProperty("line.separator"));
+
                     if (lineCacheSize > 0) {
-                        lineCache.append(line + System.getProperty("line.separator"));
                         lineCacheSize--;
                     } else {
                         notifyOutput(processId, lineCache.toString());
@@ -219,7 +222,13 @@ public class ProcessLauncherImpl implements ProcessLauncher {
 
     private void notifyOutput(String processId, String output) {
         for (ProcessListener processListener : processListeners) {
-            processListener.output(processId, output);
+            processListener.onProcessOutput(processId, output);
+        }
+    }
+
+    private void notifyActivity(String processId, String output) {
+        for (ProcessListener processListener : processListeners) {
+            processListener.onProcessActivity(processId, output);
         }
     }
 

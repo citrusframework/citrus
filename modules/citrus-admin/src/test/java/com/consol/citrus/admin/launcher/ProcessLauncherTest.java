@@ -202,12 +202,11 @@ public class ProcessLauncherTest {
                 callbacks.set(3, Boolean.TRUE);
             }
 
-            public void stop(String processId) {
-                System.out.println("Stopped:" + processId);
-                callbacks.set(4, Boolean.TRUE);
+            public void onProcessOutput(String processId, String output) {
+                //do nothing as activity was already printed
             }
 
-            public void output(String processId, String output) {
+            public void onProcessActivity(String processId, String output) {
                 System.out.println(processId + ":" + output);
             }
         };

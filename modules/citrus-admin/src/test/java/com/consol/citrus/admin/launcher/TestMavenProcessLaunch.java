@@ -92,7 +92,11 @@ public class TestMavenProcessLaunch {
                 e.printStackTrace();
             }
 
-            public void output(String processId, String output) {
+            public void onProcessOutput(String processId, String output) {
+                //do nothing as activity was already printed
+            }
+
+            public void onProcessActivity(String processId, String output) {
                 System.out.println(processId + ":" + output);
             }
         };

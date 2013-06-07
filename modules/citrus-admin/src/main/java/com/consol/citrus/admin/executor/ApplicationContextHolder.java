@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.executor;
 
-import com.consol.citrus.admin.websocket.LoggingWebSocket;
+import com.consol.citrus.admin.websocket.WebSocketTestEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,8 @@ public class ApplicationContextHolder {
     private ApplicationContext applicationContext;
     
     @Autowired
-    private LoggingWebSocket loggingWebSocket;
-    
+    private WebSocketTestEventListener webSocketTestEventListener;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ApplicationContextHolder.class);
     
@@ -78,9 +78,8 @@ public class ApplicationContextHolder {
                 applicationContext = getTestContext().getApplicationContext();
                 
                 // add special admin webapp test listeners
-                applicationContext.getBean(TestListeners.class).addTestListener(loggingWebSocket);
-                applicationContext.getBean(TestActionListeners.class).addTestActionListener(loggingWebSocket);
-                applicationContext.getBean(TestSuiteListeners.class).addTestSuiteListener(loggingWebSocket);
+                applicationContext.getBean(TestListeners.class).addTestListener(webSocketTestEventListener);
+                applicationContext.getBean(TestActionListeners.class).addTestActionListener(webSocketTestEventListener);
             }
         };
         

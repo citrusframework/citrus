@@ -86,6 +86,10 @@
     <!-- Central web socket pushes events to connected clients -->
     <bean id="loggingWebSocket" class="com.consol.citrus.admin.websocket.LoggingWebSocket" scope="singleton"/>
 
+    <bean class="com.consol.citrus.admin.websocket.WebSocketTestEventListener"/>
+    <bean class="com.consol.citrus.admin.websocket.WebSocketProcessListener"/>
+    <bean class="com.consol.citrus.admin.websocket.TestEventExtractingProcessListener"/>
+
     <!-- XML Marshalling -->
     <oxm:jaxb2-marshaller id="jaxbMarshaller">
         <oxm:class-to-be-bound name="com.consol.citrus.admin.model.AppContextInfo" />

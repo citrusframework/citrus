@@ -19,6 +19,8 @@ package com.consol.citrus.admin.executor;
 import java.io.File;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
+import com.consol.citrus.admin.websocket.TestEventExtractingProcessListener;
+import com.consol.citrus.admin.websocket.WebSocketProcessListener;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +28,6 @@ import com.consol.citrus.admin.launcher.ProcessLauncher;
 import com.consol.citrus.admin.launcher.ProcessLauncherImpl;
 import com.consol.citrus.admin.launcher.process.ExecuteSingleTest;
 import com.consol.citrus.admin.service.ConfigurationService;
-import com.consol.citrus.admin.websocket.LoggingWebSocket;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +41,10 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
     private ConfigurationService configService;
 
     @Autowired
-    private LoggingWebSocket loggingWebSocket;
+    private WebSocketProcessListener webSocketProcessListener;
+
+    @Autowired
+    private TestEventExtractingProcessListener testEventExtractingProcessListener;
     
     /**
      * {@inheritDoc}
@@ -50,7 +54,10 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
         File file = new File(configService.getProjectHome());
         ProcessBuilder processBuilder = new ExecuteSingleTest(file, testName).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
-        processLauncher.addProcessListener(loggingWebSocket);
+
+        processLauncher.addProcessListener(webSocketProcessListener);
+        processLauncher.addProcessListener(testEventExtractingProcessListener);
+
         processLauncher.launchAndContinue(processBuilder, 0);
     }
 }
