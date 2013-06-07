@@ -115,28 +115,28 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
     /**
      * {@inheritDoc}
      */
-    public void start(String processId) {
+    public void onProcessStart(String processId) {
         push(createProcessEvent(processId, PushEvent.PROCESS_START, "process started"));
     }
 
     /**
      * {@inheritDoc}
      */
-    public void success(String processId) {
+    public void onProcessSuccess(String processId) {
         push(createProcessEvent(processId, PushEvent.PROCESS_SUCCESS, "process completed successfully"));
     }
 
     /**
      * {@inheritDoc}
      */
-    public void fail(String processId, int exitCode) {
+    public void onProcessFail(String processId, int exitCode) {
         push(createProcessEvent(processId, PushEvent.PROCESS_FAILED, "process failed with exit code " + exitCode));
     }
 
     /**
      * {@inheritDoc}
      */
-    public void fail(String processId, Throwable e) {
+    public void onProcessFail(String processId, Throwable e) {
         push(createProcessEvent(processId, PushEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage()));
     }
 
@@ -206,7 +206,7 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
      * {@inheritDoc}
      */
     public void onStart() {
-        start("");
+        onProcessStart("");
     }
 
     /**
@@ -231,14 +231,14 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage, ProcessListene
      * {@inheritDoc}
      */
     public void onFinishSuccess() {
-        success("0");
+        onProcessSuccess("0");
     }
 
     /**
      * {@inheritDoc}
      */
     public void onFinishFailure(Throwable cause) {
-        fail("0", cause);
+        onProcessFail("0", cause);
     }
 
     /**

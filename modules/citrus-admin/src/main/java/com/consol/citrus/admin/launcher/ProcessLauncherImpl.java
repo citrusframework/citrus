@@ -36,6 +36,8 @@ public class ProcessLauncherImpl implements ProcessLauncher {
     private String processId;
     private Process process;
     private ProcessMonitor processMonitor;
+
+    /** Listeners get informed on process or test events */
     private List<ProcessListener> processListeners = new ArrayList<ProcessListener>();
 
     /**
@@ -193,25 +195,25 @@ public class ProcessLauncherImpl implements ProcessLauncher {
 
     private void notifyStart(String processId) {
         for (ProcessListener processListener : processListeners) {
-            processListener.start(processId);
+            processListener.onProcessStart(processId);
         }
     }
 
     private void notifySuccess(String processId) {
         for (ProcessListener processListener : processListeners) {
-            processListener.success(processId);
+            processListener.onProcessSuccess(processId);
         }
     }
 
     private void notifyFail(String processId, int exitCode) {
         for (ProcessListener processListener : processListeners) {
-            processListener.fail(processId, exitCode);
+            processListener.onProcessFail(processId, exitCode);
         }
     }
 
     private void notifyFail(String processId, Exception e) {
         for (ProcessListener processListener : processListeners) {
-            processListener.fail(processId, e);
+            processListener.onProcessFail(processId, e);
         }
     }
 

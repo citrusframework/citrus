@@ -75,19 +75,19 @@ public class TestMavenProcessLaunch {
 
     private static ProcessListener getProcessListener() {
         return new ProcessListener() {
-            public void start(String processId) {
+            public void onProcessStart(String processId) {
                 System.out.println("Starting:" + processId + ", " + new Date());
             }
 
-            public void success(String processId) {
+            public void onProcessSuccess(String processId) {
                 System.out.println("Success:" + processId);
             }
 
-            public void fail(String processId, int exitCode) {
+            public void onProcessFail(String processId, int exitCode) {
                 System.err.println("Failed:" + processId + ", errorCode:" + exitCode);
             }
 
-            public void fail(String processId, Exception e) {
+            public void onProcessFail(String processId, Throwable e) {
                 System.err.println("Failed:" + processId + ", ex:" + e.getLocalizedMessage());
                 e.printStackTrace();
             }

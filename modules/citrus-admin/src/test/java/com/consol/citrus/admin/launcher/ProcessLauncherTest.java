@@ -181,22 +181,22 @@ public class ProcessLauncherTest {
         }
 
         return new ProcessListener() {
-            public void start(String processId) {
+            public void onProcessStart(String processId) {
                 System.out.println("Starting:" + processId + ", " + new Date());
                 callbacks.set(0, Boolean.TRUE);
             }
 
-            public void success(String processId) {
+            public void onProcessSuccess(String processId) {
                 System.out.println("Success:" + processId);
                 callbacks.set(1, Boolean.TRUE);
             }
 
-            public void fail(String processId, int exitCode) {
+            public void onProcessFail(String processId, int exitCode) {
                 System.err.println("Failed:" + processId + ", errorCode:" + exitCode);
                 callbacks.set(2, Boolean.TRUE);
             }
 
-            public void fail(String processId, Exception e) {
+            public void onProcessFail(String processId, Throwable e) {
                 System.err.println("Failed:" + processId + ", ex:" + e.getLocalizedMessage());
                 e.printStackTrace();
                 callbacks.set(3, Boolean.TRUE);

@@ -31,14 +31,14 @@ public interface ProcessListener {
      *
      * @param processId the id of the process
      */
-    void start(String processId);
+    void onProcessStart(String processId);
 
     /**
      * Invoked on successful completion event
      *
      * @param processId the id of the completed process
      */
-    void success(String processId);
+    void onProcessSuccess(String processId);
 
     /**
      * Invoked on failed completion event, with the process exit code
@@ -46,7 +46,7 @@ public interface ProcessListener {
      * @param processId the id of the process
      * @param exitCode the exitcode returned from the process
      */
-    void fail(String processId, int exitCode);
+    void onProcessFail(String processId, int exitCode);
 
     /**
      * Invoked on failed completion event, with the exception that was caught
@@ -54,7 +54,7 @@ public interface ProcessListener {
      * @param processId the id of the process
      * @param e the exception caught within the ProcessLauncher
      */
-    void fail(String processId, Throwable e);
+    void onProcessFail(String processId, Throwable e);
 
     /**
      * Invoked on output message event with output data from process
