@@ -35,11 +35,15 @@
         </div>
     </form>
 
-    <a class="btn btn-success pull-right run-test"><i class="icon-play icon-white"></i> Run Test</a>
+    <button type="button" data-loading-text="Running ..." class="btn btn-success pull-right run-test"><i class="icon-play icon-white"></i> Run Test</button>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#design-{{name}}" data-toggle="tab">Design</a></li>
         <li><a href="#xml-source-{{name}}" class="xml-source" data-toggle="tab">XML</a></li>
         <li><a href="#java-source-{{name}}" class="java-source" data-toggle="tab">Java</a></li>
+        <li style="display: none;">
+            <button id="test-result-close-{{name}}" type="button" class="close" style="margin-right: 8px;">&times;</button>
+            <a href="#test-result-{{name}}" style="padding-right: 22px" data-toggle="tab">Results</a>
+        </li>
     </ul>
 
     <div class="tab-content">
@@ -51,6 +55,12 @@
         </div>
         <div class="tab-pane" id="java-source-{{name}}">
             <pre class="prettyprint linenums">Loading sources ...</pre>
+        </div>
+        <div class="tab-pane" id="test-result-{{name}}">
+            <h3>Test results</h3>
+            <div class="progress progress-success test-progress">
+                <div class="bar" style="width: 0%"></div>
+            </div>
         </div>
     </div>
 </div>

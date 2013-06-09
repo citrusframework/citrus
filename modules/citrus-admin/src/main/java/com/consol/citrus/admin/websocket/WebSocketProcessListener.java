@@ -35,7 +35,21 @@ public class WebSocketProcessListener implements ProcessListener {
      * {@inheritDoc}
      */
     public void onProcessActivity(String processId, String output) {
-        // do nothing instead wait for cached output.
+        if (output.contains("STARTING TEST")) {
+            loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.TEST_START, output));
+        } else if (output.contains("TEST SUCCESS")) {
+            loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.TEST_SUCCESS, output));
+        } else if (output.contains("TEST FAILED")) {
+            loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
+        } else if (output.contains("TEST STEP") && output.contains("done")) {
+            String[] progress = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("done") - 1)).split("/");
+            long progressValue = Math.round((Double.valueOf(progress[0]) / Double.valueOf(progress[1])) * 100);
+
+            JSONObject event = SocketEvent.createEvent(processId, SocketEvent.TEST_ACTION_FINISH,
+                    "TEST ACTION " + progress[0] + "/" + progress[1]);
+            event.put("progress", String.valueOf(progressValue));
+            loggingWebSocket.push(event);
+        }
     }
 
     /**
@@ -71,5 +85,13 @@ public class WebSocketProcessListener implements ProcessListener {
      */
     public void onProcessFail(String processId, Throwable e) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage()));
+    }
+
+    /**
+     * Setter for dependency injection of loggingWebSocket instance.
+     * @param loggingWebSocket
+     */
+    public void setLoggingWebSocket(LoggingWebSocket loggingWebSocket) {
+        this.loggingWebSocket = loggingWebSocket;
     }
 }

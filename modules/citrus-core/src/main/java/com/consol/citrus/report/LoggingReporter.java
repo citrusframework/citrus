@@ -84,7 +84,10 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
             testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, test.getParameters()));
         }
 
-        log.error("Execution of test: " + test.getName() + " failed! Nested exception is: ", cause);
+        newLine();
+        log.error("TEST FAILED " + test.getName() + " <" + test.getPackageName() + "> Nested exception is: ", cause);
+        separator();
+        newLine();
     }
 
     /**
@@ -114,10 +117,6 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
      * @see com.consol.citrus.report.TestListener#onTestFinish(com.consol.citrus.TestCase)
      */
     public void onTestFinish(TestCase test) {
-        newLine();
-        log.info("FINISHED TEST " + test.getName() + " <" + test.getPackageName() + ">");
-        separator();
-        newLine();
     }
 
     /**
@@ -125,6 +124,11 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
      */
     public void onTestSuccess(TestCase test) {
         testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
+
+        newLine();
+        log.info("TEST SUCCESS " + test.getName() + " <" + test.getPackageName() + ">");
+        separator();
+        newLine();
     }
 
     /**

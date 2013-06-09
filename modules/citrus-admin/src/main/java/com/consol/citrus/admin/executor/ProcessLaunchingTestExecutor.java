@@ -19,7 +19,6 @@ package com.consol.citrus.admin.executor;
 import java.io.File;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
-import com.consol.citrus.admin.websocket.TestEventExtractingProcessListener;
 import com.consol.citrus.admin.websocket.WebSocketProcessListener;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +42,6 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
     @Autowired
     private WebSocketProcessListener webSocketProcessListener;
 
-    @Autowired
-    private TestEventExtractingProcessListener testEventExtractingProcessListener;
-    
     /**
      * {@inheritDoc}
      */
@@ -56,8 +52,6 @@ public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
 
         processLauncher.addProcessListener(webSocketProcessListener);
-        processLauncher.addProcessListener(testEventExtractingProcessListener);
-
         processLauncher.launchAndContinue(processBuilder, 0);
     }
 }

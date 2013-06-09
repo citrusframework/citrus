@@ -109,6 +109,14 @@ div.test-details-open {
     margin-left: 80px;
 }
 
+.progress .bar {
+    transition: none;
+}
+
+.test-progress {
+    width: 650px;
+}
+
 code.template {
   display: none;
 }

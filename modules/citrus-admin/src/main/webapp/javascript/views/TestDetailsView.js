@@ -5,13 +5,15 @@
             test: {},
           
             events: {
-                "click a.run-test" : "runTest",
+                "click button.run-test" : "runTest",
                 "click a.xml-source" : "getXmlSource",
                 "click a.java-source" : "getJavaSource"
             },
 
             initialize: function() {
                 this.test = this.options.test;
+
+                CitrusWebSocket.on('change:onmessage', this.onSocketMessage, this);
 
                 $.ajax({
                     url: "testcase/details/" + this.test.packageName + "/" + this.test.name,
@@ -31,18 +33,52 @@
             },
           
             runTest: function() {
+                $('button.run-test').button('loading');
+                $('div#test-result-' + this.test.name).find('div.progress').find('.bar').width('0%');
+                $('div#test-result-' + this.test.name).find('div.progress').find('.bar').text('');
+                $('div#test-result-' + this.test.name).find('div.progress').addClass('progress-success');
+                $('div#test-result-' + this.test.name).find('div.progress').removeClass('progress-danger');
+
+                $(this.el).find('ul.nav-tabs').find('li').last().show();
+                $(this.el).find('ul.nav-tabs').find('li').last().find('a').tab('show');
+
                 $.ajax({
                     url: "testcase/execute/" + this.test.name,
                     type: 'GET',
-                    dataType: "json",
-                    success: function(testResult) {
-                        if (testResult.success) {
-                            console.log(testResult.testCase.name  + ' was executed successfully!</div>');
-                        } else {
-                            console.log(testResult.testCase.name  + ' failed! ' + testResult.failureStack + ' ' + testResult.stackTrace);
-                        }
-                    }
+                    dataType: "json"
                 });
+            },
+
+            onSocketMessage: function (message) {
+                if (message) {
+                    jsMessage = $.parseJSON(message)
+
+                    if ("PING" == jsMessage.event) {
+                        return;
+                    }
+
+                    var processId = jsMessage.processId;
+                    var msg = jsMessage.msg;
+
+                    if ("PROCESS_START" == jsMessage.event) {
+                        $('div#test-result-' + processId).find('div.progress').find('.bar').width('1%');
+                    } else if ("TEST_START" == jsMessage.event) {
+                        $('div#test-result-' + processId).find('div.progress').find('.bar').width('3%');
+                    } else if ("TEST_ACTION_FINISH" == jsMessage.event) {
+                        $('div#test-result-' + processId).find('div.progress').find('.bar').width(jsMessage.progress + '%');
+                        $('div#test-result-' + processId).find('div.progress').find('.bar').text(jsMessage.msg);
+                    } else if ("TEST_SUCCESS" == jsMessage.event) {
+                        $('button.run-test').button('reset');
+                        $('div#test-result-' + processId).find('div.progress').find('.bar').width('100%');
+                    } else if ("TEST_FAILED" == jsMessage.event) {
+                        $('button.run-test').button('reset');
+                        $('div#test-result-' + processId).find('div.progress').find('.bar').width('100%');
+                        $('div#test-result-' + processId).find('div.progress').removeClass('progress-success');
+                        $('div#test-result-' + processId).find('div.progress').addClass('progress-danger');
+                    } else {
+                        return;
+                    }
+                }
             },
 
             getXmlSource: function() {
