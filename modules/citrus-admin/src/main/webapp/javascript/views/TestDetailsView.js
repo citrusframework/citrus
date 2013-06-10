@@ -7,7 +7,8 @@
             events: {
                 "click button.run-test" : "runTest",
                 "click a.xml-source" : "getXmlSource",
-                "click a.java-source" : "getJavaSource"
+                "click a.java-source" : "getJavaSource",
+                "click button.close" : "hideResultsTab"
             },
 
             initialize: function() {
@@ -107,6 +108,11 @@
                         $('div#java-source-' + this.test.name).find('pre').removeClass("prettyprint");
                     }, this)
                 });
+            },
+
+            hideResultsTab: function() {
+                $(this.el).find('ul.nav-tabs').find('li').last().css('display', "none");
+                $(this.el).find('ul.nav-tabs').find('li').first().find('a').tab('show');
             }
     
         });
