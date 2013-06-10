@@ -27,7 +27,7 @@ import java.io.File;
  */
 public class ExecuteAllTests extends ExecuteCommand {
 
-    private static final String MVN_EXECUTE_ALL_TESTS = "mvn surefire:test";
+    private static final String MVN_EXECUTE_ALL_TESTS = "mvn compile surefire:test";
 
     /**
      * Executes all tests via Maven.

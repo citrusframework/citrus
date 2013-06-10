@@ -27,7 +27,7 @@ import java.io.File;
  */
 public class ExecuteSingleTest extends ExecuteCommand {
 
-    private static final String MVN_EXECUTE_SINGLE_TEST = "mvn surefire:test -Dtest=%s";
+    private static final String MVN_EXECUTE_SINGLE_TEST = "mvn compile surefire:test -Dtest=%s";
 
     public ExecuteSingleTest(File projectDirectory, String testName) {
         super(String.format(MVN_EXECUTE_SINGLE_TEST, testName), projectDirectory);
