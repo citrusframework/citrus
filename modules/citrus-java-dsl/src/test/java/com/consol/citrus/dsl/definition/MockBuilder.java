@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.context.TestContext;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 
@@ -41,6 +42,6 @@ public class MockBuilder extends TestNGCitrusTestBuilder {
      * @return
      */
     public TestCase testCase() {
-        return getTestCase();
+        return getTestCase(new TestContext());
     }
 }

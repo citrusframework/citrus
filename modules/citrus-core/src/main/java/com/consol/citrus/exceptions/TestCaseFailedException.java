@@ -22,7 +22,7 @@ package com.consol.citrus.exceptions;
  * 
  * @author Christoph Deppisch
  */
-public class TestCaseFailedException extends RuntimeException {
+public class TestCaseFailedException extends CitrusRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,6 +30,6 @@ public class TestCaseFailedException extends RuntimeException {
      * Default constructor.
      */
     public TestCaseFailedException(Throwable cause) {
-        super("Test failed", cause);
+        super("Test case failed", cause);
     }
 }

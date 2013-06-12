@@ -45,26 +45,28 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         testcase.setName("MyTestCase");
         
         testcase.setVariableDefinitions(Collections.singletonMap("test1Var", "456"));
+
+        TestContext testContext = createTestContext();
+        testcase.execute(testContext);
         
-        testcase.execute(createTestContext());
-        
-        Assert.assertTrue(testcase.getTestContext().getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testcase.getTestContext().getVariables().get("defaultVar"), "123");
-        Assert.assertTrue(testcase.getTestContext().getVariables().containsKey("test1Var"));
-        Assert.assertEquals(testcase.getTestContext().getVariables().get("test1Var"), "456");
+        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
+        Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
+        Assert.assertEquals(testContext.getVariables().get("test1Var"), "456");
         
         TestCase testcase2 = new TestCase();
         testcase2.setName("MyTestCase2");
         
         testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
+
+        testContext = createTestContext();
+        testcase2.execute(testContext);
         
-        testcase2.execute(createTestContext());
-        
-        Assert.assertTrue(testcase2.getTestContext().getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testcase2.getTestContext().getVariables().get("defaultVar"), "123");
-        Assert.assertTrue(testcase2.getTestContext().getVariables().containsKey("test2Var"));
-        Assert.assertEquals(testcase2.getTestContext().getVariables().get("test2Var"), "456");
-        Assert.assertFalse(testcase2.getTestContext().getVariables().containsKey("test1Var"));
+        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
+        Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));
+        Assert.assertEquals(testContext.getVariables().get("test2Var"), "456");
+        Assert.assertFalse(testContext.getVariables().containsKey("test1Var"));
     }
     
     @Test
@@ -77,18 +79,21 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         CreateVariablesAction varSetting = new CreateVariablesAction();
         varSetting.setVariables(Collections.singletonMap("defaultVar", "ABC"));
         testcase.addTestAction(varSetting);
-        testcase.execute(createTestContext());
+
+        TestContext testContext = createTestContext();
+        testcase.execute(testContext);
         
-        Assert.assertTrue(testcase.getTestContext().getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testcase.getTestContext().getVariables().get("defaultVar"), "ABC");
+        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "ABC");
         
         TestCase testcase2 = new TestCase();
         testcase2.setName("MyTestCase2");
+
+        testContext = createTestContext();
+        testcase2.execute(testContext);
         
-        testcase2.execute(createTestContext());
-        
-        Assert.assertTrue(testcase2.getTestContext().getVariables().containsKey("defaultVar"));
-        Assert.assertEquals(testcase2.getTestContext().getVariables().get("defaultVar"), "123");
+        Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
+        Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
     }
     
     @Test

@@ -18,6 +18,7 @@ package com.consol.citrus;
 
 import java.util.*;
 
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -70,7 +71,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.execute(context);
     }
     
-    @Test(expectedExceptions = {CitrusRuntimeException.class})
+    @Test(expectedExceptions = {TestCaseFailedException.class})
     public void testUnknownVariable() {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
@@ -97,6 +98,5 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.addFinallyChainAction(new EchoAction());
         
         testcase.execute(context);
-        testcase.finish();
     }
 }

@@ -42,14 +42,8 @@ import com.consol.citrus.report.TestListeners;
                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
                                    "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
 public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringContextTests {
-    /**
-     * Logger
-     */
+    /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    
-    /** Test listeners */
-    @Autowired
-    protected TestListeners testListener;
     
     @Autowired
     private TestContextFactoryBean testContextFactory;
@@ -106,6 +100,6 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @return
      */
     protected JUnitTestExecutor createExecutor() {
-        return new JUnitTestExecutor(applicationContext, getClass(), testListener);
+        return new JUnitTestExecutor(applicationContext, getClass());
     }
 }

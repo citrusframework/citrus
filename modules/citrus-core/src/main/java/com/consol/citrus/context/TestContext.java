@@ -19,6 +19,8 @@ package com.consol.citrus.context;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.consol.citrus.TestCase;
+import com.consol.citrus.report.TestListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -55,10 +57,13 @@ public class TestContext {
     private FunctionRegistry functionRegistry = new FunctionRegistry();
     
     /** Registered message validators */
-    private MessageValidatorRegistry messageValidatorRegistry;
+    private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
     
     /** Registered validation matchers */
     private ValidationMatcherRegistry validationMatcherRegistry = new ValidationMatcherRegistry();
+
+    /** List of test listeners to be informed on test events */
+    private TestListeners testListeners = new TestListeners();
     
     /**
      * Default constructor
@@ -234,6 +239,32 @@ public class TestContext {
         }
         return expression;
     }
+
+    /**
+     * Handles error creating a new CitrusRuntimeException and
+     * informs test listeners.
+     *
+     * @param testName
+     * @param packageName
+     * @param message
+     * @param cause
+     * @return
+     */
+    public CitrusRuntimeException handleError(String testName, String packageName, String message, Exception cause) {
+        // Create empty dummy test case for logging purpose
+        TestCase dummyTest = new TestCase();
+        dummyTest.setName(testName);
+        dummyTest.setPackageName(packageName);
+
+        CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
+
+        // inform test listeners with failed test
+        testListeners.onTestStart(dummyTest);
+        testListeners.onTestFailure(dummyTest, exception);
+        testListeners.onTestFinish(dummyTest);
+
+        return exception;
+    }
     
     /**
      * Setter for test variables in this context.
@@ -315,6 +346,14 @@ public class TestContext {
      */
     public void setValidationMatcherRegistry(ValidationMatcherRegistry validationMatcherRegistry) {
         this.validationMatcherRegistry = validationMatcherRegistry;
+    }
+
+    /**
+     * Set the test listeners.
+     * @param testListeners
+     */
+    public void setTestListeners(TestListeners testListeners) {
+        this.testListeners = testListeners;
     }
     
 }

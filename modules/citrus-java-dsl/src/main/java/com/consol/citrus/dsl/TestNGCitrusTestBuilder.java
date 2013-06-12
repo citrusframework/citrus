@@ -22,6 +22,7 @@ import java.util.*;
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 
+import com.consol.citrus.context.TestContext;
 import org.springframework.core.io.Resource;
 import org.testng.ITestContext;
 
@@ -626,7 +627,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     }
 
     @Override
-    protected TestCase getTestCase() {
+    protected TestCase getTestCase(TestContext context) {
         return testBuilder.getTestCase();
     }
 }

@@ -36,18 +36,14 @@ public class JUnitTestExecutor {
     /** Parent application context */
     private ApplicationContext applicationContext;
     
-    /** Test listeners */
-    private TestListeners testListeners;
-    
     /** Class to execute as JUnit test */
     private Class<?> testClass;
 
     /**
      * Default constructor using fields.
      */
-    public JUnitTestExecutor(ApplicationContext applicationContext, Class<?> testClass, TestListeners testListeners) {
+    public JUnitTestExecutor(ApplicationContext applicationContext, Class<?> testClass) {
         this.applicationContext = applicationContext;
-        this.testListeners = testListeners;
         this.testClass = testClass;
     }
     
@@ -68,39 +64,21 @@ public class JUnitTestExecutor {
      * @param context
      */
     public void executeTest(TestContext context) {
-        TestCase testCase = getTestCase();
-        
-        if (!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
-            testListeners.onTestStart(testCase);
-            
-            try {
-                testCase.execute(context);
-                testListeners.onTestSuccess(testCase);
-            } catch (Exception e) {
-                testListeners.onTestFailure(testCase, e);
-                
-                throw new TestCaseFailedException(e);
-            } finally {
-                testListeners.onTestFinish(testCase);
-                testCase.finish();
-            }
-        } else {
-            testListeners.onTestSkipped(testCase);
-        }
+        getTestCase(context).execute(context);
     }
     
     /**
      * Gets the test case from application context.
      * @return the new test case.
      */
-    protected TestCase getTestCase() {
-        ClassPathXmlApplicationContext ctx = createApplicationContext();
+    protected TestCase getTestCase(TestContext context) {
+        ClassPathXmlApplicationContext ctx = createApplicationContext(context);
         TestCase testCase = null;
         try {
             testCase = (TestCase) ctx.getBean(testClass.getSimpleName(), TestCase.class);
             testCase.setPackageName(testClass.getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
-            throw handleError("Could not find test with name '" + testClass.getSimpleName() + "'", e);
+            throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Could not find test with name '" + testClass.getSimpleName() + "'", e);
         }
         return testCase;
     }
@@ -109,7 +87,7 @@ public class JUnitTestExecutor {
      * Creates the Spring application context.
      * @return
      */
-    protected ClassPathXmlApplicationContext createApplicationContext() {
+    protected ClassPathXmlApplicationContext createApplicationContext(TestContext context) {
         try {
             return new ClassPathXmlApplicationContext(
                     new String[] {
@@ -118,32 +96,8 @@ public class JUnitTestExecutor {
                                     "com/consol/citrus/spring/internal-helper-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {
-            throw handleError("Failed to load test case", e);
+            throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Failed to load test case", e);
         }
-    }
-    
-    /**
-     * Handles error creating a new CitrusRuntimeException and 
-     * informs test listeners.
-     * 
-     * @param message
-     * @param cause
-     * @return
-     */
-    private CitrusRuntimeException handleError(String message, Exception cause) {
-        // Create empty backup test case for logging
-        TestCase backupTest = new TestCase();
-        backupTest.setName(testClass.getSimpleName());
-        backupTest.setPackageName(testClass.getPackage().getName());
-        
-        CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
-        
-        // inform test listeners with failed test
-        testListeners.onTestStart(backupTest);
-        testListeners.onTestFailure(backupTest, exception);
-        testListeners.onTestFinish(backupTest);
-        
-        return exception;
     }
 
 }

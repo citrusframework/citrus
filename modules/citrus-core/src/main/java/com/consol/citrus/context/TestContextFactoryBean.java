@@ -16,6 +16,7 @@
 
 package com.consol.citrus.context;
 
+import com.consol.citrus.report.TestListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
@@ -44,6 +45,9 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
     
     @Autowired
     private MessageValidatorRegistry messageValidatorRegistry;
+
+    @Autowired
+    private TestListeners testListeners;
     
     /**
      * Logger
@@ -59,10 +63,10 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
         context.setValidationMatcherRegistry(validationMatcherRegistry);
         context.setGlobalVariables(globalVariables);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
+        context.setTestListeners(testListeners);
         
         if (log.isDebugEnabled()) {
-            log.debug("TestContextFactory created test context '" + context
-                    + "' using global variables: '"
+            log.debug("Created new test context - using global variables: '"
                     + context.getGlobalVariables() + "'");
         }
         

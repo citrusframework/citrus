@@ -19,7 +19,9 @@ package com.consol.citrus;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -43,9 +45,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     /** Tests variables */
     private Map<String, ?> variableDefinitions = new LinkedHashMap<String, Object>();
 
-    /** Test context */
-    private TestContext context;
-
     /** Meta-Info */
     private TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
     
@@ -56,22 +55,41 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private String[] parameters = new String[] {};
 
     @Autowired
+    private TestListeners testListeners = new TestListeners();
+
+    @Autowired
     private TestActionListeners testActionListeners = new TestActionListeners();
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
 
     /**
      * Method executes the test case and all its actions.
      */
     public void doExecute(TestContext context) {
+        if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
+            testListeners.onTestStart(this);
+
+            try {
+                run(context);
+
+                testListeners.onTestSuccess(this);
+            } catch (Exception e) {
+                testListeners.onTestFailure(this, e);
+                throw new TestCaseFailedException(e);
+            } finally {
+                testListeners.onTestFinish(this);
+                finish(context);
+            }
+        } else {
+            testListeners.onTestSkipped(this);
+        }
+    }
+
+    protected void run(TestContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Initializing test case");
         }
-
-        this.context = context;
 
         /* build up the global test variables in TestContext by
          * getting the names and the current values of all variables */
@@ -112,9 +130,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Method that will be executed in any case of test case result (success, error)
      * Usually used for clean up tasks.
      */
-    public void finish() {
+    protected void finish(TestContext context) {
         if (!finallyChain.isEmpty()) {
-            log.info("Now reaching finally block to finish test case");
+            log.info("Finish test case with finally block actions");
         }
 
         /* walk through the finally chain and execute the actions in there */
@@ -205,22 +223,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     }
 
     /**
-     * Get the test context.
-     * @return the variables
-     */
-    public TestContext getTestContext() {
-        return context;
-    }
-
-    /**
-     * Set the test context.
-     * @param context the context to set
-     */
-    public void setTestContext(TestContext context) {
-        this.context = context;
-    }
-
-    /**
      * Set the package name
      * @param packageName the packageName to set
      */
@@ -250,5 +252,21 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public String[] getParameters() {
         return Arrays.copyOf(parameters, parameters.length);
+    }
+
+    /**
+     * Sets the list of test listeners.
+     * @param testListeners
+     */
+    public void setTestListeners(TestListeners testListeners) {
+        this.testListeners = testListeners;
+    }
+
+    /**
+     * Sets the list of test action listeners.
+     * @param testActionListeners
+     */
+    public void setTestActionListeners(TestActionListeners testActionListeners) {
+        this.testActionListeners = testActionListeners;
     }
 }

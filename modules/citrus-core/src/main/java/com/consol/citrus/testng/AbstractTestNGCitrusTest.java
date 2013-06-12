@@ -49,17 +49,12 @@ import com.consol.citrus.report.TestSuiteListeners;
                                     "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
                                     "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
-    /**
-     * Logger
-     */
+    /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private TestSuiteListeners testSuiteListener = new TestSuiteListeners();
+    private TestSuiteListeners testSuiteListener;
     
-    @Autowired
-    private TestListeners testListener;
-
     @Autowired
     private TestContextFactoryBean testContextFactory;
     
@@ -130,28 +125,12 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param testContext the test context.
      */
     protected void executeTest(ITestContext testContext) {
-        TestCase testCase = getTestCase();
+        TestContext ctx = prepareTestContext(createTestContext());
 
-        if (!testCase.getMetaInfo().getStatus().equals(Status.DISABLED)) {
-            testListener.onTestStart(testCase);
+        TestCase testCase = getTestCase(ctx);
+        handleTestParameters(testCase, ctx);
 
-            try {
-                TestContext ctx = prepareTestContext(createTestContext());
-                handleTestParameters(testCase, ctx);
-                
-                testCase.execute(ctx);
-                testListener.onTestSuccess(testCase);
-            } catch (Exception e) {
-                testListener.onTestFailure(testCase, e);
-
-                throw new TestCaseFailedException(e);
-            } finally {
-                testListener.onTestFinish(testCase);
-                testCase.finish();
-            }
-        } else {
-            testListener.onTestSkipped(testCase);
-        }
+        testCase.execute(ctx);
     }
 
     /**
@@ -201,25 +180,24 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /**
      * Creates a new test context.
      * @return the new citrus test context.
-     * @throws Exception on error.
      */
-    protected TestContext createTestContext() throws Exception {
-        return (TestContext)testContextFactory.getObject();
+    protected TestContext createTestContext() {
+        return (TestContext) testContextFactory.getObject();
     }
 
     /**
      * Gets the test case from application context.
      * @return the new test case.
      */
-    protected TestCase getTestCase() {
-        ClassPathXmlApplicationContext ctx = createApplicationContext();
+    protected TestCase getTestCase(TestContext context) {
+        ClassPathXmlApplicationContext ctx = createApplicationContext(context);
         TestCase testCase = null;
         
         try {
             testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
             testCase.setPackageName(this.getClass().getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
-            throw handleError("Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
         }
         
         return testCase;
@@ -229,7 +207,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Creates the Spring application context.
      * @return
      */
-    protected ClassPathXmlApplicationContext createApplicationContext() {
+    protected ClassPathXmlApplicationContext createApplicationContext(TestContext context) {
         try {
             return new ClassPathXmlApplicationContext(
                     new String[] {
@@ -238,33 +216,11 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                                     "com/consol/citrus/spring/internal-helper-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {
-            throw handleError("Failed to load test case", e);
+            throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Failed to load test case", e);
         }
     }
 
-    /**
-     * Handles error creating a new CitrusRuntimeException and 
-     * informs test listeners.
-     * 
-     * @param message
-     * @param cause
-     * @return
-     */
-    private CitrusRuntimeException handleError(String message, Exception cause) {
-        // Create empty backup test case for logging
-        TestCase backupTest = new TestCase();
-        backupTest.setName(getClass().getSimpleName());
-        backupTest.setPackageName(getClass().getPackage().getName());
-        
-        CitrusRuntimeException exception = new CitrusRuntimeException(message, cause);
-        
-        // inform test listeners with failed test
-        testListener.onTestStart(backupTest);
-        testListener.onTestFailure(backupTest, exception);
-        testListener.onTestFinish(backupTest);
-        
-        return exception;
-    }
+
 
     /**
      * Runs tasks after test suite.
@@ -287,8 +243,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /**
      * Default data provider automatically adding parameters 
      * as variables to test case.
-     * 
-     * @param testContext the current TestNG test context.
      * @return
      */
     @DataProvider(name = "citrusDataProvider")
@@ -299,7 +253,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     
     /**
      * Hook for subclasses to provide individual test parameters.
-     * 
      * @return
      */
     protected Object[][] getParameterValues() {

@@ -41,8 +41,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedTestAction("sleep");
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -81,8 +80,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedTestAction("fail");
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -120,8 +118,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedTestAction("sleep");
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -159,8 +156,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedTestAction("sleep");
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -203,8 +199,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedTestAction("sleep");
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -255,8 +250,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"));
         
         List<TestAction> actions = new ArrayList<TestAction>();
@@ -301,8 +295,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
-        test.setTestContext(context);
-        
+
         TestAction failedAction = new MockedTestAction("echo");
         
         List<TestAction> actions = new ArrayList<TestAction>();

@@ -23,6 +23,7 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Catch;
 import com.consol.citrus.container.Parallel;
 import com.consol.citrus.container.Sequence;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.JUnitTestExecutor;
@@ -627,9 +628,9 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
 
     @Override
     protected JUnitTestExecutor createExecutor() {
-        return new JUnitTestExecutor(applicationContext, getClass(), testListener) {
+        return new JUnitTestExecutor(applicationContext, getClass()) {
             @Override
-            protected TestCase getTestCase() {
+            protected TestCase getTestCase(TestContext context) {
                 return testBuilder.getTestCase();
             }
         };
