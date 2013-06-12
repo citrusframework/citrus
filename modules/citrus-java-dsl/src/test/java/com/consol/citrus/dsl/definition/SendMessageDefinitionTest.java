@@ -21,6 +21,8 @@ import static org.easymock.EasyMock.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -145,6 +147,8 @@ public class SendMessageDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("fooMessageSender", MessageSender.class)).andReturn(messageSender).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         

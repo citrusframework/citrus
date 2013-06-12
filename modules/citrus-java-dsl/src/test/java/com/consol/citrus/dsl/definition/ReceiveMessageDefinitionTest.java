@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -167,6 +169,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -411,6 +415,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -506,6 +512,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext);
 
         expect(applicationContext.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
 
         replay(applicationContext);
 
@@ -576,6 +584,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext);
 
         expect(applicationContext.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
 
         replay(applicationContext);
         
@@ -655,6 +665,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -700,6 +712,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext, resource, resourceFile);
         
         expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         expect(resource.getFile()).andReturn(resourceFile).once();
         expect(resourceFile.getAbsolutePath()).andReturn("/path/to/file/File.groovy").once();
@@ -747,6 +761,8 @@ public class ReceiveMessageDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         

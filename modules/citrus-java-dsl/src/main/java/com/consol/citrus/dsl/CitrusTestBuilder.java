@@ -50,8 +50,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Citrus test builder implementation offers test building methods to configure a
- * test case with actions, variables and properties.
+ * Citrus test builder offers builder pattern methods in order to configure a
+ * test case with test actions, variables and properties.
+ *
+ * Subclass may add its custom logic in configure() method by calling builder methods.
  *
  * @author Christoph Deppisch
  * @since 1.3.1
@@ -83,8 +85,8 @@ public class CitrusTestBuilder implements TestBuilder {
      * @param applicationContext
      */
     public CitrusTestBuilder(ApplicationContext applicationContext) {
-        this();
         this.applicationContext = applicationContext;
+        init();
     }
 
     /**

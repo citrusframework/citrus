@@ -18,6 +18,8 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
@@ -70,6 +72,8 @@ public class ReceiveTimeoutDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         

@@ -21,6 +21,8 @@ import static org.easymock.EasyMock.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -57,6 +59,8 @@ public class AssertSoapFaultDefinitionTest {
         
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -95,6 +99,8 @@ public class AssertSoapFaultDefinitionTest {
         
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -136,6 +142,8 @@ public class AssertSoapFaultDefinitionTest {
         
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -178,6 +186,8 @@ public class AssertSoapFaultDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<ErrorDetail><message>FooBar</message</ErrorDetail>".getBytes())).once();
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(resource, applicationContext);
         
@@ -220,6 +230,8 @@ public class AssertSoapFaultDefinitionTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<MessageDetail><message>FooBar</message></MessageDetail>".getBytes())).once();
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(resource, applicationContext);
         
@@ -261,6 +273,8 @@ public class AssertSoapFaultDefinitionTest {
         
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -300,6 +314,8 @@ public class AssertSoapFaultDefinitionTest {
         
         expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
         expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         

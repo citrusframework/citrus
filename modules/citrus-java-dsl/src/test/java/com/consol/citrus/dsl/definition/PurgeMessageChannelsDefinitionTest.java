@@ -18,6 +18,8 @@ package com.consol.citrus.dsl.definition;
 
 import static org.easymock.EasyMock.*;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.MessageChannel;
@@ -75,8 +77,13 @@ public class PurgeMessageChannelsDefinitionTest {
             }
         };
 
+        builder.setApplicationContext(applicationContext);
+
         reset(applicationContext);
-        
+
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+
         replay(applicationContext);
         
         builder.run(null, null);
@@ -106,6 +113,9 @@ public class PurgeMessageChannelsDefinitionTest {
         builder.setApplicationContext(applicationContext);
         
         reset(applicationContext);
+
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         

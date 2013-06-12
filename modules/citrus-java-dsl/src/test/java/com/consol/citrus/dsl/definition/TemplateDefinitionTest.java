@@ -22,6 +22,8 @@ import static org.testng.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.annotations.Test;
@@ -59,6 +61,8 @@ public class TemplateDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
@@ -100,6 +104,8 @@ public class TemplateDefinitionTest {
         reset(applicationContext);
         
         expect(applicationContext.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
+        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         replay(applicationContext);
         
