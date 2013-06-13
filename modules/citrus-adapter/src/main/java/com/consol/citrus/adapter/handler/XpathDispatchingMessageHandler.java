@@ -39,6 +39,8 @@ import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 
+import javax.xml.namespace.NamespaceContext;
+
 /**
  * This message handler implementation dispatches incoming request to other message handlers
  * according to a XPath expression evaluated on the message payload of the incoming request.
@@ -77,12 +79,7 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
 
             Node matchingNode;
             if (xpathMappingExpression != null) {
-                SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                if (!CollectionUtils.isEmpty(namespaceBindings)) {
-                    nsContext.setBindings(namespaceBindings);
-                } else {
-                    nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
-                }
+                NamespaceContext nsContext = createNamespaceContext(request);
 
                 matchingNode = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(
                         parser.getDocument()), xpathMappingExpression, nsContext);
@@ -101,6 +98,23 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
+    }
+
+    /**
+     * Builds proper namespace context for XPath expression evaluation. Incoming request message is
+     * passed as method argument.
+     * @param request
+     * @return
+     */
+    protected NamespaceContext createNamespaceContext(Message<?> request) {
+        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
+        if (!CollectionUtils.isEmpty(namespaceBindings)) {
+            nsContext.setBindings(namespaceBindings);
+        } else {
+            nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
+        }
+
+        return nsContext;
     }
 
     /**

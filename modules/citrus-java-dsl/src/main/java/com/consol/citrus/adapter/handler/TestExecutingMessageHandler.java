@@ -59,7 +59,7 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
     private MessageHandler responseMessageHandler;
 
     @Override
-    protected Message<?> dispatchMessage(Message<?> request, String mappingName) {
+    protected Message<?> dispatchMessage(final Message<?> request, String mappingName) {
         final CitrusTestBuilder testBuilder;
 
         try {
@@ -72,6 +72,7 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
         if (testBuilder != null) {
             taskExecutor.execute(new Runnable() {
                 public void run() {
+                    prepareExecution(request, testBuilder);
                     testBuilder.execute();
                 }
             });
@@ -81,6 +82,15 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
             throw new CitrusRuntimeException("Could not find test builder bean with name '" +
                     mappingName + "' in '" + messageHandlerContext + "'");
         }
+    }
+
+    /**
+     * Prepares the test builder instance before execution. Subclasses may add custom properties to teest builder
+     * here.
+     * @param request the triggering request message.
+     * @param testBuilder the found test builder.
+     */
+    protected void prepareExecution(Message<?> request, CitrusTestBuilder testBuilder) {
     }
 
     @Override
