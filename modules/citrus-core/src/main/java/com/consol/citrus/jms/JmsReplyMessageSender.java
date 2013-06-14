@@ -18,6 +18,7 @@ package com.consol.citrus.jms;
 
 import javax.jms.*;
 
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.message.*;
-import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * This JMS message sender is quite similar to Spring's AbstractJmsTemplateBasedAdapter that is 
@@ -45,8 +45,8 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
     
-    @Autowired(required=false)
-    private MessageTracingTestListener messageTracingTestListener;
+    @Autowired(required = false)
+    private MessageListeners messageListener;
     
     /**
      * Logger
@@ -80,14 +80,12 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
         
         log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
 
-        if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + replyMessage.toString());
-        }
-        
         getJmsTemplate().convertAndSend(replyDestination, replyMessage);
         
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Send JMS reply message:\n" + replyMessage.toString());
+        if (messageListener != null) {
+            messageListener.onOutboundMessage(replyMessage.toString());
+        } else {
+            log.info("Sent message is:" + System.getProperty("line.separator") + replyMessage.toString());
         }
         
         log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");

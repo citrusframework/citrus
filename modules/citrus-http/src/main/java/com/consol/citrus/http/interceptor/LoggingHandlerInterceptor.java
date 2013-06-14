@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.consol.citrus.http.controller.HttpMessageController;
-import com.consol.citrus.report.MessageTracingTestListener;
 import com.consol.citrus.util.FileUtils;
 
 /**
@@ -46,13 +46,13 @@ import com.consol.citrus.util.FileUtils;
 public class LoggingHandlerInterceptor implements HandlerInterceptor {
     
     /** New line characters in log files */
-    private static final String NEWLINE = "\n";
+    private static final String NEWLINE = System.getProperty("line.separator");
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingHandlerInterceptor.class);
     
-    @Autowired(required=false)
-    private MessageTracingTestListener messageTracingTestListener;
+    @Autowired(required = false)
+    private MessageListeners messageListener;
 
     /**
      * {@inheritDoc}
@@ -83,12 +83,11 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      * @param request
      */
     public void handleRequest(String request) {
-        if (log.isDebugEnabled()) {
-            log.debug("Received Http request:\n" + request);
-        }
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Received Http request:\n" + request);
+        if (messageListener != null) {
+            log.info("Received Http request");
+            messageListener.onInboundMessage(request);
+        } else {
+            log.info("Received Http request:" + NEWLINE + request);
         }
     }
     
@@ -97,12 +96,11 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      * @param response
      */
     public void handleResponse(String response) {
-        if (log.isDebugEnabled()) {
-            log.debug("Send Http response:\n" + response);
-        }
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Send Http response:\n" + response);
+        if (messageListener != null) {
+            log.info("Sending Http response");
+            messageListener.onOutboundMessage(response);
+        } else {
+            log.info("Sending Http response:" + NEWLINE + response);
         }
     }
     

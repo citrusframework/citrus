@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,6 @@ import org.springframework.http.*;
 import org.springframework.http.client.*;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
-
-import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * Simple logging interceptor writes Http request and response messages to the console.
@@ -39,11 +38,14 @@ import com.consol.citrus.report.MessageTracingTestListener;
  */
 public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
 
+    /** New line characters in log files */
+    private static final String NEWLINE = System.getProperty("line.separator");
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingClientInterceptor.class);
     
-    @Autowired(required=false)
-    private MessageTracingTestListener messageTracingTestListener;
+    @Autowired(required = false)
+    private MessageListeners messageListener;
     
     /**
      * {@inheritDoc}
@@ -64,12 +66,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      * @param request
      */
     public void handleRequest(String request) {
-        if (log.isDebugEnabled()) {
-            log.debug("Send Http request:\n" + request);
-        }
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Send Http request:\n" + request);
+        if (messageListener != null) {
+            log.info("Sending Http request message");
+            messageListener.onOutboundMessage(request);
+        } else {
+            log.info("Sending Http request message:" + NEWLINE + request);
         }
     }
     
@@ -78,12 +79,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      * @param response
      */
     public void handleResponse(String response) {
-        if (log.isDebugEnabled()) {
-            log.debug("Received Http response:\n" + response);
-        }
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Received Http response:\n" + response);
+        if (messageListener != null) {
+            log.info("Received Http response message");
+            messageListener.onInboundMessage(response);
+        } else {
+            log.info("Received Http response message:" + NEWLINE + response);
         }
     }
     
@@ -99,11 +99,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         builder.append(request.getMethod());
         builder.append(" ");
         builder.append(request.getURI());
-        builder.append("\n");
+        builder.append(NEWLINE);
         
         appendHeaders(request.getHeaders(), builder);
         
-        builder.append("\n");
+        builder.append(NEWLINE);
         builder.append(body);
         
         return builder.toString(); 
@@ -123,11 +123,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             builder.append(response.getStatusCode());
             builder.append(" ");
             builder.append(response.getStatusText());
-            builder.append("\n");
+            builder.append(NEWLINE);
             
             appendHeaders(response.getHeaders(), builder);
             
-            builder.append("\n");
+            builder.append(NEWLINE);
             builder.append(response.getBodyContent());
             
             return builder.toString();
@@ -146,7 +146,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
             builder.append(headerEntry.getKey());
             builder.append(":");
             builder.append(StringUtils.arrayToCommaDelimitedString(headerEntry.getValue().toArray()));
-            builder.append("\n");
+            builder.append(NEWLINE);
         }
     }
     

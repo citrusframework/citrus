@@ -31,7 +31,7 @@ public enum MessageType {
     /**
      * Check if this message type name is matching a enum value.
      * 
-     * @param messageType
+     * @param messageTypeName
      * @return
      */
     public static boolean knows(String messageTypeName) {

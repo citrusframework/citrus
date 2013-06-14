@@ -21,6 +21,7 @@ import java.io.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
-import com.consol.citrus.report.MessageTracingTestListener;
 import com.consol.citrus.util.XMLUtils;
 
 /**
@@ -39,35 +39,32 @@ import com.consol.citrus.util.XMLUtils;
  */
 public abstract class LoggingInterceptorSupport extends TransformerObjectSupport {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
     
-    @Autowired(required=false)
-    private MessageTracingTestListener messageTracingTestListener;
+    @Autowired(required = false)
+    private MessageListeners messageListener;
     
     /**
      * Prevent instantiation. 
      */
     protected LoggingInterceptorSupport() {
     }
-    
+
     /**
      * Logs request message from message context. SOAP messages get logged with envelope transformation
      * other messages with serialization.
      * 
      * @param logMessage
      * @param messageContext
+     * @param incoming
      * @throws TransformerException
      */
-    protected void logRequest(String logMessage, MessageContext messageContext) throws TransformerException {
-        if (log.isDebugEnabled()) {
-            if (messageContext.getRequest() instanceof SoapMessage) {
-                logSoapMessage(logMessage, (SoapMessage) messageContext.getRequest());
-            } else {
-                logWebServiceMessage(logMessage, messageContext.getRequest());
-            }
+    protected void logRequest(String logMessage, MessageContext messageContext, boolean incoming) throws TransformerException {
+        if (messageContext.getRequest() instanceof SoapMessage) {
+            logSoapMessage(logMessage, (SoapMessage) messageContext.getRequest(), incoming);
+        } else {
+            logWebServiceMessage(logMessage, messageContext.getRequest(), incoming);
         }
     }
     
@@ -77,14 +74,15 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
      * 
      * @param logMessage
      * @param messageContext
+     * @param incoming
      * @throws TransformerException
      */
-    protected void logResponse(String logMessage, MessageContext messageContext) throws TransformerException {
-        if (messageContext.hasResponse() && log.isDebugEnabled()) {
+    protected void logResponse(String logMessage, MessageContext messageContext, boolean incoming) throws TransformerException {
+        if (messageContext.hasResponse()) {
             if (messageContext.getResponse() instanceof SoapMessage) {
-                logSoapMessage(logMessage, (SoapMessage) messageContext.getResponse());
+                logSoapMessage(logMessage, (SoapMessage) messageContext.getResponse(), incoming);
             } else {
-                logWebServiceMessage(logMessage, messageContext.getResponse());
+                logWebServiceMessage(logMessage, messageContext.getResponse(), incoming);
             }
         }
     }
@@ -93,15 +91,16 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
      * Log SOAP message with transformer instance.
      * 
      * @param logMessage the customized log message.
-     * @param messageSource the message content as SOAP envelope source.
+     * @param soapMessage the message content as SOAP envelope source.
+     * @param incoming
      * @throws TransformerException
      */
-    protected void logSoapMessage(String logMessage, SoapMessage soapMessage) throws TransformerException {
+    protected void logSoapMessage(String logMessage, SoapMessage soapMessage, boolean incoming) throws TransformerException {
         Transformer transformer = createIndentingTransformer();
         StringWriter writer = new StringWriter();
         
         transformer.transform(soapMessage.getEnvelope().getSource(), new StreamResult(writer));
-        logMessage(logMessage + XMLUtils.prettyPrint(writer.toString()));
+        logMessage(logMessage, XMLUtils.prettyPrint(writer.toString()), incoming);
     }
     
     /**
@@ -110,28 +109,37 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
      * 
      * @param logMessage the customized log message.
      * @param message the message to log.
+     * @param incoming
      */
-    protected void logWebServiceMessage(String logMessage, WebServiceMessage message) {
+    protected void logWebServiceMessage(String logMessage, WebServiceMessage message, boolean incoming) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         
         try {
             message.writeTo(os);
-            log.debug(logMessage + os.toString());
+            logMessage(logMessage, os.toString(), incoming);
         } catch (IOException e) {
-            log.warn("Unable to write WebService message to logger", e);
+            log.warn("Unable to log WebService message", e);
         }
     }
     
     /**
      * Performs the final logger call with dynamic message.
-     * 
-     * @param message the constructed log message.
+     *
+     * @param logMessage a custom log message entry.
+     * @param message the message content.
+     * @param incoming
      */
-    protected void logMessage(String message) {
-        log.debug(message);
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage(message);
+    protected void logMessage(String logMessage, String message, boolean incoming) {
+        if (messageListener != null) {
+            log.info(logMessage);
+
+            if (incoming) {
+                messageListener.onInboundMessage(message);
+            } else {
+                messageListener.onOutboundMessage(message);
+            }
+        } else {
+            log.info(logMessage + ":" + System.getProperty("line.separator") + message);
         }
     }
     

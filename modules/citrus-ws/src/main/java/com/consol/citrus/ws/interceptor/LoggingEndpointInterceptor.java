@@ -35,7 +35,7 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
      * Write request message to logger.
      */
     public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        logRequest("Received SOAP request:\n", messageContext);
+        logRequest("Received SOAP request", messageContext, true);
         
         return true;
     }
@@ -44,7 +44,7 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
      * Write response message to logger.
      */
     public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        logResponse("Sending SOAP response:\n", messageContext);
+        logResponse("Sending SOAP response", messageContext, false);
         
         return true;
     }
@@ -53,7 +53,7 @@ public class LoggingEndpointInterceptor extends LoggingInterceptorSupport implem
      * Write fault message to logger.
      */
     public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        logResponse("Endpoint sending SOAP fault:\n", messageContext);
+        logResponse("Endpoint sending SOAP fault", messageContext, false);
         
         return true;
     }

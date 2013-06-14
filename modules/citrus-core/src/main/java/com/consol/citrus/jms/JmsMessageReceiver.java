@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms;
 
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.integration.message.GenericMessage;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.report.MessageTracingTestListener;
 
 /**
  * {@link MessageReceiver} implementation consumes messages from aJMS destination. Destination
@@ -36,8 +36,8 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
     /** Receive timeout */
     private long receiveTimeout = 5000L;
     
-    @Autowired(required=false)
-    private MessageTracingTestListener messageTracingTestListener;
+    @Autowired(required = false)
+    private MessageListeners messageListener;
     
     /**
      * Logger
@@ -58,21 +58,19 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName() + "'");
         }
         
-        log.info("Received JMS message on destination: '" + getDefaultDestinationName() + "'");
-        
         Message<?> receivedMessage;
         if (receivedObject instanceof Message<?>) {
             receivedMessage = (Message<?>)receivedObject;
         } else {
             receivedMessage = new GenericMessage<Object>(receivedObject);
         }
-        
-        if (log.isDebugEnabled()) {
-            log.debug("Received message is:\n" + receivedMessage.toString());
-        }
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Received JMS message:\n" + receivedMessage.toString());
+
+        log.info("Received JMS message on destination: '" + getDefaultDestinationName() + "'");
+
+        if (messageListener != null) {
+            messageListener.onInboundMessage(receivedMessage.toString());
+        } else {
+            log.debug("Received message is:" + System.getProperty("line.separator") + receivedMessage.toString());
         }
         
         return receivedMessage;
@@ -92,21 +90,19 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName()  + "(" + selector + ")'");
         }
         
-        log.info("Received JMS message on destination: '" + getDefaultDestinationName()  + "(" + selector + ")'");
-        
         Message<?> receivedMessage;
         if (receivedObject instanceof Message<?>) {
             receivedMessage = (Message<?>)receivedObject;
         } else {
             receivedMessage = new GenericMessage<Object>(receivedObject);
         }
-        
-        if (log.isDebugEnabled()) {
-            log.debug("Received message is:\n" + receivedMessage.toString());
-        }
-        
-        if (messageTracingTestListener != null) {
-            messageTracingTestListener.traceMessage("Received JMS message:\n" + receivedMessage.toString());
+
+        log.info("Received JMS message on destination: '" + getDefaultDestinationName()  + "(" + selector + ")'");
+
+        if (messageListener != null) {
+            messageListener.onInboundMessage(receivedMessage.toString());
+        } else {
+            log.debug("Received message is:" + System.getProperty("line.separator") + receivedMessage.toString());
         }
         
         return receivedMessage;

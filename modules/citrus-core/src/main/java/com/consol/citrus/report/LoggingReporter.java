@@ -18,6 +18,7 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,10 +31,16 @@ import org.springframework.util.StringUtils;
  * 
  * @author Christoph Deppisch
  */
-public class LoggingReporter implements TestSuiteListener, TestListener, TestActionListener, TestReporter {
+public class LoggingReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener, TestReporter {
     
     /** Collect test results for overall result overview at the very end of test execution */
     private TestResults testResults = new TestResults();
+
+    /** Inbound message logger */
+    private static Logger inboundMsgLogger = LoggerFactory.getLogger("Logger.Message_IN");
+
+    /** Outbound message logger */
+    private static Logger outboundMsgLogger = LoggerFactory.getLogger("Logger.Message_OUT");
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
@@ -126,7 +133,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
         testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
 
         newLine();
-        log.info("TEST SUCCESS " + test.getName() + " <" + test.getPackageName() + ">");
+        log.info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")");
         separator();
         newLine();
     }
@@ -199,7 +206,7 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
      * @see com.consol.citrus.report.TestActionListener#onTestActionStart(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
-        log.info("");
+        newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
         log.info("Test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + ">");
 
@@ -208,9 +215,9 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
         }
 
         if (log.isDebugEnabled() && StringUtils.hasText(testAction.getDescription())) {
-            log.debug("+++++");
+            log.debug("");
             log.debug(testAction.getDescription());
-            log.debug("+++++");
+            log.debug("");
         }
     }
 
@@ -226,9 +233,23 @@ public class LoggingReporter implements TestSuiteListener, TestListener, TestAct
      * @see com.consol.citrus.report.TestActionListener#onTestActionSkipped(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
-        log.info("");
+        newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
         log.info("Skipping test action <" + testAction.getName() != null ? testAction.getName() : testAction.getClass().getName() + ">");
+    }
+
+    /**
+     * @see MessageListener#onInboundMessage(String)
+     */
+    public void onInboundMessage(String message) {
+        inboundMsgLogger.info(message);
+    }
+
+    /**
+     * @see MessageListener#onOutboundMessage(String)
+     */
+    public void onOutboundMessage(String message) {
+        outboundMsgLogger.info(message);
     }
 
     /**
