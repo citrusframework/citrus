@@ -1,5 +1,5 @@
 <div id="{{name}}" class="test-details">
-    <h2>{{name}}</h2>
+    <h2>{{name}} &nbsp;<i class="icon-play run-test clickable"></i><i class="icon-stop cancel-test clickable" style="display: none;"></i></h2>
     <form id="test-info" class="form-horizontal">
         <div class="row-fluid">
             <div class="span6">
@@ -35,7 +35,7 @@
         </div>
     </form>
 
-    <button type="button" data-loading-text="Running ..." class="btn btn-success pull-right run-test"><i class="icon-play icon-white"></i> Run Test</button>
+    <button type="button" data-loading-text="Running ..." class="btn pull-right run-test"><i class="icon-play icon-white"></i> Run Test</button>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#design-{{name}}" data-toggle="tab">Design</a></li>
         <li><a href="#xml-source-{{name}}" class="xml-source" data-toggle="tab">XML</a></li>

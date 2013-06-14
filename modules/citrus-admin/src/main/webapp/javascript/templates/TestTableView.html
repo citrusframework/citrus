@@ -9,7 +9,7 @@
     
     {{#each tests}}
     <tr id="{{id}}" class="show-test-details clickable">
-      <td>{{name}}</td>
+      <td>{{truncate name length=35}}</td>
     </tr>
     {{/each}}
   </tbody>

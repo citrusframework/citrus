@@ -8,7 +8,11 @@ body {
 }
 
 a {
-    color: #000000;
+    color: #333333;
+}
+
+a:hover {
+    color: #F89406;
 }
 
 .navbar .brand {
@@ -76,6 +80,14 @@ div.test-details-open {
 
 .test-details h2 {
     margin-left: 20px;
+}
+
+.test-details h2 i.icon-play {
+    color: #51a351;
+}
+
+.test-details h2 i.icon-stop {
+    color: #bd362f;
 }
 
 #test-tabs {
@@ -241,7 +253,7 @@ span.message-outbound {
 }
 
 .footer-task-bar {
-    width: 30px;
+    width: 35px;
     height: 175px;
     float: left;
     padding-top: 5px;
@@ -253,8 +265,8 @@ span.message-outbound {
 .footer-task-bar i, .footer-bar i {
     display: block;
     text-align: center;
-    padding: 4px;
-    margin: 0 4px;
+    padding: 3px;
+    margin: 0 5px;
     border: 1px solid #eeeeee;
 }
 
@@ -268,4 +280,40 @@ span.message-outbound {
 
 .footer-task-bar i.disabled, .footer-bar i.disabled {
     color: #888888;
+}
+
+.btn-citrus {
+    color: #ffffff;
+    text-shadow: none;
+    background-color: #FAA732;
+    *background-color: #F89406;
+    background-image: -moz-linear-gradient(top, #FBD06E, #F89406);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FBD06E), to(#F89406));
+    background-image: -webkit-linear-gradient(top, #FBD06E, #F89406);
+    background-image: -o-linear-gradient(top, #FBD06E, #F89406);
+    background-image: linear-gradient(to bottom, #FBD06E, #F89406);
+    background-repeat: repeat-x;
+    border-color: #F89406 #F89406 #FAA732;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffFBD06E', endColorstr='#ffF89406', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.btn-citrus:hover,
+.btn-citrus:active,
+.btn-citrus.active,
+.btn-citrus.disabled,
+.btn-citrus[disabled] {
+    color: #ffffff;
+    background-color: #F89406;
+    *background-color: #FAA732;
+}
+
+.btn-citrus.active {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-citrus .caret {
+    border-top-color: #ffffff;
+    border-bottom-color: #ffffff;
 }
