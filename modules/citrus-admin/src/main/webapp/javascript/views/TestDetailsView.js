@@ -68,6 +68,10 @@
 
                     if ("PROCESS_START" == jsMessage.event) {
                         $('div#test-result-' + processId).find('div.progress').find('.bar').width('1%');
+                    } else if ("PROCESS_FAILED" == jsMessage.event) {
+                        $('button.run-test').button('reset');
+                        $('div#test-result-' + processId).find('div.progress').removeClass('progress-success');
+                        $('div#test-result-' + processId).find('div.progress').addClass('progress-danger');
                     } else if ("TEST_START" == jsMessage.event) {
                         $('div#test-result-' + processId).find('div.progress').find('.bar').width('3%');
                     } else if ("TEST_ACTION_FINISH" == jsMessage.event) {

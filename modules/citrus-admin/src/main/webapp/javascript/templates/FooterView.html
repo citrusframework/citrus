@@ -1,7 +1,9 @@
 <div class="footer-content">
     <div class="navbar">
       <div class="navbar-inner">
-        <i id="footer-minimize" class="icon-collapse pull-right"></i>
+        <div class="footer-bar pull-right">
+            <i id="footer-minimize" class="icon-collapse clickable"></i>
+        </div>
         <ul id="footer-tabs" class="nav">
             <li class="active"><a href="#console-tab" data-toggle="tab">Console</a></li>
         </ul>
@@ -12,7 +14,7 @@
         <div class="tab-pane active" id="console-tab">
             <div class="footer-tab">
                 <div class="footer-task-bar">
-                    <button id="footer-tab-clear-{{var name='hash'}}" class="btn-mini btn">&times;</button>
+                    <i id="footer-tab-clear-console" class="icon-trash clickable"></i>
                 </div>
                 <pre class="logger"></pre>
             </div>
@@ -30,7 +32,9 @@
         <div class="tab-pane" id="footer-tab-{{var name='hash'}}">
             <div id="footer-tab-content-{{var name='hash'}}" class="footer-tab">
                 <div class="footer-task-bar">
-                    <button id="footer-tab-cancel-{{var name='hash'}}" class="btn-mini btn">&times;</button>
+                    <i id="footer-tab-cancel-{{var name='hash'}}" data-toggle="tooltip" title="Cancel active process" class="icon-stop clickable"></i>
+                    <i id="footer-tab-scroll-{{var name='hash'}}" class="icon-download-alt clickable"></i>
+                    <i id="footer-tab-clear-{{var name='hash'}}" class="icon-trash clickable"></i>
                 </div>
                 <pre class="logger"></pre>
             </div>

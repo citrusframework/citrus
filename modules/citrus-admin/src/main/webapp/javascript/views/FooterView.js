@@ -47,14 +47,15 @@
                     if ("PROCESS_START" == jsMessage.event) {
                         this.createOrShowTab(processId, idHash);
 
+                        $('div#footer-tab-content-' + idHash).find('div.footer-task-bar').children('i.icon-stop').removeClass('disabled');
+
                         if ($('#footer').hasClass('minimized')) {
                             this.minimize(); // auto open footer task bar
                         }
 
                         $(logId).append(msg);
-                    } else if ("PROCESS_SUCCESS" == jsMessage.event) {
-                        $(logId).append(msg);
-                    } else if ("PROCESS_FAILED" == jsMessage.event) {
+                    } else if ("PROCESS_SUCCESS" == jsMessage.event || "PROCESS_FAILED" == jsMessage.event) {
+                        $('div#footer-tab-content-' + idHash).find('div.footer-task-bar').children('i.icon-stop').addClass('disabled');
                         $(logId).append(msg);
                     } else if ("LOG_MESSAGE" == jsMessage.event) {
                         $(logId).append(msg);
@@ -93,6 +94,17 @@
                             }
                         });
                     });
+
+                    // bind clear function on newly created tab
+                    $('#footer-tab-clear-' + idHash).click(function () {
+                        $('#footer-tab-content-' + idHash).find('pre.logger').text('');
+                    });
+
+                    // bind scroll function on newly created tab
+                    $('#footer-tab-scroll-' + idHash).click(function () {
+                        var logger = $('#footer-tab-content-' + idHash).find('pre.logger');
+                        logger.scrollTop(logger[0].scrollHeight);
+                    });
                 }
 
                 // show processId details tab
@@ -116,6 +128,14 @@
                 $('.footer-tab').removeClass('resized');
                 $('.footer-task-bar').removeClass('resized');
                 $('pre.logger').removeClass('resized');
+
+                if ($('i#footer-minimize').hasClass('icon-collapse')) {
+                    $('i#footer-minimize').removeClass('icon-collapse');
+                    $('i#footer-minimize').addClass('icon-collapse-top');
+                } else {
+                    $('i#footer-minimize').addClass('icon-collapse');
+                    $('i#footer-minimize').removeClass('icon-collapse-top');
+                }
 
                 $('#footer').toggleClass('minimized');
                 $('.footer-tab').toggleClass('minimized');

@@ -4,10 +4,19 @@ html, body {
 
 body {
 	padding-top: 60px;
+    background: url('../images/feature-logo.png') no-repeat top right;
 }
 
 a {
     color: #000000;
+}
+
+.navbar .brand {
+    padding: 6px 10px 5px;
+}
+
+.navbar .brand span {
+    vertical-align: middle;
 }
 
 .box {
@@ -56,7 +65,7 @@ a {
   vertical-align: middle;
 }
 
-tr.show-test-details {
+.clickable {
   cursor: pointer;
 }
 
@@ -226,20 +235,37 @@ span.message-outbound {
     margin-right: 8px;
 }
 
+.footer-bar {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
 .footer-task-bar {
-    width: 25px;
+    width: 30px;
     height: 175px;
     float: left;
-    padding-left: 5px;
     padding-top: 5px;
     background-color: #efefef;
     border-right: 1px solid #dddddd;
+    color: #333333;
 }
 
-.footer-task-bar button {
-    line-height: 15px;
+.footer-task-bar i, .footer-bar i {
+    display: block;
+    text-align: center;
+    padding: 4px;
+    margin: 0 4px;
+    border: 1px solid #eeeeee;
 }
 
-#footer-minimize {
-    margin-right: 20px;
+.footer-task-bar i:hover, .footer-bar i:hover {
+    border: 1px solid #cccccc;
+}
+
+.footer-task-bar i.icon-stop {
+    color: #bd362f;
+}
+
+.footer-task-bar i.disabled, .footer-bar i.disabled {
+    color: #888888;
 }
