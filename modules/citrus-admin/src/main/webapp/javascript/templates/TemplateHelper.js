@@ -29,6 +29,39 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
     };
 });
 
+/**
+ * If Equals
+ * if_eq this compare=that
+ */
+Handlebars.registerHelper('if_eq', function(context, options) {
+    if (context == options.hash.compare)
+        return options.fn(this);
+    return options.inverse(this);
+});
+
+/**
+ * Unless Equals
+ * unless_eq this compare=that
+ */
+Handlebars.registerHelper('unless_eq', function(context, options) {
+    if (context == options.hash.compare)
+        return options.inverse(this);
+    return options.fn(this);
+});
+
+/*
+ * Helper to truncate the string to the specified length
+ */
+Handlebars.registerHelper('truncate', function(message, block) {
+    if (message == null) {
+        return '';
+    }
+    message = String(message);
+    truncateStr = '...';
+    truncateAfter = block.hash.length;
+    return message.length > truncateAfter ? message.slice(0, truncateAfter) + truncateStr : message;
+});
+
 /*
  * Helper pretty prints XML fragments with indentation and new lines
  */

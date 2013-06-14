@@ -18,6 +18,7 @@ package com.consol.citrus.admin.websocket;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.report.MessageListener;
 import com.consol.citrus.report.TestActionListener;
 import com.consol.citrus.report.TestListener;
 import org.json.simple.JSONObject;
@@ -29,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Christoph Deppisch
  */
-public class WebSocketTestEventListener implements TestListener, TestActionListener {
+public class WebSocketTestListener implements TestListener, TestActionListener, MessageListener {
 
     @Autowired
     private LoggingWebSocket loggingWebSocket;
@@ -89,4 +90,17 @@ public class WebSocketTestEventListener implements TestListener, TestActionListe
     public void onTestFinish(TestCase test) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void onInboundMessage(String message) {
+        loggingWebSocket.push(SocketEvent.createEvent("INBOUND", SocketEvent.INBOUND_MESSAGE, message));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onOutboundMessage(String message) {
+        loggingWebSocket.push(SocketEvent.createEvent("OUTBOUND", SocketEvent.OUTBOUND_MESSAGE, message));
+    }
 }

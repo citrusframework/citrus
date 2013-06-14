@@ -26,6 +26,8 @@ import org.json.simple.JSONObject;
 enum SocketEvent {
     PING,
     LOG_MESSAGE,
+    INBOUND_MESSAGE,
+    OUTBOUND_MESSAGE,
     TEST_START,
     TEST_SUCCESS,
     TEST_FAILED,

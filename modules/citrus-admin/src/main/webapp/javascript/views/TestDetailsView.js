@@ -3,7 +3,9 @@
         var TestDetailsView = Backbone.View.extend({
     
             test: {},
-          
+
+            messages: [],
+
             events: {
                 "click button.run-test" : "runTest",
                 "click a.xml-source" : "getXmlSource",
@@ -40,6 +42,9 @@
                 $('div#test-result-' + this.test.name).find('div.progress').addClass('progress-success');
                 $('div#test-result-' + this.test.name).find('div.progress').removeClass('progress-danger');
 
+                // prepare and show test results tab
+                this.messages = [];
+                $(this.el).find('div.test-message-flow').html(TemplateManager.template('TestMessageFlow', { messages: this.messages }));
                 $(this.el).find('ul.nav-tabs').find('li').last().show();
                 $(this.el).find('ul.nav-tabs').find('li').last().find('a').tab('show');
 
@@ -76,6 +81,12 @@
                         $('div#test-result-' + processId).find('div.progress').find('.bar').width('100%');
                         $('div#test-result-' + processId).find('div.progress').removeClass('progress-success');
                         $('div#test-result-' + processId).find('div.progress').addClass('progress-danger');
+                    } else if ("INBOUND_MESSAGE" == jsMessage.event || "OUTBOUND_MESSAGE" == jsMessage.event) {
+                        this.messages.push({id: _.uniqueId("message_"),
+                                            type: jsMessage.event,
+                                            data: jsMessage.msg,
+                                            timestamp: moment()});
+                        $(this.el).find('div.test-message-flow').html(TemplateManager.template('TestMessageFlow', { messages: this.messages }));
                     } else {
                         return;
                     }

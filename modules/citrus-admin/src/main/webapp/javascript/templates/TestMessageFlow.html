@@ -1,0 +1,30 @@
+<table class="table table-bordered table-hover table-condensed">
+    <thead>
+        <tr>
+            <th style="min-width: 150px;">Date</th>
+            <th style="min-width: 50px;">Type</th>
+            <th style="min-width: 300px;">Message</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#unless messages.length}}
+    <tr class="no-results"><td colspan="3">&nbsp;<i class="icon-remove"></i> No message activity yet</td></tr>
+    {{/unless}}
+
+    {{#each messages}}
+    <tr id="{{id}}" class="show-message-data">
+        <td><span>{{dateFormat timestamp format="MMM DD HH:mm:ss.SSS"}}</span></td>
+        <td>
+            {{#if_eq type compare='INBOUND_MESSAGE'}}<span class="message-inbound"><i class="icon-signin"></i>&nbsp;<i class="icon-envelope-alt"></i></span>{{/if_eq}}
+            {{#if_eq type compare='OUTBOUND_MESSAGE'}}<span class="message-outbound"><i class="icon-envelope-alt"></i>&nbsp;<i class="icon-signout"></i></span>{{/if_eq}}
+        </td>
+        <td><span class="message-data">{{truncate data length=150}}</span></td>
+    </tr>
+    {{/each}}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">&nbsp;</td>
+        </tr>
+    </tfoot>
+</table>

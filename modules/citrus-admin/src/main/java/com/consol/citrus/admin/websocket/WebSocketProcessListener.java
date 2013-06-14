@@ -31,10 +31,26 @@ public class WebSocketProcessListener implements ProcessListener {
     @Autowired
     private LoggingWebSocket loggingWebSocket;
 
+    /** Last message data collected by multiple lines of process output */
+    private JSONObject messageDataEvent;
+
     /**
      * {@inheritDoc}
      */
     public void onProcessActivity(String processId, String output) {
+
+        // first check if we have a pending message data event to handle
+        if (messageDataEvent != null) {
+            if (isProcessOutputLine(output)) {
+                // message data collecting is obviously finished so push event now
+                loggingWebSocket.push(messageDataEvent);
+                messageDataEvent = null; // reset data event storage
+            } else {
+                // collect another line of message data
+                messageDataEvent.put("msg", messageDataEvent.get("msg") + System.getProperty("line.separator") + output);
+            }
+        }
+
         if (output.contains("STARTING TEST")) {
             loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.TEST_START, output));
         } else if (output.contains("TEST SUCCESS")) {
@@ -49,6 +65,10 @@ public class WebSocketProcessListener implements ProcessListener {
                     "TEST ACTION " + progress[0] + "/" + progress[1]);
             event.put("progress", String.valueOf(progressValue));
             loggingWebSocket.push(event);
+        } else if (output.contains("Logger.Message_OUT")) {
+            messageDataEvent = SocketEvent.createEvent("OUTBOUND", SocketEvent.OUTBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_OUT") + 20));
+        } else if (output.contains("Logger.Message_IN")) {
+            messageDataEvent = SocketEvent.createEvent("INBOUND", SocketEvent.INBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_IN") + 19));
         }
     }
 
@@ -94,4 +114,14 @@ public class WebSocketProcessListener implements ProcessListener {
     public void setLoggingWebSocket(LoggingWebSocket loggingWebSocket) {
         this.loggingWebSocket = loggingWebSocket;
     }
+
+    /**
+     * Checks if output line is normal log outpu in log4j format.
+     * @param output
+     * @return
+     */
+    private boolean isProcessOutputLine(String output) {
+        return output.contains("INFO") || output.contains("DEBUG") || output.contains("ERROR") | output.contains("WARN") | output.contains("TRACE");
+    }
+
 }

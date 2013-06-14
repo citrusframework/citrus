@@ -109,39 +109,21 @@ div.test-details-open {
     margin-left: 80px;
 }
 
+.progress {
+    border: 1px solid #333333;
+}
+
 .progress .bar {
+    text-shadow: none;
     transition: none;
 }
 
 .test-progress {
-    width: 650px;
+    min-width: 650px;
 }
 
 code.template {
   display: none;
-}
-
-[class^="icon-"],
-[class*=" icon-"] {
-  background-image: url("icons/glyphicons-halflings.png");
-}
-
-/* White icons with optional class, or on hover/active states of certain elements */
-
-.icon-white,
-.nav-pills > .active > a > [class^="icon-"],
-.nav-pills > .active > a > [class*=" icon-"],
-.nav-list > .active > a > [class^="icon-"],
-.nav-list > .active > a > [class*=" icon-"],
-.navbar-inverse .nav > .active > a > [class^="icon-"],
-.navbar-inverse .nav > .active > a > [class*=" icon-"],
-.dropdown-menu > li > a:hover > [class^="icon-"],
-.dropdown-menu > li > a:hover > [class*=" icon-"],
-.dropdown-menu > .active > a > [class^="icon-"],
-.dropdown-menu > .active > a > [class*=" icon-"],
-.dropdown-submenu:hover > a > [class^="icon-"],
-.dropdown-submenu:hover > a > [class*=" icon-"] {
-  background-image: url("icons/glyphicons-halflings-white.png");
 }
 
 pre.logger {
@@ -167,6 +149,20 @@ div.file-tree {
 
 #content {
   padding-bottom: 210px;
+}
+
+span.message-data {
+    font-size: 12px;
+}
+
+span.message-inbound {
+    color: #888888;
+    font-size: 16px;
+}
+
+span.message-outbound {
+    color: #555555;
+    font-size: 16px;
 }
 
 #footer {
