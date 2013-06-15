@@ -9,7 +9,14 @@
       <a class="brand" href="#"><img src="images/brand-logo.png"/><span>&nbsp;Citrus Admin<span></span></a>
       <div class="nav-collapse">
         <ul id="header-nav" class="nav">
-          <li class="active"><a id="nav-project" href="#project">Project</a></li>
+          <li class="dropdown active">
+              <a id="nav-project" href="#project">Project</a>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                  <li><a href="#project-new">New ...</a></li>
+                  <li><a href="setup">Open</a></li>
+                  <li><a href="#project-config">Settings</a></li>
+              </ul>
+          </li>
           <li><a id="nav-config" href="#config">Configuration</a></li>
           <li><a id="nav-testcases" href="#testcases">Tests</a></li>
           <li><a id="nav-stats" href="#stats">Statistics</a></li>
