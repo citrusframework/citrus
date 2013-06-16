@@ -3,6 +3,6 @@
     <li class="directory collapsed"><a href="#" rel="{{baseDir}}{{this}}/">{{this}}</a></li>
     {{/each}}
     {{#each files}}
-    <li class="file ext_{{extension}}"><a href="#" rel="{{baseDir}}/{{file}}.{{extension}}">{{file}}</a></li>
+    <li class="file ext_{{extension}}"><a href="#" rel="{{baseDir}}{{this}}.{{extension}}">{{this}}</a></li>
     {{/each}}
 </ul>

@@ -71,6 +71,7 @@ public class ClasspathTestExecutor implements TestExecutor {
             TestCaseType testCase = new TestCaseType();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
+            testCase.setFile(file);
             
             tests.add(testCase);
         }
@@ -104,7 +105,25 @@ public class ClasspathTestExecutor implements TestExecutor {
             return "Failed to load test case file: " + e.getMessage();
         }
     }
-    
+
+    /**
+     * Gets the test base directory.
+     *
+     * @return
+     */
+    public String getTestDirectory() {
+        return "/";
+    }
+
+    /**
+     * Gets the java base directory.
+     *
+     * @return
+     */
+    public String getJavaDirectory() {
+        return "/";
+    }
+
     /**
      * Finds all test cases in classpath starting in given base package. Searches for 
      * **.class files extending AbstractTestNGCitrusTest superclass.
@@ -116,7 +135,6 @@ public class ClasspathTestExecutor implements TestExecutor {
         List<String> testCaseNames = new ArrayList<String>();
         
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false, new StandardServletEnvironment());
-        
         scanner.addIncludeFilter(new CitrusTestTypeFilter());
         
         Set<BeanDefinition> findings = scanner.findCandidateComponents(basePackage);

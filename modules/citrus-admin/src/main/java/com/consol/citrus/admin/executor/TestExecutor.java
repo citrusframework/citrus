@@ -46,4 +46,16 @@ public interface TestExecutor {
      * @return
      */
     String getSourceCode(String testPackage, String testName, String type);
+
+    /**
+     * Gets the test base directory.
+     * @return
+     */
+    String getTestDirectory();
+
+    /**
+     * Gets the java base directory.
+     * @return
+     */
+    String getJavaDirectory();
 }

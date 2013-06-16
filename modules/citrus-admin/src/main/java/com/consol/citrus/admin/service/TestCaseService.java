@@ -135,5 +135,12 @@ public class TestCaseService {
     public String getTestSources(String packageName, String name, String type) {
         return testExecutor.getSourceCode(packageName, name, type);
     }
-    
+
+    /**
+     * Gets the test base directory according to the test executor used.
+     * @return
+     */
+    public String getTestDirectory() {
+        return testExecutor.getTestDirectory();
+    }
 }

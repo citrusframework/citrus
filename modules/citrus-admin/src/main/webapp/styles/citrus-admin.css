@@ -161,10 +161,14 @@ pre.logger {
 }
 
 div.file-tree {
-  border: 1px solid #BBBBBB;
+    border: 1px solid #dddddd;
+    min-height: 300px;
+    overflow: auto;
+    padding: 5px;
+}
+
+.modal-body div.file-tree {
   height: 300px;
-  overflow: auto;
-  padding: 5px;
 }
 
 .modal-backdrop, .modal-backdrop.fade.in {

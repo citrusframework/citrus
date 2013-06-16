@@ -19,6 +19,7 @@ package com.consol.citrus.admin.controller;
 import java.util.List;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
+import com.consol.citrus.admin.util.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.service.TestCaseService;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Controller manages test case related queries like get all tests
@@ -42,11 +44,31 @@ public class TestCaseController {
 
     @Autowired
     private TestCaseService testCaseService;
+
+    @Autowired
+    private FileHelper fileHelper;
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public List<TestCaseType> list() {
         return testCaseService.getAllTests();
+    }
+
+    @RequestMapping(method = { RequestMethod.POST })
+    @ResponseBody
+    public ModelAndView list(@RequestParam("dir") String dir) {
+        String directory = fileHelper.decodeDirectoryUrl(dir, testCaseService.getTestDirectory());
+
+        String[] folders = fileHelper.getFolders(directory);
+        String[] files = fileHelper.getFiles(directory, ".xml");
+
+        ModelAndView view = new ModelAndView("FileTree");
+        view.addObject("baseDir", directory);
+        view.addObject("folders", folders);
+        view.addObject("files", files);
+        view.addObject("extension", "xml");
+
+        return view;
     }
 
     @RequestMapping(value="/details/{package}/{name}", method = { RequestMethod.GET })

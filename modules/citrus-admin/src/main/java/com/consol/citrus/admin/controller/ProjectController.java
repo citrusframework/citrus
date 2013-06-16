@@ -47,19 +47,9 @@ public class ProjectController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView searchProjectHome(@RequestParam("dir") String dir) throws UnsupportedEncodingException {
-        String directory = URLDecoder.decode(dir, "UTF-8"); // TODO use system default encoding?
-        if (directory.equals("/")) {
-            directory = configService.getRootDirectory();
-        }
-        
-        if (directory.charAt(directory.length() - 1) == '\\') {
-            directory = directory.substring(0, directory.length() - 1) + "/";
-        } else if (directory.charAt(directory.length() - 1) != '/') {
-            directory += "/";
-        }
-        
-        String[] folders = fileHelper.getFolders(URLDecoder.decode(directory, "UTF-8"));
+    public ModelAndView searchProjectHome(@RequestParam("dir") String dir) {
+        String directory = fileHelper.decodeDirectoryUrl(dir, configService.getRootDirectory());
+        String[] folders = fileHelper.getFolders(directory);
 
         ModelAndView view = new ModelAndView("FileTree");
         view.addObject("folders", folders);

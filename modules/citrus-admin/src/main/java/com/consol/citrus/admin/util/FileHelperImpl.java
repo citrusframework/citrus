@@ -16,11 +16,19 @@
 
 package com.consol.citrus.admin.util;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.admin.service.ConfigurationService;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Martin Maher, Christoph Deppisch
@@ -28,7 +36,7 @@ import java.util.Arrays;
  */
 @Component
 public class FileHelperImpl implements FileHelper {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -39,14 +47,35 @@ public class FileHelperImpl implements FileHelper {
                     return name.charAt(0) != '.' && new File(dir, name).isDirectory();
                 }
             });
+
             Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
 
             return files;
         } else {
-            throw new IllegalArgumentException("Could not open directory because it does not exist: " + directory);
+            throw new CitrusAdminRuntimeException("Could not open directory because it does not exist: " + directory);
         }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    public String[] getFiles(String directory, final String fileExtension) {
+        List<String> fileNames = new ArrayList<String>();
+
+        File startDir = new File(directory);
+        File[] found = startDir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith(fileExtension);
+            }
+        });
+
+        for (File file : found) {
+            fileNames.add(FilenameUtils.getBaseName(file.getName()));
+        }
+
+        return fileNames.toArray(new String[fileNames.size()]);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -70,5 +99,30 @@ public class FileHelperImpl implements FileHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String decodeDirectoryUrl(String url, String rootDirectory) {
+        String directory = null;
+
+        try {
+            directory = URLDecoder.decode(url, "UTF-8"); // TODO use system default encoding?
+        } catch (UnsupportedEncodingException e) {
+            throw new CitrusAdminRuntimeException("Unable to decode directory URL", e);
+        }
+
+        if (directory.equals("/")) {
+            directory = rootDirectory;
+        }
+
+        if (directory.charAt(directory.length() - 1) == '\\') {
+            directory = directory.substring(0, directory.length() - 1) + "/";
+        } else if (directory.charAt(directory.length() - 1) != '/') {
+            directory += "/";
+        }
+
+        return directory;
     }
 }

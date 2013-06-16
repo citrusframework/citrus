@@ -3,10 +3,8 @@
         var TestListView = Backbone.View.extend({
     
           tests: {},
-          searchResults: {},
-          
+
           events: {
-              "click tr.show-test-details" : "showDetails",
               "submit #search-form" : "searchTests"
           },
           
@@ -22,7 +20,6 @@
                   dataType: "json",
                   success: _.bind(function(response) {
                       this.tests = response;
-                      this.searchResults = response;
                       this.afterRender();
                   }, this)
               });
@@ -31,37 +28,44 @@
           },
           
           afterRender: function() {
-              $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.tests }));
+              $('#test-file-tree').fileTree({
+                  root: '/',
+                  script: 'testcase',
+                  multiFolder: true,
+                  expandSpeed: 1,
+                  collapseSpeed: 1
+              }, _.bind(function(file) {
+                  this.showDetails(file);
+              }, this));
               
               var searchKeys = _.map(this.tests, function(test){ return test.name; });
               $('#test-name').typeahead({
                   source: _.uniq(searchKeys),
                   items: 5,
-                  minLength: 1
+                  minLength: 1,
+                  updater: _.bind(function(item) {
+                      $('#test-name').val(item);
+                      this.searchTests();
+                      return item;
+                  }, this)
               });
           },
           
           searchTests: function() {
               var searchKey = $('#test-name').val();
-              
-              if (searchKey) {
-                  if (searchKey.indexOf(".*") > 0) {
-                      this.searchResults = _.where(this.tests, {packageName: searchKey.substring(0, searchKey.length - 2)});
-                  } else {
-                      this.searchResults = _.where(this.tests, {name: searchKey});
-                  }
-              } else {
-                  this.searchResults = this.tests;
-              }
-              
-              $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.searchResults }));
+              var test = _.find(this.tests, function(t) {return t.name == searchKey});
+
+              var directory = test.packageName.replace(/\./g, "/");
+              $('li.directory.collapsed').children('a[rel*="' + directory + '"]').click();
+
+              this.showDetails(test.file);
 
               // prevent default form submission
               return false;
           },
           
-          showDetails: function(event) {
-              var test = this.searchResults[event.currentTarget.rowIndex - 1];
+          showDetails: function(file) {
+              var test = _.find(this.tests, function(t) {return t.file == file});
               var idHash= test.name.toLowerCase();
               
               if ($('ul#test-tabs li#tab-' + idHash).size() === 0) {
@@ -85,6 +89,8 @@
               
               // show test details tab
               $('#test-tabs a[href="#test-details-tab-' + idHash + '"]').tab('show');
+
+              return false;
           } 
     
         });

@@ -58,6 +58,7 @@ public class FileSystemTestExecutor implements TestExecutor{
             TestCaseType testCase = new TestCaseType();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
+            testCase.setFile(file.getAbsolutePath());
             
             tests.add(testCase);
         }
@@ -94,7 +95,7 @@ public class FileSystemTestExecutor implements TestExecutor{
      * Gets the current test directory based on project home and default test directory.
      * @return
      */
-    private String getTestDirectory() {
+    public String getTestDirectory() {
         return new File(configService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
     }
 
@@ -102,7 +103,7 @@ public class FileSystemTestExecutor implements TestExecutor{
      * Gets the current test directory based on project home and default test directory.
      * @return
      */
-    private String getJavaDirectory() {
+    public String getJavaDirectory() {
         return new File(configService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
     }
 
