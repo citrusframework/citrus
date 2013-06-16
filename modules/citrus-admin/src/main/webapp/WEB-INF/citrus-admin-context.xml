@@ -49,10 +49,24 @@
     
     <!-- Allows for mapping the DispatcherServlet to "/" by forwarding static resource requests to the container's default Servlet -->
     <mvc:default-servlet-handler/>
-    
-    <mvc:view-controller path="/" view-name="index.html"/>
-    <mvc:view-controller path="/setup" view-name="setup.html"/>
-    
+
+    <bean id="handlebarsViewResolver" class="com.github.jknack.handlebars.springmvc.HandlebarsViewResolver">
+      <property name="order" value="1"/>
+      <property name="cache" value="false"/>
+      <property name="failOnMissingFile" value="false"/>
+      <property name="prefix" value="/javascript/views"/>
+      <property name="suffix" value=".html"/>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+      <property name="order" value="2"/>
+      <property name="viewClass" value="org.springframework.web.servlet.view.InternalResourceView"/>
+      <property name="suffix" value=".html"/>
+    </bean>
+
+    <mvc:view-controller path="/" view-name="index"/>
+    <mvc:view-controller path="/setup" view-name="setup"/>
+
     <mvc:interceptors>
         <bean class="com.consol.citrus.admin.controller.ProjectSetupInterceptor">
             <property name="redirect" value="/setup"/>

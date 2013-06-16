@@ -1,0 +1,8 @@
+<ul class="jqueryFileTree" style="display: none;">
+    {{#each folders}}
+    <li class="directory collapsed"><a href="#" rel="{{baseDir}}{{this}}/">{{this}}</a></li>
+    {{/each}}
+    {{#each files}}
+    <li class="file ext_{{extension}}"><a href="#" rel="{{baseDir}}/{{file}}.{{extension}}">{{file}}</a></li>
+    {{/each}}
+</ul>

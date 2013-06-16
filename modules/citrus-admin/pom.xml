@@ -73,7 +73,7 @@
             <artifactId>jackson-xc</artifactId>
             <version>1.5.6</version>
         </dependency>
-        
+
         <!-- JaxB Bindings (API and implementation) -->
         <dependency>
           <groupId>javax.xml.bind</groupId>
@@ -84,6 +84,17 @@
           <groupId>com.sun.xml.bind</groupId>
           <artifactId>jaxb-impl</artifactId>
           <version>2.2.6</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.github.jknack</groupId>
+          <artifactId>handlebars</artifactId>
+          <version>1.0.0</version>
+        </dependency>
+        <dependency>
+          <groupId>com.github.jknack</groupId>
+          <artifactId>handlebars-springmvc</artifactId>
+          <version>1.0.0</version>
         </dependency>
     </dependencies>
   </dependencyManagement>
@@ -155,6 +166,15 @@
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-impl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.jknack</groupId>
+      <artifactId>handlebars</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.jknack</groupId>
+      <artifactId>handlebars-springmvc</artifactId>
     </dependency>
     
     <dependency>

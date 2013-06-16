@@ -18,13 +18,19 @@ package com.consol.citrus.admin.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.springmvc.HandlebarsView;
+import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.util.FileHelper;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +47,7 @@ public class ProjectController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String searchProjectHome(@RequestParam("dir") String dir) throws UnsupportedEncodingException {
+    public ModelAndView searchProjectHome(@RequestParam("dir") String dir) throws UnsupportedEncodingException {
         String directory = URLDecoder.decode(dir, "UTF-8"); // TODO use system default encoding?
         if (directory.equals("/")) {
             directory = configService.getRootDirectory();
@@ -54,16 +60,12 @@ public class ProjectController {
         }
         
         String[] folders = fileHelper.getFolders(URLDecoder.decode(directory, "UTF-8"));
-        
-        StringBuilder structure = new StringBuilder();
-        structure.append("<ul class=\"jqueryFileTree\" style=\"display: none;\">");
-        for (String file : folders) {
-            structure.append("<li class=\"directory collapsed\"><a href=\"#\" rel=\"" + directory + file + "/\">"
-                + file + "</a></li>");
-        }
-        structure.append("</ul>");
-        
-        return structure.toString();
+
+        ModelAndView view = new ModelAndView("FileTree");
+        view.addObject("folders", folders);
+        view.addObject("baseDir", directory);
+
+        return view;
     }
     
     @RequestMapping(params = {"projecthome"}, method = RequestMethod.GET)

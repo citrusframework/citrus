@@ -33,7 +33,7 @@
           afterRender: function() {
               $('#search-results').html(TemplateManager.template('TestTableView', { tests: this.tests }));
               
-              var searchKeys = _.map(this.tests, function(test){ return test.packageName + ".*"; });
+              var searchKeys = _.map(this.tests, function(test){ return test.name; });
               $('#test-name').typeahead({
                   source: _.uniq(searchKeys),
                   items: 5,
