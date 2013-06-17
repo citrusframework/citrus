@@ -33,7 +33,7 @@ public class EqualsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitTes
         matcher.validate("field", "value", "VALUE");
         matcher.validate("field", "value", "value");
         matcher.validate("field", "$%& value 123", "$%& VALUE 123");
-        matcher.validate("field", "/() VALUE ŠšŸ", "/() VALUE €…†");
+        matcher.validate("field", "/() VALUE @&Â§", "/() VALUE @&Â§");
     }
     
     @Test
