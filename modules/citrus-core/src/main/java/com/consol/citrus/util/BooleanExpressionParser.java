@@ -35,6 +35,10 @@ public final class BooleanExpressionParser {
     /** List of known operators */
     private static final List<String> OPERATORS = new ArrayList<String>(
             CollectionUtils.arrayToList(new String[]{"(", "=", "and", "or", "lt", "lt=", "gt", "gt=", ")"}));
+
+    /** List of known boolean values */
+    private static final List<String> BOOLEAN_VALUES = new ArrayList<String>(
+            CollectionUtils.arrayToList(new String[]{"true", "false"}));
     
     /**
      * Logger
@@ -88,8 +92,12 @@ public final class BooleanExpressionParser {
                     } while (m < expression.length() && !Character.isDigit(actChar) && !(actChar == ' ') && !(actChar == '('));
     
                     i = m - 1;
-    
-                    operators.push(validateOperator(operatorBuffer.toString()));
+
+                    if (BOOLEAN_VALUES.contains(operatorBuffer.toString())) {
+                        values.push(Boolean.valueOf(operatorBuffer.toString()) ? "1" : "0");
+                    } else {
+                        operators.push(validateOperator(operatorBuffer.toString()));
+                    }
                 } else if (Character.isDigit(actChar)) {
                     StringBuffer digitBuffer = new StringBuffer();
     
@@ -114,10 +122,17 @@ public final class BooleanExpressionParser {
             }
     
             String value = values.pop();
+
+            if (value.equals("0")) {
+                value = "false";
+            } else if (value.equals("1")) {
+                value = "true";
+            }
+
             result = Boolean.valueOf(value).booleanValue();
     
             if (log.isDebugEnabled()) {
-                log.debug("Boolean expression " + expression + " evaluates to " + value);
+                log.debug("Boolean expression " + expression + " evaluates to " + result);
             }
         } catch(EmptyStackException e) {
             throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);

@@ -48,6 +48,12 @@ public class BooleanExpressionParserTest {
         Assert.assertFalse(BooleanExpressionParser.evaluate("(1 lt 1) and (2 gt 2)"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 3)"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 lt 1)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("true"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("true = true"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("false = false"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("false"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("true = false"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("false = true"));
     }
     
     @Test
