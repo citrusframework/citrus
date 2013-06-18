@@ -300,7 +300,7 @@ public class XMLUtilsTest {
     }
 
     @Test
-    public void testParseEncodingCharsets() {
+    public void testParseEncodingCharset() {
         Document doc = XMLUtils.parseMessagePayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
         		"<testRequest xmlns=\"http://www.consol.de/test-default\"></testRequest>");
         Assert.assertNotNull(doc);
@@ -314,4 +314,13 @@ public class XMLUtilsTest {
         Assert.assertNotNull(doc);
     }
 
+    @Test
+    public void testEncodingRoundTrip() throws Exception {
+        String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<testRequest xmlns=\"http://www.consol.de/test-default\">ÄäÖöÜü</testRequest>";
+
+        Document doc = XMLUtils.parseMessagePayload(payload);
+
+        Assert.assertEquals(XMLUtils.serialize(doc), payload + System.getProperty("line.separator"));
+    }
 }

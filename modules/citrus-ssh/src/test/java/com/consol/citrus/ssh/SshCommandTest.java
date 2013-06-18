@@ -94,7 +94,7 @@ public class SshCommandTest {
     @Test
     public void ioException() throws IOException {
         InputStream i = createMock(InputStream.class);
-        expect(i.read((byte[]) anyObject(),anyInt(),anyInt())).andThrow(new IOException("No"));
+        expect(i.read((byte[]) anyObject())).andThrow(new IOException("No"));
         i.close();
 
         exitCallback.onExit(1,"No");

@@ -27,6 +27,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.util.FileCopyUtils;
 
 /**
  * Class to provide general file utilities, such as listing all XML files in a directory, 
@@ -85,28 +86,11 @@ public abstract class FileUtils {
      * @throws IOException
      */
     public static String readToString(InputStream inputStream, Charset charset) throws IOException {
-        BufferedInputStream reader = null;
-        StringBuilder builder = new StringBuilder();
-
         if (log.isDebugEnabled()) {
             log.debug("Reading file resource (encoding is '" + charset.displayName() + "')");
         }
 
-        try {
-            reader = new BufferedInputStream(inputStream);
-            
-            byte[] contents = new byte[1024];
-            int bytesRead=0;
-            while( (bytesRead = reader.read(contents)) != -1){
-                builder.append(new String(contents, 0, bytesRead, charset));
-            }
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
-        }
-        
-        return builder.toString();
+        return new String(FileCopyUtils.copyToByteArray(inputStream), charset);
     }
 
     /**

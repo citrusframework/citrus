@@ -191,7 +191,8 @@ public final class XMLUtils {
         serializer.getDomConfig().setParameter("format-pretty-print", true);
 
         LSOutput output = domImpl.createLSOutput();
-        output.setEncoding(doc.getInputEncoding());
+        String charset = getTargetCharset(doc).displayName();
+        output.setEncoding(charset);
 
         StringWriter writer = new StringWriter();
         output.setCharacterStream(writer);
@@ -213,7 +214,7 @@ public final class XMLUtils {
 
     /**
      * Pretty prints a XML string.
-     * @param doc
+     * @param xml
      * @throws CitrusRuntimeException
      * @return pretty printed XML string
      */
@@ -228,7 +229,10 @@ public final class XMLUtils {
 
         LSInput input = domImpl.createLSInput();
         try {
-            input.setByteStream(new ByteArrayInputStream(xml.trim().getBytes(getTargetCharsetName(xml))));
+            Charset charset = getTargetCharset(xml);
+
+            input.setByteStream(new ByteArrayInputStream(xml.trim().getBytes(charset)));
+            input.setEncoding(charset.displayName());
         } catch(UnsupportedEncodingException e) {
             throw new CitrusRuntimeException(e);
         }
@@ -343,7 +347,9 @@ public final class XMLUtils {
 
         LSInput receivedInput = domImpl.createLSInput();
         try {
-            receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(getTargetCharsetName(messagePayload))));
+            Charset charset = getTargetCharset(messagePayload);
+            receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(charset)));
+            receivedInput.setEncoding(charset.displayName());
         } catch(UnsupportedEncodingException e) {
             throw new CitrusRuntimeException(e);
         }
@@ -352,12 +358,35 @@ public final class XMLUtils {
     }
 
     /**
+     * Try to find encoding for document node. Also supports Citrus default encoding set
+     * as System property.
+     * @param doc
+     * @return
+     */
+    private static Charset getTargetCharset(Document doc) {
+        if (System.getProperty("citrus.file.encoding") != null) {
+            return Charset.forName(System.getProperty("citrus.file.encoding"));
+        }
+
+        if (doc.getInputEncoding() != null) {
+            return Charset.forName(doc.getInputEncoding());
+        }
+
+        // return as encoding the default UTF-8
+        return Charset.forName("UTF-8");
+    }
+
+    /**
      * Try to find target encoding in XML declaration.
      *
      * @param messagePayload XML message payload.
      * @return charsetName if supported.
      */
-    private static String getTargetCharsetName(String messagePayload) throws UnsupportedEncodingException {
+    private static Charset getTargetCharset(String messagePayload) throws UnsupportedEncodingException {
+        if (System.getProperty("citrus.file.encoding") != null) {
+            return Charset.forName(System.getProperty("citrus.file.encoding"));
+        }
+
         // trim incoming payload
         String payload = messagePayload.trim();
 
@@ -390,11 +419,11 @@ public final class XMLUtils {
             }
             
             // should be a valid encoding
-            return encoding;
+            return Charset.forName(encoding);
         }
 
         // return as encoding the default UTF-8
-        return "UTF-8";
+        return Charset.forName("UTF-8");
     }
 
 }
