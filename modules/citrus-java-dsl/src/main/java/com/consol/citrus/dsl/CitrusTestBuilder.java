@@ -87,14 +87,13 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public CitrusTestBuilder(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+        init();
 
         try {
             afterPropertiesSet();
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to setup test builder with application context", e);
         }
-
-        init();
     }
 
     /**
