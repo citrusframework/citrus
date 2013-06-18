@@ -22,6 +22,7 @@ import java.io.*;
 
 import javax.sql.DataSource;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -31,7 +32,7 @@ import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 
-public class ExecuteSQLQueryDefinitionTest {   
+public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
@@ -41,7 +42,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -79,7 +80,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testExecuteSQLQueryWithStatements() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -113,7 +114,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testValidationScript() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -142,7 +143,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testValidationScriptResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -177,7 +178,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testGroovyValidationScript() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -206,7 +207,7 @@ public class ExecuteSQLQueryDefinitionTest {
     
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)

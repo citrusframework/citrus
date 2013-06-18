@@ -18,15 +18,16 @@ package com.consol.citrus.dsl.definition;
 
 import static org.testng.Assert.assertEquals;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Parallel;
 
-public class ParallelDefinitionTest {
+public class ParallelDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testParallelBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 parallel(echo("${var}"), 

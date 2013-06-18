@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.annotations.Test;
@@ -33,9 +34,9 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Template;
 
-public class TemplateDefinitionTest {
+public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     @Test
     public void testTemplateBuilder() {
@@ -47,7 +48,7 @@ public class TemplateDefinitionTest {
         actions.add(new SleepAction());
         rootTemplate.setActions(actions);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 template("fooTemplate")
@@ -56,15 +57,13 @@ public class TemplateDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -79,7 +78,7 @@ public class TemplateDefinitionTest {
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         assertEquals(container.getActions().get(1).getClass(), SleepAction.class);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
@@ -91,7 +90,7 @@ public class TemplateDefinitionTest {
         actions.add(new EchoAction());
         rootTemplate.setActions(actions);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 template("fooTemplate")
@@ -99,15 +98,13 @@ public class TemplateDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -121,6 +118,6 @@ public class TemplateDefinitionTest {
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
 }

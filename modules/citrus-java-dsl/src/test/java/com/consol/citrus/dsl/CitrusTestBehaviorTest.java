@@ -19,17 +19,18 @@ package com.consol.citrus.dsl;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.dsl.definition.MockBuilder;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class CitrusTestBehaviorTest {
+public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorFrontPosition() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 applyBehavior(new FooBehavior());
@@ -58,7 +59,7 @@ public class CitrusTestBehaviorTest {
 
     @Test
     public void testBehaviorWithFinally() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -107,7 +108,7 @@ public class CitrusTestBehaviorTest {
 
     @Test
     public void testApplyBehavior() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -148,7 +149,7 @@ public class CitrusTestBehaviorTest {
 
     @Test
     public void testApplyBehaviorTwice() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 description("This is a Test");

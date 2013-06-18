@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -44,11 +45,11 @@ import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveSoapMessageDefinitionTest {
+public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
     
@@ -67,7 +68,7 @@ public class ReceiveSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachment() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -105,7 +106,7 @@ public class ReceiveSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachmentData() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -144,7 +145,7 @@ public class ReceiveSoapMessageDefinitionTest {
     public void testSoapAttachmentResource() throws IOException {
         final Resource attachmentResource = EasyMock.createMock(Resource.class);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -189,7 +190,7 @@ public class ReceiveSoapMessageDefinitionTest {
     public void testReceiveBuilderWithReceiverName() {
         SoapReplyMessageReceiver replyMessageReceiver = EasyMock.createMock(SoapReplyMessageReceiver.class);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive("replyMessageReceiver")
@@ -200,16 +201,14 @@ public class ReceiveSoapMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("replyMessageReceiver", MessageReceiver.class)).andReturn(replyMessageReceiver).once();
+        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("replyMessageReceiver", MessageReceiver.class)).andReturn(replyMessageReceiver).once();
-        expect(applicationContext.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -227,7 +226,7 @@ public class ReceiveSoapMessageDefinitionTest {
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
 }

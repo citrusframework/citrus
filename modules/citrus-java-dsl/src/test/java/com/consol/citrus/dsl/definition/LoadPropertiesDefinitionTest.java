@@ -16,15 +16,16 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.LoadPropertiesAction;
 
-public class LoadPropertiesDefinitionTest {
+public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void TestLoadBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 load("classpath:test.properties");

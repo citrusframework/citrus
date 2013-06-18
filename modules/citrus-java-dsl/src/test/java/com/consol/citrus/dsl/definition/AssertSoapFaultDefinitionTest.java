@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -34,17 +35,17 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 
-public class AssertSoapFaultDefinitionTest {
+public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     
     private Resource resource = EasyMock.createMock(Resource.class);
     private SoapFaultValidator soapFaultValidator = EasyMock.createMock(SoapFaultValidator.class);
     private SoapMessageFactory messageFactory = EasyMock.createMock(SoapMessageFactory.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     @Test
     public void testAssertSoapFaultBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -53,16 +54,14 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
 
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -78,12 +77,12 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getFaultString(), "Internal server error");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testFaultDetail() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -93,16 +92,14 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -120,12 +117,12 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><message>FooBar</message></ErrorDetail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testMultipleFaultDetails() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -136,16 +133,14 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -164,12 +159,12 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getFaultDetails().get(1), "<MessageDetail><message>FooBar</message></MessageDetail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testFaultDetailResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -179,17 +174,15 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
-        
-        reset(resource, applicationContext);
+        reset(resource, applicationContextMock);
 
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<ErrorDetail><message>FooBar</message</ErrorDetail>".getBytes())).once();
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        replay(resource, applicationContext);
+        replay(resource, applicationContextMock);
         
         builder.run(null, null);
         
@@ -207,12 +200,12 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getFaultDetails().get(0), "<ErrorDetail><message>FooBar</message</ErrorDetail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(resource, applicationContext);
+        verify(resource, applicationContextMock);
     }
     
     @Test
     public void testMultipleFaultDetailsInlineAndResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -223,17 +216,15 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
-        
-        reset(resource, applicationContext);
+        reset(resource, applicationContextMock);
 
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<MessageDetail><message>FooBar</message></MessageDetail>".getBytes())).once();
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        replay(resource, applicationContext);
+        replay(resource, applicationContextMock);
         
         builder.run(null, null);
         
@@ -252,12 +243,12 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getFaultDetails().get(1), "<MessageDetail><message>FooBar</message></MessageDetail>");
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(resource, applicationContext);
+        verify(resource, applicationContextMock);
     }
     
     @Test
     public void testAssertSoapFaultBuilderWithValidator() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -267,16 +258,14 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -293,12 +282,12 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getValidator(), soapFaultValidator);
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testAssertSoapFaultBuilderWithMessageFactory() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -308,16 +297,14 @@ public class AssertSoapFaultDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("messageFactory", SoapMessageFactory.class)).andReturn(messageFactory).once();
-        expect(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -334,6 +321,6 @@ public class AssertSoapFaultDefinitionTest {
         Assert.assertEquals(container.getMessageFactory(), messageFactory);
         Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
 }

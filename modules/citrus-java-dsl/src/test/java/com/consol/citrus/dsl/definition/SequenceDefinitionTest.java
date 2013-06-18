@@ -18,15 +18,16 @@ package com.consol.citrus.dsl.definition;
 
 import static org.testng.Assert.assertEquals;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Sequence;
 
-public class SequenceDefinitionTest {
+public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testSequenceBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 sequential(echo("${var}"), sleep(5.0));

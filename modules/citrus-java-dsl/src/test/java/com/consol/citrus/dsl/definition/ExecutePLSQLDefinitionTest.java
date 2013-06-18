@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import javax.sql.DataSource;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -30,14 +31,14 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.ExecutePLSQLAction;
 
-public class ExecutePLSQLDefinitionTest {
+public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
     private Resource sqlResource = EasyMock.createMock(Resource.class);
     
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -63,7 +64,7 @@ public class ExecutePLSQLDefinitionTest {
     
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -90,7 +91,7 @@ public class ExecutePLSQLDefinitionTest {
     
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)

@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -28,13 +29,13 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.TransformAction;
 
-public class TransformDefinitionTest {
+public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 	private Resource xmlResource = EasyMock.createMock(Resource.class);
 	private Resource xsltResource = EasyMock.createMock(Resource.class);
 	
 	@Test
 	public void testTransformBuilderWithData() {
-		MockBuilder builder = new MockBuilder() {
+		MockBuilder builder = new MockBuilder(applicationContext) {
     		@Override
     		public void configure() {
     		    transform()
@@ -58,7 +59,7 @@ public class TransformDefinitionTest {
 		
 	@Test
 	public void testTransformBuilderWithResource() throws IOException {
-		MockBuilder builder = new MockBuilder() {
+		MockBuilder builder = new MockBuilder(applicationContext) {
 			@Override
 			public void configure() {
 				transform()

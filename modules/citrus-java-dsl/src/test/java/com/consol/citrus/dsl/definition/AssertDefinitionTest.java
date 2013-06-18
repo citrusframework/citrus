@@ -18,16 +18,17 @@ package com.consol.citrus.dsl.definition;
 
 import static org.testng.Assert.assertEquals;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
-public class AssertDefinitionTest {
+public class AssertDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testAssertBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 assertException(echo("${foo}"))

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -23,7 +24,7 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.StopServerAction;
 import com.consol.citrus.server.Server;
 
-public class StopServerDefinitionTest {
+public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 	private Server testServer = EasyMock.createMock(Server.class);
 	
 	private Server server1 = EasyMock.createMock(Server.class);
@@ -32,7 +33,7 @@ public class StopServerDefinitionTest {
 
 	@Test
 	public void testStopServerBuilder() {
-		MockBuilder builder = new MockBuilder() {
+		MockBuilder builder = new MockBuilder(applicationContext) {
 			@Override
 			public void configure() {
 				stop(testServer);

@@ -18,14 +18,15 @@ package com.consol.citrus.dsl.definition;
 
 import static org.testng.Assert.assertEquals;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.Conditional;
 
-public class ConditionalDefinitionTest {
+public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testConditionalBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 conditional(echo("${var}")).when("${var} = 5");

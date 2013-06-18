@@ -18,15 +18,16 @@ package com.consol.citrus.dsl.definition;
 
 import static org.testng.Assert.assertEquals;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 
-public class RepeatOnErrorUntilTrueDefinitionTest {
+public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatOnErrorUntilTrueBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 repeatOnError(echo("${var}"), sleep(3.0), echo("${var}"))

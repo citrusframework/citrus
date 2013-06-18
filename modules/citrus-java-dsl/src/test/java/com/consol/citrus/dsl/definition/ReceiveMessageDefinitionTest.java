@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -52,17 +53,17 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveMessageDefinitionTest {
+public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     @Test
     public void testReceiveBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -92,7 +93,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithPayloadString() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -121,7 +122,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithPayloadResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -156,7 +157,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithReceiverName() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive("fooMessageReceiver")
@@ -164,15 +165,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -184,12 +183,12 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testReceiveBuilderWithTimeout() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -212,7 +211,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithHeaders() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -262,7 +261,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithHeaderData() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -310,7 +309,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithHeaderResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -365,7 +364,7 @@ public class ReceiveMessageDefinitionTest {
     public void testReceiveBuilderWithValidator() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -399,7 +398,7 @@ public class ReceiveMessageDefinitionTest {
     public void testReceiveBuilderWithValidatorName() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -410,15 +409,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -438,7 +435,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
@@ -446,7 +443,7 @@ public class ReceiveMessageDefinitionTest {
         final Map<String, String> messageSelector = new HashMap<String, String>();
         messageSelector.put("operation", "sayHello");
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -471,7 +468,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithSelectorExpression() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -497,7 +494,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -507,15 +504,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
 
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
 
-        reset(applicationContext);
+        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
 
-        expect(applicationContext.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-
-        replay(applicationContext);
+        replay(applicationContextMock);
 
         builder.run(null, null);
         
@@ -533,12 +528,12 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
 
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -567,7 +562,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractCombined() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -579,15 +574,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
 
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
 
-        reset(applicationContext);
+        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
 
-        expect(applicationContext.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -609,14 +602,14 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message"));
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
 
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testReceiveBuilderWithValidationCallback() {
         final ValidationCallback callback = EasyMock.createMock(ValidationCallback.class);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -650,7 +643,7 @@ public class ReceiveMessageDefinitionTest {
     public void testReceiveBuilderWithValidatonScript() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -660,15 +653,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -688,7 +679,7 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(validationContext.getValidationScript(), "assert true");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
@@ -697,7 +688,7 @@ public class ReceiveMessageDefinitionTest {
         
         File resourceFile = EasyMock.createMock(File.class);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -707,18 +698,16 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock, resource, resourceFile);
         
-        reset(applicationContext, resource, resourceFile);
-        
-        expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
         expect(resource.getFile()).andReturn(resourceFile).once();
         expect(resourceFile.getAbsolutePath()).andReturn("/path/to/file/File.groovy").once();
         
-        replay(applicationContext, resource, resourceFile);
+        replay(applicationContextMock, resource, resourceFile);
         
         builder.run(null, null);
         
@@ -738,14 +727,14 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertEquals(validationContext.getValidationScript(), "");
         Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "/path/to/file/File.groovy");
         
-        verify(applicationContext, resource, resourceFile);
+        verify(applicationContextMock, resource, resourceFile);
     }
     
     @Test
     public void testReceiveBuilderWithValidatonScriptAndHeader() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -756,15 +745,13 @@ public class ReceiveMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -793,12 +780,12 @@ public class ReceiveMessageDefinitionTest {
         Assert.assertNull(((PayloadTemplateMessageBuilder)headerValidationContext.getMessageBuilder()).getPayloadResourcePath());
         Assert.assertTrue(((PayloadTemplateMessageBuilder)headerValidationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testReceiveBuilderWithNamespaceValidation() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -830,7 +817,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithPathValidationExpressions() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -863,7 +850,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithIgnoreElements() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -895,7 +882,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithSchema() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)
@@ -926,7 +913,7 @@ public class ReceiveMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderWithSchemaRepository() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 receive(messageReceiver)

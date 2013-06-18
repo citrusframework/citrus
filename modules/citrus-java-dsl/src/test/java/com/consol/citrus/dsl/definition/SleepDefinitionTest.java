@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,11 +25,11 @@ import com.consol.citrus.actions.SleepAction;
 /**
  * @author Christoph Deppisch
  */
-public class SleepDefinitionTest {
+public class SleepDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSleepBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 sleep(0.5);

@@ -18,14 +18,15 @@ package com.consol.citrus.dsl.definition;
 
 import static org.testng.Assert.assertEquals;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.container.Iterate;
 
-public class IterateDefinitionTest {
+public class IterateDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testIterateBuilder() {      
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 iterate(variables().add("index", "${i}"))

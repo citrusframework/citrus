@@ -37,6 +37,7 @@ import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
@@ -58,7 +59,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class CitrusTestBuilder implements TestBuilder {
+public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
     /**
      * This builders test case
@@ -86,6 +87,13 @@ public class CitrusTestBuilder implements TestBuilder {
      */
     public CitrusTestBuilder(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+
+        try {
+            afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to setup test builder with application context", e);
+        }
+
         init();
     }
 
@@ -118,13 +126,10 @@ public class CitrusTestBuilder implements TestBuilder {
     public void init() {
         variables = new LinkedHashMap<String, Object>();
         testCase = new TestCase();
-
-        if (applicationContext != null) {
-            testCase.setTestListeners(applicationContext.getBean(TestListeners.class));
-            testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
-        }
-
         testCase.setVariableDefinitions(variables);
+
+        name(this.getClass().getSimpleName());
+        packageName(this.getClass().getPackage().getName());
     }
 
     /**
@@ -1068,5 +1073,14 @@ public class CitrusTestBuilder implements TestBuilder {
      */
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Called after Spring application context was set.
+     * @throws Exception
+     */
+    public void afterPropertiesSet() throws Exception {
+        testCase.setTestListeners(applicationContext.getBean(TestListeners.class));
+        testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
     }
 }

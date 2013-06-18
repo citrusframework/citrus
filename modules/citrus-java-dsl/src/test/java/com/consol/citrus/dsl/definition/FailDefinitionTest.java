@@ -16,16 +16,17 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.FailAction;
 
-public class FailDefinitionTest {
+public class FailDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 fail("This test will fail.");

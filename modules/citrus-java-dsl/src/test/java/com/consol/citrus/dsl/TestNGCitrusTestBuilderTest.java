@@ -16,21 +16,38 @@
 
 package com.consol.citrus.dsl;
 
+import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
+import org.easymock.EasyMock;
+import org.springframework.context.ApplicationContext;
+import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.dsl.definition.MockBuilder;
 
+import static org.easymock.EasyMock.*;
+
 /**
  * @author Christoph Deppisch
  */
 public class TestNGCitrusTestBuilderTest {
-    
+
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+
     @Test
     public void testNG() {
-        FooTest builder = new FooTest();
-        
+        FooTest builder = new FooTest(applicationContextMock);
+
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+
+        replay(applicationContextMock);
+
         builder.run(null, null);
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
@@ -41,9 +58,17 @@ public class TestNGCitrusTestBuilderTest {
         
         Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), Status.FINAL);
+
+        verify(applicationContextMock);
     }
     
     private static class FooTest extends MockBuilder {
+
+        /** Constructor */
+        public FooTest(ApplicationContext applicationContext) {
+            super(applicationContext);
+        }
+
         @Override
         public void configure() {
             description("This is a Test");

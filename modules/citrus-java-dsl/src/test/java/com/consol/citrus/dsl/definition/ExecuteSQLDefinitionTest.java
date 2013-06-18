@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import javax.sql.DataSource;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -31,7 +32,7 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.ExecuteSQLAction;
 
 
-public class ExecuteSQLDefinitionTest {    
+public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
@@ -39,7 +40,7 @@ public class ExecuteSQLDefinitionTest {
     
     @Test
     public void TestExecuteSQLBuilderWithStatement() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -64,7 +65,7 @@ public class ExecuteSQLDefinitionTest {
     
     @Test
     public void TestExecuteSQLBuilderWithSQLResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 sql(dataSource)

@@ -20,6 +20,7 @@ import static org.easymock.EasyMock.*;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.MessageChannel;
@@ -31,7 +32,7 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 
-public class PurgeMessageChannelsDefinitionTest {
+public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
     private MessageSelector messageSelector = EasyMock.createMock(MessageSelector.class);
     
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
@@ -40,11 +41,11 @@ public class PurgeMessageChannelsDefinitionTest {
     private MessageChannel channel2 = EasyMock.createMock(MessageChannel.class);
     private MessageChannel channel3 = EasyMock.createMock(MessageChannel.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
 
     @Test
     public void testPurgeChannelsBuilderWithChannels() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -66,7 +67,7 @@ public class PurgeMessageChannelsDefinitionTest {
     
     @Test
     public void testPurgeChannelBuilderWithNames() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -77,14 +78,12 @@ public class PurgeMessageChannelsDefinitionTest {
             }
         };
 
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
 
-        reset(applicationContext);
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
 
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
 
@@ -97,12 +96,12 @@ public class PurgeMessageChannelsDefinitionTest {
         Assert.assertEquals(action.getChannelResolver(), channelResolver);
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testMissingChannelResolver() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -110,14 +109,12 @@ public class PurgeMessageChannelsDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
-        
-        reset(applicationContext);
+        reset(applicationContextMock);
 
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -130,6 +127,6 @@ public class PurgeMessageChannelsDefinitionTest {
         Assert.assertNotNull(action.getChannelResolver());
         Assert.assertTrue(action.getChannelResolver() instanceof BeanFactoryChannelResolver);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
 }

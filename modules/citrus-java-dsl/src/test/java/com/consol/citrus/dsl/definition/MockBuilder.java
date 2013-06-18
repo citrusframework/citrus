@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.context.TestContext;
+import org.springframework.context.ApplicationContext;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 
@@ -30,6 +31,10 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
  * @author Christoph Deppisch
  */
 public class MockBuilder extends TestNGCitrusTestBuilder {
+
+    public MockBuilder(ApplicationContext applicationContext) {
+        setApplicationContext(applicationContext);
+    }
 
     @Override
     public void run(IHookCallBack callBack, ITestResult testResult) {

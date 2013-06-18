@@ -19,13 +19,14 @@ package com.consol.citrus.dsl.definition;
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.PurgeJmsQueuesAction;
 
-public class PurgeJMSQueuesDefinitionTest {
+public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
     
     private Queue queue1 = EasyMock.createMock(Queue.class);
@@ -34,7 +35,7 @@ public class PurgeJMSQueuesDefinitionTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueueNames() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -61,7 +62,7 @@ public class PurgeJMSQueuesDefinitionTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueues() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)

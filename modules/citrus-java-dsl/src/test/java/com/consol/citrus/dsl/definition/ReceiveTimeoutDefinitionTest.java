@@ -20,6 +20,7 @@ import static org.easymock.EasyMock.*;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
@@ -28,15 +29,15 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.message.MessageReceiver;
 
-public class ReceiveTimeoutDefinitionTest {
+public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
      
     @Test
     public void testReceiveTimeoutBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 expectTimeout(messageReceiver)
@@ -59,7 +60,7 @@ public class ReceiveTimeoutDefinitionTest {
     
     @Test
     public void testReceiveTimeoutBuilderWithReceiverName() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 expectTimeout("fooMessageReceiver")
@@ -67,15 +68,13 @@ public class ReceiveTimeoutDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
          
@@ -87,6 +86,6 @@ public class ReceiveTimeoutDefinitionTest {
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getTimeout(), 500);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
 }

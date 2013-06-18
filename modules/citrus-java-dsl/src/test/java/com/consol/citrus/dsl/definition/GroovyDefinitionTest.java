@@ -20,6 +20,7 @@ import static org.easymock.EasyMock.*;
 
 import java.io.*;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -27,14 +28,14 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.script.GroovyAction;
 
-public class GroovyDefinitionTest {
+public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
     private Resource scriptResource = EasyMock.createMock(Resource.class);
     private Resource scriptTemplate = EasyMock.createMock(Resource.class);
     private File file = EasyMock.createMock(File.class);
             
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 groovy(scriptResource)
@@ -60,7 +61,7 @@ public class GroovyDefinitionTest {
     
     @Test
     public void testGroovyBuilderWithScript() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -80,7 +81,7 @@ public class GroovyDefinitionTest {
     
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -105,7 +106,7 @@ public class GroovyDefinitionTest {
     
     @Test
     public void testGroovyBuilderWithTemplatePath() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")

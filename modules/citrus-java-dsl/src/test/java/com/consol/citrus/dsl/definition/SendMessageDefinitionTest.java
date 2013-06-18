@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -39,17 +40,17 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 /**
  * @author Christoph Deppisch
  */
-public class SendMessageDefinitionTest {
+public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
     
     @Test
     public void testSendBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -76,7 +77,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithPayloadData() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -102,7 +103,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithPayloadResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -134,7 +135,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithSenderName() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 send("fooMessageSender")
@@ -142,15 +143,13 @@ public class SendMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("fooMessageSender", MessageSender.class)).andReturn(messageSender).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("fooMessageSender", MessageSender.class)).andReturn(messageSender).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -161,12 +160,12 @@ public class SendMessageDefinitionTest {
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
     @Test
     public void testSendBuilderWithHeaders() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -196,7 +195,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithHeaderData() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -242,7 +241,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testSendBuilderWithHeaderDataResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -291,7 +290,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)
@@ -319,7 +318,7 @@ public class SendMessageDefinitionTest {
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(messageSender)

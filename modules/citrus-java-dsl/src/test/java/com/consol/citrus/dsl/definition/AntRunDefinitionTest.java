@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.tools.ant.BuildListener;
 import org.easymock.EasyMock;
 import org.testng.Assert;
@@ -26,11 +27,11 @@ import com.consol.citrus.actions.AntRunAction;
 /**
  * @author Christoph Deppisch
  */
-public class AntRunDefinitionTest {
+public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilder() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -51,7 +52,7 @@ public class AntRunDefinitionTest {
     
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -73,7 +74,7 @@ public class AntRunDefinitionTest {
     
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -99,7 +100,7 @@ public class AntRunDefinitionTest {
     
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -125,7 +126,7 @@ public class AntRunDefinitionTest {
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = EasyMock.createMock(BuildListener.class);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")

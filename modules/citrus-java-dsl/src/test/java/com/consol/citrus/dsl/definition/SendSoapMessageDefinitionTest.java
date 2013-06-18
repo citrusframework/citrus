@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -41,11 +42,11 @@ import com.consol.citrus.ws.message.WebServiceMessageSender;
 /**
  * @author Christoph Deppisch
  */
-public class SendSoapMessageDefinitionTest {
+public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private WebServiceMessageSender soapMessageSender = EasyMock.createMock(WebServiceMessageSender.class);
     
-    private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
     
@@ -64,7 +65,7 @@ public class SendSoapMessageDefinitionTest {
     
     @Test
     public void testFork() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(soapMessageSender)
@@ -106,7 +107,7 @@ public class SendSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachment() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(soapMessageSender)
@@ -139,7 +140,7 @@ public class SendSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachmentData() {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(soapMessageSender)
@@ -172,7 +173,7 @@ public class SendSoapMessageDefinitionTest {
     
     @Test
     public void testSoapAttachmentResource() throws IOException {
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(soapMessageSender)
@@ -212,7 +213,7 @@ public class SendSoapMessageDefinitionTest {
     public void testSendBuilderWithSenderName() {
         MessageSender messageSender = EasyMock.createMock(MessageSender.class);
         
-        MockBuilder builder = new MockBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
                 send("soapMessageSender")
@@ -226,16 +227,14 @@ public class SendSoapMessageDefinitionTest {
             }
         };
         
-        builder.setApplicationContext(applicationContext);
+        reset(applicationContextMock);
         
-        reset(applicationContext);
+        expect(applicationContextMock.getBean("soapMessageSender", MessageSender.class)).andReturn(soapMessageSender).once();
+        expect(applicationContextMock.getBean("messageSender", MessageSender.class)).andReturn(messageSender).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         
-        expect(applicationContext.getBean("soapMessageSender", MessageSender.class)).andReturn(soapMessageSender).once();
-        expect(applicationContext.getBean("messageSender", MessageSender.class)).andReturn(messageSender).once();
-        expect(applicationContext.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContext.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        
-        replay(applicationContext);
+        replay(applicationContextMock);
         
         builder.run(null, null);
         
@@ -256,7 +255,7 @@ public class SendSoapMessageDefinitionTest {
         Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
-        verify(applicationContext);
+        verify(applicationContextMock);
     }
     
 }
