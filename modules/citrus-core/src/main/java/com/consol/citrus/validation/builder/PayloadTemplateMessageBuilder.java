@@ -38,9 +38,6 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
     /** Direct string representation of message payload */
     private String payloadData;
     
-    /** List of manipulators for static message payload */
-    private List<MessageConstructionInterceptor<String>> messageInterceptors = new ArrayList<MessageConstructionInterceptor<String>>();
-    
     /**
      * Build the control message from
      */
@@ -53,13 +50,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
             } else if (payloadData != null){
                 messagePayload = context.replaceDynamicContentInString(payloadData);
             }
-            
-            if (StringUtils.hasText(messagePayload)) {
-                for (MessageConstructionInterceptor<String> modifyer : messageInterceptors) {
-                    messagePayload = modifyer.interceptMessageConstruction(messagePayload, context);
-                }
-            }
-            
+
             return messagePayload;
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
@@ -82,31 +73,6 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
         this.payloadResourcePath = payloadResource;
     }
     
-    /**
-     * Adds a new interceptor to the message construction process.
-     * @param interceptor
-     */
-    public void addMessageConstructingInterceptor(MessageConstructionInterceptor<String> interceptor) {
-        messageInterceptors.add(interceptor);
-    }
-
-    /**
-     * Gets the messageInterceptors.
-     * @return the messageInterceptors
-     */
-    public List<MessageConstructionInterceptor<String>> getMessageInterceptors() {
-        return messageInterceptors;
-    }
-
-    /**
-     * Sets the messageInterceptors.
-     * @param messageInterceptors the messageInterceptors to set
-     */
-    public void setMessageInterceptors(
-            List<MessageConstructionInterceptor<String>> messageInterceptors) {
-        this.messageInterceptors = messageInterceptors;
-    }
-
     /**
      * Gets the payloadResource.
      * @return the payloadResource

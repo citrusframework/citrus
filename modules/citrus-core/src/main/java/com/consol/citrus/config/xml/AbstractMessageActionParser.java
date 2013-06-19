@@ -120,7 +120,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             
             if (!overwriteMessageValues.isEmpty()) {
                 XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteMessageValues);
-                messageBuilder.addMessageConstructingInterceptor(interceptor);
+                messageBuilder.add(interceptor);
             }
         } 
         

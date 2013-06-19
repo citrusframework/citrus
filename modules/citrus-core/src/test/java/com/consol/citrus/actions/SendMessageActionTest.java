@@ -393,7 +393,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         overwriteElements.put("/TestRequest/Message", "Hello World!");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
-        messageBuilder.addMessageConstructingInterceptor(interceptor);
+        messageBuilder.add(interceptor);
         
         sendAction.setMessageBuilder(messageBuilder);
         
@@ -438,7 +438,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         overwriteElements.put("TestRequest.Message", "Hello World!");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
-        messageBuilder.addMessageConstructingInterceptor(interceptor);
+        messageBuilder.add(interceptor);
         
         sendAction.setMessageBuilder(messageBuilder);
         
@@ -484,7 +484,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
-        messageBuilder.addMessageConstructingInterceptor(interceptor);
+        messageBuilder.add(interceptor);
         
         sendAction.setMessageBuilder(messageBuilder);
         
@@ -531,7 +531,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
-        messageBuilder.addMessageConstructingInterceptor(interceptor);
+        messageBuilder.add(interceptor);
         
         sendAction.setMessageBuilder(messageBuilder);
         

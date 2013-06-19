@@ -322,7 +322,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-elementB", "text-value");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -363,7 +363,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-elementB", "");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -404,7 +404,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-elementB", "text-value");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
         
         HashMap<String, String> validateElements = new HashMap<String, String>();
         validateElements.put("root.element.sub-elementA", "text-value");
@@ -451,7 +451,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-elementB.attribute", "B");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -492,7 +492,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-element-wrong", "text-value");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -533,7 +533,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-elementB.attribute-wrong", "B");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -574,7 +574,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         messageElements.put("sub-elementB-wrong.attribute", "B");
         
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
-        controlMessageBuilder.addMessageConstructingInterceptor(interceptor);
+        controlMessageBuilder.add(interceptor);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);

@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -49,7 +50,14 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(XpathMessageConstructionInterceptor.class);
-    
+
+    /**
+     * Default constructor.
+     */
+    public XpathMessageConstructionInterceptor() {
+        super();
+    }
+
     /**
      * Default constructor using fields.
      * @param xPathExpressions
@@ -67,6 +75,10 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
      * needs to be XML here.
      */
     public String interceptMessageConstruction(String messagePayload, TestContext context) {
+        if (!StringUtils.hasText(messagePayload)) {
+            return messagePayload;
+        }
+
         Document doc = XMLUtils.parseMessagePayload(messagePayload);
 
         if (doc == null) {

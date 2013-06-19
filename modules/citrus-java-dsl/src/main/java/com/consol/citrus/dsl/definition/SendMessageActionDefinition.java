@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.oxm.Marshaller;
@@ -48,6 +51,9 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
     /** Variable extractors filled within this definition */
     private MessageHeaderVariableExtractor headerExtractor;
     private XpathPayloadVariableExtractor xpathExtractor;
+
+    /** Message constructing interceptor */
+    private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
     
     private PositionHandle positionHandle;
     
@@ -243,6 +249,30 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         }
         
         xpathExtractor.getxPathExpressions().put(xpath, variable);
+        return this;
+    }
+
+    /**
+     * Adds XPath manipulating expression that evaluates to message payload before sending.
+     * @param xpath
+     * @param value
+     * @return
+     */
+    public SendMessageActionDefinition xpath(String xpath, String value) {
+        if (xpathMessageConstructionInterceptor == null) {
+            xpathMessageConstructionInterceptor = new XpathMessageConstructionInterceptor();
+
+            if (action.getMessageBuilder() != null) {
+                ((MessageContentBuilder<String>)action.getMessageBuilder()).add(xpathMessageConstructionInterceptor);
+            } else {
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.getMessageInterceptors().add(xpathMessageConstructionInterceptor);
+
+                action.setMessageBuilder(messageBuilder);
+            }
+        }
+
+        xpathMessageConstructionInterceptor.getxPathExpressions().put(xpath, value);
         return this;
     }
     

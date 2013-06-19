@@ -203,7 +203,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
                 return "InterceptedMessagePayload";
             }
         };
-        messageBuilder.addMessageConstructingInterceptor(interceptor);
+        messageBuilder.add(interceptor);
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
         

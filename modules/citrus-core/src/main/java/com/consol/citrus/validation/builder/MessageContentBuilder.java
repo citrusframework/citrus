@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.builder;
 
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.context.TestContext;
@@ -33,4 +34,10 @@ public interface MessageContentBuilder<T> {
      * @return the constructed message object.
      */
     Message<T> buildMessageContent(TestContext context);
+
+    /**
+     * Adds a message construction interceptor.
+     * @param interceptor
+     */
+    void add(MessageConstructionInterceptor<T> interceptor);
 }

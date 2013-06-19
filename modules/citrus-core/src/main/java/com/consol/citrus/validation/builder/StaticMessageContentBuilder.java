@@ -16,9 +16,14 @@
 
 package com.consol.citrus.validation.builder;
 
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.context.TestContext;
+import org.springframework.integration.support.MessageBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Message builder returning a static message every time the build mechanism is called. This
@@ -28,6 +33,9 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  */
 public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> {
+
+    /** List of manipulators for static message payload */
+    private List<MessageConstructionInterceptor<T>> messageInterceptors = new ArrayList<MessageConstructionInterceptor<T>>();
 
     /** The static message to build here */
     private Message<T> message;
@@ -50,6 +58,16 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      * Returns the static message every time.
      */
     public Message<T> buildMessageContent(TestContext context) {
+        if (message != null && messageInterceptors.size() > 0) {
+            T payload = message.getPayload();
+
+            for (MessageConstructionInterceptor<T> modifyer : messageInterceptors) {
+                payload = modifyer.interceptMessageConstruction(payload, context);
+            }
+
+            return MessageBuilder.withPayload(payload).copyHeaders(message.getHeaders()).build();
+        }
+
         return message;
     }
 
@@ -59,5 +77,30 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      */
     public Message<T> getMessage() {
         return message;
+    }
+
+    /**
+     * Adds a new interceptor to the message construction process.
+     * @param interceptor
+     */
+    public void add(MessageConstructionInterceptor<T> interceptor) {
+        messageInterceptors.add(interceptor);
+    }
+
+    /**
+     * Gets the messageInterceptors.
+     * @return the messageInterceptors
+     */
+    public List<MessageConstructionInterceptor<T>> getMessageInterceptors() {
+        return messageInterceptors;
+    }
+
+    /**
+     * Sets the messageInterceptors.
+     * @param messageInterceptors the messageInterceptors to set
+     */
+    public void setMessageInterceptors(
+            List<MessageConstructionInterceptor<T>> messageInterceptors) {
+        this.messageInterceptors = messageInterceptors;
     }
 }
