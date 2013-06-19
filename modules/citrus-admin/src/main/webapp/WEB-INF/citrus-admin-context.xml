@@ -54,8 +54,16 @@
       <property name="order" value="1"/>
       <property name="cache" value="false"/>
       <property name="failOnMissingFile" value="false"/>
-      <property name="prefix" value="/javascript/views"/>
+      <property name="prefix" value="/javascript/templates"/>
       <property name="suffix" value=".html"/>
+    </bean>
+
+    <bean id="handlebarsPostProcessor" class="com.consol.citrus.admin.handlebars.HandlebarsHelperPostProcessor">
+      <property name="helperSources">
+        <list>
+          <bean class="com.consol.citrus.admin.handlebars.HandlebarsHelperSource"/>
+        </list>
+      </property>
     </bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">

@@ -63,6 +63,19 @@ Handlebars.registerHelper('truncate', function(message, block) {
 });
 
 /*
+ * Helper to translate folder path to package representation.
+ */
+Handlebars.registerHelper('folderToPackage', function(path, block) {
+    if (path == null) {
+        return '';
+    }
+
+    path = String(path);
+    var regExp = /[/]/g;
+    return path.replace(regExp, "\.");
+});
+
+/*
  * Helper pretty prints XML fragments with indentation and new lines
  */
 Handlebars.registerHelper('prettyPrintXml', function(context, block) {

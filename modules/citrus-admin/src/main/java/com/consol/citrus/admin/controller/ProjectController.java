@@ -16,14 +16,6 @@
 
 package com.consol.citrus.admin.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.springmvc.HandlebarsView;
-import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

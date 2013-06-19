@@ -16,13 +16,14 @@
 
 package com.consol.citrus.admin.controller;
 
+import java.io.File;
 import java.util.List;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
 import com.consol.citrus.admin.util.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.consol.citrus.admin.model.TestCaseType;
@@ -59,8 +60,25 @@ public class TestCaseController {
     public ModelAndView list(@RequestParam("dir") String dir) {
         String directory = fileHelper.decodeDirectoryUrl(dir, testCaseService.getTestDirectory());
 
-        String[] folders = fileHelper.getFolders(directory);
-        String[] files = fileHelper.getFiles(directory, ".xml");
+        String[] folders = null;
+        String[] files;
+        String compactFolder = null;
+        do {
+            if (folders != null) {
+                if (StringUtils.hasText(compactFolder)) {
+                    compactFolder += File.separator + folders[0];
+                } else {
+                    compactFolder = folders[0];
+                }
+            }
+
+            folders = fileHelper.getFolders(StringUtils.hasText(compactFolder) ? directory + File.separator + compactFolder : directory);
+            files = fileHelper.getFiles(directory, ".xml");
+        } while (folders.length == 1 && files.length == 0);
+
+        if (StringUtils.hasText(compactFolder)) {
+            folders = new String[] { compactFolder };
+        }
 
         ModelAndView view = new ModelAndView("FileTree");
         view.addObject("baseDir", directory);

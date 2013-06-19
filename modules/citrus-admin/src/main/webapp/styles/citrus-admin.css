@@ -73,6 +73,10 @@ a:hover {
   cursor: pointer;
 }
 
+form#search-form {
+    margin: 0 0 10px;
+}
+
 div.test-details-open {
    padding-top: 200px;
    text-align: center;
@@ -162,7 +166,8 @@ pre.logger {
 
 div.file-tree {
     border: 1px solid #dddddd;
-    min-height: 300px;
+    min-height: 500px;
+    max-height: 650px;
     overflow: auto;
     padding: 5px;
 }
