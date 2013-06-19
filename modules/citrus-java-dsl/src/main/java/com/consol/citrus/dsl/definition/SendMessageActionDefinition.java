@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.validation.builder.MessageContentBuilder;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
@@ -254,11 +253,11 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
 
     /**
      * Adds XPath manipulating expression that evaluates to message payload before sending.
-     * @param xpath
+     * @param expression
      * @param value
      * @return
      */
-    public SendMessageActionDefinition xpath(String xpath, String value) {
+    public SendMessageActionDefinition xpath(String expression, String value) {
         if (xpathMessageConstructionInterceptor == null) {
             xpathMessageConstructionInterceptor = new XpathMessageConstructionInterceptor();
 
@@ -272,7 +271,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
             }
         }
 
-        xpathMessageConstructionInterceptor.getxPathExpressions().put(xpath, value);
+        xpathMessageConstructionInterceptor.getxPathExpressions().put(expression, value);
         return this;
     }
     

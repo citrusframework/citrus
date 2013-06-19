@@ -24,6 +24,8 @@ import java.io.IOException;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -342,5 +344,32 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
         Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
+    }
+
+    @Test
+    public void testXpathSupport() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageSender)
+                        .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
+                        .xpath("/TestRequest/Message", "Hello World!");
+            }
+        };
+
+        builder.run(null, null);
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+
+        Assert.assertEquals(action.getMessageSender(), messageSender);
+
+        Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
+        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
+        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
+        Assert.assertEquals(((XpathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getxPathExpressions().get("/TestRequest/Message"), "Hello World!");
     }
 }
