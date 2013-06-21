@@ -166,7 +166,7 @@ pre.logger {
 
 div.file-tree {
     border: 1px solid #dddddd;
-    min-height: 500px;
+    min-height: 555px;
     max-height: 650px;
     overflow: auto;
     padding: 5px;
