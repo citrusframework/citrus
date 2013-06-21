@@ -25,7 +25,6 @@
 
               this.footerView = new FooterView({el: $('#footer')});
               this.footerView.render();
-              this.footerView.minimize();
           },
           
           welcome: function() {

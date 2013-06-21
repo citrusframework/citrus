@@ -77,6 +77,10 @@ form#search-form {
     margin: 0 0 10px;
 }
 
+form#search-form #test-name {
+    width: 238px;
+}
+
 div.test-details-open {
    padding-top: 200px;
    text-align: center;
@@ -95,7 +99,7 @@ div.test-details-open {
 }
 
 .test-details h2 i.icon-stop {
-    color: #bd362f;
+    color: #F4645C;
 }
 
 #test-tabs {
@@ -139,12 +143,24 @@ div.test-details-open {
 }
 
 .progress {
-    border: 1px solid #333333;
+    border: 1px solid #aaaaaa;
 }
 
 .progress .bar {
     text-shadow: none;
     transition: none;
+}
+
+.progress-success .bar,
+.progress .bar-success {
+    background-color: #62c462;
+    background-image: -moz-linear-gradient(top, #7ad87a, #62c462);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7ad87a), to(#62c462));
+    background-image: -webkit-linear-gradient(top, #7ad87a, #62c462);
+    background-image: -o-linear-gradient(top, #7ad87a, #62c462);
+    background-image: linear-gradient(to bottom, #7ad87a, #62c462);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff7ad87a', endColorstr='#ff62c462', GradientType=0);
 }
 
 .test-progress {
@@ -306,7 +322,7 @@ span.message-outbound {
     background-color: #ffffff;
 }
 
-#footer.resized {
+#footer.maximized {
 	height: 600px;
 }
 
@@ -318,7 +334,7 @@ span.message-outbound {
     height: 175px;
 }
 
-.footer-tab .resized, pre.logger .resized, .footer-task-bar .resized {
+.footer-tab .maximized, pre.logger .maximized, .footer-task-bar .maximized {
     height: 575px;
 }
 
@@ -340,6 +356,15 @@ span.message-outbound {
     margin-right: 10px;
 }
 
+.footer-bar i {
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 3px;
+    margin: 0 1px;
+    border: 1px solid #eeeeee;
+}
+
 .footer-task-bar {
     width: 35px;
     height: 175px;
@@ -350,7 +375,7 @@ span.message-outbound {
     color: #333333;
 }
 
-.footer-task-bar i, .footer-bar i {
+.footer-task-bar i {
     display: block;
     text-align: center;
     padding: 3px;
@@ -363,7 +388,7 @@ span.message-outbound {
 }
 
 .footer-task-bar i.icon-stop {
-    color: #bd362f;
+    color: #F4645C;
 }
 
 .footer-task-bar i.disabled, .footer-bar i.disabled {

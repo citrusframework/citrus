@@ -5,7 +5,7 @@
           tests: {},
 
           events: {
-              "submit #search-form" : "searchTests"
+              "submit #search-form" : "searchTest"
           },
           
           initialize: function() {
@@ -41,7 +41,7 @@
                   minLength: 1,
                   updater: _.bind(function(item) {
                       $('#test-name').val(item);
-                      this.searchTests();
+                      this.searchTest();
                       return item;
                   }, this)
               });
@@ -49,12 +49,16 @@
               return this;
           },
           
-          searchTests: function() {
+          searchTest: function() {
               var searchKey = $('#test-name').val();
               var test = _.find(this.tests, function(t) {return t.name == searchKey});
 
-              var directory = test.packageName.replace(/\./g, "/");
-              $('li.directory.collapsed').children('a[rel*="' + directory + '"]').click();
+              var pathTokens = test.packageName.split(".");
+              var path = "";
+              _.each(pathTokens, _.bind(function (token) {
+                  path += token + "/";
+                  this.openDirectory(path);
+              }, this));
 
               this.showDetails(test.file);
 
@@ -89,7 +93,11 @@
               $('#test-tabs a[href="#test-details-tab-' + idHash + '"]').tab('show');
 
               return false;
-          } 
+          },
+
+          openDirectory: function(path) {
+              $('li.directory.collapsed').children('a[rel$="' + path + '"]').trigger('click');
+          }
     
         });
         

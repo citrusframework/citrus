@@ -4,7 +4,7 @@
 
             events: {
                 "show .nav-tabs a": "navigateTab",
-                "dblclick .footer-content": "resize",
+                "click #footer-maximize": "maximize",
                 "click #footer-minimize" : "minimize"
             },
 
@@ -111,36 +111,55 @@
                 $('#footer-tabs a[href="#footer-tab-' + idHash + '"]').tab('show');
             },
           
-            resize: function() {
-                $('#footer').toggleClass('resized');
-                $('.footer-tab').toggleClass('resized');
-                $('.footer-task-bar').toggleClass('resized');
-                $('pre.logger').toggleClass('resized');
+            maximize: function() {
+                if ($('#footer').hasClass('maximized')) {
+                    $('#footer').removeClass('maximized');
+                    $('.footer-tab').removeClass('maximized');
+                    $('.footer-task-bar').removeClass('maximized');
+                    $('pre.logger').removeClass('maximized');
+                } else {
+                    $('#footer').addClass('maximized');
+                    $('.footer-tab').addClass('maximized');
+                    $('.footer-task-bar').addClass('maximized');
+                    $('pre.logger').addClass('maximized');
 
-                $('#footer').removeClass('minimized');
-                $('.footer-tab').removeClass('minimized');
-                $('.footer-task-bar').removeClass('minimized');
-                $('pre.logger').removeClass('minimized');
+                    if ($('#footer').hasClass('minimized')) {
+                        this.minimize();
+                    }
+                }
             },
 
             minimize: function() {
-                $('#footer').removeClass('resized');
-                $('.footer-tab').removeClass('resized');
-                $('.footer-task-bar').removeClass('resized');
-                $('pre.logger').removeClass('resized');
+                if ($('#footer').hasClass('minimized')) {
+                    $('#footer').hide('slide', {direction: 'down'}, 150, function() {
+                        $('#footer').removeClass('minimized');
+                        $('.footer-tab').removeClass('minimized');
+                        $('.footer-task-bar').removeClass('minimized');
+                        $('pre.logger').removeClass('minimized');
 
-                if ($('i#footer-minimize').hasClass('icon-collapse')) {
-                    $('i#footer-minimize').removeClass('icon-collapse');
-                    $('i#footer-minimize').addClass('icon-collapse-top');
+                        $('i#footer-minimize').addClass('icon-chevron-down');
+                        $('i#footer-minimize').removeClass('icon-chevron-up');
+
+                        $('#footer').show('slide', {direction: 'down'}, 300);
+                    });
                 } else {
-                    $('i#footer-minimize').addClass('icon-collapse');
-                    $('i#footer-minimize').removeClass('icon-collapse-top');
-                }
+                    $('#footer').hide('slide', {direction: 'down'}, 300, function() {
+                        $('#footer').removeClass('maximized');
+                        $('.footer-tab').removeClass('maximized');
+                        $('.footer-task-bar').removeClass('maximized');
+                        $('pre.logger').removeClass('maximized');
 
-                $('#footer').toggleClass('minimized');
-                $('.footer-tab').toggleClass('minimized');
-                $('.footer-task-bar').toggleClass('minimized');
-                $('pre.logger').toggleClass('minimized');
+                        $('i#footer-minimize').removeClass('icon-chevron-down');
+                        $('i#footer-minimize').addClass('icon-chevron-up');
+
+                        $('#footer').addClass('minimized');
+                        $('.footer-tab').addClass('minimized');
+                        $('.footer-task-bar').addClass('minimized');
+                        $('pre.logger').addClass('minimized');
+
+                        $('#footer').show('slide', {direction: 'down'}, 150);
+                    });
+                }
             }
 
         });

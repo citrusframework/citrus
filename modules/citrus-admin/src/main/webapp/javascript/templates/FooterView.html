@@ -2,7 +2,8 @@
     <div class="navbar">
       <div class="navbar-inner">
         <div class="footer-bar pull-right">
-            <i id="footer-minimize" class="icon-collapse clickable"></i>
+            <i id="footer-minimize" class="icon-chevron-up clickable"></i>
+            <i id="footer-maximize" class="icon-resize-full clickable"></i>
         </div>
         <ul id="footer-tabs" class="nav">
             <li class="active"><a href="#console-tab" data-toggle="tab">Console</a></li>
@@ -12,8 +13,8 @@
 
     <div id="footer-tab-content" class="tab-content" style="position:relative;">
         <div class="tab-pane active" id="console-tab">
-            <div class="footer-tab">
-                <div class="footer-task-bar">
+            <div class="footer-tab minimized">
+                <div class="footer-task-bar minimized">
                     <i id="footer-tab-clear-console" class="icon-trash clickable"></i>
                 </div>
                 <pre class="logger"></pre>
