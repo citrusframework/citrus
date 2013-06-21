@@ -16,6 +16,7 @@ import java.util.Map;
  * (Issue: https://github.com/jknack/handlebars.java/issues/186)
  *
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
 public class HandlebarsHelperPostProcessor implements BeanPostProcessor {
     /** Helper registry */

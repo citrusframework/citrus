@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
  * Basic handlebar helpers on server side.
  *
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
 public class HandlebarsHelperSource {
 
