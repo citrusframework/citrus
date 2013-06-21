@@ -4,13 +4,25 @@
             tabs:[
                 {
                     active: true,
-                    idSuffix: "xsd-schemas",
-                    displayName: "XSD Schemas",
+                    idSuffix: "schema-repositories",
+                    displayName: "Schema Repositories",
                     view: ConfigXsdSchemaView
                 },
                 {
-                    idSuffix: "schema-repositories",
-                    displayName: "Schema Repositories"
+                    idSuffix: "sender",
+                    displayName: "Message Sender"
+                },
+                {
+                    idSuffix: "receiver",
+                    displayName: "Message Receiver"
+                },
+                {
+                    idSuffix: "servers",
+                    displayName: "Servers"
+                },
+                {
+                    idSuffix: "global-variables",
+                    displayName: "Global Variables"
                 }
             ],
 
@@ -38,7 +50,7 @@
                 $('ul#config-tabs').append(Handlebars.compile($('#config-tab-template').html())({id: tab.idSuffix, tabDisplayName: tab.displayName, active: tab.active}));
 
                 if(tab.active) {
-                    var view = new tab.view({el: $('#config-xsd-schemas')});
+                    var view = new tab.view({el: $('#config-' + tab.idSuffix)});
                     view.render();
                     view.afterRender();
                     $('#config-tabs a[href="#config-tab-' + tab.idSuffix + '"]').tab('show');

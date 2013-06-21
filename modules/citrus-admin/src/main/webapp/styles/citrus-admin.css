@@ -64,6 +64,26 @@ a:hover {
     background-color: #ffffff;
 }
 
+.nav-tabs.nav-stacked > li > a {
+    color: #333333;
+    background-color: #ffffff;
+}
+
+.nav-tabs.nav-stacked > .active > a, .nav-tabs.nav-stacked > li > a:hover {
+    color: #333333;
+    background-color: #efefef;
+}
+
+.nav-tabs.nav-stacked > li > a > i {
+    color: #555555;
+    margin-top: 3px;
+}
+
+h4.page-header {
+    padding: 0 0 5px;
+    margin: 5px 0 15px;
+}
+
 .ajax-loader {
   margin-left: 10px;
   vertical-align: middle;
@@ -86,17 +106,16 @@ div.test-details-open {
    text-align: center;
 }
 
-.test-details h4.page-header {
-    padding-bottom: 5px;
-    margin: 15px 0 15px;
-}
-
 .test-details h2 i {
     color: #e5e5e5;
 }
 
 .test-details h2 i:hover {
     color: #d5d5d5;
+}
+
+.test-details h4.page-header {
+    margin: 15px 0 15px;
 }
 
 #test-tabs {
@@ -122,7 +141,7 @@ div.test-details-open {
 #test-tab-content {
     padding-left: 20px;
     padding-top: 5px;
-    min-height: 600px;
+    min-height: 695px;
     border-left: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
 }
@@ -179,8 +198,7 @@ pre.logger {
 
 div.file-tree {
     border: 1px solid #dddddd;
-    min-height: 555px;
-    max-height: 650px;
+    height: 650px;
     overflow: auto;
     padding: 5px;
 }
