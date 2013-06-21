@@ -4,7 +4,7 @@ html, body {
 
 body {
 	padding-top: 60px;
-    background: url('../images/feature-logo.png') no-repeat top right;
+    background: url('../images/feature-logo-full.png') no-repeat top right;
 }
 
 a {
@@ -86,20 +86,17 @@ div.test-details-open {
    text-align: center;
 }
 
-.test-details h2 {
-    margin-left: 20px;
+.test-details h4.page-header {
+    padding-bottom: 5px;
+    margin: 15px 0 15px;
 }
 
-.test-details h2 i.icon-play {
-    color: #888888;
+.test-details h2 i {
+    color: #e5e5e5;
 }
 
-.test-details h2 i.icon-play:hover {
-    color: #555555;
-}
-
-.test-details h2 i.icon-stop {
-    color: #F4645C;
+.test-details h2 i:hover {
+    color: #d5d5d5;
 }
 
 #test-tabs {
@@ -123,7 +120,7 @@ div.test-details-open {
 }
 
 #test-tab-content {
-    padding-left: 10px;
+    padding-left: 20px;
     padding-top: 5px;
     min-height: 600px;
     border-left: 1px solid #dddddd;
@@ -135,11 +132,11 @@ div.test-details-open {
 }
 
 #test-info .control-label {
-    width: 60px;
+    width: 80px;
 }
 
 #test-info .controls {
-    margin-left: 80px;
+    margin-left: 105px;
 }
 
 .progress {

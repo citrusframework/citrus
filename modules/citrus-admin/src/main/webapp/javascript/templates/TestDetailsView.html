@@ -1,10 +1,12 @@
 <div id="{{name}}" class="test-details">
     <h2>{{name}} &nbsp;<i class="icon-play run-test clickable"></i><i class="icon-stop cancel-test clickable" style="display: none;"></i></h2>
+
+    <h4 class="page-header">Details</h4>
     <form id="test-info" class="form-horizontal">
         <div class="row-fluid">
             <div class="span6">
                 <div class="control-group">
-                    <label class="control-label">Test:</label>
+                    <label class="control-label">Test Name:</label>
                     <div class="controls">
                         <input id="name" class="input-xlarge" name="name" type="text" placeholder="Test" value="{{name}}"/>
                     </div>
@@ -33,9 +35,34 @@
                 </div>
             </div>
         </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="control-group">
+                  <label class="control-label">Description:</label>
+                  <div class="controls">
+                    <input id="description" class="input-xxlarge" name="description" type="text" placeholder="Description" value="{{trim description}}"/>
+                  </div>
+                </div>
+            </div>
+        </div>
     </form>
 
-    <button type="button" data-loading-text="Running ..." class="btn pull-right run-test"><i class="icon-play icon-white"></i> Run Test</button>
+    <h4 class="page-header">Sources</h4>
+
+    <div class="btn-group pull-right">
+      <button type="button" data-loading-text="Running ..." class="btn run-test">Run Test</button>
+      <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">Maven [test]</a></li>
+        <li><a href="#">Maven [clean install]</a></li>
+        <li><a href="#">Ant</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Edit Run configurations</a></li>
+      </ul>
+    </div>
+
     <ul class="nav nav-tabs">
         <li class="active"><a href="#design-{{name}}" data-toggle="tab">Design</a></li>
         <li><a href="#xml-source-{{name}}" class="xml-source" data-toggle="tab">XML</a></li>
@@ -57,12 +84,12 @@
             <pre class="prettyprint linenums">Loading sources ...</pre>
         </div>
         <div class="tab-pane" id="test-result-{{name}}">
-            <h3>Test results</h3>
+            <h4>Test results</h4>
             <div class="progress progress-success test-progress">
                 <div class="bar" style="width: 0%"></div>
             </div>
 
-            <h4>Message activity</h4>
+            <h4 class="page-header">Message activity</h4>
             <div class="test-message-flow"></div>
         </div>
     </div>

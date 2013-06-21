@@ -63,6 +63,18 @@ Handlebars.registerHelper('truncate', function(message, block) {
 });
 
 /*
+ * Helper to trim specified string value
+ */
+Handlebars.registerHelper('trim', function(message, block) {
+    if (message == null) {
+        return '';
+    }
+
+    message = String(message);
+    return message.trim();
+});
+
+/*
  * Helper to translate folder path to package representation.
  */
 Handlebars.registerHelper('folderToPackage', function(path, block) {
