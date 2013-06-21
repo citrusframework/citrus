@@ -13,21 +13,17 @@
           
           render: function() {
               $(this.el).html(TemplateManager.template('TestListView', {}));
-              
+
               $.ajax({
                   url: "testcase",
                   type: 'GET',
                   dataType: "json",
                   success: _.bind(function(response) {
                       this.tests = response;
-                      this.afterRender();
-                  }, this)
+                  }, this),
+                  async: false
               });
-              
-              return this;
-          },
-          
-          afterRender: function() {
+
               $('#test-file-tree').fileTree({
                   root: '/',
                   script: 'testcase',
@@ -37,11 +33,11 @@
               }, _.bind(function(file) {
                   this.showDetails(file);
               }, this));
-              
+
               var searchKeys = _.map(this.tests, function(test){ return test.name; });
               $('#test-name').typeahead({
                   source: _.uniq(searchKeys),
-                  items: 5,
+                  items: 15,
                   minLength: 1,
                   updater: _.bind(function(item) {
                       $('#test-name').val(item);
@@ -49,6 +45,8 @@
                       return item;
                   }, this)
               });
+
+              return this;
           },
           
           searchTests: function() {

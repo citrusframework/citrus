@@ -269,6 +269,7 @@
             <source>javascript/support/moment.js</source>
             <source>javascript/support/bootstrap.js</source>
             <source>javascript/templates/TemplateHelper.js</source>
+            <source>javascript/citrus-admin-util.js</source>
             <source>support/require.js</source>
             <source>support/jasmine-jquery.js</source>
             <source>support/sinon.js</source>

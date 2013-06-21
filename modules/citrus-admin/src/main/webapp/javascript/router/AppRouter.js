@@ -1,7 +1,15 @@
 (function() {
     define(["views/HeaderView", "views/WelcomeView", "views/ConfigView", "views/TestListView", "views/FooterView"], function(HeaderView, WelcomeView, ConfigView, TestListView, FooterView) {
         var AppRouter = Backbone.Router.extend({
-        
+
+          headerView: undefined,
+          footerView: undefined,
+          welcomeView: undefined,
+          configView: undefined,
+          testListView: undefined,
+          statsView: undefined,
+          aboutView: undefined,
+
           routes: {
             "": "welcome", // #welcome
             "project": "welcome", // #welcome
@@ -12,59 +20,63 @@
           },
         
           initialize: function() {
-              var headerView = new HeaderView({el: $('#header')});
-              headerView.render();
-              var footerView = new FooterView({el: $('#footer')});
-              footerView.render();
-              footerView.minimize();
+              this.headerView = new HeaderView({el: $('#header')});
+              this.headerView.render();
 
-              $.fn.serializeObject = function () {
-                  var o = {};
-                  var a = this.serializeArray();
-                  $.each(a, function () {
-                      if (o[this.name] !== undefined) {
-                          if (!o[this.name].push) {
-                              o[this.name] = [o[this.name]];
-                          }
-                          o[this.name].push(this.value || null);
-                      }
-                      else {
-                          // treat empty string as undefined
-                          if (this.value == '') {
-                              o[this.name] = undefined;
-                          }
-                          else {
-                              o[this.name] = this.value;
-                          }
-                      }
-                  });
-                  return o;
-              };
-
+              this.footerView = new FooterView({el: $('#footer')});
+              this.footerView.render();
+              this.footerView.minimize();
           },
           
           welcome: function() {
-              var welcomeView = new WelcomeView({el: $('#content')});
-              welcomeView.render();
+              if (!this.welcomeView) {
+                  this.welcomeView = new WelcomeView({el: $('#welcome-content')});
+                  this.welcomeView.render();
+              }
+
+              $('#content').children().hide();
+              $('#welcome-content').show();
           },
           
           config: function() {
-              var configView = new ConfigView({el: $('#content')});
-              configView.render();
-              configView.afterRender();
+              if (!this.configView) {
+                  this.configView = new ConfigView({el: $('#config-content')});
+                  this.configView.render();
+                  this.configView.afterRender();
+              }
+
+              $('#content').children().hide();
+              $('#config-content').show();
           },
         
           testcases: function() {
-              var testListView = new TestListView({el: $('#content')});
-              testListView.render();
+              if (!this.testListView) {
+                  this.testListView = new TestListView({el: $('#test-list-content')});
+                  this.testListView.render();
+              }
+
+              $('#content').children().hide();
+              $('#test-list-content').show();
           },
           
           stats: function() {
-              $('#content').html('<div class="container"><h1 class="page-header">Statistics <small>Manage project statistics</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+              if (!this.statsView) {
+                  $('#stats-content').html('<div class="container"><h1 class="page-header">Statistics <small>Manage project statistics</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+              }
+
+              $('#content').children().hide();
+              $('#stats-content').show();
+
           },
-          
+
           about: function() {
-              $('#content').html('<div class="container"><h1 class="page-header">About <small>Behind the scenes</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+              if (!this.statsView) {
+                  $('#about-content').html('<div class="container"><h1 class="page-header">About <small>Behind the scenes</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+              }
+
+              $('#content').children().hide();
+              $('#about-content').show();
+
           }
         
         });
