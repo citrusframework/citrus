@@ -16,6 +16,8 @@
 
   <properties>
     <jasmine.serverPort>8234</jasmine.serverPort>
+    <citrus.serverPort>19080</citrus.serverPort>
+    <citrus.stopPort>19080</citrus.stopPort>
   </properties>
 
   <dependencyManagement>
@@ -324,15 +326,17 @@
               </webAppConfig>
               <connectors>
                 <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>9080</port>
+                  <port>${citrus.serverPort}</port>
                   <maxIdleTime>60000</maxIdleTime>
                 </connector>
               </connectors>
+              <stopPort>${citrus.stopPort}</stopPort>
+              <stopKey>stop</stopKey>
               <scanIntervalSeconds>5</scanIntervalSeconds>
               <systemProperties>
                   <systemProperty>
                     <name>file.encoding</name>
-                    <value>UTF-8</value>
+                    <value>${project.build.sourceEncoding}</value>
                   </systemProperty>
                   <systemProperty>
                     <name>log4j.configuration</name>

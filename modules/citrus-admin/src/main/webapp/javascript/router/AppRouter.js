@@ -60,7 +60,7 @@
           
           stats: function() {
               if (!this.statsView) {
-                  $('#stats-content').html('<div class="container"><h1 class="page-header">Statistics <small>Manage project statistics</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+                  $('#stats-content').html('<div class="container-fluid"><h1 class="page-header">Statistics <small>Manage project statistics</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
               }
 
               $('#content').children().hide();
@@ -70,7 +70,7 @@
 
           about: function() {
               if (!this.statsView) {
-                  $('#about-content').html('<div class="container"><h1 class="page-header">About <small>Behind the scenes</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+                  $('#about-content').html('<div class="container-fluid"><h1 class="page-header">About <small>Behind the scenes</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
               }
 
               $('#content').children().hide();

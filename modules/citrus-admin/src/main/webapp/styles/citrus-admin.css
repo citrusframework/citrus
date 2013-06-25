@@ -7,12 +7,24 @@ body {
     background: url('../images/feature-logo-full.png') no-repeat top right;
 }
 
+h1 {
+    font-size: 40.5px;
+}
+
 a {
     color: #333333;
 }
 
 a:hover {
     color: #F89406;
+}
+
+.container-fluid {
+    min-width: 1040px;
+}
+
+.row-fluid .navigation {
+    max-width: 235px;
 }
 
 .navbar .brand {
@@ -98,7 +110,7 @@ form#search-form {
 }
 
 form#search-form #test-name {
-    width: 238px;
+    width: 185px;
 }
 
 div.test-details-open {
@@ -106,12 +118,12 @@ div.test-details-open {
    text-align: center;
 }
 
-.test-details h2 i {
-    color: #e5e5e5;
+h2 i, h4 i {
+    color: #c5c5c5;
 }
 
-.test-details h2 i:hover {
-    color: #d5d5d5;
+h2 i:hover, h4 i:hover {
+    color: #a5a5a5;
 }
 
 .test-details h4.page-header {

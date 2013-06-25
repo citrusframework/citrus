@@ -8,7 +8,7 @@
           statusMessages: [],
           
           initialize: function() {
-              this.socket = new WebSocket("ws://localhost:9080/citrus-admin/log/");
+              this.socket = new WebSocket("ws://localhost:19080/citrus-admin/log/");
               this.socket.onopen = _.bind(function(evt) { 
                   this.statusMessages.push('Opened web socket connection');
                   this.online = true;
