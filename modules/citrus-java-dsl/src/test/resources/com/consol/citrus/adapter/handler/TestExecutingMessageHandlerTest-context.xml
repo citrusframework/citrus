@@ -12,8 +12,12 @@
 	 
     <context:component-scan base-package="com.consol.citrus.adapter.handler.builder"/>
 
-    <bean id="testSimulator" class="com.consol.citrus.adapter.handler.TestExecutingMessageHandler">
-      <property name="xpathMappingExpression" value="//Test/@name"/>
+    <bean id="testSimulator" class="com.consol.citrus.dsl.handler.TestExecutingMessageHandler">
+      <property name="mappingKeyExtractor">
+        <bean class="com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor">
+          <property name="xpathExpression" value="//Test/@name"/>
+        </bean>
+      </property>
       <property name="responseMessageHandler">
         <bean class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
           <property name="channelName" value="testSimulator.inbound"/>

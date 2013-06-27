@@ -16,30 +16,13 @@
 
 package com.consol.citrus.adapter.handler;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.xerces.parsers.DOMParser;
-import org.apache.xerces.util.DOMUtil;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.integration.Message;
-import org.springframework.util.*;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.xml.xpath.XPathUtils;
-
-import javax.xml.namespace.NamespaceContext;
+import com.consol.citrus.adapter.handler.mapping.SpringContextLoadingMessageHandlerMapping;
+import com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * This message handler implementation dispatches incoming request to other message handlers
@@ -52,10 +35,12 @@ import javax.xml.namespace.NamespaceContext;
  * will search for a appropriate bean instance in this context according to the mapping expression.
  *
  * @author Christoph Deppisch
+ * @deprecated since 1.3.1 in favour of RequestDispatchingMessageHandler with use of XPathMappingNameExtractor and SpringContextLoadingMessageHandlerMapping
  */
-public class XpathDispatchingMessageHandler implements MessageHandler {
+@Deprecated
+public class XpathDispatchingMessageHandler extends RequestDispatchingMessageHandler implements InitializingBean {
     /** Dispatching XPath expression */
-    private String xpathMappingExpression;
+    private String xpathMappingExpression = "local-name(/*)";
 
     /** Application context holding available message handlers */
     protected String messageHandlerContext;
@@ -63,95 +48,21 @@ public class XpathDispatchingMessageHandler implements MessageHandler {
     /** Map holding namespace bindings for XPath expression */
     private Map<String, String> namespaceBindings = new HashMap<String, String>();
 
-    /**
-     * Handles the message by evaluating the given Xpath and routing to the correct handler
-     * bean (identified by name) specified in messageHandlerContext
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
-     * @throws CitrusRuntimeException
-     */
-    public Message<?> handleMessage(Message<?> request) {
-        try {
-            final Reader reader = new StringReader(request.getPayload().toString());
-            DOMParser parser = new DOMParser();
-            parser.setFeature("http://xml.org/sax/features/validation", false);
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        SpringContextLoadingMessageHandlerMapping handlerMapping = new SpringContextLoadingMessageHandlerMapping();
+        handlerMapping.setContextConfigLocation(messageHandlerContext);
 
-            parser.parse(new InputSource(reader));
+        setMessageHandlerMapping(handlerMapping);
 
-            Node matchingNode;
-            if (xpathMappingExpression != null) {
-                NamespaceContext nsContext = createNamespaceContext(request);
+        XPathPayloadMappingKeyExtractor mappingNameExtracor = new XPathPayloadMappingKeyExtractor();
+        NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+        namespaceContextBuilder.setNamespaceMappings(namespaceBindings);
+        mappingNameExtracor.setNamespaceContextBuilder(namespaceContextBuilder);
+        mappingNameExtracor.setXpathExpression(xpathMappingExpression);
 
-                matchingNode = XPathUtils.evaluateAsNode(DOMUtil.getFirstChildElement(
-                        parser.getDocument()), xpathMappingExpression, nsContext);
-            } else {
-                matchingNode = DOMUtil.getFirstChildElement(parser.getDocument());
-            }
-
-            if (matchingNode == null) {
-                throw new CitrusRuntimeException(
-                        "Unable to find matching element for expression '" + xpathMappingExpression + "'");
-            }
-
-            return dispatchMessage(request, extractMappingName(matchingNode));
-        } catch (SAXException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        }
+        setMappingKeyExtractor(mappingNameExtracor);
     }
-
-    /**
-     * Builds proper namespace context for XPath expression evaluation. Incoming request message is
-     * passed as method argument.
-     * @param request
-     * @return
-     */
-    protected NamespaceContext createNamespaceContext(Message<?> request) {
-        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-        if (!CollectionUtils.isEmpty(namespaceBindings)) {
-            nsContext.setBindings(namespaceBindings);
-        } else {
-            nsContext.setBindings(XMLUtils.lookupNamespaces(request.getPayload().toString()));
-        }
-
-        return nsContext;
-    }
-
-    /**
-     * Dispatches handler invocation according to extracted mapping name. By default Spring bean application
-     * context is asked for a message handler instance with respective bean name.
-     * @param request
-     * @param mappingName
-     * @return
-     */
-    protected Message<?> dispatchMessage(Message<?> request, String mappingName) {
-        //TODO support FileSystemContext
-        Assert.notNull(messageHandlerContext, "MessageHandler Spring bean application context must not be empty or null");
-
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(messageHandlerContext);
-        MessageHandler handler;
-
-        try {
-        handler = (MessageHandler) ctx.getBean(mappingName, MessageHandler.class);
-        } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException("Unable to find matching message handler with bean name '" +
-                    mappingName + "' in Spring bean context", e);
-        }
-
-        return handler.handleMessage(request);
-    }
-
-    /**
-     * Extracts mapping identifier value from matching node. By default node name is
-     * used. Subclasses may overwrite with custom logic on node such as attribute value
-     * or node text value, etc.
-     * @param matchingNode
-     * @return
-     */
-    protected String extractMappingName(Node matchingNode) {
-        return matchingNode.getNodeName();
-    }
-
 
     /**
      * Set the XPath mapping expression.

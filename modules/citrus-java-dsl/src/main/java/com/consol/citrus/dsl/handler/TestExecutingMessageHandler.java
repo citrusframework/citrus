@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler;
+package com.consol.citrus.dsl.handler;
 
+import com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler;
+import com.consol.citrus.adapter.handler.RequestDispatchingMessageHandler;
+import com.consol.citrus.adapter.handler.mapping.SpringBeanMessageHandlerMapping;
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
@@ -44,7 +47,7 @@ import org.w3c.dom.Node;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler implements InitializingBean, BeanNameAware, ApplicationContextAware {
+public class TestExecutingMessageHandler extends RequestDispatchingMessageHandler implements InitializingBean, BeanNameAware, ApplicationContextAware {
 
     /** Executor start action sequence logic in separate thread task */
     private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
@@ -55,11 +58,11 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
     /** Spring bean application context holding all available test builders and basic Citrus config */
     private ApplicationContext applicationContext;
 
-    /** First response message is handled by this message handler - we can delegate to test case */
+    /** First response message is handled by this message handler - handler can also delegate to test case */
     private MessageHandler responseMessageHandler;
 
     @Override
-    protected Message<?> dispatchMessage(final Message<?> request, String mappingName) {
+    public Message<?> dispatchMessage(final Message<?> request, String mappingName) {
         final CitrusTestBuilder testBuilder;
 
         try {
@@ -69,19 +72,14 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
                     mappingName + "' in Spring bean context", e);
         }
 
-        if (testBuilder != null) {
-            taskExecutor.execute(new Runnable() {
-                public void run() {
-                    prepareExecution(request, testBuilder);
-                    testBuilder.execute();
-                }
-            });
+        taskExecutor.execute(new Runnable() {
+            public void run() {
+                prepareExecution(request, testBuilder);
+                testBuilder.execute();
+            }
+        });
 
-            return responseMessageHandler.handleMessage(request);
-        } else {
-            throw new CitrusRuntimeException("Could not find test builder bean with name '" +
-                    mappingName + "' in '" + messageHandlerContext + "'");
-        }
+        return responseMessageHandler.handleMessage(request);
     }
 
     /**
@@ -91,17 +89,6 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
      * @param testBuilder the found test builder.
      */
     protected void prepareExecution(Message<?> request, CitrusTestBuilder testBuilder) {
-    }
-
-    @Override
-    protected String extractMappingName(Node matchingNode) {
-        if (matchingNode.getNodeType() == Node.ELEMENT_NODE && StringUtils.hasText(DomUtils.getTextValue((Element) matchingNode))) {
-            return DomUtils.getTextValue((Element) matchingNode);
-        } else if(matchingNode.getNodeType() == Node.ATTRIBUTE_NODE && StringUtils.hasText(matchingNode.getNodeValue())) {
-            return matchingNode.getNodeValue();
-        } else {
-            return super.extractMappingName(matchingNode);
-        }
     }
 
     /**
@@ -125,6 +112,12 @@ public class TestExecutingMessageHandler extends XpathDispatchingMessageHandler 
             channelConnectingMessageHandler.setChannelName(name + ".inbound");
             channelConnectingMessageHandler.setBeanFactory(applicationContext);
             responseMessageHandler = channelConnectingMessageHandler;
+        }
+
+        if (getMessageHandlerMapping() == null) {
+            SpringBeanMessageHandlerMapping messageHandlerMapping = new SpringBeanMessageHandlerMapping();
+            messageHandlerMapping.setApplicationContext(applicationContext);
+            setMessageHandlerMapping(messageHandlerMapping);
         }
     }
 

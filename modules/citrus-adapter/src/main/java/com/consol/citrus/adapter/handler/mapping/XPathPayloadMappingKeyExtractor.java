@@ -1,0 +1,61 @@
+/*
+ * Copyright 2006-2013 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.adapter.handler.mapping;
+
+import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import com.consol.citrus.xml.xpath.XPathUtils;
+import org.springframework.integration.Message;
+
+/**
+ * Extracts predicate from message payload via XPath expression evaluation.
+ *
+ * @author Christoph Deppisch
+ * @sonce 1.3.1
+ */
+public class XPathPayloadMappingKeyExtractor implements MappingKeyExtractor {
+    /** XPath expression evaluated on message payload */
+    private String xpathExpression = "local-name(/*)";
+
+    /** Namespace context builder for XPath expression evaluation */
+    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+
+    @Override
+    public String extractMappingKey(Message<?> request) {
+        return XPathUtils.evaluateAsString(
+                            XMLUtils.parseMessagePayload(request.getPayload().toString()),
+                            xpathExpression,
+                            namespaceContextBuilder.buildContext(request, null));
+    }
+
+    /**
+     * Sets the xpath expression to evaluate.
+     * @param xpathExpression
+     */
+    public void setXpathExpression(String xpathExpression) {
+        this.xpathExpression = xpathExpression;
+    }
+
+    /**
+     * Sets the namespace context builder for this extractor.
+     * @param namespaceContextBuilder
+     */
+    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
+        this.namespaceContextBuilder = namespaceContextBuilder;
+    }
+
+}

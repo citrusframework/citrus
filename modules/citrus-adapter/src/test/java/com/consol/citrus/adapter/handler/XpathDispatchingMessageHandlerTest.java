@@ -1,11 +1,14 @@
 package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Unit Tests for XpathDispatchingMessageHandler
@@ -17,11 +20,13 @@ public class XpathDispatchingMessageHandlerTest {
      * Test for handler routing by node content
      */
     @Test
-    public void testRouteMessageByElementTextContent() {
+    public void testRouteMessageByElementTextContent() throws Exception {
         XpathDispatchingMessageHandler handler = new XpathDispatchingMessageHandler();
         handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
-        handler.setXpathMappingExpression("//MessageBody/*");
+                "com/consol/citrus/adapter/handler/test-context.xml");
+        handler.setXpathMappingExpression("local-name(//MessageBody/*)");
+
+        handler.afterPropertiesSet();
 
         Message<?> response = handler.handleMessage(
                 MessageBuilder.withPayload("<MessageBody><EmptyResponseRequest>emptyResponse please " +
@@ -40,10 +45,12 @@ public class XpathDispatchingMessageHandlerTest {
      * Test for handler routing without Xpath given (implementation takes the value of first node).
      */
     @Test
-    public void testRouteMessageWithoutXpath() {
+    public void testRouteMessageWithoutXpath() throws Exception {
         XpathDispatchingMessageHandler handler = new XpathDispatchingMessageHandler();
         handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
+                "com/consol/citrus/adapter/handler/test-context.xml");
+
+        handler.afterPropertiesSet();
 
         Message<?> response = handler.handleMessage(
                 MessageBuilder.withPayload(
@@ -61,28 +68,42 @@ public class XpathDispatchingMessageHandlerTest {
     /**
      * Test for Xpath which is not found --> shall raise exception
      */
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testRouteMessageWithBadXpathExpression() {
+    @Test
+    public void testRouteMessageWithBadXpathExpression() throws Exception {
         XpathDispatchingMessageHandler handler = new XpathDispatchingMessageHandler();
         handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
+                "com/consol/citrus/adapter/handler/test-context.xml");
         handler.setXpathMappingExpression("//I_DO_NOT_EXIST");
 
-        handler.handleMessage(MessageBuilder.withPayload(
+        handler.afterPropertiesSet();
+
+        try {
+            handler.handleMessage(MessageBuilder.withPayload(
                     "<MessageBody>emptyResponse</MessageBody>").build());
+            Assert.fail("Missing exception due to bad XPath expression");
+        } catch (CitrusRuntimeException e) {
+             Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
+        }
     }
 
     /**
      * Test for correct xpath, but no handler bean is found --> shall raise exc
      */
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testRouteMessageWithBadHandlerConfiguration() {
+    @Test
+    public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
         XpathDispatchingMessageHandler handler = new XpathDispatchingMessageHandler();
         handler.setMessageHandlerContext(
-                "com/consol/citrus/adapter/handler/XpathDispatchingMessageHandlerTest-context.xml");
-        handler.setXpathMappingExpression("//MessageBody/*");
+                "com/consol/citrus/adapter/handler/test-context.xml");
+        handler.setXpathMappingExpression("local-name(//MessageBody/*)");
 
-        handler.handleMessage(MessageBuilder.withPayload(
+        handler.afterPropertiesSet();
+
+        try {
+            handler.handleMessage(MessageBuilder.withPayload(
                     "<MessageBody><NoSuchBean>This bean does not exist</NoSuchBean></MessageBody>").build());
+            Assert.fail("Missing exception due to unknown message handler");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+        }
     }
 }

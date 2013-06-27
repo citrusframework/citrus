@@ -16,8 +16,11 @@
 
 package com.consol.citrus.adapter.handler;
 
+import com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor;
+import com.consol.citrus.dsl.handler.TestExecutingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -40,7 +43,10 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
      */
     @Test
     public void testRouteMessageByElementTextContent() throws Exception {
-        messageHandler.setXpathMappingExpression("//Test/@name");
+        XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
+        mappingNameExtractor.setXpathExpression("//Test/@name");
+        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+
         Message<?> response = messageHandler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"FooTest\"></Test>").build());
 
@@ -56,8 +62,10 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
      * Test for handler routing without Xpath given (implementation takes the value of first node).
      */
     @Test
-    public void testRouteMessageWithoutXpath() throws Exception {
-        messageHandler.setXpathMappingExpression(null);
+    public void testRouteMessageWithDefaultXpath() throws Exception {
+        XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
+        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+
         Message<?> response = messageHandler.handleMessage(
                 MessageBuilder.withPayload(
                     "<FooBarTest></FooBarTest>").build());
@@ -68,20 +76,36 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
     /**
      * Test for Xpath which is not found --> shall raise exception
      */
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRouteMessageWithBadXpathExpression() throws Exception {
-        messageHandler.setXpathMappingExpression("//I_DO_NOT_EXIST");
-        messageHandler.handleMessage(MessageBuilder.withPayload(
+        XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
+        mappingNameExtractor.setXpathExpression("//I_DO_NOT_EXIST");
+        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+
+        try {
+            messageHandler.handleMessage(MessageBuilder.withPayload(
                     "<FooTest>foo test please</FooTest>").build());
+            Assert.fail("Missing exception due to bad XPath expression");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
+        }
     }
 
     /**
      * Test for correct xpath, but no handler bean is found --> shall raise exc
      */
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
-        messageHandler.setXpathMappingExpression("//Test/@name");
-        messageHandler.handleMessage(MessageBuilder.withPayload(
+        XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
+        mappingNameExtractor.setXpathExpression("//Test/@name");
+        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+
+        try {
+            messageHandler.handleMessage(MessageBuilder.withPayload(
                     "<Test name=\"UNKNOWN_TEST\"></Test>").build());
+            Assert.fail("Missing exception due to unknown message handler");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+        }
     }
 }
