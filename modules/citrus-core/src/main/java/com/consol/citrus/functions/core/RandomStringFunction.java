@@ -21,6 +21,7 @@ import java.util.Random;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Function generating a random string containing alphabetic characters. Arguments specify
@@ -65,7 +66,7 @@ public class RandomStringFunction implements Function {
         String notationMethod = MIXED;
         boolean includeNumbers = false;
 
-        if (parameterList == null || parameterList.isEmpty()) {
+        if (CollectionUtils.isEmpty(parameterList)) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

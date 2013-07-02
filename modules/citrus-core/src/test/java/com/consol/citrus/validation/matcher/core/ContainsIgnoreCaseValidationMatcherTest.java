@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 public class ContainsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitTest {
     
-	ContainsIgnoreCaseValidationMatcher matcher = new ContainsIgnoreCaseValidationMatcher();
+	private ContainsIgnoreCaseValidationMatcher matcher = new ContainsIgnoreCaseValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

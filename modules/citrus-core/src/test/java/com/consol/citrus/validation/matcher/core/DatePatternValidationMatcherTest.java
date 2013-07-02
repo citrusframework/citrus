@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 public class DatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
     
-	DatePatternValidationMatcher matcher = new DatePatternValidationMatcher();
+	private DatePatternValidationMatcher matcher = new DatePatternValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

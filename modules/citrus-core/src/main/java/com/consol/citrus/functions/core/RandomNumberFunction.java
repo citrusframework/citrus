@@ -21,6 +21,7 @@ import java.util.Random;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Function returning a random numeric value. Argument specifies the number of digits and
@@ -40,7 +41,7 @@ public class RandomNumberFunction implements Function {
         int numberLength;
         boolean paddingOn = true;
 
-        if (parameterList == null || parameterList.isEmpty()) {
+        if (CollectionUtils.isEmpty(parameterList)) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

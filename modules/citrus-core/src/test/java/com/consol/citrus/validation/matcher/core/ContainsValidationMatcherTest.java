@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 public class ContainsValidationMatcherTest extends AbstractTestNGUnitTest {
     
-    ContainsValidationMatcher matcher = new ContainsValidationMatcher();
+    private ContainsValidationMatcher matcher = new ContainsValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

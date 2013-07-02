@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 public class GreaterThanValidationMatcherTest extends AbstractTestNGUnitTest {
     
-	LowerThanValidationMatcher matcher = new LowerThanValidationMatcher();
+	private LowerThanValidationMatcher matcher = new LowerThanValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

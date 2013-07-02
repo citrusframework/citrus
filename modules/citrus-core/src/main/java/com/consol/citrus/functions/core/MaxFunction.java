@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Function returns the maximum numeric value in a set of numeric arguments.
@@ -33,7 +34,7 @@ public class MaxFunction implements Function {
      * @throws InvalidFunctionUsageException
      */
     public String execute(List<String> parameterList) {
-        if (parameterList == null || parameterList.isEmpty()) {
+        if (CollectionUtils.isEmpty(parameterList)) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }
 

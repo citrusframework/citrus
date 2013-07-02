@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 public class MatchesValidationMatcherTest extends AbstractTestNGUnitTest {
     
-	MatchesValidationMatcher matcher = new MatchesValidationMatcher();
+	private MatchesValidationMatcher matcher = new MatchesValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

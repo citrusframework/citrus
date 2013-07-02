@@ -24,7 +24,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 public class IsNumberValidationMatcherTest extends AbstractTestNGUnitTest {
     
-	IsNumberValidationMatcher matcher = new IsNumberValidationMatcher();
+	private IsNumberValidationMatcher matcher = new IsNumberValidationMatcher();
     
     @Test
     public void testValidateSuccess() {

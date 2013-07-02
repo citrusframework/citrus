@@ -1,5 +1,5 @@
-/*
- * Copyright 2006-2010 the original author or authors.
+/**
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,54 +16,69 @@
 
 package com.consol.citrus.functions.core;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 /**
- * Function returning the actual date as formatted string value. User specifies format string
- * as argument. Function also supports additional date offset in order to manipulate result date value. 
- * 
+ * Function changes given date value by adding/subtracting day/month/year/hour/minute
+ * offset values. Class uses special date format to parse date string to Calendar instance.
+ *
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
-public class CurrentDateFunction extends AbstractDateFunction {
+public class ChangeDateFunction extends AbstractDateFunction {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
+    private static Logger log = LoggerFactory.getLogger(ChangeDateFunction.class);
 
     /**
      * @see com.consol.citrus.functions.Function#execute(java.util.List)
      * @throws CitrusRuntimeException
      */
     public String execute(List<String> parameterList) {
+        if (CollectionUtils.isEmpty(parameterList)) {
+            throw new InvalidFunctionUsageException("Function parameters must not be empty");
+        }
+
         Calendar calendar = Calendar.getInstance();
-        
+
         SimpleDateFormat dateFormat;
         String result = "";
-        
-        if (!CollectionUtils.isEmpty(parameterList)) {
-            dateFormat = new SimpleDateFormat(parameterList.get(0));
+
+        if (parameterList.size() > 2) {
+            dateFormat = new SimpleDateFormat(parameterList.get(2));
         } else {
             dateFormat = getDefaultDateFormat();
         }
 
-        if (parameterList != null && parameterList.size() > 1) {
+        try {
+            calendar.setTime(dateFormat.parse(parameterList.get(0)));
+        } catch (ParseException e) {
+            throw new CitrusRuntimeException(e);
+        }
+
+        if (parameterList.size() > 1) {
             applyDateOffset(calendar, parameterList.get(1));
         }
 
         try {
             result = dateFormat.format(calendar.getTime());
         } catch (RuntimeException e) {
-            log.error("Error while formatting date value ", e);
+            log.error("Error while formatting dateParameter value ", e);
             throw new CitrusRuntimeException(e);
         }
 
         return result;
     }
+
 }
