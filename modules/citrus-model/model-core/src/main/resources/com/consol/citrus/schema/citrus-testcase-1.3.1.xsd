@@ -60,7 +60,7 @@
                             <xs:element name="payload">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                                        <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
@@ -157,7 +157,7 @@
                                 <xs:element name="payload">
                                     <xs:complexType>
                                         <xs:sequence>
-                                            <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                                            <xs:any namespace="##other" processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
                                         </xs:sequence>
                                     </xs:complexType>
                                 </xs:element>
