@@ -29,9 +29,9 @@ public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
 
     /** Id or bean name of the bean definition to be removed */
     protected String elementId;
-    
-    /** Temporary holds removed node so all its children are removed too during the parsing operation */
-    protected Node deleted;
+
+    /** Delete marker set as user data on nodes (element + child nodes) that need to be deleted */
+    private static final String DELETE_NODE_MARKER = "citrus_admin_delete_marker";
     
     /**
      * Constructor using element id field.
@@ -50,23 +50,34 @@ public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
                 element.getParentNode().removeChild(element.getNextSibling());
             }
             
-            deleted = element;
+            markChildElementsForDeletion(element);
             return NodeFilter.FILTER_REJECT;
         }
         
-        if (deleted != null && shouldDeleteNode(element)) {
+        if (shouldDeleteNode(element)) {
             return NodeFilter.FILTER_REJECT;
         }
         
         return NodeFilter.FILTER_ACCEPT;
     }
-    
+
+    /**
+     * Mark child elements for deletion. When elements get processed by filter in future
+     * reject them.
+     * @param element
+     */
+    private void markChildElementsForDeletion(Element element) {
+        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+            element.getChildNodes().item(i).setUserData(DELETE_NODE_MARKER, true, null);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public short acceptText(Text text) {
-        if (deleted != null && shouldDeleteNode(text)) {
+        if (shouldDeleteNode(text)) {
             return NodeFilter.FILTER_REJECT;
         }
         
@@ -79,7 +90,14 @@ public class RemoveSpringBeanFilter extends AbstractSpringBeanFilter {
      * @return
      */
     private boolean shouldDeleteNode(Node element) {
-        return element.getParentNode() != null && element.getParentNode().equals(deleted);
+        if (element.getUserData(DELETE_NODE_MARKER) != null) {
+            if (element.getNodeType() == Node.ELEMENT_NODE) {
+                markChildElementsForDeletion((Element) element);
+            }
+            return true;
+        }
+
+        return false;
     }
 
 }
