@@ -2,7 +2,7 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         {{#if schema.id}}
-        <h3>Update XSD Schema: {{schema.id}}</h3>
+        <h3>Edit XSD Schema</h3>
         {{else}}
         <h3>New XSD Schema</h3>
         {{/if}}
@@ -12,11 +12,17 @@
         <form class="form-horizontal">
             {{#if schema.id}}
             <input name="id" type="hidden" value="{{schema.id}}"/>
+            <div class="control-group">
+              <label class="control-label">Id <em>*</em></label>
+              <div class="controls">
+                <input name="newId" value="{{schema.id}}" placeholder="Unique Id" type="text" class="span8"/>
+              </div>
+            </div>
             {{else}}
             <div class="control-group">
                 <label class="control-label">Id <em>*</em></label>
                 <div class="controls">
-                    <input name="id" value="{{schema.id}}" placeholder="Unique Id" type="text" class="span4"/>
+                    <input name="id" value="{{schema.id}}" placeholder="Unique Id" type="text" class="span8"/>
                 </div>
             </div>
             {{/if}}
@@ -24,16 +30,15 @@
             <div class="control-group">
                 <label class="control-label">Location <em>*</em></label>
                 <div class="controls">
-                    <input name="location" value="{{schema.location}}" placeholder="Location" type="text" class="span4"/>
+                    <input name="location" value="{{schema.location}}" placeholder="Location" type="text" class="span12"/>
                 </div>
             </div>
-
         </form>
     </div>
 
     <div class="modal-footer">
         {{#if schema.id}}
-        <a href="#config" id="btn-update-config-xsd-schema" class="btn btn-citrus">Update</a>
+        <a href="#config" id="btn-update-config-xsd-schema" class="btn btn-citrus">Save</a>
         {{else}}
         <a href="#config" id="btn-save-config-xsd-schema" class="btn btn-citrus">Save</a>
         {{/if}}

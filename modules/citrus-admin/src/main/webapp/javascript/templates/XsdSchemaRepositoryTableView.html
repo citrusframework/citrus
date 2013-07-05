@@ -1,0 +1,34 @@
+<table id="table-config-schema-repository" class="table table-bordered table-hover table-condensed">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Schemas</th>
+      <th width="50px;"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#unless matches.length}}
+    <tr><td colspan="3">&nbsp;<i class="icon-remove"></i> No schema repository found</td></tr>
+    {{/unless}}
+
+    {{#each matches}}
+    <tr id="{{id}}">
+      <td>{{id}}</td>
+      <td>
+      <ul class="xsd-schema-list">
+      {{#each schemas.schemas}}
+        <li><i class="icon-file-text-alt"></i>&nbsp;{{ref}}</li>
+      {{/each}}
+      </ul>
+      </td>
+      <td>
+        <a class="edit-config-schema-repository" href="#config" title="Edit XSD Schema"><i class="icon-pencil"></i></a>&nbsp;
+        <a class="del-config-schema-repository" href="#config" title="Remove XSD Schema"><i class="icon-trash"></i></a>&nbsp;
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+  <tfoot>
+    <tr><td colspan="3">&nbsp;</td></tr>
+  </tfoot>
+</table>

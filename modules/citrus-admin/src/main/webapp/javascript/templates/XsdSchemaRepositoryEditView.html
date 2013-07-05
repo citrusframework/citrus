@@ -1,0 +1,68 @@
+<div class="modal hide fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        {{#if schemaRepository.id}}
+        <h3>Edit XSD Schema Repository</h3>
+        {{else}}
+        <h3>New XSD Schema Repository</h3>
+        {{/if}}
+    </div>
+
+    <div id="form-edit-config-schema-repository" class="modal-body">
+        <form class="form-horizontal">
+            {{#if schemaRepository.id}}
+            <input name="id" type="hidden" value="{{schemaRepository.id}}"/>
+            <div class="control-group">
+              <label class="control-label">Id <em>*</em></label>
+              <div class="controls">
+                <input name="newId" value="{{schemaRepository.id}}" placeholder="Unique Id" type="text" class="span8"/>
+              </div>
+            </div>
+            {{else}}
+            <div class="control-group">
+                <label class="control-label">Id <em>*</em></label>
+                <div class="controls">
+                    <input name="id" value="{{schemaRepository.id}}" placeholder="Unique Id" type="text" class="span8"/>
+                </div>
+            </div>
+            {{/if}}
+
+            <div class="control-group">
+                <label class="control-label">Schemas</label>
+                <div class="controls">
+                    <div class="input-prepend input-append span12">
+                      <div id="xsd-schema-ref-dropdown" class="btn-group">
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          {{#each schemas}}
+                          <li><a class="xsd-schema-select" href="#config">{{id}}</a></li>
+                          {{/each}}
+                        </ul>
+                      </div>
+                      <input name="schema-ref" placeholder="Select schema" class="span10" readonly="readonly" type="text"/>
+                      <a href="#config" id="btn-add-config-xsd-schema-ref" class="btn"><i class="icon-plus"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+              <ul id="xsd-schema-refs" class="xsd-schema-list">
+                {{#each schemaRepository.schemas.schemas}}
+                <li id="{{ref}}"><i class="icon-file-text-alt"></i>&nbsp;{{ref}}</li>
+                {{/each}}
+              </ul>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        {{#if schemaRepository.id}}
+        <a href="#config" id="btn-update-config-schema-repository" class="btn btn-citrus">Save</a>
+        {{else}}
+        <a href="#config" id="btn-save-config-schema-repository" class="btn btn-citrus">Save</a>
+        {{/if}}
+        <a href="#config" id="btn-cancel-config-schema-repository" class="btn">Close</a>
+    </div>
+</div>
