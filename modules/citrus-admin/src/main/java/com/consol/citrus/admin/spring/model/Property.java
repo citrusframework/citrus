@@ -9,17 +9,10 @@ import javax.xml.bind.annotation.*;
 @XmlType(name = "propertyType", propOrder = {
     "description",
     "any",
-    "props",
-    "map",
-    "set",
     "list",
-    "array",
-    "_null",
     "propertyTypeValue",
-    "idref",
     "propertyTypeRef",
-    "bean",
-    "meta"
+    "bean"
 })
 @XmlRootElement(name = "property")
 public class Property {
@@ -27,6 +20,8 @@ public class Property {
     protected Description description;
     @XmlAnyElement(lax = true)
     protected Object any;
+    @XmlElement(name = "list")
+    protected List list;
     @XmlElement(name = "value")
     protected Value propertyTypeValue;
     @XmlElement(name = "ref")
@@ -229,6 +224,30 @@ public class Property {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * Gets the value of the list property.
+     *
+     * @return
+     *     possible object is
+     *     {@link List }
+     *
+     */
+    public List getList() {
+        return list;
+    }
+
+    /**
+     * Sets the value of the list property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link List }
+     *
+     */
+    public void setList(List value) {
+        this.list = value;
     }
 
 }

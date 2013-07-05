@@ -214,15 +214,16 @@
                 this.closeXsdSchemaForm();
 
                 var serializedForm = form.serializeObject();
+                var schemaId = serializedForm.id;
 
                 if (serializedForm.id != serializedForm.newId) {
-                    //Todo handle id changed
+                    serializedForm.id = serializedForm.newId;
                 }
 
                 serializedForm = _.omit(serializedForm, "newId");
 
                 var jsonForm = JSON.stringify(serializedForm);
-                var url = "config/xsd-schema/" + serializedForm.id;
+                var url = "config/xsd-schema/" + schemaId;
                 $.ajax({
                     url: url,
                     type: 'PUT',
@@ -242,14 +243,15 @@
                 this.closeXsdSchemaRepositoryForm();
 
                 var serializedForm = form.serializeObject();
+                var schemaRepositoryId = serializedForm.id;
 
                 if (serializedForm.id != serializedForm.newId) {
-                    //Todo handle id changed
+                    serializedForm.id = serializedForm.newId;
                 }
 
                 serializedForm = _.omit(serializedForm, "newId");
 
-                var url = "config/xsd-schema-repository/" + serializedForm.id;
+                var url = "config/xsd-schema-repository/" + schemaRepositoryId;
                 $.ajax({
                     url: url,
                     type: 'PUT',

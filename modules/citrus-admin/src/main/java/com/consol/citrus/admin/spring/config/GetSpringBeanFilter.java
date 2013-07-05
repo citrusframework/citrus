@@ -16,8 +16,11 @@
 
 package com.consol.citrus.admin.spring.config;
 
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Filter searches for a Spring bean definition in a Spring XML application context. Bean definition is identified by its 
@@ -29,6 +32,9 @@ public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
 
     /** Bean definition id */
     private String id;
+
+    /** Element type name */
+    private String elementName;
     
     /** Found bean definition element node */
     private Element beanDefinition;
@@ -36,7 +42,9 @@ public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
     /**
      * Constructor using bean definition id as field.
      */
-    public GetSpringBeanFilter(String id) {
+    public GetSpringBeanFilter(String id, Class<?> type) {
+        XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
+        this.elementName = beanTypeAnnotation.name();
         this.id = id;
     }
     
@@ -44,7 +52,8 @@ public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (isEqualById(element, id) || isEqualByBeanName(element, id)) {
+        if (DomUtils.nodeNameEquals(element, elementName) &&
+                (isEqualById(element, id) || isEqualByBeanName(element, id))) {
             beanDefinition = element;
         }
         

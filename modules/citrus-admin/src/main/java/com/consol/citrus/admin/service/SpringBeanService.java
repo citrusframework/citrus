@@ -19,10 +19,12 @@ package com.consol.citrus.admin.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
 
+import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +83,9 @@ public class SpringBeanService {
     
     @PostConstruct
     protected void initJaxbContext() {
-        jaxbContext = jaxbHelper.createJAXBContextByPath("com.consol.citrus.model.config.core");
+        jaxbContext = jaxbHelper.createJAXBContextByPath(
+                "com.consol.citrus.admin.spring.model",
+                "com.consol.citrus.model.config.core");
     }
     
     /**
@@ -95,11 +99,15 @@ public class SpringBeanService {
     public <T> T getBeanDefinition(File configFile, String id, Class<T> type) {
         LSParser parser = createLSParser();
         
-        GetSpringBeanFilter filter = new GetSpringBeanFilter(id);
+        GetSpringBeanFilter filter = new GetSpringBeanFilter(id, type);
         parser.setFilter(filter);
         parser.parseURI(configFile.toURI().toString());
-        
-        return createJaxbObjectFromElement(filter.getBeanDefinition(), type);
+
+        if (filter.getBeanDefinition() != null) {
+            return createJaxbObjectFromElement(filter.getBeanDefinition(), type);
+        }
+
+        return null;
     }
     
     /**
@@ -122,6 +130,30 @@ public class SpringBeanService {
             beanDefinitions.add(createJaxbObjectFromElement(element, type));
         }
         
+        return beanDefinitions;
+    }
+
+    /**
+     * Finds all bean definition elements by type and attribute values in Spring application context and
+     * performs unmarshalling in order to return a list of JaxB object.
+     * @param configFile
+     * @param type
+     * @param attributes
+     * @return
+     */
+    public <T> List<T> getBeanDefinitions(File configFile, Class<T> type, Map<String, String> attributes) {
+        List<T> beanDefinitions = new ArrayList<T>();
+
+        LSParser parser = createLSParser();
+
+        GetSpringBeansFilter filter = new GetSpringBeansFilter(type, attributes);
+        parser.setFilter(filter);
+        parser.parseURI(configFile.toURI().toString());
+
+        for (Element element : filter.getBeanDefinitions()) {
+            beanDefinitions.add(createJaxbObjectFromElement(element, type));
+        }
+
         return beanDefinitions;
     }
     
@@ -177,8 +209,20 @@ public class SpringBeanService {
     private Element createElementFromJaxbObject(Object jaxbElement) {
         LSInput input = domImpl.createLSInput();
         input.setStringData(jaxbHelper.marshal(jaxbContext, jaxbElement));
-        
-        return (Element)createLSParser().parse(input).getDocumentElement().cloneNode(true);
+
+        Element element = (Element)createLSParser().parse(input).getDocumentElement().cloneNode(true);
+
+        // remove all namespace declarations from element as we have set those already in root element
+        element.getAttributes().removeNamedItem("xmlns");
+
+        CitrusNamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
+        for (String prefix : namespacePrefixMapper.getNamespaceMappings().values()) {
+            if (element.hasAttribute("xmlns:" + prefix)) {
+                element.getAttributes().removeNamedItem("xmlns:" + prefix);
+            }
+        }
+
+        return element;
     }
     
     /**

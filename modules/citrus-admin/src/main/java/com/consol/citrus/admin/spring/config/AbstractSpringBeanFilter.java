@@ -21,6 +21,8 @@ import org.w3c.dom.ls.LSParserFilter;
 import org.w3c.dom.ls.LSSerializerFilter;
 import org.w3c.dom.traversal.NodeFilter;
 
+import java.util.Map;
+
 /**
  * Abstract XML load and save serializer filter for manipulating the XML application context DOM object model.
  * Subclasses may add, remove or update Spring bean definitions on the Spring XML application context.
@@ -32,6 +34,7 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
     /**
      * Checks for element equality by bean id attribute.
      * @param element
+     * @param elementId
      * @return
      */
     protected boolean isEqualById(Element element, String elementId) {
@@ -41,12 +44,40 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
     /**
      * Checks for element equality by bean name attribute.
      * @param element
+     * @param elementId
      * @return
      */
     protected boolean isEqualByBeanName(Element element, String elementId) {
         return element.hasAttribute("name") && element.getAttribute("name").equals(elementId);
     }
-    
+
+    /**
+     * Checks for element equality by bean class name attribute.
+     * @param element
+     * @param elementClass
+     * @return
+     */
+    protected boolean isEqualByBeanClass(Element element, String elementClass) {
+        return element.hasAttribute("class") && element.getAttribute("class").equals(elementClass);
+    }
+
+    /**
+     * Checks for element equality by bean class name attribute.
+     * @param element
+     * @param attributes
+     * @return
+     */
+    protected boolean isEqualByBeanAttributes(Element element, Map<String, String> attributes) {
+        for (Map.Entry<String,String> attributeEntry : attributes.entrySet()) {
+            if (!element.hasAttribute(attributeEntry.getKey()) ||
+                    !element.getAttribute(attributeEntry.getKey()).equals(attributeEntry.getValue())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -17,7 +17,9 @@
 package com.consol.citrus.admin.spring.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -33,25 +35,38 @@ import org.w3c.dom.traversal.NodeFilter;
  */
 public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
 
-    /** Element type */
+    /** Element type name */
     private String elementName;
+
+    /** Optional attributes that identify element */
+    private Map<String, String> attributes = new HashMap<String, String>();
     
     /** Found bean definition element nodes */
     private List<Element> beanDefinitions = new ArrayList<Element>();
     
     /**
-     * Constructor using bean definition id as field.
+     * Constructor using bean definition type as field.
      */
     public GetSpringBeansFilter(Class<?> type) {
         XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
         this.elementName = beanTypeAnnotation.name();
+    }
+
+    /**
+     * Constructor using bean definition type and attributes fields.
+     */
+    public GetSpringBeansFilter(Class<?> type, Map<String, String> attributes) {
+        XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
+        this.elementName = beanTypeAnnotation.name();
+        this.attributes = attributes;
     }
     
     /**
      * {@inheritDoc}
      */
     public short accept(Element element) {
-        if (DomUtils.nodeNameEquals(element, elementName)) {
+        if (DomUtils.nodeNameEquals(element, elementName) &&
+                isEqualByBeanAttributes(element, attributes)) {
             beanDefinitions.add(element);
         }
         

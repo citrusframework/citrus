@@ -22,6 +22,7 @@ import javax.xml.bind.*;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamSource;
 
+import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,11 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 @Component
 public class JAXBHelperImpl implements JAXBHelper {
 
+    /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(JAXBHelperImpl.class);
+
+    /** The namespace prefix mapper */
+    private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
     public JAXBContext createJAXBContextByPath(String... paths) {
         String contextPath = buildContextPath(paths);
@@ -82,24 +87,7 @@ public class JAXBHelperImpl implements JAXBHelper {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
         
-        NamespacePrefixMapper mapper = new NamespacePrefixMapper() {
-            @Override
-            public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-                if (namespaceUri.equals("http://www.citrusframework.org/schema/config")) {
-                    return "citrus";
-                } else if (namespaceUri.equals("http://www.citrusframework.org/schema/http/config")) {
-                    return "citrus-http";
-                } else if (namespaceUri.equals("http://www.citrusframework.org/schema/ws/config")) {
-                    return "citrus-ws";
-                } else if (namespaceUri.equals("http://www.citrusframework.org/schema/ssh/config")) {
-                    return "citrus-ssh";
-                }
-                
-                return suggestion;
-            }
-        };  
-        
-        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", mapper);
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
         
         return marshaller;
     }
@@ -151,5 +139,13 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
 
         return pathBuilder.toString();
+    }
+
+    /**
+     * Sets the namespace prefix mapper instance.
+     * @param namespacePrefixMapper
+     */
+    public void setNamespacePrefixMapper(NamespacePrefixMapper namespacePrefixMapper) {
+        this.namespacePrefixMapper = namespacePrefixMapper;
     }
 }
