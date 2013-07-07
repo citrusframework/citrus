@@ -19,6 +19,7 @@ package com.consol.citrus.admin.converter;
 import com.consol.citrus.admin.spring.model.Property;
 import com.consol.citrus.admin.spring.model.Ref;
 import com.consol.citrus.admin.spring.model.SpringBean;
+import com.consol.citrus.model.config.core.ObjectFactory;
 import com.consol.citrus.model.config.core.SchemaRepository;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -33,7 +34,7 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
 
     @Override
     public SchemaRepository convert(SpringBean springBean) {
-        SchemaRepository repository = new SchemaRepository();
+        SchemaRepository repository = new ObjectFactory().createSchemaRepository();
         repository.setId(springBean.getId());
         repository.setSchemas(new SchemaRepository.Schemas());
 

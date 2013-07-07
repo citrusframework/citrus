@@ -101,13 +101,13 @@ public class ConfigurationController {
     @RequestMapping(value = "/xsd-schema", method = {RequestMethod.GET})
     @ResponseBody
     public List<XsdSchema> listXsdSchemas() {
-        return springBeanService.getBeanDefinitions(configService.getProjectConfigFile(), XsdSchema.class);
+        return schemaRepositoryService.listSchemas(configService.getProjectConfigFile());
     }
 
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public XsdSchema getXsdSchema(@PathVariable("id") String id) {
-        return springBeanService.getBeanDefinition(configService.getProjectConfigFile(), id, XsdSchema.class);
+        return schemaRepositoryService.getSchema(configService.getProjectConfigFile(), id);
     }
 
     @RequestMapping(value="/xsd-schema", method = {RequestMethod.POST})
