@@ -119,11 +119,15 @@ div.test-details-open {
    text-align: center;
 }
 
-h2 i, h4 i {
+h3.page-header {
+    margin: 0;
+}
+
+h2 i, h3 i, h4 i {
     color: #c5c5c5;
 }
 
-h2 i:hover, h4 i:hover {
+h2 i:hover, h3 i:hover, h4 i:hover {
     color: #a5a5a5;
 }
 
@@ -486,10 +490,6 @@ ul.xsd-schema-list {
     margin: 0 0 0 10px;
 }
 
-#config-schema-repository-table {
-    margin-top: 20px;
-}
-
 input[readonly], select[readonly], textarea[readonly] {
     cursor: default;
     background-color: #ffffff;
@@ -505,13 +505,13 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .config-box:hover h5.page-header {
-    background-color: #bbcccc;
+    background-color: #FBE37E;
 }
 
 .config-box h5.page-header {
     padding-left: 5px;
     margin: 0 0 5px 0;
-    background-color: #ccdddd;
+    background-color: #efefef;
 }
 
 .config-box .button-bar {
@@ -527,6 +527,6 @@ input[readonly], select[readonly], textarea[readonly] {
     margin-left: 90px;
 }
 
-.config-sender, .config-receiver {
-
+.config-table {
+    margin-top: 20px;
 }

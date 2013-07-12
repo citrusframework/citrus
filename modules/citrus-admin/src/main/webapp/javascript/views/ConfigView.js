@@ -3,8 +3,8 @@
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
-                    idSuffix: "schema-repositories",
-                    displayName: "Schema Repositories",
+                    idSuffix: "schema-definitions",
+                    displayName: "Schema Definitions",
                     view: ConfigXsdSchemaView
                 },
                 {

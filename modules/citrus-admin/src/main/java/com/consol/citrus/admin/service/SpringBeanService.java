@@ -28,6 +28,7 @@ import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
@@ -87,6 +88,21 @@ public class SpringBeanService {
                 "com.consol.citrus.admin.spring.model",
                 "com.consol.citrus.model.config.core");
     }
+
+    /**
+     * Reads file import locations from Spring bean application context.
+     * @param configFile
+     * @return
+     */
+    public List<File> getConfigImports(File configFile) {
+        LSParser parser = createLSParser();
+
+        GetSpringImportsFilter filter = new GetSpringImportsFilter(configFile);
+        parser.setFilter(filter);
+        parser.parseURI(configFile.toURI().toString());
+
+        return filter.getImportedFiles();
+    }
     
     /**
      * Finds bean definition element by id and type in Spring application context and
@@ -98,13 +114,20 @@ public class SpringBeanService {
      */
     public <T> T getBeanDefinition(File configFile, String id, Class<T> type) {
         LSParser parser = createLSParser();
-        
+
         GetSpringBeanFilter filter = new GetSpringBeanFilter(id, type);
         parser.setFilter(filter);
-        parser.parseURI(configFile.toURI().toString());
 
-        if (filter.getBeanDefinition() != null) {
-            return createJaxbObjectFromElement(filter.getBeanDefinition(), type);
+        List<File> configFiles = new ArrayList<File>();
+        configFiles.add(configFile);
+        configFiles.addAll(getConfigImports(configFile));
+
+        for (File file : configFiles) {
+            parser.parseURI(file.toURI().toString());
+
+            if (filter.getBeanDefinition() != null) {
+                return createJaxbObjectFromElement(filter.getBeanDefinition(), type);
+            }
         }
 
         return null;
@@ -118,19 +141,7 @@ public class SpringBeanService {
      * @return
      */
     public <T> List<T> getBeanDefinitions(File configFile, Class<T> type) {
-        List<T> beanDefinitions = new ArrayList<T>();
-        
-        LSParser parser = createLSParser();
-        
-        GetSpringBeansFilter filter = new GetSpringBeansFilter(type);
-        parser.setFilter(filter);
-        parser.parseURI(configFile.toURI().toString());
-        
-        for (Element element : filter.getBeanDefinitions()) {
-            beanDefinitions.add(createJaxbObjectFromElement(element, type));
-        }
-        
-        return beanDefinitions;
+        return getBeanDefinitions(configFile, type, null);
     }
 
     /**
@@ -143,6 +154,11 @@ public class SpringBeanService {
      */
     public <T> List<T> getBeanDefinitions(File configFile, Class<T> type, Map<String, String> attributes) {
         List<T> beanDefinitions = new ArrayList<T>();
+
+        List<File> importedFiles = getConfigImports(configFile);
+        for (File importLocation : importedFiles) {
+            beanDefinitions.addAll(getBeanDefinitions(importLocation, type, attributes));
+        }
 
         LSParser parser = createLSParser();
 
@@ -166,7 +182,7 @@ public class SpringBeanService {
         Document doc = createLSParser().parseURI(configFile.toURI().toString());
         
         LSSerializer serializer = createLSSerializer();
-        
+
         serializer.setFilter(new AddSpringBeanFilter(createElementFromJaxbObject(jaxbElement)));
         serializer.writeToURI(doc, configFile.toURI().toString());
     }
@@ -181,7 +197,7 @@ public class SpringBeanService {
         Document doc = createLSParser().parseURI(configFile.toURI().toString());
         
         LSSerializer serializer = createLSSerializer();
-        
+
         serializer.setFilter(new RemoveSpringBeanFilter(id));
         serializer.writeToURI(doc, configFile.toURI().toString());
     }
@@ -193,12 +209,27 @@ public class SpringBeanService {
      * @param id
      */
     public void updateBeanDefinition(File configFile, String id, Object jaxbElement) {
-        Document doc = createLSParser().parseURI(configFile.toURI().toString());
-        
         LSSerializer serializer = createLSSerializer();
-        
-        serializer.setFilter(new UpdateSpringBeanFilter(id, createElementFromJaxbObject(jaxbElement)));
-        serializer.writeToURI(doc, configFile.toURI().toString());
+
+        UpdateSpringBeanFilter filter = new UpdateSpringBeanFilter(id, createElementFromJaxbObject(jaxbElement));
+        serializer.setFilter(filter);
+
+        List<File> configFiles = new ArrayList<File>();
+        configFiles.add(configFile);
+        configFiles.addAll(getConfigImports(configFile));
+
+        LSParser parser = createLSParser();
+        GetSpringBeanFilter getBeanFilter = new GetSpringBeanFilter(id, jaxbElement.getClass());
+        parser.setFilter(getBeanFilter);
+
+        for (File file : configFiles) {
+            Document doc = parser.parseURI(file.toURI().toString());
+
+            if (getBeanFilter.getBeanDefinition() != null) {
+                serializer.writeToURI(doc, file.toURI().toString());
+                return;
+            }
+        }
     }
     
     /**
@@ -267,10 +298,6 @@ public class SpringBeanService {
     private LSSerializer createLSSerializer() {
         LSSerializer serializer = domImpl.createLSSerializer();
         
-        if (log.isDebugEnabled()) {
-            log.debug("Using LSSerializer: " + serializer.getClass().getName());
-        }
-
         if (serializer.getDomConfig().canSetParameter("element-content-whitespace", true)) {
             serializer.getDomConfig().setParameter("element-content-whitespace", true);
         } else {
@@ -291,4 +318,5 @@ public class SpringBeanService {
         
         return serializer;
     }
+
 }

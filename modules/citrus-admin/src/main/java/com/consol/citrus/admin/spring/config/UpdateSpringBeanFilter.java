@@ -33,6 +33,9 @@ public class UpdateSpringBeanFilter extends RemoveSpringBeanFilter {
     
     /** New node added */
     private Node added = null;
+
+    /** Number of bean definitions that were updated by this filter operation */
+    private int updatedBeans = 0;
     
     /**
      * Constructor using element id field.
@@ -52,6 +55,8 @@ public class UpdateSpringBeanFilter extends RemoveSpringBeanFilter {
             } else {
                 added = element.getParentNode().appendChild(element.getOwnerDocument().importNode(beanDefinition, true));
             }
+
+            updatedBeans++;
         }
         
         if (element == added) {
@@ -61,4 +66,11 @@ public class UpdateSpringBeanFilter extends RemoveSpringBeanFilter {
         return super.accept(element);
     }
 
+    /**
+     * Gets the number of updated bean definitions.
+     * @return
+     */
+    public int getUpdatedBeans() {
+        return updatedBeans;
+    }
 }

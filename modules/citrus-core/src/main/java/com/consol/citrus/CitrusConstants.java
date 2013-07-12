@@ -42,7 +42,7 @@ public final class CitrusConstants {
     public static final String SEARCH_WILDCARD = "*";
 
     /** Default application context name */
-    public static final String DEFAULT_APPLICATIONCONTEXT = "citrus-context.xml";
+    public static final String DEFAULT_APPLICATION_CONTEXT = "citrus-context.xml";
 
     /** Default test directories */
     public static final String DEFAULT_JAVA_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "java" + File.separator;

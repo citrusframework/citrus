@@ -58,7 +58,10 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
     public GetSpringBeansFilter(Class<?> type, Map<String, String> attributes) {
         XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
         this.elementName = beanTypeAnnotation.name();
-        this.attributes = attributes;
+
+        if (attributes != null) {
+            this.attributes = attributes;
+        }
     }
     
     /**

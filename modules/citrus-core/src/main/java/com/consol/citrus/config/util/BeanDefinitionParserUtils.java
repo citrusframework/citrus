@@ -36,7 +36,7 @@ public abstract class BeanDefinitionParserUtils {
      * Sets the property value on bean definition in case value 
      * is set properly.
      * 
-     * @param beanDefinition the bean definition to be configured
+     * @param builder the bean definition builder to be configured
      * @param propertyValue the property value
      * @param propertyName the name of the property
      */
@@ -63,7 +63,7 @@ public abstract class BeanDefinitionParserUtils {
      * Sets the property reference on bean definition in case reference 
      * is set properly.
      * 
-     * @param beanDefinition the bean definition to be configured
+     * @param builder the bean definition builder to be configured
      * @param beanReference bean reference to populate the property
      * @param propertyName the name of the property
      */
@@ -77,7 +77,7 @@ public abstract class BeanDefinitionParserUtils {
      * Sets the property reference on bean definition in case reference 
      * is set properly.
      * 
-     * @param beanDefinition the bean definition to be configured
+     * @param builder the bean definition builder to be configured
      * @param beanReference bean reference to add as constructor arg
      */
     public static void addConstructorArgReference(BeanDefinitionBuilder builder, String beanReference) {

@@ -19,6 +19,7 @@ package com.consol.citrus.admin.service;
 import java.io.File;
 import java.io.IOException;
 
+import com.consol.citrus.CitrusConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,6 @@ public class ConfigurationService {
     public static final String PROJECT_HOME = "project.home";
     public static final String ROOT_DIRECTORY = "root.directory";
     
-    private static final String CITRUS_ADMIN_CONTEXT_XML = "citrus-context.xml";
-    
     /**
      * Check if home directory is valid Citrus project home.
      *
@@ -87,7 +86,7 @@ public class ConfigurationService {
      */
     public File getProjectConfigFile() {
         final File projectHome = new File(getProjectHome());
-        return fileHelper.findFileInPath(projectHome, CITRUS_ADMIN_CONTEXT_XML, true);
+        return fileHelper.findFileInPath(projectHome, CitrusConstants.DEFAULT_APPLICATION_CONTEXT, true);
     }
     
     /**
