@@ -17,9 +17,9 @@ define(["TemplateManager", "AppRouter", "WebSocketHolder"], function (TemplateMa
             // otherwise we would get 404 not found from fake server
             TemplateManager.load([
                 "ConfigView",
-                "ConfigXsdSchemaEditView",
-                "ConfigXsdSchemaTableView",
-                "ConfigXsdSchemaView",
+                "SchemaEditView",
+                "SchemaTableView",
+                "SchemaDefinitionView",
                 "FooterView",
                 "HeaderView",
                 "LoggerView",

@@ -1,8 +1,10 @@
 (function () {
     define(["TemplateManager"], function (TemplateManager) {
-        var ConfigMsgSenderReceiverView = Backbone.View.extend({
+        var MsgSenderAndReceiverView = Backbone.View.extend({
             msgSender: undefined,
             msgReceiver: undefined,
+
+            templateView: 'TableView',
 
             events: {
                 "click #btn-new-config-sender": "showNewMsgSenderForm",
@@ -18,14 +20,15 @@
                 "click .edit-config-receiver": "showEditMsgReceiverForm",
                 "click .del-config-receiver": "removeMsgReceiver",
                 "click #btn-reload-config-sender": "reload",
-                "click #btn-reload-config-receiver": "reload"
+                "click #btn-reload-config-receiver": "reload",
+                "click a.change-view": "changeView"
             },
 
             initialize: function () {
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('ConfigMsgSenderReceiverView'));
+                $(this.el).html(TemplateManager.template('MsgSenderAndReceiverView'));
                 return this;
             },
 
@@ -45,7 +48,7 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.msgSender = response;
-                        $("#config-senders").html(TemplateManager.template('MsgSenderView', {matches: this.msgSender}));
+                        $("#config-senders").html(TemplateManager.template('MsgSender' + this.templateView, {matches: this.msgSender}));
                     }, this),
                     async: true
                 });
@@ -58,7 +61,7 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.msgReceiver = response;
-                        $("#config-receivers").html(TemplateManager.template('MsgReceiverView', {matches: this.msgReceiver}));
+                        $("#config-receivers").html(TemplateManager.template('MsgReceiver' + this.templateView, {matches: this.msgReceiver}));
                     }, this),
                     async: true
                 });
@@ -93,7 +96,6 @@
                     }, this),
                     async: true
                 });
-
             },
 
             showNewMsgSenderForm: function() {
@@ -248,6 +250,14 @@
                 $('#dialog-edit-config-receiver .modal').modal('hide');
             },
 
+            changeView: function(event) {
+                this.templateView = $(event.currentTarget).attr('alt') + 'View';
+
+                this.reload();
+                event.stopPropagation();
+                return false;
+            },
+
             extractId: function(encodedId) {
                 var splitString = encodedId.split('-');
                 return splitString[splitString.length-1];
@@ -255,6 +265,6 @@
 
         });
 
-        return ConfigMsgSenderReceiverView;
+        return MsgSenderAndReceiverView;
     });
 }).call(this);

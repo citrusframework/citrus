@@ -1,17 +1,17 @@
 (function () {
-    define(["TemplateManager", "views/ConfigXsdSchemaView", "views/ConfigMsgSenderReceiverView"], function (TemplateManager, ConfigXsdSchemaView, MsgSenderReceiverView) {
+    define(["TemplateManager", "views/SchemaDefinitionView", "views/MsgSenderAndReceiverView"], function (TemplateManager, SchemaDefinitionView, MsgSenderAndReceiverView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
                     idSuffix: "schema-definitions",
                     displayName: "Schema Definitions",
-                    view: ConfigXsdSchemaView
+                    view: SchemaDefinitionView
                 },
                 {
                     active: true,
                     idSuffix: "sender-receiver",
-                    displayName: "Message Sender + Receiver",
-                    view: MsgSenderReceiverView
+                    displayName: "Message Sender/Receiver",
+                    view: MsgSenderAndReceiverView
                 },
                 {
                     idSuffix: "servers",

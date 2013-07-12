@@ -1,96 +1,96 @@
 (function () {
     define(["TemplateManager"], function (TemplateManager) {
-        var ConfigXsdSchemaView = Backbone.View.extend({
+        var SchemaDefinitionView = Backbone.View.extend({
             schemas: undefined,
             schemaRepositories: undefined,
 
             events: {
-                "click #btn-new-config-xsd-schema": "showNewXsdSchemaForm",
-                "click #btn-save-config-xsd-schema": "createXsdSchema",
-                "click #btn-update-config-xsd-schema": "updateXsdSchema",
-                "click #btn-cancel-config-xsd-schema": "closeXsdSchemaForm",
-                "click #btn-new-config-schema-repository": "showNewXsdSchemaRepositoryForm",
-                "click #btn-save-config-schema-repository": "createXsdSchemaRepository",
-                "click #btn-update-config-schema-repository": "updateXsdSchemaRepository",
-                "click #btn-cancel-config-schema-repository": "closeXsdSchemaRepositoryForm",
-                "click .edit-config-xsd-schema": "showEditXsdSchemaForm",
-                "click .del-config-xsd-schema": "removeXsdSchema",
-                "click .edit-config-schema-repository": "showEditXsdSchemaRepositoryForm",
-                "click .del-config-schema-repository": "removeXsdSchemaRepository",
-                "submit #form-filter-config-xsd-schemas": "filterXsdSchemas",
+                "click #btn-new-config-xsd-schema": "showNewSchemaForm",
+                "click #btn-save-config-xsd-schema": "createSchema",
+                "click #btn-update-config-xsd-schema": "updateSchema",
+                "click #btn-cancel-config-xsd-schema": "closeSchemaForm",
+                "click #btn-new-config-schema-repository": "showNewSchemaRepositoryForm",
+                "click #btn-save-config-schema-repository": "createSchemaRepository",
+                "click #btn-update-config-schema-repository": "updateSchemaRepository",
+                "click #btn-cancel-config-schema-repository": "closeSchemaRepositoryForm",
+                "click .edit-config-xsd-schema": "showEditSchemaForm",
+                "click .del-config-xsd-schema": "removeSchema",
+                "click .edit-config-schema-repository": "showEditSchemaRepositoryForm",
+                "click .del-config-schema-repository": "removeSchemaRepository",
+                "submit #form-filter-config-xsd-schemas": "filterSchemas",
                 "click #btn-reload-config-xsd-schemas": "reload",
                 "click #btn-reload-config-schema-repository": "reload",
-                "click a.xsd-schema-select": "selectXsdSchema",
-                "click #btn-add-config-xsd-schema-ref": "addXsdSchemaReference",
-                "click input[name='schema-ref']": "showXsdSchemaReferenceSelect"
+                "click a.xsd-schema-select": "selectSchema",
+                "click #btn-add-config-xsd-schema-ref": "addSchemaReference",
+                "click input[name='schema-ref']": "showSchemaReferenceSelect"
             },
 
             initialize: function () {
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('ConfigXsdSchemaView'));
+                $(this.el).html(TemplateManager.template('SchemaDefinitionView'));
                 return this;
             },
 
             afterRender: function () {
                 $('#input-filter-config-xsd-schemas').keyup(_.bind(function () {
-                    this.filterXsdSchemas();
+                    this.filterSchemas();
                 }, this));
 
                 this.reload();
             },
 
             reload: function() {
-                this.getXsdSchemas();
-                this.getXsdSchemaRepositories();
+                this.getSchemas();
+                this.getSchemaRepositories();
             },
 
-            getXsdSchemas: function () {
+            getSchemas: function () {
                 $.ajax({
                     url: "config/xsd-schema",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.schemas = response;
-                        $("#config-xsd-schemas-table").html(TemplateManager.template('XsdSchemaTableView', {matches: this.schemas}));
+                        $("#config-xsd-schemas-table").html(TemplateManager.template('SchemaTableView', {matches: this.schemas}));
                         $('#input-filter-config-xsd-schemas').val('');
                     }, this),
                     async: true
                 });
             },
 
-            getXsdSchemaRepositories: function () {
+            getSchemaRepositories: function () {
                 $.ajax({
                     url: "config/xsd-schema-repository",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.schemaRepositories = response;
-                        $("#config-schema-repository-table").html(TemplateManager.template('XsdSchemaRepositoryTableView', {matches: this.schemaRepositories}));
+                        $("#config-schema-repository-table").html(TemplateManager.template('SchemaRepositoryTableView', {matches: this.schemaRepositories}));
                     }, this),
                     async: true
                 });
             },
 
-            filterXsdSchemas: function () {
+            filterSchemas: function () {
                 var searchKey = $('#input-filter-config-xsd-schemas').val();
 
                 if (searchKey.length) {
-                    $("#config-xsd-schemas-table").html(TemplateManager.template('XsdSchemaTableView', {matches: _.filter(this.schemas, function (schema) {
+                    $("#config-xsd-schemas-table").html(TemplateManager.template('SchemaTableView', {matches: _.filter(this.schemas, function (schema) {
                         // regex: match all key names (e.g. "keyname":) in JSON String
                         var regex = /"(\w|0-9|_)+":/;
                         // replace key names with empty string and only search for match in values
                         return JSON.stringify(schema).replace(regex,"").indexOf(searchKey) >= 0;
                     })}));
                 } else {
-                    $("#config-xsd-schemas-table").html(TemplateManager.template('XsdSchemaTableView', {matches: this.schemas}));
+                    $("#config-xsd-schemas-table").html(TemplateManager.template('SchemaTableView', {matches: this.schemas}));
                 }
 
                 return false;
             },
 
-            removeXsdSchema: function (event) {
+            removeSchema: function (event) {
                 var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedSchemaId);
                 var url = "config/xsd-schema/" + id;
@@ -106,7 +106,7 @@
 
             },
 
-            removeXsdSchemaRepository: function (event) {
+            removeSchemaRepository: function (event) {
                 var encodedId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedId);
                 var url = "config/xsd-schema-repository/" + id;
@@ -122,19 +122,19 @@
 
             },
 
-            showNewXsdSchemaForm: function() {
-                $('#dialog-edit-config-xsd-schema').html(TemplateManager.template('XsdSchemaEditView', {schema: undefined}));
+            showNewSchemaForm: function() {
+                $('#dialog-edit-config-xsd-schema').html(TemplateManager.template('SchemaEditView', {schema: undefined}));
                 $('#dialog-edit-config-xsd-schema .modal').modal();
 
             },
 
-            showNewXsdSchemaRepositoryForm: function() {
-                $('#dialog-edit-config-schema-repository').html(TemplateManager.template('XsdSchemaRepositoryEditView', {schemaRepository: undefined, schemas: this.schemas}));
+            showNewSchemaRepositoryForm: function() {
+                $('#dialog-edit-config-schema-repository').html(TemplateManager.template('SchemaRepositoryEditView', {schemaRepository: undefined, schemas: this.schemas}));
                 $('#dialog-edit-config-schema-repository .modal').modal();
 
             },
 
-            showEditXsdSchemaForm: function() {
+            showEditSchemaForm: function() {
                 var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedSchemaId);
                 var url = "config/xsd-schema/" + id;
@@ -144,14 +144,14 @@
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        $('#dialog-edit-config-xsd-schema').html(TemplateManager.template('XsdSchemaEditView', {schema: response}));
+                        $('#dialog-edit-config-xsd-schema').html(TemplateManager.template('SchemaEditView', {schema: response}));
                         $('#dialog-edit-config-xsd-schema .modal').modal();
                     }, this),
                     async: true
                 });
             },
 
-            showEditXsdSchemaRepositoryForm: function() {
+            showEditSchemaRepositoryForm: function() {
                 var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedSchemaId);
                 var url = "config/xsd-schema-repository/" + id;
@@ -161,16 +161,16 @@
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        $('#dialog-edit-config-schema-repository').html(TemplateManager.template('XsdSchemaRepositoryEditView', {schemaRepository: response, schemas: this.schemas}));
+                        $('#dialog-edit-config-schema-repository').html(TemplateManager.template('SchemaRepositoryEditView', {schemaRepository: response, schemas: this.schemas}));
                         $('#dialog-edit-config-schema-repository .modal').modal();
                     }, this),
                     async: true
                 });
             },
 
-            createXsdSchema: function() {
+            createSchema: function() {
                 var form = $('#form-edit-config-xsd-schema form');
-                this.closeXsdSchemaForm();
+                this.closeSchemaForm();
 
                 var serializedForm = form.serializeObject();
                 var jsonForm = JSON.stringify(serializedForm);
@@ -189,9 +189,9 @@
                 return false;
             },
 
-            createXsdSchemaRepository: function() {
+            createSchemaRepository: function() {
                 var form = $('#form-edit-config-schema-repository form');
-                this.closeXsdSchemaRepositoryForm();
+                this.closeSchemaRepositoryForm();
 
                 var serializedForm = form.serializeObject();
                 var url = "config/xsd-schema-repository";
@@ -209,9 +209,9 @@
                 return false;
             },
 
-            updateXsdSchema: function() {
+            updateSchema: function() {
                 var form = $('#form-edit-config-xsd-schema form');
-                this.closeXsdSchemaForm();
+                this.closeSchemaForm();
 
                 var serializedForm = form.serializeObject();
                 var schemaId = serializedForm.id;
@@ -238,9 +238,9 @@
                 return false;
             },
 
-            updateXsdSchemaRepository: function() {
+            updateSchemaRepository: function() {
                 var form = $('#form-edit-config-schema-repository form');
-                this.closeXsdSchemaRepositoryForm();
+                this.closeSchemaRepositoryForm();
 
                 var serializedForm = form.serializeObject();
                 var schemaRepositoryId = serializedForm.id;
@@ -278,11 +278,11 @@
                 return JSON.stringify(schemaRepository);
             },
 
-            closeXsdSchemaForm: function() {
+            closeSchemaForm: function() {
                 $('#dialog-edit-config-xsd-schema .modal').modal('hide');
             },
 
-            closeXsdSchemaRepositoryForm: function() {
+            closeSchemaRepositoryForm: function() {
                 $('#dialog-edit-config-schema-repository .modal').modal('hide');
             },
 
@@ -291,13 +291,13 @@
                 return splitString[splitString.length-1];
             },
 
-            selectXsdSchema: function(event) {
+            selectSchema: function(event) {
                 $('input[name="schema-ref"]').val(event.currentTarget.innerText);
                 $('#xsd-schema-ref-dropdown').removeClass('open');
                 return false;
             },
 
-            addXsdSchemaReference: function() {
+            addSchemaReference: function() {
                 var schemaId = $('input[name="schema-ref"]').val();
                 if (schemaId.length) {
                     if ($('ul#xsd-schema-refs').children('li#' + schemaId).size() == 0) {
@@ -310,13 +310,13 @@
                 return false;
             },
 
-            showXsdSchemaReferenceSelect: function(event) {
+            showSchemaReferenceSelect: function(event) {
                 $('#xsd-schema-ref-dropdown').addClass('open');
                 event.stopPropagation();
             }
 
         });
 
-        return ConfigXsdSchemaView;
+        return SchemaDefinitionView;
     });
 }).call(this);
