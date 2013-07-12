@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchema;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
@@ -38,11 +41,17 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
     /** Element type name */
     private String elementName;
 
+    /** Element namespace to look for */
+    private String elementNamespace;
+
     /** Optional attributes that identify element */
     private Map<String, String> attributes = new HashMap<String, String>();
     
     /** Found bean definition element nodes */
     private List<Element> beanDefinitions = new ArrayList<Element>();
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(GetSpringBeansFilter.class);
     
     /**
      * Constructor using bean definition type as field.
@@ -50,14 +59,14 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
     public GetSpringBeansFilter(Class<?> type) {
         XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
         this.elementName = beanTypeAnnotation.name();
+        this.elementNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
     }
 
     /**
      * Constructor using bean definition type and attributes fields.
      */
     public GetSpringBeansFilter(Class<?> type, Map<String, String> attributes) {
-        XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
-        this.elementName = beanTypeAnnotation.name();
+        this(type);
 
         if (attributes != null) {
             this.attributes = attributes;
@@ -69,6 +78,7 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
      */
     public short accept(Element element) {
         if (DomUtils.nodeNameEquals(element, elementName) &&
+                isEqualByNamespace(element, elementNamespace) &&
                 isEqualByBeanAttributes(element, attributes)) {
             beanDefinitions.add(element);
         }

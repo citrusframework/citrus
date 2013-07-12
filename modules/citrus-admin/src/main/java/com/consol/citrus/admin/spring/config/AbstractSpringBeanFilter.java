@@ -79,6 +79,21 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
     }
 
     /**
+     * Checks for element equality by namespace uri.
+     * @param element
+     * @param namespaceUri
+     * @return
+     */
+    protected boolean isEqualByNamespace(Element element, String namespaceUri) {
+        if (namespaceUri != null && element.getSchemaTypeInfo() != null &&
+                element.getSchemaTypeInfo().getTypeNamespace() != null) {
+            return element.getSchemaTypeInfo().getTypeNamespace().equals(namespaceUri);
+        }
+
+        return true;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public short startElement(Element element) {

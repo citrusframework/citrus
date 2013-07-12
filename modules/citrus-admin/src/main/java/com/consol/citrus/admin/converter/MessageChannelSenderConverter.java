@@ -17,28 +17,28 @@
 package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.MessageSenderType;
-import com.consol.citrus.model.config.core.JmsMessageSender;
+import com.consol.citrus.model.config.core.MessageChannelSender;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class JmsMessageSenderConverter implements MessageSenderConverter<JmsMessageSender> {
+public class MessageChannelSenderConverter implements MessageSenderConverter<MessageChannelSender> {
 
     @Override
-    public MessageSenderType convert(JmsMessageSender jmsMessageSender) {
+    public MessageSenderType convert(MessageChannelSender messageChannelSender) {
         MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
 
-        messageSenderType.setName(jmsMessageSender.getId());
+        messageSenderType.setName(messageChannelSender.getId());
 
-        if (StringUtils.hasText(jmsMessageSender.getDestinationName())) {
-            messageSenderType.setDestination(jmsMessageSender.getDestinationName());
+        if (StringUtils.hasText(messageChannelSender.getChannelName())) {
+            messageSenderType.setDestination(messageChannelSender.getChannelName());
         } else {
-            messageSenderType.setDestination("ref:" + jmsMessageSender.getDestination());
+            messageSenderType.setDestination("ref:" + messageChannelSender.getChannel());
         }
 
-        messageSenderType.setType("JMS");
+        messageSenderType.setType("SPRING");
 
         return messageSenderType;
     }

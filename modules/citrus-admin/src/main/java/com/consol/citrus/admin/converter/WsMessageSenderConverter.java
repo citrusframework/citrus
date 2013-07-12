@@ -16,11 +16,23 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageReceiverType;
+import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.model.config.ws.MessageSender;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageReceiverConverter<K> extends ObjectConverter<MessageReceiverType, K> {
+public class WsMessageSenderConverter implements MessageSenderConverter<MessageSender> {
+
+    @Override
+    public MessageSenderType convert(MessageSender wsMessageSender) {
+        MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
+
+        messageSenderType.setName(wsMessageSender.getId());
+        messageSenderType.setDestination(wsMessageSender.getRequestUrl());
+        messageSenderType.setType("SOAP");
+
+        return messageSenderType;
+    }
 }

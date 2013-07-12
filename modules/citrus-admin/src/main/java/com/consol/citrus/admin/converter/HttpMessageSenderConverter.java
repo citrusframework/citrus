@@ -16,11 +16,24 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageReceiverType;
+import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.model.config.core.JmsMessageSender;
+import com.consol.citrus.model.config.http.MessageSender;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageReceiverConverter<K> extends ObjectConverter<MessageReceiverType, K> {
+public class HttpMessageSenderConverter implements MessageSenderConverter<MessageSender> {
+
+    @Override
+    public MessageSenderType convert(MessageSender httpMessageSender) {
+        MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
+
+        messageSenderType.setName(httpMessageSender.getId());
+        messageSenderType.setDestination(httpMessageSender.getRequestUrl());
+        messageSenderType.setType("HTTP");
+
+        return messageSenderType;
+    }
 }

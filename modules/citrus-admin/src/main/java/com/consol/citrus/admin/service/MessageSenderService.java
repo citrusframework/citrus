@@ -16,9 +16,13 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.admin.converter.HttpMessageSenderConverter;
 import com.consol.citrus.admin.converter.JmsMessageSenderConverter;
+import com.consol.citrus.admin.converter.MessageChannelSenderConverter;
+import com.consol.citrus.admin.converter.WsMessageSenderConverter;
 import com.consol.citrus.admin.model.MessageSenderType;
 import com.consol.citrus.model.config.core.JmsMessageSender;
+import com.consol.citrus.model.config.core.MessageChannelSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +40,11 @@ public class MessageSenderService {
     @Autowired
     private SpringBeanService springBeanService;
 
+    /** Object converters */
     private JmsMessageSenderConverter jmsMessageSenderConverter = new JmsMessageSenderConverter();
+    private MessageChannelSenderConverter messageChannelSenderConverter = new MessageChannelSenderConverter();
+    private HttpMessageSenderConverter httpMessageSenderConverter = new HttpMessageSenderConverter();
+    private WsMessageSenderConverter wsMessageSenderConverter = new WsMessageSenderConverter();
 
     /**
      * Gets the message sender definition by bean id in application context.
@@ -55,10 +63,25 @@ public class MessageSenderService {
      */
     public List<MessageSenderType> listMessageSender(File projectConfigFile) {
         List<MessageSenderType> messageSender = new ArrayList<MessageSenderType>();
-        List<JmsMessageSender> jsmMessageSender = springBeanService.getBeanDefinitions(projectConfigFile, JmsMessageSender.class);
 
-        for (JmsMessageSender sender : jsmMessageSender) {
+        List<JmsMessageSender> jmsMessageSender = springBeanService.getBeanDefinitions(projectConfigFile, JmsMessageSender.class);
+        for (JmsMessageSender sender : jmsMessageSender) {
             messageSender.add(jmsMessageSenderConverter.convert(sender));
+        }
+
+        List<MessageChannelSender> channelMessageSender = springBeanService.getBeanDefinitions(projectConfigFile, MessageChannelSender.class);
+        for (MessageChannelSender sender : channelMessageSender) {
+            messageSender.add(messageChannelSenderConverter.convert(sender));
+        }
+
+        List<com.consol.citrus.model.config.http.MessageSender> httpMessageSender = springBeanService.getBeanDefinitions(projectConfigFile, com.consol.citrus.model.config.http.MessageSender.class);
+        for (com.consol.citrus.model.config.http.MessageSender sender : httpMessageSender) {
+            messageSender.add(httpMessageSenderConverter.convert(sender));
+        }
+
+        List<com.consol.citrus.model.config.ws.MessageSender> wsMessageSender = springBeanService.getBeanDefinitions(projectConfigFile, com.consol.citrus.model.config.ws.MessageSender.class);
+        for (com.consol.citrus.model.config.ws.MessageSender sender : wsMessageSender) {
+            messageSender.add(wsMessageSenderConverter.convert(sender));
         }
 
         return messageSender;

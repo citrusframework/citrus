@@ -18,6 +18,7 @@ package com.consol.citrus.admin.converter;
 
 /**
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
 public interface ObjectConverter<T, K> {
 

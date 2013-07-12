@@ -86,7 +86,9 @@ public class SpringBeanService {
     protected void initJaxbContext() {
         jaxbContext = jaxbHelper.createJAXBContextByPath(
                 "com.consol.citrus.admin.spring.model",
-                "com.consol.citrus.model.config.core");
+                "com.consol.citrus.model.config.core",
+                "com.consol.citrus.model.config.ws",
+                "com.consol.citrus.model.config.http");
     }
 
     /**

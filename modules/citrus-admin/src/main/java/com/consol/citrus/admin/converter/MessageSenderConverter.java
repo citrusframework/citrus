@@ -20,6 +20,7 @@ import com.consol.citrus.admin.model.MessageSenderType;
 
 /**
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
 public interface MessageSenderConverter<K> extends ObjectConverter<MessageSenderType, K> {
 }
