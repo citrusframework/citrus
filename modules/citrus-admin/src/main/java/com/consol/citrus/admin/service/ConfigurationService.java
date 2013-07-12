@@ -53,7 +53,7 @@ public class ConfigurationService {
     public static final String PROJECT_HOME = "project.home";
     public static final String ROOT_DIRECTORY = "root.directory";
     
-    private static final String CITRUS_ADMIN_CONTEXT_XML = "citrus-admin-context.xml";
+    private static final String CITRUS_ADMIN_CONTEXT_XML = "citrus-context.xml";
     
     /**
      * Check if home directory is valid Citrus project home.

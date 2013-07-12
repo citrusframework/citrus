@@ -72,7 +72,7 @@ public class AppContextController {
         Map<String, Server> servers = ctx.getBeansOfType(Server.class);
         
         for (Entry<String, Server> server : servers.entrySet()) {
-            ServerInstanceType serverType = new ServerInstanceType();
+            ServerType serverType = new ServerType();
             serverType.setName(server.getKey());
             appContextInfo.getServerInstances().add(serverType);
         }

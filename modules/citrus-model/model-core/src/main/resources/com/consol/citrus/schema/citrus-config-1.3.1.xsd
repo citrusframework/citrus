@@ -28,7 +28,13 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="jms-message-sender" type="jmsAdapterType"/>
+    <xs:element name="jms-message-sender">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="jmsAdapterType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
     
     <xs:element name="jms-message-receiver">
         <xs:complexType>
@@ -102,8 +108,14 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:element name="message-channel-sender" type="messageChannelAdapterType"/>
-    
+    <xs:element name="message-channel-sender">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="messageChannelAdapterType"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="message-channel-receiver">
         <xs:complexType>
             <xs:complexContent>

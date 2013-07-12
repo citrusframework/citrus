@@ -17,6 +17,7 @@ a {
 
 a:hover {
     color: #F89406;
+    text-decoration: none;
 }
 
 .container-fluid {
@@ -492,4 +493,40 @@ ul.xsd-schema-list {
 input[readonly], select[readonly], textarea[readonly] {
     cursor: default;
     background-color: #ffffff;
+}
+
+.config-box {
+    font-size: 12px;
+    width: 295px;
+    padding: 0px 0px 0px 0px;
+    float: left;
+    margin-right: 10px;
+    overflow-x: hidden;
+}
+
+.config-box:hover h5.page-header {
+    background-color: #bbcccc;
+}
+
+.config-box h5.page-header {
+    padding-left: 5px;
+    margin: 0 0 5px 0;
+    background-color: #ccdddd;
+}
+
+.config-box .button-bar {
+    border-top: 1px solid #eeeeee;
+    text-align: right;
+}
+
+.config-box dl.dl-horizontal dt {
+    width: 80px;
+}
+
+.config-box dl.dl-horizontal dd {
+    margin-left: 90px;
+}
+
+.config-sender, .config-receiver {
+
 }

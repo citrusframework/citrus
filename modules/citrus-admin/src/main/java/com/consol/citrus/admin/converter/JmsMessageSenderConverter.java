@@ -16,14 +16,22 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.spring.model.SpringBean;
+import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.model.config.core.JmsMessageSender;
 
 /**
- * Converter interface for converting legacy spring bean definitions to Citrus schema elements. Usually
- * used to convert configuration objects coming from application context.
- *
  * @author Christoph Deppisch
- * @since 1.3.1
  */
-public interface SpringBeanConverter<T> extends ObjectConverter<T, SpringBean> {
+public class JmsMessageSenderConverter implements MessageSenderConverter<JmsMessageSender> {
+
+    @Override
+    public MessageSenderType convert(JmsMessageSender jmsMessageSender) {
+        MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
+
+        messageSenderType.setName(jmsMessageSender.getId());
+        messageSenderType.setDestination(jmsMessageSender.getDestinationName());
+        messageSenderType.setType("JMS");
+
+        return messageSenderType;
+    }
 }

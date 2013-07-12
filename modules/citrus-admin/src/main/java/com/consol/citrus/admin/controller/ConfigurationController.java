@@ -16,24 +16,14 @@
 
 package com.consol.citrus.admin.controller;
 
-import com.consol.citrus.admin.service.SchemaRepositoryService;
-import com.consol.citrus.admin.service.SpringBeanService;
-import com.consol.citrus.admin.spring.model.Property;
-import com.consol.citrus.admin.spring.model.Ref;
-import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.model.config.core.SchemaRepository;
-import com.consol.citrus.model.config.core.XsdSchema;
-import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.admin.model.MessageReceiverType;
+import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.service.*;
+import com.consol.citrus.model.config.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.consol.citrus.admin.service.ConfigurationService;
-import org.springframework.xml.xsd.SimpleXsdSchema;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,6 +45,11 @@ public class ConfigurationController {
 
     @Autowired
     private SchemaRepositoryService schemaRepositoryService;
+
+    @Autowired
+    private MessageSenderService messageSenderService;
+    @Autowired
+    private MessageReceiverService messageReceiverService;
 
     @RequestMapping(value = "/projecthome", method = RequestMethod.GET)
     @ResponseBody
@@ -125,6 +120,66 @@ public class ConfigurationController {
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteXsdSchema(@PathVariable("id") String id) {
+        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
+    }
+
+    @RequestMapping(value = "/msg-sender", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<MessageSenderType> listMsgSender() {
+        return messageSenderService.listMessageSender(configService.getProjectConfigFile());
+    }
+
+    @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.GET})
+    @ResponseBody
+    public MessageSenderType getMsgSender(@PathVariable("id") String id) {
+        return messageSenderService.getMessageSender(configService.getProjectConfigFile(), id);
+    }
+
+    @RequestMapping(value="/msg-sender", method = {RequestMethod.POST})
+    @ResponseBody
+    public void createMsgSender(@RequestBody MessageSenderType msgSender) {
+        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), msgSender);
+    }
+
+    @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.PUT})
+    @ResponseBody
+    public void updateMsgSender(@PathVariable("id") String id, @RequestBody MessageSenderType msgSender) {
+        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, msgSender);
+    }
+
+    @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.DELETE})
+    @ResponseBody
+    public void deleteMsgSender(@PathVariable("id") String id) {
+        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
+    }
+
+    @RequestMapping(value = "/msg-receiver", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<MessageReceiverType> listMsgReceiver() {
+        return messageReceiverService.listMessageReceiver(configService.getProjectConfigFile());
+    }
+
+    @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.GET})
+    @ResponseBody
+    public MessageReceiverType getMsgReceiver(@PathVariable("id") String id) {
+        return messageReceiverService.getMessageReceiver(configService.getProjectConfigFile(), id);
+    }
+
+    @RequestMapping(value="/msg-receiver", method = {RequestMethod.POST})
+    @ResponseBody
+    public void createMsgReceiver(@RequestBody MessageReceiverType msgReceiver) {
+        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), msgReceiver);
+    }
+
+    @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.PUT})
+    @ResponseBody
+    public void updateMsgReceiver(@PathVariable("id") String id, @RequestBody MessageReceiverType msgReceiver) {
+        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, msgReceiver);
+    }
+
+    @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.DELETE})
+    @ResponseBody
+    public void deleteMsgReceiver(@PathVariable("id") String id) {
         springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
     }
 }

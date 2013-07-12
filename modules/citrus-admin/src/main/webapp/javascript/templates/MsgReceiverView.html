@@ -1,0 +1,23 @@
+{{#unless matches.length}}
+<div class="box">
+  <p>No message receiver found</p>
+</div>
+{{/unless}}
+
+{{#each matches}}
+<div class="box config-box config-receiver clickable" id="{{name}}">
+  <h5 class="page-header"><i class="icon-signin"></i>&nbsp;[{{type}}] {{truncate name length=25}}</h5>
+
+  <dl class="dl-horizontal">
+    <dt>Name:</dt><dd>{{name}}</dd>
+    <dt>Destination:</dt><dd>{{destination}}</dd>
+  </dl>
+
+  <div class="button-bar">
+    <a class="edit-config-receiver" href="#config" title="Edit message receiver"><i class="icon-pencil"></i></a>&nbsp;
+    <a class="del-config-receiver" href="#config" title="Remove message receiver"><i class="icon-trash"></i></a>&nbsp;
+  </div>
+</div>
+{{/each}}
+
+<div class="clearfix"/>

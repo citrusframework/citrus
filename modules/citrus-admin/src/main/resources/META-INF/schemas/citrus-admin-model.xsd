@@ -30,7 +30,7 @@
             <xs:sequence>
                 <xs:element name="message-sender" type="MessageSenderType" minOccurs="0" maxOccurs="unbounded" />
                 <xs:element name="message-receiver" type="MessageReceiverType" minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="server-instance" type="ServerInstanceType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="server-instance" type="ServerType" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -48,19 +48,23 @@
     
     <!-- TYPES -->
 
-	<xs:complexType name="MessageSenderType">
+	  <xs:complexType name="MessageSenderType">
         <xs:sequence>
+            <xs:element name="type" type="xs:string" />
             <xs:element name="name" type="xs:string" />
+            <xs:element name="destination" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
     
     <xs:complexType name="MessageReceiverType">
         <xs:sequence>
+            <xs:element name="type" type="xs:string" />
             <xs:element name="name" type="xs:string" />
+            <xs:element name="destination" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
     
-    <xs:complexType name="ServerInstanceType">
+    <xs:complexType name="ServerType">
         <xs:sequence>
             <xs:element name="name" type="xs:string" />
             <xs:element name="port" type="xs:integer"/>
@@ -68,18 +72,18 @@
     </xs:complexType>
     
     <xs:complexType name="TestCaseType">
-      <xs:sequence>
-        <xs:element name="package-name" type="xs:string"/>
-        <xs:element name="name" type="xs:string"/>
-        <xs:element name="author" type="xs:string"/>
-        <xs:element name="description" type="xs:string"/>
-        <xs:element name="status" type="xs:string"/>
-        <xs:element name="groups" type="xs:string"/>
-        <xs:element name="creationDate" type="xs:string"/>
-        <xs:element name="lastUpdated" type="xs:string"/>
-        <xs:element name="lastUpdatedBy" type="xs:string"/>
-        <xs:element name="file" type="xs:string"/>
-      </xs:sequence>
+        <xs:sequence>
+            <xs:element name="package-name" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="author" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="groups" type="xs:string"/>
+            <xs:element name="creationDate" type="xs:string"/>
+            <xs:element name="lastUpdated" type="xs:string"/>
+            <xs:element name="lastUpdatedBy" type="xs:string"/>
+            <xs:element name="file" type="xs:string"/>
+        </xs:sequence>
     </xs:complexType>
     
 </xs:schema>

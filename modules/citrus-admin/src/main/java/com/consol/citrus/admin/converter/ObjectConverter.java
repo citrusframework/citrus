@@ -16,14 +16,15 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.spring.model.SpringBean;
-
 /**
- * Converter interface for converting legacy spring bean definitions to Citrus schema elements. Usually
- * used to convert configuration objects coming from application context.
- *
  * @author Christoph Deppisch
- * @since 1.3.1
  */
-public interface SpringBeanConverter<T> extends ObjectConverter<T, SpringBean> {
+public interface ObjectConverter<T, K> {
+
+    /**
+     * Converts a configuration definition object to desired object.
+     * @param definition
+     * @return
+     */
+    T convert(K definition);
 }
