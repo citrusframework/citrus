@@ -1,4 +1,4 @@
-<table class="table table-bordered table-hover table-condensed">
+<table class="table table-hover table-condensed">
     <thead>
         <tr>
             <th style="min-width: 150px;">Date</th>
@@ -15,8 +15,8 @@
     <tr id="{{id}}" class="show-message-data">
         <td><span>{{dateFormat timestamp format="MMM DD HH:mm:ss.SSS"}}</span></td>
         <td>
-            {{#if_eq type compare='INBOUND_MESSAGE'}}<span class="message-inbound"><i class="icon-signin"></i>&nbsp;<i class="icon-envelope-alt"></i></span>{{/if_eq}}
-            {{#if_eq type compare='OUTBOUND_MESSAGE'}}<span class="message-outbound"><i class="icon-envelope-alt"></i>&nbsp;<i class="icon-signout"></i></span>{{/if_eq}}
+            {{#if_eq type compare='INBOUND_MESSAGE'}}<span class="label message-inbound"><i class="icon-envelope"></i><i class="icon-signin"></i></span>{{/if_eq}}
+            {{#if_eq type compare='OUTBOUND_MESSAGE'}}<span class="label message-outbound"><i class="icon-signout"></i><i class="icon-envelope"></i></span>{{/if_eq}}
         </td>
         <td><span class="message-data">{{truncate data length=150}}</span></td>
     </tr>

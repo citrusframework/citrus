@@ -1,5 +1,11 @@
 <div id="{{name}}" class="test-details">
-    <h2>{{name}} &nbsp;<i class="icon-play run-test clickable"></i><i class="icon-stop cancel-test clickable" style="display: none;"></i></h2>
+    <h2>
+      <span>{{name}}</span>
+      <div class="pull-right">
+        <a class="btn run-test" type="button" title="Run test">&nbsp;<i class="icon-play"></i>&nbsp;</a>
+        <a class="btn cancel-test" type="button" title="Stop test execution" style="display: none;">&nbsp;<i class="icon-stop"></i>&nbsp;</a>
+      </div>
+    </h2>
 
     <h4 class="page-header">Details</h4>
     <form id="test-info" class="form-horizontal">
@@ -35,28 +41,26 @@
                 </div>
             </div>
         </div>
-        <div class="row-fluid">
-            <div class="span12">
-                <div class="control-group">
-                  <label class="control-label">Description:</label>
-                  <div class="controls">
-                    <input id="description" class="input-xxlarge" name="description" type="text" placeholder="Description" value="{{trim description}}"/>
-                  </div>
-                </div>
-            </div>
-        </div>
     </form>
+
+    <h4 class="page-header">Description</h4>
+    <blockquote>
+      {{#unless description}}
+        <p>No description</p>
+      {{/unless}}
+
+      <p>{{description}}</p>
+    </blockquote>
 
     <h4 class="page-header">Sources</h4>
 
     <div class="btn-group pull-right">
-      <button type="button" data-loading-text="Running ..." class="btn run-test">Run Test</button>
+      <button type="button" data-loading-text="Running ..." class="btn run-test">Run Config</button>
       <button class="btn dropdown-toggle" data-toggle="dropdown">
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><a href="#">Maven [test]</a></li>
-        <li><a href="#">Maven [clean install]</a></li>
+        <li><a href="#">Maven</a></li>
         <li><a href="#">Ant</a></li>
         <li class="divider"></li>
         <li><a href="#">Edit Run configurations</a></li>

@@ -7,8 +7,8 @@
             messages: [],
 
             events: {
-                "click .run-test" : "runTest",
-                "click .cancel-test" : "cancelTest",
+                "click a.run-test" : "runTest",
+                "click a.cancel-test" : "cancelTest",
                 "click a.xml-source" : "getXmlSource",
                 "click a.java-source" : "getJavaSource",
                 "click button.close" : "hideResultsTab"
@@ -54,6 +54,8 @@
                     type: 'GET',
                     dataType: "json"
                 });
+
+                return false;
             },
 
             cancelTest: function() {
@@ -64,6 +66,8 @@
                     success: function() {
                     }
                 });
+
+                return false;
             },
 
             onSocketMessage: function (message) {
@@ -79,12 +83,12 @@
 
                     if ("PROCESS_START" == jsMessage.event) {
                         $('div#test-result-' + processId).find('div.progress').find('.bar').width('1%');
-                        $('i.run-test').hide();
-                        $('i.cancel-test').show();
+                        $('a.run-test').hide();
+                        $('a.cancel-test').show();
                     } else if ("PROCESS_FAILED" == jsMessage.event) {
                         $('button.run-test').button('reset');
-                        $('i.run-test').show();
-                        $('i.cancel-test').hide();
+                        $('a.run-test').show();
+                        $('a.cancel-test').hide();
                         $('div#test-result-' + processId).find('div.progress').removeClass('progress-success');
                         $('div#test-result-' + processId).find('div.progress').addClass('progress-danger');
                     } else if ("TEST_START" == jsMessage.event) {
@@ -94,13 +98,13 @@
                         $('div#test-result-' + processId).find('div.progress').find('.bar').text(jsMessage.msg);
                     } else if ("TEST_SUCCESS" == jsMessage.event) {
                         $('button.run-test').button('reset');
-                        $('i.run-test').show();
-                        $('i.cancel-test').hide();
+                        $('a.run-test').show();
+                        $('a.cancel-test').hide();
                         $('div#test-result-' + processId).find('div.progress').find('.bar').width('100%');
                     } else if ("TEST_FAILED" == jsMessage.event) {
                         $('button.run-test').button('reset');
-                        $('i.run-test').show();
-                        $('i.cancel-test').hide();
+                        $('a.run-test').show();
+                        $('a.cancel-test').hide();
                         $('div#test-result-' + processId).find('div.progress').find('.bar').width('100%');
                         $('div#test-result-' + processId).find('div.progress').removeClass('progress-success');
                         $('div#test-result-' + processId).find('div.progress').addClass('progress-danger');

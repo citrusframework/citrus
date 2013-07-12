@@ -1,6 +1,6 @@
 (function() {
     define(["TemplateManager"], function(TemplateManager) {
-        var ProjectView = Backbone.View.extend({
+        var ProjectOpenView = Backbone.View.extend({
           
           projectHome: "",
           
@@ -23,7 +23,7 @@
           },
           
           render: function() {
-              $(this.el).html(TemplateManager.template('ProjectView', {projectHome: this.projectHome}));
+              $(this.el).html(TemplateManager.template('ProjectOpenView', {projectHome: this.projectHome}));
               
               $('#file-tree').fileTree({ 
                   root: '/',
@@ -55,6 +55,6 @@
         
         });
         
-        return ProjectView;
+        return ProjectOpenView;
     });
 }).call(this);

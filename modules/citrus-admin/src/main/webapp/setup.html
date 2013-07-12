@@ -23,13 +23,12 @@
 	      baseUrl: 'javascript',
 	      paths: {
 	          "TemplateManager" : "templates/TemplateManager",
-	          "ProjectView" : "views/ProjectView"
+	          "ProjectOpenView" : "views/ProjectOpenView"
 	      }},
-	      ["TemplateManager", "ProjectView", "domReady!"], function(TemplateManager, ProjectView) {
+	      ["TemplateManager", "ProjectOpenView", "domReady!"], function(TemplateManager, ProjectOpenView) {
 	        
-	      TemplateManager.load(['ProjectView'], function() {
-	          var projectView = new ProjectView({el: $('#content')});
-              projectView.render();
+	      TemplateManager.load(['ProjectOpenView'], function() {
+	          new ProjectOpenView({el: $('#content')}).render();
 	      });
       });
     </script>

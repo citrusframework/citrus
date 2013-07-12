@@ -45,6 +45,10 @@ a:hover {
   position: relative;
 }
 
+.box-dark {
+    background-color: #eeeeee;
+}
+
 .side-nav {
   background-color: #FFFFFF;
   border-radius: 6px 6px 6px 6px;
@@ -124,7 +128,7 @@ h3.page-header {
 }
 
 h2 i, h3 i, h4 i {
-    color: #c5c5c5;
+    color: #999999;
 }
 
 h2 i:hover, h3 i:hover, h4 i:hover {
@@ -243,7 +247,7 @@ div.file-tree {
   background-color: #F9F9F9;
 }
 
-.modal .form-horizontal .control-label {
+.form-horizontal .control-label {
     width: 110px;
 }
 
@@ -260,12 +264,14 @@ span.message-data {
 }
 
 span.message-inbound {
-    color: #888888;
+    color: #ffffff;
+    background-color: #5ab15a;
     font-size: 16px;
 }
 
 span.message-outbound {
-    color: #555555;
+    color: #ffffff;
+    background-color: #92bed2;
     font-size: 16px;
 }
 
