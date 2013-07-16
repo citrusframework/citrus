@@ -14,13 +14,30 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.model;
 
-import com.consol.citrus.admin.model.MessageReceiverItem;
+import com.consol.citrus.model.testcase.core.Testcase;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageReceiverConverter<K> extends ObjectConverter<MessageReceiverItem, K> {
+public class TestCaseDetail extends TestCaseItem {
+
+    private Testcase test;
+
+    /**
+     * @return
+     */
+    public Testcase getTest() {
+        return test;
+    }
+
+    /**
+     * @param test
+     */
+    public void setTest(Testcase test) {
+        this.test = test;
+    }
+
 }

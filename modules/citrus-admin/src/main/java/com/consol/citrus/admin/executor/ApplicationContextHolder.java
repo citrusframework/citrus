@@ -45,20 +45,6 @@ public class ApplicationContextHolder {
     private static Logger log = LoggerFactory.getLogger(ApplicationContextHolder.class);
     
     /**
-     * Gets the current application context. If not loaded before we initialize the 
-     * context on the fly.
-     * 
-     * @return
-     */
-    public ApplicationContext getApplicationContext() {
-        if (applicationContext == null) {
-            loadApplicationContext();
-        }
-
-        return applicationContext;
-    }
-
-    /**
      * Returns the status of the application context. If the application context hasn't been loaded already or has been
      * loaded but afterwards destroyed then false is returned. Otherwise true is returned.
      *
@@ -71,22 +57,24 @@ public class ApplicationContextHolder {
     /**
      * Loads the basic Citrus application context with all necessary parent context files.
      */
-    private ApplicationContext loadApplicationContext() {
-        TestContextManager testContextManager = new TestContextManager(AbstractTestNGCitrusTest.class) {
-            @Override
-            public void prepareTestInstance(Object testInstance) throws Exception {
-                applicationContext = getTestContext().getApplicationContext();
-                
-                // add special admin webapp test listeners
-                applicationContext.getBean(TestListeners.class).addTestListener(webSocketTestEventListener);
-                applicationContext.getBean(TestActionListeners.class).addTestActionListener(webSocketTestEventListener);
+    public ApplicationContext loadApplicationContext() {
+        if (applicationContext != null) {
+            TestContextManager testContextManager = new TestContextManager(AbstractTestNGCitrusTest.class) {
+                @Override
+                public void prepareTestInstance(Object testInstance) throws Exception {
+                    applicationContext = getTestContext().getApplicationContext();
+
+                    // add special admin webapp test listeners
+                    applicationContext.getBean(TestListeners.class).addTestListener(webSocketTestEventListener);
+                    applicationContext.getBean(TestActionListeners.class).addTestActionListener(webSocketTestEventListener);
+                }
+            };
+
+            try {
+                testContextManager.prepareTestInstance(null);
+            } catch (Exception e) {
+                log.error("Failed to load application context", e);
             }
-        };
-        
-        try {
-            testContextManager.prepareTestInstance(null);
-        } catch (Exception e) {
-            log.error("Failed to load application context", e);
         }
         
         return applicationContext;
@@ -111,5 +99,12 @@ public class ApplicationContextHolder {
         
         applicationContext = null;
     }
-    
+
+    /**
+     * Gets the application context.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
 }

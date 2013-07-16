@@ -20,7 +20,7 @@ import com.consol.citrus.admin.converter.HttpMessageSenderConverter;
 import com.consol.citrus.admin.converter.JmsMessageSenderConverter;
 import com.consol.citrus.admin.converter.MessageChannelSenderConverter;
 import com.consol.citrus.admin.converter.WsMessageSenderConverter;
-import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.model.config.core.JmsMessageSender;
 import com.consol.citrus.model.config.core.MessageChannelSender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class MessageSenderService {
      * @param id
      * @return
      */
-    public MessageSenderType getMessageSender(File projectConfigFile, String id) {
+    public MessageSenderItem getMessageSender(File projectConfigFile, String id) {
         return jmsMessageSenderConverter.convert(springBeanService.getBeanDefinition(projectConfigFile, id, JmsMessageSender.class));
     }
 
@@ -61,8 +61,8 @@ public class MessageSenderService {
      * @param projectConfigFile
      * @return
      */
-    public List<MessageSenderType> listMessageSender(File projectConfigFile) {
-        List<MessageSenderType> messageSender = new ArrayList<MessageSenderType>();
+    public List<MessageSenderItem> listMessageSender(File projectConfigFile) {
+        List<MessageSenderItem> messageSender = new ArrayList<MessageSenderItem>();
 
         List<JmsMessageSender> jmsMessageSender = springBeanService.getBeanDefinitions(projectConfigFile, JmsMessageSender.class);
         for (JmsMessageSender sender : jmsMessageSender) {

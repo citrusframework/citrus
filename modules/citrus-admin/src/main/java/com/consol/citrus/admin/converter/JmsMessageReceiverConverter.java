@@ -1,6 +1,6 @@
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageReceiverType;
+import com.consol.citrus.admin.model.MessageReceiverItem;
 import com.consol.citrus.model.config.core.JmsMessageReceiver;
 import org.springframework.util.StringUtils;
 
@@ -11,8 +11,8 @@ import org.springframework.util.StringUtils;
 public class JmsMessageReceiverConverter implements MessageReceiverConverter<JmsMessageReceiver> {
 
     @Override
-    public MessageReceiverType convert(JmsMessageReceiver definition) {
-        MessageReceiverType messageReceiverType = new com.consol.citrus.admin.model.ObjectFactory().createMessageReceiverType();
+    public MessageReceiverItem convert(JmsMessageReceiver definition) {
+        MessageReceiverItem messageReceiverType = new MessageReceiverItem();
 
         messageReceiverType.setName(definition.getId());
 

@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.*;
 import java.io.IOException;
 import java.util.List;
 
+import com.consol.citrus.admin.model.TestCaseItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,7 +29,6 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.service.ConfigurationService;
 
 /**
@@ -51,12 +51,12 @@ public class FileSystemTestExecutorTest extends AbstractTestNGSpringContextTests
         
         replay(configService);
         
-        List<TestCaseType> tests = testExecutor.getTests();
+        List<TestCaseItem> tests = testExecutor.getTests();
         
         Assert.assertNotNull(tests);
         Assert.assertEquals(tests.size(), 2L);
         
-        TestCaseType test = tests.get(0);
+        TestCaseItem test = tests.get(0);
         Assert.assertEquals(test.getName(), "FooTest");
         Assert.assertEquals(test.getPackageName(), "");
         

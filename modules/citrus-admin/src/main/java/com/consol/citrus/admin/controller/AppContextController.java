@@ -48,36 +48,8 @@ public class AppContextController {
     }
 
     @RequestMapping(method = { RequestMethod.GET })
-    @ResponseBody
-    public AppContextInfo startContext(HttpEntity<String> requestEntity) {
-        AppContextInfo appContextInfo = new AppContextInfo();
-
-        ApplicationContext ctx = appContextHolder.getApplicationContext();
-        Map<String, MessageSender> senders = ctx.getBeansOfType(MessageSender.class);
-        
-        for (Entry<String, MessageSender> sender : senders.entrySet()) {
-            MessageSenderType senderType = new MessageSenderType();
-            senderType.setName(sender.getKey());
-            appContextInfo.getMessageSenders().add(senderType);
-        }
-        
-        Map<String, MessageReceiver> receivers = ctx.getBeansOfType(MessageReceiver.class);
-        
-        for (Entry<String, MessageReceiver> receiver : receivers.entrySet()) {
-            MessageReceiverType receiverType = new MessageReceiverType();
-            receiverType.setName(receiver.getKey());
-            appContextInfo.getMessageReceivers().add(receiverType);
-        }
-        
-        Map<String, Server> servers = ctx.getBeansOfType(Server.class);
-        
-        for (Entry<String, Server> server : servers.entrySet()) {
-            ServerType serverType = new ServerType();
-            serverType.setName(server.getKey());
-            appContextInfo.getServerInstances().add(serverType);
-        }
-        
-        return appContextInfo;
+    public void startContext(HttpEntity<String> requestEntity) {
+        appContextHolder.loadApplicationContext();
     }
     
     @RequestMapping(method = { RequestMethod.DELETE })

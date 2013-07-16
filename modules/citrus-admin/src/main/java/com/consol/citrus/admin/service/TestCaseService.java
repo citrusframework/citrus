@@ -17,23 +17,26 @@
 package com.consol.citrus.admin.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.admin.model.TestCaseDetail;
+import com.consol.citrus.admin.model.TestCaseItem;
+import com.consol.citrus.admin.model.TestResult;
+import com.consol.citrus.admin.spring.model.SpringBeans;
+import com.consol.citrus.model.testcase.core.Testcase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Component;
-import org.springframework.util.xml.SimpleNamespaceContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.springframework.xml.transform.StringSource;
 
 import com.consol.citrus.admin.executor.TestExecutor;
-import com.consol.citrus.admin.model.TestCaseType;
-import com.consol.citrus.admin.model.TestResult;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.xml.xpath.XPathUtils;
 
 /**
  * Test case related activities get bundled in this service implementation. Service lists all test cases,
@@ -51,11 +54,15 @@ public class TestCaseService {
     @Autowired
     private TestExecutor testExecutor;
 
+    @Autowired
+    @Qualifier("jaxbMarshaller")
+    private Unmarshaller unmarshaller;
+
     /**
      * Lists all available Citrus test cases from classpath.
      * @return
      */
-    public List<TestCaseType> getAllTests() {
+    public List<TestCaseItem> getAllTests() {
         return testExecutor.getTests();
     }
 
@@ -63,32 +70,20 @@ public class TestCaseService {
      * Gets test case details such as status, description, author.
      * @return
      */
-    public TestCaseType getTestDetails(String packageName, String testName) {
+    public TestCaseDetail getTestDetails(String packageName, String testName) {
         // TODO also get testng groups from java part
-        TestCaseType testCase = new TestCaseType();
+        TestCaseDetail testCase = new TestCaseDetail();
         testCase.setPackageName(packageName);
-        testCase.setName(testName);
 
         String xmlPart = testExecutor.getSourceCode(packageName, testName, "xml");
 
-        SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-        nsContext.bindNamespaceUri("spring", "http://www.springframework.org/schema/beans"); //TODO: remove hard coded namespace uri
-        nsContext.bindNamespaceUri("citrus", "http://www.citrusframework.org/schema/testcase"); //TODO: remove hard coded namespace uri
-
-        Document testCaseDocument = XMLUtils.parseMessagePayload(xmlPart);
-        Node metaInfoNode = XPathUtils.evaluateAsNode(testCaseDocument, "/spring:beans/citrus:testcase/citrus:meta-info", nsContext);
-
-        testCase.setAuthor(XPathUtils.evaluateAsString(metaInfoNode, "citrus:author", nsContext));
-        testCase.setCreationDate(XPathUtils.evaluateAsString(metaInfoNode, "citrus:creationdate", nsContext));
-        testCase.setLastUpdatedBy(XPathUtils.evaluateAsString(metaInfoNode, "citrus:last-updated-by", nsContext));
-        testCase.setLastUpdated(XPathUtils.evaluateAsString(metaInfoNode, "citrus:last-updated-on", nsContext));
-        testCase.setStatus(XPathUtils.evaluateAsString(metaInfoNode, "citrus:status", nsContext));
-
+        Testcase test = null;
         try {
-            testCase.setDescription(XPathUtils.evaluateAsString(testCaseDocument, "/spring:beans/citrus:testcase/citrus:description", nsContext));
-        } catch (CitrusRuntimeException e) {
-            testCase.setDescription("");
+            test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
+        } catch (IOException e) {
+            throw new CitrusAdminRuntimeException("", e);
         }
+        testCase.setTest(test);
 
         return testCase;
     }
@@ -100,7 +95,7 @@ public class TestCaseService {
      */
     public TestResult executeTest(String testName) {
         TestResult result = new TestResult();
-        TestCaseType testCase = new TestCaseType();
+        TestCaseItem testCase = new TestCaseItem();
         testCase.setName(testName);
         result.setTestCase(testCase);
         

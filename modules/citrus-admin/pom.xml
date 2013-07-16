@@ -23,12 +23,6 @@
   <dependencyManagement>
     <dependencies>
         <dependency>
-          <groupId>com.consol.citrus.model</groupId>
-          <artifactId>citrus-model-core</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
           <groupId>com.consol.citrus</groupId>
           <artifactId>citrus-core</artifactId>
           <version>${project.version}</version>
@@ -102,12 +96,6 @@
   </dependencyManagement>
   
   <dependencies>
-
-    <dependency>
-      <groupId>com.consol.citrus.model</groupId>
-      <artifactId>citrus-model-core</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-core</artifactId>
@@ -213,29 +201,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      
-      <plugin>
-          <groupId>org.jvnet.jaxb2.maven2</groupId>
-          <artifactId>maven-jaxb2-plugin</artifactId>
-          <executions>
-              <execution>
-                  <goals>
-                      <goal>generate</goal>
-                  </goals>
-              </execution>
-          </executions>
-          <configuration>
-              <schemaDirectory>src/main/resources/META-INF/schemas</schemaDirectory>
-              <schemaIncludes>
-                  <include>citrus-admin-model.xsd</include>
-              </schemaIncludes>
-              <bindingIncludes>
-                  <include>**/*.xjb</include>
-              </bindingIncludes>
-              <verbose>true</verbose>
-              <extension>true</extension>
-          </configuration>
       </plugin>
 
       <plugin>

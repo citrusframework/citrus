@@ -82,19 +82,12 @@
         </bean> 
     </mvc:interceptors>
     
-    <bean id="jaxbHttpMessageConverter"
-        class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
-        <property name="marshaller" ref="jaxbMarshaller" />
-        <property name="unmarshaller" ref="jaxbMarshaller" />
-    </bean>
-    
     <bean name="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
         <property name="order" value="1" />
         <property name="messageConverters">
             <list>
-                <ref bean="jaxbHttpMessageConverter" />
                 <ref bean="jsonHttpMessageConverter" />
             </list>
         </property>
@@ -113,6 +106,7 @@
 
     <!-- XML Marshalling -->
     <oxm:jaxb2-marshaller id="jaxbMarshaller">
-        <oxm:class-to-be-bound name="com.consol.citrus.admin.model.AppContextInfo" />
+        <oxm:class-to-be-bound name="com.consol.citrus.admin.spring.model.SpringBeans" />
+        <oxm:class-to-be-bound name="com.consol.citrus.model.testcase.core.Testcase" />
     </oxm:jaxb2-marshaller>
 </beans>

@@ -16,21 +16,13 @@
 
 package com.consol.citrus.admin.websocket;
 
-import com.consol.citrus.admin.executor.FileSystemTestExecutor;
-import com.consol.citrus.admin.model.TestCaseType;
-import com.consol.citrus.admin.service.ConfigurationService;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.easymock.EasyMock.*;
 

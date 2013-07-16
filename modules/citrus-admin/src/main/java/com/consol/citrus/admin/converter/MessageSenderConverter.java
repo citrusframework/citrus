@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.model.MessageSenderItem;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageSenderConverter<K> extends ObjectConverter<MessageSenderType, K> {
+public interface MessageSenderConverter<K> extends ObjectConverter<MessageSenderItem, K> {
 }

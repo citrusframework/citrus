@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.model.config.core.MessageChannelSender;
 import org.springframework.util.StringUtils;
 
@@ -27,8 +27,8 @@ import org.springframework.util.StringUtils;
 public class MessageChannelSenderConverter implements MessageSenderConverter<MessageChannelSender> {
 
     @Override
-    public MessageSenderType convert(MessageChannelSender messageChannelSender) {
-        MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
+    public MessageSenderItem convert(MessageChannelSender messageChannelSender) {
+        MessageSenderItem messageSenderType = new MessageSenderItem();
 
         messageSenderType.setName(messageChannelSender.getId());
 

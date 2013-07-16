@@ -16,8 +16,8 @@
 
 package com.consol.citrus.admin.controller;
 
-import com.consol.citrus.admin.model.MessageReceiverType;
-import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.model.MessageReceiverItem;
+import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.admin.service.*;
 import com.consol.citrus.model.config.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,25 +125,25 @@ public class ConfigurationController {
 
     @RequestMapping(value = "/msg-sender", method = {RequestMethod.GET})
     @ResponseBody
-    public List<MessageSenderType> listMsgSender() {
+    public List<MessageSenderItem> listMsgSender() {
         return messageSenderService.listMessageSender(configService.getProjectConfigFile());
     }
 
     @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public MessageSenderType getMsgSender(@PathVariable("id") String id) {
+    public MessageSenderItem getMsgSender(@PathVariable("id") String id) {
         return messageSenderService.getMessageSender(configService.getProjectConfigFile(), id);
     }
 
     @RequestMapping(value="/msg-sender", method = {RequestMethod.POST})
     @ResponseBody
-    public void createMsgSender(@RequestBody MessageSenderType msgSender) {
+    public void createMsgSender(@RequestBody MessageSenderItem msgSender) {
         springBeanService.addBeanDefinition(configService.getProjectConfigFile(), msgSender);
     }
 
     @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateMsgSender(@PathVariable("id") String id, @RequestBody MessageSenderType msgSender) {
+    public void updateMsgSender(@PathVariable("id") String id, @RequestBody MessageSenderItem msgSender) {
         springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, msgSender);
     }
 
@@ -155,25 +155,25 @@ public class ConfigurationController {
 
     @RequestMapping(value = "/msg-receiver", method = {RequestMethod.GET})
     @ResponseBody
-    public List<MessageReceiverType> listMsgReceiver() {
+    public List<MessageReceiverItem> listMsgReceiver() {
         return messageReceiverService.listMessageReceiver(configService.getProjectConfigFile());
     }
 
     @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public MessageReceiverType getMsgReceiver(@PathVariable("id") String id) {
+    public MessageReceiverItem getMsgReceiver(@PathVariable("id") String id) {
         return messageReceiverService.getMessageReceiver(configService.getProjectConfigFile(), id);
     }
 
     @RequestMapping(value="/msg-receiver", method = {RequestMethod.POST})
     @ResponseBody
-    public void createMsgReceiver(@RequestBody MessageReceiverType msgReceiver) {
+    public void createMsgReceiver(@RequestBody MessageReceiverItem msgReceiver) {
         springBeanService.addBeanDefinition(configService.getProjectConfigFile(), msgReceiver);
     }
 
     @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateMsgReceiver(@PathVariable("id") String id, @RequestBody MessageReceiverType msgReceiver) {
+    public void updateMsgReceiver(@PathVariable("id") String id, @RequestBody MessageReceiverItem msgReceiver) {
         springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, msgReceiver);
     }
 

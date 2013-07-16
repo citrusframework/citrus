@@ -14,13 +14,45 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.model;
 
-import com.consol.citrus.admin.model.MessageReceiverItem;
+import java.math.BigInteger;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageReceiverConverter<K> extends ObjectConverter<MessageReceiverItem, K> {
+public class ServerItem {
+
+    private String name;
+    private BigInteger port;
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param value
+     */
+    public void setName(String value) {
+        this.name = value;
+    }
+
+    /**
+     * @return
+     */
+    public BigInteger getPort() {
+        return port;
+    }
+
+    /**
+     * @param value
+     */
+    public void setPort(BigInteger value) {
+        this.port = value;
+    }
+
 }

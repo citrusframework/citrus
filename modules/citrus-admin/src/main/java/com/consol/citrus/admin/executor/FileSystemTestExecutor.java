@@ -20,12 +20,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.admin.model.TestCaseDetail;
+import com.consol.citrus.admin.model.TestCaseItem;
+import com.consol.citrus.model.testcase.core.Testcase;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.*;
-import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.util.FileUtils;
 
@@ -40,8 +42,8 @@ public class FileSystemTestExecutor implements TestExecutor{
     /**
      * {@inheritDoc}
      */
-    public List<TestCaseType> getTests() {
-        List<TestCaseType> tests = new ArrayList<TestCaseType>();
+    public List<TestCaseItem> getTests() {
+        List<TestCaseItem> tests = new ArrayList<TestCaseItem>();
         String testDirectory = getTestDirectory();
         
         List<File> testFiles = FileUtils.getTestFiles(testDirectory);
@@ -55,7 +57,7 @@ public class FileSystemTestExecutor implements TestExecutor{
                 testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
             }
             
-            TestCaseType testCase = new TestCaseType();
+            TestCaseItem testCase = new TestCaseItem();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
             testCase.setFile(file.getAbsolutePath());

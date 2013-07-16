@@ -18,7 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.converter.JmsMessageReceiverConverter;
 import com.consol.citrus.admin.converter.MessageChannelReceiverConverter;
-import com.consol.citrus.admin.model.MessageReceiverType;
+import com.consol.citrus.admin.model.MessageReceiverItem;
 import com.consol.citrus.model.config.core.JmsMessageReceiver;
 import com.consol.citrus.model.config.core.MessageChannelReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class MessageReceiverService {
      * @param id
      * @return
      */
-    public MessageReceiverType getMessageReceiver(File projectConfigFile, String id) {
+    public MessageReceiverItem getMessageReceiver(File projectConfigFile, String id) {
         return jmsMessageReceiverConverter.convert(springBeanService.getBeanDefinition(projectConfigFile, id, JmsMessageReceiver.class));
     }
 
@@ -56,8 +56,8 @@ public class MessageReceiverService {
      * @param projectConfigFile
      * @return
      */
-    public List<MessageReceiverType> listMessageReceiver(File projectConfigFile) {
-        List<MessageReceiverType> messageReceiver = new ArrayList<MessageReceiverType>();
+    public List<MessageReceiverItem> listMessageReceiver(File projectConfigFile) {
+        List<MessageReceiverItem> messageReceiver = new ArrayList<MessageReceiverItem>();
 
         List<JmsMessageReceiver> jmsMessageReceiver = springBeanService.getBeanDefinitions(projectConfigFile, JmsMessageReceiver.class);
         for (JmsMessageReceiver receiver : jmsMessageReceiver) {

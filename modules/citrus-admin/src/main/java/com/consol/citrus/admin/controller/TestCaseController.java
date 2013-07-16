@@ -20,13 +20,14 @@ import java.io.File;
 import java.util.List;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
+import com.consol.citrus.admin.model.TestCaseDetail;
+import com.consol.citrus.admin.model.TestCaseItem;
 import com.consol.citrus.admin.util.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.service.TestCaseService;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -51,7 +52,7 @@ public class TestCaseController {
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
-    public List<TestCaseType> list() {
+    public List<TestCaseItem> list() {
         return testCaseService.getAllTests();
     }
 
@@ -91,7 +92,7 @@ public class TestCaseController {
 
     @RequestMapping(value="/details/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public TestCaseType executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
+    public TestCaseDetail executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
         return testCaseService.getTestDetails(testPackage, testName);
     }
     

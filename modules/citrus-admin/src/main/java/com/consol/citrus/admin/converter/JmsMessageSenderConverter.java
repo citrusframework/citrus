@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.model.config.core.JmsMessageSender;
 import org.springframework.util.StringUtils;
 
@@ -27,8 +27,8 @@ import org.springframework.util.StringUtils;
 public class JmsMessageSenderConverter implements MessageSenderConverter<JmsMessageSender> {
 
     @Override
-    public MessageSenderType convert(JmsMessageSender jmsMessageSender) {
-        MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
+    public MessageSenderItem convert(JmsMessageSender jmsMessageSender) {
+        MessageSenderItem messageSenderType = new MessageSenderItem();
 
         messageSenderType.setName(jmsMessageSender.getId());
 

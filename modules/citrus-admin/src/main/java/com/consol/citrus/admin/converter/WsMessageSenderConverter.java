@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageSenderType;
+import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.model.config.ws.MessageSender;
 
 /**
@@ -26,8 +26,8 @@ import com.consol.citrus.model.config.ws.MessageSender;
 public class WsMessageSenderConverter implements MessageSenderConverter<MessageSender> {
 
     @Override
-    public MessageSenderType convert(MessageSender wsMessageSender) {
-        MessageSenderType messageSenderType = new com.consol.citrus.admin.model.ObjectFactory().createMessageSenderType();
+    public MessageSenderItem convert(MessageSender wsMessageSender) {
+        MessageSenderItem messageSenderType = new MessageSenderItem();
 
         messageSenderType.setName(wsMessageSender.getId());
         messageSenderType.setDestination(wsMessageSender.getRequestUrl());
