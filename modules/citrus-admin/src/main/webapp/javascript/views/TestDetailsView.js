@@ -30,16 +30,16 @@
 
             render: function() {
                 $(this.el).html(TemplateManager.template('TestDetailsView', this.test));
-
+                $(this.el).find('div.test-design').html(TemplateManager.template('TestDesignView', { test: this.test.detail }));
                 return this;
             },
           
             runTest: function() {
                 $('button.run-test').button('loading');
-                $('div#test-result-' + this.test.test.name).find('div.progress').find('.bar').width('0%');
-                $('div#test-result-' + this.test.test.name).find('div.progress').find('.bar').text('');
-                $('div#test-result-' + this.test.test.name).find('div.progress').addClass('progress-success');
-                $('div#test-result-' + this.test.test.name).find('div.progress').removeClass('progress-danger');
+                $('div#test-result-' + this.test.detail.name).find('div.progress').find('.bar').width('0%');
+                $('div#test-result-' + this.test.detail.name).find('div.progress').find('.bar').text('');
+                $('div#test-result-' + this.test.detail.name).find('div.progress').addClass('progress-success');
+                $('div#test-result-' + this.test.detail.name).find('div.progress').removeClass('progress-danger');
 
                 // prepare and show test results tab
                 this.messages = [];
@@ -48,7 +48,7 @@
                 $(this.el).find('ul.nav-tabs').find('li').last().find('a').tab('show');
 
                 $.ajax({
-                    url: "testcase/execute/" + this.test.test.name,
+                    url: "testcase/execute/" + this.test.detail.name,
                     type: 'GET',
                     dataType: "json"
                 });
@@ -58,7 +58,7 @@
 
             cancelTest: function() {
                 $.ajax({
-                    url: "testcase/stop/" + this.test.test.name,
+                    url: "testcase/stop/" + this.test.detail.name,
                     type: 'GET',
                     dataType: "json",
                     success: function() {
@@ -120,28 +120,28 @@
 
             getXmlSource: function() {
                 $.ajax({
-                    url: "testcase/source/" + this.test.packageName + "/" + this.test.test.name + "/xml",
+                    url: "testcase/source/" + this.test.packageName + "/" + this.test.detail.name + "/xml",
                     type: 'GET',
                     dataType: "html",
                     success: _.bind(function(fileContent) {
-                        $('div#xml-source-' + this.test.test.name).find('pre').text(fileContent);
-                        $('div#xml-source-' + this.test.test.name).find('pre').addClass("prettyprint");
+                        $('div#xml-source-' + this.test.detail.name).find('pre').text(fileContent);
+                        $('div#xml-source-' + this.test.detail.name).find('pre').addClass("prettyprint");
                         prettyPrint();
-                        $('div#xml-source-' + this.test.test.name).find('pre').removeClass("prettyprint");
+                        $('div#xml-source-' + this.test.detail.name).find('pre').removeClass("prettyprint");
                     }, this)
                 });
             },
 
             getJavaSource: function() {
                 $.ajax({
-                    url: "testcase/source/" + this.test.packageName + "/" + this.test.test.name + "/java",
+                    url: "testcase/source/" + this.test.packageName + "/" + this.test.detail.name + "/java",
                     type: 'GET',
                     dataType: "html",
                     success: _.bind(function(fileContent) {
-                        $('div#java-source-' + this.test.test.name).find('pre').text(fileContent);
-                        $('div#java-source-' + this.test.test.name).find('pre').addClass("prettyprint");
+                        $('div#java-source-' + this.test.detail.name).find('pre').text(fileContent);
+                        $('div#java-source-' + this.test.detail.name).find('pre').addClass("prettyprint");
                         prettyPrint();
-                        $('div#java-source-' + this.test.test.name).find('pre').removeClass("prettyprint");
+                        $('div#java-source-' + this.test.detail.name).find('pre').removeClass("prettyprint");
                     }, this)
                 });
             },

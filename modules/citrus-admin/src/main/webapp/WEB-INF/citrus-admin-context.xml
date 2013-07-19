@@ -41,7 +41,11 @@
 
     <!-- Turns on support for mapping requests to Spring MVC @Controller methods
          Also registers default formatters and validators for use across all @Controllers -->
-    <mvc:annotation-driven conversion-service="applicationConversionService"/>
+    <mvc:annotation-driven conversion-service="applicationConversionService">
+      <mvc:message-converters register-defaults="true">
+        <bean parent="jsonHttpMessageConverter"/>
+      </mvc:message-converters>
+    </mvc:annotation-driven>
     <bean id="applicationConversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
      
     <!-- Handles HTTP GET requests for /static/** by efficiently serving up static resources -->
@@ -82,7 +86,40 @@
         </bean> 
     </mvc:interceptors>
     
-    <bean name="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+    <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+      <property name="objectMapper" ref="jacksonObjectMapper"/>
+    </bean>
+
+    <bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper">
+      <property name="defaltTyping">
+        <bean class="com.consol.citrus.admin.json.TestActionTypeResolverBuilder"/>
+      </property>
+    </bean>
+
+    <bean id="jacksonSerializationConfig" class="org.codehaus.jackson.map.SerializationConfig"
+          factory-bean="jacksonObjectMapper" factory-method="getSerializationConfig" />
+
+    <!-- Ensure null Objects/values are ignored and not shown in the produced
+      jason message -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+      <property name="targetObject" ref="jacksonSerializationConfig" />
+      <property name="targetMethod" value="setSerializationInclusion" />
+      <property name="arguments">
+        <list>
+          <value type="org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion">NON_NULL</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+      <property name="targetObject" ref="jacksonSerializationConfig" />
+      <property name="targetMethod" value="enable" />
+      <property name="arguments">
+        <list>
+          <value type="org.codehaus.jackson.map.SerializationConfig.Feature">INDENT_OUTPUT</value>
+        </list>
+      </property>
+    </bean>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
         <property name="order" value="1" />

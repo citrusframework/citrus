@@ -314,8 +314,8 @@
     <xs:group name="actionGroup">
         <xs:choice>
             <xs:element ref="action"/>
-            <xs:element name="send" type="sendActionType"/>
-            <xs:element name="receive" type="receiveActionType"/>
+            <xs:element ref="send"/>
+            <xs:element ref="receive"/>
             <xs:element ref="sql"/>
             <xs:element ref="plsql"/>
             <xs:element ref="java"/>
@@ -380,6 +380,10 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name="send"  type="sendActionType"/>
+
+    <xs:element name="receive" type="receiveActionType"/>
 
     <xs:element name="sql">
         <xs:complexType>

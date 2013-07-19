@@ -72,13 +72,14 @@ public class TestCaseService {
     public TestCaseDetail getTestDetails(String packageName, String testName) {
         // TODO also get testng groups from java part
         TestCaseDetail testCase = new TestCaseDetail();
+        testCase.setName(testName);
         testCase.setPackageName(packageName);
 
         String xmlPart = testExecutor.getSourceCode(packageName, testName, "xml");
 
         try {
             Testcase test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
-            testCase.setTest(test);
+            testCase.setDetail(test);
         } catch (IOException e) {
             throw new CitrusAdminRuntimeException("", e);
         }

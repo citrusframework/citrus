@@ -24,20 +24,20 @@ import com.consol.citrus.model.testcase.core.Testcase;
  */
 public class TestCaseDetail extends TestCaseItem {
 
-    private Testcase test;
+    private Testcase detail;
 
     /**
      * @return
      */
-    public Testcase getTest() {
-        return test;
+    public Testcase getDetail() {
+        return detail;
     }
 
     /**
-     * @param test
+     * @param detail
      */
-    public void setTest(Testcase test) {
-        this.test = test;
+    public void setDetail(Testcase detail) {
+        this.detail = detail;
     }
 
 }

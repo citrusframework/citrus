@@ -1,0 +1,50 @@
+<div class="box test-variables-box" id="{{name}}">
+  <h5 class="page-header">
+    <i class="icon-dollar"></i>&nbsp;Variables
+    <div class="pull-right">
+      <a class="edit-test-variables" href="#testcases" title="Edit test variables"><i class="icon-pencil"></i></a>&nbsp;
+    </div>
+  </h5>
+
+  <dl class="dl-horizontal">
+    {{#each test.variables.variables}}
+    <dt>{{name}}:</dt><dd>{{value}}</dd>
+    {{/each}}
+  </dl>
+</div>
+
+<div class="test-action action-start">
+  <i class="icon-play"></i>
+  <p>start</p>
+</div>
+{{#each test.actions.actionsAndSendsAndReceives}}
+  <div class="test-transition">
+    <i class="icon-long-arrow-right"></i>
+  </div>
+  {{#if actionsAndSendsAndReceives}}
+    <div class="test-container">
+    {{#each actionsAndSendsAndReceives}}
+      <div class="test-action">
+        <i class="icon-{{type}}">&nbsp;</i>
+        <p>{{type}}</p>
+      </div>
+    {{/each}}
+    </div>
+  {{/if}}
+
+  {{#unless actionsAndSendsAndReceives}}
+  <div class="test-action">
+    <i class="icon-{{type}}">&nbsp;</i>
+    <p>{{type}}</p>
+  </div>
+  {{/unless}}
+{{/each}}
+<div class="test-transition">
+  <i class="icon-long-arrow-right"></i>
+</div>
+<div class="test-action action-stop">
+  <i class="icon-stop"></i>
+  <p>stop</p>
+</div>
+
+<div class="clearfix"></div>

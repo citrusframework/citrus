@@ -1,6 +1,6 @@
-<div id="{{test.name}}" class="test-details">
+<div id="{{detail.name}}" class="test-details">
     <h2>
-      <span>{{test.name}}</span>
+      <span>{{detail.name}}</span>
       <div class="pull-right">
         <a class="btn run-test" type="button" title="Run test">&nbsp;<i class="icon-play"></i>&nbsp;</a>
         <a class="btn cancel-test" type="button" title="Stop test execution" style="display: none;">&nbsp;<i class="icon-stop"></i>&nbsp;</a>
@@ -14,21 +14,21 @@
                 <div class="control-group">
                     <label class="control-label">Test Name:</label>
                     <div class="controls">
-                        <input id="name" class="input-xlarge" name="name" type="text" placeholder="Test" value="{{test.name}}"/>
+                        <input id="name" class="input-xlarge" name="name" type="text" placeholder="Test" value="{{detail.name}}"/>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">Author:</label>
                     <div class="controls">
-                        <input id="author" class="input-xlarge" name="author" type="text" placeholder="Author" value="{{test.metaInfo.author}}"/>
+                        <input id="author" class="input-xlarge" name="author" type="text" placeholder="Author" value="{{detail.metaInfo.author}}"/>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">Status:</label>
                     <div class="controls">
-                        <input id="status" class="input-xlarge" name="status" type="text" placeholder="Status" value="{{test.metaInfo.status}}"/>
+                        <input id="status" class="input-xlarge" name="status" type="text" placeholder="Status" value="{{detail.metaInfo.status}}"/>
                     </div>
                 </div>
             </div>
@@ -45,11 +45,11 @@
 
     <h4 class="page-header">Description</h4>
     <blockquote>
-      {{#unless test.description}}
+      {{#unless detail.description}}
         <p>No description</p>
       {{/unless}}
 
-      <p>{{test.description}}</p>
+      <p>{{detail.description}}</p>
     </blockquote>
 
     <h4 class="page-header">Sources</h4>
@@ -68,26 +68,26 @@
     </div>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#design-{{test.name}}" data-toggle="tab">Design</a></li>
-        <li><a href="#xml-source-{{test.name}}" class="xml-source" data-toggle="tab">XML</a></li>
-        <li><a href="#java-source-{{test.name}}" class="java-source" data-toggle="tab">Java</a></li>
+        <li class="active"><a href="#design-{{detail.name}}" data-toggle="tab">Design</a></li>
+        <li><a href="#xml-source-{{detail.name}}" class="xml-source" data-toggle="tab">XML</a></li>
+        <li><a href="#java-source-{{detail.name}}" class="java-source" data-toggle="tab">Java</a></li>
         <li style="display: none;">
-            <button id="test-result-close-{{test.name}}" type="button" class="close" style="margin-right: 8px;">&times;</button>
-            <a href="#test-result-{{test.name}}" style="padding-right: 22px" data-toggle="tab">Results</a>
+            <button id="test-result-close-{{detail.name}}" type="button" class="close" style="margin-right: 8px;">&times;</button>
+            <a href="#test-result-{{detail.name}}" style="padding-right: 22px" data-toggle="tab">Results</a>
         </li>
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane" id="design-{{test.name}}">
-            <div class="design"></div>
+        <div class="tab-pane active" id="design-{{detail.name}}">
+            <div class="test-design"></div>
         </div>
-        <div class="tab-pane" id="xml-source-{{test.name}}">
+        <div class="tab-pane" id="xml-source-{{detail.name}}">
             <pre class="prettyprint linenums">Loading sources ...</pre>
         </div>
-        <div class="tab-pane" id="java-source-{{test.name}}">
+        <div class="tab-pane" id="java-source-{{detail.name}}">
             <pre class="prettyprint linenums">Loading sources ...</pre>
         </div>
-        <div class="tab-pane" id="test-result-{{test.name}}">
+        <div class="tab-pane" id="test-result-{{detail.name}}">
             <h4>Test results</h4>
             <div class="progress progress-success test-progress">
                 <div class="bar" style="width: 0%"></div>
