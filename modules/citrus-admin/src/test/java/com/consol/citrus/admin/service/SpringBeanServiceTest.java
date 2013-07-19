@@ -16,17 +16,22 @@
 
 package com.consol.citrus.admin.service;
 
-import java.io.*;
-import java.util.List;
-
+import com.consol.citrus.admin.util.JAXBHelperImpl;
+import com.consol.citrus.model.config.core.SchemaRepository;
+import com.consol.citrus.model.config.core.SchemaRepositoryBuilder;
+import com.consol.citrus.model.config.core.XsdSchema;
+import com.consol.citrus.model.config.core.XsdSchemaBuilder;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.admin.util.JAXBHelperImpl;
-import com.consol.citrus.model.config.core.*;
-import com.consol.citrus.util.FileUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -55,7 +60,7 @@ public class SpringBeanServiceTest {
         
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
-        Assert.assertTrue(result.contains("<citrus:schema-repository xmlns:citrus=\"http://www.citrusframework.org/schema/config\" id=\"x\">"));
+        Assert.assertTrue(result.contains("<citrus:schema-repository xmlns:citrus=\"http://www.citrusframework.org/schema/config\" id=\"x\">"), "Failed to validate " + result);
     }
     
     @Test
@@ -69,11 +74,11 @@ public class SpringBeanServiceTest {
         
         String result = FileUtils.readToString(new FileInputStream(tempFile));
         
-        Assert.assertTrue(result.contains("id=\"preserveMe\""));
-        Assert.assertTrue(result.contains("name=\"preserveMeName\""));
+        Assert.assertTrue(result.contains("id=\"preserveMe\""), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("name=\"preserveMeName\""), "Failed to validate " + result);
         
-        Assert.assertFalse(result.contains("<bean id=\"deleteMe\""));
-        Assert.assertFalse(result.contains("<bean name=\"deleteMeName\""));
+        Assert.assertFalse(result.contains("<bean id=\"deleteMe\""), "Failed to validate " + result);
+        Assert.assertFalse(result.contains("<bean name=\"deleteMeName\""), "Failed to validate " + result);
     }
     
     @Test
@@ -86,7 +91,7 @@ public class SpringBeanServiceTest {
         
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
-        Assert.assertTrue(result.contains("<citrus:xsd-schema id=\"helloSchema\" location=\"newLocation\"/>"));
+        Assert.assertTrue(result.contains("<citrus:xsd-schema id=\"helloSchema\" location=\"newLocation\"/>"), "Failed to validate " + result);
     }
     
     @Test

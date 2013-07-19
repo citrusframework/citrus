@@ -16,16 +16,13 @@
 
 package com.consol.citrus.admin.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
-
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.admin.executor.TestExecutor;
 import com.consol.citrus.admin.model.TestCaseDetail;
 import com.consol.citrus.admin.model.TestCaseItem;
 import com.consol.citrus.admin.model.TestResult;
 import com.consol.citrus.admin.spring.model.SpringBeans;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.model.testcase.core.Testcase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +32,10 @@ import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Component;
 import org.springframework.xml.transform.StringSource;
 
-import com.consol.citrus.admin.executor.TestExecutor;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.List;
 
 /**
  * Test case related activities get bundled in this service implementation. Service lists all test cases,
@@ -77,13 +76,12 @@ public class TestCaseService {
 
         String xmlPart = testExecutor.getSourceCode(packageName, testName, "xml");
 
-        Testcase test = null;
         try {
-            test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
+            Testcase test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
+            testCase.setTest(test);
         } catch (IOException e) {
             throw new CitrusAdminRuntimeException("", e);
         }
-        testCase.setTest(test);
 
         return testCase;
     }
