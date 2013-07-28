@@ -647,27 +647,29 @@ ul.test-variables {
     font-size: 20px;
 }
 
-.test-variables-box {
+.test-variables {
     padding: 0px 0px 0px 0px;
 }
 
-.test-variables-box h5.page-header {
-    padding-left: 5px;
-    margin: 0 0 5px 0;
+.test-variables h5.page-header {
+    padding-left: 10px;
+    padding-bottom: 0px;
+    width: 450px;
+    margin: 0 0 0 0;
     background-color: #efefef;
 }
 
-.test-variables-box .button-bar {
+.test-variables .button-bar {
     border-top: 1px solid #eeeeee;
     text-align: right;
 }
 
-.test-variables-box dl.dl-horizontal dt {
+.test-variables dl.dl-horizontal dt {
     width: 180px;
     padding-right: 5px;
     border-bottom: 1px solid #efefef;
 }
 
-.test-variables-box dl.dl-horizontal dd {
+.test-variables dl.dl-horizontal dd {
     margin-left: 200px;
 }

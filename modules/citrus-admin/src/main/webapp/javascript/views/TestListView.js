@@ -31,7 +31,7 @@
                   expandSpeed: 1,
                   collapseSpeed: 1
               }, _.bind(function(file) {
-                  this.showDetails(file);
+                  CitrusAdmin.navigate("testcases/" + _.find(this.tests, function(t) {return t.file == file}).name, true);
               }, this));
 
               var searchKeys = _.map(this.tests, function(test){ return test.name; });
@@ -60,14 +60,15 @@
                   this.openDirectory(path);
               }, this));
 
-              this.showDetails(test.file);
+              $('#test-name').val('');
+              CitrusAdmin.navigate("testcases/" + test.name, true);
 
               // prevent default form submission
               return false;
           },
           
-          showDetails: function(file) {
-              var test = _.find(this.tests, function(t) {return t.file == file});
+          showDetails: function(testName) {
+              var test = _.find(this.tests, function(t) {return t.name == testName});
               var idHash= test.name.toLowerCase();
               
               if ($('ul#test-tabs li#tab-' + idHash).size() === 0) {
@@ -77,13 +78,23 @@
                 
                   // bind close function on newly created tab
                   $('#tab-close-' + idHash).click(function() {
-                      if ($(this).parent('li').hasClass('active')) {
-                          // removed tab was active so display first tab (search tab)
-                          $(this).parent('li').prev().find('a').tab('show');
-                      }
-                    
+                      var isActiveTab = $(this).parent('li').hasClass('active')
+
                       // remove tab item
                       $(this).parent('li').remove();
+
+                      if (isActiveTab) {
+                          // removed tab was active so display next tab
+                          $('ul#test-tabs').find('li:last').find('a').tab('show');
+                      }
+
+                      if ($('ul#test-tabs').find('li').size() == 1) {
+                          // last tab was closed so navigate to testcase base page
+                          CitrusAdmin.navigate('testcases', false);
+                      } else {
+                          // navigate to new active tab
+                          CitrusAdmin.navigate('testcases/' + $('ul#test-tabs').find('li.active').find('a').text(), false);
+                      }
                   });
                 
                   $('#test-case-details-' + idHash).html(new TestDetailsView({ test: test }).render().el);

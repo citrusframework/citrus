@@ -15,6 +15,7 @@
             "project": "welcome", // #welcome
             "config": "config", //#config
             "testcases": "testcases", // #testcases
+            "testcases/:testName": "testDetails", // #testcases/EchoActionITest
             "stats": "stats", // #stats
             "about": "about" // #about
           },
@@ -56,6 +57,11 @@
 
               $('#content').children().hide();
               $('#test-list-content').show();
+          },
+
+          testDetails: function(testName) {
+              this.testcases();
+              this.testListView.showDetails(testName);
           },
           
           stats: function() {

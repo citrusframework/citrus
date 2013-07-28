@@ -1,44 +1,53 @@
-<div class="box test-variables-box" id="{{name}}">
+<div class="test-variables">
   <h5 class="page-header">
-    <i class="icon-dollar"></i>&nbsp;Variables
-    <div class="pull-right">
-      <a class="edit-test-variables" href="#testcases" title="Edit test variables"><i class="icon-pencil"></i></a>&nbsp;
-    </div>
+    <span>Variables:</span>
+    <a class="edit-test-variables" href="#testcases" title="Edit test variables"><i class="icon-pencil"></i></a>
   </h5>
-
   <dl class="dl-horizontal">
+    {{#unless test.variables.variables}}
+    <dt>variables:</dt><dd>No values defined!</dd>
+    {{/unless}}
+
     {{#each test.variables.variables}}
     <dt>{{name}}:</dt><dd>{{value}}</dd>
     {{/each}}
   </dl>
 </div>
 
+
 <div class="test-action action-start">
   <i class="icon-play"></i>
   <p>start</p>
 </div>
-{{#each test.actions.actionsAndSendsAndReceives}}
-  <div class="test-transition">
-    <i class="icon-long-arrow-right"></i>
-  </div>
-  {{#if actionsAndSendsAndReceives}}
+
+<div class="test-actions">
+  {{#each test.actions.actionsAndSendsAndReceives}}
+    {{#if actionsAndSendsAndReceives}}
     <div class="test-container">
     {{#each actionsAndSendsAndReceives}}
+      <div class="test-transition">
+        <i class="icon-long-arrow-right"></i>
+      </div>
       <div class="test-action">
         <i class="icon-{{type}}">&nbsp;</i>
         <p>{{type}}</p>
       </div>
     {{/each}}
     </div>
-  {{/if}}
+    {{/if}}
 
-  {{#unless actionsAndSendsAndReceives}}
-  <div class="test-action">
-    <i class="icon-{{type}}">&nbsp;</i>
-    <p>{{type}}</p>
-  </div>
-  {{/unless}}
-{{/each}}
+    {{#unless actionsAndSendsAndReceives}}
+    <div class="test-transition">
+      <i class="icon-long-arrow-right"></i>
+    </div>
+    <div class="test-action">
+      <i class="icon-{{type}}">&nbsp;</i>
+      <p>{{type}}</p>
+    </div>
+    {{/unless}}
+  {{/each}}
+</div>
+
 <div class="test-transition">
   <i class="icon-long-arrow-right"></i>
 </div>
