@@ -6,7 +6,7 @@
     logic Citrus uses for incoming messages.</para>
     
     <para>However other message formats are supported, too. And it is quite easy to tell Citrus not to use XML but JSON for instance. First of
-    all we have intriduce a JSON message validator implementation to the citrus-context.xml</para>
+    all we have introduce a JSON message validator implementation to the citrus-context.xml</para>
     
     <programlisting>&lt;bean id=&quot;jsonTextMessageValidator&quot; class=&quot;com.consol.citrus.validation.json.JsonTextMessageValidator&quot;/&gt;</programlisting>
     
@@ -55,12 +55,9 @@
     
     <para>We can also use JSON arrays and nested objects. Citrus is very powerful in comparing JSON objects.</para>
     
-    <important>
-      <para>When using several message validators for one single message format in the citrus-context.xml you may have to pick a implementation for each receive action 
-      in your test cases. Otherwise Citrus does not know which of the applying message validators to choose.</para>
-    </important>
-    
-    <para>Lets have a look at the Groovy JSON message validator example:</para>
+    <para>Lets have a look at the Groovy JSON message validator example. Therefore we have to add a new message validator to the citrus-context.xml</para>
+
+    <programlisting>&lt;bean id=&quot;groovyJsonMessageValidator&quot; class=&quot;com.consol.citrus.validation.script.GroovyJsonMessageValidator&quot;/&gt;</programlisting>
     
     <programlisting>&lt;receive with=&quot;httpMessageReceiver&quot;&gt;
     &lt;message type=&quot;json&quot; validator=&quot;groovyJsonMessageValidator&quot;&gt;
@@ -77,10 +74,23 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
-    <para>In this example we use the <emphasis>groovyJsonMessageValidator</emphasis> explicitly which was added to the citrus-context.xml as bean before. The Groovy JSON
-    slurper is automatically passed to the validation script. This way you can access the JSON object elements in your code doing some assertions.</para>
+    <para>In this example we use the <emphasis>groovyJsonMessageValidator</emphasis> explicitly in the receive test action. The message validator implementation was added
+    to the citrus-context.xml as a Spring bean before. The Groovy JSON slurper is then automatically passed to the validation script. This way you can access the JSON object
+    elements in your code doing some assertions.</para>
+
+    <important>
+      <para>Using several message validator implementations at the same time in the citrus-context.xml is no problem. Citrus automatically searches for all available
+      message validators applicable for the given message format and executes these validators in sequence. So several message validators can coexist in a Citrus project.</para>
+    </important>
+
+    <tip>
+      <para>By default Citrus will consolidate all available message validators for a message format in sequence. You can explicitly pick a special message validator in the receive
+        message action as shown in the example above. In this case all other validators will not take part in this special message validation. But be careful: When picking a message
+        validator explicitly you are of course limited to this message validator's capabilities. Validation features of other validators are not valid in this case (e.g. message
+        header validation, XPath validation, etc.)</para>
+    </tip>
     
-    <para>By the way sending JSON messages in Citrus is also very easy. Just use JSON message payloads in your sending message action.</para>
+    <para>So much for receiving JSON message data in Citrus. Of course sending JSON messages in Citrus is also very easy. Just use JSON message payloads in your sending message action.</para>
     
     <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
