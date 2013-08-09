@@ -1,11 +1,10 @@
 <div class="test-variables">
   <h5 class="page-header">
     <span>Variables:</span>
-    <a class="edit-test-variables" href="#testcases" title="Edit test variables"><i class="icon-pencil"></i></a>
   </h5>
   <dl class="dl-horizontal">
     {{#unless test.variables.variables}}
-    <dt>variables:</dt><dd>No values defined!</dd>
+    <dt>No values defined!</dt><dd>&nbsp;</dd>
     {{/unless}}
 
     {{#each test.variables.variables}}
@@ -14,10 +13,9 @@
   </dl>
 </div>
 
-
 <div class="test-action action-start">
   <i class="icon-play"></i>
-  <p>start</p>
+  <p><b>start</b></p>
 </div>
 
 <div class="test-actions">
@@ -30,7 +28,7 @@
       </div>
       <div class="test-action">
         <i class="icon-{{type}}">&nbsp;</i>
-        <p>{{type}}</p>
+        <p><b>{{type}}</b></p>
       </div>
     {{/each}}
     </div>
@@ -42,7 +40,7 @@
     </div>
     <div class="test-action">
       <i class="icon-{{type}}">&nbsp;</i>
-      <p>{{type}}</p>
+      <p><b>{{type}}</b></p>
     </div>
     {{/unless}}
   {{/each}}
@@ -53,7 +51,7 @@
 </div>
 <div class="test-action action-stop">
   <i class="icon-stop"></i>
-  <p>stop</p>
+  <p><b>stop</b></p>
 </div>
 
 <div class="clearfix"></div>
