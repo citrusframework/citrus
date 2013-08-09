@@ -19,7 +19,7 @@ package com.consol.citrus.admin.converter;
 import com.consol.citrus.admin.spring.model.Property;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.model.config.core.ObjectFactory;
-import com.consol.citrus.model.config.core.XsdSchema;
+import com.consol.citrus.model.config.core.Schema;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,18 +28,19 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class SchemaSpringBeanConverter implements SpringBeanConverter<XsdSchema> {
+public class SchemaSpringBeanConverter implements SpringBeanConverter<Schema> {
 
     @Override
-    public XsdSchema convert(SpringBean springBean) {
-        XsdSchema schema = new ObjectFactory().createXsdSchema();
-        schema.setId(StringUtils.hasText(springBean.getId()) ? springBean.getId() : "- generated -");
+    public Schema convert(SpringBean springBean) {
+        Schema schema = new ObjectFactory().createSchema();
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("xsd")) {
                 schema.setLocation(property.getValue());
             }
         }
+
+        schema.setId(StringUtils.hasText(springBean.getId()) ? springBean.getId() : String.valueOf(System.currentTimeMillis()));
 
         return schema;
     }

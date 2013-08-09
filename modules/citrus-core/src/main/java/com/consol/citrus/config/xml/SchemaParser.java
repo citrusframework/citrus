@@ -16,32 +16,37 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.TestActor;
-import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.xml.DomUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.w3c.dom.Element;
 
 /**
- * Bean definition parser for xsd-schema configuration.
+ * Bean definition parser for schema configuration.
  *
  * @author Martin.Maher@consol.de
  * @since 2013.03.15
  */
-public class XsdSchemaParser implements BeanDefinitionParser {
+public class SchemaParser implements BeanDefinitionParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
+        String location = element.getAttribute("location");
+        BeanDefinitionBuilder builder;
 
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("location"), "xsd");
+        if (location.endsWith(".wsdl")) {
+            builder = BeanDefinitionBuilder.genericBeanDefinition(WsdlXsdSchema.class);
+            BeanDefinitionParserUtils.setPropertyValue(builder, location, "wsdl");
+        } else {
+            builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
+            BeanDefinitionParserUtils.setPropertyValue(builder, location, "xsd");
+        }
 
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
 

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,24 +40,42 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
 
-        ManagedList<RuntimeBeanReference> schemaReferences = new ManagedList<RuntimeBeanReference>();
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
+
+        ManagedList<RuntimeBeanReference> schemas = new ManagedList<RuntimeBeanReference>();
 
         Element schemasElement = DomUtils.getChildElementByTagName(element, "schemas");
         if (schemasElement != null) {
-            List<Element> schemaElements = DomUtils.getChildElementsByTagName(schemasElement, "schema");
-            if (schemaElements != null) {
-                for (Element schemaElement : schemaElements) {
-                    String ref = schemaElement.getAttribute("ref");
-                    schemaReferences.add(new RuntimeBeanReference(ref));
+            List<Element> schemaElements = DomUtils.getChildElements(schemasElement);
+            for (Element schemaElement : schemaElements) {
+                if (schemaElement.hasAttribute("schema")) {
+                    schemas.add(new RuntimeBeanReference(schemaElement.getAttribute("schema")));
+                } else if (schemaElement.hasAttribute("id") && schemaElement.hasAttribute("location")) {
+                    new SchemaParser().parse(schemaElement, parserContext);
+                    schemas.add(new RuntimeBeanReference(schemaElement.getAttribute("id")));
                 }
             }
         }
 
-        if (schemaReferences.size() > 0) {
-            builder.addPropertyValue("schemas", schemaReferences);
+        if (schemas.size() > 0) {
+            builder.addPropertyValue("schemas", schemas);
+        }
+
+        List<String> locations = new ArrayList<String>();
+        Element locationsElement = DomUtils.getChildElementByTagName(element, "locations");
+        if (locationsElement != null) {
+            List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, "location");
+            for (Element locationElement : locationElements) {
+                locations.add(locationElement.getAttribute("path"));
+            }
+        }
+
+        if (locations.size() > 0) {
+            builder.addPropertyValue("locations", locations);
         }
 
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
+
         return null;
     }
 }

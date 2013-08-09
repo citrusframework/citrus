@@ -44,17 +44,52 @@ public class SchemaRepositoryBuilder {
     }
 
     /**
-     * Add new schema
-     * @param schemaRef the schema to reference
+     * Adds new schema by id and location.
+     * @param id
+     * @param location
      * @return
      */
-    public SchemaRepositoryBuilder addSchema(String schemaRef) {
-        SchemaRepository.Schemas.Schema schema = new SchemaRepository.Schemas.Schema();
-        schema.setRef(schemaRef);
+    public SchemaRepositoryBuilder addSchema(String id, String location) {
+        Schema schema = new Schema();
+        schema.setId(id);
+        schema.setLocation(location);
+
         if(model.getSchemas() == null) {
             model.setSchemas(new SchemaRepository.Schemas());
         }
-        model.getSchemas().getSchemas().add(schema);
+
+        model.getSchemas().getRevesAndSchemas().add(schema);
+        return this;
+    }
+
+    /**
+     * Adds new schema by instance.
+     * @param schema
+     * @return
+     */
+    public SchemaRepositoryBuilder addSchema(Schema schema) {
+        if(model.getSchemas() == null) {
+            model.setSchemas(new SchemaRepository.Schemas());
+        }
+
+        model.getSchemas().getRevesAndSchemas().add(schema);
+        return this;
+    }
+
+    /**
+     * Add new schema reference by id
+     * @param schemaId the schema to reference
+     * @return
+     */
+    public SchemaRepositoryBuilder addSchemaReference(String schemaId) {
+        SchemaRepository.Schemas.Ref schemaRef = new SchemaRepository.Schemas.Ref();
+        schemaRef.setSchema(schemaId);
+
+        if(model.getSchemas() == null) {
+            model.setSchemas(new SchemaRepository.Schemas());
+        }
+
+        model.getSchemas().getRevesAndSchemas().add(schemaRef);
         return this;
     }
 

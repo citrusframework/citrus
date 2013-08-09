@@ -20,7 +20,9 @@ import com.consol.citrus.admin.spring.model.Property;
 import com.consol.citrus.admin.spring.model.Ref;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.model.config.core.ObjectFactory;
+import com.consol.citrus.model.config.core.Schema;
 import com.consol.citrus.model.config.core.SchemaRepository;
+import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 
@@ -44,27 +46,34 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
                     if (item instanceof SpringBean) {
                         SpringBean bean = (SpringBean)item;
 
+                        Schema schema = new Schema();
+
+                        if (StringUtils.hasText(bean.getId())) {
+                            schema.setId(bean.getId());
+                        } else {
+                            schema.setId(String.valueOf(System.currentTimeMillis()));
+                        }
+
                         if (bean.getClazz().equals(SimpleXsdSchema.class.getName())) {
-                            SchemaRepository.Schemas.Schema schema = new SchemaRepository.Schemas.Schema();
-
-                            if (StringUtils.hasText(bean.getId())) {
-                                schema.setRef(bean.getId());
-                                repository.getSchemas().getSchemas().add(schema);
-                                continue;
-                            }
-
                             for (Property beanProperty : bean.getProperties()) {
                                 if (beanProperty.getName().equals("xsd")) {
-                                    schema.setRef(beanProperty.getValue());
-                                    repository.getSchemas().getSchemas().add(schema);
+                                    schema.setLocation(beanProperty.getValue());
+                                }
+                            }
+                        } else if (bean.getClazz().equals(WsdlXsdSchema.class.getName())) {
+                            for (Property beanProperty : bean.getProperties()) {
+                                if (beanProperty.getName().equals("wsdl")) {
+                                    schema.setLocation(beanProperty.getValue());
                                 }
                             }
                         }
+
+                        repository.getSchemas().getRevesAndSchemas().add(schema);
                     } else if (item instanceof Ref) {
                         Ref ref = (Ref) item;
-                        SchemaRepository.Schemas.Schema schema = new SchemaRepository.Schemas.Schema();
-                        schema.setRef(ref.getBean());
-                        repository.getSchemas().getSchemas().add(schema);
+                        SchemaRepository.Schemas.Ref schema = new SchemaRepository.Schemas.Ref();
+                        schema.setSchema(ref.getBean());
+                        repository.getSchemas().getRevesAndSchemas().add(schema);
                     }
                 }
             }

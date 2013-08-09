@@ -16,10 +16,10 @@
 
 package com.consol.citrus.xml;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.WsdlXsdSchema;
+import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -31,8 +31,9 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.xml.schema.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Schema repository holding a set of XML schema resources known in the test scope.
@@ -51,7 +52,7 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
     
     /** List of location patterns that will be translated to schema resources */
     private List<String> locations = new ArrayList<String>();
-    
+
     /** Mapping strategy */
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
     
@@ -127,6 +128,14 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
      */
     public void setSchemaMappingStrategy(XsdSchemaMappingStrategy schemaMappingStrategy) {
         this.schemaMappingStrategy = schemaMappingStrategy;
+    }
+
+    /**
+     * Gets the schema mapping strategy.
+     * @return
+     */
+    public XsdSchemaMappingStrategy getSchemaMappingStrategy() {
+        return schemaMappingStrategy;
     }
 
     /**

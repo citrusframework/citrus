@@ -27,8 +27,8 @@
         <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
     </bean>
 
-    <citrus:xsd-schema id="testSchema2" location="classpath:com/consol/citrus/validation/test.xsd" />
-    <citrus:xsd-schema id="testSchema3" location="classpath:com/consol/citrus/validation/test.xsd" />
+    <citrus:schema id="testSchema2" location="classpath:com/consol/citrus/validation/test.xsd" />
+    <citrus:schema id="testSchema3" location="classpath:com/consol/citrus/validation/test.xsd" />
 
     <bean id="testSchemaRepository1" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
@@ -38,21 +38,21 @@
         </property>
     </bean>
 
-  <citrus:schema-repository id="testSchemaRepository2">
-      <citrus:schemas>
-          <citrus:schema ref="testSchema" />
-      </citrus:schemas>
-  </citrus:schema-repository>
+    <citrus:schema-repository id="testSchemaRepository2">
+        <citrus:schemas>
+            <citrus:ref schema="testSchema" />
+        </citrus:schemas>
+    </citrus:schema-repository>
 
-  <bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>citrus.properties</value>
-			</list>
-		</property>
-	</bean>
-	
-	<bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
+    <bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+      <property name="locations">
+        <list>
+          <value>citrus.properties</value>
+        </list>
+      </property>
+    </bean>
+
+    <bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
 	
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">

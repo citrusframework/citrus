@@ -19,8 +19,8 @@ package com.consol.citrus.admin.service;
 import com.consol.citrus.admin.converter.SchemaRepositorySpringBeanConverter;
 import com.consol.citrus.admin.converter.SchemaSpringBeanConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
+import com.consol.citrus.model.config.core.Schema;
 import com.consol.citrus.model.config.core.SchemaRepository;
-import com.consol.citrus.model.config.core.XsdSchema;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -93,10 +93,10 @@ public class SchemaRepositoryService {
      * @param projectConfigFile
      * @return
      */
-    public List<XsdSchema> listSchemas(File projectConfigFile) {
-        List<XsdSchema> schemas = new ArrayList<XsdSchema>();
+    public List<Schema> listSchemas(File projectConfigFile) {
+        List<Schema> schemas = new ArrayList<Schema>();
 
-        schemas.addAll(springBeanService.getBeanDefinitions(projectConfigFile, XsdSchema.class));
+        schemas.addAll(springBeanService.getBeanDefinitions(projectConfigFile, Schema.class));
 
         List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectConfigFile, SpringBean.class, Collections.singletonMap("class", SimpleXsdSchema.class.getName()));
         for (SpringBean springBean : springBeans) {
@@ -113,8 +113,8 @@ public class SchemaRepositoryService {
      * @param id
      * @return
      */
-    public XsdSchema getSchema(File projectConfigFile, String id) {
-        XsdSchema schema = springBeanService.getBeanDefinition(projectConfigFile, id, XsdSchema.class);
+    public Schema getSchema(File projectConfigFile, String id) {
+        Schema schema = springBeanService.getBeanDefinition(projectConfigFile, id, Schema.class);
 
         if (schema == null) {
             SpringBean springBean = springBeanService.getBeanDefinition(projectConfigFile, id, SpringBean.class);

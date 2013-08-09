@@ -26,17 +26,34 @@ import org.testng.annotations.Test;
 public class SchemaRepositoryBuilderTest {
 
     @Test
-    public void testBuild() throws Exception {
+    public void testBuildWithSchemas() throws Exception {
         SchemaRepository schemaRepository = new SchemaRepositoryBuilder()
-                .withId("1")
-                .addSchema("schema1")
-                .addSchema("schema2")
+                .withId("schemaRepo")
+                .addSchema(new SchemaBuilder().withId("schema1").withLocation("location1").build())
+                .addSchema("schema2", "location2")
                 .build();
 
         Assert.assertNotNull(schemaRepository);
-        Assert.assertEquals(schemaRepository.getId(), "1");
-        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().size(), 2);
-        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().get(0).getRef(), "schema1");
-        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().get(1).getRef(), "schema2");
+        Assert.assertEquals(schemaRepository.getId(), "schemaRepo");
+        Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), 2);
+        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getId(), "schema1");
+        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getLocation(), "location1");
+        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getId(), "schema2");
+        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getLocation(), "location2");
+    }
+
+    @Test
+    public void testBuildWithRefs() throws Exception {
+        SchemaRepository schemaRepository = new SchemaRepositoryBuilder()
+                .withId("schemaRepo")
+                .addSchemaReference("schema1")
+                .addSchemaReference("schema2")
+                .build();
+
+        Assert.assertNotNull(schemaRepository);
+        Assert.assertEquals(schemaRepository.getId(), "schemaRepo");
+        Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), 2);
+        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), "schema1");
+        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), "schema2");
     }
 }

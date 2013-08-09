@@ -95,25 +95,25 @@ public class ConfigurationController {
 
     @RequestMapping(value = "/xsd-schema", method = {RequestMethod.GET})
     @ResponseBody
-    public List<XsdSchema> listXsdSchemas() {
+    public List<Schema> listXsdSchemas() {
         return schemaRepositoryService.listSchemas(configService.getProjectConfigFile());
     }
 
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public XsdSchema getXsdSchema(@PathVariable("id") String id) {
+    public Schema getXsdSchema(@PathVariable("id") String id) {
         return schemaRepositoryService.getSchema(configService.getProjectConfigFile(), id);
     }
 
     @RequestMapping(value="/xsd-schema", method = {RequestMethod.POST})
     @ResponseBody
-    public void createXsdSchema(@RequestBody XsdSchema xsdSchema) {
+    public void createXsdSchema(@RequestBody Schema xsdSchema) {
         springBeanService.addBeanDefinition(configService.getProjectConfigFile(), xsdSchema);
     }
 
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateXsdSchema(@PathVariable("id") String id, @RequestBody XsdSchema xsdSchema) {
+    public void updateXsdSchema(@PathVariable("id") String id, @RequestBody Schema xsdSchema) {
         springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, xsdSchema);
     }
 

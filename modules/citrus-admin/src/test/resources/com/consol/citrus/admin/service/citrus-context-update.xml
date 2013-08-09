@@ -6,8 +6,8 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
           
-    <citrus:xsd-schema id="helloSchema" location="classpath:com/consol/citrus/demo/sayHello.xsd" />
+    <citrus:schema id="helloSchema" location="classpath:com/consol/citrus/demo/sayHello.xsd" />
     
-    <citrus:xsd-schema id="fooSchema" location="classpath:com/consol/citrus/demo/foo.xsd" />
+    <citrus:schema id="fooSchema" location="classpath:com/consol/citrus/demo/foo.xsd" />
     
 </beans>

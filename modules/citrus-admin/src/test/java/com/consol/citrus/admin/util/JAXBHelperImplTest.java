@@ -16,15 +16,16 @@
 
 package com.consol.citrus.admin.util;
 
-import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.model.config.core.Schema;
+import com.consol.citrus.model.config.core.SchemaBuilder;
+import com.consol.citrus.model.config.core.SchemaRepository;
+import com.consol.citrus.model.config.core.SchemaRepositoryBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.model.config.core.*;
+import javax.xml.bind.JAXBContext;
+import java.io.File;
 
 /**
  * Tests JAXBHelperImpl
@@ -72,7 +73,7 @@ public class JAXBHelperImplTest {
     public void testMarshalClass() {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
 
-        XsdSchema xsdSchema = new XsdSchemaBuilder().withId("123").setLocation("this <location /> should be escaped").build();
+        Schema xsdSchema = new SchemaBuilder().withId("123").withLocation("this <location /> should be escaped").build();
 
         String marshalledXml = jaxbHelper.marshal(jaxbContext, xsdSchema);
 
@@ -95,7 +96,7 @@ public class JAXBHelperImplTest {
                 "xmlns=\"http://www.citrusframework.org/schema/config\"/>";
 
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
-        XsdSchema xsdSchema = jaxbHelper.unmarshal(jaxbContext, XsdSchema.class, xml);
+        Schema xsdSchema = jaxbHelper.unmarshal(jaxbContext, Schema.class, xml);
 
         Assert.assertNotNull(xsdSchema);
         Assert.assertEquals(xsdSchema.getLocation(), "this <location /> should be escaped");
@@ -106,14 +107,14 @@ public class JAXBHelperImplTest {
     @Test(expectedExceptions = CitrusAdminRuntimeException.class, expectedExceptionsMessageRegExp = "Exception thrown during unmarshal")
     public void testUnmarshalFromFile_fileDoesNotExist() throws Exception {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
-        jaxbHelper.unmarshal(jaxbContext, XsdSchema.class, new File("someNonExistentFile.xml"));
+        jaxbHelper.unmarshal(jaxbContext, Schema.class, new File("someNonExistentFile.xml"));
     }
 
     @Test
     public void testMarshalToAndUnmarshalFromFile() throws Exception {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
 
-        SchemaRepository schemaRepository = new SchemaRepositoryBuilder().withId("123").addSchema("abc").addSchema("def").build();
+        SchemaRepository schemaRepository = new SchemaRepositoryBuilder().withId("123").addSchemaReference("abc").addSchemaReference("def").build();
 
         File tmpXmlFile = File.createTempFile("marshalltest", ".xml");
         tmpXmlFile.deleteOnExit();
@@ -124,8 +125,8 @@ public class JAXBHelperImplTest {
 
         Assert.assertNotNull(loadedSchemaRepository);
         Assert.assertEquals(schemaRepository.getId(), loadedSchemaRepository.getId());
-        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().size(), loadedSchemaRepository.getSchemas().getSchemas().size());
-        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().get(0).getRef(), loadedSchemaRepository.getSchemas().getSchemas().get(0).getRef());
-        Assert.assertEquals(schemaRepository.getSchemas().getSchemas().get(1).getRef(), loadedSchemaRepository.getSchemas().getSchemas().get(1).getRef());
+        Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), loadedSchemaRepository.getSchemas().getRevesAndSchemas().size());
+        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), ((SchemaRepository.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema());
+        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), ((SchemaRepository.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema());
     }
 }

@@ -49,8 +49,8 @@
 
             <div class="controls">
               <ul id="xsd-schema-refs" class="xsd-schema-list">
-                {{#each schemaRepository.schemas.schemas}}
-                <li id="{{ref}}"><i class="icon-file-text-alt"></i>&nbsp;{{ref}}</li>
+                {{#each schemaRepository.schemas.revesAndSchemas}}
+                <li id="{{ref}}"><i class="icon-file-text-alt"></i>&nbsp;{{schema}}{{id}}</li>
                 {{/each}}
               </ul>
             </div>

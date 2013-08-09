@@ -19,17 +19,17 @@ package com.consol.citrus.model.config.core;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class XsdSchemaBuilderTest {
+public class SchemaBuilderTest {
     @Test
     public void testBuild() throws Exception {
-        XsdSchema xsdSchema = new XsdSchemaBuilder()
-                .withId("1")
-                .setLocation("location1")
+        Schema schema = new SchemaBuilder()
+                .withId("schema1")
+                .withLocation("location1")
                 .build();
 
-        Assert.assertNotNull(xsdSchema);
-        Assert.assertEquals(xsdSchema.getId(), "1");
-        Assert.assertEquals(xsdSchema.getLocation(), "location1");
+        Assert.assertNotNull(schema);
+        Assert.assertEquals(schema.getId(), "schema1");
+        Assert.assertEquals(schema.getLocation(), "location1");
     }
 
 }

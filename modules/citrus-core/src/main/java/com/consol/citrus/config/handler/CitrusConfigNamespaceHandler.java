@@ -32,7 +32,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
      */
     public void init() {
         registerBeanDefinitionParser("schema-repository", new SchemaRepositoryParser());
-        registerBeanDefinitionParser("xsd-schema", new XsdSchemaParser());
+        registerBeanDefinitionParser("schema", new SchemaParser());
         registerBeanDefinitionParser("actor", new TestActorParser());
         registerBeanDefinitionParser("jms-message-sender", new JmsMessageSenderParser());
         registerBeanDefinitionParser("jms-message-receiver", new JmsMessageReceiverParser());

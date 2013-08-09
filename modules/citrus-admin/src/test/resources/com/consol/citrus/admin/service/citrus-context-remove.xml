@@ -14,7 +14,7 @@
         <property name="some" value="some"/>
     </bean>
     
-    <citrus:xsd-schema id="helloSchema" location="classpath:com/consol/citrus/demo/sayHello.xsd" />
+    <citrus:schema id="helloSchema" location="classpath:com/consol/citrus/demo/sayHello.xsd" />
     
     <bean name="deleteMeName" class="com.consol.citrus.SampleClass"/>
     <bean name="preserveMeName" class="com.consol.citrus.SampleClass"/>
