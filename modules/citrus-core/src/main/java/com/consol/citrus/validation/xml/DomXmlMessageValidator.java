@@ -16,13 +16,23 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.dom.DOMSource;
-
+import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.AbstractMessageValidator;
+import com.consol.citrus.validation.ControlMessageValidator;
+import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import com.consol.citrus.xml.xpath.XPathExpressionResult;
+import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -33,7 +43,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.*;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.*;
@@ -41,19 +53,15 @@ import org.w3c.dom.ls.LSException;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.*;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import com.consol.citrus.xml.XsdSchemaRepository;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import com.consol.citrus.xml.xpath.XPathExpressionResult;
-import com.consol.citrus.xml.xpath.XPathUtils;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -565,7 +573,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 ValidationUtils.buildValueMismatchErrorMessage("Number of attributes not equal for element '"
                         + received.getLocalName() + "'", countAttributes(sourceAttr), countAttributes(receivedAttr)));
 
-        for(int i = 0; i<receivedAttr.getLength(); i++) {
+        for (int i = 0; i<receivedAttr.getLength(); i++) {
             doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext, namespaceContext, context);
         }
 
@@ -638,7 +646,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      */
     private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes,
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext, TestContext context) {
-        if (received.getNodeName().startsWith("xmlns")) { return; }
+        if (received.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) { return; }
 
         String receivedName = received.getLocalName();
 
@@ -661,14 +669,44 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             return;
         } else if (isValidationMatcherExpression(source)) {
             ValidationMatcherUtils.resolveValidationMatcher(source.getNodeName(),
-                    received.getFirstChild().getNodeValue().trim(),
-                    source.getFirstChild().getNodeValue().trim(),
+                    received.getNodeValue().trim(),
+                    source.getNodeValue().trim(),
                     context);
+
+            if (log.isDebugEnabled()) {
+                log.debug("Attribute '" + receivedName + "'='" + source.getNodeValue() + "': OK");
+            }
             return;
         }
 
         String receivedValue = received.getNodeValue();
         String sourceValue = source.getNodeValue();
+
+        if (receivedValue.contains(":") && sourceValue.contains(":")) {
+            // value has namespace prefix set, do special QName validation
+            String receivedPrefix = receivedValue.substring(0, receivedValue.indexOf(":"));
+            String sourcePrefix = sourceValue.substring(0, sourceValue.indexOf(":"));
+
+            Map<String, String> receivedNamespaces = XMLUtils.lookupNamespaces(received.getOwnerDocument());
+            receivedNamespaces.putAll(XMLUtils.lookupNamespaces(element));
+
+            if (receivedNamespaces.containsKey(receivedPrefix)) {
+                Map<String, String> sourceNamespaces = XMLUtils.lookupNamespaces(source.getOwnerDocument());
+
+                if (sourceNamespaces.containsKey(sourcePrefix)) {
+                    Assert.isTrue(sourceNamespaces.get(sourcePrefix).equals(receivedNamespaces.get(receivedPrefix)),
+                            ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute value namespace '"
+                                    + receivedValue + "'", sourceNamespaces.get(sourcePrefix), receivedNamespaces.get(receivedPrefix)));
+
+                    // remove namespace prefixes as they mut not form equality
+                    receivedValue = receivedValue.substring((receivedPrefix + ":").length());
+                    sourceValue = sourceValue.substring((sourcePrefix + ":").length());
+                } else {
+                    throw new ValidationException("Received attribute value '" + receivedName + "' describes namespace qualified attribute value," +
+                            " control value '" + sourceValue + "' does not");
+                }
+            }
+        }
 
         Assert.isTrue(receivedValue.equals(sourceValue),
                 ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
@@ -706,7 +744,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         int cntAttributes = 0;
 
         for (int i = 0; i < attributesR.getLength(); i++) {
-            if (!attributesR.item(i).getNodeName().startsWith("xmlns")) {
+            if (!attributesR.item(i).getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) {
                 cntAttributes++;
             }
         }

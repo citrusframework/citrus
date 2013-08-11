@@ -16,11 +16,10 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -31,10 +30,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.xml.XsdSchemaRepository;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -594,4 +592,173 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessagePayload(message, validationContext, context);
     }
+
+    @Test
+    public void testNamespaceQualifiedAttributeValue() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                        + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                        + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                        + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                        + "</element>"
+                    + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test
+    public void testNamespaceQualifiedAttributeValueParentDeclaration() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xmlns:ns1='http://citrus/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test
+    public void testNamespaceQualifiedAttributeValueDifferentPrefix() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:cit='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test
+    public void testNamespaceQualifiedLikeAttributeValues() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element credentials='username:password' attributeB='attribute-value'>"
+                + "<sub-element>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element credentials='username:password' attributeB='attribute-value'>"
+                + "<sub-element>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test(expectedExceptions = {IllegalArgumentException.class})
+    public void testNamespaceQualifiedAttributeValueFails() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:wrong-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test(expectedExceptions = {IllegalArgumentException.class})
+    public void testNamespaceQualifiedAttributeValueUriMismatch() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:cit='http://citrus/cit' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test(expectedExceptions = {IllegalArgumentException.class})
+    public void testNamespaceQualifiedAttributeMissingPrefix() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/cit' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testNamespaceQualifiedAttributeValueMissingDeclaration() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
 }
