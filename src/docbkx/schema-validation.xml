@@ -5,47 +5,48 @@
     <para>There are several possibilities to describe the structure of XML documents. The two most popular ways are DTD 
     (Document type definition) and XSD (XML Schema definition). Once a XML document has decided to be classified using a schema 
     definition the structure of the document has to fit the predefined rules inside the schema definition. XML document instances 
-    are valid only in case they meet all these structure rules defined in the schema definition. 
-    Currently Citrus can validate XML documents using the schema languages DTD and XSD.</para>
+    are valid only in case they meet all these structure rules defined in the schema definition. Currently Citrus can validate XML
+    documents using the schema languages DTD and XSD.</para>
 
     <section id="xsd-validation">
-        <title>XSD schema validation</title>
+        <title>XSD schema repositories</title>
         
-        <para>Citrus handles XML schema definitions in order to validate incoming XML documents. Consequential the message receiving 
-        actions have to know the respective XML schema (*.xsd) file resources to do so. This is done through a central schema repository
-        which holds all available XML schema files for a project.</para>
+        <para>Citrus tries to validate all incoming XML messages against a schema definition in order to ensure that all rules are fulfilled.
+        As a consequence the message receiving actions in Citrus do have to know the XML schema definition (*.xsd) file resources that belong
+        to our project. Therefore Citrus introduces a central schema repository component which holds all available XML schema files for a project.</para>
         
-        <programlisting>&lt;bean id=&quot;schemaRepository&quot; 
-         class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
-    &lt;property name=&quot;schemas&quot;&gt;
-        &lt;list&gt;
-            &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                &lt;property name=&quot;xsd&quot; 
-                     value=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
-            &lt;/bean&gt;
-            &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                &lt;property name=&quot;xsd&quot; 
-                     value=&quot;classpath:citrus/flightbooking/AirlineSchema.xsd&quot;/&gt;
-            &lt;/bean&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+        <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;&gt;
+    &lt;citrus:schemas&gt;
+        &lt;citrus:schema id=&quot;travelAgencySchema&quot;
+            location=&quot;classpath:citrus/flightbooking/TravelAgencySchema.xsd&quot;/&gt;
+        &lt;citrus:schema id=&quot;royalArilineSchema&quot;
+            location=&quot;classpath:citrus/flightbooking/RoyalAirlineSchema.xsd&quot;/&gt;
+        &lt;citrus:ref schema=&quot;smartArilineSchema&quot;/&gt;
+    &lt;/citrus:schemas&gt;
+&lt;/citrus:schema-repository&gt;
+
+&lt;citrus:schema id=&quot;smartArilineSchema&quot;
+      location=&quot;classpath:citrus/flightbooking/SmartAirlineSchema.xsd&quot;/&gt;</programlisting>
+
+        <para>As you can see the schema repository is a simple XML component defined inside the Spring application context. The repository can hold nested schema definitions
+        defined by some identifier and a file location for the xsd schema file. Schema definitions can also be referenced by its identifier for usage in several schema repository
+        instances.</para>
+
+        <para>By convention the default schema repository component is defined in the Citrus Spring configuration (citrus-context.xml) with the
+        id "schemaRepository". Spring application context is then able to inject the schema repository into all message receiving test actions at runtime.
+        The receiving test action consolidates the repository for a matching schema definition file in order to validate the incoming XML document structure.</para>
         
-        <para>By convention the schema repository instance is defined in the Citrus Spring configuration with the id "schemaRepository".
-        Spring is then able to inject this schema repository instance into every message receiving action. The receiving action receives 
-        XML messages and will ask the repository for a matching schema definition file in order to validate the document structure.</para>
-        
-        <para>The connection between XML messages and xsd schema files is done with a mapping strategy which we will discuss later in this chapter. By default
-        Citrus picks the right schema using the target namespace that is defined inside a schema definition. The target namespace of the schema definition has to
-        match the namespace of the root element in the received XML message. Using this central schema repository you do not have to wire XML messages and schema 
-        files together every time within your test. This is done automatically within the schema repository. All you need to do is defin all schema definition files inside
-        the schema repository.</para>
+        <para>The connection between incoming XML messages and xsd schema files in the repository is done by a mapping strategy which we will discuss later in this chapter.
+        By default Citrus picks the right schema based on the target namespace that is defined inside the schema definition. The target namespace of the schema definition has to
+        match the namespace of the root element in the received XML message. With this mapping strategy you will not have to wire XML messages and schema
+        files manually all is done automatically by the Citrus schema repository at runtime. All you need to do is to register all available schema definition files regardless of which
+        target namespace or nature inside the Citrus schema repository.</para>
         
         <important>
-            <para>In case Citrus receives a classified XML message using namespaces Citrus will try to validate the structure of the message 
-            by default. Consequently you will also get errors in case no matching schema definition file is found inside the schema 
-            repository. So if you explicitly do not want to validate the XML schema for some reason you have to disable the validation
-            explicitly in your test.</para>
+            <para>XMl schema validation is mandatory in Citrus. This means that Citrus always tries to find a matching schema definition inside the schema repository in order to
+            perform syntax validation on incoming schema qualified XML messages. A classified XML message is defined by its namespace definitions. Consequently you will get validation errors
+            in case no matching schema definition file is found inside the schema repository. So if you explicitly do not want to validate the XML schema for some reason you have to disable
+            the validation explicitly in your test with <emphasis>schema-validation=&quot;false&quot;</emphasis>.</para>
             
             <programlisting>&lt;receive with=&quot;getCustomerRequestReceiver&quot;&gt;
     &lt;message schema-validation=&quot;false&quot;&gt;
@@ -61,10 +62,64 @@
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
             
-            <para>This way might sound annoying for you but in our opinion it is very important to validate the structure of the received 
+            <para>This mandatory schema validation might sound annoying to you but in our opinion it is very important to validate the structure of the received
             XML messages, so disabling the schema validation should not be the standard for all tests. Disabling automatic schema validation
-            should only apply to special situations.</para>
+            should only apply to very special situations. So please try to put all available schema definitions to the schema repository and you will be fine.</para>
         </important>
+    </section>
+
+    <section id="wsdl-validation">
+      <title>WSDL schemas</title>
+
+      <para>In SOAP WebServices world the WSDL (WebService Schema Definition Language) defines the structure an nature of the XML messages exchanged across the interface.
+      Often the WSDL files do hold the XML schema definitions as nested elements. In Citrus you can directly set the WSDL file as location of a schema definition like this:</para>
+
+      <programlisting>&lt;citrus:schema id=&quot;arilineWsdl&quot;
+    location=&quot;classpath:citrus/flightbooking/AirlineSchema.wsdl&quot;/&gt;</programlisting>
+
+      <para>Citrus is able to find the nested schema definitions inside the WSDL file in order to build a valid schema file for the schema repository. So incoming XML messages
+      that refer to the WSDL file can be validated for syntax rules.</para>
+    </section>
+
+    <section id="schema-location-pattern">
+      <title>Schema location patterns</title>
+
+      <para>Setting all schemas one by one in a schema repository can be verbose and uncomfortable, especially when dealing with lots of xsd and wsdl files. The schema repository
+      also supports location pattern expressions. See this example to see how it works:</para>
+
+      <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;&gt;
+  &lt;citrus:locations&gt;
+    &lt;citrus:location
+        path=&quot;classpath:citrus/flightbooking/*.xsd&quot;/&gt;
+  &lt;/citrus:locations&gt;
+&lt;/citrus:schema-repository&gt;</programlisting>
+
+      <para>The schema repository searches for all files matching the resource path location pattern and adds them as schema instances to the repository. Of course this also works with
+      WSDL files.</para>
+    </section>
+
+    <section id="schema-collections">
+      <title>Schema collections</title>
+
+      <para>Sometimes multiple a schema definition is separated into multiple files. This is a problem for the Citrus schema repository as the schema mapping strategy
+      then is not able to pick the right file for validation, in particular when working with target namespace values as key for the schema mapping strategy. As a solution for this
+      problem you have to put all schemas with the same target namespace value into a schema collection.</para>
+
+      <programlisting>&lt;citrus:schema-collection id=&quot;flightbookingSchemaCollection&quot;&gt;
+  &lt;citrus:schemas&gt;
+    &lt;citrus:schema location=&quot;classpath:citrus/flightbooking/BaseTypes.xsd&quot;/&gt;
+    &lt;citrus:schema location=&quot;classpath:citrus/flightbooking/AirlineSchema.xsd&quot;/&gt;
+  &lt;/citrus:schemas&gt;
+&lt;/citrus:schema-collection&gt;</programlisting>
+
+      <para>Both schema definitions <emphasis>BaseTypes.xsd</emphasis> and <emphasis>AirlineSchema.xsd</emphasis> share the same target namespace and therefore
+      need to be combined in schema collection component. The schema collection can be referenced in any schema repository as normal schema definition.</para>
+
+      <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;&gt;
+  &lt;citrus:schemas&gt;
+    &lt;citrus:ref schema=&quot;flightbookingSchemaCollection&quot;/&gt;
+  &lt;/citrus:schemas&gt;
+&lt;/citrus:schema-repository&gt;</programlisting>
     </section>
     
     <section id="schema-mapping-strategy">
@@ -81,28 +136,24 @@
             The target namespace is also used as root namespace in XML message payloads. According to this information Citrus can pick up the right schema definition file in the schema
             repository. You can set the schema mapping strategy as property in the configuration files:</para>
             
-            <programlisting>&lt;bean id=&quot;schemaRepository&quot; 
-         class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
-    &lt;property name=&quot;schemaMappingStrategy&quot;&gt;
-        &lt;bean class=&quot;com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy&quot;/&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;schemas&quot;&gt;
-        &lt;list&gt;
-            &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-                &lt;property name=&quot;xsd&quot; 
-                     value=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;
-            &lt;/bean&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+            <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;
+    schema-mapping-strategy=&quot;schemaMappingStrategy&quot;&gt;
+  &lt;citrus:schemas&gt;
+    &lt;citrus:schema id=&quot;helloSchema&quot;
+        location=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;
+  &lt;/citrus:schemas&gt;
+&lt;/citrus:schema-repository&gt;
+
+&lt;bean id=&quot;schemaMappingStrategy&quot;
+    class=&quot;com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy&quot;/&gt;</programlisting>
 
             <para>The <emphasis>sayHello.xsd</emphasis> schema file defines a target namespace (http://consol.de/schemas/sayHello.xsd):</para>
             
             <programlisting>&lt;xs:schema xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot;
-     xmlns=&quot;http://consol.de/schemas/sayHello.xsd&quot;
-     targetNamespace=&quot;http://consol.de/schemas/sayHello.xsd&quot;
-     elementFormDefault=&quot;qualified&quot;
-     attributeFormDefault=&quot;unqualified&quot;&gt;
+    xmlns=&quot;http://consol.de/schemas/sayHello.xsd&quot;
+    targetNamespace=&quot;http://consol.de/schemas/sayHello.xsd&quot;
+    elementFormDefault=&quot;qualified&quot;
+    attributeFormDefault=&quot;unqualified&quot;&gt;
      
 &lt;/xs:schema&gt;</programlisting>
 
@@ -123,37 +174,31 @@
             <para>The next possibility for mapping incoming request messages to a schema definition is via the XML root element QName. Each XML message
             payload starts with a root element that usually declares the type of a XML message. According to this root element you can set up mappings in the schema repository.</para>
             
-            <programlisting>&lt;bean id=&quot;schemaRepository&quot; 
-         class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
-    &lt;property name=&quot;schemaMappingStrategy&quot;&gt;
-        &lt;bean class=&quot;com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy&quot;&gt;
-            &lt;property name=&quot;mappings&quot;&gt;
-                &lt;map&gt;
-                    &lt;entry key=&quot;HelloRequest&quot; value=&quot;helloSchema&quot;/&gt;
-                    &lt;entry key=&quot;GoodbyeRequest&quot; value=&quot;goodbyeSchema&quot;/&gt;
-                &lt;/map&gt;
-            &lt;/property&gt;
-        &lt;/bean&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;schemas&quot;&gt;
-        &lt;list&gt;
-            &gt;ref bean=&quot;helloSchema&quot;/&gt;
-            &gt;ref bean=&quot;goodbyeSchema&quot;/&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
+            <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;
+    schema-mapping-strategy=&quot;schemaMappingStrategy&quot;&gt;
+  &lt;citrus:schemas&gt;
+    &lt;citrus:ref schema=&quot;helloSchema&quot;/&gt;
+    &lt;citrus:ref schema=&quot;goodbyeSchema&quot;/&gt;
+  &lt;/citrus:schemas&gt;
+&lt;/citrus:schema-repository&gt;
+
+&lt;bean id=&quot;schemaMappingStrategy&quot;
+    class=&quot;com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy&quot;&gt;
+  &lt;property name=&quot;mappings&quot;&gt;
+    &lt;map&gt;
+      &lt;entry key=&quot;HelloRequest&quot; value=&quot;helloSchema&quot;/&gt;
+      &lt;entry key=&quot;GoodbyeRequest&quot; value=&quot;goodbyeSchema&quot;/&gt;
+    &lt;/map&gt;
+  &lt;/property&gt;
 &lt;/bean&gt;
 
-&lt;bean id=&quot;helloSchema&quot; class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-    &lt;property name=&quot;xsd&quot; 
-         value=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;
-&lt;/bean&gt;
+&lt;citrus:schema id=&quot;helloSchema&quot;
+    location=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;
 
-&lt;bean id=&quot;goodbyeSchema&quot; class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-    &lt;property name=&quot;xsd&quot; 
-         value=&quot;classpath:citrus/samples/sayGoodbye.xsd&quot;/&gt;
-&lt;/bean&gt;</programlisting>
+&lt;citrus:schema id=&quot;goodbyeSchema&quot;
+     location=&quot;classpath:citrus/samples/sayGoodbye.xsd&quot;/&gt;</programlisting>
 
-            <para>The programlisting above defines two root qname mappings - one for <emphasis>HelloRequest</emphasis> and one for <emphasis>GoodbyeRequest</emphasis> message types.
+            <para>The listing above defines two root qname mappings - one for <emphasis>HelloRequest</emphasis> and one for <emphasis>GoodbyeRequest</emphasis> message types.
             An incoming message of type &lt;HelloRequest&gt; is then mapped to the respective schema and so on. With this dedicated mappings you are able to control which schema is used on
             a XML request, regardless of target namespace definitions.</para>
         </section>
@@ -164,30 +209,28 @@
             <para>Let's discuss the possibility to combine several schema mapping strategies in a logical chain. You can define more than one mapping strategy that are
             evaluated in sequence. The first strategy to find a proper schema definition file in the repository wins.</para>
             
-            <programlisting>&lt;bean id=&quot;schemaRepository&quot; 
-         class=&quot;com.consol.citrus.xml.XsdSchemaRepository&quot;&gt;
-    &lt;property name=&quot;schemaMappingStrategy&quot;&gt;
-        &lt;bean class=&quot;com.consol.citrus.xml.schema.SchemaMappingStrategyChain&quot;&gt;
-            &lt;property name=&quot;strategies&quot;&gt;
-                &lt;list&gt;
-                    &lt;bean class=&quot;com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy&quot;&gt;
-                        &lt;property name=&quot;mappings&quot;&gt;
-                            &lt;map&gt;
-                                &lt;entry key=&quot;HelloRequest&quot; value=&quot;helloSchema&quot;/&gt;
-                            &lt;/map&gt;
-                        &lt;/property&gt;
-                    &lt;/bean&gt;
-                    &lt;bean class=&quot;com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy&quot;/&gt;                
-                &lt;/list&gt;
-            &lt;/property&gt;
-        &lt;/bean&gt;
-    &lt;/property&gt;
-    &lt;property name=&quot;schemas&quot;&gt;
-        &lt;list&gt;
-            &gt;ref bean=&quot;helloSchema&quot;/&gt;
-            &gt;ref bean=&quot;goodbyeSchema&quot;/&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
+            <programlisting>&lt;citrus:schema-repository id=&quot;schemaRepository&quot;
+    schema-mapping-strategy=&quot;schemaMappingStrategy&quot;&gt;
+  &lt;citrus:schemas&gt;
+    &lt;citrus:ref schema=&quot;helloSchema&quot;/&gt;
+    &lt;citrus:ref schema=&quot;goodbyeSchema&quot;/&gt;
+  &lt;/citrus:schemas&gt;
+&lt;/citrus:schema-repository&gt;
+
+&lt;bean id=&quot;schemaMappingStrategy&quot;
+    class=&quot;com.consol.citrus.xml.schema.SchemaMappingStrategyChain&quot;&gt;
+  &lt;property name=&quot;strategies&quot;&gt;
+    &lt;list&gt;
+      &lt;bean class=&quot;com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy&quot;&gt;
+        &lt;property name=&quot;mappings&quot;&gt;
+          &lt;map&gt;
+            &lt;entry key=&quot;HelloRequest&quot; value=&quot;helloSchema&quot;/&gt;
+          &lt;/map&gt;
+        &lt;/property&gt;
+      &lt;/bean&gt;
+      &lt;bean class=&quot;com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy&quot;/&gt;
+    &lt;/list&gt;
+  &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
 
             <para>So the schema mapping chain uses both <emphasis>RootQNameSchemaMappingStrategy</emphasis> and <emphasis>TargetNamespaceSchemaMappingStrategy</emphasis> in combination.
@@ -212,10 +255,8 @@
     &lt;/message&gt;
 &lt;/receive&gt;
 
-&lt;bean id=&quot;helloSchema&quot; class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
-    &lt;property name=&quot;xsd&quot; 
-         value=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;
-&lt;/bean&gt;</programlisting>
+&lt;citrus:schema id=&quot;helloSchema&quot;
+    location=&quot;classpath:citrus/samples/sayHello.xsd&quot;/&gt;</programlisting>
 
         <para>In the example above the tester explicitly sets a schema definition in the receive action (schema=&quot;helloSchema&quot;). The attribute value refers to named schema bean 
         somewhere in the applciation context. This overrules all schema mapping strategies used in the central schema repository as the given schema is directly used for validation. This feature 
@@ -234,11 +275,11 @@
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
-        <para>The <emphasis>schema-repository</emphasis> attribute refers to a bean of type <emphasis>com.consol.citrus.xml.XsdSchemaRepository</emphasis> somewhere in the applicaiton context.</para>
+        <para>The <emphasis>schema-repository</emphasis> attribute refers to a Citrus schema repository component which is defined somewhere in the Spring application context (e.g. citrus-context.xml).</para>
         
         <important>
             <para>In case you have several schema repositories in your project do always define a default repository (name=&quot;schemaRepository&quot;). This helps Citrus to always find at least
-            one repository to consult with.</para>
+            one repository to interact with.</para>
         </important>
     </section>
     

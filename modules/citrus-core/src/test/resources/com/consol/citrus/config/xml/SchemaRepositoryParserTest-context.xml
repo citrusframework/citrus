@@ -15,8 +15,13 @@
       </citrus:schemas>
     </citrus:schema-repository>
 
-    <citrus:schema-repository id="schemaRepository2" schema-mapping-strategy="schemaMappingStrategy">
+    <citrus:schema-repository id="schemaRepository2">
+      <citrus:locations>
+        <citrus:location path="classpath:com/consol/citrus/validation/*"/>
+      </citrus:locations>
     </citrus:schema-repository>
+
+    <citrus:schema-repository id="schemaRepository3" schema-mapping-strategy="schemaMappingStrategy"/>
 
     <citrus:schema id="schema1" location="classpath:com/consol/citrus/validation/test.xsd"/>
 

@@ -14,13 +14,8 @@
     <!-- Common settings -->
     <context:property-placeholder location="classpath:citrus.properties"/>
 
-    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
-        <property name="schemas">
-            <list>
-            </list>
-        </property>
-    </bean>
-    
+    <citrus:schema-repository id="schemaRepository"/>
+
     <bean class="com.consol.citrus.variable.GlobalVariables">
         <property name="variables">
             <map>

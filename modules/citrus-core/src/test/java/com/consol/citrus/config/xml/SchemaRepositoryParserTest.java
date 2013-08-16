@@ -37,7 +37,7 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
     public void testSchemaRepositoryParser() {
         Map<String, XsdSchemaRepository> schemaRepositories = beanDefinitionContext.getBeansOfType(XsdSchemaRepository.class);
         
-        Assert.assertEquals(schemaRepositories.size(), 2);
+        Assert.assertEquals(schemaRepositories.size(), 3);
         
         // 1st schema repository
         XsdSchemaRepository schemaRepository = schemaRepositories.get("schemaRepository1");
@@ -49,9 +49,21 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), WsdlXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), MultiResourceXsdSchema.class);
+        Assert.assertNotNull(schemaRepository.getLocations());
+        Assert.assertEquals(schemaRepository.getLocations().size(), 0);
 
         // 2nd schema repository
         schemaRepository = schemaRepositories.get("schemaRepository2");
+        Assert.assertNotNull(schemaRepository.getSchemas());
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
+        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
+        Assert.assertNotNull(schemaRepository.getLocations());
+        Assert.assertEquals(schemaRepository.getLocations().size(), 1);
+        Assert.assertEquals(schemaRepository.getLocations().get(0), "classpath:com/consol/citrus/validation/*");
+
+        // 3rd schema repository
+        schemaRepository = schemaRepositories.get("schemaRepository3");
         Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), RootQNameSchemaMappingStrategy.class);
 
         Assert.assertTrue(beanDefinitionContext.containsBean("schema1"));
