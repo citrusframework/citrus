@@ -16,36 +16,45 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.xml.schema.WsdlXsdSchema;
+import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.List;
 
 /**
  * Bean definition parser for schema configuration.
  *
- * @author Martin.Maher@consol.de
+ * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class SchemaParser implements BeanDefinitionParser {
+public class SchemaCollectionParser implements BeanDefinitionParser {
 
     /**
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String location = element.getAttribute("location");
-        BeanDefinitionBuilder builder;
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MultiResourceXsdSchema.class);
 
-        if (location.endsWith(".wsdl")) {
-            builder = BeanDefinitionBuilder.genericBeanDefinition(WsdlXsdSchema.class);
-            BeanDefinitionParserUtils.setPropertyValue(builder, location, "wsdl");
-        } else {
-            builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
-            BeanDefinitionParserUtils.setPropertyValue(builder, location, "xsd");
+        ManagedList<Resource> schemas = new ManagedList<Resource>();
+
+        Element schemasElement = DomUtils.getChildElementByTagName(element, "schemas");
+        if (schemasElement != null) {
+            List<Element> schemaElements = DomUtils.getChildElementsByTagName(schemasElement, "schema");
+            for (Element schemaElement : schemaElements) {
+                schemas.add(new PathMatchingResourcePatternResolver().getResource(schemaElement.getAttribute("location")));
+            }
+        }
+
+        if (schemas.size() > 0) {
+            builder.addPropertyValue("schemas", schemas);
         }
 
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());

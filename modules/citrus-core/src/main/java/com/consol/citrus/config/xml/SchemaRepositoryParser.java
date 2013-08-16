@@ -34,7 +34,7 @@ import java.util.List;
  * Bean definition parser for schema-repository configuration.
  *
  * @author Martin.Maher@consol.de
- * @since 2013.03.22
+ * @since 1.3.1
  */
 public class SchemaRepositoryParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {

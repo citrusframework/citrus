@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author Martin.Maher@consol.de
- * @since 2013.04.19
+ * @since 1.3.1
  */
 public class SchemaRepositoryBuilderTest {
 

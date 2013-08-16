@@ -20,7 +20,7 @@ package com.consol.citrus.model.config.core;
  * Builder for creating schema repository instances.
  *
  * @author Martin.Maher@consol.de
- * @since 2013.04.19
+ * @since 1.3.1
  */
 public class SchemaRepositoryBuilder {
 

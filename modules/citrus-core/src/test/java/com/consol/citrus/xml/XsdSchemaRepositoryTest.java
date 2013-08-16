@@ -82,8 +82,9 @@ public class XsdSchemaRepositoryTest {
         
         schemaRepository.afterPropertiesSet();
         
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
     }
     
     @Test

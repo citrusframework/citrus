@@ -11,6 +11,7 @@
         <citrus:ref schema="schema1"/>
         <citrus:ref schema="wsdl1"/>
         <citrus:schema id="wsdl2" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+        <citrus:ref schema="schemaCollection1"/>
       </citrus:schemas>
     </citrus:schema-repository>
 
@@ -20,6 +21,13 @@
     <citrus:schema id="schema1" location="classpath:com/consol/citrus/validation/test.xsd"/>
 
     <citrus:schema id="wsdl1" location="classpath:com/consol/citrus/xml/BookStore.wsdl"/>
+
+    <citrus:schema-collection id="schemaCollection1">
+      <citrus:schemas>
+        <citrus:schema location="classpath:com/consol/citrus/validation/test.xsd"/>
+        <citrus:schema location="classpath:com/consol/citrus/validation/sample.xsd"/>
+      </citrus:schemas>
+    </citrus:schema-collection>
 
     <bean id="schemaMappingStrategy" class="com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy"/>
 </beans>

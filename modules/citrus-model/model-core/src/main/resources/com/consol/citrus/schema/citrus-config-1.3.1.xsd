@@ -181,6 +181,25 @@
         <xs:attribute name="location" type="xs:string" use="required"/>
     </xs:complexType>
 
+    <xs:element name="schema-collection">
+        <xs:complexType>
+            <xs:sequence>
+              <xs:element name="schemas">
+                  <xs:complexType>
+                      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                          <xs:element name="schema">
+                              <xs:complexType>
+                                  <xs:attribute name="location" type="xs:string" use="required" />
+                              </xs:complexType>
+                          </xs:element>
+                      </xs:sequence>
+                  </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="schema" type="schemaType"/>
 
     <xs:element name="schema-repository">

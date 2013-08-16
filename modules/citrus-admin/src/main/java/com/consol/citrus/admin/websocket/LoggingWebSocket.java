@@ -16,19 +16,19 @@
 
 package com.consol.citrus.admin.websocket;
 
-import java.io.IOException;
-import java.util.*;
-
 import org.eclipse.jetty.websocket.WebSocket;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.*;
+
 /**
  * Used for publishing log messages to connected clients via the web socket api.
  *
  * @author Martin.Maher@consol.de
- * @since 2013.01.28
+ * @since 1.3
  */
 public class LoggingWebSocket implements WebSocket.OnTextMessage {
 

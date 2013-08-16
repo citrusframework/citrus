@@ -15,10 +15,6 @@
  */
 package com.consol.citrus.xml.schema;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -26,6 +22,9 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 /**
  * Schema combines multiple file resources usually with exactly the same target namespace to
@@ -53,8 +52,17 @@ public class MultiResourceXsdSchema extends SimpleXsdSchema implements Initializ
         
         super.afterPropertiesSet();
     }
+
+    /**
+     * Gets the schemas included in this collection.
+     * @return
+     */
+    public Resource[] getSchemas() {
+        return schemas.clone();
+    }
     
     /**
+     * Sets the schemas in this collection.
      * @param schemas the schema resources to set
      */
     public void setSchemas(Resource[] schemas) {

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * Logging WebSocket
  *
  * @author Martin.Maher@consol.de
- * @since 2013.01.29
+ * @since 1.3
  */
 public class LoggingWebSocketServlet extends WebSocketServlet {
 

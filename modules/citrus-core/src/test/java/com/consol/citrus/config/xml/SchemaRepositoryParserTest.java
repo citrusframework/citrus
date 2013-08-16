@@ -18,6 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
 import com.consol.citrus.xml.schema.RootQNameSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
@@ -42,11 +43,12 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         XsdSchemaRepository schemaRepository = schemaRepositories.get("schemaRepository1");
         Assert.assertEquals(schemaRepository.getSchemaMappingStrategy().getClass(), TargetNamespaceSchemaMappingStrategy.class);
         Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 4);
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 5);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), WsdlXsdSchema.class);
         Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), MultiResourceXsdSchema.class);
 
         // 2nd schema repository
         schemaRepository = schemaRepositories.get("schemaRepository2");
@@ -56,5 +58,6 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertTrue(beanDefinitionContext.containsBean("schema2"));
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl1"));
         Assert.assertTrue(beanDefinitionContext.containsBean("wsdl2"));
+        Assert.assertTrue(beanDefinitionContext.containsBean("schemaCollection1"));
     }
 }
