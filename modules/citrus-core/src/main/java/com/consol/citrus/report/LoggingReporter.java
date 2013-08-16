@@ -17,13 +17,11 @@
 package com.consol.citrus.report;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.report.TestResult.RESULT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.consol.citrus.TestCase;
-import com.consol.citrus.report.TestResult.RESULT;
 import org.springframework.util.StringUtils;
 
 /**
@@ -235,7 +233,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
-        log.info("Skipping test action <" + testAction.getName() != null ? testAction.getName() : testAction.getClass().getName() + ">");
+        log.info("Skipping test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + ">");
     }
 
     /**

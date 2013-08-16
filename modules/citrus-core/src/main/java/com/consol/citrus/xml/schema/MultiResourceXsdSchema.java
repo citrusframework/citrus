@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Schema combines multiple file resources usually with exactly the same target namespace to
@@ -58,7 +59,7 @@ public class MultiResourceXsdSchema extends SimpleXsdSchema implements Initializ
      * @return
      */
     public Resource[] getSchemas() {
-        return schemas.clone();
+        return Arrays.copyOf(schemas, schemas.length);
     }
     
     /**
@@ -66,6 +67,6 @@ public class MultiResourceXsdSchema extends SimpleXsdSchema implements Initializ
      * @param schemas the schema resources to set
      */
     public void setSchemas(Resource[] schemas) {
-        this.schemas = schemas.clone();
+        this.schemas = Arrays.copyOf(schemas, schemas.length);
     }
 }

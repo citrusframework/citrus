@@ -16,6 +16,8 @@
 
 package com.consol.citrus.http.security;
 
+import java.util.Arrays;
+
 /**
  * User model object for easy instantiation in Spring application context.
  * 
@@ -46,7 +48,7 @@ public class User {
         super();
         this.name = name;
         this.password = password;
-        this.roles = roles;
+        this.roles = Arrays.copyOf(roles, roles.length);
     }
 
     /**
@@ -86,7 +88,7 @@ public class User {
      * @return the roles the roles to get.
      */
     public String[] getRoles() {
-        return roles;
+        return Arrays.copyOf(roles, roles.length);
     }
 
     /**
@@ -94,7 +96,7 @@ public class User {
      * @param roles the roles to set
      */
     public void setRoles(String[] roles) {
-        this.roles = roles;
+        this.roles = Arrays.copyOf(roles, roles.length);
     }
 
 }

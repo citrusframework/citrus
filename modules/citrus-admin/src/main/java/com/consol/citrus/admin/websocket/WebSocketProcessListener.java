@@ -121,7 +121,7 @@ public class WebSocketProcessListener implements ProcessListener {
      * @return
      */
     private boolean isProcessOutputLine(String output) {
-        return output.contains("INFO") || output.contains("DEBUG") || output.contains("ERROR") | output.contains("WARN") | output.contains("TRACE");
+        return output.contains("INFO") || output.contains("DEBUG") || output.contains("ERROR") || output.contains("WARN") || output.contains("TRACE");
     }
 
 }
