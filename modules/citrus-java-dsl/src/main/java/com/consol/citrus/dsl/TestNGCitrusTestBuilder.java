@@ -16,30 +16,29 @@
 
 package com.consol.citrus.dsl;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.jms.ConnectionFactory;
-import javax.sql.DataSource;
-
-import com.consol.citrus.context.TestContext;
-import org.springframework.core.io.Resource;
-import org.testng.ITestContext;
-
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.dsl.testng.CitrusTestRunner;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import org.springframework.core.io.Resource;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
+import org.testng.ITestContext;
+import org.testng.annotations.Factory;
+
+import javax.jms.ConnectionFactory;
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -51,6 +50,35 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
     /** Test builder delegate */
     private CitrusTestBuilder testBuilder;
+
+    @Factory
+    public Object[] createCitrusTests() throws Exception {
+        List<CitrusTestRunner> tests = new ArrayList<CitrusTestRunner>();
+
+        for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
+            if (method.getAnnotation(CitrusTest.class) != null) {
+                CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+
+                springTestContextPrepareTestInstance();
+                init();
+
+                if (StringUtils.hasText(citrusTestAnnotation.name())) {
+                    name(citrusTestAnnotation.name());
+                } else {
+                    name(method.getName());
+                }
+
+                ReflectionUtils.invokeMethod(method, this);
+
+                TestContext testContext = prepareTestContext(createTestContext());
+                TestCase testCase = getTestCase(testContext);
+
+                tests.add(new CitrusTestRunner(testCase, testContext));
+            }
+        }
+
+        return tests.toArray(new Object[tests.size()]);
+    }
 
     /**
      * Initialize test case and variables. Must be done with each test run.

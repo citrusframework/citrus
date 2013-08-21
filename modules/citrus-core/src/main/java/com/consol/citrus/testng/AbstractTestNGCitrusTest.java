@@ -16,6 +16,12 @@
 
 package com.consol.citrus.testng;
 
+import com.consol.citrus.TestCase;
+import com.consol.citrus.container.*;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.TestSuiteListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -27,16 +33,6 @@ import org.springframework.util.Assert;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.*;
-
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo.Status;
-import com.consol.citrus.container.*;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.report.TestListeners;
-import com.consol.citrus.report.TestSuiteListeners;
 
 /**
  * Abstract base test implementation for testng test cases. Providing test listener support and
@@ -102,7 +98,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Runs tasks before tests.
      * @param testContext the test context.
      */
-    @BeforeClass(alwaysRun=true, dependsOnMethods = "springTestContextPrepareTestInstance")
+    @BeforeMethod(alwaysRun=true)
     public void beforeTest(ITestContext testContext) {
         if (beforeTest != null) {
             try {
@@ -112,7 +108,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             }
         }
     }
-    
+
     /**
      * Executes the test case.
      */
@@ -219,8 +215,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Failed to load test case", e);
         }
     }
-
-
 
     /**
      * Runs tasks after test suite.
