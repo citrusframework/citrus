@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.3.1" date="20.08.2013" description="1.3.1 release">
+        <action dev="christophd" type="update">
+          CITRUS-181 Add true/false to BooleanExpressionParser
+        </action>
         <action dev="christophd" type="fix">
           CITRUS-180 Attribute validation xsi:type namespace dependent
         </action>
