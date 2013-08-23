@@ -59,6 +59,10 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
             if (method.getAnnotation(CitrusTest.class) != null) {
                 CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
 
+                if (!citrusTestAnnotation.enabled()) {
+                    continue;
+                }
+
                 springTestContextPrepareTestInstance();
                 init();
 
@@ -73,11 +77,24 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                 TestContext testContext = prepareTestContext(createTestContext());
                 TestCase testCase = getTestCase(testContext);
 
-                tests.add(new CitrusTestRunner(testCase, testContext));
+                tests.add(createTestRunner(testCase, testContext));
             }
         }
 
         return tests.toArray(new Object[tests.size()]);
+    }
+
+    /**
+     * Creates new test runner which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test runner with custom test annotations set.
+     * @param testCase
+     * @param testContext
+     * @return
+     */
+    protected CitrusTestRunner createTestRunner(TestCase testCase, TestContext testContext) {
+        return new CitrusTestRunner(testCase, testContext,
+                String.format("%s(%s)", this.getClass().getSimpleName(), testCase.getName()));
     }
 
     /**

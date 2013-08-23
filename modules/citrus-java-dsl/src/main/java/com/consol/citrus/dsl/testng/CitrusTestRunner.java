@@ -32,15 +32,18 @@ public class CitrusTestRunner implements ITest, Runnable {
     /** This runners test case and context */
     private final TestCase testCase;
     private final TestContext testContext;
+    private final String testName;
 
     /**
      * Constructor using final fields for testCase and testContext.
      * @param testCase
      * @param testContext
+     * @param testName
      */
-    public CitrusTestRunner(TestCase testCase, TestContext testContext) {
+    public CitrusTestRunner(TestCase testCase, TestContext testContext, String testName) {
         this.testCase = testCase;
         this.testContext = testContext;
+        this.testName = testName;
     }
 
     @Test
@@ -50,6 +53,6 @@ public class CitrusTestRunner implements ITest, Runnable {
 
     @Override
     public String getTestName() {
-        return testCase.getName();
+        return testName;
     }
 }
