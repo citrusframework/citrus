@@ -15,12 +15,45 @@
   </properties>
   
   <body>
-    <release version="1.3" date="01.07.2012" description="1.3.1 release">
+    <release version="1.3.1" date="20.08.2013" description="1.3.1 release">
+        <action dev="christophd" type="fix">
+          CITRUS-180 Attribute validation xsi:type namespace dependent
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-179 XHTML user guide missing tidy dependency
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-178 Groovy message header validation skipped
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-177 ProcessContents strategy for xs:any elements in testcase.xsd
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-176 Improve message dispatching handler
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-175 Empty control message disables validation
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-174 JAXBHelperImpl using jdk internal NamespacePrefixMapper
+        </action>
         <action dev="christophd" type="add">
-          CITRUS-XXX Add Citrus test builder for Java DSL
+          CITRUS-173 MatchWeekday function
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-172 ChangeDate function
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-169 FileUtils read to String encoding
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-168 Add XSD schema repository bean definition parser
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-167 Move message constructing interceptor to base interface
         </action>
     </release>
-    <release version="1.3" date="01.04.2012" description="1.3 release">
+    <release version="1.3" date="01.04.2013" description="1.3 release">
         <action dev="christophd" type="add">
           CITRUS-165 Add Http params to basic authentication
         </action>
