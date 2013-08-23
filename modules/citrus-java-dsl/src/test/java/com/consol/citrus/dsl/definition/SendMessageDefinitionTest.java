@@ -16,16 +16,17 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -33,11 +34,11 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -150,6 +151,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean("fooMessageSender", MessageSender.class)).andReturn(messageSender).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
         
         replay(applicationContextMock);
         

@@ -60,9 +60,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     @Autowired(required = false)
     private SequenceAfterSuite afterSuite;
     
-    @Autowired(required = false)
-    private SequenceBeforeTest beforeTest;
-    
     /** Parameter values provided from external logic */
     private Object[][] allParameters;
 
@@ -91,21 +88,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         } else {
             testSuiteListener.onStart();
             testSuiteListener.onStartSuccess();
-        }
-    }
-
-    /**
-     * Runs tasks before tests.
-     * @param testContext the test context.
-     */
-    @BeforeMethod(alwaysRun=true)
-    public void beforeTest(ITestContext testContext) {
-        if (beforeTest != null) {
-            try {
-                beforeTest.execute(createTestContext());
-            } catch (Exception e) {
-                org.testng.Assert.fail("Before test failed with errors", e);
-            }
         }
     }
 

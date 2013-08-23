@@ -28,11 +28,6 @@ public class SampleTest extends AbstractTestNGCitrusTest {
     public void beforeSuite(ITestContext testContext) throws Exception {
     }
     
-    @Override
-    @BeforeClass(dependsOnMethods = "springTestContextPrepareTestInstance")
-    public void beforeTest(ITestContext testContext) {
-    }
-    
     @Test
     public void sampleITest(ITestContext testContext) {
         executeTest(testContext);

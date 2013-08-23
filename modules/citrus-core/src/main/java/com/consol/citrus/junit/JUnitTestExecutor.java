@@ -16,17 +16,11 @@
 
 package com.consol.citrus.junit;
 
+import com.consol.citrus.TestCase;
+import com.consol.citrus.context.TestContext;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo.Status;
-import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.report.TestListeners;
 
 /**
  * @author Christoph Deppisch
@@ -47,19 +41,6 @@ public class JUnitTestExecutor {
         this.testClass = testClass;
     }
     
-    /**
-     * @param beforeTest
-     */
-    public void beforeTest(SequenceBeforeTest beforeTest, TestContext context) {
-        if (beforeTest != null) {
-            try {
-                beforeTest.execute(context);
-            } catch (Exception e) {
-                throw new CitrusRuntimeException("Before test failed with errors", e);
-            }
-        }
-    }
-
     /**
      * @param context
      */

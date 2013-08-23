@@ -16,16 +16,6 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.*;
-
-import javax.annotation.Resource;
-
-import org.easymock.EasyMock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.container.*;
@@ -34,6 +24,15 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import javax.annotation.Resource;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -206,7 +205,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
     }
     
     @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testFailTasksBetween() {
+    public void testBeforeTestFail() {
         SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
         
         beforeTestActions.addTestAction(new FailAction());

@@ -16,9 +16,7 @@
 
 package com.consol.citrus.dsl;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
@@ -32,23 +30,17 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
-import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Citrus test builder offers builder pattern methods in order to configure a
@@ -1081,5 +1073,9 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     public void afterPropertiesSet() throws Exception {
         testCase.setTestListeners(applicationContext.getBean(TestListeners.class));
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
+
+        if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
+            testCase.setBeforeTest(applicationContext.getBean(SequenceBeforeTest.class));
+        }
     }
 }

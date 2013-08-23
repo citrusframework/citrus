@@ -16,17 +16,17 @@
 
 package com.consol.citrus.dsl;
 
+import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.dsl.definition.MockBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
-import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.TestCaseMetaInfo.Status;
-import com.consol.citrus.dsl.definition.MockBuilder;
+import java.util.HashMap;
 
 import static org.easymock.EasyMock.*;
 
@@ -45,6 +45,7 @@ public class TestNGCitrusTestBuilderTest {
 
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
 
         replay(applicationContextMock);
 

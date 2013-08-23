@@ -16,19 +16,20 @@
 
 package com.consol.citrus;
 
-import java.util.*;
-import java.util.Map.Entry;
-
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
-
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.context.TestContext;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -59,6 +60,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     @Autowired
     private TestActionListeners testActionListeners = new TestActionListeners();
+
+    @Autowired(required = false)
+    private SequenceBeforeTest beforeTest;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
@@ -71,6 +75,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             testListeners.onTestStart(this);
 
             try {
+                beforeTest(context);
                 run(context);
 
                 testListeners.onTestSuccess(this);
@@ -83,6 +88,16 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             }
         } else {
             testListeners.onTestSkipped(this);
+        }
+    }
+
+    public void beforeTest(TestContext context) {
+        if (beforeTest != null) {
+            try {
+                beforeTest.execute(context);
+            } catch (Exception e) {
+                throw new CitrusRuntimeException("Before test failed with errors", e);
+            }
         }
     }
 
@@ -268,5 +283,13 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public void setTestActionListeners(TestActionListeners testActionListeners) {
         this.testActionListeners = testActionListeners;
+    }
+
+    /**
+     * Sets the before test action sequence.
+     * @param beforeTest
+     */
+    public void setBeforeTest(SequenceBeforeTest beforeTest) {
+        this.beforeTest = beforeTest;
     }
 }

@@ -16,8 +16,8 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
+import com.consol.citrus.actions.PurgeMessageChannelAction;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -30,7 +30,9 @@ import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.PurgeMessageChannelAction;
+import java.util.HashMap;
+
+import static org.easymock.EasyMock.*;
 
 public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
     private MessageSelector messageSelector = EasyMock.createMock(MessageSelector.class);
@@ -82,6 +84,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
 
         replay(applicationContextMock);
         
@@ -113,6 +116,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
         
         replay(applicationContextMock);
         

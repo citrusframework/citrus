@@ -16,19 +16,15 @@
 
 package com.consol.citrus.junit;
 
-import org.junit.Before;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-
-import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestListeners;
 
 /**
  * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides 
@@ -48,25 +44,14 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     @Autowired
     private TestContextFactoryBean testContextFactory;
     
-    @Autowired(required = false)
-    private SequenceBeforeTest beforeTest;
-    
     /** Delegate test execution to this executor */
     private JUnitTestExecutor testExecutor;
     
     /**
-     * Run tasks before each test case.
-     */
-    @Before
-    public void beforeTest() {
-        testExecutor  = createExecutor();
-        testExecutor.beforeTest(beforeTest, createTestContext());
-    }
-
-    /**
      * Execute the test case.
      */
     protected void executeTest() {
+        testExecutor  = createExecutor();
         testExecutor.executeTest(prepareTestContext(createTestContext()));
     }
     
