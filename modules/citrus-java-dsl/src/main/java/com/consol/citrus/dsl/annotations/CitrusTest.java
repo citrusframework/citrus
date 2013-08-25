@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
  * test builder class. Each method annotated with this annotation will result in a separate test execution.
  *
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

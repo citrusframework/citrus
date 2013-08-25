@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.testng;
+package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
@@ -25,7 +25,8 @@ import org.testng.annotations.Test;
  * Simple test runner to be executed by TestNG {@link org.testng.annotations.Factory} factory methods that create Citrus tests
  * on the fly. Runner has {@link org.testng.annotations.Test} annotated run method which is executed by TestNG.
  *
-* @author Christoph Deppisch
+ * @author Christoph Deppisch
+ * @since 1.3.1
 */
 public class CitrusTestRunner implements ITest, Runnable {
 

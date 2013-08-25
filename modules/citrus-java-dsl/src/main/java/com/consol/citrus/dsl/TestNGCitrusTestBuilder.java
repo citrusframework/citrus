@@ -22,18 +22,18 @@ import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.dsl.testng.CitrusTestRunner;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.testng.CitrusTestRunner;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.ITestContext;
-import org.testng.annotations.Factory;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
@@ -51,9 +51,9 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     /** Test builder delegate */
     private CitrusTestBuilder testBuilder;
 
-    @Factory
-    public Object[] createCitrusTests() throws Exception {
-        List<CitrusTestRunner> tests = new ArrayList<CitrusTestRunner>();
+    @Override
+    protected List<CitrusTestRunner> createTestRunners() {
+        List<CitrusTestRunner> tests = super.createTestRunners();
 
         for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
             if (method.getAnnotation(CitrusTest.class) != null) {
@@ -63,8 +63,12 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                     continue;
                 }
 
-                springTestContextPrepareTestInstance();
-                init();
+                try {
+                    springTestContextPrepareTestInstance();
+                    init();
+                } catch (Exception e) {
+                    throw new CitrusRuntimeException("Unable to prepare Spring application context", e);
+                }
 
                 if (StringUtils.hasText(citrusTestAnnotation.name())) {
                     name(citrusTestAnnotation.name());
@@ -75,26 +79,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                 ReflectionUtils.invokeMethod(method, this);
 
                 TestContext testContext = prepareTestContext(createTestContext());
-                TestCase testCase = getTestCase(testContext);
+                TestCase testCase = testBuilder.getTestCase();
 
                 tests.add(createTestRunner(testCase, testContext));
             }
         }
 
-        return tests.toArray(new Object[tests.size()]);
-    }
-
-    /**
-     * Creates new test runner which has TestNG test annotations set for test execution. Only
-     * suitable for tests that get created at runtime through factory method. Subclasses
-     * may overwrite this in order to provide custom test runner with custom test annotations set.
-     * @param testCase
-     * @param testContext
-     * @return
-     */
-    protected CitrusTestRunner createTestRunner(TestCase testCase, TestContext testContext) {
-        return new CitrusTestRunner(testCase, testContext,
-                String.format("%s(%s)", this.getClass().getSimpleName(), testCase.getName()));
+        return tests;
     }
 
     /**

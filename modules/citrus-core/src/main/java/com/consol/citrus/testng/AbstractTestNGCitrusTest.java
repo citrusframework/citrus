@@ -17,7 +17,9 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.container.*;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.container.SequenceAfterSuite;
+import com.consol.citrus.container.SequenceBeforeSuite;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -27,12 +29,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.Assert;
+import org.springframework.util.*;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.*;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base test implementation for testng test cases. Providing test listener support and
@@ -62,6 +71,95 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     
     /** Parameter values provided from external logic */
     private Object[][] allParameters;
+
+    @Factory
+    public Object[] testFactory() {
+        List<CitrusTestRunner> testRunners = createTestRunners();
+        return testRunners.toArray(new Object[testRunners.size()]);
+    }
+
+    /**
+     * Method dynamically creates test runners for multiple tests contained in this test class.
+     * Usually several test annotated methods in subclass reside in separate test case executed
+     * by a test runner instance. Tests created are handled by test factory at runtime.
+     * @return
+     */
+    protected List<CitrusTestRunner> createTestRunners() {
+        List<CitrusTestRunner> tests = new ArrayList<CitrusTestRunner>();
+
+        for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
+            if (method.getAnnotation(CitrusXmlTest.class) != null) {
+                CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
+
+                if (!citrusTestAnnotation.enabled()) {
+                    continue;
+                }
+
+                try {
+                    springTestContextPrepareTestInstance();
+                } catch (Exception e) {
+                    throw new CitrusRuntimeException("Unable to prepare Spring application context", e);
+                }
+
+                String[] testNames = new String[] {};
+                if (citrusTestAnnotation.names().length > 0) {
+                    testNames = citrusTestAnnotation.names();
+                } else if (citrusTestAnnotation.packagesToScan().length == 0) {
+                    // only use default method name as test in case no package scan is set
+                    testNames = new String[] { method.getName() };
+                }
+
+                String testPackage;
+                if (StringUtils.hasText(citrusTestAnnotation.packageName())) {
+                    testPackage = citrusTestAnnotation.packageName();
+                } else {
+                    testPackage = method.getDeclaringClass().getPackage().getName();
+                }
+
+                for (String testName : testNames) {
+                    TestContext testContext = prepareTestContext(createTestContext());
+                    TestCase testCase = getTestCase(testContext, testPackage, testName);
+
+                    tests.add(createTestRunner(testCase, testContext));
+                }
+
+                String[] testPackages = citrusTestAnnotation.packagesToScan();
+                for (String packageName : testPackages) {
+                    try {
+                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
+
+                        for (Resource fileResource : fileResources) {
+                            TestContext testContext = prepareTestContext(createTestContext());
+
+                            String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                            filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
+
+                            TestCase testCase = getTestCase(testContext, filePath,
+                                    fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()));
+                            tests.add(createTestRunner(testCase, testContext));
+                        }
+                    } catch (IOException e) {
+                        throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'");
+                    }
+                }
+            }
+        }
+
+        return tests;
+    }
+
+    /**
+     * Creates new test runner which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test runner with custom test annotations set.
+     * @param testCase
+     * @param testContext
+     * @return
+     */
+    protected CitrusTestRunner createTestRunner(TestCase testCase, TestContext testContext) {
+        return new CitrusTestRunner(testCase, testContext,
+                String.format("%s(%s)", this.getClass().getSimpleName(), testCase.getName()));
+    }
 
     /**
      * Runs tasks before test suite.
@@ -164,18 +262,31 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     }
 
     /**
-     * Gets the test case from application context.
-     * @return the new test case.
+     * Gets the test case to execute.
+     * @param context
+     * @return
      */
     protected TestCase getTestCase(TestContext context) {
-        ClassPathXmlApplicationContext ctx = createApplicationContext(context);
+        // by default use this class name and package
+        return getTestCase(context, this.getClass().getPackage().getName(), this.getClass().getSimpleName());
+    }
+
+    /**
+     * Gets the test case from application context.
+     * @param context
+     * @param packageName
+     * @param testName
+     * @return the new test case.
+     */
+    protected TestCase getTestCase(TestContext context, String packageName, String testName) {
+        ClassPathXmlApplicationContext ctx = createApplicationContext(context, packageName, testName);
         TestCase testCase = null;
         
         try {
-            testCase = (TestCase) ctx.getBean(this.getClass().getSimpleName(), TestCase.class);
-            testCase.setPackageName(this.getClass().getPackage().getName());
+            testCase = (TestCase) ctx.getBean(testName, TestCase.class);
+            testCase.setPackageName(packageName);
         } catch (NoSuchBeanDefinitionException e) {
-            throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Could not find test with name '" + this.getClass().getSimpleName() + "'", e);
+            throw context.handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);
         }
         
         return testCase;
@@ -185,13 +296,12 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Creates the Spring application context.
      * @return
      */
-    protected ClassPathXmlApplicationContext createApplicationContext(TestContext context) {
+    protected ClassPathXmlApplicationContext createApplicationContext(TestContext context, String packageName, String testName) {
         try {
             return new ClassPathXmlApplicationContext(
                     new String[] {
-                            this.getClass().getPackage().getName().replace('.', '/')
-                                    + "/" + getClass().getSimpleName() + ".xml",
-                                    "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                            packageName.replace('.', '/') + "/" + testName + ".xml",
+                            "com/consol/citrus/spring/internal-helper-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {
             throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Failed to load test case", e);
