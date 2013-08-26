@@ -74,7 +74,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
     @Factory
     public Object[] testFactory() {
-        List<CitrusTestRunner> testRunners = createTestRunners();
+        List<TestRunner> testRunners = createTestRunners();
         return testRunners.toArray(new Object[testRunners.size()]);
     }
 
@@ -84,8 +84,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * by a test runner instance. Tests created are handled by test factory at runtime.
      * @return
      */
-    protected List<CitrusTestRunner> createTestRunners() {
-        List<CitrusTestRunner> tests = new ArrayList<CitrusTestRunner>();
+    protected List<TestRunner> createTestRunners() {
+        List<TestRunner> tests = new ArrayList<TestRunner>();
 
         for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
             if (method.getAnnotation(CitrusXmlTest.class) != null) {
@@ -118,9 +118,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
                 for (String testName : testNames) {
                     TestContext testContext = prepareTestContext(createTestContext());
-                    TestCase testCase = getTestCase(testContext, testPackage, testName);
 
-                    tests.add(createTestRunner(testCase, testContext));
+                    tests.add(createTestRunner(testName, testPackage, testContext));
                 }
 
                 String[] testPackages = citrusTestAnnotation.packagesToScan();
@@ -134,9 +133,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                             String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
                             filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
 
-                            TestCase testCase = getTestCase(testContext, filePath,
-                                    fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()));
-                            tests.add(createTestRunner(testCase, testContext));
+                            tests.add(createTestRunner(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath, testContext));
                         }
                     } catch (IOException e) {
                         throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'");
@@ -152,13 +149,16 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Creates new test runner which has TestNG test annotations set for test execution. Only
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test runner with custom test annotations set.
-     * @param testCase
+     * @param beanName
+     * @param packageName
      * @param testContext
      * @return
      */
-    protected CitrusTestRunner createTestRunner(TestCase testCase, TestContext testContext) {
-        return new CitrusTestRunner(testCase, testContext,
-                String.format("%s(%s)", this.getClass().getSimpleName(), testCase.getName()));
+    protected TestRunner createTestRunner(String beanName, String packageName, TestContext testContext) {
+        CitrusXmlTestRunner testRunner = new CitrusXmlTestRunner(beanName, packageName, applicationContext, testContext);
+        testRunner.setTestName(String.format("%s(%s)",
+                this.getClass().getSimpleName(), beanName));
+        return testRunner;
     }
 
     /**

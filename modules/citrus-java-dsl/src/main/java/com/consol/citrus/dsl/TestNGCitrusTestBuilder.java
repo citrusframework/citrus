@@ -26,8 +26,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.testng.CitrusTestRunner;
+import com.consol.citrus.testng.*;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.springframework.core.io.Resource;
@@ -52,8 +51,8 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     private CitrusTestBuilder testBuilder;
 
     @Override
-    protected List<CitrusTestRunner> createTestRunners() {
-        List<CitrusTestRunner> tests = super.createTestRunners();
+    protected List<TestRunner> createTestRunners() {
+        List<TestRunner> tests = super.createTestRunners();
 
         for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
             if (method.getAnnotation(CitrusTest.class) != null) {
@@ -86,6 +85,21 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
         }
 
         return tests;
+    }
+
+    /**
+     * Creates new test runner which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test runner with custom test annotations set.
+     * @param testCase
+     * @param testContext
+     * @return
+     */
+    protected TestRunner createTestRunner(TestCase testCase, TestContext testContext) {
+        CitrusTestRunner testRunner = new CitrusTestRunner(testCase, testContext);
+        testRunner.setTestName(String.format("%s(%s)",
+                this.getClass().getSimpleName(), testCase.getName()));
+        return testRunner;
     }
 
     /**

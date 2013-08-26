@@ -17,31 +17,23 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
+import org.testng.ITest;
 
 /**
- * Simple test runner to be executed by TestNG {@link org.testng.annotations.Factory} factory methods that create Citrus tests
- * on the fly. Runner has {@link org.testng.annotations.Test} annotated run method which is executed by TestNG.
- *
+ * Test runner interface.
  * @author Christoph Deppisch
- * @since 1.3.1
-*/
-public class CitrusTestRunner extends AbstractTestRunner {
-
-    private final TestCase testCase;
+ */
+public interface TestRunner extends Runnable, ITest {
 
     /**
-     * Constructor using final fields for testCase and testContext.
-     * @param testCase
-     * @param testContext
+     * Gets the test case instance.
+     * @return
      */
-    public CitrusTestRunner(TestCase testCase, TestContext testContext) {
-        super(testContext);
-        this.testCase = testCase;
-    }
+    TestCase getTestCase();
 
-    @Override
-    public TestCase getTestCase() {
-        return testCase;
-    }
+    /**
+     * Sets the test name explicitly.
+     * @param testName
+     */
+    void setTestName(String testName);
 }
