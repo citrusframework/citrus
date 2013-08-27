@@ -692,6 +692,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             if (receivedNamespaces.containsKey(receivedPrefix)) {
                 Map<String, String> sourceNamespaces = XMLUtils.lookupNamespaces(source.getOwnerDocument());
+                sourceNamespaces.putAll(XMLUtils.lookupNamespaces(((Attr)source).getOwnerElement()));
 
                 if (sourceNamespaces.containsKey(sourcePrefix)) {
                     Assert.isTrue(sourceNamespaces.get(sourcePrefix).equals(receivedNamespaces.get(receivedPrefix)),

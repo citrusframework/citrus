@@ -636,6 +636,27 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testNamespaceQualifiedAttributeValueParentDeclarationInSource() {
+        Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xmlns:ns1='http://citrus/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xmlns:ns1='http://citrus/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "</element>"
+                + "</root>").build();
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
+        validationContext.setControlMessage(controlMessage);
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+        validator.validateMessagePayload(message, validationContext, context);
+    }
+
+    @Test
     public void testNamespaceQualifiedAttributeValueDifferentPrefix() {
         Message<?> message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
