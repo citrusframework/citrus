@@ -169,4 +169,25 @@
         
         <programlisting>&lt;value&gt;@greaterThan(5)@&lt;/value&gt;</programlisting>        
     </section>
+
+    <section id="validation-matcher-weekday">
+      <title>isWeekday()</title>
+
+      <para>The matcher works on date values and checks that a given date evaluates to the expected day of the week.
+      The user defines the expected day by its name in uppercase characters. The matcher fails in case the given date
+      is another week day than expected.</para>
+
+      <programlisting>&lt;someDate&gt;@isWeekday('MONDAY')@&lt;/someDate&gt;</programlisting>
+
+      <para>Possible values for the expected day of the week are: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY or SUNDAY.</para>
+
+      <para>The field value has to be a date value otherwise the matcher will fail to parse the date. The matcher requires
+      a date format which is <emphasis>dd.MM.yyyy</emphasis> by default. You can change this date format as follows:</para>
+
+      <programlisting>&lt;someDate&gt;@isWeekday('MONDAY('yyyy-MM-dd'))@&lt;/someDate&gt;</programlisting>
+
+      <para>Now the matcher uses the custom date format in order to parse the date value for evaluation. The validation matcher
+      also works with date time values. In this case you have to give a valid date time format respectively
+      (e.g. FRIDAY('yyyy-MM-dd'T'hh:mm:ss')).</para>
+    </section>
 </chapter>

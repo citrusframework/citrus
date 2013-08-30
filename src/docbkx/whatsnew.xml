@@ -2,111 +2,360 @@
 <chapter id="whatsnew">
   <title>What's new?!</title>
 
-  <para>The new Citrus release introduces new features and changes that we discuss in the following sections. We want you to get an overview of what has happened in the last release so you can
-  spot your favorite.</para>
-  
-  <section id="whatsnew-javadsl">
-    <title>Java DSL</title>
+  <para>In the following sections we shortly describe the Citrus evolution over various releases. We want you to get a quick overview of what has happened and all the new things in Citrus.
+  So hopefully you can spot your favorite new feature to discover.</para>
 
-    <para>Citrus users, in particular those with development experience, do often tell me about the nasty XML code they have to deal with for writing Citrus test definitions. Developers want to write 
-    Java code rather than XML. Although I personally do like the Citrus XML test syntax we have introduced a Java DSL language for writing Citrus tests with Java only.</para>
-    
-    <para>We have introduced the Java DSL to all major test action features in Citrus so you can switch without having to worry about loosing functionality. Details can be seen in the test action section 
-    where we added Java DSL examples almost everywhere (<xref linkend="actions"/>). The basic Java DSL setup is described in <xref linkend="testcase"/>.</para>
-  </section>
-  
-  <section id="whatsnew-xhtml">
-    <title>XHTML message validation</title>
+  <section id ="whatsnew-1-3-1">
+    <title>Enhancements in Citrus 1.3.1</title>
 
-    <para>Message validation for Html code was not really comfortable as Html does not confirm to be wellformed and valid XML syntax. XHTML tries to close this gap by automatically resolving all Html specific 
-    XML syntax rule violations. With Citrus 1.3 we introduced a XHTML message validator which does the magic for converting Html code to proper wellformed and valid XML. In a test case you can then use
-    the full XML validation power in Citrus in order to validate incoming Html messages. Section <xref linkend="validation-xhtml"/> deals with the new validation capabilities for Html.</para>
-  </section>
-  
-  <section id="whatsnew-soap-fault">
-    <title>Multiple SOAP fault detail support</title>
+    <section id="whatsnew-1-3-1-annotations">
+      <title>@CitrusTest and @CitrusXmlTest annotations</title>
 
-    <para>SOAP fault messages can hold many SOAP fault detail elements. Citrus was able to handle a single SOAP fault detail on sending and receiving test actions from the very beginning but multiple SOAP 
-    fault detail elements were not supported. Fortunately things are getting better and you can send and receive as many fault detail elements as you like in Citrus 1.3. For each SOAP fault detail you can 
-    specify individual validation rules and expectations. See <xref linkend="soap-faults"/> for detailed description.</para>
-  </section>
-  
-  <section id="whatsnew-server-security-handler">
-    <title>Jetty server security handler</title>
+      <para>With the new Java DSL capabilities Citrus created new ways of executing test cases within a TestNG or
+      JUnit test class. Now we even improved the usage here with two new annotations <emphasis>@CitrusTest</emphasis>
+      and <emphasis>CitrusXmlTest</emphasis>. The integration into the unit test class has never been easier for us.</para>
 
-    <para>With our Jetty server component you can set up Http mock servers very easy. The server is automatically configured to accept Http client connections and to load a Spring application context on startup. Now you can also 
-    set some more details on this automatic server configuration (e.g. server context path, servlet names or servlet mappings). In addition to that you can access the security context of the web container. This enables you to set up
-    security constraints such as basic authentication on server resources. Clients are then forced to authenticate properly when accessing the server. Unauthorized users will get <emphasis>401 access denied</emphasis> errors immediately. 
-    See <xref linkend="http-basic-auth-server"/> for details. Of course this also applies to our SOAP WebService Jetty server components (<xref linkend="soap-basic-auth-server"/>).</para>
-  </section>
-  
-  <section id="whatsnew-actors">
-    <title>Test actors</title>
+      <para>You can have several Citrus annotations and with this several Citrus test cases in one single Java class and
+      the Citrus tests now are able to coexist with other unit tests. You can even mix Java DSL and old XML Citrus test cases in
+      a single Java class.</para>
 
-    <para>We introduced a new concept of test actors for sending and receiving test actions. This enables you to link a test actor (e.g. interface partner application, backend application) to a test
-    action in your test. Following from that you can enable/disable test actors and all linked test actions very easy. This enables us to reuse Citrus test cases in end-to-end test scenarios where
-    not all interface partners get simulated by Citrus. If you like to read more about this concept follow the detailed instruction in <xref linkend="test-actors"/>.</para>
-  </section>
-  
-  <section id="whatsnew-soap-http-errors">
-    <title>Simulate Http error codes with SOAP</title>
+      <para>Also the XML Citrus tests can be grouped to a single Java class with multiple XML files or even a package scan
+      for XML files.</para>
 
-    <para>Citrus provides SOAP WebServices server simulation with clients connecting to the server sending SOAP requests. As a server Citrus is now able to simulate Http error codes like 
-    <emphasis>404 Not found</emphasis> and <emphasis>500 Internal server error</emphasis>. Before that the Citrus SOAP server had to always respond with a proper SOAP response or SOAP fault. 
-    See <xref linkend="soap-http-errors"/> for details.</para>
-  </section>
-  
-  <section id="whatsnew-ssh">
-    <title>SSH server and client</title>
+      <para>We have changed the documentation in this guide so you can see how to use the new annotations. Also see our
+      Citrus blog where we continuously describe the many possibilities that you have with the new annotations.</para>
+    </section>
 
-    <para>The Citrus family has raised a new member in adding SSH connectivity. With the new SSH module you are able to provide a full stack SSH server. The SSH server accepts client connections and you as a tester can simulate
-    any SSH server functionality with proper validation as it is known to Citrus SOAP and HTTP modules. In addition to that you can also use the Citrus SSH client in order to connect to an external SSH server. You can execute 
-    SSH commands on the SSH server and validate the respective response data. The full description is provided in <xref linkend="ssh"/>.</para>
+    <section id="whatsnew-1-3-1-parameters">
+      <title>@CitrusParameters annotation</title>
+
+      <para>Citrus is able to use the fabulous TestNG data provider capabilities in order to execute a test case several times
+      with different data provided form external resources. The new @CitrusParameters annotation helps to set parameter names
+      which are used as test variable names in the test case.</para>
+    </section>
+
+    <section id="whatsnew-1-3-1-schema-repository-parser">
+      <title>Schema repository configuration components</title>
+
+      <para>Defining schema repositories and schemas (xsd, wsdl) is common use in Citrus. We have added XML bean definition parsers
+      so defining those components is less verbose. You can use the Citrus <emphasis>citrus:schema-repository</emphasis>
+      and <emphasis>citrus:schema</emphasis> components in your Spring application context configuration. The components do receive several
+      attributes for further configuration. XSD, WSDL and schema collections are supported here.</para>
+
+      <para>Checkout <xref linkend="xsd-validation"/> for examples how to use the new configuration components.</para>
+    </section>
+
+    <section id="whatsnew-1-3-1-change-date-function">
+      <title>Change date function</title>
+
+      <para>We have added a new Citrus function <emphasis>citrus:changeDate()</emphasis> that is available for you by default.
+      The function changes a given date value adding or removing a datetime offset (e.g. year, month, day, hour, minute, second).
+      So you can manipulate each date value also those of dynamic nature coming with some message.</para>
+
+      <para>See <xref linkend="functions-changedate"/> for examples and detailed syntax usage of this function.</para>
+    </section>
+
+    <section id="whatsnew-1-3-1-weekday-matcher">
+      <title>Weekday validation matcher</title>
+
+      <para>The new weekday validation matcher also works on date values. The matcher checks that a given
+      date value evaluates to a expected day of the week. So the user can check that a date field is always a saturday
+      for instance. This is very helpful when checking that a given date value is not a working day for example.</para>
+
+      <para>See <xref linkend="validation-matcher-weekday"/> for some more detailed description of the matcher's capabilities.</para>
+    </section>
   </section>
-  
-  <section id="whatsnew-antrun">
-    <title>ANT run test action</title>
-    
-    <para>With this new test action you can call ANT builds from your test case. The action executes one or more ANT build targets on a build.xml file. You can specify build properties that get passed to the ANT build and 
-    you can add a custom build listener. In case the ANT build run fails the test fails accordingly with the build exception. See <xref linkend="actions-antrun"/> for details.</para>
+
+  <section id="whatsnew-1-3">
+    <title>Enhancements in Citrus 1.3</title>
+
+    <section id="whatsnew-1-3-javadsl">
+      <title>Java DSL</title>
+
+      <para>Citrus users, in particular those with development experience, do often tell me about the nasty XML code they have to deal with for writing Citrus test definitions. Developers want to write
+      Java code rather than XML. Although I personally do like the Citrus XML test syntax we have introduced a Java DSL language for writing Citrus tests with Java only.</para>
+
+      <para>We have introduced the Java DSL to all major test action features in Citrus so you can switch without having to worry about loosing functionality. Details can be seen in the test action section
+      where we added Java DSL examples almost everywhere (<xref linkend="actions"/>). The basic Java DSL setup is described in <xref linkend="testcase"/>.</para>
+    </section>
+
+    <section id="whatsnew-1-3-xhtml">
+      <title>XHTML message validation</title>
+
+      <para>Message validation for Html code was not really comfortable as Html does not confirm to be wellformed and valid XML syntax. XHTML tries to close this gap by automatically resolving all Html specific
+      XML syntax rule violations. With Citrus 1.3 we introduced a XHTML message validator which does the magic for converting Html code to proper wellformed and valid XML. In a test case you can then use
+      the full XML validation power in Citrus in order to validate incoming Html messages. Section <xref linkend="validation-xhtml"/> deals with the new validation capabilities for Html.</para>
+    </section>
+
+    <section id="whatsnew-1-3-soap-fault">
+      <title>Multiple SOAP fault detail support</title>
+
+      <para>SOAP fault messages can hold many SOAP fault detail elements. Citrus was able to handle a single SOAP fault detail on sending and receiving test actions from the very beginning but multiple SOAP
+      fault detail elements were not supported. Fortunately things are getting better and you can send and receive as many fault detail elements as you like in Citrus 1.3. For each SOAP fault detail you can
+      specify individual validation rules and expectations. See <xref linkend="soap-faults"/> for detailed description.</para>
+    </section>
+
+    <section id="whatsnew-1-3-server-security-handler">
+      <title>Jetty server security handler</title>
+
+      <para>With our Jetty server component you can set up Http mock servers very easy. The server is automatically configured to accept Http client connections and to load a Spring application context on startup. Now you can also
+      set some more details on this automatic server configuration (e.g. server context path, servlet names or servlet mappings). In addition to that you can access the security context of the web container. This enables you to set up
+      security constraints such as basic authentication on server resources. Clients are then forced to authenticate properly when accessing the server. Unauthorized users will get <emphasis>401 access denied</emphasis> errors immediately.
+      See <xref linkend="http-basic-auth-server"/> for details. Of course this also applies to our SOAP WebService Jetty server components (<xref linkend="soap-basic-auth-server"/>).</para>
+    </section>
+
+    <section id="whatsnew-1-3-actors">
+      <title>Test actors</title>
+
+      <para>We introduced a new concept of test actors for sending and receiving test actions. This enables you to link a test actor (e.g. interface partner application, backend application) to a test
+      action in your test. Following from that you can enable/disable test actors and all linked test actions very easy. This enables us to reuse Citrus test cases in end-to-end test scenarios where
+      not all interface partners get simulated by Citrus. If you like to read more about this concept follow the detailed instruction in <xref linkend="test-actors"/>.</para>
+    </section>
+
+    <section id="whatsnew-1-3-soap-http-errors">
+      <title>Simulate Http error codes with SOAP</title>
+
+      <para>Citrus provides SOAP WebServices server simulation with clients connecting to the server sending SOAP requests. As a server Citrus is now able to simulate Http error codes like
+      <emphasis>404 Not found</emphasis> and <emphasis>500 Internal server error</emphasis>. Before that the Citrus SOAP server had to always respond with a proper SOAP response or SOAP fault.
+      See <xref linkend="soap-http-errors"/> for details.</para>
+    </section>
+
+    <section id="whatsnew-1-3-ssh">
+      <title>SSH server and client</title>
+
+      <para>The Citrus family has raised a new member in adding SSH connectivity. With the new SSH module you are able to provide a full stack SSH server. The SSH server accepts client connections and you as a tester can simulate
+      any SSH server functionality with proper validation as it is known to Citrus SOAP and HTTP modules. In addition to that you can also use the Citrus SSH client in order to connect to an external SSH server. You can execute
+      SSH commands on the SSH server and validate the respective response data. The full description is provided in <xref linkend="ssh"/>.</para>
+    </section>
+
+    <section id="whatsnew-1-3-antrun">
+      <title>ANT run test action</title>
+
+      <para>With this new test action you can call ANT builds from your test case. The action executes one or more ANT build targets on a build.xml file. You can specify build properties that get passed to the ANT build and
+      you can add a custom build listener. In case the ANT build run fails the test fails accordingly with the build exception. See <xref linkend="actions-antrun"/> for details.</para>
+    </section>
+
+    <section id="whatsnew-1-3-polling-interval">
+      <title>Polling interval for reply handlers</title>
+
+      <para>With synchronous communication in Citrus we always have a combination of a synchronous message sender and a reply handler component. These two perform a handshake when passing synchronous reply messages to the test
+      for further processing such as message validation. While the sender is waiting for the synchronous response to arrive the reply handler polls for the reply message. This polling for reply messages was done in a static way
+      which often led to time delays according to long polling intervals. Now with Citrus 1.3 you can set the polling-interval for the reply handler as you like. This setting is
+      valid for all reply handler components in Citrus (citrus-jms, citrus-http, citrus-ws, citrus-channel, citrus-shh, and so on).</para>
+    </section>
+
+    <section id="whatsnew-1-3-upgrading">
+      <title>Upgrading from version 1.2</title>
+
+      <para>If you are coming from Citrus 1.2 you may have to look at the following points in order to have a smooth upgrade to the new release version.</para>
+
+      <itemizedlist mark="opencircle">
+        <listitem>
+          <para><emphasis>Jetty version upgrade</emphasis> We are using Jetty a lot for starting Http server mocks within Citrus. In order to stay up to date we upgraded to
+            Jetty 8.1.7 version with this Citrus release. This implies that package names did change for Jetty API. In general there is no conflict for you as a Citrus user, but you may want to
+            adjust your logging configuration according to new Jetty packages. Jetty package names did change from <emphasis>ord.mortbay</emphasis> to <emphasis>org.eclipse.jetty</emphasis>.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis>Spring version upgrade</emphasis> Staying up to date with the versions of 3rd library dependencies is quite important for us. So we upgrade our dependencies to newer versions
+            with each release. As we did only upgrade minor versions there is no significant change or problems to be expected. However you may take care on versions and
+            release changes in the Spring world for details and migration.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis>TIBCO module</emphasis> We decided to put the TIBCO module separately as it is a very special connectivity adapter for TIBCO software only. So you will not find the TIBCO module
+            within the Citrus distribution anymore. We will maintain a TIBCO connectivity adapter separately in the future.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
   </section>
-  
-  <section id="whatsnew-polling-interval">
-    <title>Polling interval for reply handlers</title>
-    
-    <para>With synchronous communication in Citrus we always have a combination of a synchronous message sender and a reply handler component. These two perform a handshake when passing synchronous reply messages to the test
-    for further processing such as message validation. While the sender is waiting for the synchronous response to arrive the reply handler polls for the reply message. This polling for reply messages was done in a static way 
-    which often led to time delays according to long polling intervals. Now with Citrus 1.3 you can set the polling-interval for the reply handler as you like. This setting is
-    valid for all reply handler components in Citrus (citrus-jms, citrus-http, citrus-ws, citrus-channel, citrus-shh, and so on).</para>
+
+  <section id="whatsnew-1-2">
+    <title>Enhancements in Citrus 1.2</title>
+
+    <section id="whatsnew-1-2-spring">
+      <title>Spring version update</title>
+
+      <para>We have some major version upgrades in our Spring dependencies. We are now using Spring 3.1.1, Spring Integration 2.1.2 and SpringWS 2.1.0. This upgrade
+      was overdue for some time and is definitely worth it. With these upgrades we had to apply some changes in our API, too. This is because we are using the Spring classes a lot
+      in our code. See the upgrade guide in this chapter for all significant changes that might affect your project.</para>
+    </section>
+
+    <section id="whatsnew-1-2-groovy">
+      <title>New groovy features</title>
+
+      <para>Citrus extended the possibilities to work with script languages like Groovy. You can use Groovy's MarkupBuilder to create
+      XML message payloads. Your Groovy code goes right into the test case or comes from external file. With MarkupBuilder you
+      do not need to care about XML message syntax and overhead. Just focus on the pure message content. You can read the details in
+      <xref linkend="groovy-markupbuilder"/>.</para>
+
+      <para>Further Groovy feature goes to the validation capabilities. Instead of working with XML DOM tree comparison and XPath expression validation you
+      can use Groovy XMLSlurper. This is very useful for those of you who need to do complex message validation and do not like the XML/XPath syntax at all. With
+      XMLSlurper you can access the XML DOM tree via named closure operations which feels great. This especially comes in handy for complex generic XML structures
+      as you can search for elements, sort element list and use the powerful contains operation. This is all described in <xref linkend="groovy-xmlslurper"/>.</para>
+
+      <para>Some other Groovy support extension comes in SQL result set validation (<xref linkend="actions-database-groovy"/>). When reading data from the database someone is able to validation the
+      resulting data row set with Groovy script. The script code easily accesses the rows and columns with Groovy's out-of-the-box list and map handling. This
+      adds very powerful validation to multi-row data sets from the database.</para>
+    </section>
+
+    <section id="whatsnew-1-2-sql">
+      <title>SQL multi-line result set validation</title>
+
+      <para>In this new Citrus version the tester can validate SQL Query results that have multiple rows. In the past Citrus could only handle a single row in the
+      result set. Now this new release brings light into the dark. See also the new Groovy SQL result set validation which fits brilliant for complex multi-row
+      SQL result set validation. The details can be found in <xref linkend="actions-database-query"/></para>
+    </section>
+
+    <section id="whatsnew-1-2-message-types">
+      <title>Extended message format support</title>
+
+      <para>In previous versions Citrus was primary designed to handle XML message payloads. With this new release Citrus is also able to work with other message formats
+      such as JSON, CSV, PLAINTEXT. This applies to sending messages as well as receiving and particularly validating message payloads. The tester can specify several message
+      validators in Citrus for different message formats. According to the expected message format the proper validator is chosen to perform the message validation.</para>
+
+      <para>We have implemented a JSON message validator capable of ignoring specific JSON entries and handling JSONArrays. We also provide a plain text message validator which
+      is very basic to be honest. The framework is ready to receive new validator implementations so you can add custom validators for your specific needs.</para>
+    </section>
+
+    <section id="whatsnew-1-2-xml">
+      <title>New XML features</title>
+
+      <para>XML namespace handling is tedious expecially if you have to deal with a lot of XPath expressions in your tests. Before you had need to specify a namespace
+      context for the XPath expression every time you use them in your test - now you can have a central namespace context which declares namespaces you use in your project.
+      These namespaces identified by some prefix are available throughout the test project which is much more maintainable and easy to use. See how it works in
+      <xref linkend="xpath-namespace"/>.</para>
+    </section>
+
+    <section id="whatsnew-1-2-soap">
+      <title>SOAP support improvements</title>
+
+      <para>WsAddressing standard is now supported in Citrus (<xref linkend="soap-ws-adressing"/>). This means you can declare the specific WsAddressing message headers on message
+      sender level in order to send messages with WsAddressing feature. The header is constructed automatically for all SOAP messages that are sent over the message sender.</para>
+
+      <para>Dynamic SOAP endpoint uri resolver enables you to dynamically address SOAP endpoints during a test. Sometimes a message sender may dynamically have to change the SOAP
+      url for each call (e.g. address different request uri parts). With a endpoint uri resolver set on the message sender you can handle this requirement very easy. The tip for
+      dynamic endpoint resolving was added to <xref linkend="soap-sender"/></para>
+
+      <para>We also simplified the synchronous SOAP HTTP communication within test cases. In previous versions you had to build complex parallel and sequential container constructs
+      in order to continue with test execution while the SOAP message sender is waiting for the synchronous response to arrive. Now you can simply fork the message sending action and
+      continue with further test actions while synchronous SOAP communication takes place. See the <xref linkend="soap-fork-mode"/> for details</para>
+
+      <para>Some really small change introduced with this release is the fact that Citrus now logs SOAP messages in their pure nature. This means that you can see the complete SOAP
+      envelope of messages in the Citrus log files. This is more than helpful when searching for errors inside your test case.</para>
+    </section>
+
+    <section id="whatsnew-1-2-http">
+      <title>Http and RESTful WebServices</title>
+
+      <para>We have changed Http communication components for full support of RESTful WebServices on client and server side. The Http client now uses Spring's REST support for
+      Http requests (GET, PUT, DELETE, POST, etc.). The server side has changed, too. The Http server now provides RESTful WebServices and is compliant to the existing SOAP Jetty server
+      implementation in Citrus. If you want to upgrade existing projects to this version you may have to adjust the Spring application context configuration to some extent.</para>
+
+      <para>For details have a look at the upgrade guide (<xref linkend="whatsnew-upgrading"/>) in this chapter or find detailed explanations to the new Http components in <xref linkend="http"/>.</para>
+    </section>
+
+    <section id="whatsnew-1-2-html-report">
+      <title>HTML reporting</title>
+
+      <para>Citrus provides HTML reports after each test run with detailed information on the failed tests. You can immediately see which tests failed in execution and where the test
+      stopped. <xref linkend="reporting-html"/> provides details on this new feature.</para>
+    </section>
+
+    <section id="whatsnew-1-2-validation">
+      <title>Validation matchers</title>
+
+      <para>The new validation matchers will put the message validation mechanisms to a new level. With validation matchers you are able to execute powerful assertions on each message content element.
+      For instance you can use the isNumber validation matcher for checking that a message value is of numeric nature. We added several matcher implementations that are ready for usage in your test but you can
+      also write your custom validation matchers. Have a look at <xref linkend="validation-matchers"/> for details.</para>
+    </section>
+
+    <section id="whatsnew-1-2-conditional">
+      <title>Conditional container</title>
+
+      <para>The new conditional test action container enables you to execute test actions only in case a boolean expression evaluates to true. So the nested test actions inside the container may be not
+      executed at all in case a condition is not met. See <xref linkend="containers-conditional"/> for details.</para>
+    </section>
+
+    <section id="whatsnew-1-2-channel-selector">
+      <title>Support for message selectors on message channels</title>
+
+      <para>Spring Integration message channels do not support message selectors like JMS queues do for example. With Citrus 1.2 we implemented a solution for this issue with a special message channel
+      implementation. So you can use the message selector feature also when using message channels. Go to <xref linkend="message-channel-selector-support"/> for details.</para>
+    </section>
+
+    <section id="whatsnew-1-2-actions">
+      <title>New test actions</title>
+
+      <para>We introduced some completely new test actions in this release for you. The new actions are listed below:</para>
+
+      <itemizedlist>
+        <listitem>Purge message channel action (<xref linkend="actions-purge-channels"/>)</listitem>
+      </itemizedlist>
+
+      <para>See <xref linkend="actions"/> for detailed instructions how to use the new actions.</para>
+    </section>
+
+    <section id="whatsnew-1-2-functions">
+      <title>New functions</title>
+
+      <para>We introduced some new default Citrus functions that will ease the testers life. This includes commonly used functions like encoding/decoding base64 bindary data, escaping XML and generating
+      random Java UUID values. These are the new functions in this release:</para>
+
+      <itemizedlist>
+        <listitem>citrus:randomUUID()</listitem>
+        <listitem>citrus:cdataSection()</listitem>
+        <listitem>citrus:encodeBase64()</listitem>
+        <listitem>citrus:decodeBase64()</listitem>
+        <listitem>citrus:digestAuthHeader()</listitem>
+        <listitem>citrus:localHostAddress()</listitem>
+      </itemizedlist>
+
+      <para>See <xref linkend="functions"/> for detail descriptions of each function.</para>
+    </section>
+
+    <section id="whatsnew-1-2-upgrading">
+      <title>Upgrading from version 1.1</title>
+
+      <para>If you are coming from Citrus 1.1 final you may have to look at the following points.</para>
+
+      <itemizedlist mark="opencircle">
+        <listitem>
+          <para><emphasis>Spring version update</emphasis> We did some major version upgrades on our Spring dependencies. We are now using Spring 3.1.1, Spring Integration 2.1.2 and SpringWS 2.1.0.
+          These new major releases bring some code changes in our Citrus API which might affect your code and configuration, too. So please update your configuration, it is definitely worth it!</para>
+        </listitem>
+        <listitem>
+          <para><emphasis>Spring Integration headers:</emphasis> With 2.0.x version Spring Integration has removed the internal header prefix (&quot;springintegration_&quot;).
+          So in some cases you might use those internal header names in your test cases in order to synchronize synchronous communication with internal message ids. Your test case
+          will fail as long as you use the old Spring internal header prefix in the test. Simply remove the header prefix wherever used and your test is up and running again.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis>Message validator:</emphasis> You need to specify at least one message validator in the citrus-context.xml. Before this was internally a static XML message validator, but now we offer
+          different validators for several message formats like XML and JSON. Please see the Java API doc on MessageValidator interface for available implementations. If you just like to
+          keep it as it was before add this bean to the citrus-context.xml:</para>
+
+          <programlisting>&lt;bean id=&quot;xmlMessageValidator&quot; class=&quot;com.consol.citrus.validation.xml.DomXmlMessageValidator&quot;/&gt;</programlisting>
+        </listitem>
+        <listitem>
+          <para><emphasis>Test suite:</emphasis> We have eliminated/changed the Citrus test suite logic because it duplicates those test suites defined in TestNG or JUnit. In older versions the tester had to define a
+          Citrus test suite in Spring application context in order to execute test actions before/after the test run. Now these tasks before and after the test run are decoupled from a test suite.
+          You define test suites exclusively in TestNG or JUnit. The test actions before/after the test run are seperately defined in citrus-context.xml so you have to change this configuration
+          in your Citrus project.</para>
+          <para>See <xref linkend="testsuite"/> for details on this configuration changes.</para>
+        </listitem>
+        <listitem>
+          <para><emphasis>JUnit vs. TestNG:</emphasis> We support both famous unit testing frameworks JUnit and TestNG. With this release you are free to choose your prefered one. In this manner you need to add
+          either a JUnit dependency or a TestNG dependency to your project on your own. We do not have static dependencies in our Maven POM to neither of those two. On our side these dependencies
+          are declared optional so you feel free to add the one you like best to your Maven POM. Just add a JUnit or TestNG dependency to your Maven project or add the respective jar file to your
+          project if you use ANT instead.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
   </section>
   
   <section id="whatsnew-bugfixes">
     <title>Bugfixes</title>
     
-    <para>Bug fixing is part of our daily business. Finding and solving issues makes Citrus better every day. For a detailed
-    bugfix listing please refer to the complete changes log in JIRA (<ulink url="https://citrusframework.atlassian.net/secure/ReleaseNote.jspa?projectId=10000&amp;version=10003">https://citrusframework.atlassian.net</ulink>).</para>
+    <para>Bug fixing is part of your daily business as a developer. Finding and solving issues makes Citrus better every day. For a detailed
+    bugfix listing please refer to the complete changes log of each release in JIRA (<ulink url="https://citrusframework.atlassian.net/secure/ReleaseNote.jspa?projectId=10000&amp;version=10003">https://citrusframework.atlassian.net</ulink>).</para>
   </section>
-  
-  <section id="whatsnew-upgrading">
-    <title>Upgrading from version 1.2</title>
-    
-    <para>If you are coming from Citrus 1.2 you may have to look at the following points in order to have a smooth upgrade to the new release version.</para>
-    
-    <itemizedlist mark="opencircle">
-        <listitem>
-            <para><emphasis>Jetty version upgrade</emphasis> We are using Jetty a lot for starting Http server mocks within Citrus. In order to stay up to date we upgraded to
-            Jetty 8.1.7 version with this Citrus release. This implies that package names did change for Jetty API. In general there is no conflict for you as a Citrus user, but you may want to
-            adjust your logging configuration according to new Jetty packages. Jetty package names did change from <emphasis>ord.mortbay</emphasis> to <emphasis>org.eclipse.jetty</emphasis>.</para>
-        </listitem>
-        <listitem>
-            <para><emphasis>Spring version upgrade</emphasis> Staying up to date with the versions of 3rd library dependencies is quite important for us. So we upgrade our dependencies to newer versions
-            with each release. As we did only upgrade minor versions there is no significant change or problems to be expected. However you may take care on versions and 
-            release changes in the Spring world for details and migration.</para>
-        </listitem>
-        <listitem>
-            <para><emphasis>TIBCO module</emphasis> We decided to put the TIBCO module separately as it is a very special connectivity adapter for TIBCO software only. So you will not find the TIBCO module
-            within the Citrus distribution anymore. We will maintain a TIBCO connectivity adapter separately in the future.</para>
-        </listitem>
-    </itemizedlist>
-  </section>
+
 </chapter>

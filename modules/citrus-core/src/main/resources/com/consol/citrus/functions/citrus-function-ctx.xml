@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
  * Copyright 2006-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,95 +17,98 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	 
-	<bean id="citrusFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary">
-		<property name="name" value="citrusFunctionLibrary"/>
-		<property name="prefix" value="citrus:"/>
-		<property name="members">
-			<map>
-				<entry key="randomNumber">
-					<bean class="com.consol.citrus.functions.core.RandomNumberFunction"/>
-				</entry>
-				<entry key="randomString">
-					<bean class="com.consol.citrus.functions.core.RandomStringFunction"/>
-				</entry>
-				<entry key="concat">
-					<bean class="com.consol.citrus.functions.core.ConcatFunction"/>
-				</entry>
-				<entry key="currentDate">
-					<bean class="com.consol.citrus.functions.core.CurrentDateFunction"/>
-				</entry>
-				<entry key="substring">
-					<bean class="com.consol.citrus.functions.core.SubstringFunction"/>
-				</entry>
-				<entry key="stringLength">
-					<bean class="com.consol.citrus.functions.core.StringLengthFunction"/>
-				</entry>
-				<entry key="translate">
-					<bean class="com.consol.citrus.functions.core.TranslateFunction"/>
-				</entry>
-				<entry key="substringBefore">
-					<bean class="com.consol.citrus.functions.core.SubstringBeforeFunction"/>
-				</entry>
-				<entry key="substringAfter">
-					<bean class="com.consol.citrus.functions.core.SubstringAfterFunction"/>
-				</entry>
-				<entry key="round">
-					<bean class="com.consol.citrus.functions.core.RoundFunction"/>
-				</entry>
-				<entry key="floor">
-					<bean class="com.consol.citrus.functions.core.FloorFunction"/>
-				</entry>
-				<entry key="ceiling">
-					<bean class="com.consol.citrus.functions.core.CeilingFunction"/>
-				</entry>
-				<entry key="upperCase">
-					<bean class="com.consol.citrus.functions.core.UpperCaseFunction"/>
-				</entry>
-				<entry key="lowerCase">
-					<bean class="com.consol.citrus.functions.core.LowerCaseFunction"/>
-				</entry>
-				<entry key="average">
-					<bean class="com.consol.citrus.functions.core.AvgFunction"/>
-				</entry>
-				<entry key="minimum">
-					<bean class="com.consol.citrus.functions.core.MinFunction"/>
-				</entry>
-				<entry key="maximum">
-					<bean class="com.consol.citrus.functions.core.MaxFunction"/>
-				</entry>
-				<entry key="sum">
-					<bean class="com.consol.citrus.functions.core.SumFunction"/>
-				</entry>
-				<entry key="absolute">
-					<bean class="com.consol.citrus.functions.core.AbsoluteFunction"/>
-				</entry>
-                <entry key="randomEnumValue">
-                    <bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"/>
-                </entry>
-                <entry key="randomUUID">
-                    <bean class="com.consol.citrus.functions.core.RandomUUIDFunction"/>
-                </entry>
-                <entry key="cdataSection">
-                    <bean class="com.consol.citrus.functions.core.CreateCDataSectionFunction"/>
-                </entry>
-                <entry key="escapeXml">
-                    <bean class="com.consol.citrus.functions.core.EscapeXmlFunction"/>
-                </entry>
-                <entry key="encodeBase64">
-                    <bean class="com.consol.citrus.functions.core.EncodeBase64Function"/>
-                </entry>
-                <entry key="decodeBase64">
-                    <bean class="com.consol.citrus.functions.core.DecodeBase64Function"/>
-                </entry>
-                <entry key="digestAuthHeader">
-                    <bean class="com.consol.citrus.functions.core.DigestAuthHeaderFunction"/>
-                </entry>
-                <entry key="localHostAddress">
-                    <bean class="com.consol.citrus.functions.core.LocalHostAddressFunction"/>
-                </entry>
-			</map>
-		</property>
-	</bean>
-	 
+
+  <bean id="citrusFunctionLibrary" class="com.consol.citrus.functions.FunctionLibrary">
+    <property name="name" value="citrusFunctionLibrary"/>
+    <property name="prefix" value="citrus:"/>
+    <property name="members">
+      <map>
+        <entry key="randomNumber">
+          <bean class="com.consol.citrus.functions.core.RandomNumberFunction"/>
+        </entry>
+        <entry key="randomString">
+          <bean class="com.consol.citrus.functions.core.RandomStringFunction"/>
+        </entry>
+        <entry key="concat">
+          <bean class="com.consol.citrus.functions.core.ConcatFunction"/>
+        </entry>
+        <entry key="currentDate">
+          <bean class="com.consol.citrus.functions.core.CurrentDateFunction"/>
+        </entry>
+        <entry key="substring">
+          <bean class="com.consol.citrus.functions.core.SubstringFunction"/>
+        </entry>
+        <entry key="stringLength">
+          <bean class="com.consol.citrus.functions.core.StringLengthFunction"/>
+        </entry>
+        <entry key="translate">
+          <bean class="com.consol.citrus.functions.core.TranslateFunction"/>
+        </entry>
+        <entry key="substringBefore">
+          <bean class="com.consol.citrus.functions.core.SubstringBeforeFunction"/>
+        </entry>
+        <entry key="substringAfter">
+          <bean class="com.consol.citrus.functions.core.SubstringAfterFunction"/>
+        </entry>
+        <entry key="round">
+          <bean class="com.consol.citrus.functions.core.RoundFunction"/>
+        </entry>
+        <entry key="floor">
+          <bean class="com.consol.citrus.functions.core.FloorFunction"/>
+        </entry>
+        <entry key="ceiling">
+          <bean class="com.consol.citrus.functions.core.CeilingFunction"/>
+        </entry>
+        <entry key="upperCase">
+          <bean class="com.consol.citrus.functions.core.UpperCaseFunction"/>
+        </entry>
+        <entry key="lowerCase">
+          <bean class="com.consol.citrus.functions.core.LowerCaseFunction"/>
+        </entry>
+        <entry key="average">
+          <bean class="com.consol.citrus.functions.core.AvgFunction"/>
+        </entry>
+        <entry key="minimum">
+          <bean class="com.consol.citrus.functions.core.MinFunction"/>
+        </entry>
+        <entry key="maximum">
+          <bean class="com.consol.citrus.functions.core.MaxFunction"/>
+        </entry>
+        <entry key="sum">
+          <bean class="com.consol.citrus.functions.core.SumFunction"/>
+        </entry>
+        <entry key="absolute">
+          <bean class="com.consol.citrus.functions.core.AbsoluteFunction"/>
+        </entry>
+        <entry key="randomEnumValue">
+          <bean class="com.consol.citrus.functions.core.RandomEnumValueFunction"/>
+        </entry>
+        <entry key="randomUUID">
+          <bean class="com.consol.citrus.functions.core.RandomUUIDFunction"/>
+        </entry>
+        <entry key="cdataSection">
+          <bean class="com.consol.citrus.functions.core.CreateCDataSectionFunction"/>
+        </entry>
+        <entry key="escapeXml">
+          <bean class="com.consol.citrus.functions.core.EscapeXmlFunction"/>
+        </entry>
+        <entry key="encodeBase64">
+          <bean class="com.consol.citrus.functions.core.EncodeBase64Function"/>
+        </entry>
+        <entry key="decodeBase64">
+          <bean class="com.consol.citrus.functions.core.DecodeBase64Function"/>
+        </entry>
+        <entry key="digestAuthHeader">
+          <bean class="com.consol.citrus.functions.core.DigestAuthHeaderFunction"/>
+        </entry>
+        <entry key="localHostAddress">
+          <bean class="com.consol.citrus.functions.core.LocalHostAddressFunction"/>
+        </entry>
+        <entry key="changeDate">
+          <bean class="com.consol.citrus.functions.core.ChangeDateFunction"/>
+        </entry>
+      </map>
+    </property>
+  </bean>
+
 </beans>

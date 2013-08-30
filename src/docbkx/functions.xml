@@ -535,4 +535,37 @@ uri=http://127.0.0.1:8080,response=51f98c,opaque=b29a30,algorithm=md5&gt;</progr
         
         <para>address = <emphasis>&lt;192.168.2.100&gt;</emphasis></para>
     </section>
+
+    <section id="functions-changedate">
+        <title>citrus:changeDate()</title>
+
+        <para>This function works with date values and manipulates those at runtime by adding or removing a date
+        value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</para>
+
+        <para>Let us clarify this with a simple example for this function:</para>
+
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:changeDate('01.01.2000', '+1y+1M+1d')&lt;/message&gt;
+&lt;/echo&gt;
+&lt;echo&gt;
+    &lt;message&gt;citrus:changeDate(citrus:currentDate(), '-1M')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
+
+        <para>Function output:</para>
+        <para><emphasis>02.02.2001</emphasis></para>
+        <para><emphasis>13.04.2013</emphasis></para>
+
+        <para>As you can see the change date function works on static date values or dynamic variable values or functions like <emphasis>citrus:currentDate()</emphasis>. By default
+        the change date function requires a date format such as the current date function ('dd.MM.yyyy'). You can also define a custom date format:</para>
+
+        <programlisting>&lt;echo&gt;
+    &lt;message&gt;citrus:changeDate('2000-01-10', '-1M-1d', 'yyyy-MM-dd')&lt;/message&gt;
+&lt;/echo&gt;</programlisting>
+
+        <para>Function output:</para>
+        <para><emphasis>1999-12-09</emphasis></para>
+
+        <para>With this you are able to manipulate all date values of static or dynamic nature at test runtime.</para>
+    </section>
+
 </chapter>
