@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class IterateJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void IterateJavaITest() {
         variable("max", "3");
         
         iterate(echo("index is: ${i}")).condition("i lt= citrus:randomNumber(1)").index("i");
@@ -45,10 +45,5 @@ public class IterateJavaITest extends TestNGCitrusTestBuilder {
         iterate(echo("index is: ${i}")).condition("i lt= 50").index("i")
                                        .startsWith(0)
                                        .step(5);
-    }
-    
-    @Test
-    public void iterateITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

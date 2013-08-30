@@ -16,19 +16,19 @@
 
 package com.consol.citrus.javadsl;
 
-import org.springframework.core.io.ClassPathResource;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void SendSoapMessageWithAttachmentJavaITest() {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         
@@ -97,10 +97,5 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                             "<ns0:Success>true</ns0:Success>" +
                         "</ns0:SoapMessageWithAttachmentResponse>")
             .schemaValidation(false);
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

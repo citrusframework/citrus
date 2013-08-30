@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class JmsTopicJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void JmsTopicJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
@@ -69,10 +69,5 @@ public class JmsTopicJavaITest extends TestNGCitrusTestBuilder {
                     .description("Send asynchronous hello request: TestFramework -> HelloService")
            )    
         );
-    }
-    
-    @Test
-    public void jmsTopicITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

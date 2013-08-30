@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class WebServiceClientJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void WebServiceClientJavaITest() {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         
@@ -51,10 +51,5 @@ public class WebServiceClientJavaITest extends TestNGCitrusTestBuilder {
             .header("Request", "HelloRequest")
             .header("Operation", "sayHelloResponse")
             .schemaValidation(false);
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

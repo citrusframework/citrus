@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class RepeatUntilTrueJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void RepeatUntilTrueJavaITest() {
         variable("max", "3");
         
         repeat(echo("index is: ${i}")).until("i gt citrus:randomNumber(1)").index("i");
@@ -41,10 +41,5 @@ public class RepeatUntilTrueJavaITest extends TestNGCitrusTestBuilder {
         repeat(echo("index is: ${i}")).until("i gt 0").index("i");
         
         repeat(echo("index is: ${i}")).until("${max} lt i").index("i");
-    }
-    
-    @Test
-    public void repeatUntilTrueITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void XMLValidationMatcherJavaITest() {
         variable("greetingText", "Hello Citrus");      
         
         parallel(
@@ -74,10 +74,5 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
              .header("citrus_http_status_code", "200")
              .header("citrus_http_version", "HTTP/1.1")
              .header("citrus_http_reason_phrase", "OK");
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void SendReplyToJavaITest() {
         variable("operation", "GetDate");
         variable("conversationId", "123456789");
         
@@ -92,10 +92,5 @@ public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
                     .timeout(5000L)
             )
         );
-    }
-    
-    @Test
-    public void sendReplyToITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

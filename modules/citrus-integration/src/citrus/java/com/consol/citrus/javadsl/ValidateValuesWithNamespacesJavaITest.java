@@ -16,23 +16,23 @@
 
 package com.consol.citrus.javadsl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ValidateValuesWithNamespacesJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     private NamespaceContextBuilder namespaceContextBuilder;
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void ValidateValuesWithNamespacesJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
@@ -167,10 +167,5 @@ public class ValidateValuesWithNamespacesJavaITest extends TestNGCitrusTestBuild
             .extractFromPayload("/def:HelloResponse/def:Text", "extractedText");
         
         groovy("assert context.getVariable('extractedText') == 'Hello ${user}'");
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

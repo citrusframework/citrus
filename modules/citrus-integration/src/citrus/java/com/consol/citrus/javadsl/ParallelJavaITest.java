@@ -16,19 +16,19 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ParallelJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void ParallelJavaITest() {
         parallel(
             sleep(1.5), 
             sequential(
@@ -58,10 +58,5 @@ public class ParallelJavaITest extends TestNGCitrusTestBuilder {
                 ).condition("i lt= 5").index("i")
             )
         ).exception(CitrusRuntimeException.class);
-    }
-    
-    @Test
-    public void parallelITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

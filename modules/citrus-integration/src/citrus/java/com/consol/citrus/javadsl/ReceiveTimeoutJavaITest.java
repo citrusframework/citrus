@@ -16,30 +16,25 @@
 
 package com.consol.citrus.javadsl;
 
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.message.MessageReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.message.MessageReceiver;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ReceiveTimeoutJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     @Qualifier("dummyMessageReceiver")
     private MessageReceiver messageReceiver;
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void ReceiveTimeoutJavaITest() {
         expectTimeout(messageReceiver).timeout(500);
-    }
-    
-    @Test
-    public void receiveTimeoutITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

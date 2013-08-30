@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class StopTimeJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void StopTimeJavaITest() {
         stopTime();
         stopTime("watchId");
         sleep(1000L);
@@ -35,10 +35,5 @@ public class StopTimeJavaITest extends TestNGCitrusTestBuilder {
         sleep(2000L);
         stopTime();
         stopTime("watchId");
-    }
-    
-    @Test
-    public void stopTimeITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

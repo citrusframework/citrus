@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class LoadPropertiesJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void LoadPropertiesJavaITest() {
         variable("checkDate", "citrus:currentDate('yyyy-MM-dd')");
         
         load("classpath:com/consol/citrus/actions/load.properties");
@@ -49,10 +49,5 @@ public class LoadPropertiesJavaITest extends TestNGCitrusTestBuilder {
                   "Assert.assertEquals(\"${todayDate}\", \"${checkDate}\")\n" +
               "}\n" +
           "}\n");
-    }
-    
-    @Test
-    public void loadPropertiesITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

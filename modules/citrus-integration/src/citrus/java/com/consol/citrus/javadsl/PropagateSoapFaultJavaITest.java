@@ -16,6 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
@@ -24,10 +25,11 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class PropagateSoapFaultJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void PropagateSoapFaultJavaITest() {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         

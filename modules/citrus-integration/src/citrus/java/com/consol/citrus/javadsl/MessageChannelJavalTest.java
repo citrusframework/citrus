@@ -16,21 +16,21 @@
 
 package com.consol.citrus.javadsl;
 
-import java.util.*;
-
-import org.testng.ITestContext;
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.message.MessageType;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.message.MessageType;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class MessageChannelJavalTest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void MessageChannelJavalTest() {
         send("channelRequestSender")
             .payload("Hello Citrus")
             .header("Operation", "sayHello");
@@ -222,10 +222,5 @@ public class MessageChannelJavalTest extends TestNGCitrusTestBuilder {
                     "</ns:text>" +
                 "</ns:HelloMessage>")
             .header("Operation", "sayHello");
-    }
-    
-    @Test
-    public void messageChannelTest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

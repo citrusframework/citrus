@@ -16,28 +16,23 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class SequentialJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void SequentialJavaITest() {
         sequential(
             stopTime(),
             sleep(1.0),
             echo("Hello Citrus"),
             stopTime()
         );
-    }
-    
-    @Test
-    public void sequentialITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

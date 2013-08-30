@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class WsAddressingJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void WsAddressingJavaITest() {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         
@@ -43,10 +43,5 @@ public class WsAddressingJavaITest extends TestNGCitrusTestBuilder {
                 .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello")
         ).faultString("One or more mandatory SOAP header blocks not understood")
         .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand");
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

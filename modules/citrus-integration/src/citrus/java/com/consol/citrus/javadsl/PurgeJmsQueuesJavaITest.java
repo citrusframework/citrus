@@ -16,19 +16,19 @@
 
 package com.consol.citrus.javadsl;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
-
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import javax.jms.ConnectionFactory;
+import javax.jms.Queue;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class PurgeJmsQueuesJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
@@ -47,8 +47,8 @@ public class PurgeJmsQueuesJavaITest extends TestNGCitrusTestBuilder {
     @Qualifier("testQueue3")
     private Queue queue3;
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void PurgeJmsQueuesJavaITest() {
         purgeQueues()
             .queue("Citrus.Queue.Dummy")
             .queue("Citrus.Queue.Dummy.One.In")
@@ -76,10 +76,5 @@ public class PurgeJmsQueuesJavaITest extends TestNGCitrusTestBuilder {
             .queue("Citrus.Queue.Dummy.One.Out")
             .queue("Citrus.Queue.Dummy.Three.In")
             .queue("Citrus.Queue.Dummy.Three.Out");
-    }
-    
-    @Test
-    public void purgeJmsQueuesITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

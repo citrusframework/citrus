@@ -16,19 +16,19 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class RepeatOnErrorJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void RepeatOnErrorJavaITest() {
         variable("message", "Hello TestFramework");
         
         repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");
@@ -42,10 +42,5 @@ public class RepeatOnErrorJavaITest extends TestNGCitrusTestBuilder {
             ).until("i = 3").index("i")
         ).exception(CitrusRuntimeException.class);
         
-    }
-    
-    @Test
-    public void repeatOnErrorITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

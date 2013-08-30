@@ -16,19 +16,19 @@
 
 package com.consol.citrus.javadsl;
 
-import org.springframework.core.io.ClassPathResource;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class JmsCommunicationJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void JmsCommunicationJavaITest() {
         String operation = "sayHello";
         
         variable("correlationId", "citrus:randomNumber(10)");
@@ -66,10 +66,5 @@ public class JmsCommunicationJavaITest extends TestNGCitrusTestBuilder {
             .payload(new ClassPathResource("com/consol/citrus/actions/helloResponse.xml"))
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}");
-    }
-    
-    @Test
-    public void jmsCommunicationITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

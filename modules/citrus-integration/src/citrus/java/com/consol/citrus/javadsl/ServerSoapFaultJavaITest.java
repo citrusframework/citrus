@@ -16,25 +16,25 @@
 
 package com.consol.citrus.javadsl;
 
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     @Qualifier("xmlSoapFaultValidator")
     private SoapFaultValidator soapFaultValidator;
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void ServerSoapFaultJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
@@ -292,10 +292,5 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
         echo("Test XML multiple soap fault detail elements validation");
         
         //TODO code test
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

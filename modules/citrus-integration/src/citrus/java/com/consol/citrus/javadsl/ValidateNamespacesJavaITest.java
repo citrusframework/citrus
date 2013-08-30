@@ -16,19 +16,19 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.ValidationException;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ValidateNamespacesJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void ValidateNamespacesJavaITest() {
         echo("Test: Success with single namespace validation");
         
         send("testMessageSender")
@@ -127,10 +127,5 @@ public class ValidateNamespacesJavaITest extends TestNGCitrusTestBuilder {
                 .validateNamespace("trq", "http://www.consol.de/schemas/test")
                 .timeout(5000)
         ).exception(ValidationException.class);
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }
