@@ -201,7 +201,7 @@
         &lt;value&gt;
         &lt;![CDATA[
             &lt;ns0:Response 
-                xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sample.xsd&quot;&gt;
+                xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
                 &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
                 &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
                 &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;

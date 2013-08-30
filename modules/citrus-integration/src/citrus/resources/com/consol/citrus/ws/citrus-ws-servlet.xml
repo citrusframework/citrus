@@ -17,9 +17,9 @@
         <property name="mappings">
             <props>
                 <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sample.xsd}SoapProbingRequest">probingServiceEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
+                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}SoapProbingRequest">probingServiceEndpoint</prop>
             </props>
         </property>
         <property name="interceptors">

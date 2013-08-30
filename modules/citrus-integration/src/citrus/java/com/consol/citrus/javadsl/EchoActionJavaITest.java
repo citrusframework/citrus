@@ -16,25 +16,20 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class EchoActionJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void EchoActionJavaITest() {
         echo("Hello Citrus!");
         
         echo("Today is citrus:currentDate()");
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

@@ -32,7 +32,7 @@ public class PropagateSoapFaultJavaITest extends TestNGCitrusTestBuilder {
         variable("soapFaultString", "Invalid request");
         
         send("webServiceFaultPropagatingHelloRequestSender")
-            .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sample.xsd\">" +
+            .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                             "</ns0:SoapFaultForcingRequest>");
         

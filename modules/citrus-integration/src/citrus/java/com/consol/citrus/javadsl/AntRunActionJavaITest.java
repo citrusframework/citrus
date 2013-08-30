@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class AntRunActionJavaITest extends TestNGCitrusTestBuilder {
-    
-    @Override
-    public void configure() {
+
+    @CitrusTest
+    public void AntRunActionJavaITest() {
         variable("welcomeText", "Hello Citrus today is citrus:currentDate()!");
         variable("checked", "true");
         
@@ -45,10 +45,5 @@ public class AntRunActionJavaITest extends TestNGCitrusTestBuilder {
         antrun("classpath:com/consol/citrus/actions/build.xml")
             .target("checkMe")
             .propertyFile("classpath:com/consol/citrus/actions/build.properties");
-    }
-    
-    @Test
-    public void antRunActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

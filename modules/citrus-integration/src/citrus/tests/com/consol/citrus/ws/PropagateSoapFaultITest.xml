@@ -25,7 +25,7 @@
                 <message>
                     <data>
                         <![CDATA[
-                            <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sample.xsd">
+                            <ns0:SoapFaultForcingRequest xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
                                 <ns0:Message>This is invalid</ns0:Message>
                             </ns0:SoapFaultForcingRequest>
                         ]]>
