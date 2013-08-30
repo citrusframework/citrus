@@ -33,7 +33,4 @@ import java.lang.annotation.Target;
 public @interface CitrusTest {
     /** Test name optional -  by default method name is used as test name */
     public String name() default "";
-
-    /** Enable/disable test case in annotation */
-    public boolean enabled() default true;
 }

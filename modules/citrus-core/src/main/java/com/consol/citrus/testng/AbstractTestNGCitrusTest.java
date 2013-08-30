@@ -34,14 +34,13 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.*;
-import org.testng.ITestContext;
-import org.testng.Reporter;
+import org.springframework.util.Assert;
+import org.testng.*;
 import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Abstract base test implementation for testng test cases. Providing test listener support and
@@ -72,34 +71,43 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /** Parameter values provided from external logic */
     private Object[][] allParameters;
 
-    @Factory
-    public Object[] testFactory() {
-        List<TestRunner> testRunners = createTestRunners();
-        return testRunners.toArray(new Object[testRunners.size()]);
+    /** Collection of test runners for annotated methods */
+    private Map<String, List<TestRunner>> testRunners = new HashMap<String, List<TestRunner>>();
+
+    @Override
+    public void run(IHookCallBack callBack, ITestResult testResult) {
+        Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
+
+        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
+            List<TestRunner> methodTestRunners = testRunners.get(method.getName());
+
+            if (methodTestRunners != null) {
+                for (TestRunner testRunner : methodTestRunners) {
+                    try {
+                        testRunner.run();
+                    } catch (Throwable t) {
+                        testResult.setThrowable(t);
+                        testResult.setStatus(ITestResult.FAILURE);
+                    }
+                }
+            }
+
+            super.run(new FakeExecutionCallBack(callBack.getParameters()), testResult);
+        } else {
+            super.run(callBack, testResult);
+        }
     }
 
     /**
-     * Method dynamically creates test runners for multiple tests contained in this test class.
-     * Usually several test annotated methods in subclass reside in separate test case executed
-     * by a test runner instance. Tests created are handled by test factory at runtime.
-     * @return
+     * Creates test runners from @CitrusXmlTest annotated test methods and saves those to local member.
+     * Test runners get executed later when actual method is called by TestNG. This way user can annotate
+     * multiple methods in one single class each executing several Citrus XML tests.
      */
-    protected List<TestRunner> createTestRunners() {
-        List<TestRunner> tests = new ArrayList<TestRunner>();
-
+    @BeforeClass(alwaysRun = true)
+    public void createTestRunners() {
         for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
             if (method.getAnnotation(CitrusXmlTest.class) != null) {
                 CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
-
-                if (!citrusTestAnnotation.enabled()) {
-                    continue;
-                }
-
-                try {
-                    springTestContextPrepareTestInstance();
-                } catch (Exception e) {
-                    throw new CitrusRuntimeException("Unable to prepare Spring application context", e);
-                }
 
                 String[] testNames = new String[] {};
                 if (citrusTestAnnotation.names().length > 0) {
@@ -116,10 +124,13 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     testPackage = method.getDeclaringClass().getPackage().getName();
                 }
 
+                List<TestRunner> methodTestRunners = new ArrayList<TestRunner>();
+                testRunners.put(method.getName(), methodTestRunners);
+
                 for (String testName : testNames) {
                     TestContext testContext = prepareTestContext(createTestContext());
 
-                    tests.add(createTestRunner(testName, testPackage, testContext));
+                    methodTestRunners.add(createTestRunner(testName, testPackage, testContext));
                 }
 
                 String[] testPackages = citrusTestAnnotation.packagesToScan();
@@ -133,7 +144,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                             String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
                             filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
 
-                            tests.add(createTestRunner(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath, testContext));
+                            methodTestRunners.add(createTestRunner(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath, testContext));
                         }
                     } catch (IOException e) {
                         throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'");
@@ -141,8 +152,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 }
             }
         }
-
-        return tests;
     }
 
     /**
@@ -343,5 +352,27 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected Object[][] getParameterValues() {
         return new Object[][] { {} };
+    }
+
+    /**
+     * Class faking test execution as callback. Used in run hookable method when test case
+     * was executed before and callback is needed for super class run method invocation.
+     */
+    protected class FakeExecutionCallBack implements IHookCallBack {
+        private Object[] parameters;
+
+        public FakeExecutionCallBack(Object[] parameters) {
+            this.parameters = parameters;
+        }
+
+        @Override
+        public void runTestMethod(ITestResult testResult) {
+            // do nothing as test case was already executed
+        }
+
+        @Override
+        public Object[] getParameters() {
+            return parameters;
+        }
     }
 }

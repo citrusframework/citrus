@@ -18,9 +18,6 @@ public @interface CitrusXmlTest {
     /** Test package name optional -  by default package of declaring test class is used */
     public String packageName() default "";
 
-    /** Enable/disable test case in annotation */
-    public boolean enabled() default true;
-
     /** Test packages to scan for XML test case definitions */
     public String[] packagesToScan() default {};
 

@@ -18,7 +18,6 @@ package com.consol.citrus.testng;
 
 import com.consol.citrus.context.TestContext;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.Test;
 
 /**
  * Abstract test runner executes Citrus test case instance at runtime.
@@ -38,7 +37,6 @@ public abstract class AbstractTestRunner implements TestRunner {
         this.testContext = testContext;
     }
 
-    @Test
     public void run() {
         getTestCase().execute(testContext);
     }
