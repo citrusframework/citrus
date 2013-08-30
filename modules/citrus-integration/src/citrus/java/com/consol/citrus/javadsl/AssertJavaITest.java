@@ -16,22 +16,22 @@
 
 package com.consol.citrus.javadsl;
 
-import java.io.IOException;
-
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class AssertJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void AssertJavaITest() {
         variable("failMessage", "Something went wrong!");
         
         assertException(fail("Fail once"))
@@ -70,10 +70,5 @@ public class AssertJavaITest extends TestNGCitrusTestBuilder {
                     .exception(CitrusRuntimeException.class)
                     .message("Must be failing"))
                 .exception(ValidationException.class);
-    }
-    
-    @Test
-    public void assertITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

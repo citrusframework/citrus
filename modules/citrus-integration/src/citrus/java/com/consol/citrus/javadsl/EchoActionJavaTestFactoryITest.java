@@ -16,12 +16,14 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class EchoActionJavaTestFactoryITest extends TestNGCitrusTestBuilder {
 
     @CitrusTest(name = "EchoFactoryTest1")

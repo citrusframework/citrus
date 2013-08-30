@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  */
 @Test
 public class EchoActionJavaITest extends TestNGCitrusTestBuilder {
-    
+
     @CitrusTest
     public void EchoActionJavaITest() {
         echo("Hello Citrus!");
