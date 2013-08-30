@@ -144,10 +144,14 @@
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">import org.testng.ITestContext;
 import org.testng.annotations.Test;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
+@Test
 public class SendMessageTest extends TestNGCitrusTestBuilder {
-    protected void configure() {
+
+    @CitrusTest(name = "SendMessageTest")
+    protected void sendMessageTest() {
         description("Basic send message example");
     
         variable("requestTag", "Rx123456789");
@@ -169,11 +173,6 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
                     "&lt;/RequestMessage&gt;")
             .header("Operation", "GetCustomer")
             .header("RequestTag", "${requestTag}");
-    }
-    
-    @Test
-    public void doTest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }</programlisting>
 

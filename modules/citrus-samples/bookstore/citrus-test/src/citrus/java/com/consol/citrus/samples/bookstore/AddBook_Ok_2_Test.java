@@ -16,25 +16,25 @@
 
 package com.consol.citrus.samples.bookstore;
 
-import java.util.Calendar;
-
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.samples.bookstore.model.*;
+import com.consol.citrus.validation.MarshallingValidationCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.oxm.Marshaller;
 import org.springframework.util.Assert;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.samples.bookstore.model.*;
-import com.consol.citrus.validation.MarshallingValidationCallback;
+import java.util.Calendar;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class AddBook_Ok_2_Test extends TestNGCitrusTestBuilder {
 
     @Autowired
@@ -48,8 +48,8 @@ public class AddBook_Ok_2_Test extends TestNGCitrusTestBuilder {
     @Autowired
     private Marshaller marshaller;
 
-    @Override
-    protected void configure() {
+    @CitrusTest
+    public void AddBook_Ok_2_Test() {
         String isbn = "978-citrus:randomNumber(10)";
         
         send(bookRequestMessageSender)
@@ -63,11 +63,6 @@ public class AddBook_Ok_2_Test extends TestNGCitrusTestBuilder {
                     Assert.isTrue(response.isSuccess());
                 }
             });
-    }
-    
-    @Test
-    public void runTest(ITestContext testContext) {
-        executeTest(testContext);
     }
     
     /**

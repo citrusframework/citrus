@@ -16,10 +16,9 @@
 
 package com.consol.citrus.samples.bookstore;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * TODO: Description
@@ -30,8 +29,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 public class ListBooks_OK_1_Test extends AbstractTestNGCitrusTest {
     
     @Test
-    public void listBooks_OK_1_Test(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void ListBooks_OK_1_Test() {}
 
 }

@@ -103,28 +103,26 @@
     pure Java. Let us have a look at a first Java test example:</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">import org.testng.ITestContext;
+    <programlisting language="java">
 import org.testng.annotations.Test;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
+@Test
 public class MyFirstTest extends TestNGCitrusTestBuilder {
-    protected void configure() {
+    @CitrusTest(name = "MyFirstTest")
+    protected void myFirstTest() {
         description("First example showing the basic test case definition elements!");
     
         variable("text", "Hello Test Framework");
     
         echo(${test});
     }
-    
-    @Test
-    public void doTest(ITestContext testContext) {
-        executeTest(testContext);
-    }
 }</programlisting>
     
-    <para>Citrus provides a base builder Java class that provides all capabilities for you in form of builder pattern methods. You are forced to implement the configure() method 
-    which explains the test logic. The test actions defined inside the configure() method will be called later on during test runtime sequence. For completion we need a TestNG 
-    annotated method that executes the test case for us.</para>
+    <para>Citrus provides a base builder Java class that provides all capabilities for you in form of builder pattern methods. Just use the @CitrusTest annotation on top of the test method.
+    Citrus will use the method name as the test name by default. As you can see in the example above you can also customize the test name within the @CitrusTest annotation. The test method
+    builds all test actions using the test builder pattern. The defined test actions will then be called later on during test runtime.</para>
     
     <para>This is the basic test Java class pattern used in Citrus. You as a tester with development background can easily extend this pattern for customized logic. Again if you are
     coming without coding experience do not worry this Java code is optional. You can do exactly the same with the XML syntax only.</para>
