@@ -1,7 +1,7 @@
 package com.consol.citrus.ssh;
 
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 /**
@@ -11,7 +11,6 @@ import org.testng.annotations.Test;
 public class SshServerITest extends AbstractTestNGCitrusTest {
     
     @Test
-    public void sshServerITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void SshServerITest() {}
 }

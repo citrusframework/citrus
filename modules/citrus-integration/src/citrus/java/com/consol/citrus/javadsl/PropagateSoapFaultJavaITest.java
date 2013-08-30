@@ -16,11 +16,9 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.annotations.CitrusTest;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -45,10 +43,5 @@ public class PropagateSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                             "</SOAP-ENV:Fault>")
             .schemaValidation(false)
             .timeout(5000L);
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

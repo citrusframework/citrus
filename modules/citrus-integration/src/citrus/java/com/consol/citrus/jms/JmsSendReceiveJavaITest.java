@@ -16,19 +16,20 @@
 
 package com.consol.citrus.jms;
 
-import java.util.Collections;
-
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.core.io.ClassPathResource;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class JmsSendReceiveJavaITest extends AbstractJmsTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void JmsSendReceiveJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");
         variable("correlationIdA", "citrus:randomNumber(10)");
         variable("correlationIdB", "citrus:randomNumber(10)");      
@@ -131,10 +132,5 @@ public class JmsSendReceiveJavaITest extends AbstractJmsTestBuilder {
                 .header("Operation", "sayHello")
                 .timeout(300))
             .exception(com.consol.citrus.exceptions.ActionTimeoutException.class);
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

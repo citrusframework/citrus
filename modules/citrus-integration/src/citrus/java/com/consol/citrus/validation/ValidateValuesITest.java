@@ -16,10 +16,9 @@
 
 package com.consol.citrus.validation;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -27,7 +26,6 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class ValidateValuesITest extends AbstractTestNGCitrusTest {
     @Test
-    public void validateValuesITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void ValidateValuesITest() {}
 }

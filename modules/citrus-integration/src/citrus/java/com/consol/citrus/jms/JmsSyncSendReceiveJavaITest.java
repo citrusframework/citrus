@@ -16,17 +16,18 @@
 
 package com.consol.citrus.jms;
 
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.core.io.ClassPathResource;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class JmsSyncSendReceiveJavaITest extends AbstractJmsTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void JmsSyncSendReceiveJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
@@ -64,10 +65,5 @@ public class JmsSyncSendReceiveJavaITest extends AbstractJmsTestBuilder {
             .payload(new ClassPathResource("com/consol/citrus/jms/helloResponse.xml"))
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationId}");
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

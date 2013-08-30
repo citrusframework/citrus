@@ -16,17 +16,15 @@
 
 package com.consol.citrus.ws;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 public class SoapHttpErrorITest extends AbstractTestNGCitrusTest {
     @Test
-    public void soapHttpErrorITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void SoapHttpErrorITest() {}
 }

@@ -16,17 +16,15 @@
 
 package com.consol.citrus.validation;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 public class JsonGroovyValidationITest extends AbstractTestNGCitrusTest {
     @Test
-    public void jsonTextValidationITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void JsonGroovyValidationITest() {}
 }

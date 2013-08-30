@@ -16,10 +16,9 @@
 
 package com.consol.citrus.variables;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * Test the use of property loader with global variables and general variable support.
@@ -31,7 +30,6 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class GlobalVariablesITest extends AbstractTestNGCitrusTest {
     @Test
-    public void globalVariablesITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void GlobalVariablesITest() {}
 }

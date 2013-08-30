@@ -16,10 +16,9 @@
 
 package com.consol.citrus.variables;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Jan Lipphaus
@@ -27,7 +26,6 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class ScriptVariablesITest extends AbstractTestNGCitrusTest {
     @Test
-    public void scriptVaribalesITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void ScriptVariablesITest() {}
 }

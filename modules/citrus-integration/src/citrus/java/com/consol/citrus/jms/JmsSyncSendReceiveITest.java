@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms;
 
-import org.testng.ITestContext;
+import com.consol.citrus.annotations.CitrusXmlTest;
 import org.testng.annotations.Test;
 
 /**
@@ -24,7 +24,6 @@ import org.testng.annotations.Test;
  */
 public class JmsSyncSendReceiveITest extends AbstractJmsTest {
     @Test
-    public void jmsSyncSendReceiveITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void JmsSyncSendReceiveITest() {}
 }
