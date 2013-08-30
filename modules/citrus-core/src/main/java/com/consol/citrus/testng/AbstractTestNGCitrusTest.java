@@ -52,6 +52,7 @@ import java.util.*;
                                     "classpath:citrus-context.xml", 
                                     "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
                                     "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
+@Listeners( { CitrusMethodInterceptor.class } )
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -81,14 +82,12 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
             List<TestRunner> methodTestRunners = testRunners.get(method.getName());
 
-            if (methodTestRunners != null) {
-                for (TestRunner testRunner : methodTestRunners) {
-                    try {
-                        testRunner.run();
-                    } catch (Throwable t) {
-                        testResult.setThrowable(t);
-                        testResult.setStatus(ITestResult.FAILURE);
-                    }
+            if (!CollectionUtils.isEmpty(methodTestRunners)) {
+                try {
+                    methodTestRunners.remove(0).run();
+                } catch (Throwable t) {
+                    testResult.setThrowable(t);
+                    testResult.setStatus(ITestResult.FAILURE);
                 }
             }
 
@@ -165,8 +164,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected TestRunner createTestRunner(String beanName, String packageName, TestContext testContext) {
         CitrusXmlTestRunner testRunner = new CitrusXmlTestRunner(beanName, packageName, applicationContext, testContext);
-        testRunner.setTestName(String.format("%s(%s)",
-                this.getClass().getSimpleName(), beanName));
         return testRunner;
     }
 
@@ -355,6 +352,14 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     }
 
     /**
+     * Gets this classes test runners.
+     * @return
+     */
+    public Map<String, List<TestRunner>> getTestRunners() {
+        return testRunners;
+    }
+
+    /**
      * Class faking test execution as callback. Used in run hookable method when test case
      * was executed before and callback is needed for super class run method invocation.
      */
@@ -374,5 +379,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         public Object[] getParameters() {
             return parameters;
         }
+
     }
 }

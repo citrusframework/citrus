@@ -17,23 +17,16 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
-import org.testng.ITest;
 
 /**
  * Test runner interface.
  * @author Christoph Deppisch
  */
-public interface TestRunner extends Runnable, ITest {
+public interface TestRunner extends Runnable {
 
     /**
      * Gets the test case instance.
      * @return
      */
     TestCase getTestCase();
-
-    /**
-     * Sets the test name explicitly.
-     * @param testName
-     */
-    void setTestName(String testName);
 }

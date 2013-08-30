@@ -17,7 +17,6 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract test runner executes Citrus test case instance at runtime.
@@ -27,7 +26,6 @@ public abstract class AbstractTestRunner implements TestRunner {
 
     /** This runners test case and context */
     private final TestContext testContext;
-    private String testName;
 
     /**
      * Default constructor using the test context field.
@@ -39,23 +37,6 @@ public abstract class AbstractTestRunner implements TestRunner {
 
     public void run() {
         getTestCase().execute(testContext);
-    }
-
-    @Override
-    public String getTestName() {
-        if (StringUtils.hasText(testName)) {
-            return testName;
-        } else {
-            return getTestCase().getName();
-        }
-    }
-
-    /**
-     * Sets custom test name used in unit test execution.
-     * @param testName
-     */
-    public void setTestName(String testName) {
-        this.testName = testName;
     }
 
     /**
