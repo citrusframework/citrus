@@ -223,7 +223,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     private void handleTestParameters(TestCase testCase, TestContext ctx) {
         if (allParameters != null) {
-            Parameters parametersAnnotation = Reporter.getCurrentTestResult().getMethod().getMethod().getAnnotation(Parameters.class);
+            Parameters parametersAnnotation = Reporter.getCurrentTestResult().getMethod().getConstructorOrMethod().getMethod().getAnnotation(Parameters.class);
             if (parametersAnnotation == null) {
                 throw new CitrusRuntimeException("Missing Parameters annotation, " +
                         "please provide parameter names with this annotation when using Citrus data provider!");
