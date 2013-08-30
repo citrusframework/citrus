@@ -249,13 +249,25 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     " parameter names defined with " + parameterValues.length + " parameter values available");
         }
 
-        String[] parameters = new String[parameterValues.length];
-        for (int k = 0; k < parameterValues.length; k++) {
-            ctx.setVariable(parameterNames[k], parameterValues[k]);
-            parameters[k] = "'" + parameterValues[k] + "'";
+        for (int i = 0; i < parameterValues.length; i++) {
+            ctx.setVariable(parameterNames[i], parameterValues[i]);
         }
 
-        testCase.setParameters(parameters);
+        testCase.setParameters(convertParameterValues(parameterValues));
+    }
+
+    /**
+     * Converts object parameter array to string array for test case.
+     * @param parameterValues
+     * @return
+     */
+    protected String[] convertParameterValues(Object[] parameterValues) {
+        String[] parameters = new String[parameterValues.length];
+        for (int i = 0; i < parameterValues.length; i++) {
+            parameters[i] = "'" + parameterValues[i] + "'";
+        }
+
+        return parameters;
     }
 
     /**

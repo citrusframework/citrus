@@ -29,8 +29,7 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.testng.*;
 
 import javax.jms.ConnectionFactory;
@@ -65,7 +64,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                 name(method.getName());
             }
 
-            ReflectionUtils.invokeMethod(method, this);
+            if (getParameterValues().length > 0) {
+                Object[] parameterValues = getParameterValues()[testResult.getMethod().getCurrentInvocationCount()];
+                testBuilder.getTestCase().setParameters(convertParameterValues(parameterValues));
+                ReflectionUtils.invokeMethod(method, this, parameterValues);
+            } else {
+                ReflectionUtils.invokeMethod(method, this);
+            }
 
             TestContext testContext = prepareTestContext(createTestContext());
             TestCase testCase = testBuilder.getTestCase();
