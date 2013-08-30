@@ -16,20 +16,18 @@
 
 package com.consol.citrus.samples.greeting.jms;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2010
  */
 public class GreetingJmsTest extends AbstractTestNGCitrusTest {
-
     @Test
-    public void greetingJmsTest(ITestContext testContext) {
-        executeTest(testContext);
+    @CitrusXmlTest
+    public void GreetingJmsTest() {
     }
     
 }

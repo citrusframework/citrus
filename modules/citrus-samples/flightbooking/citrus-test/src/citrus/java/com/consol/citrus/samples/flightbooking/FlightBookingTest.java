@@ -16,20 +16,19 @@
 
 package com.consol.citrus.samples.flightbooking;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2010
  */
+@Test
 public class FlightBookingTest extends AbstractTestNGCitrusTest {
     
-    @Test
-    public void flightBookingTest(ITestContext testContext) {
-        executeTest(testContext);
+    @CitrusXmlTest
+    public void FlightBookingTest() {
     }
 
 }
