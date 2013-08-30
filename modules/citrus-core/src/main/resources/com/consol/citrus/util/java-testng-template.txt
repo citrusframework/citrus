@@ -1,8 +1,8 @@
 package @test.package@;
 
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
@@ -11,9 +11,9 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  * \@author @test.author@
  * \@since @test.creation.date@
  */
+\@Test
 public class @test.name@ extends AbstractTestNGCitrusTest {
-    \@Test
-    public void @test.method.name@(ITestContext testContext) {
-        executeTest(testContext);
-    }
+
+    \@CitrusXmlTest(names = "@test.name@")
+    public void @test.method.name@() {}
 }
