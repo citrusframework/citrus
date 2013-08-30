@@ -16,17 +16,15 @@
 
 package com.consol.citrus.container;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 public class TemplateAdvancedITest extends AbstractTestNGCitrusTest {
     @Test
-    public void templateAdvancedITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void TemplateAdvancedITest() {}
 }

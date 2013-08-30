@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class InputActionJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void InputActionJavaITest() {
+    public void InputActionJavaITest() {
         variable("userinput", "");
         variable("userinput1", "");
         variable("userinput2", "y");

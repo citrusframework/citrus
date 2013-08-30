@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SleepActionJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void SleepActionJavaITest() {
+    public void SleepActionJavaITest() {
         sleep(0.5);
         sleep();
     }

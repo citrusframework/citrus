@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SequentialJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void SequentialJavaITest() {
+    public void SequentialJavaITest() {
         sequential(
             stopTime(),
             sleep(1.0),

@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void SendReplyToJavaITest() {
+    public void SendReplyToJavaITest() {
         variable("operation", "GetDate");
         variable("conversationId", "123456789");
         

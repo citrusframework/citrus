@@ -111,7 +111,7 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 @Test
 public class MyFirstTest extends TestNGCitrusTestBuilder {
     @CitrusTest(name = "MyFirstTest")
-    protected void myFirstTest() {
+    public void myFirstTest() {
         description("First example showing the basic test case definition elements!");
     
         variable("text", "Hello Test Framework");

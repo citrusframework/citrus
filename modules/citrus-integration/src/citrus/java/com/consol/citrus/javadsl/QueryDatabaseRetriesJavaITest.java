@@ -35,7 +35,7 @@ public class QueryDatabaseRetriesJavaITest extends TestNGCitrusTestBuilder {
     private DataSource dataSource;
     
     @CitrusTest
-    protected void QueryDatabaseRetriesJavaITest() {
+    public void QueryDatabaseRetriesJavaITest() {
         parallel(
             sequential(
                 sql(dataSource)

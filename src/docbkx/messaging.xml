@@ -151,7 +151,7 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 public class SendMessageTest extends TestNGCitrusTestBuilder {
 
     @CitrusTest(name = "SendMessageTest")
-    protected void sendMessageTest() {
+    public void sendMessageTest() {
         description("Basic send message example");
     
         variable("requestTag", "Rx123456789");

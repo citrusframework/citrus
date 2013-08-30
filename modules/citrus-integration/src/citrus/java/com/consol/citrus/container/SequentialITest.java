@@ -16,10 +16,9 @@
 
 package com.consol.citrus.container;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -27,7 +26,6 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class SequentialITest extends AbstractTestNGCitrusTest {
     @Test
-    public void sequentialITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void SequentialITest() {}
 }

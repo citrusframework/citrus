@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class HttpServerStandaloneJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void HttpServerStandaloneJavaITest() {
+    public void HttpServerStandaloneJavaITest() {
         variable("custom_header_id", "123456789");
         
         send("httpMessageSenderStandalone")

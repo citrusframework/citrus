@@ -16,8 +16,8 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 /**
@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
  */
 public class ConditionalITest extends AbstractTestNGCitrusTest {
     @Test
-    public void conditionalITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void ConditionalITest() {}
 }

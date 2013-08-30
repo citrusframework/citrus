@@ -34,7 +34,7 @@ public class ReceiveTimeoutJavaITest extends TestNGCitrusTestBuilder {
     private MessageReceiver messageReceiver;
     
     @CitrusTest
-    protected void ReceiveTimeoutJavaITest() {
+    public void ReceiveTimeoutJavaITest() {
         expectTimeout(messageReceiver).timeout(500);
     }
 }

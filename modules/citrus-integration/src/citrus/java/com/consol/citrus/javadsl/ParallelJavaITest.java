@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class ParallelJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void ParallelJavaITest() {
+    public void ParallelJavaITest() {
         parallel(
             sleep(1.5), 
             sequential(

@@ -35,7 +35,7 @@ public class ExecutePLSQLJavaITest extends TestNGCitrusTestBuilder {
     private DataSource dataSource;
     
     @CitrusTest
-    protected void ExecutePLSQLJavaITest() {
+    public void ExecutePLSQLJavaITest() {
         plsql(dataSource)
             .sqlResource("classpath:com/consol/citrus/actions/plsql.sql")
             .ignoreErrors(true);

@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class TransformActionJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void TransformActionJavaITest() {
+    public void TransformActionJavaITest() {
         transform()
             .source("<TestRequest>" +
                         "<Message>Hello World!</Message>" +

@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class IterateJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void IterateJavaITest() {
+    public void IterateJavaITest() {
         variable("max", "3");
         
         iterate(echo("index is: ${i}")).condition("i lt= citrus:randomNumber(1)").index("i");

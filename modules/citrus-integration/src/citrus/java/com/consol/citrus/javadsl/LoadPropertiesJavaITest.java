@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class LoadPropertiesJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void LoadPropertiesJavaITest() {
+    public void LoadPropertiesJavaITest() {
         variable("checkDate", "citrus:currentDate('yyyy-MM-dd')");
         
         load("classpath:com/consol/citrus/actions/load.properties");

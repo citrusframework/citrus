@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class StopTimeJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void StopTimeJavaITest() {
+    public void StopTimeJavaITest() {
         stopTime();
         stopTime("watchId");
         sleep(1000L);

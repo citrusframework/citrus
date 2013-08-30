@@ -16,26 +16,26 @@
 
 package com.consol.citrus.javadsl;
 
-import javax.sql.DataSource;
-
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import javax.sql.DataSource;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class FinallyBlockJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    public void FinallyBlockJavaITest() {
         variable("orderId", "citrus:randomNumber(5)");
 
         sql(dataSource)
@@ -46,10 +46,5 @@ public class FinallyBlockJavaITest extends TestNGCitrusTestBuilder {
         doFinally(
                 sql(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'")
         );
-    }
-    
-    @Test
-    public void finallyBlockITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

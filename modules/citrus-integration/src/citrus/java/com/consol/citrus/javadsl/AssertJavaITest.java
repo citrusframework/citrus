@@ -31,7 +31,7 @@ import java.io.IOException;
 public class AssertJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
-    protected void AssertJavaITest() {
+    public void AssertJavaITest() {
         variable("failMessage", "Something went wrong!");
         
         assertException(fail("Fail once"))

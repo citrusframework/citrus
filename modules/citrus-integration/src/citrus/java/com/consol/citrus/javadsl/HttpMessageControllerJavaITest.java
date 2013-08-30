@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest(name = "HttpMessageControllerJavaITest")
-    protected void httpMessageControllerITest() {
+    public void httpMessageControllerITest() {
         variable("id", "123456789");
         
         echo("First request without query parameter and context path variables.");
