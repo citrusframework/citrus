@@ -16,26 +16,26 @@
 
 package com.consol.citrus.javadsl;
 
-import javax.sql.DataSource;
-
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import javax.sql.DataSource;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ExecuteSQLJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void ExecuteSQLJavaITest() {
         variable("rowsCount", "0");
         variable("customerId", "1");
         
@@ -79,10 +79,5 @@ public class ExecuteSQLJavaITest extends TestNGCitrusTestBuilder {
             .validateScript("assert rows.size == 2\n" +
                     "assert rows[0].RTAG == 'requestTag'\n" +
                     "assert rows[0].DESC == 'Migrate'\n", "groovy");
-    }
-    
-    @Test
-    public void executeSQLITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

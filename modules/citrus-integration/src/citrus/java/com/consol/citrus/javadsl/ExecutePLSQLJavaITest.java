@@ -16,26 +16,26 @@
 
 package com.consol.citrus.javadsl;
 
-import javax.sql.DataSource;
-
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import javax.sql.DataSource;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class ExecutePLSQLJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     @Qualifier("testDataSource")
     private DataSource dataSource;
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void ExecutePLSQLJavaITest() {
         plsql(dataSource)
             .sqlResource("classpath:com/consol/citrus/actions/plsql.sql")
             .ignoreErrors(true);
@@ -52,10 +52,5 @@ public class ExecutePLSQLJavaITest extends TestNGCitrusTestBuilder {
                         "END;\n" +
                         "/")
             .ignoreErrors(true);
-    }
-    
-    @Test
-    public void executePLSQLITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

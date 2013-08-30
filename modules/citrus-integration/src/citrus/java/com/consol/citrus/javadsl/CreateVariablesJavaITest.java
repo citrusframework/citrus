@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class CreateVariablesJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void CreateVariablesJavaITest() {
         variable("myVariable", "12345");
         variable("newValue", "54321");
         
@@ -41,10 +41,5 @@ public class CreateVariablesJavaITest extends TestNGCitrusTestBuilder {
         echo("New variable 'new' has the value: ${new}");
         
         groovy("assert ${myVariable} == 54321");
-    }
-    
-    @Test
-    public void createVariablesITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

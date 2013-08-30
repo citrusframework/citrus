@@ -16,25 +16,20 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class GlobalPropertiesJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void GlobalPropertiesJavaITest() {
         echo("Project name is: ${project.name}");
         
         echo("Testing global variables from properties: ${globalWelcomingText}");
-    }
-    
-    @Test
-    public void globalPropertiesITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

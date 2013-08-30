@@ -16,17 +16,15 @@
 
 package com.consol.citrus.channel;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 public class MessageChannelTest extends AbstractTestNGCitrusTest {
     @Test
-    public void messageChannelTest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void MessageChannelTest() {}
 }

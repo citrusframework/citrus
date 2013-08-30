@@ -16,28 +16,23 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class EmptySoapResponseJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void EmptySoapResponseJavaITest() {
         send("webServiceHelloRequestSender")
             .payload("<ns0:SoapProbingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Timestamp>citrus:currentDate(\"yyyy-MM-dd'T'hh:mm:ss\")</ns0:Timestamp>" +
                             "</ns0:SoapProbingRequest>");
         
         expectTimeout("webServiceHelloReplyHandler").timeout(1000L);
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

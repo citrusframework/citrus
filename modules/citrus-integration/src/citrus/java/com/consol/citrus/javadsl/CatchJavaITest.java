@@ -16,28 +16,23 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class CatchJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void CatchJavaITest() {
         catchException(fail("Fail!"));
         
         catchException("com.consol.citrus.exceptions.CitrusRuntimeException", fail("Fail!"));
         
         catchException(CitrusRuntimeException.class, fail("Fail!"));
-    }
-    
-    @Test
-    public void catchITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

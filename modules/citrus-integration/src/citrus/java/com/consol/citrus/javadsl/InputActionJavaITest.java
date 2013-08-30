@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class InputActionJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void InputActionJavaITest() {
         variable("userinput", "");
         variable("userinput1", "");
         variable("userinput2", "y");
@@ -44,10 +44,5 @@ public class InputActionJavaITest extends TestNGCitrusTestBuilder {
         echo("user input was: ${userinput3}");
         input().result("userinput4");
         echo("user input was: ${userinput4}");
-    }
-    
-    @Test
-    public void inputActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

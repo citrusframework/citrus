@@ -16,18 +16,18 @@
 
 package com.consol.citrus.javadsl;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
     
-    @Override
-    protected void configure() {
+    @CitrusTest
+    protected void HttpServerJavaITest() {
         variable("custom_header_id", "123456789");
         
         echo("Send Http message and respond with 200 OK");
@@ -143,10 +143,5 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
             .header("citrus_http_version", "HTTP/1.1")
             .header("citrus_http_reason_phrase", "OK");
         
-    }
-    
-    @Test
-    public void httpServerITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }

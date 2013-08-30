@@ -16,22 +16,22 @@
 
 package com.consol.citrus.javadsl;
 
-import org.springframework.core.io.ClassPathResource;
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
+@Test
 public class GroovyActionJavaITest extends TestNGCitrusTestBuilder {
     
     /** OS new line */
     private static final String NEWLINE = System.getProperty("line.separator");
     
-    @Override
-    public void configure() {
+    @CitrusTest
+    public void GroovyActionJavaITest() {
         variable("date", "citrus:currentDate()");
         variable("greetingText", "Hello Citrus!");
         
@@ -76,10 +76,5 @@ public class GroovyActionJavaITest extends TestNGCitrusTestBuilder {
                   "}");
         
         groovy(new ClassPathResource("com/consol/citrus/script/example.groovy"));
-    }
-    
-    @Test
-    public void echoActionITest(ITestContext testContext) {
-        executeTest(testContext);
     }
 }
