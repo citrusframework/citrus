@@ -84,7 +84,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
             if (!CollectionUtils.isEmpty(methodTestRunners)) {
                 try {
-                    methodTestRunners.remove(0).run();
+                    methodTestRunners.get(testResult.getMethod().getCurrentInvocationCount() % methodTestRunners.size()).run();
                 } catch (Throwable t) {
                     testResult.setThrowable(t);
                     testResult.setStatus(ITestResult.FAILURE);
@@ -240,7 +240,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             String[] parameters = new String[parameterValues.length];
             for (int k = 0; k < parameterValues.length; k++) {
                 ctx.setVariable(parameterNames[k], parameterValues[k]);
-                parameters[k] = "'" + parameterValues[k].toString() + "'";
+                parameters[k] = "'" + parameterValues[k] + "'";
             }
             
             testCase.setParameters(parameters);
