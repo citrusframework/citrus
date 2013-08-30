@@ -16,10 +16,9 @@
 
 package com.consol.citrus.actions;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -27,7 +26,6 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class FinallyBlockITest extends AbstractTestNGCitrusTest {
     @Test
-    public void finallyBlockITest(ITestContext testContext) {
-        executeTest(testContext);
-    }
+    @CitrusXmlTest
+    public void FinallyBlockITest() {}
 }
