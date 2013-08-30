@@ -70,7 +70,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     private SequenceAfterSuite afterSuite;
     
     /** Parameter values provided from external logic */
-    private Object[][] allParameters;
+    private Object[][] citrusDataProviderParameters;
 
     /** Collection of test runners for annotated methods */
     private Map<String, List<TestRunner>> testRunners = new HashMap<String, List<TestRunner>>();
@@ -84,7 +84,12 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
             if (!CollectionUtils.isEmpty(methodTestRunners)) {
                 try {
-                    methodTestRunners.get(testResult.getMethod().getCurrentInvocationCount() % methodTestRunners.size()).run();
+                    TestRunner testRunner = methodTestRunners.get(testResult.getMethod().getCurrentInvocationCount() % methodTestRunners.size());
+
+                    if (citrusDataProviderParameters != null) {
+                        handleTestParameters(testResult.getMethod(), testRunner.getTestCase(), testRunner.getTestContext(), citrusDataProviderParameters[testResult.getMethod().getCurrentInvocationCount() % citrusDataProviderParameters.length]);
+                    }
+                    testRunner.run();
                 } catch (Throwable t) {
                     testResult.setThrowable(t);
                     testResult.setStatus(ITestResult.FAILURE);
@@ -210,41 +215,47 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         TestContext ctx = prepareTestContext(createTestContext());
 
         TestCase testCase = getTestCase(ctx);
-        handleTestParameters(testCase, ctx);
+        if (citrusDataProviderParameters != null) {
+            handleTestParameters(Reporter.getCurrentTestResult().getMethod(), testCase, ctx,
+                    citrusDataProviderParameters[Reporter.getCurrentTestResult().getMethod().getCurrentInvocationCount()]);
+        }
 
         testCase.execute(ctx);
     }
 
     /**
      * Methods adds optional TestNG parameters as variables to the test case.
-     * 
+     *
+     * @param method the testng method currently executed
      * @param testCase the constructed Citrus test.
      * @param ctx the Citrus test context.
      */
-    private void handleTestParameters(TestCase testCase, TestContext ctx) {
-        if (allParameters != null) {
-            Parameters parametersAnnotation = Reporter.getCurrentTestResult().getMethod().getConstructorOrMethod().getMethod().getAnnotation(Parameters.class);
-            if (parametersAnnotation == null) {
-                throw new CitrusRuntimeException("Missing Parameters annotation, " +
-                        "please provide parameter names with this annotation when using Citrus data provider!");
-            }
-            
-            String[] parameterNames = parametersAnnotation.value();
-            Object[] parameterValues = allParameters[Reporter.getCurrentTestResult().getMethod().getCurrentInvocationCount()];
-            
-            if (parameterValues.length != parameterNames.length) {
-                throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length + 
-                        " parameter names defined with " + parameterValues.length + " parameter values available");
-            }
-            
-            String[] parameters = new String[parameterValues.length];
-            for (int k = 0; k < parameterValues.length; k++) {
-                ctx.setVariable(parameterNames[k], parameterValues[k]);
-                parameters[k] = "'" + parameterValues[k] + "'";
-            }
-            
-            testCase.setParameters(parameters);
+    private void handleTestParameters(ITestNGMethod method, TestCase testCase, TestContext ctx, Object[] parameterValues) {
+        String[] parameterNames;
+
+        CitrusParameters citrusParameters = method.getConstructorOrMethod().getMethod().getAnnotation(CitrusParameters.class);
+        Parameters testNgParameters = method.getConstructorOrMethod().getMethod().getAnnotation(Parameters.class);
+        if (citrusParameters != null) {
+            parameterNames = citrusParameters.value();
+        } else if (testNgParameters != null) {
+            parameterNames = testNgParameters.value();
+        } else {
+            throw new CitrusRuntimeException("Missing parameters annotation, " +
+                    "please provide parameter names with proper annotation when using data provider!");
         }
+
+        if (parameterValues.length != parameterNames.length) {
+            throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length +
+                    " parameter names defined with " + parameterValues.length + " parameter values available");
+        }
+
+        String[] parameters = new String[parameterValues.length];
+        for (int k = 0; k < parameterValues.length; k++) {
+            ctx.setVariable(parameterNames[k], parameterValues[k]);
+            parameters[k] = "'" + parameterValues[k] + "'";
+        }
+
+        testCase.setParameters(parameters);
     }
 
     /**
@@ -339,8 +350,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     @DataProvider(name = "citrusDataProvider")
     protected Object[][] provideTestParameters() {
-      allParameters = getParameterValues();
-      return allParameters;
+      citrusDataProviderParameters = getParameterValues();
+      return citrusDataProviderParameters;
     }
     
     /**

@@ -16,11 +16,10 @@
 
 package com.consol.citrus.testng;
 
+import com.consol.citrus.annotations.CitrusXmlTest;
 import org.testng.ITestContext;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
  * @author Christoph Deppisch
@@ -28,6 +27,12 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
  */
 public class DataProviderITest extends AbstractTestNGCitrusTest {
     
+    @Test(dataProvider = "citrusDataProvider")
+    @CitrusXmlTest
+    @CitrusParameters( "message" )
+    public void DataProviderITest(ITestContext testContext) {
+    }
+
     @Parameters( "message" )
     @Test(dataProvider = "citrusDataProvider")
     public void dataProviderITest(ITestContext testContext) {

@@ -16,24 +16,21 @@
 
 package com.consol.citrus.testng;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
+import java.lang.annotation.*;
 
 /**
- * Test runner interface.
+ * Parameter annotation provides parameter names that are passed to the test case test context
+ * as variables. Variable values are provided by TestNG data provider.
+ *
  * @author Christoph Deppisch
+ * @since 1.3.1
  */
-public interface TestRunner extends Runnable {
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface CitrusParameters {
     /**
-     * Gets the test case instance.
-     * @return
+     * The list of parameter names corresponding with TestNG data provider parameter values.
+     * Each parameter name and value is injected to the test case as test variable before execution.
      */
-    TestCase getTestCase();
-
-    /**
-     * Gets the test context for this test runner.
-     * @return
-     */
-    TestContext getTestContext();
+    public String[] value();
 }
