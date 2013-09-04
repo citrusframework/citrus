@@ -16,6 +16,10 @@
         <include>com.consol.citrus:citrus-ssh</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus:citrus-adapter</include>
+        <include>com.consol.citrus.model:citrus-model-core</include>
+        <include>com.consol.citrus.model:citrus-model-http</include>
+        <include>com.consol.citrus.model:citrus-model-ws</include>
+        <include>com.consol.citrus.model:citrus-model-ssh</include>
         <include>com.consol.citrus.ant:citrus-ant-tasks</include>
         <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
       </includes>
@@ -40,6 +44,7 @@
         <exclude>**/src/pom.xml</exclude>
         <exclude>**/citrus-test/pom.xml</exclude>
         <exclude>src/main/script</exclude>
+        <exclude>**/*.iml</exclude>
         <exclude>.project</exclude>
         <exclude>.classpath</exclude>
         <exclude>.settings</exclude>
@@ -83,6 +88,34 @@
     </fileSet>
     
     <!-- Citrus Sources -->
+    <fileSet>
+      <directory>modules/citrus-model/model-core/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-http/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-ws/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-ssh/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
     <fileSet>
         <directory>modules/citrus-core/target</directory>
         <outputDirectory>src</outputDirectory>

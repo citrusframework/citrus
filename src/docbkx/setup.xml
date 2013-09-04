@@ -177,8 +177,8 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
   
       <itemizedlist>
           <listitem>
-              <para>Java 5.0 or higher</para>
-              <para>Installed JDK 5.0 or higher plus JAVA_HOME environment variable set up and pointing 
+              <para>Java 1.6 or higher</para>
+              <para>Installed JDK 1.6 or higher plus JAVA_HOME environment variable set up and pointing
               to your Java installation directory</para>
           </listitem>
           <listitem>

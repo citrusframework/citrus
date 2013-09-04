@@ -17,6 +17,9 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <encoding>${file.encoding}</encoding>

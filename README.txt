@@ -19,8 +19,8 @@ PRECONDITIONS
   You need following software on your machine in order to use the 
   Citrus framework:
  
-  * Java 5.0 or higher
-    Installed JDK 5.0 or higher plus JAVA_HOME environment variable set 
+  * Java 1.6 or higher
+    Installed JDK 1.6 or higher plus JAVA_HOME environment variable set
     up and pointing to your Java installation directory
    
   * Java IDE (optional)

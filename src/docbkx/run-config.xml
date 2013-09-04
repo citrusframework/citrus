@@ -95,6 +95,37 @@
             <emphasis>**/*Test.xml</emphasis> file name pattern.</para>
           </listitem>
         </itemizedlist>
+
+        <para>You can also mix the various CitrusXmlTest annotation patterns in a single Java class. So we are able to have several test cases in one
+        single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.</para>
+
+        <programlisting>@Test
+public class SampleTest extends AbstractTestNGCitrusTest {
+    @CitrusXmlTest(names = "SampleTest")
+    public void sampleTest() {}
+
+    @CitrusXmlTest(names = { "SampleTest", "Sample2Test" })
+    public void multipleTests() {}
+
+    @CitrusXmlTest(names = "OtherTest", packageName = "com.other.testpackage")
+    public void sampleTest() {}
+
+    @CitrusXmlTest(packagesToScan =  { "com.some.testpackage", "com.other.testpackage" })
+    public void sampleTest() {}
+}</programlisting>
+
+      <para>You are free to combine these test annotations as you like. As the whole Java class is annotated with the TestNG
+      <emphasis>@Test</emphasis> annotation each method gets executed automatically. Citrus will also take care on executing each XML test case as
+      a separate unit test. So the test reports will have the exact number of executed tests and the JUnit/TestNG test reports do have the exact test
+      outline for further usage (e.g. in continuous build reports).</para>
+
+      <note>
+        <para>When test execution takes place each test method annotation is evaluated in sequence. XML test cases that match several times, for instance by
+        explicit name reference and a package scan will be executed several times respectively.</para>
+      </note>
+
+      <para>The best thing about using the <emphasis>@CitrusXmlTest</emphasis> annotation is that you can continue to use the fabulous TestNG
+      capabilities (e.g. test groups, invocation count, thread pools, data providers, and so on).</para>
     </section> 
     
     <section id="run-config-junit">
