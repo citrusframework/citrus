@@ -28,9 +28,9 @@ PRECONDITIONS
     and executing test cases). You can use the Java IDE that you like best 
     like Eclipse or IntelliJ IDEA.
  
-  * Maven 2.2.1 or higher (optional)
-    Citrus projects will fit best with Maven2 (http://maven.apache.org). 
-    However it is not required to use Maven2. You can also run tests using 
+  * Maven 3.0.x or higher (optional)
+    Citrus projects will fit best with Maven (http://maven.apache.org).
+    However it is not required to use Maven. You can also run tests using
     ANT (http://ant.apache.org/) for instance.
    
 INSTALLATION

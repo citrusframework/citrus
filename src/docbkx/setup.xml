@@ -188,7 +188,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
               any convenient XML Editor to write new test cases.</para>
           </listitem>
           <listitem>
-              <para>Ant 1.7.0 or higher</para>
+              <para>Ant 1.8 or higher</para>
               <para>Ant (<ulink url="http://ant.apache.org/">http://ant.apache.org/</ulink>) will run tests and 
               compile your Citrus code extensions if necessary.</para>
           </listitem>
