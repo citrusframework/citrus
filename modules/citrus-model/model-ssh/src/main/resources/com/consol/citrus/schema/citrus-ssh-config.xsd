@@ -15,7 +15,7 @@
  * limitations under the License.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-     xmlns="http://www.citrusframework.org/ssh/schema/config"
+     xmlns="http://www.citrusframework.org/schema/ssh/config"
      targetNamespace="http://www.citrusframework.org/schema/ssh/config"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
