@@ -188,7 +188,7 @@
     </file>
     <!-- PDF reference documentation -->
     <file>
-      <source>target/doc/pdf/citrus-reference.pdf</source>
+      <source>target/doc/pdf/citrus-reference-1.3.1.pdf</source>
       <outputDirectory>docs/reference/pdf</outputDirectory>
     </file>
   </files>

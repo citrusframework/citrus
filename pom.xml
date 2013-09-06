@@ -852,7 +852,7 @@
                 <configuration>
                   <postProcess>
                     <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
-                          tofile="${project.basedir}/target/site/reference/pdf/citrus-reference.pdf" failonerror="true" />
+                          tofile="${project.basedir}/target/site/reference/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
                   </postProcess>                    
                 </configuration>
                 <goals>
@@ -1038,7 +1038,7 @@
                 <configuration>
                   <postProcess>
                     <copy file="${project.basedir}/target/docbkx/pdf/index.pdf" 
-                          tofile="${project.basedir}/target/doc/pdf/citrus-reference.pdf" failonerror="true" />
+                          tofile="${project.basedir}/target/doc/pdf/citrus-reference-${project.version}.pdf" failonerror="true" />
                   </postProcess>                    
                 </configuration>
                 <goals>
