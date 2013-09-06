@@ -16,33 +16,86 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.io.BufferedReader;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class InputActionTest extends AbstractTestNGUnitTest {
-	
-	@Test
+
+    private BufferedReader inputReader = EasyMock.createMock(BufferedReader.class);
+
+    @Test
+    public void testInput() throws IOException {
+        reset(inputReader);
+
+        expect(inputReader.readLine()).andReturn("yes").once();
+
+        replay(inputReader);
+
+        InputAction input = initializeInputAction();
+        input.setMessage("Is that correct?");
+
+        input.execute(context);
+
+        Assert.assertEquals(context.getVariable("userinput"), "yes");
+
+        verify(inputReader);
+    }
+
+    @Test
 	public void testExistingInputVariable() {
+        reset(inputReader);
+
+        replay(inputReader);
+
 	    context.setVariable("userinput", "yes");
 	    
-		InputAction input = new InputAction();
+		InputAction input = initializeInputAction();
 		input.setMessage("Is that correct?");
 		
 		input.execute(context);
+
+        Assert.assertEquals(context.getVariable("userinput"), "yes");
+
+        verify(inputReader);
 	}
 	
 	@Test
-    public void testValidAnswers() {
-        context.setVariable("userinput", "yes");
-        
-        InputAction input = new InputAction();
+    public void testValidAnswers() throws IOException {
+        reset(inputReader);
+
+        expect(inputReader.readLine()).andReturn("i dont know").once();
+        expect(inputReader.readLine()).andReturn("no").once();
+
+        replay(inputReader);
+
+        InputAction input = initializeInputAction();
         input.setValidAnswers("yes/no");
         input.setMessage("Is that correct?");
-        
+
         input.execute(context);
+
+        Assert.assertEquals(context.getVariable("userinput"), "no");
+
+        verify(inputReader);
+    }
+
+    private InputAction initializeInputAction() {
+        return new InputAction() {
+            @Override
+            protected BufferedReader getInputReader() {
+                // returning reader mock instead of system input reader
+                return inputReader;
+            }
+        };
     }
 }
