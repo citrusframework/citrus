@@ -102,7 +102,7 @@ public class SampleTest extends AbstractTestNGCitrusTest {
         <para>You can also mix the various CitrusXmlTest annotation patterns in a single Java class. So we are able to have several test cases in one
         single Java class. Each annotated method represents one or more Citrus XML test cases. Se the following example to see what this is about.</para>
 
-        <programlisting>@Test
+        <programlisting language="java">@Test
 public class SampleTest extends AbstractTestNGCitrusTest {
     @CitrusXmlTest(names = "SampleTest")
     public void sampleTest() {}
