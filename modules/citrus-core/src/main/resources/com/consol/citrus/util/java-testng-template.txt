@@ -14,6 +14,6 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 \@Test
 public class @test.name@ extends AbstractTestNGCitrusTest {
 
-    \@CitrusXmlTest(names = "@test.name@")
+    \@CitrusXmlTest(name = "@test.name@")
     public void @test.method.name@() {}
 }

@@ -117,9 +117,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
 
                 String[] testNames = new String[] {};
-                if (citrusTestAnnotation.names().length > 0) {
-                    testNames = citrusTestAnnotation.names();
-                } else if (citrusTestAnnotation.packagesToScan().length == 0) {
+                if (citrusTestAnnotation.name().length > 0) {
+                    testNames = citrusTestAnnotation.name();
+                } else if (citrusTestAnnotation.packageScan().length == 0) {
                     // only use default method name as test in case no package scan is set
                     testNames = new String[] { method.getName() };
                 }
@@ -140,7 +140,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     methodTestRunners.add(createTestRunner(testName, testPackage, testContext));
                 }
 
-                String[] testPackages = citrusTestAnnotation.packagesToScan();
+                String[] testPackages = citrusTestAnnotation.packageScan();
                 for (String packageName : testPackages) {
                     try {
                         Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");

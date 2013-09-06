@@ -12,13 +12,14 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CitrusXmlTest {
+
     /** Test name optional -  by default method name is used as test name */
-    public String[] names() default {};
+    public String[] name() default {};
 
     /** Test package name optional -  by default package of declaring test class is used */
     public String packageName() default "";
 
     /** Test packages to scan for XML test case definitions */
-    public String[] packagesToScan() default {};
+    public String[] packageScan() default {};
 
 }

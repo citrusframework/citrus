@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 @Test
 public class AddBook_OK_1_Test extends AbstractTestNGCitrusTest {
     
-    @CitrusXmlTest(names = "AddBook_OK_1_Test")
+    @CitrusXmlTest(name = "AddBook_OK_1_Test")
     public void addBook_OK_1_Test() {}
     
 }

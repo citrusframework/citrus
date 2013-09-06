@@ -53,13 +53,13 @@ public class CitrusMethodInterceptor implements IMethodInterceptor {
 
                 CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
                 if (citrusXmlTestAnnotation != null) {
-                    if (citrusXmlTestAnnotation.names().length > 1) {
-                        for (int i = 1; i < citrusXmlTestAnnotation.names().length; i++) {
+                    if (citrusXmlTestAnnotation.name().length > 1) {
+                        for (int i = 1; i < citrusXmlTestAnnotation.name().length; i++) {
                             interceptedMethods.add(new MethodInstance(method.getMethod()));
                         }
                     }
 
-                    String[] packagesToScan = citrusXmlTestAnnotation.packagesToScan();
+                    String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
                     for (String packageName : packagesToScan) {
                         try {
                             Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
