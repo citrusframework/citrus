@@ -55,24 +55,21 @@ public class CitrusXmlTestRunner extends AbstractTestRunner {
     @Override
     public TestCase getTestCase() {
         if (testCase == null) {
-            testCase = loadTestCase();
+            loadTestCase();
         }
 
         return testCase;
     }
 
-    private TestCase loadTestCase() {
+    private void loadTestCase() {
         ApplicationContext ctx = loadApplicationContext();
-        TestCase testCase = null;
 
         try {
-            testCase = (TestCase) ctx.getBean(beanName, TestCase.class);
+            testCase = ctx.getBean(beanName, TestCase.class);
             testCase.setPackageName(packageName);
         } catch (NoSuchBeanDefinitionException e) {
             throw getTestContext().handleError(beanName, packageName, "Could not find test with name '" + beanName + "'", e);
         }
-
-        return testCase;
     }
 
     private ApplicationContext loadApplicationContext() {

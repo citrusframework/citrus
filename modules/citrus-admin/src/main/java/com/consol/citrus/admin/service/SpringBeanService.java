@@ -16,27 +16,23 @@
 
 package com.consol.citrus.admin.service;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBContext;
-
 import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
+import com.consol.citrus.admin.spring.config.*;
+import com.consol.citrus.admin.util.JAXBHelper;
+import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.*;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.ls.*;
 
-import com.consol.citrus.admin.spring.config.*;
-import com.consol.citrus.admin.util.JAXBHelper;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import javax.annotation.PostConstruct;
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import java.io.File;
+import java.util.*;
 
 /**
  * Service is able to add, remove update Spring XML bean definitions to some ordinary
@@ -57,31 +53,6 @@ public class SpringBeanService {
     /** JaxBContext holds xml bean definition packages known to this context */
     private JAXBContext jaxbContext;
     
-    /** DOM implementation */
-    private static DOMImplementationRegistry registry = null;
-    private static DOMImplementationLS domImpl = null;
-    
-    static {
-        try {
-            registry = DOMImplementationRegistry.newInstance();
-            
-            DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
-
-            if (log.isDebugEnabled()) {
-                for (int i = 0; i < domImplList.getLength(); i++) {
-                    log.debug("Found DOMImplementationLS: " + domImplList.item(i));
-                }
-            }
-            
-            domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-            if (log.isDebugEnabled()) {
-                log.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
-            }
-        } catch (Exception e) {
-            throw new CitrusRuntimeException(e);
-        }
-    }
-    
     @PostConstruct
     protected void initJaxbContext() {
         jaxbContext = jaxbHelper.createJAXBContextByPath(
@@ -97,7 +68,7 @@ public class SpringBeanService {
      * @return
      */
     public List<File> getConfigImports(File configFile) {
-        LSParser parser = createLSParser();
+        LSParser parser = XMLUtils.createLSParser();
 
         GetSpringImportsFilter filter = new GetSpringImportsFilter(configFile);
         parser.setFilter(filter);
@@ -115,7 +86,7 @@ public class SpringBeanService {
      * @return
      */
     public <T> T getBeanDefinition(File configFile, String id, Class<T> type) {
-        LSParser parser = createLSParser();
+        LSParser parser = XMLUtils.createLSParser();
 
         GetSpringBeanFilter filter = new GetSpringBeanFilter(id, type);
         parser.setFilter(filter);
@@ -162,7 +133,7 @@ public class SpringBeanService {
             beanDefinitions.addAll(getBeanDefinitions(importLocation, type, attributes));
         }
 
-        LSParser parser = createLSParser();
+        LSParser parser = XMLUtils.createLSParser();
 
         GetSpringBeansFilter filter = new GetSpringBeansFilter(type, attributes);
         parser.setFilter(filter);
@@ -181,9 +152,9 @@ public class SpringBeanService {
      * @param jaxbElement
      */
     public void addBeanDefinition(File configFile, Object jaxbElement) {
-        Document doc = createLSParser().parseURI(configFile.toURI().toString());
+        Document doc = XMLUtils.createLSParser().parseURI(configFile.toURI().toString());
         
-        LSSerializer serializer = createLSSerializer();
+        LSSerializer serializer = XMLUtils.createLSSerializer();
 
         serializer.setFilter(new AddSpringBeanFilter(createElementFromJaxbObject(jaxbElement)));
         serializer.writeToURI(doc, configFile.toURI().toString());
@@ -196,9 +167,9 @@ public class SpringBeanService {
      * @param id
      */
     public void removeBeanDefinition(File configFile, String id) {
-        Document doc = createLSParser().parseURI(configFile.toURI().toString());
+        Document doc = XMLUtils.createLSParser().parseURI(configFile.toURI().toString());
         
-        LSSerializer serializer = createLSSerializer();
+        LSSerializer serializer = XMLUtils.createLSSerializer();
 
         serializer.setFilter(new RemoveSpringBeanFilter(id));
         serializer.writeToURI(doc, configFile.toURI().toString());
@@ -211,7 +182,7 @@ public class SpringBeanService {
      * @param id
      */
     public void updateBeanDefinition(File configFile, String id, Object jaxbElement) {
-        LSSerializer serializer = createLSSerializer();
+        LSSerializer serializer = XMLUtils.createLSSerializer();
 
         UpdateSpringBeanFilter filter = new UpdateSpringBeanFilter(id, createElementFromJaxbObject(jaxbElement));
         serializer.setFilter(filter);
@@ -220,7 +191,7 @@ public class SpringBeanService {
         configFiles.add(configFile);
         configFiles.addAll(getConfigImports(configFile));
 
-        LSParser parser = createLSParser();
+        LSParser parser = XMLUtils.createLSParser();
         GetSpringBeanFilter getBeanFilter = new GetSpringBeanFilter(id, jaxbElement.getClass());
         parser.setFilter(getBeanFilter);
 
@@ -240,18 +211,18 @@ public class SpringBeanService {
      * @return
      */
     private Element createElementFromJaxbObject(Object jaxbElement) {
-        LSInput input = domImpl.createLSInput();
+        LSInput input = XMLUtils.createLSInput();
         input.setStringData(jaxbHelper.marshal(jaxbContext, jaxbElement));
 
-        Element element = (Element)createLSParser().parse(input).getDocumentElement().cloneNode(true);
+        Element element = (Element)XMLUtils.createLSParser().parse(input).getDocumentElement().cloneNode(true);
 
         // remove all namespace declarations from element as we have set those already in root element
-        element.getAttributes().removeNamedItem("xmlns");
+        element.getAttributes().removeNamedItem(XMLConstants.XMLNS_ATTRIBUTE);
 
         CitrusNamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
         for (String prefix : namespacePrefixMapper.getNamespaceMappings().values()) {
-            if (element.hasAttribute("xmlns:" + prefix)) {
-                element.getAttributes().removeNamedItem("xmlns:" + prefix);
+            if (element.hasAttribute(XMLConstants.XMLNS_ATTRIBUTE + ":" + prefix)) {
+                element.getAttributes().removeNamedItem(XMLConstants.XMLNS_ATTRIBUTE + ":" + prefix);
             }
         }
 
@@ -265,60 +236,8 @@ public class SpringBeanService {
      * @return
      */
     private <T> T createJaxbObjectFromElement(Element element, Class<T> type) {
-        LSSerializer serializer = createLSSerializer();
+        LSSerializer serializer = XMLUtils.createLSSerializer();
         return (T)jaxbHelper.unmarshal(jaxbContext, type, serializer.writeToString(element));
-    }
-
-    /**
-     * Creates basic LSParser instance and sets common 
-     * properties and configuration parameters.
-     * @return
-     */
-    private LSParser createLSParser() {
-        LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-        
-        if (parser.getDomConfig().canSetParameter("cdata-sections", true)) {
-            parser.getDomConfig().setParameter("cdata-sections", true);
-        } else {
-            log.warn("Unable to set cdata-sections parameter on LSParser");
-        }
-        
-        if (parser.getDomConfig().canSetParameter("split-cdata-sections", false)) {
-            parser.getDomConfig().setParameter("split-cdata-sections", false);
-        } else {
-            log.warn("Unable to set split-cdata-sections parameter on LSParser");
-        }
-        
-        return parser;
-    }
-    
-    /**
-     * Creates basic LSSerializer instance and sets common 
-     * properties and configuration parameters.
-     * @return
-     */
-    private LSSerializer createLSSerializer() {
-        LSSerializer serializer = domImpl.createLSSerializer();
-        
-        if (serializer.getDomConfig().canSetParameter("element-content-whitespace", true)) {
-            serializer.getDomConfig().setParameter("element-content-whitespace", true);
-        } else {
-            log.warn("Unable to set element-content-whitespace parameter on LSSerializer");
-        }
-
-        if (serializer.getDomConfig().canSetParameter("split-cdata-sections", false)) {
-            serializer.getDomConfig().setParameter("split-cdata-sections", false);
-        } else {
-            log.warn("Unable to set split-cdata-sections parameter on LSSerializer");
-        }
-        
-        if (serializer.getDomConfig().canSetParameter("format-pretty-print", true)) {
-            serializer.getDomConfig().setParameter("format-pretty-print", true);
-        } else {
-            log.warn("Unable to set format-pretty-print parameter on LSSerializer - XML output will be in pure format");
-        }
-        
-        return serializer;
     }
 
 }

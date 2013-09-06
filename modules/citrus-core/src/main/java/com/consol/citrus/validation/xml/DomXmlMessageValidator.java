@@ -684,8 +684,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         if (receivedValue.contains(":") && sourceValue.contains(":")) {
             // value has namespace prefix set, do special QName validation
-            String receivedPrefix = receivedValue.substring(0, receivedValue.indexOf(":"));
-            String sourcePrefix = sourceValue.substring(0, sourceValue.indexOf(":"));
+            String receivedPrefix = receivedValue.substring(0, receivedValue.indexOf(':'));
+            String sourcePrefix = sourceValue.substring(0, sourceValue.indexOf(':'));
 
             Map<String, String> receivedNamespaces = XMLUtils.lookupNamespaces(received.getOwnerDocument());
             receivedNamespaces.putAll(XMLUtils.lookupNamespaces(element));

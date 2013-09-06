@@ -16,29 +16,20 @@
 
 package com.consol.citrus.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import javax.xml.XMLConstants;
-
-import org.springframework.util.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSInput;
-import org.w3c.dom.ls.LSOutput;
-import org.w3c.dom.ls.LSParser;
-import org.w3c.dom.ls.LSSerializer;
-
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.LSResolverImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.*;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.*;
+
+import javax.xml.XMLConstants;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Class providing several utility methods for XML processing.
@@ -49,6 +40,16 @@ import com.consol.citrus.xml.LSResolverImpl;
  */
 public final class XMLUtils {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(XMLUtils.class);
+
+    public static final String SPLIT_CDATA_SECTIONS = "split-cdata-sections";
+    public static final String FORMAT_PRETTY_PRINT = "format-pretty-print";
+    public static final String ELEMENT_CONTENT_WHITESPACE = "element-content-whitespace";
+    public static final String CDATA_SECTIONS = "cdata-sections";
+    public static final String VALIDATE_IF_SCHEMA = "validate-if-schema";
+    public static final String RESOURCE_RESOLVER = "resource-resolver";
+
     /** DOM implementation */
     private static DOMImplementationRegistry registry = null;
     private static DOMImplementationLS domImpl = null;
@@ -56,7 +57,19 @@ public final class XMLUtils {
     static {
         try {
             registry = DOMImplementationRegistry.newInstance();
+
+            if (log.isDebugEnabled()) {
+                DOMImplementationList domImplList = registry.getDOMImplementationList("LS");
+                for (int i = 0; i < domImplList.getLength(); i++) {
+                    log.debug("Found DOMImplementationLS: " + domImplList.item(i));
+                }
+            }
+
             domImpl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+
+            if (log.isDebugEnabled()) {
+                log.debug("Using DOMImplementationLS: " + domImpl.getClass().getName());
+            }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
         }
@@ -66,6 +79,51 @@ public final class XMLUtils {
      * Prevent instantiation.
      */
     private XMLUtils() {
+    }
+
+    /**
+     * Creates basic LSParser instance and sets common
+     * properties and configuration parameters.
+     * @return
+     */
+    public static LSParser createLSParser() {
+        LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+
+        XMLUtils.setParserConfigParameter(parser, XMLUtils.CDATA_SECTIONS, true);
+        XMLUtils.setParserConfigParameter(parser, XMLUtils.SPLIT_CDATA_SECTIONS, false);
+
+        return parser;
+    }
+
+    /**
+     * Creates basic LSSerializer instance and sets common
+     * properties and configuration parameters.
+     * @return
+     */
+    public static LSSerializer createLSSerializer() {
+        LSSerializer serializer = domImpl.createLSSerializer();
+
+        XMLUtils.setSerializerConfigParameter(serializer, XMLUtils.ELEMENT_CONTENT_WHITESPACE, true);
+        XMLUtils.setSerializerConfigParameter(serializer, XMLUtils.SPLIT_CDATA_SECTIONS, false);
+        XMLUtils.setSerializerConfigParameter(serializer, XMLUtils.FORMAT_PRETTY_PRINT, true);
+
+        return serializer;
+    }
+
+    /**
+     * Creates LSInput from dom implementation.
+     * @return
+     */
+    public static LSInput createLSInput() {
+        return domImpl.createLSInput();
+    }
+
+    /**
+     * Creates LSOutput form dom implementation.
+     * @return
+     */
+    public static LSOutput createLSOutput() {
+        return domImpl.createLSOutput();
     }
 
     /**
@@ -182,15 +240,9 @@ public final class XMLUtils {
      * @return serialized XML string
      */
     public static String serialize(Document doc) {
-        LSSerializer serializer = null;
+        LSSerializer serializer = createLSSerializer();
 
-        checkDomImplInitialization();
-
-        serializer = domImpl.createLSSerializer();
-        serializer.getDomConfig().setParameter("split-cdata-sections", false);
-        serializer.getDomConfig().setParameter("format-pretty-print", true);
-
-        LSOutput output = domImpl.createLSOutput();
+        LSOutput output = createLSOutput();
         String charset = getTargetCharset(doc).displayName();
         output.setEncoding(charset);
 
@@ -203,31 +255,15 @@ public final class XMLUtils {
     }
 
     /**
-     * Checks if DOM implementation was initialized correctly.
-     * @throws CitrusRuntimeException
-     */
-    private static void checkDomImplInitialization() {
-        if (domImpl == null) {
-            throw new CitrusRuntimeException("DOM initialization was not done correctly - unable to continue");
-        }
-    }
-
-    /**
      * Pretty prints a XML string.
      * @param xml
      * @throws CitrusRuntimeException
      * @return pretty printed XML string
      */
     public static String prettyPrint(String xml) {
-        LSParser parser = null;
+        LSParser parser = createLSParser();
+        LSInput input = createLSInput();
 
-        checkDomImplInitialization();
-
-        parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-        parser.getDomConfig().setParameter("cdata-sections", true);
-        parser.getDomConfig().setParameter("split-cdata-sections", false);
-
-        LSInput input = domImpl.createLSInput();
         try {
             Charset charset = getTargetCharset(xml);
 
@@ -334,18 +370,12 @@ public final class XMLUtils {
      * @return DOM document.
      */
     public static Document parseMessagePayload(String messagePayload) {
-        checkDomImplInitialization();
+        LSParser parser = createLSParser();
+        setParserConfigParameter(parser, VALIDATE_IF_SCHEMA, true);
+        setParserConfigParameter(parser, RESOURCE_RESOLVER, new LSResolverImpl(domImpl));
+        setParserConfigParameter(parser, ELEMENT_CONTENT_WHITESPACE, false);
 
-        LSParser parser = domImpl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-        parser.getDomConfig().setParameter("cdata-sections", true);
-        parser.getDomConfig().setParameter("split-cdata-sections", false);
-        parser.getDomConfig().setParameter("validate-if-schema", true);
-
-        parser.getDomConfig().setParameter("resource-resolver", new LSResolverImpl(domImpl));
-
-        parser.getDomConfig().setParameter("element-content-whitespace", false);
-
-        LSInput receivedInput = domImpl.createLSInput();
+        LSInput receivedInput = createLSInput();
         try {
             Charset charset = getTargetCharset(messagePayload);
             receivedInput.setByteStream(new ByteArrayInputStream(messagePayload.trim().getBytes(charset)));
@@ -364,8 +394,8 @@ public final class XMLUtils {
      * @return
      */
     private static Charset getTargetCharset(Document doc) {
-        if (System.getProperty("citrus.file.encoding") != null) {
-            return Charset.forName(System.getProperty("citrus.file.encoding"));
+        if (System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING) != null) {
+            return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING));
         }
 
         if (doc.getInputEncoding() != null) {
@@ -383,8 +413,8 @@ public final class XMLUtils {
      * @return charsetName if supported.
      */
     private static Charset getTargetCharset(String messagePayload) throws UnsupportedEncodingException {
-        if (System.getProperty("citrus.file.encoding") != null) {
-            return Charset.forName(System.getProperty("citrus.file.encoding"));
+        if (System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING) != null) {
+            return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING));
         }
 
         // trim incoming payload
@@ -424,6 +454,42 @@ public final class XMLUtils {
 
         // return as encoding the default UTF-8
         return Charset.forName("UTF-8");
+    }
+
+    /**
+     * Sets a config parameter on LSParser instance if settable. Otherwise logging unset parameter.
+     * @param serializer
+     * @param parameterName
+     * @param value
+     */
+    public static void setSerializerConfigParameter(LSSerializer serializer, String parameterName, Object value) {
+        if (serializer.getDomConfig().canSetParameter(parameterName, value)) {
+            serializer.getDomConfig().setParameter(parameterName, value);
+        } else {
+            logParameterNotSet(parameterName, "LSSerializer");
+        }
+    }
+
+    /**
+     * Sets a config parameter on LSParser instance if settable. Otherwise logging unset parameter.
+     * @param parser
+     * @param parameterName
+     * @param value
+     */
+    public static void setParserConfigParameter(LSParser parser, String parameterName, Object value) {
+        if (parser.getDomConfig().canSetParameter(parameterName, value)) {
+            parser.getDomConfig().setParameter(parameterName, value);
+        } else {
+            logParameterNotSet(parameterName, "LSParser");
+        }
+    }
+
+    /**
+     * Logging that parameter was not set on component.
+     * @param parameterName
+     */
+    private static void logParameterNotSet(String parameterName, String componentName) {
+        log.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
     }
 
 }

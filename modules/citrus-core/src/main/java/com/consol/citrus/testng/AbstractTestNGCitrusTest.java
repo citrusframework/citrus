@@ -90,8 +90,11 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                         handleTestParameters(testResult.getMethod(), testRunner.getTestCase(), testRunner.getTestContext(), citrusDataProviderParameters[testResult.getMethod().getCurrentInvocationCount() % citrusDataProviderParameters.length]);
                     }
                     testRunner.run();
-                } catch (Throwable t) {
-                    testResult.setThrowable(t);
+                } catch (RuntimeException e) {
+                    testResult.setThrowable(e);
+                    testResult.setStatus(ITestResult.FAILURE);
+                } catch (Exception e) {
+                    testResult.setThrowable(e);
                     testResult.setStatus(ITestResult.FAILURE);
                 }
             }
@@ -386,11 +389,11 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Class faking test execution as callback. Used in run hookable method when test case
      * was executed before and callback is needed for super class run method invocation.
      */
-    protected class FakeExecutionCallBack implements IHookCallBack {
+    protected static final class FakeExecutionCallBack implements IHookCallBack {
         private Object[] parameters;
 
         public FakeExecutionCallBack(Object[] parameters) {
-            this.parameters = parameters;
+            this.parameters = Arrays.copyOf(parameters, parameters.length);
         }
 
         @Override
@@ -400,7 +403,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         @Override
         public Object[] getParameters() {
-            return parameters;
+            return Arrays.copyOf(parameters, parameters.length);
         }
 
     }

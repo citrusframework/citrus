@@ -77,8 +77,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
             try {
                 testCase.execute(testContext);
-            } catch (Throwable t) {
-                testResult.setThrowable(t);
+            } catch (RuntimeException e) {
+                testResult.setThrowable(e);
+                testResult.setStatus(ITestResult.FAILURE);
+            } catch (Exception e) {
+                testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
             }
 

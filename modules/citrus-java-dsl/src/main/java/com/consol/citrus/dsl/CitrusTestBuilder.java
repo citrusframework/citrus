@@ -114,7 +114,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     /**
      * Initializing method.
      */
-    public void init() {
+    public final void init() {
         variables = new LinkedHashMap<String, Object>();
         testCase = new TestCase();
         testCase.setVariableDefinitions(variables);
@@ -1070,7 +1070,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * Called after Spring application context was set.
      * @throws Exception
      */
-    public void afterPropertiesSet() throws Exception {
+    public final void afterPropertiesSet() throws Exception {
         testCase.setTestListeners(applicationContext.getBean(TestListeners.class));
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 

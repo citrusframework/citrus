@@ -16,17 +16,16 @@
 
 package com.consol.citrus.util;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-import java.util.Properties;
-
+import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.Properties;
 
 /**
  * CLI creating a new test case from a template.
@@ -331,7 +330,7 @@ public class TestCaseCreator {
     
     /**
      * Set the request to use.
-     * @param framework
+     * @param xmlRequest
      * @return
      */
     public TestCaseCreator withXmlRequest(String xmlRequest) {
@@ -341,7 +340,7 @@ public class TestCaseCreator {
     
     /**
      * Set the response to use.
-     * @param framework
+     * @param xmlResponse
      * @return
      */
     public TestCaseCreator withXmlResponse(String xmlResponse) {

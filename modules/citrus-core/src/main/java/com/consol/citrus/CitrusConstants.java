@@ -27,7 +27,9 @@ import com.consol.citrus.message.MessageType;
  * @since 2006
  */
 public final class CitrusConstants {
-    
+
+    public static final String CITRUS_FILE_ENCODING = "citrus.file.encoding";
+
     /**
      * Prevent instantiation.
      */

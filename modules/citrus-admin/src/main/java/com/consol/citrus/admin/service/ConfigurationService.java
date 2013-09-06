@@ -16,10 +16,9 @@
 
 package com.consol.citrus.admin.service;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.admin.util.FileHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.util.FileHelper;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Single point of access for all configuration settings. These are project related activities like project home selection and
@@ -85,8 +84,7 @@ public class ConfigurationService {
      * @return the config file or null if no config file exists within the selected project.
      */
     public File getProjectConfigFile() {
-        final File projectHome = new File(getProjectHome());
-        return fileHelper.findFileInPath(projectHome, CitrusConstants.DEFAULT_APPLICATION_CONTEXT, true);
+        return fileHelper.findFileInPath(new File(getProjectHome()), CitrusConstants.DEFAULT_APPLICATION_CONTEXT, true);
     }
     
     /**
