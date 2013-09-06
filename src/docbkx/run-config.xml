@@ -143,9 +143,9 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
     public void myFirstTest() {
         description("First example showing the basic test case definition elements!");
 
-         variable("text", "Hello Test Framework");
+        variable("text", "Hello Test Framework");
 
-         echo(${test});
+        echo("${test}");
     }
 }</programlisting>
 

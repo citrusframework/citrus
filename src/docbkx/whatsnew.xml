@@ -13,17 +13,19 @@
 
       <para>With the new Java DSL capabilities Citrus created new ways of executing test cases within a TestNG or
       JUnit test class. Now we even improved the usage here with two new annotations <emphasis>@CitrusTest</emphasis>
-      and <emphasis>CitrusXmlTest</emphasis>. The integration into the unit test class has never been easier for us.</para>
+      and <emphasis>CitrusXmlTest</emphasis>. The integration into the unit test class has never been easier for you.</para>
 
-      <para>You can have several Citrus annotations and with this several Citrus test cases in one single Java class and
-      the Citrus tests now are able to coexist with other unit tests. You can even mix Java DSL and old XML Citrus test cases in
-      a single Java class.</para>
+      <para>The new Citrus annotations go directly to your unit test methods. With this enhancement you can have multiple Citrus
+      test cases in one single Java class and the Citrus tests now are able to coexist with other unit test methods. You can even
+      mix Java DSL and XML Citrus test cases in a single Java class.</para>
 
-      <para>Also the XML Citrus tests can be grouped to a single Java class with multiple XML files or even a package scan
-      for XML files.</para>
+      <para>The XML Citrus tests can be grouped to a single Java class with multiple XML files loaded during execution. There is
+      even a package scan for all Citrus XML files within a directory structure so you do not have to create a Java class for each
+      test case anymore.</para>
 
-      <para>We have changed the documentation in this guide so you can see how to use the new annotations. Also see our
-      Citrus blog where we continuously describe the many possibilities that you have with the new annotations.</para>
+      <para>We have changed the documentation in this guide so you can see how to use the new annotations. For detailed overview see
+      <xref linkend="run-config-testng"/>. Also see our Citrus blog where we continuously describe the many possibilities that you
+      have with the new annotations.</para>
     </section>
 
     <section id="whatsnew-1-3-1-parameters">

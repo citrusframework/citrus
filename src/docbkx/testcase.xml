@@ -103,8 +103,7 @@
     pure Java. Let us have a look at a first Java test example:</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">
-import org.testng.annotations.Test;
+    <programlisting language="java">import org.testng.annotations.Test;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
@@ -116,7 +115,7 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
     
         variable("text", "Hello Test Framework");
     
-        echo(${test});
+        echo("${test}");
     }
 }</programlisting>
     
