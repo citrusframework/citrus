@@ -16,12 +16,10 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+
+import java.util.*;
 
 /**
  * Display help information on citrus-maven-plugin.<br/> Call <pre>  mvn citrus:help -Ddetail=true -Dgoal=&lt;goal-name&gt;</pre> to display parameter details.
@@ -81,10 +79,10 @@ public class HelpMojo
 
         StringBuffer sb = new StringBuffer();
 
-        append( sb, "com.consol.citrus.mvn:citrus-maven-plugin:1.3.1", 0 );
+        append( sb, "com.consol.citrus.mvn:citrus-maven-plugin:1.4", 0 );
         append( sb, "", 0 );
 
-        append( sb, "citrus-maven-plugin 1.3.1", 0 );
+        append( sb, "citrus-maven-plugin 1.4", 0 );
         append( sb, "Citrus Maven Plugin", 1 );
         append( sb, "", 0 );
 

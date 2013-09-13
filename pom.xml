@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
-  <version>1.3.1</version>
+  <version>1.4</version>
   <name>citrus</name>
   <description>Citrus Test Framework</description>
   <url>http://www.citrusframework.org</url>
@@ -120,7 +120,7 @@
   </developers>
 
   <prerequisites>
-    <maven>2.2.1</maven>
+    <maven>3.0.3</maven>
   </prerequisites>
 
   <scm>
