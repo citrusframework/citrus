@@ -6,13 +6,13 @@ import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * This is a sample Citrus integration test
+ * This is a sample Citrus integration test for loading XML syntax test case.
  *
- * @author Unknown
+ * @author Citrus
  */
 @Test
 public class SampleXmlTest extends AbstractTestNGCitrusTest {
 
-    @CitrusXmlTest
+    @CitrusXmlTest(name = "SampleXmlTest")
     public void sampleXmlTest() {}
 }
