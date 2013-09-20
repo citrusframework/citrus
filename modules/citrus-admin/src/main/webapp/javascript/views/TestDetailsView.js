@@ -128,6 +128,7 @@
                         $('div#xml-source-' + this.test.detail.name).find('pre').addClass("prettyprint");
                         prettyPrint();
                         $('div#xml-source-' + this.test.detail.name).find('pre').removeClass("prettyprint");
+                        $('div#xml-source-' + this.test.detail.name).find('pre').addClass("prettycode");
                     }, this)
                 });
             },
@@ -142,6 +143,7 @@
                         $('div#java-source-' + this.test.detail.name).find('pre').addClass("prettyprint");
                         prettyPrint();
                         $('div#java-source-' + this.test.detail.name).find('pre').removeClass("prettyprint");
+                        $('div#java-source-' + this.test.detail.name).find('pre').addClass("prettycode");
                     }, this)
                 });
             },

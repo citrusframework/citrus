@@ -25,7 +25,8 @@ a:hover {
 }
 
 .row-fluid .navigation {
-    max-width: 235px;
+    width: 15%;
+    min-width: 235px;
 }
 
 .navbar-inverse .navbar-inner {
@@ -201,8 +202,10 @@ h2 i:hover, h3 i:hover, h4 i:hover {
 #test-tab-content {
     padding-left: 20px;
     padding-top: 5px;
+    padding-right: 20px;
     min-height: 695px;
     border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
 }
 
@@ -747,4 +750,15 @@ ul.test-variables {
 
 .test-variables dl.dl-horizontal dd {
     margin-left: 200px;
+}
+
+.prettycode {
+  padding: 8px;
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+}
+.prettycode.linenums {
+  -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+     -moz-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+          box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
 }
