@@ -92,7 +92,7 @@
 
     <bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper">
       <property name="defaltTyping">
-        <bean class="com.consol.citrus.admin.json.TestActionTypeResolverBuilder"/>
+        <bean class="com.consol.citrus.admin.jackson.CitrusTypeResolverBuilder"/>
       </property>
     </bean>
 

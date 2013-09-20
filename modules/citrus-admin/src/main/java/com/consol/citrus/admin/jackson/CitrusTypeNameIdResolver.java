@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.json;
+package com.consol.citrus.admin.jackson;
 
 import com.consol.citrus.model.testcase.core.Action;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
@@ -44,13 +44,13 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestActionTypeNameIdResolver implements TypeIdResolver {
+public class CitrusTypeNameIdResolver implements TypeIdResolver {
 
     /** List of known id to type mappings */
     private Map<String, JavaType> typeMappings = new HashMap<String, JavaType>();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestActionTypeNameIdResolver.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusTypeNameIdResolver.class);
 
     @Override
     public void init(JavaType baseType) {

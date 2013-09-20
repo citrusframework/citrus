@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.json;
+package com.consol.citrus.admin.jackson;
 
 import com.consol.citrus.TestAction;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -25,15 +25,15 @@ import org.codehaus.jackson.type.JavaType;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestActionTypeResolverBuilder extends ObjectMapper.DefaultTypeResolverBuilder {
+public class CitrusTypeResolverBuilder extends ObjectMapper.DefaultTypeResolverBuilder {
 
     /**
      * Default constructor with field initialization.
      */
-    public TestActionTypeResolverBuilder() {
+    public CitrusTypeResolverBuilder() {
         super(ObjectMapper.DefaultTyping.OBJECT_AND_NON_CONCRETE);
 
-        init(JsonTypeInfo.Id.CUSTOM, new TestActionTypeNameIdResolver());
+        init(JsonTypeInfo.Id.CUSTOM, new CitrusTypeNameIdResolver());
         inclusion(JsonTypeInfo.As.PROPERTY);
         typeProperty("type");
     }
