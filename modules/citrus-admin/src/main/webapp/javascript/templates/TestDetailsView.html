@@ -1,39 +1,87 @@
+<h2 class="test-details-header">{{detail.name}} <small>{{packageName}}</small>
+  <div class="btn-group pull-right">
+    <a class="btn run-test" type="button" title="Run test">&nbsp;<i class="icon-play"></i>&nbsp;Run</a>
+    <a class="btn cancel-test" type="button" title="Stop test execution" style="display: none;">&nbsp;<i class="icon-stop"></i>&nbsp;Stop</a>
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#">Maven</a></li>
+      <li><a href="#">Ant</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Edit Run configurations</a></li>
+    </ul>
+  </div>
+</h2>
+
 <div id="{{detail.name}}" class="test-details">
-    <h2>{{detail.name}} <small>{{packageName}}</small>
-      <div class="btn-group pull-right">
-          <a class="btn run-test" type="button" title="Run test">&nbsp;<i class="icon-play"></i>&nbsp;Run</a>
-          <a class="btn cancel-test" type="button" title="Stop test execution" style="display: none;">&nbsp;<i class="icon-stop"></i>&nbsp;Stop</a>
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-              <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-              <li><a href="#">Maven</a></li>
-              <li><a href="#">Ant</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Edit Run configurations</a></li>
-          </ul>
-      </div>
-    </h2>
-
-    <br/>
-
-    {{#if detail.description}}
-    <blockquote>
-      <p><u>Description:</u>&nbsp;{{detail.description}}</p>
-    </blockquote>
-    {{/if}}
-
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#design-{{detail.name}}" data-toggle="tab">Design</a></li>
-        <li><a href="#xml-source-{{detail.name}}" class="xml-source" data-toggle="tab">XML</a></li>
-        <li><a href="#java-source-{{detail.name}}" class="java-source" data-toggle="tab">Java</a></li>
-        <li style="display: none;">
+    <div class="test-details-navbar navbar">
+      <div class="navbar-inner">
+        <ul class="nav">
+          <li><a href="#info-{{detail.name}}" data-toggle="tab">Info</a></li>
+          <li class="active"><a href="#design-{{detail.name}}" data-toggle="tab" data-toggle="tab">Design</a></li>
+          <li><a href="#xml-source-{{detail.name}}" class="xml-source" data-toggle="tab">XML</a></li>
+          <li><a href="#java-source-{{detail.name}}" class="java-source" data-toggle="tab">Java</a></li>
+          <li style="display: none;">
             <button id="test-result-close-{{detail.name}}" type="button" class="close" style="margin-right: 8px;">&times;</button>
             <a href="#test-result-{{detail.name}}" style="padding-right: 22px" data-toggle="tab">Results</a>
-        </li>
-    </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <br/>
 
-    <div class="tab-content">
+    <div class="test-details-content tab-content">
+        <div class="tab-pane" id="info-{{detail.name}}">
+          <div class="test-info">
+            <form class="form-horizontal">
+              <div class="control-group">
+                <label class="control-label">Test Name</label>
+                <div class="controls">
+                  <input id="name" class="input-xlarge" name="name" type="text" placeholder="Test" value="{{name}}"/>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Author</label>
+                <div class="controls">
+                  <input id="author" class="input-xlarge" name="author" type="text" placeholder="Author" value="{{author}}"/>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Status</label>
+                <div class="controls">
+                  <input id="status" class="input-xlarge" name="status" type="text" placeholder="Status" value="{{status}}"/>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">Package</label>
+                <div class="controls">
+                  <input id="packageName" class="input-xlarge" name="packageName" type="text" placeholder="Package" value="{{packageName}}"/>
+                </div>
+              </div>
+
+              <br/>
+
+              <div class="control-group">
+                <label class="control-label">Description</label>
+                <div class="controls">
+                  <blockquote class="test-description">
+                    {{#if detail.description}}
+                    <p>{{detail.description}}</p>
+                    {{/if}}
+                    {{#unless detail.description}}
+                    <p>No description</p>
+                    {{/unless}}
+                  </blockquote>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
         <div class="tab-pane active" id="design-{{detail.name}}">
             <div class="test-design"></div>
         </div>

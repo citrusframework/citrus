@@ -3,7 +3,6 @@ html, body {
 }
 
 body {
-	padding-top: 60px;
     background: url('../images/feature-logo-full.png') no-repeat top right;
 }
 
@@ -160,6 +159,7 @@ form#search-form #test-name {
 
 div.test-details-open {
    padding-top: 200px;
+   min-height: 495px;
    text-align: center;
 }
 
@@ -171,8 +171,46 @@ h2 i, h3 i, h4 i {
     color: #555555;
 }
 
+.test-details {
+    min-height: 695px;
+}
+
+.test-details-content {
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-right: 20px;
+}
+
 .test-details h4.page-header {
     margin: 15px 0 15px;
+}
+
+.test-details-header {
+    margin: 0px;
+    padding: 5px 20px;
+    background-color: #ffffff;
+    line-height: 60px;
+}
+
+.test-details-header small {
+    color: #555555;
+}
+
+.test-details-navbar {
+    margin-bottom: 0px;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+}
+
+.test-details-navbar .navbar-inner {
+    border: none;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    padding-left: 0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 #test-tabs {
@@ -196,25 +234,13 @@ h2 i, h3 i, h4 i {
 }
 
 #test-tab-content {
-    padding-left: 20px;
-    padding-top: 5px;
-    padding-right: 20px;
-    min-height: 695px;
     border-left: 1px solid #dddddd;
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
 }
 
-#test-info .control-group {
-    margin-bottom: 5px;
-}
-
-#test-info .control-label {
-    width: 80px;
-}
-
-#test-info .controls {
-    margin-left: 105px;
+.test-description {
+    min-height: 80px;
 }
 
 .progress {
@@ -271,7 +297,7 @@ ul.jqueryFileTree a:hover {
 
 div.file-tree {
     border: 1px solid #dddddd;
-    height: 650px;
+    height: 750px;
     overflow: auto;
     padding: 5px;
 }
@@ -285,8 +311,13 @@ div.file-tree {
   background-color: #F9F9F9;
 }
 
+.form-horizontal .control-group {
+    margin-bottom: 10px;
+}
+
 .form-horizontal .control-label {
     width: 110px;
+    font-weight: bold;
 }
 
 .form-horizontal .controls {
@@ -569,9 +600,9 @@ input[readonly], select[readonly], textarea[readonly] {
   margin-bottom: 30px;
 }
 
-ul.test-variables {
-    list-style: none;
-    margin: 0;
+.test-design h5.page-header {
+   padding-bottom: 0px;
+   margin: 0px 0px 0px 0px;
 }
 
 .test-actions {
@@ -708,54 +739,20 @@ ul.test-variables {
 .test-variables {
     padding: 0px 0px 0px 0px;
     margin: 20px 0;
-    cursor: pointer;
-    background-color: #efefef;
-    *background-color: #efefef;
-    background-image: -moz-linear-gradient(top, #ffffff, #efefef);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#efefef));
-    background-image: -webkit-linear-gradient(top, #ffffff, #efefef);
-    background-image: -o-linear-gradient(top, #ffffff, #efefef);
-    background-image: linear-gradient(to bottom, #ffffff, #efefef);
-    background-repeat: repeat-x;
-    border: 1px solid #efefef;
-    *border: 0;
-    border-color: #cccccc #c0c0c0;
-    border-bottom-color: #cccccc;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffefefef', GradientType=0);
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-    *zoom: 1;
-    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.test-variables h5.page-header {
-    text-align: center;
-    padding-bottom: 0px;
-    margin: 0px 0px 0px 0px;
-}
-
-.test-variables dl.dl-horizontal dt {
+.test-variables dt {
     width: 180px;
     padding-right: 5px;
-    border-bottom: 1px solid #bbbbbb;
 }
 
-.test-variables dl.dl-horizontal dd {
+.test-variables dd {
     margin-left: 200px;
 }
 
 .prettycode {
   padding: 8px;
-  background-color: #f7f7f9;
-  border: 1px solid #e1e1e8;
-}
-
-.prettycode.linenums {
-  -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
-     -moz-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
-          box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+  background-color: #ffffff;
+  border: none;
+  max-height: 600px;
 }

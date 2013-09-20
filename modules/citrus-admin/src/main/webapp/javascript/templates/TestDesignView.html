@@ -1,17 +1,20 @@
-<div class="test-variables">
-  <h5 class="page-header">
-    <span>Variables:</span>
-  </h5>
-  <dl class="dl-horizontal">
-    {{#unless test.variables.variables}}
-    <dt>No values defined!</dt><dd>&nbsp;</dd>
-    {{/unless}}
+<h5 class="page-header">
+  <span>Variables:</span>
+</h5>
 
-    {{#each test.variables.variables}}
-    <dt>{{name}}:</dt><dd>{{value}}</dd>
-    {{/each}}
-  </dl>
-</div>
+<dl class="test-variables dl-horizontal">
+  {{#unless test.variables.variables}}
+  <dt>No values defined!</dt><dd>&nbsp;</dd>
+  {{/unless}}
+
+  {{#each test.variables.variables}}
+  <dt>{{name}}:</dt><dd>{{value}}</dd>
+  {{/each}}
+</dl>
+
+<h5 class="page-header">
+  <span>Actions:</span>
+</h5>
 
 <div class="test-action action-start">
   <i class="icon-play"></i>
