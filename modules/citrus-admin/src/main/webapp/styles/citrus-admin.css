@@ -244,24 +244,12 @@ h2 i, h3 i, h4 i {
 }
 
 .progress {
-    border: 1px solid #aaaaaa;
+    border: 1px solid #dddddd;
 }
 
 .progress .bar {
     text-shadow: none;
     transition: none;
-}
-
-.progress-success .bar,
-.progress .bar-success {
-    background-color: #62c462;
-    background-image: -moz-linear-gradient(top, #7ad87a, #62c462);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7ad87a), to(#62c462));
-    background-image: -webkit-linear-gradient(top, #7ad87a, #62c462);
-    background-image: -o-linear-gradient(top, #7ad87a, #62c462);
-    background-image: linear-gradient(to bottom, #7ad87a, #62c462);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff7ad87a', endColorstr='#ff62c462', GradientType=0);
 }
 
 .test-progress {
@@ -600,7 +588,7 @@ input[readonly], select[readonly], textarea[readonly] {
   margin-bottom: 30px;
 }
 
-.test-design h5.page-header {
+.test-design h4.page-header {
    padding-bottom: 0px;
    margin: 0px 0px 0px 0px;
 }

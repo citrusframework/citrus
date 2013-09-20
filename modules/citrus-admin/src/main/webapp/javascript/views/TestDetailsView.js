@@ -44,8 +44,8 @@
                 // prepare and show test results tab
                 this.messages = [];
                 $(this.el).find('div.test-message-flow').html(TemplateManager.template('TestMessageFlow', { messages: this.messages }));
-                $(this.el).find('ul.nav-tabs').find('li').last().show();
-                $(this.el).find('ul.nav-tabs').find('li').last().find('a').tab('show');
+                $(this.el).find('ul.nav').find('li').last().show();
+                $(this.el).find('ul.nav').find('li').last().find('a').tab('show');
 
                 $.ajax({
                     url: "testcase/execute/" + this.test.detail.name,
