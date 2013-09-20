@@ -168,11 +168,7 @@ h3.page-header {
 }
 
 h2 i, h3 i, h4 i {
-    color: #999999;
-}
-
-h2 i:hover, h3 i:hover, h4 i:hover {
-    color: #a5a5a5;
+    color: #555555;
 }
 
 .test-details h4.page-header {
@@ -757,6 +753,7 @@ ul.test-variables {
   background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
 }
+
 .prettycode.linenums {
   -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
      -moz-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
