@@ -124,7 +124,11 @@
                     type: 'GET',
                     dataType: "html",
                     success: _.bind(function(fileContent) {
-                        $('div#xml-source-' + this.test.detail.name).find('pre').text(fileContent);
+                        if (fileContent) {
+                            $('div#xml-source-' + this.test.detail.name).find('pre').text(fileContent);
+                        } else {
+                            $('div#xml-source-' + this.test.detail.name).find('pre').text("<xml>No sources available!</xml>");
+                        }
                         $('div#xml-source-' + this.test.detail.name).find('pre').addClass("prettyprint");
                         prettyPrint();
                         $('div#xml-source-' + this.test.detail.name).find('pre').removeClass("prettyprint");
