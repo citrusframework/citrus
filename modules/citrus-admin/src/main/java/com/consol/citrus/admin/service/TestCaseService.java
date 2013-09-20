@@ -130,6 +130,14 @@ public class TestCaseService {
     }
 
     /**
+     * Gets the test base java directory according to the test executor used.
+     * @return
+     */
+    public String getJavaDirectory() {
+        return testExecutor.getJavaDirectory();
+    }
+
+    /**
      * Gets the test base directory according to the test executor used.
      * @return
      */

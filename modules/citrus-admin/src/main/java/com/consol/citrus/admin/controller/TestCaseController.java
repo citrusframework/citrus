@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 /**
  * Controller manages test case related queries like get all tests
@@ -58,10 +58,12 @@ public class TestCaseController {
     @RequestMapping(method = { RequestMethod.POST })
     @ResponseBody
     public ModelAndView list(@RequestParam("dir") String dir) {
-        String directory = fileHelper.decodeDirectoryUrl(dir, testCaseService.getTestDirectory());
+        String testDirectory = testCaseService.getTestDirectory() + fileHelper.decodeDirectoryUrl(dir, "");
+        String javaDirectory = testCaseService.getJavaDirectory() + fileHelper.decodeDirectoryUrl(dir, "");
 
         String[] folders = null;
-        String[] files;
+        String[] xmlFiles;
+        String[] javaFiles;
         String compactFolder = null;
         do {
             if (folders != null) {
@@ -72,19 +74,43 @@ public class TestCaseController {
                 }
             }
 
-            folders = fileHelper.getFolders(StringUtils.hasText(compactFolder) ? directory + File.separator + compactFolder : directory);
-            files = fileHelper.getFiles(directory, ".xml");
-        } while (folders.length == 1 && files.length == 0);
+            folders = fileHelper.getFolders(StringUtils.hasText(compactFolder) ? javaDirectory + File.separator + compactFolder : javaDirectory);
+            xmlFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? testDirectory + File.separator + compactFolder : testDirectory, ".xml");
+            javaFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? javaDirectory + File.separator + compactFolder : javaDirectory, ".java");
+        } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
 
-        if (StringUtils.hasText(compactFolder)) {
-            folders = new String[] { compactFolder };
+        List<Map<String, String>> xmlTestFiles = new ArrayList<Map<String, String>>();
+        for (String xmlFile : xmlFiles) {
+            HashMap<String, String> properties = new HashMap<String, String>();
+
+            properties.put("file", xmlFile);
+            properties.put("extension", "xml");
+            properties.put("testDir", testDirectory);
+
+            xmlTestFiles.add(properties);
+        }
+
+        List<Map<String, String>> javaTestFiles = new ArrayList<Map<String, String>>();
+        for (String javaFile : javaFiles) {
+            HashMap<String, String> properties = new HashMap<String, String>();
+
+            properties.put("file", javaFile);
+            properties.put("extension", "java");
+            properties.put("testDir", javaDirectory);
+
+            javaTestFiles.add(properties);
         }
 
         ModelAndView view = new ModelAndView("FileTree");
-        view.addObject("baseDir", directory);
+
+        if (StringUtils.hasText(compactFolder)) {
+            view.addObject("compactFolder", compactFolder);
+        }
+
+        view.addObject("baseDir", fileHelper.decodeDirectoryUrl(dir, ""));
         view.addObject("folders", folders);
-        view.addObject("files", files);
-        view.addObject("extension", "xml");
+        view.addObject("xmlFiles", xmlTestFiles);
+        view.addObject("javaFiles", javaTestFiles);
 
         return view;
     }

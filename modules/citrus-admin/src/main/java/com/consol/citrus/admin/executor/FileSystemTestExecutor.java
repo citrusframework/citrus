@@ -22,7 +22,11 @@ import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,6 +37,9 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 public class FileSystemTestExecutor implements TestExecutor{
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(FileSystemTestExecutor.class);
 
     @Autowired
     private ConfigurationService configService;
@@ -62,7 +69,33 @@ public class FileSystemTestExecutor implements TestExecutor{
             
             tests.add(testCase);
         }
-        
+
+        testDirectory = getJavaDirectory();
+
+        try {
+            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + testDirectory + "**/*.java");
+
+            for (Resource resource : javaSources) {
+                File file = resource.getFile();
+                String testName = file.getName().substring(0, file.getName().lastIndexOf("."));
+                String testPackageName = file.getPath().substring(testDirectory.length(), file.getPath().length() - file.getName().length())
+                        .replace(File.separatorChar, '.');
+
+                if (testPackageName.endsWith(".")) {
+                    testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
+                }
+
+                TestCaseInfo testCase = new TestCaseInfo();
+                testCase.setName(testName);
+                testCase.setPackageName(testPackageName);
+                testCase.setFile(file.getAbsolutePath());
+
+                tests.add(testCase);
+            }
+        } catch (IOException e) {
+            log.warn("Failed to read Java source files - list of test cases for this project is incomplete", e);
+        }
+
         return tests;
     }
 

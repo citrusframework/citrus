@@ -17,18 +17,13 @@
 package com.consol.citrus.admin.util;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.service.ConfigurationService;
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Martin Maher, Christoph Deppisch
@@ -63,6 +58,11 @@ public class FileHelperImpl implements FileHelper {
         List<String> fileNames = new ArrayList<String>();
 
         File startDir = new File(directory);
+
+        if (!startDir.exists()) {
+            return new String[] {};
+        }
+
         File[] found = startDir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.endsWith(fileExtension);
@@ -114,7 +114,11 @@ public class FileHelperImpl implements FileHelper {
         }
 
         if (directory.equals("/")) {
-            directory = rootDirectory;
+            if (StringUtils.hasText(rootDirectory)) {
+                directory = rootDirectory;
+            } else {
+                return rootDirectory;
+            }
         }
 
         if (directory.charAt(directory.length() - 1) == '\\') {

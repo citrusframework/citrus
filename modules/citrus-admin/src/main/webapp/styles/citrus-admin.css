@@ -159,7 +159,7 @@ form#search-form #test-name {
 
 div.test-details-open {
    padding-top: 200px;
-   min-height: 495px;
+   min-height: 595px;
    text-align: center;
 }
 
@@ -281,6 +281,10 @@ ul.jqueryFileTree a {
 
 ul.jqueryFileTree a:hover {
     background: #efefef;
+}
+
+ul.jqueryFileTree li.ext_java {
+    background: url(icons/filetree/java.png) left top no-repeat;
 }
 
 div.file-tree {

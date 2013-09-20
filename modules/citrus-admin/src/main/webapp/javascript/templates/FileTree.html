@@ -1,8 +1,29 @@
 <ul class="jqueryFileTree" style="display: none;">
+    {{#if compactFolder}}
+    <li class="directory expanded"><a href="#" rel="{{baseDir}}{{compactFolder}}/">{{folderToPackage compactFolder}}</a>
+    <ul class="jqueryFileTree">
+      {{#each folders}}
+      <li class="directory collapsed"><a href="#" rel="{{baseDir}}{{compactFolder}}/{{this}}/">{{folderToPackage this}}</a></li>
+      {{/each}}
+      {{#each xmlFiles}}
+      <li class="file ext_{{extension}}"><a href="#" rel="{{testDir}}{{compactFolder}}/{{file}}.{{extension}}">{{file}}</a></li>
+      {{/each}}
+      {{#each javaFiles}}
+      <li class="file ext_{{extension}}"><a href="#" rel="{{testDir}}{{compactFolder}}/{{file}}.{{extension}}">{{file}}</a></li>
+      {{/each}}
+    </ul>
+    </li>
+    {{/if}}
+
+    {{#unless compactFolder}}
     {{#each folders}}
     <li class="directory collapsed"><a href="#" rel="{{baseDir}}{{this}}/">{{folderToPackage this}}</a></li>
     {{/each}}
-    {{#each files}}
-    <li class="file ext_{{extension}}"><a href="#" rel="{{baseDir}}{{this}}.{{extension}}">{{this}}</a></li>
+    {{#each xmlFiles}}
+    <li class="file ext_{{extension}}"><a href="#" rel="{{testDir}}{{file}}.{{extension}}">{{file}}</a></li>
     {{/each}}
+    {{#each javaFiles}}
+    <li class="file ext_{{extension}}"><a href="#" rel="{{testDir}}{{file}}.{{extension}}">{{file}}</a></li>
+    {{/each}}
+    {{/unless}}
 </ul>
