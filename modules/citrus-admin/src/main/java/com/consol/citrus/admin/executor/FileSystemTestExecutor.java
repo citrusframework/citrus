@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.executor;
 
 import com.consol.citrus.*;
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.TestCaseInfo;
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.util.FileUtils;
@@ -117,10 +118,15 @@ public class FileSystemTestExecutor implements TestExecutor{
         String dir = type.equals("java") ? getJavaDirectory() : getTestDirectory();
 
         try {
-            return FileUtils.readToString(new FileInputStream(dir +
-                    File.separator + testPackage.replaceAll("\\.", File.separator) + File.separator + testName + "." + type));
+            String sourceFilePath = dir + File.separator + testPackage.replaceAll("\\.", File.separator) + File.separator + testName + "." + type;
+
+            if (new File(sourceFilePath).exists()) {
+                return FileUtils.readToString(new FileInputStream(sourceFilePath));
+            } else {
+                return "";
+            }
         } catch (IOException e) {
-            return "Failed to load test case file: " + e.getMessage();
+            throw new CitrusAdminRuntimeException("Failed to load test case source code: " + e.getMessage());
         }
     }
     

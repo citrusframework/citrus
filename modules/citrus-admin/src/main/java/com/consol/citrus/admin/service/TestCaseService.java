@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
 
 import java.io.ByteArrayOutputStream;
@@ -76,12 +77,19 @@ public class TestCaseService {
 
         String xmlPart = testExecutor.getSourceCode(packageName, testName, "xml");
 
-        try {
-            Testcase test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
-            testCase.setDetail(test);
-        } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("", e);
+        Testcase test;
+        if (StringUtils.hasText(xmlPart)) {
+            try {
+                test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
+            } catch (IOException e) {
+                throw new CitrusAdminRuntimeException("Failed to unmarshal test case from Spring XML bean definition", e);
+            }
+        } else {
+            test = new Testcase();
+            test.setName(testName);
         }
+
+        testCase.setDetail(test);
 
         return testCase;
     }
