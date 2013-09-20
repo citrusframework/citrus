@@ -22,7 +22,7 @@ package com.consol.citrus.admin.model;
  */
 public class TestResult {
 
-    private TestCaseItem testCase;
+    private TestCaseInfo testCase;
     private boolean success;
     private String stackTrace;
     private String failureStack;
@@ -30,14 +30,14 @@ public class TestResult {
     /**
      * @return
      */
-    public TestCaseItem getTestCase() {
+    public TestCaseInfo getTestCase() {
         return testCase;
     }
 
     /**
      * @param value
      */
-    public void setTestCase(TestCaseItem value) {
+    public void setTestCase(TestCaseInfo value) {
         this.testCase = value;
     }
 

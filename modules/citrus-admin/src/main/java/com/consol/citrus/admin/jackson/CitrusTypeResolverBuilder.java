@@ -22,6 +22,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
 
 /**
+ * Builds proper type id resolver for Citrus test actions.
  * @author Christoph Deppisch
  * @since 1.3.1
  */

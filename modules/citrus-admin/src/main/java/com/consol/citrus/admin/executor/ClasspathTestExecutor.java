@@ -16,13 +16,14 @@
 
 package com.consol.citrus.admin.executor;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseItem;
-import com.consol.citrus.model.testcase.core.Testcase;
+import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusCliOptions;
+import com.consol.citrus.admin.model.TestCaseInfo;
+import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.report.TestReporter;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.util.FileUtils;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +35,12 @@ import org.springframework.core.type.ClassMetadata;
 import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusCliOptions;
-import com.consol.citrus.admin.service.ConfigurationService;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.report.TestReporter;
-import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import com.consol.citrus.util.FileUtils;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
+ * Executes a test case from direct classpath using same JVM in which this server web application is running.
  * @author Christoph Deppisch
  */
 public class ClasspathTestExecutor implements TestExecutor {
@@ -59,8 +57,8 @@ public class ClasspathTestExecutor implements TestExecutor {
     /**
      * {@inheritDoc}
      */
-    public List<TestCaseItem> getTests() {
-        List<TestCaseItem> tests = new ArrayList<TestCaseItem>();
+    public List<TestCaseInfo> getTests() {
+        List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
         
         List<String> testFiles = findTestsInClasspath(System.getProperty(BASE_PACKAGE, "com.consol.citrus"));
         
@@ -69,7 +67,7 @@ public class ClasspathTestExecutor implements TestExecutor {
             String testPackageName = file.substring(0, file.length() - testName.length() - 1)
                     .replace(File.separatorChar, '.');
             
-            TestCaseItem testCase = new TestCaseItem();
+            TestCaseInfo testCase = new TestCaseInfo();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
             testCase.setFile(file);

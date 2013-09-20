@@ -22,7 +22,7 @@ import com.consol.citrus.model.testcase.core.Testcase;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestCaseDetail extends TestCaseItem {
+public class TestCaseDetail extends TestCaseInfo {
 
     private Testcase detail;
 

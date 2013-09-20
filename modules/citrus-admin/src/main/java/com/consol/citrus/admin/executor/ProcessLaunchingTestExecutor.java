@@ -16,19 +16,18 @@
 
 package com.consol.citrus.admin.executor;
 
-import java.io.File;
-
-import com.consol.citrus.admin.launcher.ProcessMonitor;
+import com.consol.citrus.admin.launcher.*;
+import com.consol.citrus.admin.launcher.process.ExecuteSingleTest;
+import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.websocket.WebSocketProcessListener;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.consol.citrus.admin.launcher.ProcessLauncher;
-import com.consol.citrus.admin.launcher.ProcessLauncherImpl;
-import com.consol.citrus.admin.launcher.process.ExecuteSingleTest;
-import com.consol.citrus.admin.service.ConfigurationService;
+import java.io.File;
 
 /**
+ * Executes test case by starting a new process in separate JVM. Supports Maven and Ant process
+ * launching.
  * @author Christoph Deppisch
  */
 public class ProcessLaunchingTestExecutor extends FileSystemTestExecutor {

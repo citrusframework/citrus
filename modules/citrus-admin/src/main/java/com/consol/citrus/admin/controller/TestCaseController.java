@@ -16,20 +16,19 @@
 
 package com.consol.citrus.admin.controller;
 
-import java.io.File;
-import java.util.List;
-
 import com.consol.citrus.admin.launcher.ProcessMonitor;
 import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseItem;
+import com.consol.citrus.admin.model.TestCaseInfo;
+import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import com.consol.citrus.admin.service.TestCaseService;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Controller manages test case related queries like get all tests
@@ -52,7 +51,7 @@ public class TestCaseController {
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
-    public List<TestCaseItem> list() {
+    public List<TestCaseInfo> list() {
         return testCaseService.getAllTests();
     }
 
@@ -92,7 +91,7 @@ public class TestCaseController {
 
     @RequestMapping(value="/details/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public TestCaseDetail executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
+    public TestCaseDetail getTestDetails(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
         return testCaseService.getTestDetails(testPackage, testName);
     }
     

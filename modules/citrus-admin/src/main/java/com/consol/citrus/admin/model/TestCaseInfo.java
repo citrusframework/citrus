@@ -19,7 +19,7 @@ package com.consol.citrus.admin.model;
 /**
  * @author Christoph Deppisch
  */
-public class TestCaseItem {
+public class TestCaseInfo {
 
     private String name;
 

@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Special type id resolver for Citrus test actions. Implementation ensures proper json type resolving for test action
+ * classes.
  * @author Christoph Deppisch
  * @since 1.3.1
  */

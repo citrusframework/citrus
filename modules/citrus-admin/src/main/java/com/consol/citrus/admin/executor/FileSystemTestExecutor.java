@@ -16,22 +16,20 @@
 
 package com.consol.citrus.admin.executor;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseItem;
-import com.consol.citrus.model.testcase.core.Testcase;
+import com.consol.citrus.*;
+import com.consol.citrus.admin.model.TestCaseInfo;
+import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.util.FileUtils;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.consol.citrus.*;
-import com.consol.citrus.admin.service.ConfigurationService;
-import com.consol.citrus.util.FileUtils;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Executes test case from file system by starting new Citrus command line instance.
  * @author Christoph Deppisch
  */
 public class FileSystemTestExecutor implements TestExecutor{
@@ -42,8 +40,8 @@ public class FileSystemTestExecutor implements TestExecutor{
     /**
      * {@inheritDoc}
      */
-    public List<TestCaseItem> getTests() {
-        List<TestCaseItem> tests = new ArrayList<TestCaseItem>();
+    public List<TestCaseInfo> getTests() {
+        List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
         String testDirectory = getTestDirectory();
         
         List<File> testFiles = FileUtils.getTestFiles(testDirectory);
@@ -57,7 +55,7 @@ public class FileSystemTestExecutor implements TestExecutor{
                 testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
             }
             
-            TestCaseItem testCase = new TestCaseItem();
+            TestCaseInfo testCase = new TestCaseInfo();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
             testCase.setFile(file.getAbsolutePath());

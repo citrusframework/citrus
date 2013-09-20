@@ -18,9 +18,8 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.TestExecutor;
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseItem;
-import com.consol.citrus.admin.model.TestResult;
+import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.model.TestCaseInfo;
 import com.consol.citrus.admin.spring.model.SpringBeans;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.model.testcase.core.Testcase;
@@ -61,7 +60,7 @@ public class TestCaseService {
      * Lists all available Citrus test cases from classpath.
      * @return
      */
-    public List<TestCaseItem> getAllTests() {
+    public List<TestCaseInfo> getAllTests() {
         return testExecutor.getTests();
     }
 
@@ -94,7 +93,7 @@ public class TestCaseService {
      */
     public TestResult executeTest(String testName) {
         TestResult result = new TestResult();
-        TestCaseItem testCase = new TestCaseItem();
+        TestCaseInfo testCase = new TestCaseInfo();
         testCase.setName(testName);
         result.setTestCase(testCase);
         

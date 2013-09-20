@@ -16,10 +16,9 @@
 
 package com.consol.citrus.admin.executor;
 
-import java.util.List;
+import com.consol.citrus.admin.model.TestCaseInfo;
 
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseItem;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -30,7 +29,7 @@ public interface TestExecutor {
      * Get all available test cases in default Citrus test directory
      * @return
      */
-    List<TestCaseItem> getTests();
+    List<TestCaseInfo> getTests();
     
     /**
      * Run test and throw exception when failed.
