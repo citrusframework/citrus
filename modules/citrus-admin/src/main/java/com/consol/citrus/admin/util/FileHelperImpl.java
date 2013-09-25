@@ -43,9 +43,13 @@ public class FileHelperImpl implements FileHelper {
                 }
             });
 
-            Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
 
-            return files;
+            if (files != null) {
+                Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+                return files;
+            } else {
+                return new String[] {};
+            }
         } else {
             throw new CitrusAdminRuntimeException("Could not open directory because it does not exist: " + directory);
         }

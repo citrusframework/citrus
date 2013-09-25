@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.controller;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +41,12 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView searchProjectHome(@RequestParam("dir") String dir) {
-        String directory = fileHelper.decodeDirectoryUrl(dir, configService.getRootDirectory());
+        String directory = FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, configService.getRootDirectory()));
         String[] folders = fileHelper.getFolders(directory);
 
         ModelAndView view = new ModelAndView("FileTree");
         view.addObject("folders", folders);
-        view.addObject("baseDir", directory);
+        view.addObject("baseDir", FilenameUtils.separatorsToUnix(directory));
 
         return view;
     }

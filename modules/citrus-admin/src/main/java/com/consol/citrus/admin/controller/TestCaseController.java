@@ -21,6 +21,7 @@ import com.consol.citrus.admin.model.TestCaseDetail;
 import com.consol.citrus.admin.model.TestCaseInfo;
 import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -28,7 +29,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Controller manages test case related queries like get all tests
@@ -58,13 +62,13 @@ public class TestCaseController {
     @RequestMapping(method = { RequestMethod.POST })
     @ResponseBody
     public ModelAndView list(@RequestParam("dir") String dir) {
-        String testDirectory = testCaseService.getTestDirectory() + fileHelper.decodeDirectoryUrl(dir, "");
-        String javaDirectory = testCaseService.getJavaDirectory() + fileHelper.decodeDirectoryUrl(dir, "");
+        String testDirectory = testCaseService.getTestDirectory() + FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, ""));
+        String javaDirectory = testCaseService.getJavaDirectory() + FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, ""));
 
         String[] folders = null;
         String[] xmlFiles;
         String[] javaFiles;
-        String compactFolder = null;
+        String compactFolder = "";
         do {
             if (folders != null) {
                 if (StringUtils.hasText(compactFolder)) {
@@ -74,18 +78,19 @@ public class TestCaseController {
                 }
             }
 
-            folders = fileHelper.getFolders(StringUtils.hasText(compactFolder) ? javaDirectory + File.separator + compactFolder : javaDirectory);
-            xmlFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? testDirectory + File.separator + compactFolder : testDirectory, ".xml");
-            javaFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? javaDirectory + File.separator + compactFolder : javaDirectory, ".java");
+            folders = fileHelper.getFolders(StringUtils.hasText(compactFolder) ? javaDirectory + compactFolder : javaDirectory);
+            xmlFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? testDirectory + compactFolder : testDirectory, ".xml");
+            javaFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? javaDirectory + compactFolder : javaDirectory, ".java");
         } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
 
         List<Map<String, String>> xmlTestFiles = new ArrayList<Map<String, String>>();
         for (String xmlFile : xmlFiles) {
             HashMap<String, String> properties = new HashMap<String, String>();
 
-            properties.put("file", xmlFile);
+            properties.put("fileName", xmlFile);
             properties.put("extension", "xml");
-            properties.put("testDir", testDirectory);
+            properties.put("filePath", testDirectory
+                    + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
 
             xmlTestFiles.add(properties);
         }
@@ -94,9 +99,10 @@ public class TestCaseController {
         for (String javaFile : javaFiles) {
             HashMap<String, String> properties = new HashMap<String, String>();
 
-            properties.put("file", javaFile);
+            properties.put("fileName", javaFile);
             properties.put("extension", "java");
-            properties.put("testDir", javaDirectory);
+            properties.put("filePath", javaDirectory
+                    + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
 
             javaTestFiles.add(properties);
         }
@@ -104,10 +110,11 @@ public class TestCaseController {
         ModelAndView view = new ModelAndView("FileTree");
 
         if (StringUtils.hasText(compactFolder)) {
-            view.addObject("compactFolder", compactFolder);
+            view.addObject("compactFolder", FilenameUtils.separatorsToUnix(compactFolder));
         }
 
-        view.addObject("baseDir", fileHelper.decodeDirectoryUrl(dir, ""));
+        view.addObject("baseDir", FilenameUtils.separatorsToUnix(fileHelper.decodeDirectoryUrl(dir, "")
+                + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : "")));
         view.addObject("folders", folders);
         view.addObject("xmlFiles", xmlTestFiles);
         view.addObject("javaFiles", javaTestFiles);

@@ -17,7 +17,7 @@ public class HandlebarsHelperSource {
      */
     public String folderToPackage(String context) {
         if (StringUtils.hasText(context)) {
-            return context.replaceAll("/", ".");
+            return context.replace('/', '.');
         } else {
             return context;
         }

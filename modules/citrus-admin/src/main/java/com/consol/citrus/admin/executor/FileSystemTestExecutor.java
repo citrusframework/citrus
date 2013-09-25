@@ -23,6 +23,7 @@ import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class FileSystemTestExecutor implements TestExecutor{
         List<File> testFiles = FileUtils.getTestFiles(testDirectory);
         
         for (File file : testFiles) {
-            String testName = file.getName().substring(0, file.getName().lastIndexOf("."));
+            String testName = FilenameUtils.getBaseName(file.getName());
             String testPackageName = file.getPath().substring(testDirectory.length(), file.getPath().length() - file.getName().length())
                     .replace(File.separatorChar, '.');
             
@@ -74,11 +75,11 @@ public class FileSystemTestExecutor implements TestExecutor{
         testDirectory = getJavaDirectory();
 
         try {
-            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + testDirectory + "**/*.java");
+            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(testDirectory) + "**/*.java");
 
             for (Resource resource : javaSources) {
                 File file = resource.getFile();
-                String testName = file.getName().substring(0, file.getName().lastIndexOf("."));
+                String testName = FilenameUtils.getBaseName(file.getName());
                 String testPackageName = file.getPath().substring(testDirectory.length(), file.getPath().length() - file.getName().length())
                         .replace(File.separatorChar, '.');
 
@@ -118,7 +119,7 @@ public class FileSystemTestExecutor implements TestExecutor{
         String dir = type.equals("java") ? getJavaDirectory() : getTestDirectory();
 
         try {
-            String sourceFilePath = dir + File.separator + testPackage.replaceAll("\\.", File.separator) + File.separator + testName + "." + type;
+            String sourceFilePath = dir + File.separator + testPackage.replace('.', File.separatorChar) + File.separator + testName + "." + type;
 
             if (new File(sourceFilePath).exists()) {
                 return FileUtils.readToString(new FileInputStream(sourceFilePath));

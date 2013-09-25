@@ -100,7 +100,7 @@ public class ClasspathTestExecutor implements TestExecutor {
      * {@inheritDoc}
      */
     public String getSourceCode(String testPackage, String testName, String type) {
-        Resource testFile = new PathMatchingResourcePatternResolver().getResource(testPackage.replaceAll("\\.", "/") + "/" + testName + "." + type);
+        Resource testFile = new PathMatchingResourcePatternResolver().getResource(testPackage.replace('.', '/') + "/" + testName + "." + type);
         
         try {
             return FileUtils.readToString(testFile);
