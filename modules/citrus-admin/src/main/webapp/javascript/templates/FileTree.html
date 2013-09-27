@@ -8,10 +8,10 @@
     <li class="directory collapsed"><a href="#" rel="{{baseDir}}{{this}}/">{{folderToPackage this}}</a></li>
     {{/each}}
     {{#each xmlFiles}}
-    <li class="file ext_{{extension}}"><a href="#" rel="{{filePath}}{{fileName}}.{{extension}}">{{fileName}}</a></li>
+    <li class="file ext_{{extension}}"><a href="#" rel="{{filePath}}{{fileName}}">{{fileName}}</a></li>
     {{/each}}
     {{#each javaFiles}}
-    <li class="file ext_{{extension}}"><a href="#" rel="{{filePath}}{{fileName}}.{{extension}}">{{fileName}}</a></li>
+    <li class="file ext_{{extension}}"><a href="#" rel="{{filePath}}{{fileName}}">{{fileName}}</a></li>
     {{/each}}
 
     {{#if compactFolder}}

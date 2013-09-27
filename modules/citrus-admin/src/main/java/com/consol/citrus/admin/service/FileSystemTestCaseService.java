@@ -21,6 +21,7 @@ import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.FileSystemTestExecutor;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.util.FileHelper;
+import com.consol.citrus.dsl.TestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -33,7 +34,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test case service reads tests from file system and delegates to file system test executor for
@@ -76,7 +78,7 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
             TestCaseInfo testCase = new TestCaseInfo();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
-            testCase.setFile(file.getAbsolutePath());
+            testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator + FilenameUtils.getBaseName(file.getName()));
 
             tests.add(testCase);
         }
@@ -89,19 +91,24 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
             for (Resource resource : javaSources) {
                 File file = resource.getFile();
                 String testName = FilenameUtils.getBaseName(file.getName());
-                String testPackageName = file.getPath().substring(testDirectory.length(), file.getPath().length() - file.getName().length())
-                        .replace(File.separatorChar, '.');
+                String testPackageName = file.getParentFile().getAbsolutePath().substring(testDirectory.length()).replace(File.separatorChar, '.');
 
-                if (testPackageName.endsWith(".")) {
-                    testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
+                try {
+                    Class<?> testBuilderClass = Class.forName(testPackageName + "." + testName);
+
+                    if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
+                        TestCaseInfo testCase = new TestCaseInfo();
+                        testCase.setName(testName);
+                        testCase.setPackageName(testPackageName);
+                        testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
+
+                        tests.add(testCase);
+                    } else {
+                        log.debug("Skipping java source as it is not a test builder: " + testPackageName + "." + testName);
+                    }
+                } catch (ClassNotFoundException e) {
+                    log.warn("Skipping java source as it is not part of classpath: " + testPackageName + "." + testName);
                 }
-
-                TestCaseInfo testCase = new TestCaseInfo();
-                testCase.setName(testName);
-                testCase.setPackageName(testPackageName);
-                testCase.setFile(file.getAbsolutePath());
-
-                tests.add(testCase);
             }
         } catch (IOException e) {
             log.warn("Failed to read Java source files - list of test cases for this project is incomplete", e);
@@ -177,7 +184,32 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
 
             folders = fileHelper.getFolders(new File(javaDirectory + compactFolder));
             xmlFiles = fileHelper.getFiles(new File(testDirectory + compactFolder), ".xml");
-            javaFiles = fileHelper.getFiles(new File(javaDirectory + compactFolder), ".java");
+            javaFiles = new String[] {};
+            try {
+                Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + javaDirectory + compactFolder + "/*.java");
+                List<String> testBuilders = new ArrayList<String>();
+                for (Resource resource : javaSources) {
+                    File file = resource.getFile();
+                    String testName = FilenameUtils.getBaseName(file.getName());
+                    String testPackageName = file.getParentFile().getAbsolutePath().substring(getJavaDirectory().length()).replace(File.separatorChar, '.');
+
+                    try {
+                        Class<?> testBuilderClass = Class.forName(testPackageName + "." + testName);
+
+                        if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
+                            testBuilders.add(testName);
+                        } else {
+                            log.debug("Skipping java source as it is not a test builder: " + testPackageName + "." +  testName);
+                        }
+                    } catch (ClassNotFoundException e) {
+                        log.warn("Skipping java source as it is not part of classpath: " + testPackageName + "." + testName);
+                    }
+                }
+
+                javaFiles = testBuilders.toArray(new String[testBuilders.size()]);
+            } catch (IOException e) {
+                log.warn("Failed to read Java source files - list of test cases for this project is incomplete", e);
+            }
         } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
 
         List<FileTreeModel.FileModel> xmlTestFiles = new ArrayList<FileTreeModel.FileModel>();

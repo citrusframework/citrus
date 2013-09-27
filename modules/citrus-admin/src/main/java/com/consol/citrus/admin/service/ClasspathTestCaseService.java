@@ -24,6 +24,7 @@ import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.util.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.ClassMetadata;
 import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
@@ -77,7 +79,7 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
             TestCaseInfo testCase = new TestCaseInfo();
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
-            testCase.setFile(file);
+            testCase.setFile(ClassUtils.convertClassNameToResourcePath(file));
 
             tests.add(testCase);
         }
@@ -148,8 +150,17 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
 
             try {
                 folders = fileHelper.getFolders(new ClassPathResource(dir + compactFolder).getFile());
-                xmlFiles = fileHelper.getFiles(new ClassPathResource(dir + compactFolder).getFile(), ".xml");
-                javaFiles = fileHelper.getFiles(new ClassPathResource(dir + compactFolder).getFile(), ".java");
+                Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(dir + compactFolder + "/*Test.xml");
+                xmlFiles = new String[fileResources.length];
+                for (int i = 0; i < fileResources.length; i++) {
+                    xmlFiles[i] = FilenameUtils.getBaseName(fileResources[i].getFilename());
+                }
+
+                fileResources = new PathMatchingResourcePatternResolver().getResources(dir + compactFolder + "/*.class");
+                javaFiles = new String[fileResources.length];
+                for (int i = 0; i < fileResources.length; i++) {
+                    javaFiles[i] = FilenameUtils.getBaseName(fileResources[i].getFilename());
+                }
             } catch (IOException e) {
                 throw new CitrusAdminRuntimeException(e);
             }
@@ -214,7 +225,8 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
         @Override
         protected boolean match(ClassMetadata metadata) {
             return !metadata.getClassName().equals(TestNGCitrusTestBuilder.class.getName()) &&
-                    metadata.getSuperClassName().equals(AbstractTestNGCitrusTest.class.getName());
+                    (metadata.getSuperClassName().equals(AbstractTestNGCitrusTest.class.getName()) ||
+                    metadata.getSuperClassName().equals(TestNGCitrusTestBuilder.class.getName()));
         }
     }
 }
