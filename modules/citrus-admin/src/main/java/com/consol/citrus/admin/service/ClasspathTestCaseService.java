@@ -116,8 +116,8 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
     }
 
     @Override
-    public String getSourceCode(String packageName, String name, String type) {
-        Resource testFile = new PathMatchingResourcePatternResolver().getResource(packageName.replace('.', '/') + "/" + name + "." + type);
+    public String getSourceCode(String packageName, String name, TestCaseType type) {
+        Resource testFile = new PathMatchingResourcePatternResolver().getResource(packageName.replace('.', '/') + "/" + name + "." + type.name().toLowerCase());
 
         try {
             return FileUtils.readToString(testFile);
@@ -127,7 +127,7 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
     }
 
     @Override
-    public FileTreeModel getTestsAsFileTree(String dir) {
+    public FileTreeModel getTestFileTree(String dir) {
         FileTreeModel model = new FileTreeModel();
 
         String[] folders = null;

@@ -76,6 +76,7 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
             }
 
             TestCaseInfo testCase = new TestCaseInfo();
+            testCase.setType(TestCaseType.XML);
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
             testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator + FilenameUtils.getBaseName(file.getName()));
@@ -98,6 +99,7 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
 
                     if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
                         TestCaseInfo testCase = new TestCaseInfo();
+                        testCase.setType(TestCaseType.JAVA);
                         testCase.setName(testName);
                         testCase.setPackageName(testPackageName);
                         testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
@@ -146,11 +148,11 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
     }
 
     @Override
-    public String getSourceCode(String packageName, String name, String type) {
-        String dir = type.equals("java") ? getJavaDirectory() : getTestDirectory();
+    public String getSourceCode(String packageName, String name, TestCaseType type) {
+        String dir = type.equals(TestCaseType.JAVA) ? getJavaDirectory() : getTestDirectory();
 
         try {
-            String sourceFilePath = dir + File.separator + packageName.replace('.', File.separatorChar) + File.separator + name + "." + type;
+            String sourceFilePath = dir + File.separator + packageName.replace('.', File.separatorChar) + File.separator + name + "." + type.name().toLowerCase();
 
             if (new File(sourceFilePath).exists()) {
                 return FileUtils.readToString(new FileInputStream(sourceFilePath));
@@ -163,7 +165,7 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
     }
 
     @Override
-    public FileTreeModel getTestsAsFileTree(String dir) {
+    public FileTreeModel getTestFileTree(String dir) {
         FileTreeModel model = new FileTreeModel();
 
         String testDirectory = getTestDirectory() + dir;

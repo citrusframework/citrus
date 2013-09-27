@@ -166,6 +166,14 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     }
 
     /**
+     * Gets the variable definitions.
+     * @return
+     */
+    public Map<String, ?> getVariableDefinitions() {
+        return variableDefinitions;
+    }
+
+    /**
      * Setter for finally chain.
      * @param finallyChain
      */

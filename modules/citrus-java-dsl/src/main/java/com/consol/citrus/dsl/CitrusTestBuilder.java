@@ -82,7 +82,9 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         init();
 
         try {
-            afterPropertiesSet();
+            if (applicationContext != null) {
+                afterPropertiesSet();
+            }
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to setup test builder with application context", e);
         }
@@ -1045,7 +1047,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      *
      * @return the testCase the testCase to get.
      */
-    protected TestCase getTestCase() {
+    public TestCase getTestCase() {
         return testCase;
     }
 

@@ -26,6 +26,7 @@ public class TestCaseInfo {
     private String packageName;
     private String groups;
     private String file;
+    private TestCaseType type;
 
     /**
      * @return
@@ -81,5 +82,21 @@ public class TestCaseInfo {
      */
     public void setFile(String value) {
         this.file = value;
+    }
+
+    /**
+     * Gets the test case type.
+     * @return
+     */
+    public TestCaseType getType() {
+        return type;
+    }
+
+    /**
+     * Sets the test case type.
+     * @param type
+     */
+    public void setType(TestCaseType type) {
+        this.type = type;
     }
 }

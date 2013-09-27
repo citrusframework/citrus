@@ -18,7 +18,7 @@
                 CitrusWebSocket.on('change:onmessage', this.onSocketMessage, this);
 
                 $.ajax({
-                    url: "testcase/details/" + this.options.test.packageName + "/" + this.options.test.name,
+                    url: "testcase/details/" + this.options.test.packageName + "/" + this.options.test.name + "/" + this.options.test.type,
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function(test) {
@@ -127,7 +127,7 @@
                         if (fileContent) {
                             $('div#xml-source-' + this.test.detail.name).find('pre').text(fileContent);
                         } else {
-                            $('div#xml-source-' + this.test.detail.name).find('pre').text("<xml>No sources available!</xml>");
+                            $('div#xml-source-' + this.test.detail.name).find('pre').text("<xml>No XML sources available!</xml>");
                         }
                         $('div#xml-source-' + this.test.detail.name).find('pre').addClass("prettyprint");
                         prettyPrint();

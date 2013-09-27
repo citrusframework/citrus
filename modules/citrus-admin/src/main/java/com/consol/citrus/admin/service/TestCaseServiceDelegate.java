@@ -54,11 +54,11 @@ public class TestCaseServiceDelegate implements TestCaseService {
     }
 
     @Override
-    public TestCaseDetail getTestDetail(String packageName, String testName) {
+    public TestCaseDetail getTestDetail(String packageName, String testName, TestCaseType type) {
         if (configurationService.getProjectNature().equals(ProjectNature.FILESYSTEM)) {
-            return fileSystemTestCaseService.getTestDetail(packageName, testName);
+            return fileSystemTestCaseService.getTestDetail(packageName, testName, type);
         } else if (configurationService.getProjectNature().equals(ProjectNature.CLASSPATH)) {
-            return classpathTestCaseService.getTestDetail(packageName, testName);
+            return classpathTestCaseService.getTestDetail(packageName, testName, type);
         } else {
             throw getUnsupportedProjectNatureException();
         }
@@ -76,7 +76,7 @@ public class TestCaseServiceDelegate implements TestCaseService {
     }
 
     @Override
-    public String getSourceCode(String packageName, String name, String type) {
+    public String getSourceCode(String packageName, String name, TestCaseType type) {
         if (configurationService.getProjectNature().equals(ProjectNature.FILESYSTEM)) {
             return fileSystemTestCaseService.getSourceCode(packageName, name, type);
         } else if (configurationService.getProjectNature().equals(ProjectNature.CLASSPATH)) {
@@ -87,11 +87,11 @@ public class TestCaseServiceDelegate implements TestCaseService {
     }
 
     @Override
-    public FileTreeModel getTestsAsFileTree(String dir) {
+    public FileTreeModel getTestFileTree(String dir) {
         if (configurationService.getProjectNature().equals(ProjectNature.FILESYSTEM)) {
-            return fileSystemTestCaseService.getTestsAsFileTree(dir);
+            return fileSystemTestCaseService.getTestFileTree(dir);
         } else if (configurationService.getProjectNature().equals(ProjectNature.CLASSPATH)) {
-            return classpathTestCaseService.getTestsAsFileTree(dir);
+            return classpathTestCaseService.getTestFileTree(dir);
         } else {
             throw getUnsupportedProjectNatureException();
         }

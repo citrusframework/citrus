@@ -60,7 +60,7 @@ public class TestCaseController {
     public ModelAndView list(@RequestParam("dir") String dir) {
         ModelAndView view = new ModelAndView("FileTree");
 
-        FileTreeModel model = testCaseService.getTestsAsFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
+        FileTreeModel model = testCaseService.getTestFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
 
         if (StringUtils.hasText(model.getCompactFolder())) {
             view.addObject("compactFolder", FilenameUtils.separatorsToUnix(model.getCompactFolder()));
@@ -77,17 +77,18 @@ public class TestCaseController {
         return view;
     }
 
-    @RequestMapping(value="/details/{package}/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/details/{package}/{name}/{type}", method = { RequestMethod.GET })
     @ResponseBody
-    public TestCaseDetail getTestDetails(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
-        return testCaseService.getTestDetail(testPackage, testName);
+    public TestCaseDetail getTestDetail(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
+                                        @PathVariable("type") String type) {
+        return testCaseService.getTestDetail(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
     }
     
     @RequestMapping(value="/source/{package}/{name}/{type}", method = { RequestMethod.GET })
     @ResponseBody
     public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
-            @PathVariable("type") String type) {
-        return testCaseService.getSourceCode(testPackage, testName, type);
+                                @PathVariable("type") String type) {
+        return testCaseService.getSourceCode(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
     }
     
     @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })

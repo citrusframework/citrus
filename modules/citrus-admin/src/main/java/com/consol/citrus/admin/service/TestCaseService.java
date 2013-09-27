@@ -36,9 +36,12 @@ public interface TestCaseService {
 
     /**
      * Gets test case details such as status, description, author.
+     * @param packageName
+     * @param testName
+     * @param type
      * @return
      */
-    TestCaseDetail getTestDetail(String packageName, String testName);
+    TestCaseDetail getTestDetail(String packageName, String testName, TestCaseType type);
     
     /**
      * Runs a test case and returns result outcome (success or failure).
@@ -51,15 +54,15 @@ public interface TestCaseService {
      * Gets the source code for the given test.
      * @param packageName
      * @param name
-     * @param type Java, XMl, Groovy, etc.
+     * @param type
      * @return
      */
-    String getSourceCode(String packageName, String name, String type);
+    String getSourceCode(String packageName, String name, TestCaseType type);
 
     /**
      * Searches directory for Citrus test cases and constructs proper file tree model.
      * @param dir
      * @return
      */
-    FileTreeModel getTestsAsFileTree(String dir);
+    FileTreeModel getTestFileTree(String dir);
 }

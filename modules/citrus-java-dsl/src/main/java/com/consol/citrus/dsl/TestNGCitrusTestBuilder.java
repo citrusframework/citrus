@@ -666,7 +666,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     }
 
     @Override
-    protected TestCase getTestCase(TestContext context) {
+    public TestCase getTestCase(TestContext context) {
         return testBuilder.getTestCase();
     }
 
