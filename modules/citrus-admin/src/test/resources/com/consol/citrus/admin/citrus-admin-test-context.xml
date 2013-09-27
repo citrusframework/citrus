@@ -1,20 +1,39 @@
-<beans xmlns="http://www.springframework.org/schema/beans" 
+<beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:oxm="http://www.springframework.org/schema/oxm"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+                           http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd">
           
     <!-- Used for autowiring -->
     <context:annotation-config/>
     
-    <!-- DAO implementation mocks -->
+    <!-- Mocks -->
     <bean id="configService" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="com.consol.citrus.admin.service.ConfigurationService"/>
     </bean>
-    
+
+    <bean id="processMonitor" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.admin.launcher.ProcessMonitor"/>
+    </bean>
+
+    <bean id="loggingWebSocket" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.admin.websocket.LoggingWebSocket"/>
+    </bean>
+
+    <bean id="webSocketProcessListener" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketProcessListener"/>
+    </bean>
+
+    <bean class="com.consol.citrus.admin.service.FileSystemTestCaseService"/>
+
     <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
-    
     <bean class="com.consol.citrus.admin.util.FileHelperImpl"/>
+
+    <!-- XML Marshalling -->
+    <oxm:jaxb2-marshaller id="jaxbMarshaller">
+      <oxm:class-to-be-bound name="com.consol.citrus.admin.spring.model.SpringBeans" />
+      <oxm:class-to-be-bound name="com.consol.citrus.model.testcase.core.Testcase" />
+    </oxm:jaxb2-marshaller>
 </beans>

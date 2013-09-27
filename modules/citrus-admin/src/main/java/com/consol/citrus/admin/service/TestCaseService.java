@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,8 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.executor.TestExecutor;
 import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.model.TestCaseInfo;
-import com.consol.citrus.admin.spring.model.SpringBeans;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.model.testcase.core.Testcase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringSource;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.util.List;
 
 /**
@@ -43,113 +26,40 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
-@Component
-public class TestCaseService {
+public interface TestCaseService {
     
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestCaseService.class);
-    
-    /** Test executor depends on type of project classpath or filesystem */
-    @Autowired
-    private TestExecutor testExecutor;
-
-    @Autowired
-    @Qualifier("jaxbMarshaller")
-    private Unmarshaller unmarshaller;
-
     /**
-     * Lists all available Citrus test cases from classpath.
+     * Lists all available Citrus test cases.
      * @return
      */
-    public List<TestCaseInfo> getAllTests() {
-        return testExecutor.getTests();
-    }
+    List<TestCaseInfo> getTests();
 
     /**
      * Gets test case details such as status, description, author.
      * @return
      */
-    public TestCaseDetail getTestDetails(String packageName, String testName) {
-        // TODO also get testng groups from java part
-        TestCaseDetail testCase = new TestCaseDetail();
-        testCase.setName(testName);
-        testCase.setPackageName(packageName);
-
-        String xmlPart = testExecutor.getSourceCode(packageName, testName, "xml");
-
-        Testcase test;
-        if (StringUtils.hasText(xmlPart)) {
-            try {
-                test = ((SpringBeans) unmarshaller.unmarshal(new StringSource(xmlPart))).getTestcase();
-            } catch (IOException e) {
-                throw new CitrusAdminRuntimeException("Failed to unmarshal test case from Spring XML bean definition", e);
-            }
-        } else {
-            test = new Testcase();
-            test.setName(testName);
-        }
-
-        testCase.setDetail(test);
-
-        return testCase;
-    }
+    TestCaseDetail getTestDetail(String packageName, String testName);
     
     /**
      * Runs a test case and returns result outcome (success or failure).
      * @param testName
      * @return
      */
-    public TestResult executeTest(String testName) {
-        TestResult result = new TestResult();
-        TestCaseInfo testCase = new TestCaseInfo();
-        testCase.setName(testName);
-        result.setTestCase(testCase);
-        
-        try {
-            testExecutor.execute(testName);
-            
-            result.setSuccess(true);
-        } catch (Exception e) {
-            log.warn("Failed to execute Citrus test case '" + testName + "'", e);
-
-            result.setSuccess(false);
-            
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            e.printStackTrace(new PrintStream(os));
-            result.setStackTrace("Caused by: " + os.toString());
-            
-            if (e instanceof CitrusRuntimeException) {
-                result.setFailureStack(((CitrusRuntimeException)e).getFailureStackAsString());
-            }
-        }
-        
-        return result;
-    }
+    TestResult executeTest(String testName);
     
     /**
      * Gets the source code for the given test.
      * @param packageName
      * @param name
-     * @param type
+     * @param type Java, XMl, Groovy, etc.
      * @return
      */
-    public String getTestSources(String packageName, String name, String type) {
-        return testExecutor.getSourceCode(packageName, name, type);
-    }
+    String getSourceCode(String packageName, String name, String type);
 
     /**
-     * Gets the test base java directory according to the test executor used.
+     * Searches directory for Citrus test cases and constructs proper file tree model.
+     * @param dir
      * @return
      */
-    public String getJavaDirectory() {
-        return testExecutor.getJavaDirectory();
-    }
-
-    /**
-     * Gets the test base directory according to the test executor used.
-     * @return
-     */
-    public String getTestDirectory() {
-        return testExecutor.getTestDirectory();
-    }
+    FileTreeModel getTestsInFileTree(String dir);
 }

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.executor;
+package com.consol.citrus.admin.configuration;
 
 /**
+ * Nature of currently selected project, either classpath or file system.
+ *
  * @author Christoph Deppisch
+ * @since 1.4
  */
-public interface TestExecutor {
+public enum ProjectNature {
 
-    /**
-     * Run test and throw exception when failed.
-     * @param testName
-     * @throws Exception
-     */
-    void execute(String testName) throws Exception;
-
+    CLASSPATH,
+    FILESYSTEM
 }

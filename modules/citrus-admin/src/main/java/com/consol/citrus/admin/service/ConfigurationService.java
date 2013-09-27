@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.admin.configuration.ProjectNature;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.util.FileHelper;
 import org.slf4j.Logger;
@@ -30,8 +31,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Single point of access for all configuration settings. These are project related activities like project home selection and
- * project specific settings.
+ * Single point of access for all configuration settings. These are project related settings like project home and
+ * root directory information.
  *
  * @author Martin Maher, Christoph Deppisch
  */
@@ -47,11 +48,16 @@ public class ConfigurationService {
     
     /** Preferences fields */
     private String projectHome = System.getProperty(PROJECT_HOME, "");
-    private String rootDirectory = System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home")); 
+    private String rootDirectory = System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
+    private String basePackage = System.getProperty(BASE_PACKAGE, "com.consol.citrus");
+    private ProjectNature projectNature = ProjectNature.valueOf(System.getProperty(PROJECT_NATURE, ProjectNature.FILESYSTEM.name()));
     
     /** System property names */
     public static final String PROJECT_HOME = "project.home";
     public static final String ROOT_DIRECTORY = "root.directory";
+    /** Base package for test cases to look for */
+    public static final String BASE_PACKAGE = "test.base.package";
+    public static final String PROJECT_NATURE = "project.nature";
     
     /**
      * Check if home directory is valid Citrus project home.
@@ -130,4 +136,37 @@ public class ConfigurationService {
         System.setProperty(ROOT_DIRECTORY, rootDirectory);
     }
 
+    /**
+     * Gets the current project's nature.
+     * @return
+     */
+    public ProjectNature getProjectNature() {
+        return projectNature;
+    }
+
+    /**
+     * Sets the current project nature.
+     * @param projectNature
+     */
+    public void setProjectNature(ProjectNature projectNature) {
+        this.projectNature = projectNature;
+        System.setProperty(PROJECT_NATURE, projectNature.name());
+    }
+
+    /**
+     * Gets the current base package for tests.
+     * @return
+     */
+    public String getBasePackage() {
+        return basePackage;
+    }
+
+    /**
+     * Sets the test base package.
+     * @param basePackage
+     */
+    public void setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
+        System.setProperty(BASE_PACKAGE, basePackage);
+    }
 }

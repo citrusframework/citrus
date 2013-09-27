@@ -17,9 +17,8 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseInfo;
-import com.consol.citrus.admin.service.TestCaseService;
+import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.service.TestCaseServiceDelegate;
 import com.consol.citrus.admin.util.FileHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Controller manages test case related queries like get all tests
@@ -48,7 +44,7 @@ public class TestCaseController {
     private ProcessMonitor processMonitor;
 
     @Autowired
-    private TestCaseService testCaseService;
+    private TestCaseServiceDelegate testCaseService;
 
     @Autowired
     private FileHelper fileHelper;
@@ -56,68 +52,27 @@ public class TestCaseController {
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public List<TestCaseInfo> list() {
-        return testCaseService.getAllTests();
+        return testCaseService.getTests();
     }
 
     @RequestMapping(method = { RequestMethod.POST })
     @ResponseBody
     public ModelAndView list(@RequestParam("dir") String dir) {
-        String testDirectory = testCaseService.getTestDirectory() + FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, ""));
-        String javaDirectory = testCaseService.getJavaDirectory() + FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, ""));
-
-        String[] folders = null;
-        String[] xmlFiles;
-        String[] javaFiles;
-        String compactFolder = "";
-        do {
-            if (folders != null) {
-                if (StringUtils.hasText(compactFolder)) {
-                    compactFolder += File.separator + folders[0];
-                } else {
-                    compactFolder = folders[0];
-                }
-            }
-
-            folders = fileHelper.getFolders(StringUtils.hasText(compactFolder) ? javaDirectory + compactFolder : javaDirectory);
-            xmlFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? testDirectory + compactFolder : testDirectory, ".xml");
-            javaFiles = fileHelper.getFiles(StringUtils.hasText(compactFolder) ? javaDirectory + compactFolder : javaDirectory, ".java");
-        } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
-
-        List<Map<String, String>> xmlTestFiles = new ArrayList<Map<String, String>>();
-        for (String xmlFile : xmlFiles) {
-            HashMap<String, String> properties = new HashMap<String, String>();
-
-            properties.put("fileName", xmlFile);
-            properties.put("extension", "xml");
-            properties.put("filePath", testDirectory
-                    + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
-
-            xmlTestFiles.add(properties);
-        }
-
-        List<Map<String, String>> javaTestFiles = new ArrayList<Map<String, String>>();
-        for (String javaFile : javaFiles) {
-            HashMap<String, String> properties = new HashMap<String, String>();
-
-            properties.put("fileName", javaFile);
-            properties.put("extension", "java");
-            properties.put("filePath", javaDirectory
-                    + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
-
-            javaTestFiles.add(properties);
-        }
-
         ModelAndView view = new ModelAndView("FileTree");
 
-        if (StringUtils.hasText(compactFolder)) {
-            view.addObject("compactFolder", FilenameUtils.separatorsToUnix(compactFolder));
+        FileTreeModel model = testCaseService.getTestsInFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
+
+        if (StringUtils.hasText(model.getCompactFolder())) {
+            view.addObject("compactFolder", FilenameUtils.separatorsToUnix(model.getCompactFolder()));
+            view.addObject("baseDir", FilenameUtils.separatorsToUnix(fileHelper.decodeDirectoryUrl(dir, "")
+                    + model.getCompactFolder() + File.separator));
+        } else {
+            view.addObject("baseDir", FilenameUtils.separatorsToUnix(fileHelper.decodeDirectoryUrl(dir, "")));
         }
 
-        view.addObject("baseDir", FilenameUtils.separatorsToUnix(fileHelper.decodeDirectoryUrl(dir, "")
-                + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : "")));
-        view.addObject("folders", folders);
-        view.addObject("xmlFiles", xmlTestFiles);
-        view.addObject("javaFiles", javaTestFiles);
+        view.addObject("folders", model.getFolders());
+        view.addObject("xmlFiles", model.getXmlFiles());
+        view.addObject("javaFiles", model.getJavaFiles());
 
         return view;
     }
@@ -125,14 +80,14 @@ public class TestCaseController {
     @RequestMapping(value="/details/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public TestCaseDetail getTestDetails(@PathVariable("package") String testPackage, @PathVariable("name") String testName) {
-        return testCaseService.getTestDetails(testPackage, testName);
+        return testCaseService.getTestDetail(testPackage, testName);
     }
     
     @RequestMapping(value="/source/{package}/{name}/{type}", method = { RequestMethod.GET })
     @ResponseBody
     public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
             @PathVariable("type") String type) {
-        return testCaseService.getTestSources(testPackage, testName, type);
+        return testCaseService.getSourceCode(testPackage, testName, type);
     }
     
     @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })

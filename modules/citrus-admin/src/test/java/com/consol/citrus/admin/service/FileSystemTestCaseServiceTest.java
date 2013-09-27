@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.executor;
+package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.model.TestCaseInfo;
-import com.consol.citrus.admin.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,35 +33,35 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  */
 @ContextConfiguration(locations = { "classpath:com/consol/citrus/admin/citrus-admin-test-context.xml" })
-public class FileSystemTestExecutorTest extends AbstractTestNGSpringContextTests {
+public class FileSystemTestCaseServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private ConfigurationService configService;
-    
+
     @Autowired
-    private FileSystemTestExecutor testExecutor;
-    
+    private FileSystemTestCaseService testCaseService;
+
     @Test
     public void testGetTests() throws IOException {
         reset(configService);
 
         expect(configService.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).times(2);
-        
+
         replay(configService);
-        
-        List<TestCaseInfo> tests = testExecutor.getTests();
-        
+
+        List<TestCaseInfo> tests = testCaseService.getTests();
+
         Assert.assertNotNull(tests);
         Assert.assertEquals(tests.size(), 2L);
-        
+
         TestCaseInfo test = tests.get(0);
         Assert.assertEquals(test.getName(), "FooTest");
         Assert.assertEquals(test.getPackageName(), "");
-        
+
         test = tests.get(1);
         Assert.assertEquals(test.getName(), "BarTest");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
-        
+
         verify(configService);
     }
 }
