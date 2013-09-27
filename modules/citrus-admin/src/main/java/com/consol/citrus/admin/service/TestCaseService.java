@@ -61,5 +61,5 @@ public interface TestCaseService {
      * @param dir
      * @return
      */
-    FileTreeModel getTestsInFileTree(String dir);
+    FileTreeModel getTestsAsFileTree(String dir);
 }

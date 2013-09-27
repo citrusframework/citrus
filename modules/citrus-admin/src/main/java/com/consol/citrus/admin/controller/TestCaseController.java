@@ -60,7 +60,7 @@ public class TestCaseController {
     public ModelAndView list(@RequestParam("dir") String dir) {
         ModelAndView view = new ModelAndView("FileTree");
 
-        FileTreeModel model = testCaseService.getTestsInFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
+        FileTreeModel model = testCaseService.getTestsAsFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
 
         if (StringUtils.hasText(model.getCompactFolder())) {
             view.addObject("compactFolder", FilenameUtils.separatorsToUnix(model.getCompactFolder()));

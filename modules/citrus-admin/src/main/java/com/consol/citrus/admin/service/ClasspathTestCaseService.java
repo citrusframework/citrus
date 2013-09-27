@@ -118,7 +118,7 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
     }
 
     @Override
-    public FileTreeModel getTestsInFileTree(String dir) {
+    public FileTreeModel getTestsAsFileTree(String dir) {
         FileTreeModel model = new FileTreeModel();
 
         // TODO Implementation

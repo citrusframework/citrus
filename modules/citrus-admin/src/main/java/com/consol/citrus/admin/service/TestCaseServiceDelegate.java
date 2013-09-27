@@ -87,11 +87,11 @@ public class TestCaseServiceDelegate implements TestCaseService {
     }
 
     @Override
-    public FileTreeModel getTestsInFileTree(String dir) {
+    public FileTreeModel getTestsAsFileTree(String dir) {
         if (configurationService.getProjectNature().equals(ProjectNature.FILESYSTEM)) {
-            return fileSystemTestCaseService.getTestsInFileTree(dir);
+            return fileSystemTestCaseService.getTestsAsFileTree(dir);
         } else if (configurationService.getProjectNature().equals(ProjectNature.CLASSPATH)) {
-            return classpathTestCaseService.getTestsInFileTree(dir);
+            return classpathTestCaseService.getTestsAsFileTree(dir);
         } else {
             throw getUnsupportedProjectNatureException();
         }
