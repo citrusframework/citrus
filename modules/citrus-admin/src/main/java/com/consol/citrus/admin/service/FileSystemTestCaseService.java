@@ -175,9 +175,9 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
                 }
             }
 
-            folders = fileHelper.getFolders(javaDirectory + compactFolder);
-            xmlFiles = fileHelper.getFiles(testDirectory + compactFolder, ".xml");
-            javaFiles = fileHelper.getFiles(javaDirectory + compactFolder, ".java");
+            folders = fileHelper.getFolders(new File(javaDirectory + compactFolder));
+            xmlFiles = fileHelper.getFiles(new File(testDirectory + compactFolder), ".xml");
+            javaFiles = fileHelper.getFiles(new File(javaDirectory + compactFolder), ".java");
         } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
 
         List<FileTreeModel.FileModel> xmlTestFiles = new ArrayList<FileTreeModel.FileModel>();

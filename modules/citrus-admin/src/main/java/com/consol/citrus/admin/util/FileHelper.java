@@ -17,7 +17,6 @@
 package com.consol.citrus.admin.util;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Useful file utilities.
@@ -32,7 +31,7 @@ public interface FileHelper {
      * @param directory
      * @return
      */
-    String[] getFolders(String directory);
+    String[] getFolders(File directory);
 
     /**
      * Gets files of explicit extension nature living in given directory.
@@ -40,16 +39,16 @@ public interface FileHelper {
      * @param fileExtension
      * @return
      */
-    String[] getFiles(String directory, String fileExtension);
+    String[] getFiles(File directory, String fileExtension);
     
     /**
      * Scans file path for filename and returns file instance.
-     * @param path
+     * @param directory
      * @param filename
      * @param recursive
      * @return
      */
-    File findFileInPath(File path, String filename, boolean recursive);
+    File findFileInPath(File directory, String filename, boolean recursive);
 
 
     /**

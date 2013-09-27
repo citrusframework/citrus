@@ -16,8 +16,10 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.ClasspathTestExecutor;
 import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.util.FileHelper;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -27,11 +29,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.ClassMetadata;
 import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
 import java.io.*;
@@ -55,6 +59,9 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
     /** Test executor works on project classpath */
     @Autowired
     private ClasspathTestExecutor testExecutor;
+
+    @Autowired
+    private FileHelper fileHelper;
 
     @Override
     public List<TestCaseInfo> getTests() {
@@ -121,7 +128,59 @@ public class ClasspathTestCaseService extends AbstractTestCaseService {
     public FileTreeModel getTestsAsFileTree(String dir) {
         FileTreeModel model = new FileTreeModel();
 
-        // TODO Implementation
+        String[] folders = null;
+        String[] xmlFiles;
+        String[] javaFiles;
+        String compactFolder = "";
+
+        if (!StringUtils.hasText(dir)) {
+            compactFolder = configurationService.getBasePackage().replace('.', '/');
+        }
+
+        do {
+            if (folders != null) {
+                if (StringUtils.hasText(compactFolder)) {
+                    compactFolder += File.separator + folders[0];
+                } else {
+                    compactFolder = folders[0];
+                }
+            }
+
+            try {
+                folders = fileHelper.getFolders(new ClassPathResource(dir + compactFolder).getFile());
+                xmlFiles = fileHelper.getFiles(new ClassPathResource(dir + compactFolder).getFile(), ".xml");
+                javaFiles = fileHelper.getFiles(new ClassPathResource(dir + compactFolder).getFile(), ".java");
+            } catch (IOException e) {
+                throw new CitrusAdminRuntimeException(e);
+            }
+        } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
+
+        List<FileTreeModel.FileModel> xmlTestFiles = new ArrayList<FileTreeModel.FileModel>();
+        for (String xmlFile : xmlFiles) {
+            FileTreeModel.FileModel fileModel = new FileTreeModel.FileModel();
+
+            fileModel.setFileName(xmlFile);
+            fileModel.setExtension("xml");
+            fileModel.setFilePath(dir + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
+
+            xmlTestFiles.add(fileModel);
+        }
+
+        List<FileTreeModel.FileModel> javaTestFiles = new ArrayList<FileTreeModel.FileModel>();
+        for (String javaFile : javaFiles) {
+            FileTreeModel.FileModel fileModel = new FileTreeModel.FileModel();
+
+            fileModel.setFileName(javaFile);
+            fileModel.setExtension("java");
+            fileModel.setFilePath(dir + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
+
+            javaTestFiles.add(fileModel);
+        }
+
+        model.setCompactFolder(compactFolder);
+        model.setFolders(folders);
+        model.setXmlFiles(xmlTestFiles);
+        model.setJavaFiles(javaTestFiles);
 
         return model;
     }

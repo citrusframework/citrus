@@ -16,14 +16,15 @@
 
 package com.consol.citrus.admin.controller;
 
+import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.admin.util.FileHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import com.consol.citrus.admin.service.ConfigurationService;
-import com.consol.citrus.admin.util.FileHelper;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.File;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +43,7 @@ public class ProjectController {
     @ResponseBody
     public ModelAndView searchProjectHome(@RequestParam("dir") String dir) {
         String directory = FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, configService.getRootDirectory()));
-        String[] folders = fileHelper.getFolders(directory);
+        String[] folders = fileHelper.getFolders(new File(directory));
 
         ModelAndView view = new ModelAndView("FileTree");
         view.addObject("folders", folders);

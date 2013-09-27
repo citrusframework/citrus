@@ -35,9 +35,9 @@ public class FileHelperImpl implements FileHelper {
     /**
      * {@inheritDoc}
      */
-    public String[] getFolders(String directory) {
-        if (new File(directory).exists()) {
-            String[] files = new File(directory).list(new FilenameFilter() {
+    public String[] getFolders(File directory) {
+        if (directory.exists()) {
+            String[] files = directory.list(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return name.charAt(0) != '.' && new File(dir, name).isDirectory();
                 }
@@ -58,16 +58,14 @@ public class FileHelperImpl implements FileHelper {
     /**
      * {@inheritDoc}
      */
-    public String[] getFiles(String directory, final String fileExtension) {
+    public String[] getFiles(File directory, final String fileExtension) {
         List<String> fileNames = new ArrayList<String>();
 
-        File startDir = new File(directory);
-
-        if (!startDir.exists()) {
+        if (!directory.exists()) {
             return new String[] {};
         }
 
-        File[] found = startDir.listFiles(new FilenameFilter() {
+        File[] found = directory.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.endsWith(fileExtension);
             }
@@ -83,13 +81,13 @@ public class FileHelperImpl implements FileHelper {
     /**
      * {@inheritDoc}
      */
-    public File findFileInPath(File path, String filename, boolean recursive) {
-        if (!path.isDirectory()) {
-            String msg = String.format("Expected a directory but instead got '%s'", path.getAbsolutePath());
+    public File findFileInPath(File directory, String filename, boolean recursive) {
+        if (!directory.isDirectory()) {
+            String msg = String.format("Expected a directory but instead got '%s'", directory.getAbsolutePath());
             throw new UnsupportedOperationException(msg);
         }
 
-        File[] files = path.listFiles();
+        File[] files = directory.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
                 File returnedFile = findFileInPath(file, filename, recursive);
