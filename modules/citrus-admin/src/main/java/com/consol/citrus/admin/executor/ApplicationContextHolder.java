@@ -58,7 +58,7 @@ public class ApplicationContextHolder {
      * Loads the basic Citrus application context with all necessary parent context files.
      */
     public ApplicationContext loadApplicationContext() {
-        if (applicationContext != null) {
+        if (applicationContext == null) {
             TestContextManager testContextManager = new TestContextManager(AbstractTestNGCitrusTest.class) {
                 @Override
                 public void prepareTestInstance(Object testInstance) throws Exception {
