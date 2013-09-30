@@ -22,8 +22,16 @@
       <constructor-arg value="com.consol.citrus.admin.websocket.LoggingWebSocket"/>
     </bean>
 
+    <bean id="webSocketTestListener" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketTestListener"/>
+    </bean>
+
     <bean id="webSocketProcessListener" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketProcessListener"/>
+    </bean>
+
+    <bean id="appContextHolder" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.admin.executor.ApplicationContextHolder"/>
     </bean>
 
     <bean class="com.consol.citrus.admin.service.FileSystemTestCaseService"/>

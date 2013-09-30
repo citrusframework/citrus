@@ -19,6 +19,7 @@ package com.consol.citrus.admin.service;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.admin.converter.TestcaseModelConverter;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.admin.executor.ApplicationContextHolder;
 import com.consol.citrus.admin.model.TestCaseDetail;
 import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.spring.model.SpringBeans;
@@ -27,6 +28,7 @@ import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.model.testcase.core.Testcase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -45,6 +47,9 @@ public abstract class AbstractTestCaseService implements TestCaseService {
     @Autowired
     @Qualifier("jaxbMarshaller")
     private Unmarshaller unmarshaller;
+
+    @Autowired
+    private ApplicationContextHolder applicationContextHolder;
 
     /**
      * Gets test case details such as status, description, author.
@@ -80,7 +85,14 @@ public abstract class AbstractTestCaseService implements TestCaseService {
         try {
             Class<?> testBuilderClass = Class.forName(packageName + "." + testName);
 
+            if (!applicationContextHolder.isApplicationContextLoaded()) {
+                applicationContextHolder.loadApplicationContext();
+            }
+
             TestNGCitrusTestBuilder builder = (TestNGCitrusTestBuilder) testBuilderClass.getConstructor(new Class[]{}).newInstance();
+            AutowireCapableBeanFactory beanFactory = applicationContextHolder.getApplicationContext().getAutowireCapableBeanFactory();
+            beanFactory.autowireBeanProperties(builder, AutowireCapableBeanFactory.AUTOWIRE_NO, false);
+            beanFactory.initializeBean(builder, testBuilderClass.getName());
 
             for (Method method : ReflectionUtils.getAllDeclaredMethods(testBuilderClass)) {
                 if (method.getAnnotation(CitrusTest.class) != null) {
