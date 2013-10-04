@@ -21,8 +21,7 @@ package com.consol.citrus.admin.launcher;
  * using the {@link com.consol.citrus.admin.launcher.ProcessLauncher}.
  *
  * @author Martin.Maher@consol.de
- * @version $Id$
- * @since 2012.11.30
+ * @since 1.3
  */
 public interface ProcessListener {
 

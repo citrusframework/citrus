@@ -66,7 +66,7 @@
                 $(this.el).find('ul.nav').find('li').last().find('a').tab('show');
 
                 $.ajax({
-                    url: "testcase/execute/" + this.test.detail.name + "?runConfiguration=" + this.runConfigurationId,
+                    url: "testcase/execute/" + this.test.packageName + "/" + this.test.detail.name + "?runConfiguration=" + this.runConfigurationId,
                     type: 'GET',
                     dataType: "json"
                 });
@@ -78,9 +78,7 @@
                 $.ajax({
                     url: "testcase/stop/" + this.test.detail.name,
                     type: 'GET',
-                    dataType: "json",
-                    success: function() {
-                    }
+                    dataType: "json"
                 });
 
                 return false;

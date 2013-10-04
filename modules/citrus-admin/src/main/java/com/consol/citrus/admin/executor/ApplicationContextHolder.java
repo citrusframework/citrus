@@ -19,6 +19,7 @@ package com.consol.citrus.admin.executor;
 import com.consol.citrus.admin.websocket.WebSocketTestListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContextManager;
@@ -27,13 +28,13 @@ import com.consol.citrus.report.*;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 
 /**
- * Singleton bean holding the application context for this Citrus project. Singleton in applciation context so all participating
+ * Singleton bean holding the application context for this Citrus project. Singleton in application context so all participating
  * beans can autowire this class and application context is only loaded once.
  * 
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class ApplicationContextHolder {
+public class ApplicationContextHolder implements DisposableBean {
     
     /** Citrus application context */
     private ApplicationContext applicationContext;
@@ -67,6 +68,7 @@ public class ApplicationContextHolder {
                     // add special admin webapp test listeners
                     applicationContext.getBean(TestListeners.class).addTestListener(webSocketTestEventListener);
                     applicationContext.getBean(TestActionListeners.class).addTestActionListener(webSocketTestEventListener);
+                    applicationContext.getBean(MessageListeners.class).addMessageListener(webSocketTestEventListener);
                 }
             };
 
@@ -106,5 +108,12 @@ public class ApplicationContextHolder {
      */
     public ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (applicationContext != null) {
+            destroyApplicationContext();
+        }
     }
 }

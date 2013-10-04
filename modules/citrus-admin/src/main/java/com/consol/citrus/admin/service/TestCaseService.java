@@ -46,20 +46,21 @@ public interface TestCaseService {
     
     /**
      * Runs a test case and returns result outcome (success or failure).
+     * @param packageName
      * @param testName
      * @param runConfigurationId
      * @return
      */
-    TestResult executeTest(String testName, String runConfigurationId);
+    TestResult executeTest(String packageName, String testName, String runConfigurationId);
     
     /**
      * Gets the source code for the given test.
      * @param packageName
-     * @param name
+     * @param testName
      * @param type
      * @return
      */
-    String getSourceCode(String packageName, String name, TestCaseType type);
+    String getSourceCode(String packageName, String testName, TestCaseType type);
 
     /**
      * Searches directory for Citrus test cases and constructs proper file tree model.

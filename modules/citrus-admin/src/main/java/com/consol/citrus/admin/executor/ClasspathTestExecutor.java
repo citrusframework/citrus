@@ -16,17 +16,18 @@
 
 package com.consol.citrus.admin.executor;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusCliOptions;
 import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.admin.websocket.WebSocketLoggingAppender;
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.report.TestReporter;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.ParseException;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.TestNG;
+import org.testng.xml.*;
 
-import java.io.File;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Executes a test case from direct classpath using same JVM in which this server web application is running.
@@ -35,27 +36,76 @@ import java.util.Map;
 public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfiguration> {
 
     @Autowired
-    private ApplicationContextHolder appContextHolder;
+    private ApplicationContextHolder applicationContextHolder;
     
     @Autowired
     private ConfigurationService configService;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void execute(String testName, ClasspathRunConfiguration configuration) throws ParseException {
-        Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), 
-                new String[] { "-test", testName, "-testdir", new File(configService.getProjectHome()).getAbsolutePath() }));
-        citrus.run();
+    @Autowired
+    private WebSocketLoggingAppender webSocketLoggingAppender;
 
-        if (!appContextHolder.isApplicationContextLoaded()) {
-            appContextHolder.loadApplicationContext();
+    @Override
+    public void execute(String packageName, String testName, ClasspathRunConfiguration configuration) {
+        try {
+            Class<?> testClass = Class.forName(packageName + "." + testName);
+
+            webSocketLoggingAppender.setProcessId(testName);
+
+            if (!applicationContextHolder.isApplicationContextLoaded()) {
+                applicationContextHolder.loadApplicationContext();
+            }
+
+            if (TestNGCitrusTestBuilder.class.isAssignableFrom(testClass)) {
+                runTestBuilder(testName, testClass);
+            } else if (AbstractTestNGCitrusTest.class.isAssignableFrom(testClass)) {
+                runTest(testName, testClass);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new CitrusAdminRuntimeException("Failed to execute test case as it is not part of classpath: " + packageName + "." + testName, e);
+        } catch (Exception e) {
+            throw new CitrusAdminRuntimeException("Failed to load Java source " + packageName + "." + testName, e);
+        } finally {
+            Map<String, TestReporter> reporters = applicationContextHolder.getApplicationContext().getBeansOfType(TestReporter.class);
+            for (TestReporter reporter : reporters.values()) {
+                reporter.clearTestResults();
+            }
+
+            webSocketLoggingAppender.setProcessId(null);
         }
-        
-        Map<String, TestReporter> reporters = appContextHolder.getApplicationContext().getBeansOfType(TestReporter.class);
-        for (TestReporter reporter : reporters.values()) {
-            reporter.clearTestResults();
+    }
+
+    /**
+     * Instantiates and runs Citrus test class.
+     * @param testName
+     * @param testClass
+     */
+    private void runTest(String testName, Class<?> testClass) {
+        TestNG testng = new TestNG(true);
+
+        XmlSuite suite = new XmlSuite();
+        suite.setName("citrus-test-suite");
+
+        XmlTest test = new XmlTest(suite);
+        test.setName(testName);
+        test.setXmlClasses(Collections.singletonList(new XmlClass(testClass)));
+
+        List<XmlSuite> suites = new ArrayList<XmlSuite>();
+        suites.add(suite);
+        testng.setXmlSuites(suites);
+        testng.run();
+
+        if (testng.hasFailure()) {
+            throw new CitrusAdminRuntimeException("Citrus test run failed!");
         }
+    }
+
+    /**
+     * Instantiates and runs Citrus Java DSL test builder class.
+     * @param testName
+     * @param testClass
+     */
+    private void runTestBuilder(String testName, Class<?> testClass) {
+        runTest(testName, testClass);
     }
 
 }

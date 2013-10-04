@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/context")
+@RequestMapping("/appcontext")
 public class AppContextController {
 
     @Autowired
@@ -42,15 +42,14 @@ public class AppContextController {
         return appContextHolder.isApplicationContextLoaded();
     }
 
-    @RequestMapping(method = { RequestMethod.GET })
-    public ResponseEntity<?> startContext(HttpEntity<String> requestEntity) {
+    @RequestMapping(value="/start", method = { RequestMethod.GET })
+    public ResponseEntity<String> startContext(HttpEntity<String> requestEntity) {
         appContextHolder.loadApplicationContext();
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
-    @RequestMapping(method = { RequestMethod.DELETE })
-    @ResponseBody
-    public ResponseEntity<?> stopContext(HttpEntity<String> requestEntity) {
+
+    @RequestMapping(value="/stop", method = { RequestMethod.GET })
+    public ResponseEntity<String> stopContext(HttpEntity<String> requestEntity) {
         appContextHolder.destroyApplicationContext();
         return new ResponseEntity<String>(HttpStatus.OK);
     }

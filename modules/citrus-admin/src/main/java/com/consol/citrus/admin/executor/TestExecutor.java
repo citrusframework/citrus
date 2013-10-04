@@ -25,10 +25,11 @@ public interface TestExecutor<C extends RunConfiguration> {
 
     /**
      * Run test and throw exception when failed.
+     * @param packageName
      * @param testName
      * @param runConfiguration
      * @throws Exception
      */
-    void execute(String testName, C runConfiguration) throws Exception;
+    void execute(String packageName, String testName, C runConfiguration) throws Exception;
 
 }

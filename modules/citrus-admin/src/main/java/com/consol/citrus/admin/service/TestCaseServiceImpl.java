@@ -129,7 +129,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     }
 
     @Override
-    public TestResult executeTest(String testName, String runConfigurationId) {
+    public TestResult executeTest(String packageName, String testName, String runConfigurationId) {
         TestResult result = new TestResult();
         TestCaseInfo testCase = new TestCaseInfo();
         testCase.setName(testName);
@@ -137,7 +137,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
 
         try {
             RunConfiguration configuration = configurationService.getRunConfiguration(runConfigurationId);
-            getTestExecutorForConfiguration(configuration).execute(testName, configuration);
+            TestExecutor<RunConfiguration> testExecutor = getTestExecutorForConfiguration(configuration);
+            testExecutor.execute(packageName, testName, configuration);
 
             result.setSuccess(true);
         } catch (Exception e) {

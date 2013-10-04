@@ -25,6 +25,8 @@ import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -94,17 +96,18 @@ public class TestCaseController {
         return testCaseService.getSourceCode(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
     }
     
-    @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })
+    @RequestMapping(value="/execute/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public String executeTest(@PathVariable("name") String testName, @RequestParam("runConfiguration") String runConfigurationId) {
-        testCaseService.executeTest(testName, runConfigurationId);
-        return "LAUNCHED";
+    public ResponseEntity<String> executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
+                                              @RequestParam("runConfiguration") String runConfigurationId) {
+        testCaseService.executeTest(testPackage, testName, runConfigurationId);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value="/stop/{processId}", method = { RequestMethod.GET })
     @ResponseBody
-    public String stopTest(@PathVariable("processId") String processId) {
+    public ResponseEntity<String> stopTest(@PathVariable("processId") String processId) {
         processMonitor.stopProcess(processId);
-        return "STOPPED";
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 }

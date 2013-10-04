@@ -34,9 +34,7 @@ public class WebSocketProcessListener implements ProcessListener {
     /** Last message data collected by multiple lines of process output */
     private JSONObject messageDataEvent;
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onProcessActivity(String processId, String output) {
 
         // first check if we have a pending message data event to handle
@@ -72,37 +70,27 @@ public class WebSocketProcessListener implements ProcessListener {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onProcessOutput(String processId, String output) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.LOG_MESSAGE, output));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onProcessStart(String processId) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.PROCESS_START, "process started"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onProcessSuccess(String processId) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.PROCESS_SUCCESS, "process completed successfully"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onProcessFail(String processId, int exitCode) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exit code " + exitCode));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onProcessFail(String processId, Throwable e) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.PROCESS_FAILED, "process failed with exception " + e.getLocalizedMessage()));
     }

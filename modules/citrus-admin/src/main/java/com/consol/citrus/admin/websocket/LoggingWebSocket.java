@@ -49,7 +49,6 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                LOG.debug("Pinging client to keep connection alive");
                 ping();
             }
         };

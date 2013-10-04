@@ -46,10 +46,8 @@ public class FileSystemTestExecutor implements TestExecutor<MavenRunConfiguratio
     @Autowired
     private WebSocketProcessListener webSocketProcessListener;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void execute(String testName, MavenRunConfiguration configuration) throws ParseException {
+    @Override
+    public void execute(String packageName, String testName, MavenRunConfiguration configuration) throws ParseException {
         File file = new File(configService.getProjectHome());
         ProcessBuilder processBuilder = new MavenRunSingleTestCommand(file, testName, configuration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);

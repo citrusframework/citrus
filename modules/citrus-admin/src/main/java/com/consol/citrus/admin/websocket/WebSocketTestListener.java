@@ -18,9 +18,7 @@ package com.consol.citrus.admin.websocket;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.report.MessageListener;
-import com.consol.citrus.report.TestActionListener;
-import com.consol.citrus.report.TestListener;
+import com.consol.citrus.report.*;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,72 +33,64 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
     @Autowired
     private LoggingWebSocket loggingWebSocket;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onTestActionStart(TestCase testCase, TestAction testAction) {
-        loggingWebSocket.push(SocketEvent.createEvent(testCase.getName(), SocketEvent.TEST_ACTION_START, testAction.getName()));
+    @Override
+    public void onTestActionStart(TestCase test, TestAction testAction) {
+        loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_ACTION_START, testAction.getName()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onTestActionFinish(TestCase testCase, TestAction testAction) {
-        loggingWebSocket.push(SocketEvent.createEvent(testCase.getName(), SocketEvent.TEST_ACTION_FINISH, testAction.getName()));
+    @Override
+    public void onTestActionFinish(TestCase test, TestAction testAction) {
+        long totalActions = test.getActionCount();
+        int currentAction = test.getActionIndex(testAction) + 1;
+
+        long progressValue = Math.round((Double.valueOf(currentAction) / Double.valueOf(totalActions)) * 100);
+
+        JSONObject event = SocketEvent.createEvent(test.getName(), SocketEvent.TEST_ACTION_FINISH,
+                "TEST ACTION " + currentAction + "/" + totalActions);
+        event.put("progress", String.valueOf(progressValue));
+        loggingWebSocket.push(event);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
-        loggingWebSocket.push(SocketEvent.createEvent(testCase.getName(), SocketEvent.TEST_ACTION_SKIP, testAction.getName()));
+    @Override
+    public void onTestActionSkipped(TestCase test, TestAction testAction) {
+        loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_ACTION_SKIP, testAction.getName()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onTestStart(TestCase test) {
+        loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.PROCESS_START, "process started"));
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_START, test.getName()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onTestSuccess(TestCase test) {
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_SUCCESS, test.getName()));
+        loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.PROCESS_SUCCESS, "process completed successfully"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_FAILED, test.getName()));
+        loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.PROCESS_FAILED, "process failed with exception " + cause.getLocalizedMessage()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onTestSkipped(TestCase test) {
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_SKIP, test.getName()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onTestFinish(TestCase test) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onInboundMessage(String message) {
         loggingWebSocket.push(SocketEvent.createEvent("INBOUND", SocketEvent.INBOUND_MESSAGE, message));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void onOutboundMessage(String message) {
         loggingWebSocket.push(SocketEvent.createEvent("OUTBOUND", SocketEvent.OUTBOUND_MESSAGE, message));
     }
+
 }

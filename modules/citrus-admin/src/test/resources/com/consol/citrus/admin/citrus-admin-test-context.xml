@@ -30,6 +30,10 @@
       <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketProcessListener"/>
     </bean>
 
+    <bean id="webSocketLoggingAppender" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.admin.websocket.WebSocketLoggingAppender"/>
+    </bean>
+
     <bean id="appContextHolder" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.admin.executor.ApplicationContextHolder"/>
     </bean>
