@@ -1,37 +1,50 @@
-<h4 class="page-header">
-  <span>Variables:</span>
-</h4>
+<h4><span>Variables:</span></h4>
 
-<dl class="test-variables dl-horizontal">
+<table id="test-variables" class="table table-hover table-condensed table-bordered">
+  <thead>
+  <tr>
+    <th width="200px">Name</th>
+    <th>Value</th>
+    <th width="50px;"></th>
+  </tr>
+  </thead>
+  <tbody>
   {{#unless test.variables.variables}}
-  <dt>No values defined!</dt><dd>&nbsp;</dd>
+  <tr><td colspan="3">&nbsp;<i class="icon-remove"></i> No values defined!</td></tr>
   {{/unless}}
 
   {{#each test.variables.variables}}
-  <dt>{{name}}:</dt><dd>{{value}}</dd>
+  <tr id="{{id}}">
+    <td>{{name}}</td>
+    <td>{{value}}</td>
+    <td>
+      <a class="edit-variable" href="#" title="Edit variable"><i class="icon-pencil"></i></a>&nbsp;
+      <a class="del-variable" href="#" title="Remove variable"><i class="icon-trash"></i></a>&nbsp;
+    </td>
+  </tr>
   {{/each}}
-</dl>
+  </tbody>
+</table>
 
 <h4 class="page-header">
   <span>Actions:</span>
 </h4>
 
-<div class="test-action action-start">
-  <i class="icon-play"></i>
-  <p><b>start</b></p>
-</div>
-
 <div class="test-actions">
+  <div class="start-action">
+    <i class="icon-play"></i>
+  </div>
+
   {{#each test.actions.actionsAndSendsAndReceives}}
     {{#if actionsAndSendsAndReceives}}
     <div class="test-container">
     {{#each actionsAndSendsAndReceives}}
       <div class="test-transition">
-        <i class="icon-long-arrow-right"></i>
+        <i class="icon-long-arrow-down"></i>
       </div>
       <div class="test-action">
         <i class="icon-{{type}}">&nbsp;</i>
-        <p><b>{{type}}</b></p>
+        <p>{{type}}</p>
       </div>
     {{/each}}
     </div>
@@ -39,22 +52,19 @@
 
     {{#unless actionsAndSendsAndReceives}}
     <div class="test-transition">
-      <i class="icon-long-arrow-right"></i>
+      <i class="icon-long-arrow-down"></i>
     </div>
     <div class="test-action">
       <i class="icon-{{type}}">&nbsp;</i>
-      <p><b>{{type}}</b></p>
+      <p>{{type}}</p>
     </div>
     {{/unless}}
   {{/each}}
-</div>
+  <div class="test-transition">
+    <i class="icon-long-arrow-down"></i>
+  </div>
 
-<div class="test-transition">
-  <i class="icon-long-arrow-right"></i>
+  <div class="stop-action">
+    <i class="icon-stop"></i>
+  </div>
 </div>
-<div class="test-action action-stop">
-  <i class="icon-stop"></i>
-  <p><b>stop</b></p>
-</div>
-
-<div class="clearfix"></div>

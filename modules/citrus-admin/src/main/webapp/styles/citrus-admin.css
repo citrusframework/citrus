@@ -176,6 +176,7 @@ h2 i, h3 i, h4 i {
 }
 
 .test-details-content {
+    max-height: 600px;
     padding-left: 20px;
     padding-top: 5px;
     padding-right: 20px;
@@ -597,16 +598,43 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .test-actions {
-    width: 850px;
+    margin-top: 20px;
+    padding-left: 45%;
+}
+
+.start-action, .stop-action {
+    padding: 0px 0px 0px 0px;
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    margin: 5px 15px;
+    background-color: #dddddd;
+    *background-color: #dddddd;
+    background-image: -moz-linear-gradient(top, #ffffff, #dddddd);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#dddddd));
+    background-image: -webkit-linear-gradient(top, #ffffff, #dddddd);
+    background-image: -o-linear-gradient(top, #ffffff, #dddddd);
+    background-image: linear-gradient(to bottom, #ffffff, #dddddd);
+    background-repeat: repeat-x;
+    border: 2px solid #a0a0a0;
+    *border: 0;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffdddddd', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    *zoom: 1;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .test-action {
     padding: 0px 0px 0px 0px;
-    float: left;
     width: 78px;
     height: 48px;
     text-align: center;
-    margin: 20px 0;
+    margin: 5px 0;
     cursor: pointer;
     background-color: #dddddd;
     *background-color: #dddddd;
@@ -642,16 +670,21 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .test-container {
-    float: left;
     border-left: 1px solid #dddddd;
     border-right: 1px solid #dddddd;
 }
 
-.test-action p {
+.test-action p, .start-action p, .stop-action p {
     font-size: 12px;
     line-height: 20px;
     margin-bottom: 0px;
     padding-top: 5px;
+}
+
+.start-action i, .stop-action i {
+    position: relative;
+    top: 14px;
+    font-size: 20px;
 }
 
 .test-action i {
@@ -661,11 +694,11 @@ input[readonly], select[readonly], textarea[readonly] {
     font-size: 20px;
 }
 
-.test-action i.icon-play {
+.start-action i.icon-play {
     color: #5ab15a;
 }
 
-.test-action i.icon-stop {
+.stop-action i.icon-stop {
     color: #F4645C;
 }
 
@@ -713,17 +746,14 @@ input[readonly], select[readonly], textarea[readonly] {
 
 .test-transition {
     padding: 0px 0px 0px 0px;
-    float: left;
     background: none;
-    width: 20px;
-    height: 50px;
+    width: 78px;
+    height: 20px;
     text-align: center;
-    margin: 20px 10px;
+    margin: 0px 0px;
 }
 
 .test-transition i {
-    position: relative;
-    top: 15px;
     font-size: 20px;
 }
 
@@ -745,5 +775,4 @@ input[readonly], select[readonly], textarea[readonly] {
   padding: 8px;
   background-color: #ffffff;
   border: none;
-  max-height: 600px;
 }
