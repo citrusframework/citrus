@@ -11,7 +11,7 @@ public abstract class AbstractRunConfiguration implements RunConfiguration {
 
     /** Name of this run configuration */
     private String id;
-
+    private boolean standard = false;
     private Properties systemProperties = new Properties();
 
     @Override
@@ -30,5 +30,14 @@ public abstract class AbstractRunConfiguration implements RunConfiguration {
 
     public void setSystemProperties(Properties systemProperties) {
         this.systemProperties = systemProperties;
+    }
+
+    @Override
+    public boolean isStandard() {
+        return standard;
+    }
+
+    public void setStandard(boolean standard) {
+        this.standard = standard;
     }
 }

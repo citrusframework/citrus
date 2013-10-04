@@ -68,6 +68,7 @@ public class ConfigurationService {
     public ConfigurationService() {
         MavenRunConfiguration mavenRunConfiguration = new MavenRunConfiguration();
         mavenRunConfiguration.setId("Maven");
+        mavenRunConfiguration.setStandard(true);
         runConfigurationList.add(mavenRunConfiguration);
 
         ClasspathRunConfiguration classpathRunConfiguration = new ClasspathRunConfiguration();

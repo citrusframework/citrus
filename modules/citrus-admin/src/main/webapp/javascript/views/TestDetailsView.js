@@ -4,7 +4,7 @@
     
             test: {},
             runConfigurations: {},
-            runConfigurationId: "",
+            activeConfiguration: {},
             messages: [],
 
             events: {
@@ -25,7 +25,8 @@
                     dataType: "json",
                     success: _.bind(function(runConfigurations) {
                         this.runConfigurations = runConfigurations;
-                        this.runConfigurationId = runConfigurations[0].id;
+
+                        this.activeConfiguration = _.find(runConfigurations, function(i) { return i.standard });
                     }, this),
                     async: false
                 });
@@ -42,13 +43,22 @@
             },
 
             render: function() {
-                $(this.el).html(TemplateManager.template('TestDetailsView', { test: this.test, runConfigurations: this.runConfigurations }));
+                $(this.el).html(TemplateManager.template('TestDetailsView', { test: this.test, runConfigurations: this.runConfigurations, activeConfiguration: this.activeConfiguration }));
                 $(this.el).find('div.test-design').html(TemplateManager.template('TestDesignView', { test: this.test.detail }));
                 return this;
             },
 
             selectRunConfig: function(event) {
-                this.runConfigurationId = event.currentTarget.innerText;
+                if (event.currentTarget.id != "New") {
+                    this.activeConfiguration = _.find(this.runConfigurations, function(i) { return i.id === event.currentTarget.id });
+                }
+
+                $(this.el).find('.test-details-header').find('.btn-group').find('ul.dropdown-menu').find('li').find('a.run-config').find('i.icon-ok').hide();
+                $(this.el).find('.test-details-header').find('.btn-group').find('ul.dropdown-menu').find('li').find('a#' + event.currentTarget.id).find('i.icon-ok').show();
+
+                $(this.el).find('.test-details-header').find('.btn-group').find('.run-test').find('span.active-configuration').html('[' + event.currentTarget.id + ']');
+                $(this.el).find('.test-details-header').find('.btn-group').find('button.dropdown-toggle').dropdown('toggle');
+
                 return false;
             },
           
@@ -66,7 +76,7 @@
                 $(this.el).find('ul.nav').find('li').last().find('a').tab('show');
 
                 $.ajax({
-                    url: "testcase/execute/" + this.test.packageName + "/" + this.test.detail.name + "?runConfiguration=" + this.runConfigurationId,
+                    url: "testcase/execute/" + this.test.packageName + "/" + this.test.detail.name + "?runConfiguration=" + this.activeConfiguration.id,
                     type: 'GET',
                     dataType: "json"
                 });

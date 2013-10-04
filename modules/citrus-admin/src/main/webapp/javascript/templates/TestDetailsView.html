@@ -1,16 +1,18 @@
 <h2 class="test-details-header">{{test.detail.name}} <small>{{test.packageName}}</small>
   <div class="btn-group pull-right">
-    <a class="btn run-test" type="button" title="Run test">&nbsp;<i class="icon-play"></i>&nbsp;Run</a>
+    <a class="btn run-test" type="button" title="Run test">&nbsp;<i class="icon-play"></i>&nbsp;Run <span class="active-configuration">[{{activeConfiguration.id}}]</span></a>
     <a class="btn cancel-test" type="button" title="Stop test execution" style="display: none;">&nbsp;<i class="icon-stop"></i>&nbsp;Stop</a>
     <button class="btn dropdown-toggle" data-toggle="dropdown">
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-      {{# each runConfigurations}}
-      <li><a href="#" class="run-config">{{id}}</a></li>
+      <li><a id="New" href="#" class="run-config">New ...&nbsp;<i class="icon-ok" style="display: none;"></i></a></li>
+      <li class="divider"></li>
+      {{#each runConfigurations}}
+      <li><a id="{{id}}" href="#" class="run-config">{{id}}&nbsp;<i class="icon-ok" style="{{#unless standard}}display: none;{{/unless}}"></i></a></li>
       {{/each}}
       <li class="divider"></li>
-      <li><a href="#" class="run-config">Custom</a></li>
+      <li><a id="Edit" href="#config">Edit configurations ...</a></li>
     </ul>
   </div>
 </h2>

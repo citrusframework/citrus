@@ -18,4 +18,10 @@ public interface RunConfiguration {
       * @return
      */
     Properties getSystemProperties();
+
+    /**
+     * Marks run configuration as standard configuration.
+     * @return
+     */
+    boolean isStandard();
 }
