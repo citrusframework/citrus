@@ -18,6 +18,7 @@ package com.consol.citrus.admin.executor;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusCliOptions;
+import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.report.TestReporter;
 import org.apache.commons.cli.GnuParser;
@@ -31,7 +32,7 @@ import java.util.Map;
  * Executes a test case from direct classpath using same JVM in which this server web application is running.
  * @author Christoph Deppisch
  */
-public class ClasspathTestExecutor implements TestExecutor {
+public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfiguration> {
 
     @Autowired
     private ApplicationContextHolder appContextHolder;
@@ -42,7 +43,7 @@ public class ClasspathTestExecutor implements TestExecutor {
     /**
      * {@inheritDoc}
      */
-    public void execute(String testName) throws ParseException {
+    public void execute(String testName, ClasspathRunConfiguration configuration) throws ParseException {
         Citrus citrus = new Citrus(new GnuParser().parse(new CitrusCliOptions(), 
                 new String[] { "-test", testName, "-testdir", new File(configService.getProjectHome()).getAbsolutePath() }));
         citrus.run();

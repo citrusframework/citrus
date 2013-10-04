@@ -187,9 +187,8 @@ h2 i, h3 i, h4 i {
 
 .test-details-header {
     margin: 0px;
-    padding: 5px 20px;
+    padding: 15px 20px;
     background-color: #ffffff;
-    line-height: 60px;
 }
 
 .test-details-header small {

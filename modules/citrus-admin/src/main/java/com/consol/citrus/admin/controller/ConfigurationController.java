@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.controller;
 
+import com.consol.citrus.admin.configuration.RunConfiguration;
 import com.consol.citrus.admin.model.MessageReceiverItem;
 import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.admin.service.*;
@@ -48,8 +49,15 @@ public class ConfigurationController {
 
     @Autowired
     private MessageSenderService messageSenderService;
+
     @Autowired
     private MessageReceiverService messageReceiverService;
+
+    @RequestMapping(value = "/run", method = RequestMethod.GET)
+    @ResponseBody
+    public List<RunConfiguration> getRunConfigurations() {
+        return configService.getRunConfigurations();
+    }
 
     @RequestMapping(value = "/projecthome", method = RequestMethod.GET)
     @ResponseBody

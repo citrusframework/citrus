@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.launcher.process;
+package com.consol.citrus.admin.launcher.process.maven;
+
+import com.consol.citrus.admin.configuration.MavenRunConfiguration;
 
 import java.io.File;
 
@@ -22,14 +24,19 @@ import java.io.File;
  * ProcessBuilder for launching a single citrus test.
  *
  * @author Martin.Maher@consol.de
- * @version $Id$
- * @since 2013.01.26
+ * @since 1.3
  */
-public class ExecuteSingleTest extends ExecuteCommand {
+public class MavenRunSingleTestCommand extends MavenCommand {
 
-    private static final String MVN_EXECUTE_SINGLE_TEST = "mvn compile surefire:test -Dtest=%s";
+    /** Test to execute */
+    private String testName;
 
-    public ExecuteSingleTest(File projectDirectory, String testName) {
-        super(String.format(MVN_EXECUTE_SINGLE_TEST, testName), projectDirectory);
+    public MavenRunSingleTestCommand(File projectDirectory, String testName, MavenRunConfiguration configuration) {
+        super(MavenCommand.COMPILE + MavenCommand.TEST, projectDirectory, configuration);
+        this.testName = testName;
+    }
+
+    protected void prepareConfiguration(MavenRunConfiguration configuration) {
+        configuration.getSystemProperties().put("test", testName);
     }
 }

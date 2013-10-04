@@ -3,10 +3,12 @@
         var TestDetailsView = Backbone.View.extend({
     
             test: {},
-
+            runConfigurations: {},
+            runConfigurationId: "",
             messages: [],
 
             events: {
+                "click a.run-config" : "selectRunConfig",
                 "click a.run-test" : "runTest",
                 "click a.cancel-test" : "cancelTest",
                 "click a.xml-source" : "getXmlSource",
@@ -16,6 +18,17 @@
 
             initialize: function() {
                 CitrusWebSocket.on('change:onmessage', this.onSocketMessage, this);
+
+                $.ajax({
+                    url: "config/run",
+                    type: 'GET',
+                    dataType: "json",
+                    success: _.bind(function(runConfigurations) {
+                        this.runConfigurations = runConfigurations;
+                        this.runConfigurationId = runConfigurations[0].id;
+                    }, this),
+                    async: false
+                });
 
                 $.ajax({
                     url: "testcase/details/" + this.options.test.packageName + "/" + this.options.test.name + "/" + this.options.test.type,
@@ -29,9 +42,14 @@
             },
 
             render: function() {
-                $(this.el).html(TemplateManager.template('TestDetailsView', this.test));
+                $(this.el).html(TemplateManager.template('TestDetailsView', { test: this.test, runConfigurations: this.runConfigurations }));
                 $(this.el).find('div.test-design').html(TemplateManager.template('TestDesignView', { test: this.test.detail }));
                 return this;
+            },
+
+            selectRunConfig: function(event) {
+                this.runConfigurationId = event.currentTarget.innerText;
+                return false;
             },
           
             runTest: function() {
@@ -48,7 +66,7 @@
                 $(this.el).find('ul.nav').find('li').last().find('a').tab('show');
 
                 $.ajax({
-                    url: "testcase/execute/" + this.test.detail.name,
+                    url: "testcase/execute/" + this.test.detail.name + "?runConfiguration=" + this.runConfigurationId,
                     type: 'GET',
                     dataType: "json"
                 });

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.launcher.process;
+package com.consol.citrus.admin.launcher.process.maven;
+
+import com.consol.citrus.admin.configuration.MavenRunConfiguration;
 
 import java.io.File;
 
@@ -22,14 +24,16 @@ import java.io.File;
  * ProcessBuilder for launching a single citrus test.
  *
  * @author Martin.Maher@consol.de
- * @version $Id$
- * @since 2013.01.26
+ * @since 1.3
  */
-public class RebuildProject extends ExecuteCommand {
+public class MavenRebuildProjectCommand extends MavenCommand {
 
-    private static final String MVN_REBUILD = "mvn clean install -Dtest -DfailIfNoTests=false";
+    public MavenRebuildProjectCommand(File workingDirectory, MavenRunConfiguration configuration) {
+        super(MavenCommand.CLEAN + MavenCommand.INSTALL, workingDirectory, configuration);
+    }
 
-    public RebuildProject(File projectDirectory) {
-        super(MVN_REBUILD, projectDirectory);
+    protected void prepareConfiguration(MavenRunConfiguration configuration) {
+        configuration.getSystemProperties().put("test", "");
+        configuration.getSystemProperties().put("failIfNoTests", "false");
     }
 }

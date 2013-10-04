@@ -17,8 +17,13 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
+import com.consol.citrus.admin.configuration.MavenRunConfiguration;
+import com.consol.citrus.admin.configuration.RunConfiguration;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
+import com.consol.citrus.admin.executor.ClasspathTestExecutor;
 import com.consol.citrus.admin.executor.FileSystemTestExecutor;
+import com.consol.citrus.admin.executor.TestExecutor;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.util.FileHelper;
 import com.consol.citrus.dsl.TestBuilder;
@@ -44,17 +49,21 @@ import java.util.List;
  * @since 1.4
  */
 @Component
-public class FileSystemTestCaseService extends AbstractTestCaseService {
+public class TestCaseServiceImpl extends AbstractTestCaseService {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FileSystemTestCaseService.class);
+    private static Logger log = LoggerFactory.getLogger(TestCaseServiceImpl.class);
 
     @Autowired
     private ConfigurationService configurationService;
 
     /** Test executor works on filesystem */
     @Autowired
-    private FileSystemTestExecutor testExecutor;
+    private FileSystemTestExecutor fileSystemTestExecutor;
+
+    /** Test executor works on project classpath */
+    @Autowired
+    private ClasspathTestExecutor classpathTestExecutor;
 
     @Autowired
     private FileHelper fileHelper;
@@ -120,14 +129,15 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
     }
 
     @Override
-    public TestResult executeTest(String testName) {
+    public TestResult executeTest(String testName, String runConfigurationId) {
         TestResult result = new TestResult();
         TestCaseInfo testCase = new TestCaseInfo();
         testCase.setName(testName);
         result.setTestCase(testCase);
 
         try {
-            testExecutor.execute(testName);
+            RunConfiguration configuration = configurationService.getRunConfiguration(runConfigurationId);
+            getTestExecutorForConfiguration(configuration).execute(testName, configuration);
 
             result.setSuccess(true);
         } catch (Exception e) {
@@ -145,6 +155,21 @@ public class FileSystemTestCaseService extends AbstractTestCaseService {
         }
 
         return result;
+    }
+
+    /**
+     * Finds proper test case executor implementation for run configuration.
+     * @param configuration
+     * @return
+     */
+    private TestExecutor getTestExecutorForConfiguration(RunConfiguration configuration) {
+        if (configuration instanceof MavenRunConfiguration) {
+            return fileSystemTestExecutor;
+        } else if (configuration instanceof ClasspathRunConfiguration) {
+            return classpathTestExecutor;
+        }
+
+        throw new CitrusAdminRuntimeException("Unable to execute test for run configuration: " + configuration.getId());
     }
 
     @Override

@@ -34,10 +34,12 @@
       <constructor-arg value="com.consol.citrus.admin.executor.ApplicationContextHolder"/>
     </bean>
 
-    <bean class="com.consol.citrus.admin.service.FileSystemTestCaseService"/>
+    <bean class="com.consol.citrus.admin.service.TestCaseServiceImpl"/>
 
     <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
     <bean class="com.consol.citrus.admin.util.FileHelperImpl"/>
+
+    <bean class="com.consol.citrus.admin.executor.ClasspathTestExecutor"/>
 
     <!-- XML Marshalling -->
     <oxm:jaxb2-marshaller id="jaxbMarshaller">

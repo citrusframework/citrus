@@ -17,8 +17,11 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
-import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.service.TestCaseServiceDelegate;
+import com.consol.citrus.admin.model.FileTreeModel;
+import com.consol.citrus.admin.model.TestCaseDetail;
+import com.consol.citrus.admin.model.TestCaseInfo;
+import com.consol.citrus.admin.model.TestCaseType;
+import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,7 @@ public class TestCaseController {
     private ProcessMonitor processMonitor;
 
     @Autowired
-    private TestCaseServiceDelegate testCaseService;
+    private TestCaseService testCaseService;
 
     @Autowired
     private FileHelper fileHelper;
@@ -93,8 +96,8 @@ public class TestCaseController {
     
     @RequestMapping(value="/execute/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public String executeTest(@PathVariable("name") String testName) {
-        testCaseService.executeTest(testName);
+    public String executeTest(@PathVariable("name") String testName, @RequestParam("runConfiguration") String runConfigurationId) {
+        testCaseService.executeTest(testName, runConfigurationId);
         return "LAUNCHED";
     }
 

@@ -16,8 +16,11 @@
 
 package com.consol.citrus.admin.executor;
 
-import com.consol.citrus.admin.launcher.*;
-import com.consol.citrus.admin.launcher.process.ExecuteSingleTest;
+import com.consol.citrus.admin.configuration.MavenRunConfiguration;
+import com.consol.citrus.admin.launcher.ProcessLauncher;
+import com.consol.citrus.admin.launcher.ProcessLauncherImpl;
+import com.consol.citrus.admin.launcher.ProcessMonitor;
+import com.consol.citrus.admin.launcher.process.maven.MavenRunSingleTestCommand;
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.websocket.WebSocketProcessListener;
 import org.apache.commons.cli.ParseException;
@@ -31,7 +34,7 @@ import java.io.File;
  * Executes test case from file system by starting new Citrus command line instance.
  * @author Christoph Deppisch
  */
-public class FileSystemTestExecutor implements TestExecutor{
+public class FileSystemTestExecutor implements TestExecutor<MavenRunConfiguration> {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FileSystemTestExecutor.class);
@@ -46,9 +49,9 @@ public class FileSystemTestExecutor implements TestExecutor{
     /**
      * {@inheritDoc}
      */
-    public void execute(String testName) throws ParseException {
+    public void execute(String testName, MavenRunConfiguration configuration) throws ParseException {
         File file = new File(configService.getProjectHome());
-        ProcessBuilder processBuilder = new ExecuteSingleTest(file, testName).getProcessBuilder();
+        ProcessBuilder processBuilder = new MavenRunSingleTestCommand(file, testName, configuration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
 
         processLauncher.addProcessListener(webSocketProcessListener);

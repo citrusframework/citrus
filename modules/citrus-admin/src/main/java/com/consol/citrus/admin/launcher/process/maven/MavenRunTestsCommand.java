@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.launcher.process;
+package com.consol.citrus.admin.launcher.process.maven;
+
+import com.consol.citrus.admin.configuration.MavenRunConfiguration;
 
 import java.io.File;
 
@@ -22,19 +24,12 @@ import java.io.File;
  * ProcessBuilder for launching all Citrus tests.
  *
  * @author Martin.Maher@consol.de
- * @version $Id$
- * @since 2013.01.26
+ * @since 1.3
  */
-public class ExecuteAllTests extends ExecuteCommand {
+public class MavenRunTestsCommand extends MavenCommand {
 
-    private static final String MVN_EXECUTE_ALL_TESTS = "mvn compile surefire:test";
-
-    /**
-     * Executes all tests via Maven.
-     * @param projectDirectory
-     */
-    public ExecuteAllTests(File projectDirectory) {
-        super(MVN_EXECUTE_ALL_TESTS, projectDirectory);
+    public MavenRunTestsCommand(File projectDirectory, MavenRunConfiguration configuration) {
+        super(MavenCommand.COMPILE + MavenCommand.TEST, projectDirectory, configuration);
     }
 
 }

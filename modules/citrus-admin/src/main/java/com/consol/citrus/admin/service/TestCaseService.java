@@ -25,6 +25,7 @@ import java.util.List;
  * executes tests and provides test case information.
  * 
  * @author Christoph Deppisch
+ * @since 1.3
  */
 public interface TestCaseService {
     
@@ -46,9 +47,10 @@ public interface TestCaseService {
     /**
      * Runs a test case and returns result outcome (success or failure).
      * @param testName
+     * @param runConfigurationId
      * @return
      */
-    TestResult executeTest(String testName);
+    TestResult executeTest(String testName, String runConfigurationId);
     
     /**
      * Gets the source code for the given test.

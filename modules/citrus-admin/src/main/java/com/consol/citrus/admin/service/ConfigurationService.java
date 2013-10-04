@@ -17,7 +17,9 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.admin.configuration.ProjectNature;
+import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
+import com.consol.citrus.admin.configuration.MavenRunConfiguration;
+import com.consol.citrus.admin.configuration.RunConfiguration;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.util.FileHelper;
 import org.slf4j.Logger;
@@ -29,12 +31,15 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Single point of access for all configuration settings. These are project related settings like project home and
  * root directory information.
  *
  * @author Martin Maher, Christoph Deppisch
+ * @since 1.3
  */
 @Component
 public class ConfigurationService {
@@ -50,14 +55,39 @@ public class ConfigurationService {
     private String projectHome = System.getProperty(PROJECT_HOME, "");
     private String rootDirectory = System.getProperty(ROOT_DIRECTORY, System.getProperty("user.home"));
     private String basePackage = System.getProperty(BASE_PACKAGE, "com.consol.citrus");
-    private ProjectNature projectNature = ProjectNature.valueOf(System.getProperty(PROJECT_NATURE, ProjectNature.FILESYSTEM.name()));
-    
+
     /** System property names */
     public static final String PROJECT_HOME = "project.home";
     public static final String ROOT_DIRECTORY = "root.directory";
     /** Base package for test cases to look for */
     public static final String BASE_PACKAGE = "test.base.package";
-    public static final String PROJECT_NATURE = "project.nature";
+
+    /** List of run configurations */
+    private List<RunConfiguration> runConfigurationList = new ArrayList<RunConfiguration>();
+
+    public ConfigurationService() {
+        MavenRunConfiguration mavenRunConfiguration = new MavenRunConfiguration();
+        mavenRunConfiguration.setId("Maven");
+        runConfigurationList.add(mavenRunConfiguration);
+
+        ClasspathRunConfiguration classpathRunConfiguration = new ClasspathRunConfiguration();
+        classpathRunConfiguration.setId("Classpath");
+        runConfigurationList.add(classpathRunConfiguration);
+    }
+
+    public RunConfiguration getRunConfiguration(String id) {
+        for (RunConfiguration runConfiguration : runConfigurationList) {
+            if (runConfiguration.getId().equals(id)) {
+                return runConfiguration;
+            }
+        }
+
+        throw new CitrusAdminRuntimeException("Unknown run configuration: " + id);
+    }
+
+    public List<RunConfiguration> getRunConfigurations() {
+        return runConfigurationList;
+    }
     
     /**
      * Check if home directory is valid Citrus project home.
@@ -134,23 +164,6 @@ public class ConfigurationService {
     public void setRootDirectory(String rootDirectory) {
         this.rootDirectory = rootDirectory;
         System.setProperty(ROOT_DIRECTORY, rootDirectory);
-    }
-
-    /**
-     * Gets the current project's nature.
-     * @return
-     */
-    public ProjectNature getProjectNature() {
-        return projectNature;
-    }
-
-    /**
-     * Sets the current project nature.
-     * @param projectNature
-     */
-    public void setProjectNature(ProjectNature projectNature) {
-        this.projectNature = projectNature;
-        System.setProperty(PROJECT_NATURE, projectNature.name());
     }
 
     /**

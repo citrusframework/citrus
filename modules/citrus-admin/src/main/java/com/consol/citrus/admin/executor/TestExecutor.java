@@ -16,16 +16,19 @@
 
 package com.consol.citrus.admin.executor;
 
+import com.consol.citrus.admin.configuration.RunConfiguration;
+
 /**
  * @author Christoph Deppisch
  */
-public interface TestExecutor {
+public interface TestExecutor<C extends RunConfiguration> {
 
     /**
      * Run test and throw exception when failed.
      * @param testName
+     * @param runConfiguration
      * @throws Exception
      */
-    void execute(String testName) throws Exception;
+    void execute(String testName, C runConfiguration) throws Exception;
 
 }

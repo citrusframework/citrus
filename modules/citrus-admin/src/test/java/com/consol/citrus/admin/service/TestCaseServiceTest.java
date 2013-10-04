@@ -33,13 +33,13 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  */
 @ContextConfiguration(locations = { "classpath:com/consol/citrus/admin/citrus-admin-test-context.xml" })
-public class FileSystemTestCaseServiceTest extends AbstractTestNGSpringContextTests {
+public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private ConfigurationService configService;
 
     @Autowired
-    private FileSystemTestCaseService testCaseService;
+    private TestCaseServiceImpl testCaseService;
 
     @Test
     public void testGetTests() throws IOException {

@@ -28,8 +28,7 @@ import java.util.List;
  * Base class for creating {@link ProcessBuilder}s. To be used for executing a shell command on unix or windows.
  *
  * @author Martin.Maher@consol.de
- * @version $Id$
- * @since 2012.11.30
+ * @since 1.3
  */
 public class ExecuteCommand {
     private static final Logger LOG = LoggerFactory.getLogger(ExecuteCommand.class);
@@ -65,13 +64,17 @@ public class ExecuteCommand {
             commands.add(CMD_OPTION_C);
         }
 
-        commands.add(command);
+        commands.add(buildCommand(command));
 
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.directory(workingDirectory);
 
         LOG.trace("Returning ProcessBuilder for command:" + commands);
         return pb;
+    }
+
+    protected String buildCommand(String command) {
+        return command;
     }
 
     private void validateWorkingDirectory(File workingDirectory) {
