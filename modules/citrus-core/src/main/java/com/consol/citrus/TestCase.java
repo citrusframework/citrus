@@ -112,10 +112,12 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             String key = entry.getKey();
             Object value = entry.getValue();
 
-            //check if value is a variable or function (and resolve it accordingly)
-            value = context.replaceDynamicContentInString(value.toString());
-
-            context.setVariable(key, value);
+            if (value instanceof String) {
+                //check if value is a variable or function (and resolve it accordingly)
+                context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
+            } else {
+                context.setVariable(key, value);
+            }
         }
 
         /* Debug print all variables */
