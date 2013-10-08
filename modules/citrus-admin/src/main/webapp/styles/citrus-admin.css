@@ -670,8 +670,28 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .test-container {
-    border-left: 1px solid #dddddd;
-    border-right: 1px solid #dddddd;
+    border: 1px solid #dddddd;
+    margin-left: -45px;
+    padding-left: 45px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    width: 140px;
+}
+
+.test-container span {
+    margin-left: -20px;
+}
+
+.test-container span i {
+    font-size: 20px;
+}
+
+.test-container-nested {
+    margin-left: -25px;
+    padding-left: 25px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    width: 110px;
 }
 
 .test-action p, .start-action p, .stop-action p {

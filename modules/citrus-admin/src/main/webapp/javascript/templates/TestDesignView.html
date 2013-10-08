@@ -37,15 +37,30 @@
 
   {{#each test.actions.actionsAndSendsAndReceives}}
     {{#if actionsAndSendsAndReceives}}
+    <div class="test-transition">
+      <i class="icon-long-arrow-down"></i>
+    </div>
     <div class="test-container">
+      <span><i class="icon-{{type}}">&nbsp;</i>{{type}}</span>
     {{#each actionsAndSendsAndReceives}}
-      <div class="test-transition">
-        <i class="icon-long-arrow-down"></i>
+      {{#if actionsAndSendsAndReceives}}
+      <div class="test-container test-container-nested">
+        <span><i class="icon-{{type}}">&nbsp;</i>{{type}}</span>
+        {{#each actionsAndSendsAndReceives}}
+        <div class="test-action">
+          <i class="icon-{{type}}">&nbsp;</i>
+          <p>{{type}}</p>
+        </div>
+        {{/each}}
       </div>
+      {{/if}}
+
+      {{#unless actionsAndSendsAndReceives}}
       <div class="test-action">
         <i class="icon-{{type}}">&nbsp;</i>
         <p>{{type}}</p>
       </div>
+      {{/unless}}
     {{/each}}
     </div>
     {{/if}}
