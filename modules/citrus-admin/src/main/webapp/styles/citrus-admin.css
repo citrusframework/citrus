@@ -283,8 +283,12 @@ ul.jqueryFileTree a:hover {
     background: #efefef;
 }
 
-ul.jqueryFileTree li.ext_java {
+ul.jqueryFileTree li.ext_java_class {
     background: url(icons/filetree/java.png) left top no-repeat;
+}
+
+ul.jqueryFileTree li.ext_java_method {
+    background: url(icons/filetree/method.png) left top no-repeat;
 }
 
 div.file-tree {

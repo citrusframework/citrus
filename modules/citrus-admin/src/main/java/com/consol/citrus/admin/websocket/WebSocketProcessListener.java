@@ -64,9 +64,9 @@ public class WebSocketProcessListener implements ProcessListener {
             event.put("progress", String.valueOf(progressValue));
             loggingWebSocket.push(event);
         } else if (output.contains("Logger.Message_OUT")) {
-            messageDataEvent = SocketEvent.createEvent("OUTBOUND", SocketEvent.OUTBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_OUT") + 20));
+            messageDataEvent = SocketEvent.createEvent(processId, SocketEvent.OUTBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_OUT") + 20));
         } else if (output.contains("Logger.Message_IN")) {
-            messageDataEvent = SocketEvent.createEvent("INBOUND", SocketEvent.INBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_IN") + 19));
+            messageDataEvent = SocketEvent.createEvent(processId, SocketEvent.INBOUND_MESSAGE, output.substring(output.indexOf("Logger.Message_IN") + 19));
         }
     }
 

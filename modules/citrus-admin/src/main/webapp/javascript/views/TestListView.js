@@ -69,15 +69,18 @@
           
           showDetails: function(testName) {
               var test = _.find(this.tests, function(t) {return t.name == testName});
-              var idHash= test.name.toLowerCase();
-              
-              if ($('ul#test-tabs li#tab-' + idHash).size() === 0) {
+
+              if (!test.id) {
+                _.extend(test, {id: _.uniqueId()});
+              }
+
+              if ($('ul#test-tabs li#tab-' + test.id).size() === 0) {
                   
-                  $('ul#test-tabs').append(Handlebars.compile($('#test-details-tab').html())({hash: idHash, name: test.name}));
-                  $('div#test-tab-content').append(Handlebars.compile($('#test-details-tab-pane').html())({hash: idHash}));
+                  $('ul#test-tabs').append(Handlebars.compile($('#test-details-tab').html())({id: test.id, name: test.name}));
+                  $('div#test-tab-content').append(Handlebars.compile($('#test-details-tab-pane').html())({id: test.id}));
                 
                   // bind close function on newly created tab
-                  $('#tab-close-' + idHash).click(function() {
+                  $('#tab-close-' + test.id).click(function() {
                       var isActiveTab = $(this).parent('li').hasClass('active')
 
                       // remove tab item
@@ -97,11 +100,11 @@
                       }
                   });
                 
-                  $('#test-case-details-' + idHash).html(new TestDetailsView({ test: test }).render().el);
+                  $('#test-case-details-' + test.id).html(new TestDetailsView({ test: test }).render().el);
               }
               
               // show test details tab
-              $('#test-tabs a[href="#test-details-tab-' + idHash + '"]').tab('show');
+              $('#test-tabs a[href="#test-details-tab-' + test.id + '"]').tab('show');
 
               return false;
           },

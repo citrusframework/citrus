@@ -17,16 +17,13 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
-import com.consol.citrus.admin.configuration.MavenRunConfiguration;
-import com.consol.citrus.admin.configuration.RunConfiguration;
+import com.consol.citrus.admin.configuration.*;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.executor.ClasspathTestExecutor;
-import com.consol.citrus.admin.executor.FileSystemTestExecutor;
-import com.consol.citrus.admin.executor.TestExecutor;
+import com.consol.citrus.admin.executor.*;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.util.FileHelper;
 import com.consol.citrus.dsl.TestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -36,9 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,6 +113,17 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                         testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
 
                         tests.add(testCase);
+
+                        List<String> methods = getTestMethods(testBuilderClass);
+                        for (String method : methods) {
+                            testCase = new TestCaseInfo();
+                            testCase.setType(TestCaseType.JAVA);
+                            testCase.setName(testName + "." + method);
+                            testCase.setPackageName(testPackageName);
+                            testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()) + "." + method);
+
+                            tests.add(testCase);
+                        }
                     } else {
                         log.debug("Skipping java source as it is not a test builder: " + testPackageName + "." + testName);
                     }
@@ -198,8 +208,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         String javaDirectory = getJavaDirectory() + dir;
 
         String[] folders = null;
-        String[] xmlFiles;
-        String[] javaFiles;
+        List<FileTreeModel.TestFileModel> xmlTestFiles = new ArrayList<FileTreeModel.TestFileModel>();
+        List<FileTreeModel.TestFileModel> javaTestFiles = new ArrayList<FileTreeModel.TestFileModel>();
         String compactFolder = "";
         do {
             if (folders != null) {
@@ -211,11 +221,19 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
             }
 
             folders = fileHelper.getFolders(new File(javaDirectory + compactFolder));
-            xmlFiles = fileHelper.getFiles(new File(testDirectory + compactFolder), ".xml");
-            javaFiles = new String[] {};
+            String[] xmlFiles = fileHelper.getFiles(new File(testDirectory + compactFolder), ".xml");
+
+            for (String xmlFile : xmlFiles) {
+                FileTreeModel.TestFileModel fileModel = new FileTreeModel.TestFileModel();
+
+                fileModel.setFileName(xmlFile);
+                fileModel.setFilePath(testDirectory + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
+
+                xmlTestFiles.add(fileModel);
+            }
+
             try {
                 Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + javaDirectory + compactFolder + "/*.java");
-                List<String> testBuilders = new ArrayList<String>();
                 for (Resource resource : javaSources) {
                     File file = resource.getFile();
                     String testName = FilenameUtils.getBaseName(file.getName());
@@ -225,7 +243,18 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                         Class<?> testBuilderClass = Class.forName(testPackageName + "." + testName);
 
                         if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
-                            testBuilders.add(testName);
+                            FileTreeModel.TestFileModel fileModel = new FileTreeModel.TestFileModel();
+
+                            fileModel.setFileName(testName);
+                            fileModel.setFilePath(javaDirectory + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
+
+                            List<String> methods = getTestMethods(testBuilderClass);
+                            // only add methods in case several test methods found - one single method is represented by test class
+                            if (methods.size() > 1) {
+                                fileModel.setTestMethods(methods);
+                            }
+
+                            javaTestFiles.add(fileModel);
                         } else {
                             log.debug("Skipping java source as it is not a test builder: " + testPackageName + "." +  testName);
                         }
@@ -233,34 +262,10 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                         log.warn("Skipping java source as it is not part of classpath: " + testPackageName + "." + testName);
                     }
                 }
-
-                javaFiles = testBuilders.toArray(new String[testBuilders.size()]);
             } catch (IOException e) {
                 log.warn("Failed to read Java source files - list of test cases for this project is incomplete", e);
             }
-        } while (folders.length == 1 && xmlFiles.length == 0 && javaFiles.length == 0);
-
-        List<FileTreeModel.FileModel> xmlTestFiles = new ArrayList<FileTreeModel.FileModel>();
-        for (String xmlFile : xmlFiles) {
-            FileTreeModel.FileModel fileModel = new FileTreeModel.FileModel();
-
-            fileModel.setFileName(xmlFile);
-            fileModel.setExtension("xml");
-            fileModel.setFilePath(testDirectory + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
-
-            xmlTestFiles.add(fileModel);
-        }
-
-        List<FileTreeModel.FileModel> javaTestFiles = new ArrayList<FileTreeModel.FileModel>();
-        for (String javaFile : javaFiles) {
-            FileTreeModel.FileModel fileModel = new FileTreeModel.FileModel();
-
-            fileModel.setFileName(javaFile);
-            fileModel.setExtension("java");
-            fileModel.setFilePath(javaDirectory + (StringUtils.hasText(compactFolder) ? compactFolder + File.separator : ""));
-
-            javaTestFiles.add(fileModel);
-        }
+        } while (folders.length == 1 && xmlTestFiles.size() == 0 && javaTestFiles.size() == 0);
 
         model.setCompactFolder(compactFolder);
         model.setFolders(folders);
@@ -268,6 +273,30 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         model.setJavaFiles(javaTestFiles);
 
         return model;
+    }
+
+    /**
+     * Finds all Citrus annotated test methods in test class. Do only return methods when more than one test method
+     * is found. Otherwise use class itself as test representation.
+     * @param testClass
+     * @return
+     */
+    private List<String> getTestMethods(Class<?> testClass) {
+        List<String> methodNames = new ArrayList<String>();
+        for (Method method : ReflectionUtils.getAllDeclaredMethods(testClass)) {
+            if (method.getAnnotation(CitrusTest.class) != null) {
+                CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+
+                if (StringUtils.hasText(citrusTestAnnotation.name())) {
+                    methodNames.add(citrusTestAnnotation.name());
+                } else {
+                    // use default method name as test
+                    methodNames.add(method.getName());
+                }
+            }
+        }
+
+        return methodNames;
     }
 
     /**

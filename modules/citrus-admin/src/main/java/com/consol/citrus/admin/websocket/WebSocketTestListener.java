@@ -33,6 +33,8 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
     @Autowired
     private LoggingWebSocket loggingWebSocket;
 
+    private String processId = "";  //TODO refactor message listener instead of storing processId of last executed test
+
     @Override
     public void onTestActionStart(TestCase test, TestAction testAction) {
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_ACTION_START, testAction.getName()));
@@ -58,6 +60,7 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
 
     @Override
     public void onTestStart(TestCase test) {
+        processId = test.getName();
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.PROCESS_START, "process started"));
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_START, test.getName()));
     }
@@ -85,12 +88,12 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
 
     @Override
     public void onInboundMessage(String message) {
-        loggingWebSocket.push(SocketEvent.createEvent("INBOUND", SocketEvent.INBOUND_MESSAGE, message));
+        loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.INBOUND_MESSAGE, message));
     }
 
     @Override
     public void onOutboundMessage(String message) {
-        loggingWebSocket.push(SocketEvent.createEvent("OUTBOUND", SocketEvent.OUTBOUND_MESSAGE, message));
+        loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.OUTBOUND_MESSAGE, message));
     }
 
 }

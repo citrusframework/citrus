@@ -17,16 +17,16 @@
   </div>
 </h2>
 
-<div id="{{test.detail.name}}" class="test-details">
+<div id="{{test.id}}" class="test-details">
     <div class="test-details-navbar navbar">
       <div class="navbar-inner">
         <ul class="nav">
-          <li><a href="#info-{{test.detail.name}}" data-toggle="tab">Info</a></li>
-          <li class="active"><a href="#design-{{test.detail.name}}" data-toggle="tab" data-toggle="tab">Design</a></li>
-          <li><a href="#xml-source-{{test.detail.name}}" class="xml-source" data-toggle="tab">XML</a></li>
-          <li><a href="#java-source-{{test.detail.name}}" class="java-source" data-toggle="tab">Java</a></li>
+          <li><a href="#info-{{test.id}}" data-toggle="tab">Info</a></li>
+          <li class="active"><a href="#design-{{test.id}}" data-toggle="tab" data-toggle="tab">Design</a></li>
+          <li><a href="#xml-source-{{test.id}}" class="xml-source" data-toggle="tab">XML</a></li>
+          <li><a href="#java-source-{{test.id}}" class="java-source" data-toggle="tab">Java</a></li>
           <li style="display: none;">
-            <a href="#test-result-{{test.detail.name}}" style="padding-right: 22px" data-toggle="tab">Results</a>
+            <a href="#test-result-{{test.id}}" style="padding-right: 22px" data-toggle="tab">Results</a>
           </li>
         </ul>
       </div>
@@ -34,7 +34,7 @@
     <br/>
 
     <div class="test-details-content tab-content">
-        <div class="tab-pane" id="info-{{test.detail.name}}">
+        <div class="tab-pane" id="info-{{test.id}}">
           <div class="test-info">
             <form class="form-horizontal">
               <div class="control-group">
@@ -84,16 +84,16 @@
 
           </div>
         </div>
-        <div class="tab-pane active" id="design-{{test.detail.name}}">
+        <div class="tab-pane active" id="design-{{test.id}}">
             <div class="test-design"></div>
         </div>
-        <div class="tab-pane" id="xml-source-{{test.detail.name}}">
+        <div class="tab-pane" id="xml-source-{{test.id}}">
             <pre class="prettycode linenums"><ol class="linenums"><li class="L0"><span class="str">Loading sources ...</span></li></ol></pre>
         </div>
-        <div class="tab-pane" id="java-source-{{test.detail.name}}">
+        <div class="tab-pane" id="java-source-{{test.id}}">
             <pre class="prettycode linenums"><ol class="linenums"><li class="L0"><span class="str">Loading sources ...</span></li></ol></pre>
         </div>
-        <div class="tab-pane" id="test-result-{{test.detail.name}}">
+        <div class="tab-pane" id="test-result-{{test.id}}">
             <h4>Test results</h4>
             <div class="progress progress-success test-progress">
                 <div class="bar" style="width: 0%"></div>

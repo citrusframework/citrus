@@ -19,46 +19,43 @@ package com.consol.citrus.admin.model;
 import java.util.*;
 
 /**
+ * Model for file tree Handlebars template. Constructs a file tree for one single directory with nested folders and files.
+ * Supports compact representation of empty folder sequences.
+ *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public class FileTreeModel {
 
     private String compactFolder;
     private String[] folders;
-    private List<FileModel> xmlFiles;
-    private List<FileModel> javaFiles;
+    private List<TestFileModel> xmlFiles;
+    private List<TestFileModel> javaFiles;
 
     /**
      * File properties representing a file in tree.
      */
-    public static class FileModel extends HashMap<String, String> {
+    public static class TestFileModel extends HashMap<String, Object> {
 
         private static final String FILENAME = "fileName";
         private static final String EXTENSION = "extension";
         private static final String FILEPATH = "filePath";
-
-        public String getFileName() {
-            return get(FILENAME);
-        }
+        private static final String TEST_METHODS = "testMethods";
 
         public void setFileName(String fileName) {
             put(FILENAME, fileName);
-        }
-
-        public String getExtension() {
-            return get(EXTENSION);
         }
 
         public void setExtension(String extension) {
             put(EXTENSION, extension);
         }
 
-        public String getFilePath() {
-            return get(FILEPATH);
-        }
-
         public void setFilePath(String filePath) {
             put(FILEPATH, filePath);
+        }
+
+        public void setTestMethods(List<String> methods) {
+            put(TEST_METHODS, methods);
         }
     }
 
@@ -78,19 +75,19 @@ public class FileTreeModel {
         this.folders = folders;
     }
 
-    public List<FileModel> getXmlFiles() {
+    public List<TestFileModel> getXmlFiles() {
         return xmlFiles;
     }
 
-    public void setXmlFiles(List<FileModel> xmlFiles) {
+    public void setXmlFiles(List<TestFileModel> xmlFiles) {
         this.xmlFiles = xmlFiles;
     }
 
-    public List<FileModel> getJavaFiles() {
+    public List<TestFileModel> getJavaFiles() {
         return javaFiles;
     }
 
-    public void setJavaFiles(List<FileModel> javaFiles) {
+    public void setJavaFiles(List<TestFileModel> javaFiles) {
         this.javaFiles = javaFiles;
     }
 

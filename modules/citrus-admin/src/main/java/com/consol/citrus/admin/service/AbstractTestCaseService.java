@@ -82,8 +82,19 @@ public abstract class AbstractTestCaseService implements TestCaseService {
      * @return
      */
     private Testcase getJavaTestModel(String packageName, String testName) {
+        String methodName = null;
+        String testClassName;
+
+        int methodSeparatorIndex = testName.indexOf('.');
+        if (methodSeparatorIndex > 0) {
+            methodName = testName.substring(methodSeparatorIndex + 1);
+            testClassName = testName.substring(0, methodSeparatorIndex);
+        } else {
+            testClassName = testName;
+        }
+
         try {
-            Class<?> testBuilderClass = Class.forName(packageName + "." + testName);
+            Class<?> testBuilderClass = Class.forName(packageName + "." + testClassName);
 
             if (!applicationContextHolder.isApplicationContextLoaded()) {
                 applicationContextHolder.loadApplicationContext();
@@ -95,25 +106,40 @@ public abstract class AbstractTestCaseService implements TestCaseService {
             beanFactory.initializeBean(builder, testBuilderClass.getName());
 
             for (Method method : ReflectionUtils.getAllDeclaredMethods(testBuilderClass)) {
-                if (method.getAnnotation(CitrusTest.class) != null) {
-                    CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+                CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+                if (citrusTestAnnotation != null) {
+                    if (StringUtils.hasText(methodName)) {
+                        if (StringUtils.hasText(citrusTestAnnotation.name())) {
+                            if (!citrusTestAnnotation.name().equals(methodName)) {
+                                continue;
+                            }
+                        } else if (!method.getName().equals(methodName)) {
+                           continue;
+                        }
+                    }
 
-                    builder.init();
-                    ReflectionUtils.invokeMethod(method, builder);
-
-                    TestCase testCase = builder.getTestCase(null);
-                    return new TestcaseModelConverter().convert(testCase);
+                    Testcase model = getJavaDslTest(builder, method);
+                    model.setName(StringUtils.hasText(methodName) ? methodName : testClassName);
+                    return model;
                 }
             }
         } catch (ClassNotFoundException e) {
-            throw new CitrusAdminRuntimeException("Failed to load Java source as it is not part of classpath: " + packageName + "." + testName, e);
+            throw new CitrusAdminRuntimeException("Failed to load Java source as it is not part of classpath: " + packageName + "." + testClassName, e);
         } catch (Exception e) {
-            throw new CitrusAdminRuntimeException("Failed to load Java source " + packageName + "." + testName, e);
+            throw new CitrusAdminRuntimeException("Failed to load Java source " + packageName + "." + testClassName, e);
         }
 
         Testcase testModel = new Testcase();
-        testModel.setName(testName);
+        testModel.setName(StringUtils.hasText(methodName) ? methodName : testClassName);
         return testModel;
+    }
+
+    private Testcase getJavaDslTest(TestNGCitrusTestBuilder builder, Method method) {
+        builder.init();
+        ReflectionUtils.invokeMethod(method, builder);
+
+        TestCase testCase = builder.getTestCase(null);
+        return new TestcaseModelConverter().convert(testCase);
     }
 
     /**

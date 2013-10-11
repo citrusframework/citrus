@@ -63,7 +63,7 @@ public class TestCaseController {
     @RequestMapping(method = { RequestMethod.POST })
     @ResponseBody
     public ModelAndView list(@RequestParam("dir") String dir) {
-        ModelAndView view = new ModelAndView("FileTree");
+        ModelAndView view = new ModelAndView("TestFileTree");
 
         FileTreeModel model = testCaseService.getTestFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
 
@@ -82,14 +82,18 @@ public class TestCaseController {
         return view;
     }
 
-    @RequestMapping(value="/details/{package}/{name}/{type}", method = { RequestMethod.GET })
+    @RequestMapping(value="/details/{type}/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public TestCaseDetail getTestDetail(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
-                                        @PathVariable("type") String type) {
-        return testCaseService.getTestDetail(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
+                                        @PathVariable("type") String type, @RequestParam(value = "method", required = false) String method) {
+        if (StringUtils.hasText(method)) {
+            return testCaseService.getTestDetail(testPackage, testName + "." + method, TestCaseType.valueOf(type.toUpperCase()));
+        } else {
+            return testCaseService.getTestDetail(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
+        }
     }
     
-    @RequestMapping(value="/source/{package}/{name}/{type}", method = { RequestMethod.GET })
+    @RequestMapping(value="/source/{type}/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
                                 @PathVariable("type") String type) {

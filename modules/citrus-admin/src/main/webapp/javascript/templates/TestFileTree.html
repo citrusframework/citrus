@@ -1,0 +1,32 @@
+<ul class="jqueryFileTree" style="display: none;">
+  {{#if compactFolder}}
+  <li class="directory expanded"><a href="#" rel="{{baseDir}}">{{folderToPackage compactFolder}}</a>
+    <ul class="jqueryFileTree">
+      {{/if}}
+
+      {{#each folders}}
+      <li class="directory collapsed"><a href="#" rel="{{baseDir}}{{this}}/">{{folderToPackage this}}</a></li>
+      {{/each}}
+      {{#each xmlFiles}}
+      <li class="file ext_xml"><a href="#" rel="{{filePath}}{{fileName}}">{{fileName}}</a></li>
+      {{/each}}
+      {{#each javaFiles}}
+      {{#if testMethods}}
+      <li class="file ext_java_class"><a href="#" rel="{{filePath}}{{fileName}}">{{fileName}}</a>
+        <ul class="jqueryFileTree">
+          {{#each testMethods}}
+          <li class="file ext_java_method"><a href="#" rel="{{filePath}}{{fileName}}.{{this}}">{{this}}</a></li>
+          {{/each}}
+        </ul>
+      </li>
+      {{/if}}
+      {{#unless testMethods}}
+      <li class="file ext_java_class"><a href="#" rel="{{filePath}}{{fileName}}">{{fileName}}</a></li>
+      {{/unless}}
+      {{/each}}
+
+      {{#if compactFolder}}
+    </ul>
+  </li>
+  {{/if}}
+</ul>
