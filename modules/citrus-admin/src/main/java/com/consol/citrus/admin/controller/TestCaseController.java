@@ -103,8 +103,13 @@ public class TestCaseController {
     @RequestMapping(value="/execute/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public ResponseEntity<String> executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
-                                              @RequestParam("runConfiguration") String runConfigurationId) {
-        testCaseService.executeTest(testPackage, testName, runConfigurationId);
+                                              @RequestParam(value = "runConfiguration", required = true) String runConfigurationId, @RequestParam(value = "method", required = false) String method) {
+        if (StringUtils.hasText(method)) {
+            testCaseService.executeTest(testPackage, testName + "." + method, runConfigurationId);
+        } else {
+            testCaseService.executeTest(testPackage, testName, runConfigurationId);
+        }
+
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

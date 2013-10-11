@@ -21,12 +21,16 @@ import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.websocket.WebSocketLoggingAppender;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import org.testng.TestNG;
 import org.testng.xml.*;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -46,24 +50,35 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
 
     @Override
     public void execute(String packageName, String testName, ClasspathRunConfiguration configuration) {
-        try {
-            Class<?> testClass = Class.forName(packageName + "." + testName);
+        String methodName = null;
+        String testClassName;
 
-            webSocketLoggingAppender.setProcessId(testName);
+        int methodSeparatorIndex = testName.indexOf('.');
+        if (methodSeparatorIndex > 0) {
+            methodName = testName.substring(methodSeparatorIndex + 1);
+            testClassName = testName.substring(0, methodSeparatorIndex);
+        } else {
+            testClassName = testName;
+        }
+
+        try {
+            Class<?> testClass = Class.forName(packageName + "." + testClassName);
+
+            webSocketLoggingAppender.setProcessId(testClassName);
 
             if (!applicationContextHolder.isApplicationContextLoaded()) {
                 applicationContextHolder.loadApplicationContext();
             }
 
             if (TestNGCitrusTestBuilder.class.isAssignableFrom(testClass)) {
-                runTestBuilder(testName, testClass);
+                runTestBuilder(testClassName, methodName, testClass);
             } else if (AbstractTestNGCitrusTest.class.isAssignableFrom(testClass)) {
-                runTest(testName, testClass);
+                runTest(testClassName, methodName, testClass);
             }
         } catch (ClassNotFoundException e) {
-            throw new CitrusAdminRuntimeException("Failed to execute test case as it is not part of classpath: " + packageName + "." + testName, e);
+            throw new CitrusAdminRuntimeException("Failed to execute test case as it is not part of classpath: " + packageName + "." + testClassName, e);
         } catch (Exception e) {
-            throw new CitrusAdminRuntimeException("Failed to load Java source " + packageName + "." + testName, e);
+            throw new CitrusAdminRuntimeException("Failed to load Java source " + packageName + "." + testClassName, e);
         } finally {
             Map<String, TestReporter> reporters = applicationContextHolder.getApplicationContext().getBeansOfType(TestReporter.class);
             for (TestReporter reporter : reporters.values()) {
@@ -77,9 +92,10 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
     /**
      * Instantiates and runs Citrus test class.
      * @param testName
+     * @param methodName
      * @param testClass
      */
-    private void runTest(String testName, Class<?> testClass) {
+    private void runTest(String testName, String methodName, Class<?> testClass) {
         TestNG testng = new TestNG(true);
 
         XmlSuite suite = new XmlSuite();
@@ -87,7 +103,13 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
 
         XmlTest test = new XmlTest(suite);
         test.setName(testName);
-        test.setXmlClasses(Collections.singletonList(new XmlClass(testClass)));
+
+        XmlClass xmlClass = new XmlClass(testClass);
+        if (StringUtils.hasText(methodName)) {
+            xmlClass.getIncludedMethods().add(new XmlInclude(getMethodName(methodName, testClass)));
+        }
+
+        test.setXmlClasses(Collections.singletonList(xmlClass));
 
         List<XmlSuite> suites = new ArrayList<XmlSuite>();
         suites.add(suite);
@@ -100,12 +122,37 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
     }
 
     /**
+     * Finds test method name in test class - either method with name or other method with test annotation
+     * named accordingly.
+     * @param methodName
+     * @param testClass
+     * @return
+     */
+    private String getMethodName(String methodName, Class<?> testClass) {
+        if (ReflectionUtils.findMethod(testClass, methodName) != null) {
+            return methodName;
+        } else {
+            for (Method method : ReflectionUtils.getAllDeclaredMethods(testClass)) {
+                CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
+                if (citrusTestAnnotation != null && StringUtils.hasText(citrusTestAnnotation.name())) {
+                    if (citrusTestAnnotation.name().equals(methodName)) {
+                        return method.getName();
+                    }
+                }
+            }
+        }
+
+        throw new CitrusAdminRuntimeException("Could not find method with name or Citrus annotation name: " + methodName);
+    }
+
+    /**
      * Instantiates and runs Citrus Java DSL test builder class.
      * @param testName
+     * @param methodName
      * @param testClass
      */
-    private void runTestBuilder(String testName, Class<?> testClass) {
-        runTest(testName, testClass);
+    private void runTestBuilder(String testName, String methodName, Class<?> testClass) {
+        runTest(testName, methodName, testClass);
     }
 
 }

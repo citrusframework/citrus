@@ -31,10 +31,8 @@
                     async: false
                 });
 
-                var testNameUrl = String(this.options.test.name).replace(".", "?method=");
-
                 $.ajax({
-                    url: "testcase/details/"+ this.options.test.type + "/" + this.options.test.packageName + "/" + testNameUrl,
+                    url: "testcase/details/"+ this.options.test.type + "/" + this.options.test.packageName + "/" + this.getTestNameUrl(this.options.test.name),
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function(test) {
@@ -78,8 +76,15 @@
                 $(this.el).find('ul.nav').find('li').last().show();
                 $(this.el).find('ul.nav').find('li').last().find('a').tab('show');
 
+                var testNameUrl = this.getTestNameUrl(this.test.name);
+                if (String(testNameUrl).indexOf('?') > 0) {
+                    testNameUrl += "&runConfiguration=" + this.activeConfiguration.id;
+                } else {
+                    testNameUrl += "?runConfiguration=" + this.activeConfiguration.id;
+                }
+
                 $.ajax({
-                    url: "testcase/execute/" + this.test.packageName + "/" + this.test.name + "?runConfiguration=" + this.activeConfiguration.id,
+                    url: "testcase/execute/" + this.test.packageName + "/" + testNameUrl,
                     type: 'GET',
                     dataType: "json"
                 });
@@ -89,7 +94,7 @@
 
             cancelTest: function() {
                 $.ajax({
-                    url: "testcase/stop/" + this.test.name,
+                    url: "testcase/stop/" + this.getTestNameUrl(this.test.name),
                     type: 'GET',
                     dataType: "json"
                 });
@@ -152,7 +157,7 @@
 
             getXmlSource: function() {
                 $.ajax({
-                    url: "testcase/source/xml/" + this.test.packageName + "/" + this.test.name,
+                    url: "testcase/source/xml/" + this.test.packageName + "/" + this.getTestNameUrl(this.test.name),
                     type: 'GET',
                     dataType: "html",
                     success: _.bind(function(fileContent) {
@@ -171,7 +176,7 @@
 
             getJavaSource: function() {
                 $.ajax({
-                    url: "testcase/source/java/" + this.test.packageName + "/" + this.test.name,
+                    url: "testcase/source/java/" + this.test.packageName + "/" + this.getTestNameUrl(this.test.name),
                     type: 'GET',
                     dataType: "html",
                     success: _.bind(function(fileContent) {
@@ -182,6 +187,10 @@
                         $('div#java-source-' + this.test.id).find('pre').addClass("prettycode");
                     }, this)
                 });
+            },
+
+            getTestNameUrl: function(testName) {
+                return String(testName).replace(".", "?method=");
             },
 
             hideResultsTab: function() {
