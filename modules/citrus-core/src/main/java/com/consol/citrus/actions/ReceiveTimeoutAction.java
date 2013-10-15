@@ -43,10 +43,15 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     /** Message selector string */
     private String messageSelector;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(ReceiveTimeoutAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public ReceiveTimeoutAction() {
+        setName("receive-timeout");
+    }
 
     @Override
     public void doExecute(TestContext context) {

@@ -16,14 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class AssertDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -41,7 +40,7 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Assert.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), Assert.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "assert");
         
         Assert container = (Assert)(builder.testCase().getTestAction(0));
         

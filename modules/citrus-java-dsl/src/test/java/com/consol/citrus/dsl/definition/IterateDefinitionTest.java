@@ -16,12 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
+import com.consol.citrus.container.Iterate;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.container.Iterate;
+import static org.testng.Assert.assertEquals;
 
 public class IterateDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -41,7 +40,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), Iterate.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "iterate");
         
         Iterate container = (Iterate)builder.testCase().getActions().get(0);   
         assertEquals(container.getIndexName(), "i");

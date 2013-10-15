@@ -16,12 +16,13 @@
 
 package com.consol.citrus.actions;
 
-import java.util.*;
-
+import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.channel.QueueChannel;
@@ -29,8 +30,8 @@ import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.support.channel.ChannelResolver;
 
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.context.TestContext;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action purges all messages from a message channel instance. Message channel must be
@@ -59,7 +60,14 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(PurgeMessageChannelAction.class);
-    
+
+    /**
+     * Default constructor.
+     */
+    public PurgeMessageChannelAction() {
+        setName("purge-channel");
+    }
+
     @Override
     public void doExecute(TestContext context) {
         log.info("Purging message channels ...");

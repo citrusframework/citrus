@@ -49,8 +49,6 @@ public class LoadPropertiesActionParser implements BeanDefinitionParser {
             throw new BeanCreationException("Missing properties file definition for load action");
         }
 
-        beanDefinition.addPropertyValue("name", element.getLocalName());
-
         return beanDefinition.getBeanDefinition();
     }
 }

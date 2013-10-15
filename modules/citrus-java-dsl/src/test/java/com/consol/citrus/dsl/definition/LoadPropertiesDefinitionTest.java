@@ -38,7 +38,7 @@ public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), LoadPropertiesAction.class);
         
         LoadPropertiesAction action = (LoadPropertiesAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), LoadPropertiesAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "load");
         Assert.assertEquals(action.getFilePath(), "classpath:test.properties");
     }
 }

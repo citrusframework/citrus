@@ -16,18 +16,16 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-
-import javax.xml.transform.*;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
+import javax.xml.transform.*;
+import java.io.IOException;
 
 
 /**
@@ -55,10 +53,15 @@ public class TransformAction extends AbstractTestAction {
 	/** Target variable for the result */
 	private String targetVariable = "transform-result";
 	
-	/**
-     * Logger
-     */
+	/** Logger */
     private static Logger log = LoggerFactory.getLogger(TransformAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public TransformAction() {
+        setName("transform");
+    }
 
 	@Override
 	public void doExecute(TestContext context) {

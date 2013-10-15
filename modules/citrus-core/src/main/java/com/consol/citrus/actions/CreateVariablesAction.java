@@ -16,15 +16,14 @@
 
 package com.consol.citrus.actions;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.variable.VariableUtils;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Action creating new test variables during a test. Existing test variables are overwritten
@@ -38,10 +37,15 @@ public class CreateVariablesAction extends AbstractTestAction {
     /** New variables to set */
     private Map<String, String> variables = new LinkedHashMap<String, String>();
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public CreateVariablesAction() {
+        setName("create-variables");
+    }
 
     @Override
     public void doExecute(TestContext context) {

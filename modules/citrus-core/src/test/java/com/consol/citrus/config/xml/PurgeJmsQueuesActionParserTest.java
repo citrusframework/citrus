@@ -31,7 +31,7 @@ public class PurgeJmsQueuesActionParserTest extends AbstractActionParserTest<Pur
     @Test
     public void testPurgeJmsQueuesActionParser() {
         assertActionCount(3);
-        assertActionClassAndName(PurgeJmsQueuesAction.class, "purge-jms-queues");
+        assertActionClassAndName(PurgeJmsQueuesAction.class, "purge-queue");
         
         PurgeJmsQueuesAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getReceiveTimeout());

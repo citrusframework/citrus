@@ -54,10 +54,15 @@ public class GroovyAction extends AbstractTestAction {
         void execute(TestContext context);
     }
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(GroovyAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public GroovyAction() {
+        setName("groovy");
+    }
 
     @Override
     public void doExecute(TestContext context) {

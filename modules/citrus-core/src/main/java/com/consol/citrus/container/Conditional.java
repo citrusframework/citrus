@@ -34,13 +34,18 @@ import com.consol.citrus.util.BooleanExpressionParser;
  */
 public class Conditional extends AbstractActionContainer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(Conditional.class);
 
     /** Boolean expression string */
     protected String expression;
+
+    /**
+     * Default constructor.
+     */
+    public Conditional() {
+        setName("conditional");
+    }
 
     @Override
     public void doExecute(final TestContext context) {
@@ -62,7 +67,7 @@ public class Conditional extends AbstractActionContainer {
     /**
      * Condition which allows execution if true.
      *
-     * @param conditionIn
+     * @param expressionIn
      */
     public void setExpression(final String expressionIn) {
         this.expression = expressionIn;

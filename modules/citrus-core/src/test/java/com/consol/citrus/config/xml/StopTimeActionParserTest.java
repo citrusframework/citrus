@@ -30,7 +30,7 @@ public class StopTimeActionParserTest extends AbstractActionParserTest<StopTimeA
     @Test
     public void testFailActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(StopTimeAction.class, "trace-time");
+        assertActionClassAndName(StopTimeAction.class, "stop-time");
         
         StopTimeAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getId(), "CITRUS_TIMELINE");

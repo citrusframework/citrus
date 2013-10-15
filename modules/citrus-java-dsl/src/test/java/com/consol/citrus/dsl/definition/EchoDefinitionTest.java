@@ -42,7 +42,7 @@ public class EchoDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
         
         EchoAction action = (EchoAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), EchoAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "echo");
         Assert.assertEquals(action.getMessage(), "Hello Citrus!");
     }
 }

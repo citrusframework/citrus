@@ -16,15 +16,14 @@
 
 package com.consol.citrus.container;
 
-import java.util.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ParallelContainerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Test action will execute nested actions in parallel. Each action is executed in a
@@ -40,10 +39,15 @@ public class Parallel extends AbstractActionContainer {
     /** Collect exceptions in list */
     private List<CitrusRuntimeException> exceptions = new ArrayList<CitrusRuntimeException>();
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(Parallel.class);
+
+    /**
+     * Default constructor.
+     */
+    public Parallel() {
+        setName("parallel");
+    }
 
     @Override
     public void doExecute(TestContext context) {

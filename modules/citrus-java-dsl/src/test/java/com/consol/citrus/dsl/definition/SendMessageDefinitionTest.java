@@ -67,7 +67,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -94,7 +94,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -124,7 +124,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -161,7 +161,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
         verify(applicationContextMock);
@@ -185,7 +185,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -219,7 +219,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -231,7 +231,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertNull(messageBuilder.getMessageHeaderResourcePath());
         
         action = ((SendMessageAction)builder.testCase().getActions().get(1));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -270,7 +270,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -281,7 +281,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "someHeaderData");
         
         action = ((SendMessageAction)builder.testCase().getActions().get(1));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
@@ -310,7 +310,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
@@ -338,7 +338,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
         
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
         
         Assert.assertEquals(action.getMessageSender(), messageSender);
         
@@ -365,7 +365,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
 
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), SendMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getMessageSender(), messageSender);
 

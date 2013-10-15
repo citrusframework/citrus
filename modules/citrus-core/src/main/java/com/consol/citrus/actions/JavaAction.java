@@ -16,17 +16,18 @@
 
 package com.consol.citrus.actions;
 
-import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action to enable class invocation through java reflection
@@ -50,10 +51,15 @@ public class JavaAction extends AbstractTestAction {
     /** Constructor args */
     private List<Object> constructorArgs = new ArrayList<Object>();
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(JavaAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public JavaAction() {
+        setName("java");
+    }
 
     @SuppressWarnings("unchecked")
     @Override

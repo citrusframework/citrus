@@ -30,10 +30,15 @@ import com.consol.citrus.context.TestContext;
  */
 public class Sequence extends AbstractActionContainer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(Sequence.class);
+
+    /**
+     * Default constructor.
+     */
+    public Sequence() {
+        setName("sequential");
+    }
 
     @Override
     public void doExecute(TestContext context) {

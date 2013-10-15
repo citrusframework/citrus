@@ -16,15 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
-
+import com.consol.citrus.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.PurgeJmsQueuesAction;
+import javax.jms.ConnectionFactory;
+import javax.jms.Queue;
 
 public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
@@ -50,6 +49,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
           
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "purge-queue");
           
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000);

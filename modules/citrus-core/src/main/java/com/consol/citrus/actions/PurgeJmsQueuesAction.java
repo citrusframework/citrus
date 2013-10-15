@@ -62,7 +62,14 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
-    
+
+    /**
+     * Default constructor.
+     */
+    public PurgeJmsQueuesAction() {
+        setName("purge-queue");
+    }
+
     @SuppressWarnings("PMD.CloseResource") //suppress since session/connection closed via JmsUtils
     @Override
     public void doExecute(TestContext context) {

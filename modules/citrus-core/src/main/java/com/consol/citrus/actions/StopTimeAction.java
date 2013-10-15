@@ -16,16 +16,15 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Action used for time measurement during test. User can define a time line that is followed
@@ -42,10 +41,15 @@ public class StopTimeAction extends AbstractTestAction {
     /** Current time line id */
     private String id = "CITRUS_TIMELINE";
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(StopTimeAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public StopTimeAction() {
+        setName("stop-time");
+    }
 
     @Override
     public void doExecute(TestContext context) {

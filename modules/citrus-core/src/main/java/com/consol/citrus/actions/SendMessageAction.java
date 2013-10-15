@@ -16,19 +16,18 @@
 
 package com.consol.citrus.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.integration.Message;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.integration.Message;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -55,6 +54,13 @@ public class SendMessageAction extends AbstractTestAction {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SendMessageAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public SendMessageAction() {
+        setName("send");
+    }
 
     /**
      * Message is constructed with payload and header entries and sent via

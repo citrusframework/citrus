@@ -16,8 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.*;
-
+import com.consol.citrus.actions.AntRunAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -25,8 +25,9 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.AntRunAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Bean definition parser for ant run action in test case.
@@ -67,8 +68,6 @@ public class AntRunActionParser implements BeanDefinitionParser {
         }
         
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("build-listener"), "buildListener");
-        
-        beanDefinition.addPropertyValue("name", element.getLocalName());
         
         return beanDefinition.getBeanDefinition();
     }

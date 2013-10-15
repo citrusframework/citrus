@@ -16,8 +16,13 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import java.util.*;
-
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.DescriptionElementParser;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -29,13 +34,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.TestActionRegistry;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Parser for SOAP fault assert action.
@@ -49,7 +50,6 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(AssertSoapFault.class);
 
-        beanDefinition.addPropertyValue("name", element.getLocalName());
         DescriptionElementParser.doParse(element, beanDefinition);
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-code"), "faultCode");

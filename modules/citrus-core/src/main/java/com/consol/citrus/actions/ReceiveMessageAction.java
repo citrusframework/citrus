@@ -16,15 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.util.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -34,6 +25,17 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.integration.Message;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
@@ -74,10 +76,15 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * message validator for this message */
     private String messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(ReceiveMessageAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public ReceiveMessageAction() {
+        setName("receive");
+    }
 
     /**
      * Method receives a message via {@link MessageReceiver} instance

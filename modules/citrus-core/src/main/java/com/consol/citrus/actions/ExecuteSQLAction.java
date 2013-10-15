@@ -16,10 +16,10 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Iterator;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+
+import java.util.Iterator;
 
 /**
  * Test action execute SQL statements. Use this action when executing
@@ -34,6 +34,13 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
+
+    /**
+     * Default constructor.
+     */
+    public ExecuteSQLAction() {
+        setName("sql");
+    }
 
     @Override
     public void doExecute(TestContext context) {

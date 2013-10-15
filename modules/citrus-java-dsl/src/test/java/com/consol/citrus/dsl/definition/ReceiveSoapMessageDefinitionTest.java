@@ -85,7 +85,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
         
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -123,7 +123,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
         
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -167,7 +167,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
         
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
@@ -219,12 +219,12 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), ReceiveSoapMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getMessageReceiver(), replyMessageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
-        Assert.assertEquals(action.getName(), ReceiveMessageAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         

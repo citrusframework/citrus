@@ -16,12 +16,11 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Date;
-
+import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.context.TestContext;
+import java.util.Date;
 
 /**
  * Prints messages to the console/logger during test execution.
@@ -34,10 +33,15 @@ public class EchoAction extends AbstractTestAction {
     /** Log message */
     private String message;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(EchoAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public EchoAction() {
+        setName("echo");
+    }
 
     @Override
     public void doExecute(TestContext context) {

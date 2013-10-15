@@ -16,11 +16,8 @@
 
 package com.consol.citrus.actions;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map.Entry;
-import java.util.*;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.tools.ant.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +25,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Stack;
 
 /**
  * Action calls Apache ANT with given build file and runs ANT targets
@@ -62,7 +62,14 @@ public class AntRunAction extends AbstractTestAction {
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AntRunAction.class);
-    
+
+    /**
+     * Default constructor.
+     */
+    public AntRunAction() {
+        setName("antrun");
+    }
+
     @Override
     public void doExecute(TestContext context) {
         Project project = new Project();

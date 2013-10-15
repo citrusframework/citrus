@@ -16,15 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class CatchDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -42,9 +41,9 @@ public class CatchDefinitionTest extends AbstractTestNGUnitTest {
         
         assertEquals(builder.testCase().getActions().size(), 2);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Catch.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), Catch.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "catch");
         assertEquals(builder.testCase().getActions().get(1).getClass(), Catch.class);
-        assertEquals(builder.testCase().getActions().get(1).getName(), Catch.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(1).getName(), "catch");
         
         Catch container = (Catch)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 1);

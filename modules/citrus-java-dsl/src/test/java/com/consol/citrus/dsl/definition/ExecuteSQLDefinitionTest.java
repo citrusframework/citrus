@@ -16,20 +16,18 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.File;
-import java.io.IOException;
-
-import javax.sql.DataSource;
-
+import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ExecuteSQLAction;
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
 
 
 public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
@@ -57,7 +55,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
         
         ExecuteSQLAction action = (ExecuteSQLAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), ExecuteSQLAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql");
         Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getDataSource(), dataSource);
@@ -85,7 +83,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
 
         ExecuteSQLAction action = (ExecuteSQLAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), ExecuteSQLAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql");
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getDataSource(), dataSource);
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");

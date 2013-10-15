@@ -57,8 +57,6 @@ public class GroovyActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("scriptResourcePath", filePath);
         }
         
-        beanDefinition.addPropertyValue("name", element.getLocalName());
-        
         return beanDefinition.getBeanDefinition();
     }
 }

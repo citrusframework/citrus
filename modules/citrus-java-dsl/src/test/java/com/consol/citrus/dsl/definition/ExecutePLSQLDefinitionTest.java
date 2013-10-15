@@ -16,20 +16,18 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import javax.sql.DataSource;
-
+import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ExecutePLSQLAction;
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
 
 public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
@@ -54,7 +52,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
           
         ExecutePLSQLAction action = (ExecutePLSQLAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "plsql");
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
         Assert.assertNull(action.getScript());
@@ -82,7 +80,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "plsql");
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getStatements().size(), 0L);
         Assert.assertEquals(action.getScript(), "testScript");
@@ -106,7 +104,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), ExecutePLSQLAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "plsql");
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getStatements().size(), 0L);
         Assert.assertNull(action.getSqlResourcePath());

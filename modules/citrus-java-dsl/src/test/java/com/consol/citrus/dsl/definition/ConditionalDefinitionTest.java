@@ -16,12 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
+import com.consol.citrus.container.Conditional;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.container.Conditional;
+import static org.testng.Assert.assertEquals;
 
 public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -37,7 +36,7 @@ public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Conditional.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), Conditional.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "conditional");
         
         Conditional container = (Conditional)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 1);

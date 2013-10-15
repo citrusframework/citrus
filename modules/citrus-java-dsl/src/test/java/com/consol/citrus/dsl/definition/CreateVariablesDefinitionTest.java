@@ -40,7 +40,7 @@ public class CreateVariablesDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), CreateVariablesAction.class);
         
         CreateVariablesAction action = (CreateVariablesAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), CreateVariablesAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "create-variables");
         Assert.assertEquals(action.getVariables().toString(), "{foo=bar, text=Hello Citrus!}");
         
     }

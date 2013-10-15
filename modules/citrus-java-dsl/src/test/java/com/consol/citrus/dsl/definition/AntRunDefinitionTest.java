@@ -45,7 +45,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), AntRunAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
     }
@@ -66,7 +66,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), AntRunAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertNull(action.getTarget());
         Assert.assertEquals(action.getTargets(), "prepare,test,release");
@@ -90,7 +90,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), AntRunAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
         Assert.assertEquals(action.getProperties().size(), 2L);
@@ -115,7 +115,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), AntRunAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
         Assert.assertEquals(action.getProperties().size(), 0L);
@@ -141,7 +141,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), AntRunAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildListener(), buildListener);
     }
 }

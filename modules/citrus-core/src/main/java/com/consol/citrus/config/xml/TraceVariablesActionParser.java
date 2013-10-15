@@ -16,10 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.consol.citrus.actions.TraceVariablesAction;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -27,7 +24,9 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.TraceVariablesAction;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Bean definition parser for trace-variables action in test case.
@@ -51,8 +50,6 @@ public class TraceVariablesActionParser implements BeanDefinitionParser {
             variableNames.add(variable.getAttribute("name"));
         }
         beanDefinition.addPropertyValue("variableNames", variableNames);
-
-        beanDefinition.addPropertyValue("name", element.getLocalName());
 
         return beanDefinition.getBeanDefinition();
     }

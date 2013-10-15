@@ -16,18 +16,17 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
+import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.TransformAction;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
 
 public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 	private Resource xmlResource = EasyMock.createMock(Resource.class);
@@ -51,7 +50,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 		
 		TransformAction action = (TransformAction)builder.testCase().getActions().get(0);
 		
-		Assert.assertEquals(action.getName(), TransformAction.class.getSimpleName());
+		Assert.assertEquals(action.getName(), "transform");
 		Assert.assertEquals(action.getXmlData(), "<Test>XML</test>");
 		Assert.assertEquals(action.getXsltData(), "XSLT");
 		Assert.assertEquals(action.getTargetVariable(), "result");
@@ -81,7 +80,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 		
 		TransformAction action = (TransformAction)builder.testCase().getActions().get(0);
 		
-		Assert.assertEquals(action.getName(), TransformAction.class.getSimpleName());
+		Assert.assertEquals(action.getName(), "transform");
 		Assert.assertEquals(action.getXmlData(), "xmlData");
 		Assert.assertEquals(action.getXsltData(), "xsltSource");
 		Assert.assertEquals(action.getTargetVariable(), "result");

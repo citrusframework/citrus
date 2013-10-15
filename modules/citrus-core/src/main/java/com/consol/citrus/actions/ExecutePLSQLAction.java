@@ -16,12 +16,13 @@
 
 package com.consol.citrus.actions;
 
-import java.util.*;
-
-import org.springframework.dao.DataAccessException;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.dao.DataAccessException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Class executes PLSQL statements either declared inline as PLSQL statements or given by an
@@ -36,6 +37,13 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
     /** boolean flag marking that possible SQL errors will be ignored */
     private boolean ignoreErrors = false;
+
+    /**
+     * Default constructor.
+     */
+    public ExecutePLSQLAction() {
+        setName("plsql");
+    }
 
     @Override
     public void doExecute(TestContext context) {

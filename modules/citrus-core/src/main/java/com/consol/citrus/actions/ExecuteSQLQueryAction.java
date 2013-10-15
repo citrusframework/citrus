@@ -16,19 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.util.CollectionUtils;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -38,6 +25,14 @@ import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -65,10 +60,15 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /** NULL value representation in SQL */
     private static final String NULL_VALUE = "NULL";
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(ExecuteSQLQueryAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public ExecuteSQLQueryAction() {
+        setName("sql-query");
+    }
 
     @Override
     public void doExecute(TestContext context) {

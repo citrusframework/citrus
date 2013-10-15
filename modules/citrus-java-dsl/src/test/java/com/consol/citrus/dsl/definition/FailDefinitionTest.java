@@ -40,7 +40,7 @@ public class FailDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), FailAction.class);
         
         FailAction action = (FailAction)builder.testCase().getActions().get(0);
-        Assert.assertEquals(action.getName(), FailAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "fail");
         Assert.assertEquals(action.getMessage(), "This test will fail.");
     }
 }

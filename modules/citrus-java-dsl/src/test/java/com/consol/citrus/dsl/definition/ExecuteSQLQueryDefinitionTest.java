@@ -16,21 +16,21 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.*;
-
-import javax.sql.DataSource;
-
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ExecuteSQLQueryAction;
-import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
 
 public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
@@ -65,7 +65,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
-        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().entrySet().iterator().next().toString(), "COLUMN=[value]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
@@ -100,7 +100,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
-        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().entrySet().iterator().next().toString(), "COLUMN=[value1, value2]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
@@ -130,7 +130,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
-        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
@@ -163,7 +163,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
-        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
@@ -194,7 +194,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
-        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
@@ -227,7 +227,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
         
-        Assert.assertEquals(action.getName(), ExecuteSQLQueryAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());

@@ -16,13 +16,12 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.context.TestContext;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Action that prints variable values to the console/logger. Action requires a list of variable
@@ -35,10 +34,15 @@ public class TraceVariablesAction extends AbstractTestAction {
     /** List of variable names */
     private List<String> variableNames;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(TraceVariablesAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public TraceVariablesAction() {
+        setName("trace");
+    }
 
     @Override
     public void doExecute(TestContext context) {

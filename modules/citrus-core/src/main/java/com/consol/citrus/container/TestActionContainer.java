@@ -16,9 +16,9 @@
 
 package com.consol.citrus.container;
 
-import java.util.List;
-
 import com.consol.citrus.TestAction;
+
+import java.util.List;
 
 /**
  * Container interface describing all test action containers that hold several embedded test actions
@@ -36,7 +36,6 @@ public interface TestActionContainer {
     
     /**
      * Get the embedded test actions within this container.
-     * @param actions
      */
     List<TestAction> getActions();
     

@@ -16,8 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.*;
-
+import com.consol.citrus.actions.JavaAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -27,8 +27,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.JavaAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Bean definition parser for java action in test case.
@@ -72,8 +73,6 @@ public class JavaActionParser implements BeanDefinitionParser {
             }
             beanDefinition.addPropertyValue("methodArgs", arguments);
         }
-
-        beanDefinition.addPropertyValue("name", element.getLocalName());
 
         return beanDefinition.getBeanDefinition();
     }

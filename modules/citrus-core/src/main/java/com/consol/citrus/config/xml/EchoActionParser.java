@@ -45,8 +45,6 @@ public class EchoActionParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("message", DomUtils.getTextValue(messageElement));
         }
 
-        beanDefinition.addPropertyValue("name", element.getLocalName());
-
         return beanDefinition.getBeanDefinition();
     }
 }

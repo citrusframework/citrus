@@ -32,10 +32,15 @@ public class Catch extends AbstractActionContainer {
     /** Exception type caught */
     private String exception = CitrusRuntimeException.class.getName();
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(Catch.class);
+
+    /**
+     * Default constructor.
+     */
+    public Catch() {
+        setName("catch");
+    }
 
     @Override
     public void doExecute(TestContext context) {

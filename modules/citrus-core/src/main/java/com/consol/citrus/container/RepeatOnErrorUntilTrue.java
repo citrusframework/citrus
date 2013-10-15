@@ -37,10 +37,15 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
     /** Auto sleep in seconds */
     private long autoSleep = 1;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
+
+    /**
+     * Default constructor.
+     */
+    public RepeatOnErrorUntilTrue() {
+        setName("repeat-on-error");
+    }
 
     /**
      * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)

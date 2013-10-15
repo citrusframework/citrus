@@ -16,13 +16,12 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.container.RepeatUntilTrue;
+import static org.testng.Assert.assertEquals;
 
 public class RepeatUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -41,7 +40,7 @@ public class RepeatUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), RepeatUntilTrue.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), RepeatUntilTrue.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "repeat");
         
         RepeatUntilTrue container = (RepeatUntilTrue)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 3);

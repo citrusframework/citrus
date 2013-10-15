@@ -60,6 +60,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "purge-channel");
 
         PurgeMessageChannelAction action = (PurgeMessageChannelAction) builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getChannels().size(), 3);

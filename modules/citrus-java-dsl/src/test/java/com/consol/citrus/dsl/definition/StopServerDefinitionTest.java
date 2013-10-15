@@ -49,11 +49,11 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 		Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), StopServerAction.class);
 		
 		StopServerAction action = (StopServerAction)builder.testCase().getActions().get(0);
-		Assert.assertEquals(action.getName(), StopServerAction.class.getSimpleName());
+		Assert.assertEquals(action.getName(), "stop-server");
 		Assert.assertEquals(action.getServer(), testServer);
 		
 		action = (StopServerAction)builder.testCase().getActions().get(1);
-        Assert.assertEquals(action.getName(), StopServerAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "stop-server");
 		Assert.assertEquals(action.getServerList().size(), 3);
 		Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");
 	}

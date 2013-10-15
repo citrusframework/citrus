@@ -34,7 +34,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
     @Test
     public void testAssertSoapFaultParser() {
         assertActionCount(7);
-        assertActionClassAndName(AssertSoapFault.class, "assert");
+        assertActionClassAndName(AssertSoapFault.class, "soap-fault");
         
         // 1st action
         AssertSoapFault action = getNextTestActionFromTest();

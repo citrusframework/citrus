@@ -16,18 +16,17 @@
 
 package com.consol.citrus.container;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Assert exception to happen in nested test action.
@@ -45,10 +44,15 @@ public class Assert extends AbstractActionContainer {
     /** Localized exception message for control */
     private String message = null;
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(Assert.class);
+
+    /**
+     * Default constructor.
+     */
+    public Assert() {
+        setName("assert");
+    }
 
     @Override
     public void doExecute(TestContext context) {

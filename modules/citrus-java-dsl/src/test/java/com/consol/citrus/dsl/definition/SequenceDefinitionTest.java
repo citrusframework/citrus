@@ -16,13 +16,12 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.Sequence;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.container.Sequence;
+import static org.testng.Assert.assertEquals;
 
 public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -38,7 +37,7 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Sequence.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), Sequence.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "sequential");
         
         Sequence container = (Sequence)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 2);

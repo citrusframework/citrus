@@ -31,7 +31,7 @@ public class AntRunActionParserTest extends AbstractActionParserTest<AntRunActio
     @Test
     public void testAntRunActionParser() {
         assertActionCount(4);
-        assertActionClassAndName(AntRunAction.class, "ant");
+        assertActionClassAndName(AntRunAction.class, "antrun");
         
         AntRunAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getBuildFilePath(), "classpath:com/consol/citrus/actions/build.xml");

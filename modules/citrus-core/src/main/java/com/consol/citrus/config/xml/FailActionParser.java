@@ -41,8 +41,6 @@ public class FailActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, beanDefinition);
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("message"), "message");
 
-        beanDefinition.addPropertyValue("name", element.getLocalName());
-
         return beanDefinition.getBeanDefinition();
     }
 }

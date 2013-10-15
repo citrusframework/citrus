@@ -63,8 +63,6 @@ public class TransformActionParser implements BeanDefinitionParser {
         
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("variable"), "targetVariable");
         
-        beanDefinition.addPropertyValue("name", element.getLocalName());
-        
         return beanDefinition.getBeanDefinition();
     }
 

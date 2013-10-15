@@ -16,17 +16,18 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.*;
-
+import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.script.GroovyAction;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
 
 public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
     private Resource scriptResource = EasyMock.createMock(Resource.class);
@@ -51,6 +52,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "groovy");
         
         GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getScript(), "someScript");

@@ -53,6 +53,13 @@ public class InputAction extends AbstractTestAction {
     /** Separates valid answer possibilities */
     public static final String ANSWER_SEPARATOR = "/";
 
+    /**
+     * Default constructor.
+     */
+    public InputAction() {
+        setName("input");
+    }
+
     @Override
     public void doExecute(TestContext context) {
 

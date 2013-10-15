@@ -16,13 +16,12 @@
 
 package com.consol.citrus.dsl.definition;
 
-import static org.testng.Assert.assertEquals;
-
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import static org.testng.Assert.assertEquals;
 
 public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -42,7 +41,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), RepeatOnErrorUntilTrue.class.getSimpleName());
+        assertEquals(builder.testCase().getActions().get(0).getName(), "repeat-on-error");
         
         RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 3);

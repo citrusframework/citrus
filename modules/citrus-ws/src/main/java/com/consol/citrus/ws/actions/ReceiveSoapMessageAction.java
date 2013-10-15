@@ -16,10 +16,6 @@
 
 package com.consol.citrus.ws.actions;
 
-import java.io.IOException;
-
-import org.springframework.integration.Message;
-
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -27,6 +23,9 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
+import org.springframework.integration.Message;
+
+import java.io.IOException;
 
 /**
  * Message receiver for SOAP messaging.
@@ -48,7 +47,14 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     
     /** SOAP attachment validator */
     private SoapAttachmentValidator attachmentValidator = new SimpleSoapAttachmentValidator();
-    
+
+    /**
+     * Default constructor.
+     */
+    public ReceiveSoapMessageAction() {
+        setName("receive");
+    }
+
     /**
      * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.integration.Message, com.consol.citrus.context.TestContext)
      */

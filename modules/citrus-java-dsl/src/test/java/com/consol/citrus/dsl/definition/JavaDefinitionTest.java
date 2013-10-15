@@ -16,16 +16,15 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.JavaAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.actions.JavaAction;
-import com.consol.citrus.context.TestContext;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JavaDefinitionTest extends AbstractTestNGUnitTest {
     
@@ -54,7 +53,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), JavaAction.class);
         
         JavaAction action = ((JavaAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "java");
         
         Assert.assertEquals(action.getClassName(), "com.consol.citrus.dsl.util.JavaTest");
         Assert.assertNull(action.getInstance());
@@ -82,7 +81,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), JavaAction.class);
         
         JavaAction action = ((JavaAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "java");
         
         Assert.assertEquals(action.getClassName(), EchoAction.class.getSimpleName());
         Assert.assertNull(action.getInstance());
@@ -110,7 +109,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), JavaAction.class);
         
         JavaAction action = ((JavaAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), JavaAction.class.getSimpleName());
+        Assert.assertEquals(action.getName(), "java");
         
         Assert.assertNull(action.getClassName());
         Assert.assertNotNull(action.getInstance());

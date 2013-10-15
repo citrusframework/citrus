@@ -30,7 +30,7 @@ public class TraceVariablesActionParserTest extends AbstractActionParserTest<Tra
     @Test
     public void testTraceVariablesActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(TraceVariablesAction.class, "trace-variables");
+        assertActionClassAndName(TraceVariablesAction.class, "trace");
         
         TraceVariablesAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableNames().size(), 0);

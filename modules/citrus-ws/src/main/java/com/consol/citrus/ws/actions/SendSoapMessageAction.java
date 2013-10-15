@@ -16,14 +16,6 @@
 
 package com.consol.citrus.ws.actions;
 
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.integration.Message;
-import org.springframework.util.StringUtils;
-
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -31,6 +23,13 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.integration.Message;
+import org.springframework.util.StringUtils;
+
+import java.io.IOException;
 
 /**
  * Message sender implementation sending SOAP messages.
@@ -53,7 +52,14 @@ public class SendSoapMessageAction extends SendMessageAction {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SendSoapMessageAction.class);
-    
+
+    /**
+     * Default constructor.
+     */
+    public SendSoapMessageAction() {
+        setName("send");
+    }
+
     @Override
     public void doExecute(final TestContext context) {
         final Message<?> message = createMessage(context);

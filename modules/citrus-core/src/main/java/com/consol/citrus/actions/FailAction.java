@@ -28,6 +28,13 @@ public class FailAction extends AbstractTestAction {
     /** User defined cause message to explain the error */
     private String message = "Generated error to interrupt test execution";
 
+    /**
+     * Default constructor.
+     */
+    public FailAction() {
+        setName("fail");
+    }
+
     @Override
     public void doExecute(TestContext context) {
         throw new CitrusRuntimeException(context.replaceDynamicContentInString(message));

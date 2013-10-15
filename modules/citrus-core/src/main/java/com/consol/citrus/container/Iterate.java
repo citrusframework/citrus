@@ -36,6 +36,13 @@ public class Iterate extends AbstractIteratingTestAction {
     private int step = 1;
 
     /**
+     * Default constructor.
+     */
+    public Iterate() {
+        setName("iterate");
+    }
+
+    /**
      * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
      * @throws com.consol.citrus.exceptions.CitrusRuntimeException
      */

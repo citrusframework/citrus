@@ -32,10 +32,15 @@ public class SleepAction extends AbstractTestAction {
     /** Delay time in seconds */
     private String delay = "5";
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SleepAction.class);
+
+    /**
+     * Default constructor.
+     */
+    public SleepAction() {
+        setName("sleep");
+    }
 
     @Override
     public void doExecute(TestContext context) {

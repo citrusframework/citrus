@@ -16,11 +16,16 @@
 
 package com.consol.citrus.ws.actions;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.xml.transform.*;
-
+import com.consol.citrus.TestAction;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -34,16 +39,14 @@ import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.springframework.xml.transform.StringSource;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Asserting SOAP fault exception in embedded test action.
@@ -79,10 +82,15 @@ public class AssertSoapFault extends AbstractActionContainer {
     /** Message factory creating new soap messages */
     private SoapMessageFactory messageFactory;
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
+
+    /**
+     * Default constructor.
+     */
+    public AssertSoapFault() {
+        setName("soap-fault");
+    }
 
     @Override
     public void doExecute(TestContext context) {
