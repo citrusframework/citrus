@@ -58,4 +58,10 @@ public interface MessageReceiver {
      * @return
      */
     TestActor getActor();
+
+    /**
+     * Gets the receiver name usually the Spring bean name.
+     * @return
+     */
+    String getName();
 }

@@ -18,6 +18,7 @@ package com.consol.citrus.channel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.*;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
@@ -32,7 +33,7 @@ import com.consol.citrus.message.*;
  * 
  * @author Christoph Deppisch
  */
-public class ReplyMessageChannelSender implements MessageSender {
+public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
     
     /** Holding dynamic reply channel  */
     private ReplyMessageChannelHolder replyMessageChannelHolder;
@@ -45,6 +46,9 @@ public class ReplyMessageChannelSender implements MessageSender {
     
     /** Test actor linked to this message sender */
     private TestActor actor;
+
+    /** This sender's name */
+    private String name = getClass().getSimpleName();
     
     /**
      * Logger
@@ -153,5 +157,15 @@ public class ReplyMessageChannelSender implements MessageSender {
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

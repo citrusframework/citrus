@@ -3,6 +3,7 @@ package com.consol.citrus.message;
 import com.consol.citrus.TestActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch, roland
  * @since 06.09.12
  */
-abstract public class AbstractSyncMessageSender implements MessageSender {
+abstract public class AbstractSyncMessageSender implements MessageSender, BeanNameAware {
 
     /** Logger */
     protected  Logger log = LoggerFactory.getLogger(getClass());
@@ -28,6 +29,9 @@ abstract public class AbstractSyncMessageSender implements MessageSender {
 
     /** Test actor linked to this message sender */
     private TestActor actor;
+
+    /** This sender's name */
+    private String name = getClass().getSimpleName();
 
     /**
      * Informs reply message handler for further processing
@@ -93,5 +97,15 @@ abstract public class AbstractSyncMessageSender implements MessageSender {
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

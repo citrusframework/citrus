@@ -16,36 +16,43 @@
 
 package com.consol.citrus.ws.message;
 
-import java.io.IOException;
-
-import javax.xml.transform.*;
-
+import com.consol.citrus.TestActor;
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.ReplyMessageHandler;
+import com.consol.citrus.ws.addressing.WsAddressingHeaders;
+import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
+import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
+import com.consol.citrus.ws.message.callback.WsAddressingRequestMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.core.*;
+import org.springframework.ws.client.core.FaultMessageResolver;
+import org.springframework.ws.client.core.SimpleFaultMessageResolver;
+import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.transform.StringResult;
 
-import com.consol.citrus.TestActor;
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
-import com.consol.citrus.ws.addressing.WsAddressingHeaders;
-import com.consol.citrus.ws.message.callback.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.io.IOException;
 /**
  * Message sender connection as client to a WebService endpoint. The sender supports
  * SOAP attachments in contrary to the normal message senders.
  * 
  * @author Christoph Deppisch
  */
-public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender {
+public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender, BeanNameAware {
 
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
@@ -64,6 +71,9 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
     
     /** Test actor linked to this message sender */
     private TestActor actor;
+
+    /** This sender's name */
+    private String name = getClass().getSimpleName();
     
     /**
      * Logger
@@ -297,5 +307,15 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      */
     public WsAddressingHeaders getAddressingHeaders() {
         return addressingHeaders;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

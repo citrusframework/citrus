@@ -16,14 +16,14 @@
 
 package com.consol.citrus.message;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.TestActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
 
-import com.consol.citrus.TestActor;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generic implementation for reply message receiver implementations. In addition to the usual
@@ -35,7 +35,7 @@ import com.consol.citrus.TestActor;
  *  
  * @author Christoph Deppisch
  */
-public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler {
+public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler, BeanNameAware {
 
     /** Store of reply messages */
     private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
@@ -45,7 +45,10 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
     
     /** The test actor linked with this reply message receiver */
     private TestActor actor;
-    
+
+    /** This receiver's name */
+    private String name = getClass().getSimpleName();
+
     /** Logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
     
@@ -150,5 +153,15 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
      */
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

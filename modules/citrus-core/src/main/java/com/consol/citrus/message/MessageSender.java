@@ -38,6 +38,12 @@ public interface MessageSender {
      * @return
      */
     TestActor getActor();
+
+    /**
+     * Gets the sender name usually the Spring bean name.
+     * @return
+     */
+    String getName();
     
     /**
      * Enumeration representing the different error handling strategies for this

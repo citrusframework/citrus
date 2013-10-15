@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.*;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
@@ -36,7 +37,7 @@ import com.consol.citrus.message.MessageSender;
  * 
  * @author Christoph Christoph
  */
-public class MessageChannelSender implements MessageSender, BeanFactoryAware {
+public class MessageChannelSender implements MessageSender, BeanFactoryAware, BeanNameAware {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MessageChannelSender.class);
@@ -58,6 +59,9 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
     
     /** Test actor linked to this message sender */
     private TestActor actor;
+
+    /** This sender's name */
+    private String name = getClass().getSimpleName();
     
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
@@ -215,5 +219,15 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware {
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

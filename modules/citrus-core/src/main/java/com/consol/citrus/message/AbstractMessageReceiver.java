@@ -16,6 +16,7 @@
 
 package com.consol.citrus.message;
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.TestActor;
@@ -25,13 +26,16 @@ import com.consol.citrus.TestActor;
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractMessageReceiver implements MessageReceiver {
+public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNameAware {
 
     /** Receive timeout in ms */
     private long receiveTimeout = 5000L;
     
     /** The test actor linked to this message receiver */
     private TestActor actor;
+
+    /** This receiver's name */
+    private String name = getClass().getSimpleName();
     
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
@@ -88,5 +92,14 @@ public abstract class AbstractMessageReceiver implements MessageReceiver {
     public void setActor(TestActor actor) {
         this.actor = actor;
     }
-    
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
 }

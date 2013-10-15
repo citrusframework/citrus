@@ -16,8 +16,11 @@
 
 package com.consol.citrus.jms;
 
-import javax.jms.*;
-
+import com.consol.citrus.TestActor;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +38,7 @@ import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.TestActor;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import javax.jms.*;
 
 /**
  * Synchronous message sender implementation for JMS. Sender publishes messages to a JMS destination and
@@ -274,7 +275,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     }
 
     /**
-     *
+     * Resolves the destination name from Jms session.
      * @param name
      * @param session
      * @return
@@ -526,5 +527,10 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.jms;
 
-import javax.jms.*;
-
+import com.consol.citrus.TestActor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
@@ -29,14 +29,14 @@ import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 
-import com.consol.citrus.TestActor;
+import javax.jms.*;
 
 /**
  * Basic adapter class for JMS communication. The adapter uses Spring's {@link JmsTemplate}.
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractJmsAdapter implements InitializingBean {
+public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAware {
 
     /** The connection factory */
     private ConnectionFactory connectionFactory;
@@ -64,6 +64,9 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
     
     /** Test actor linked to this message sender */
     private TestActor actor;
+
+    /** Name of this adapter */
+    private String name = getClass().getSimpleName();
     
     /**
      * Logger
@@ -266,5 +269,18 @@ public abstract class AbstractJmsAdapter implements InitializingBean {
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the adapter's name - usually the Spring bean name.
+     * @return
+     */
+    public String getName() {
+        return name;
     }
 }
