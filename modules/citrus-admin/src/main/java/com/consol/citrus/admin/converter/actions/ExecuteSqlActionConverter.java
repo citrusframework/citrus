@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.consol.citrus.admin.converter.actions;
 
-package com.consol.citrus.admin.converter;
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.model.testcase.core.Sql;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4
  */
-public interface ObjectConverter<T, S> {
+public class ExecuteSqlActionConverter implements ObjectConverter<Sql, ExecuteSQLAction> {
 
-    /**
-     * Converts a configuration definition object to desired object.
-     * @param definition
-     * @return
-     */
-    T convert(S definition);
+    @Override
+    public Sql convert(ExecuteSQLAction definition) {
+        Sql action = new ObjectFactory().createSql();
+
+        action.setDescription(definition.getDescription());
+        action.setDatasource(definition.getDataSource().toString());
+
+        return action;
+    }
 }

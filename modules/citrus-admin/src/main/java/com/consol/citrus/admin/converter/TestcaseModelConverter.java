@@ -18,7 +18,17 @@ package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.admin.converter.actions.*;
+import com.consol.citrus.admin.converter.container.RepeatOnErrorContainerConverter;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import com.consol.citrus.model.testcase.core.ActionListType;
+import com.consol.citrus.model.testcase.core.MetaInfoType;
+import com.consol.citrus.model.testcase.core.Testcase;
+import com.consol.citrus.model.testcase.core.Variables;
 
 import java.util.Map;
 
@@ -52,16 +62,24 @@ public class TestcaseModelConverter implements ObjectConverter<Testcase, TestCas
 
         testModel.setVariables(variables);
 
+        ActionListType actions = new ActionListType();
         for (TestAction testAction : definition.getActions()) {
-            Action action = new Action();
-            action.setReference(testAction.getName());
-            action.setDescription(testAction.getDescription());
-
-            ActionListType actions = new ActionListType();
-            actions.getActionsAndSendsAndReceives().add(action);
-
-            testModel.setActions(actions);
+            if (testAction instanceof ReceiveMessageAction) {
+                actions.getActionsAndSendsAndReceives().add(new ReceiveMessageActionConverter().convert((ReceiveMessageAction) testAction));
+            } else if (testAction instanceof SendMessageAction) {
+                actions.getActionsAndSendsAndReceives().add(new SendMessageActionConverter().convert((SendMessageAction) testAction));
+            } else if (testAction instanceof SleepAction) {
+                actions.getActionsAndSendsAndReceives().add(new SleepActionConverter().convert((SleepAction) testAction));
+            } else if (testAction instanceof ExecuteSQLAction) {
+                actions.getActionsAndSendsAndReceives().add(new ExecuteSqlActionConverter().convert((ExecuteSQLAction) testAction));
+            } else if (testAction instanceof RepeatOnErrorUntilTrue) {
+                actions.getActionsAndSendsAndReceives().add(new RepeatOnErrorContainerConverter().convert((RepeatOnErrorUntilTrue) testAction));
+            } else {
+                actions.getActionsAndSendsAndReceives().add(new TestActionConverter().convert(testAction));
+            }
         }
+
+        testModel.setActions(actions);
 
         return testModel;
     }

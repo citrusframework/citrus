@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.consol.citrus.admin.converter.actions;
 
-package com.consol.citrus.admin.converter;
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.model.testcase.core.Sleep;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4
  */
-public interface ObjectConverter<T, S> {
+public class SleepActionConverter implements ObjectConverter<Sleep, SleepAction> {
 
-    /**
-     * Converts a configuration definition object to desired object.
-     * @param definition
-     * @return
-     */
-    T convert(S definition);
+    @Override
+    public Sleep convert(SleepAction definition) {
+        Sleep action = new ObjectFactory().createSleep();
+
+        action.setDescription(definition.getDescription());
+        action.setTime(definition.getDelay());
+
+        return action;
+    }
 }

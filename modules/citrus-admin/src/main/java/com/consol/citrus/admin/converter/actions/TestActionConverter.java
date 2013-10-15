@@ -13,19 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.consol.citrus.admin.converter.actions;
 
-package com.consol.citrus.admin.converter;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.model.testcase.core.Action;
+import com.consol.citrus.model.testcase.core.ObjectFactory;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4
  */
-public interface ObjectConverter<T, S> {
+public class TestActionConverter implements ObjectConverter<Action, TestAction> {
 
-    /**
-     * Converts a configuration definition object to desired object.
-     * @param definition
-     * @return
-     */
-    T convert(S definition);
+    @Override
+    public Action convert(TestAction definition) {
+        Action action = new ObjectFactory().createAction();
+
+        action.setReference(definition.getName());
+        action.setDescription(definition.getDescription());
+
+        return action;
+    }
 }
