@@ -84,6 +84,8 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             for (String stmt : statements) {
                 validateSqlStatement(stmt);
                 stmt = context.replaceDynamicContentInString(stmt);
+
+                log.info("Executing SQL query: " + stmt);
                 List<Map<String, Object>> results = getJdbcTemplate().queryForList(stmt);
 
                 allResultRows.addAll(results);

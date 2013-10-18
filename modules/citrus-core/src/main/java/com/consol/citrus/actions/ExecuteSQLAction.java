@@ -62,7 +62,7 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
 
                 stmt = context.replaceDynamicContentInString(stmt);
 
-                log.info("Found Sql statement " + stmt);
+                log.info("Executing SQL statement: " + stmt);
                 getJdbcTemplate().execute(stmt);
             } catch (Exception e) {
                 if (ignoreErrors) {
