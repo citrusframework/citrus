@@ -1,85 +1,87 @@
-<h4><span>Variables:</span></h4>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="test-variables-panel span3">
+      <table class="table table-hover table-condensed">
+        <thead>
+        <tr>
+          <th colspan="2">Variables</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#unless test.variables.variables}}
+        <tr><td colspan="2">&nbsp;<i class="icon-remove"></i> No variables defined!</td></tr>
+        {{/unless}}
 
-<table id="test-variables" class="table table-hover table-condensed table-bordered">
-  <thead>
-  <tr>
-    <th width="200px">Name</th>
-    <th>Value</th>
-    <th width="50px;"></th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#unless test.variables.variables}}
-  <tr><td colspan="3">&nbsp;<i class="icon-remove"></i> No values defined!</td></tr>
-  {{/unless}}
-
-  {{#each test.variables.variables}}
-  <tr id="{{id}}">
-    <td>{{name}}</td>
-    <td>{{value}}</td>
-    <td>
-      <a class="edit-variable" href="#" title="Edit variable"><i class="icon-pencil"></i></a>&nbsp;
-      <a class="del-variable" href="#" title="Remove variable"><i class="icon-trash"></i></a>&nbsp;
-    </td>
-  </tr>
-  {{/each}}
-  </tbody>
-</table>
-
-<h4 class="page-header">
-  <span>Actions:</span>
-</h4>
-
-<div class="test-actions">
-  <div class="start-action">
-    <i class="icon-play"></i>
-  </div>
-
-  {{#each test.actions.actionsAndSendsAndReceives}}
-    {{#if actionsAndSendsAndReceives}}
-    <div class="test-transition">
-      <i class="icon-long-arrow-down"></i>
+        {{#each test.variables.variables}}
+        <tr id="{{id}}">
+          <td>{{name}}</td>
+          <td class="test-variable">{{value}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="clickable clickable-hover test-variables-add"><i class="icon-plus"></i> New</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-    <div class="test-container">
-      <span><i class="icon-{{type}}">&nbsp;</i>{{type}}</span>
-    {{#each actionsAndSendsAndReceives}}
-      {{#if actionsAndSendsAndReceives}}
-      <div class="test-container test-container-nested">
-        <span><i class="icon-{{type}}">&nbsp;</i>{{type}}</span>
-        {{#each actionsAndSendsAndReceives}}
+    <div class="test-design-panel span9">
+      <div class="test-actions">
+        <div class="start-action">
+          <i class="icon-play"></i>
+        </div>
+
+        {{#each test.actions.actionsAndSendsAndReceives}}
+        {{#if actionsAndSendsAndReceives}}
+        <div class="test-transition">
+          <i class="icon-long-arrow-down"></i>
+        </div>
+        <div class="test-container">
+          <span><i class="icon-{{type}}">&nbsp;</i>{{type}}</span>
+          {{#each actionsAndSendsAndReceives}}
+          {{#if actionsAndSendsAndReceives}}
+          <div class="test-container test-container-nested">
+            <span><i class="icon-{{type}}">&nbsp;</i>{{type}}</span>
+            {{#each actionsAndSendsAndReceives}}
+            <div class="test-action">
+              <i class="icon-{{type}}">&nbsp;</i>
+              <p>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</p>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+
+          {{#unless actionsAndSendsAndReceives}}
+          <div class="test-action">
+            <i class="icon-{{type}}">&nbsp;</i>
+            <p>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</p>
+          </div>
+          {{/unless}}
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#unless actionsAndSendsAndReceives}}
+        <div class="test-transition">
+          <i class="icon-long-arrow-down"></i>
+        </div>
         <div class="test-action">
           <i class="icon-{{type}}">&nbsp;</i>
           <p>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</p>
         </div>
+        {{/unless}}
         {{/each}}
+        <div class="test-transition">
+          <i class="icon-long-arrow-down"></i>
+        </div>
+
+        <div class="stop-action">
+          <i class="icon-stop"></i>
+        </div>
       </div>
-      {{/if}}
-
-      {{#unless actionsAndSendsAndReceives}}
-      <div class="test-action">
-        <i class="icon-{{type}}">&nbsp;</i>
-        <p>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</p>
-      </div>
-      {{/unless}}
-    {{/each}}
     </div>
-    {{/if}}
-
-    {{#unless actionsAndSendsAndReceives}}
-    <div class="test-transition">
-      <i class="icon-long-arrow-down"></i>
-    </div>
-    <div class="test-action">
-      <i class="icon-{{type}}">&nbsp;</i>
-      <p>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</p>
-    </div>
-    {{/unless}}
-  {{/each}}
-  <div class="test-transition">
-    <i class="icon-long-arrow-down"></i>
-  </div>
-
-  <div class="stop-action">
-    <i class="icon-stop"></i>
   </div>
 </div>
+
+

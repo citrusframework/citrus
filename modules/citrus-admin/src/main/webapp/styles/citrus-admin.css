@@ -149,6 +149,10 @@ h4.page-header {
   cursor: pointer;
 }
 
+.clickable-hover:hover {
+  background: #f5f5f5;
+}
+
 form#search-form {
     margin: 0 0 10px;
 }
@@ -176,10 +180,7 @@ h2 i, h3 i, h4 i {
 }
 
 .test-details-content {
-    max-height: 600px;
-    padding-left: 20px;
-    padding-top: 5px;
-    padding-right: 20px;
+    height: 650px;
 }
 
 .test-details h4.page-header {
@@ -593,12 +594,46 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .test-design {
-  margin-bottom: 30px;
+    background: #f6f6f6;
 }
 
-.test-design h4.page-header {
-   padding-bottom: 0px;
-   margin: 0px 0px 0px 0px;
+.test-design .container-fluid {
+    padding: 0px 0px 0px 0px;
+}
+
+.test-design .span9 {
+    min-height: 650px;
+    margin-left: 0px;
+}
+
+.test-design-panel {
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    background: #ffffff;
+}
+
+.test-variables-panel {
+    background: #ffffff;
+}
+
+.test-variables-panel table {
+    margin-top: 15px;
+    margin-bottom: 0px;
+    word-break: break-all;
+    word-wrap: break-word;
+    border-bottom: 1px solid #dddddd;
+}
+
+.test-variables-panel thead {
+    font-size: 17.5px;
+}
+
+.test-variables-panel tbody {
+    font-size: 12px;
+}
+
+td.test-variable {
+    border-left: 1px solid #dddddd
 }
 
 .test-actions {
@@ -779,20 +814,6 @@ input[readonly], select[readonly], textarea[readonly] {
 
 .test-transition i {
     font-size: 20px;
-}
-
-.test-variables {
-    padding: 0px 0px 0px 0px;
-    margin: 20px 0;
-}
-
-.test-variables dt {
-    width: 180px;
-    padding-right: 5px;
-}
-
-.test-variables dd {
-    margin-left: 200px;
 }
 
 .prettycode {
