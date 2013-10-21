@@ -547,11 +547,6 @@ span.message-outbound {
     border-bottom-color: #ffffff;
 }
 
-ul.xsd-schema-list {
-    list-style: none;
-    margin: 0 0 0 10px;
-}
-
 input[readonly], select[readonly], textarea[readonly] {
     cursor: default;
     background-color: #ffffff;
@@ -803,6 +798,92 @@ td.test-variable {
     color: #5ab15a;
 }
 
+.icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.icon-large {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+}
+
+.icon-large.icon-schema-repository {
+    background: url("icons/large/schema-repository.png") no-repeat;
+}
+
+.icon-schema {
+    background: url("icons/schema.png") no-repeat;
+}
+
+.icon-large.icon-schema {
+    background: url("icons/large/schema.png") no-repeat;
+}
+
+ul.xsd-schema-list {
+    list-style: none;
+    margin: 0px 0px;
+}
+
+.config-panel {
+    padding-right: 0px;
+    background: #f6f6f6;
+    border-bottom: 1px solid #dddddd;
+}
+
+.config-items-panel {
+    background: #ffffff;
+    border-left: 1px solid #dddddd;
+}
+
+.config-item {
+    float: left;
+    width: 250px;
+    height: 180px;
+    border-right: 1px solid #dddddd;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow-y: hidden;
+}
+
+.config-item h4 {
+    vertical-align: top;
+    margin: 3px 0px;
+}
+
+.config-item dl {
+    margin-bottom: 5px;
+}
+
+.config-item dt {
+    width: 45px;
+}
+
+.config-item dd {
+    margin-left: 55px;
+}
+
+.config-item-new {
+    color: #aaaaaa;
+}
+
+.config-properties {
+    margin: 0px 0px;
+}
+
+.config-properties-panel .config-properties {
+    margin-top: 75px;
+    font-weight: bold;
+}
+
+.config-properties li {
+    list-style: none;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
 .test-transition {
     padding: 0px 0px 0px 0px;
     background: none;
@@ -821,3 +902,4 @@ td.test-variable {
   background-color: #ffffff;
   border: none;
 }
+

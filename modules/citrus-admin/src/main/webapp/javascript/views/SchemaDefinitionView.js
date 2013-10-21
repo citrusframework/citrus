@@ -5,21 +5,16 @@
             schemaRepositories: undefined,
 
             events: {
-                "click #btn-new-config-xsd-schema": "showNewSchemaForm",
+                "click #new-schema": "showNewSchemaForm",
                 "click #btn-save-config-xsd-schema": "createSchema",
                 "click #btn-update-config-xsd-schema": "updateSchema",
                 "click #btn-cancel-config-xsd-schema": "closeSchemaForm",
-                "click #btn-new-config-schema-repository": "showNewSchemaRepositoryForm",
+                "click #new-schema-repository": "showNewSchemaRepositoryForm",
                 "click #btn-save-config-schema-repository": "createSchemaRepository",
                 "click #btn-update-config-schema-repository": "updateSchemaRepository",
                 "click #btn-cancel-config-schema-repository": "closeSchemaRepositoryForm",
-                "click .edit-config-xsd-schema": "showEditSchemaForm",
-                "click .del-config-xsd-schema": "removeSchema",
-                "click .edit-config-schema-repository": "showEditSchemaRepositoryForm",
-                "click .del-config-schema-repository": "removeSchemaRepository",
-                "submit #form-filter-config-xsd-schemas": "filterSchemas",
-                "click #btn-reload-config-xsd-schemas": "reload",
-                "click #btn-reload-config-schema-repository": "reload",
+                "click .config-item": "showEditSchemaForm",
+                "click .config-item": "showEditSchemaRepositoryForm",
                 "click a.xsd-schema-select": "selectSchema",
                 "click #btn-add-config-xsd-schema-ref": "addSchemaReference",
                 "click input[name='schema-ref']": "showSchemaReferenceSelect"
@@ -29,16 +24,13 @@
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('SchemaDefinitionView'));
+                this.reload();
+
+                $(this.el).html(TemplateManager.template('SchemaDefinitionView', {schemaRepositories: this.schemaRepositories, schemas: this.schemas}));
                 return this;
             },
 
             afterRender: function () {
-                $('#input-filter-config-xsd-schemas').keyup(_.bind(function () {
-                    this.filterSchemas();
-                }, this));
-
-                this.reload();
             },
 
             reload: function() {
@@ -53,10 +45,8 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.schemas = response;
-                        $("#config-xsd-schemas-table").html(TemplateManager.template('SchemaTableView', {matches: this.schemas}));
-                        $('#input-filter-config-xsd-schemas').val('');
                     }, this),
-                    async: true
+                    async: false
                 });
             },
 
@@ -67,27 +57,9 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.schemaRepositories = response;
-                        $("#config-schema-repository-table").html(TemplateManager.template('SchemaRepositoryTableView', {matches: this.schemaRepositories}));
                     }, this),
-                    async: true
+                    async: false
                 });
-            },
-
-            filterSchemas: function () {
-                var searchKey = $('#input-filter-config-xsd-schemas').val();
-
-                if (searchKey.length) {
-                    $("#config-xsd-schemas-table").html(TemplateManager.template('SchemaTableView', {matches: _.filter(this.schemas, function (schema) {
-                        // regex: match all key names (e.g. "keyname":) in JSON String
-                        var regex = /"(\w|0-9|_)+":/;
-                        // replace key names with empty string and only search for match in values
-                        return JSON.stringify(schema).replace(regex,"").indexOf(searchKey) >= 0;
-                    })}));
-                } else {
-                    $("#config-xsd-schemas-table").html(TemplateManager.template('SchemaTableView', {matches: this.schemas}));
-                }
-
-                return false;
             },
 
             removeSchema: function (event) {
