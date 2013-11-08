@@ -16,18 +16,7 @@
 
 package com.consol.citrus.xml.schema;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.wsdl.*;
-import javax.wsdl.factory.WSDLFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import com.ibm.wsdl.extensions.schema.SchemaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
@@ -39,9 +28,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.ibm.wsdl.extensions.schema.SchemaImpl;
+import javax.wsdl.*;
+import javax.wsdl.factory.WSDLFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Wrapper implementation takes care of nested WSDL schema types. Exposes those WSDL schema types as
@@ -96,7 +95,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
      * @throws TransformerConfigurationException 
      */
     private void loadSchemas() throws WSDLException, IOException, TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
-        Definition definition = WSDLFactory.newInstance().newWSDLReader().readWSDL(wsdl.getFile().getAbsolutePath());
+        Definition definition = WSDLFactory.newInstance().newWSDLReader().readWSDL(wsdl.getURI().getPath(), new InputSource(wsdl.getInputStream()));
         
         Types types = definition.getTypes();
         List<?> schemaTypes = types.getExtensibilityElements();
