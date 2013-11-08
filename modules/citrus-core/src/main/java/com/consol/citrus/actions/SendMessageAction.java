@@ -16,11 +16,13 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -52,6 +54,13 @@ public class SendMessageAction extends AbstractTestAction {
      * message sender is waiting for the synchronous response */
     private boolean forkMode = false;
 
+    /** The message type to send in this action - this information is needed to find proper
+     * message construction interceptors for this message */
+    private String messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
+
+    /** Optional data dictionary that explicitly modifies message content before sending */
+    private DataDictionary dataDictionary;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SendMessageAction.class);
 
@@ -68,7 +77,7 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public void doExecute(TestContext context) {
-        final Message<?> message = createMessage(context);
+        final Message<?> message = createMessage(context, messageType);
         
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : variableExtractors) {
@@ -104,10 +113,15 @@ public class SendMessageAction extends AbstractTestAction {
     /**
      * Create message to be sent.
      * @param context
+     * @param messageType
      * @return
      */
-    protected Message<?> createMessage(TestContext context) {
-        return messageBuilder.buildMessageContent(context);
+    protected Message<?> createMessage(TestContext context, String messageType) {
+        if (dataDictionary != null) {
+            messageBuilder.setDataDictionary(dataDictionary);
+        }
+
+        return messageBuilder.buildMessageContent(context, messageType);
     }
 
     /**
@@ -172,5 +186,37 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public boolean isForkMode() {
         return forkMode;
+    }
+
+    /**
+     * Sets the expected message type for this receive action.
+     * @param messageType the messageType to set
+     */
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    /**
+     * Gets the message type for this receive action.
+     * @return the messageType
+     */
+    public String getMessageType() {
+        return messageType;
+    }
+
+    /**
+     * Gets the data dictionary.
+     * @return
+     */
+    public DataDictionary getDataDictionary() {
+        return dataDictionary;
+    }
+
+    /**
+     * Sets the data dictionary.
+     * @param dataDictionary
+     */
+    public void setDataDictionary(DataDictionary dataDictionary) {
+        this.dataDictionary = dataDictionary;
     }
 }

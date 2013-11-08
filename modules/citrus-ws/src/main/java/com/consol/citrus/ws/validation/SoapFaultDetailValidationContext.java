@@ -16,11 +16,12 @@
 
 package com.consol.citrus.ws.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Special validation context holds 1-n {@link XmlMessageValidationContext} instances for
@@ -56,6 +57,9 @@ public class SoapFaultDetailValidationContext implements ValidationContext {
     public void addValidationContext(XmlMessageValidationContext context) {
         this.validationContexts.add(context);
     }
-    
-    
+
+    @Override
+    public String getMessageType() {
+        return MessageType.XML.toString();
+    }
 }

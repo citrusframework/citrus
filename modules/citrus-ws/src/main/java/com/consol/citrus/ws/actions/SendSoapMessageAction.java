@@ -62,7 +62,7 @@ public class SendSoapMessageAction extends SendMessageAction {
 
     @Override
     public void doExecute(final TestContext context) {
-        final Message<?> message = createMessage(context);
+        final Message<?> message = createMessage(context, getMessageType());
         
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : getVariableExtractors()) {

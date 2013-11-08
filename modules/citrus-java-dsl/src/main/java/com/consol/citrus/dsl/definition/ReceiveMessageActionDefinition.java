@@ -16,16 +16,6 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.Map;
-
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.Assert;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
@@ -42,6 +32,15 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.util.Assert;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Receive message action definition offers configuration methods for a receive test action. Build options 
@@ -119,7 +118,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
                 ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadData(payload);
             } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
                 validationContext.setControlMessage(MessageBuilder.withPayload(payload).copyHeaders(message.getHeaders()).build());
             }
         } else {
@@ -141,7 +140,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             if (messageType.equals(MessageType.XML)) {
                 validationContext = new XmlMessageValidationContext();
             } else {
-                validationContext = new ControlMessageValidationContext();
+                validationContext = new ControlMessageValidationContext(messageType.toString());
             }
             
             action.getValidationContexts().add(validationContext);
@@ -153,7 +152,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      */
     private void initializeScriptValidationContext() {
         if (scriptValidationContext == null) {
-            scriptValidationContext = new ScriptValidationContext();
+            scriptValidationContext = new ScriptValidationContext(messageType.toString());
             
             action.getValidationContexts().add(scriptValidationContext);
         }
@@ -188,7 +187,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
                     PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
                     messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
     
-                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
                     messageBuilder.setMessageHeaders(message.getHeaders());
                     
                     validationContext.setMessageBuilder(messageBuilder);
@@ -218,7 +217,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
                 ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessageHeaders().put(name, value);
             } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
                 validationContext.setControlMessage(MessageBuilder.fromMessage(message).setHeader(name, value).build());
             }
         } else {
@@ -246,7 +245,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
                 // convert to payload template message builder
                 PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
                 
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
                 messageBuilder.setPayloadData(message.getPayload().toString());
                 messageBuilder.getMessageHeaders().putAll(message.getHeaders());
                 messageBuilder.setMessageHeaderData(data);
@@ -278,7 +277,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
                     // convert to payload template message builder
                     PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
                     
-                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null);
+                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
                     messageBuilder.setPayloadData(message.getPayload().toString());
                     messageBuilder.getMessageHeaders().putAll(message.getHeaders());
                     messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));

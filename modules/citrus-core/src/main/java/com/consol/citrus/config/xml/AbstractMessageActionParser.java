@@ -16,14 +16,6 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.*;
-
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
-import org.springframework.util.StringUtils;
-import org.springframework.util.xml.DomUtils;
-import org.w3c.dom.Element;
-
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -31,6 +23,13 @@ import com.consol.citrus.validation.interceptor.XpathMessageConstructionIntercep
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
+import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.util.StringUtils;
+import org.springframework.util.xml.DomUtils;
+import org.w3c.dom.Element;
+
+import java.util.*;
 
 /**
  * Parser providing basic message element configurations used in send and receive actions.
@@ -54,8 +53,12 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 messageBuilder = parseScriptBuilder(messageElement);
             }
         }
-        
-        return messageBuilder != null ? messageBuilder : new PayloadTemplateMessageBuilder();
+
+        if (messageBuilder != null) {
+            return messageBuilder;
+        } else {
+            return new PayloadTemplateMessageBuilder();
+        }
     }
     
     /**

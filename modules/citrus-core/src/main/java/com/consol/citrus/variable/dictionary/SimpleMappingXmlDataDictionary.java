@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * Very basic data dictionary that holds a list of mappings for message elements. Mapping key is the element path inside
+ * the XML structure {@link com.consol.citrus.util.XMLUtils getNodesPathName()}. The mapping value is set as new element
+ * value where test variables are supported in value expressions.
  * @author Christoph Deppisch
  * @since 1.4
  */

@@ -48,17 +48,17 @@
                   <message>
                       <data>
                       <![CDATA[
-			        	<GetDateRequestMessage>
-							<MessageHeader>
-								<ConversationId>_</ConversationId>
-								<Timestamp>citrus:currentDate()</Timestamp>
-							</MessageHeader>
-							<MessageBody>
-								<Format>yyyy-mm-dd</Format>
-							</MessageBody>
-						</GetDateRequestMessage>	
-					  ]]>
-					  </data>
+                          <GetDateRequestMessage>
+                            <MessageHeader>
+                              <ConversationId>_</ConversationId>
+                              <Timestamp>citrus:currentDate()</Timestamp>
+                            </MessageHeader>
+                            <MessageBody>
+                              <Format>yyyy-mm-dd</Format>
+                            </MessageBody>
+                          </GetDateRequestMessage>
+                      ]]>
+                      </data>
                       <element path="ConversationId" value="${conversationId}"/>
                   </message>
                   <header>

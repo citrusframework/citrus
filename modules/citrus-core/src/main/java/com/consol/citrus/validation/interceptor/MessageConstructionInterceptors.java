@@ -17,6 +17,7 @@
 package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -33,20 +34,33 @@ import java.util.List;
 public class MessageConstructionInterceptors implements MessageConstructionInterceptor {
 
     @Autowired(required = false)
-    List<MessageConstructionInterceptor> messageConstructionInterceptors = new ArrayList<MessageConstructionInterceptor>();
+    private List<MessageConstructionInterceptor> messageConstructionInterceptors = new ArrayList<MessageConstructionInterceptor>();
 
     @Override
-    public Message<?> interceptMessageConstruction(Message<?> message, TestContext context) {
+    public Message<?> interceptMessageConstruction(Message<?> message, String messageType, TestContext context) {
         if (messageConstructionInterceptors.size() > 0) {
             Message<?> intercepted = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
 
             for (MessageConstructionInterceptor messageConstructionInterceptor : messageConstructionInterceptors) {
-                intercepted = messageConstructionInterceptor.interceptMessageConstruction(intercepted, context);
+                if (messageConstructionInterceptor.supportsMessageType(messageType.toString())) {
+                    if (messageConstructionInterceptor instanceof DataDictionary &&
+                            ((DataDictionary) messageConstructionInterceptor).getScope().equals(DataDictionary.DictionaryScope.EXPLICIT)) {
+                        // skip explicit data dictionary to avoid duplicate dictionary usage.
+                        continue;
+                    }
+
+                    intercepted = messageConstructionInterceptor.interceptMessageConstruction(intercepted, messageType, context);
+                }
             }
 
             return intercepted;
         }
 
         return message;
+    }
+
+    @Override
+    public boolean supportsMessageType(String messageType) {
+        return true;
     }
 }

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.validation.builder;
 
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
-import org.springframework.integration.Message;
-
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
+import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 import java.util.ArrayList;
@@ -40,6 +40,9 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
     /** The static message to build here */
     private Message<T> message;
 
+    /** Optional data dictionary that explicitly modifies control message content before construction */
+    private DataDictionary dataDictionary;
+
     /**
      * Default constructor with static message to be built by this message builder.
      */
@@ -57,14 +60,21 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
     /**
      * Returns the static message every time.
      */
-    public Message<T> buildMessageContent(TestContext context) {
+    @Override
+    public Message<T> buildMessageContent(TestContext context, String messageType) {
         if (message != null && messageInterceptors.size() > 0) {
             Message<T> result = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
 
-            result = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(result, context);
+            result = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(result, messageType, context);
 
             for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                result = (Message<T>) modifyer.interceptMessageConstruction(result, context);
+                if (modifyer.supportsMessageType(messageType)) {
+                    result = (Message<T>) modifyer.interceptMessageConstruction(result, messageType, context);
+                }
+            }
+
+            if (dataDictionary != null && dataDictionary.supportsMessageType(messageType)) {
+                dataDictionary.interceptMessageConstruction(result, messageType, context);
             }
 
             return result;
@@ -87,6 +97,11 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      */
     public void add(MessageConstructionInterceptor interceptor) {
         messageInterceptors.add(interceptor);
+    }
+
+    @Override
+    public void setDataDictionary(DataDictionary dataDictionary) {
+        this.dataDictionary = dataDictionary;
     }
 
     /**

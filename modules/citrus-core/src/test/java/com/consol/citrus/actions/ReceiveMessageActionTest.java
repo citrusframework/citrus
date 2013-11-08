@@ -16,18 +16,7 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.*;
-
-import com.consol.citrus.TestCase;
-import org.easymock.EasyMock;
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.consol.citrus.TestActor;
+import com.consol.citrus.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
@@ -42,6 +31,15 @@ import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.*;
+import org.easymock.EasyMock;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -1474,7 +1472,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext();
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(CitrusConstants.DEFAULT_MESSAGE_TYPE);
         validationContexts.add(scriptValidationContext);
 
         receiveAction.setValidationContexts(validationContexts);

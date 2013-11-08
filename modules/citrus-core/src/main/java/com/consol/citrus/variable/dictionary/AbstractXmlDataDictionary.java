@@ -17,8 +17,8 @@
 package com.consol.citrus.variable.dictionary;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.*;
@@ -28,17 +28,17 @@ import org.w3c.dom.traversal.NodeFilter;
 import java.io.StringWriter;
 
 /**
- * Abstract data dictionary works on XML message payloads with parsing the document and translating each element
- * and attribute.
+ * Abstract data dictionary works on XML message payloads only with parsing the document and translating each element
+ * and attribute with respective value in dictionary.
  *
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractXmlDataDictionary extends AbstractMessageConstructionInterceptor implements DataDictionary {
+public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary {
 
     @Override
-    protected String interceptMessagePayload(String messagePayload, TestContext context) {
-        if (!StringUtils.hasText(messagePayload)) {
+    protected String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
+        if (!StringUtils.hasText(messagePayload) || !supportsMessageType(messageType)) {
             return messagePayload;
         }
 
@@ -94,4 +94,11 @@ public abstract class AbstractXmlDataDictionary extends AbstractMessageConstruct
             return NodeFilter.FILTER_ACCEPT;
         }
     }
+
+    @Override
+    public boolean supportsMessageType(String messageType) {
+        return MessageType.XML.toString().equalsIgnoreCase(messageType);
+    }
+
+
 }

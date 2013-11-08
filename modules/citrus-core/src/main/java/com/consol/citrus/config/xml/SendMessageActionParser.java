@@ -16,9 +16,9 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -27,9 +27,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.variable.VariableExtractor;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bean definition parser for send action in test case.
@@ -62,7 +61,17 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-        
+
+        String messageType = messageElement.getAttribute("type");
+        if (StringUtils.hasText(messageType)) {
+            builder.addPropertyValue("messageType", messageType);
+        }
+
+        String dataDictionary = messageElement.getAttribute("data-dictionary");
+        if (StringUtils.hasText(dataDictionary)) {
+            builder.addPropertyReference("dataDictionary", dataDictionary);
+        }
+
         AbstractMessageContentBuilder<?> messageBuilder = constructMessageBuilder(messageElement);
         parseHeaderElements(element, messageBuilder);
         

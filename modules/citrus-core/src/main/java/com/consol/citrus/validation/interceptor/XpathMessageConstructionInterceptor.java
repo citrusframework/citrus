@@ -19,6 +19,7 @@ package com.consol.citrus.validation.interceptor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
@@ -72,8 +73,8 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      * needs to be XML here.
      */
     @Override
-    public String interceptMessagePayload(String messagePayload, TestContext context) {
-        if (!StringUtils.hasText(messagePayload)) {
+    public String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
+        if (!StringUtils.hasText(messagePayload) || !supportsMessageType(messageType)) {
             return messagePayload;
         }
 
@@ -126,6 +127,11 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
         return XMLUtils.serialize(doc);
     }
 
+    @Override
+    public boolean supportsMessageType(String messageType) {
+        return MessageType.XML.toString().equalsIgnoreCase(messageType);
+    }
+
     /**
      * @param xPathExpressions the xPathExpressions to set
      */
@@ -140,5 +146,4 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
     public Map<String, String> getxPathExpressions() {
         return xPathExpressions;
     }
-
 }

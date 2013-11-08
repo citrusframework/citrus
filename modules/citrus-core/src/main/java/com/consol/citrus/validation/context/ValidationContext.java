@@ -23,4 +23,10 @@ package com.consol.citrus.validation.context;
  * @author Christoph Deppisch
  */
 public interface ValidationContext {
+
+    /**
+     * Gets the message type this context was built for.
+     * @return
+     */
+    String getMessageType();
 }

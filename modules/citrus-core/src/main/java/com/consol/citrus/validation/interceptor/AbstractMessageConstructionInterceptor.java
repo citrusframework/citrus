@@ -31,27 +31,29 @@ import org.springframework.integration.support.MessageBuilder;
 public abstract class AbstractMessageConstructionInterceptor implements MessageConstructionInterceptor {
 
     @Override
-    public Message<?> interceptMessageConstruction(Message<?> message, TestContext context) {
-        return MessageBuilder.withPayload(interceptMessagePayload(message.getPayload().toString(), context))
-                             .copyHeaders(interceptMessageHeaders(message.getHeaders(), context)).build();
+    public Message<?> interceptMessageConstruction(Message<?> message, String messageType, TestContext context) {
+        return MessageBuilder.withPayload(interceptMessagePayload(message.getPayload().toString(), messageType, context))
+                             .copyHeaders(interceptMessageHeaders(message.getHeaders(), messageType, context)).build();
     }
 
     /**
      * Intercept message headers. Subclasses may overwrite this method and modify headers.
      * @param headers the message header entries
+     * @param messageType
      * @param context the current test context
      * @return
      */
-    protected MessageHeaders interceptMessageHeaders(MessageHeaders headers, TestContext context) {
+    protected MessageHeaders interceptMessageHeaders(MessageHeaders headers, String messageType, TestContext context) {
         return headers;
     }
 
     /**
      * Intercept the message payload construction. Subclasses may overwrite this method and modify message payload.
      * @param messagePayload the payload
+     * @param messageType
      * @param context the current test context
      */
-    protected String interceptMessagePayload(String messagePayload, TestContext context) {
+    protected String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
         return messagePayload;
     }
 }

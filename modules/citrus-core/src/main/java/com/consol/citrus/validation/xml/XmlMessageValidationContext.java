@@ -16,11 +16,11 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.util.*;
-
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 import org.springframework.core.io.Resource;
 
-import com.consol.citrus.validation.ControlMessageValidationContext;
+import java.util.*;
 
 /**
  * XML validation context holding validation specific information needed for XML 
@@ -52,7 +52,14 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
     
     /** Explicit schema instance to use for this validation */
     private String schema;
-    
+
+    /**
+     * Default constructor using message type field.
+     */
+    public XmlMessageValidationContext() {
+        super(MessageType.XML.toString());
+    }
+
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
@@ -96,7 +103,7 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
 
     /**
      * Set the namespace definitions.
-     * @param namespaceContext the namespaceContext to set
+     * @param namespaces the namespaceContext to set
      */
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;

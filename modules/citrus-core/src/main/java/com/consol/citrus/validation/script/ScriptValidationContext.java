@@ -16,13 +16,13 @@
 
 package com.consol.citrus.validation.script;
 
-import java.io.IOException;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.ValidationContext;
+
+import java.io.IOException;
 
 /**
  * Basic script validation context providing the validation code either from file resource or 
@@ -39,20 +39,25 @@ public class ScriptValidationContext implements ValidationContext {
     
     /** Type indicating which type of script we use (e.g. groovy, scala etc.) */
     private String scriptType = ScriptTypes.GROOVY;
+
+    /** The message type this context was built for */
+    private final String messageType;
     
     /**
      * Default constructor.
      */
-    public ScriptValidationContext() {
+    public ScriptValidationContext(String messageType) {
+        this.messageType = messageType;
     }
     
     /**
      * Constructor using type field.
-     * @param type
+     * @param scriptType
+     * @param messageType
      */
-    public ScriptValidationContext(String type) {
-        super();
-        this.scriptType = type;
+    public ScriptValidationContext(String scriptType, String messageType) {
+        this(messageType);
+        this.scriptType = scriptType;
     }
 
     /**
@@ -121,5 +126,10 @@ public class ScriptValidationContext implements ValidationContext {
      */
     public void setScriptType(String scriptType) {
         this.scriptType = scriptType;
+    }
+
+    @Override
+    public String getMessageType() {
+        return messageType;
     }
 }

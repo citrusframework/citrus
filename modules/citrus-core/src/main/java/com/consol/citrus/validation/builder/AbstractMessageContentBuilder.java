@@ -18,10 +18,10 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.support.MessageBuilder;
@@ -47,6 +47,9 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     /** The message header as inline data */
     private String messageHeaderData;
 
+    /** Optional data dictionary that explicitly modifies control message content before construction */
+    private DataDictionary dataDictionary;
+
     /** List of manipulators for static message payload */
     private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<MessageConstructionInterceptor>();
     
@@ -54,7 +57,8 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * Constructs the control message with headers and payload coming from 
      * subclass implementation.
      */
-    public Message<T> buildMessageContent(TestContext context) {
+    @Override
+    public Message<T> buildMessageContent(TestContext context, String messageType) {
 
         T payload = buildMessagePayload(context);
 
@@ -63,10 +67,16 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
                 .build();
 
         if (payload != null) {
-            message = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(message, context);
+            message = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
 
             for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                message = (Message<T>) modifyer.interceptMessageConstruction(message, context);
+                if (modifyer.supportsMessageType(messageType)) {
+                    message = (Message<T>) modifyer.interceptMessageConstruction(message, messageType, context);
+                }
+            }
+
+            if (dataDictionary != null && dataDictionary.supportsMessageType(messageType)) {
+                dataDictionary.interceptMessageConstruction(message, messageType, context);
             }
         }
 
@@ -126,6 +136,11 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             String size = headers.get(MessageHeaders.SEQUENCE_SIZE).toString();
             headers.put(MessageHeaders.SEQUENCE_SIZE, Integer.valueOf(size));
         }
+    }
+
+    @Override
+    public void setDataDictionary(DataDictionary dataDictionary) {
+        this.dataDictionary = dataDictionary;
     }
 
     /**

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.validation.builder;
 
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
-import org.springframework.integration.Message;
-
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
+import org.springframework.integration.Message;
 
 /**
  * Interface for classes beeing able to build control messages for validation.
@@ -31,13 +31,20 @@ public interface MessageContentBuilder<T> {
     /**
      * Builds the control message. 
      * @param context the current test context.
+     * @param messageType the message type to build.
      * @return the constructed message object.
      */
-    Message<T> buildMessageContent(TestContext context);
+    Message<T> buildMessageContent(TestContext context, String messageType);
 
     /**
      * Adds a message construction interceptor.
      * @param interceptor
      */
     void add(MessageConstructionInterceptor interceptor);
+
+    /**
+     * Sets explicit data dictionary for this message builder.
+     * @param dataDictionary
+     */
+    void setDataDictionary(DataDictionary dataDictionary);
 }

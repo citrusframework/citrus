@@ -21,21 +21,21 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.Message;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
@@ -47,7 +47,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class ReceiveMessageAction extends AbstractTestAction {
+public class ReceiveMessageAction extends AbstractTestAction implements InitializingBean {
     /** Build message selector with name value pairs */
     private Map<String, String> messageSelector = new HashMap<String, String>();
 
@@ -62,6 +62,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /** MessageValidator responsible for message validation */
     private MessageValidator<? extends ValidationContext> validator;
+
+    /** Optional data dictionary that explicitly modifies message content before validation */
+    private DataDictionary dataDictionary;
     
     /** Callback able to additionally validate received message */
     private ValidationCallback validationCallback;
@@ -342,5 +345,32 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public void setValidationCallback(ValidationCallback validationCallback) {
         this.validationCallback = validationCallback;
+    }
+
+    /**
+     * Gets the data dictionary.
+     * @return
+     */
+    public DataDictionary getDataDictionary() {
+        return dataDictionary;
+    }
+
+    /**
+     * Sets the data dictionary.
+     * @param dataDictionary
+     */
+    public void setDataDictionary(DataDictionary dataDictionary) {
+        this.dataDictionary = dataDictionary;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (dataDictionary != null) {
+            for (ValidationContext validationContext : validationContexts) {
+                if (validationContext instanceof ControlMessageValidationContext) {
+                    ((ControlMessageValidationContext) validationContext).getMessageBuilder().setDataDictionary(dataDictionary);
+                }
+            }
+        }
     }
 }
