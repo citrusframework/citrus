@@ -16,18 +16,16 @@
 
 package com.consol.citrus.util;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.*;
-import java.util.Map;
-
-import javax.xml.XMLConstants;
-
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
+
+import javax.xml.XMLConstants;
+import java.io.*;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -114,6 +112,11 @@ public class XMLUtilsTest {
         expect(childNode3.getLocalName()).andReturn("childNode3").anyTimes();
         expect(childNode3.getParentNode()).andReturn(childNode2).anyTimes();
 
+        expect(testNode.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
+        expect(childNode1.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
+        expect(childNode2.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
+        expect(childNode3.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
+
         replay(doc, testNode, childNode1, childNode2, childNode3);
 
         Assert.assertEquals(XMLUtils.getNodesPathName(testNode), "testNode");
@@ -121,6 +124,44 @@ public class XMLUtilsTest {
         Assert.assertEquals(XMLUtils.getNodesPathName(childNode3), "testNode.childNode2.childNode3");
 
         verify(doc, testNode, childNode1, childNode2, childNode3);
+    }
+
+    @Test
+    public void testGetNodePathNameForAttribute() {
+        Document doc = EasyMock.createMock(Document.class);
+        Element testNode = EasyMock.createMock(Element.class);
+        Element childNode1 = EasyMock.createMock(Element.class);
+        Attr attribute1 = EasyMock.createMock(Attr.class);
+        Attr attribute2 = EasyMock.createMock(Attr.class);
+
+        reset(doc, testNode, childNode1, attribute1, attribute2);
+
+        expect(doc.getParentNode()).andReturn(null).anyTimes();
+
+        expect(testNode.getLocalName()).andReturn("testNode").anyTimes();
+        expect(testNode.getParentNode()).andReturn(doc).anyTimes();
+
+        expect(childNode1.getLocalName()).andReturn("childNode1").anyTimes();
+        expect(childNode1.getParentNode()).andReturn(testNode).anyTimes();
+
+        expect(attribute1.getLocalName()).andReturn("attribute1").anyTimes();
+        expect(attribute1.getOwnerElement()).andReturn(testNode).anyTimes();
+
+        expect(attribute2.getLocalName()).andReturn("attribute2").anyTimes();
+        expect(attribute2.getOwnerElement()).andReturn(childNode1).anyTimes();
+
+        expect(testNode.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
+        expect(childNode1.getNodeType()).andReturn(Node.ELEMENT_NODE).anyTimes();
+        expect(attribute1.getNodeType()).andReturn(Node.ATTRIBUTE_NODE).anyTimes();
+        expect(attribute2.getNodeType()).andReturn(Node.ATTRIBUTE_NODE).anyTimes();
+
+        replay(doc, testNode, childNode1, attribute1, attribute2);
+
+        Assert.assertEquals(XMLUtils.getNodesPathName(testNode), "testNode");
+        Assert.assertEquals(XMLUtils.getNodesPathName(attribute1), "testNode.attribute1");
+        Assert.assertEquals(XMLUtils.getNodesPathName(attribute2), "testNode.childNode1.attribute2");
+
+        verify(doc, testNode, childNode1, attribute1, attribute2);
     }
 
     @Test

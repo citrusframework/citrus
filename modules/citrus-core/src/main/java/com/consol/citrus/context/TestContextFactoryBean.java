@@ -16,16 +16,16 @@
 
 package com.consol.citrus.context;
 
+import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
+import com.consol.citrus.variable.GlobalVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
-import com.consol.citrus.variable.GlobalVariables;
 
 /**
  * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}.
@@ -48,6 +48,9 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
 
     @Autowired
     private TestListeners testListeners;
+
+    @Autowired
+    private MessageConstructionInterceptors messageConstructionInterceptors;
     
     /**
      * Logger
@@ -64,6 +67,7 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
         context.setGlobalVariables(globalVariables);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         context.setTestListeners(testListeners);
+        context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         
         if (log.isDebugEnabled()) {
             log.debug("Created new test context - using global variables: '"

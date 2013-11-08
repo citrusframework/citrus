@@ -34,7 +34,10 @@
     <bean class="com.consol.citrus.report.TestSuiteListeners"/>
     <bean class="com.consol.citrus.report.MessageListeners"/>
     <bean class="com.consol.citrus.report.FailureStackTestListener"/>
-    
+
+    <!-- Global message construction interceptors -->
+    <bean class="com.consol.citrus.validation.interceptor.MessageConstructionInterceptors"/>
+
     <!-- Default logging reporters -->    
     <bean class="com.consol.citrus.report.LoggingReporter"/>
     <bean class="com.consol.citrus.report.HtmlReporter"/>

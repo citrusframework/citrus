@@ -16,18 +16,17 @@
 
 package com.consol.citrus.container;
 
-import java.util.*;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Class represents a previously defined block of test actions. Test cases can call
@@ -81,6 +80,8 @@ public class Template extends AbstractTestAction {
             
             innerContext.setMessageValidatorRegistry(context.getMessageValidatorRegistry());
             innerContext.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
+            innerContext.setTestListeners(context.getTestListeners());
+            innerContext.setMessageConstructionInterceptors(context.getMessageConstructionInterceptors());
         }
         
         for (Entry<String, String> entry : parameter.entrySet()) {

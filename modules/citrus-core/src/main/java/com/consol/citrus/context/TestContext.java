@@ -16,24 +16,24 @@
 
 package com.consol.citrus.context;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.VariableNullValueException;
+import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
+import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.VariableNullValueException;
-import com.consol.citrus.functions.FunctionRegistry;
-import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
-import com.consol.citrus.variable.GlobalVariables;
-import com.consol.citrus.variable.VariableUtils;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -64,6 +64,9 @@ public class TestContext {
 
     /** List of test listeners to be informed on test events */
     private TestListeners testListeners = new TestListeners();
+
+    /** List of global message construction interceptors */
+    private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
     
     /**
      * Default constructor
@@ -349,11 +352,34 @@ public class TestContext {
     }
 
     /**
+     * Gets the test listeners.
+     * @return
+     */
+    public TestListeners getTestListeners() {
+        return testListeners;
+    }
+
+    /**
      * Set the test listeners.
      * @param testListeners
      */
     public void setTestListeners(TestListeners testListeners) {
         this.testListeners = testListeners;
     }
-    
+
+    /**
+     * Gets the message construction interceptors.
+     * @return
+     */
+    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
+        return messageConstructionInterceptors;
+    }
+
+    /**
+     * Sets the messsage construction interceptors.
+     * @param messageConstructionInterceptors
+     */
+    public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
+        this.messageConstructionInterceptors = messageConstructionInterceptors;
+    }
 }

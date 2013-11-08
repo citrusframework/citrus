@@ -16,18 +16,20 @@
 
 package com.consol.citrus.validation.builder;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import org.springframework.integration.Message;
+import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -192,21 +194,24 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderInterceptor() {
-        MessageConstructionInterceptor<String> interceptor = new MessageConstructionInterceptor<String>() {
-            public Message<String> interceptMessageConstruction(
-                    Message<String> message, TestContext context) {
-                return message;
-            }
-
-            public String interceptMessageConstruction(String messagePayload,
+        MessageConstructionInterceptor interceptor = new AbstractMessageConstructionInterceptor() {
+            @Override
+            public String interceptMessagePayload(String messagePayload,
                     TestContext context) {
                 return "InterceptedMessagePayload";
             }
+
+            @Override
+            protected MessageHeaders interceptMessageHeaders(MessageHeaders headers, TestContext context) {
+                return MessageBuilder.withPayload("").copyHeaders(headers).setHeader("NewHeader", "new").build().getHeaders();
+            }
         };
+
         messageBuilder.add(interceptor);
         
         Message<String> resultingMessage = messageBuilder.buildMessageContent(context);
         
         Assert.assertEquals(resultingMessage.getPayload(), "InterceptedMessagePayload");
+        Assert.assertTrue(resultingMessage.getHeaders().containsKey("NewHeader"));
     }
 }

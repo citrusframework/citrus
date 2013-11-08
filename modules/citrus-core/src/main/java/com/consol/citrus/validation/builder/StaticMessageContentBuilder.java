@@ -35,7 +35,7 @@ import java.util.List;
 public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> {
 
     /** List of manipulators for static message payload */
-    private List<MessageConstructionInterceptor<T>> messageInterceptors = new ArrayList<MessageConstructionInterceptor<T>>();
+    private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<MessageConstructionInterceptor>();
 
     /** The static message to build here */
     private Message<T> message;
@@ -59,13 +59,15 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      */
     public Message<T> buildMessageContent(TestContext context) {
         if (message != null && messageInterceptors.size() > 0) {
-            T payload = message.getPayload();
+            Message<T> result = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
 
-            for (MessageConstructionInterceptor<T> modifyer : messageInterceptors) {
-                payload = modifyer.interceptMessageConstruction(payload, context);
+            result = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(result, context);
+
+            for (MessageConstructionInterceptor modifyer : messageInterceptors) {
+                result = (Message<T>) modifyer.interceptMessageConstruction(result, context);
             }
 
-            return MessageBuilder.withPayload(payload).copyHeaders(message.getHeaders()).build();
+            return result;
         }
 
         return message;
@@ -83,7 +85,7 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      * Adds a new interceptor to the message construction process.
      * @param interceptor
      */
-    public void add(MessageConstructionInterceptor<T> interceptor) {
+    public void add(MessageConstructionInterceptor interceptor) {
         messageInterceptors.add(interceptor);
     }
 
@@ -91,7 +93,7 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      * Gets the messageInterceptors.
      * @return the messageInterceptors
      */
-    public List<MessageConstructionInterceptor<T>> getMessageInterceptors() {
+    public List<MessageConstructionInterceptor> getMessageInterceptors() {
         return messageInterceptors;
     }
 
@@ -100,7 +102,7 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
      * @param messageInterceptors the messageInterceptors to set
      */
     public void setMessageInterceptors(
-            List<MessageConstructionInterceptor<T>> messageInterceptors) {
+            List<MessageConstructionInterceptor> messageInterceptors) {
         this.messageInterceptors = messageInterceptors;
     }
 }

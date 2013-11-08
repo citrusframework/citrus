@@ -16,23 +16,19 @@
 
 package com.consol.citrus.validation.builder;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHeaderType;
-import com.consol.citrus.util.FileUtils;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 /**
  * Abstract control message builder is aware of message headers and delegates message payload
@@ -52,7 +48,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     private String messageHeaderData;
 
     /** List of manipulators for static message payload */
-    private List<MessageConstructionInterceptor<T>> messageInterceptors = new ArrayList<MessageConstructionInterceptor<T>>();
+    private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<MessageConstructionInterceptor>();
     
     /**
      * Constructs the control message with headers and payload coming from 
@@ -62,15 +58,19 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
 
         T payload = buildMessagePayload(context);
 
+        Message<T> message = MessageBuilder.withPayload(payload)
+                .copyHeaders(buildMessageHeaders(context))
+                .build();
+
         if (payload != null) {
-            for (MessageConstructionInterceptor<T> modifyer : messageInterceptors) {
-                payload = modifyer.interceptMessageConstruction(payload, context);
+            message = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(message, context);
+
+            for (MessageConstructionInterceptor modifyer : messageInterceptors) {
+                message = (Message<T>) modifyer.interceptMessageConstruction(message, context);
             }
         }
 
-        return MessageBuilder.withPayload(payload)
-                             .copyHeaders(buildMessageHeaders(context))
-                             .build();
+        return message;
     }
     
     protected abstract T buildMessagePayload(TestContext context);
@@ -180,7 +180,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * Adds a new interceptor to the message construction process.
      * @param interceptor
      */
-    public void add(MessageConstructionInterceptor<T> interceptor) {
+    public void add(MessageConstructionInterceptor interceptor) {
         messageInterceptors.add(interceptor);
     }
 
@@ -188,7 +188,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * Gets the messageInterceptors.
      * @return the messageInterceptors
      */
-    public List<MessageConstructionInterceptor<T>> getMessageInterceptors() {
+    public List<MessageConstructionInterceptor> getMessageInterceptors() {
         return messageInterceptors;
     }
 
@@ -197,7 +197,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * @param messageInterceptors the messageInterceptors to set
      */
     public void setMessageInterceptors(
-            List<MessageConstructionInterceptor<T>> messageInterceptors) {
+            List<MessageConstructionInterceptor> messageInterceptors) {
         this.messageInterceptors = messageInterceptors;
     }
 }

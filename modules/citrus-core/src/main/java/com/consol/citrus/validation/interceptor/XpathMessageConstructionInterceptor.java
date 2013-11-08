@@ -16,24 +16,21 @@
 
 package com.consol.citrus.validation.interceptor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Interceptor implementation evaluating XPath expressions on message payload during message construction.
@@ -41,7 +38,7 @@ import com.consol.citrus.xml.xpath.XPathUtils;
  * 
  * @author Christoph Deppisch
  */
-public class XpathMessageConstructionInterceptor implements MessageConstructionInterceptor<String> {
+public class XpathMessageConstructionInterceptor extends AbstractMessageConstructionInterceptor {
 
     /** Overwrites message elements before validating (via XPath expressions) */
     private Map<String, String> xPathExpressions = new HashMap<String, String>();
@@ -74,7 +71,8 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
      * Method parses the message payload to DOM document representation, therefore message payload
      * needs to be XML here.
      */
-    public String interceptMessageConstruction(String messagePayload, TestContext context) {
+    @Override
+    public String interceptMessagePayload(String messagePayload, TestContext context) {
         if (!StringUtils.hasText(messagePayload)) {
             return messagePayload;
         }
@@ -126,14 +124,6 @@ public class XpathMessageConstructionInterceptor implements MessageConstructionI
         }
         
         return XMLUtils.serialize(doc);
-    }
-
-    /**
-     * Intercept the message and modify the message payload.
-     */
-    public Message<String> interceptMessageConstruction(Message<String> message, TestContext context) {
-       return MessageBuilder.withPayload(interceptMessageConstruction(message.getPayload(), context))
-                            .copyHeaders(message.getHeaders()).build();
     }
 
     /**

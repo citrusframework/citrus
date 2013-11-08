@@ -39,5 +39,5 @@ public interface MessageContentBuilder<T> {
      * Adds a message construction interceptor.
      * @param interceptor
      */
-    void add(MessageConstructionInterceptor<T> interceptor);
+    void add(MessageConstructionInterceptor interceptor);
 }

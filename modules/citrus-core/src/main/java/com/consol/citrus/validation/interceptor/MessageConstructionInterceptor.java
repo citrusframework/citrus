@@ -27,19 +27,12 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  */
-public interface MessageConstructionInterceptor<T> {
+public interface MessageConstructionInterceptor {
 
     /**
      * Intercept the message construction.
      * @param message the message to be modified.
      * @param context the current test context
      */
-    Message<T> interceptMessageConstruction(Message<T> message, TestContext context);
-    
-    /**
-     * Intercept the message payload construction.
-     * @param messagePayload the payload
-     * @param context the current test context
-     */
-    T interceptMessageConstruction(T messagePayload, TestContext context);
+    Message<?> interceptMessageConstruction(Message<?> message, TestContext context);
 }

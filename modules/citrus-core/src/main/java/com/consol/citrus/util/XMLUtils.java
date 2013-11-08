@@ -209,7 +209,14 @@ public final class XMLUtils {
      */
     public static String getNodesPathName(Node node) {
         final StringBuffer buffer = new StringBuffer();
-        buildNodeName(node, buffer);
+
+        if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+            buildNodeName(((Attr) node).getOwnerElement(), buffer);
+            buffer.append("." + node.getLocalName());
+        } else {
+            buildNodeName(node, buffer);
+        }
+
         return buffer.toString();
     }
 
@@ -393,7 +400,7 @@ public final class XMLUtils {
      * @param doc
      * @return
      */
-    private static Charset getTargetCharset(Document doc) {
+    public static Charset getTargetCharset(Document doc) {
         if (System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING) != null) {
             return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING));
         }
