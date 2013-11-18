@@ -44,9 +44,7 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
     /** Overwrites message elements before validating (via XPath expressions) */
     private Map<String, String> xPathExpressions = new HashMap<String, String>();
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathMessageConstructionInterceptor.class);
 
     /**
@@ -74,7 +72,7 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      */
     @Override
     public String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
-        if (!StringUtils.hasText(messagePayload) || !supportsMessageType(messageType)) {
+        if (!StringUtils.hasText(messagePayload)) {
             return messagePayload;
         }
 
@@ -135,7 +133,7 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
     /**
      * @param xPathExpressions the xPathExpressions to set
      */
-    public void setxPathExpressions(Map<String, String> xPathExpressions) {
+    public void setXPathExpressions(Map<String, String> xPathExpressions) {
         this.xPathExpressions = xPathExpressions;
     }
 
@@ -143,7 +141,7 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      * Gets the xPathExpressions.
      * @return the xPathExpressions
      */
-    public Map<String, String> getxPathExpressions() {
+    public Map<String, String> getXPathExpressions() {
         return xPathExpressions;
     }
 }

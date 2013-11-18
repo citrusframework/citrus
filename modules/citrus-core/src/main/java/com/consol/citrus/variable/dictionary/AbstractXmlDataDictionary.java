@@ -38,7 +38,7 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary {
 
     @Override
     protected String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
-        if (!StringUtils.hasText(messagePayload) || !supportsMessageType(messageType)) {
+        if (!StringUtils.hasText(messagePayload)) {
             return messagePayload;
         }
 

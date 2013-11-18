@@ -18,7 +18,8 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -52,7 +53,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
 
     /** List of manipulators for static message payload */
     private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<MessageConstructionInterceptor>();
-    
+
     /**
      * Constructs the control message with headers and payload coming from 
      * subclass implementation.
@@ -70,12 +71,10 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             message = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
 
             for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                if (modifyer.supportsMessageType(messageType)) {
-                    message = (Message<T>) modifyer.interceptMessageConstruction(message, messageType, context);
-                }
+                message = (Message<T>) modifyer.interceptMessageConstruction(message, messageType, context);
             }
 
-            if (dataDictionary != null && dataDictionary.supportsMessageType(messageType)) {
+            if (dataDictionary != null) {
                 dataDictionary.interceptMessageConstruction(message, messageType, context);
             }
         }

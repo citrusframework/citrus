@@ -151,8 +151,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertTrue(messageBuilder.getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
         XpathMessageConstructionInterceptor messageConstructionInterceptor = (XpathMessageConstructionInterceptor)messageBuilder.getMessageInterceptors().get(0);
         
-        Assert.assertEquals(messageConstructionInterceptor.getxPathExpressions().size(), 1);
-        Assert.assertEquals(messageConstructionInterceptor.getxPathExpressions().get("/ns:TestMessage/"), "newValue");
+        Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().size(), 1);
+        Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().get("/ns:TestMessage/"), "newValue");
         
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), false);
         

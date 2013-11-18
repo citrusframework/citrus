@@ -41,16 +41,14 @@ public class MessageConstructionInterceptors implements MessageConstructionInter
         if (messageConstructionInterceptors.size() > 0) {
             Message<?> intercepted = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
 
-            for (MessageConstructionInterceptor messageConstructionInterceptor : messageConstructionInterceptors) {
-                if (messageConstructionInterceptor.supportsMessageType(messageType.toString())) {
-                    if (messageConstructionInterceptor instanceof DataDictionary &&
-                            ((DataDictionary) messageConstructionInterceptor).getScope().equals(DataDictionary.DictionaryScope.EXPLICIT)) {
-                        // skip explicit data dictionary to avoid duplicate dictionary usage.
-                        continue;
-                    }
-
-                    intercepted = messageConstructionInterceptor.interceptMessageConstruction(intercepted, messageType, context);
+            for (MessageConstructionInterceptor interceptor : messageConstructionInterceptors) {
+                if (interceptor instanceof DataDictionary &&
+                        !((DataDictionary) interceptor).isGlobalScope()) {
+                    // skip explicit data dictionary to avoid duplicate dictionary usage.
+                    continue;
                 }
+
+                intercepted = interceptor.interceptMessageConstruction(intercepted, messageType, context);
             }
 
             return intercepted;

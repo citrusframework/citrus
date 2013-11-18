@@ -19,20 +19,21 @@ package com.consol.citrus.variable.dictionary;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 
 /**
+ * Abstract data dictionary implementation provides global scope handling.
  * @author Christoph Deppisch
  */
 public abstract class AbstractDataDictionary extends AbstractMessageConstructionInterceptor implements DataDictionary {
 
-    /** Scope defines where dictionary should be applied (inbound, outbound, explicit, global) */
-    private DictionaryScope scope = DictionaryScope.GLOBAL;
+    /** Scope defines where dictionary should be applied (explicit or global) */
+    private boolean globalScope = true;
 
     @Override
-    public DictionaryScope getScope() {
-        return scope;
+    public boolean isGlobalScope() {
+        return globalScope;
     }
 
     @Override
-    public void setScope(DictionaryScope scope) {
-        this.scope = scope;
+    public void setGlobalScope(boolean scope) {
+        this.globalScope = scope;
     }
 }

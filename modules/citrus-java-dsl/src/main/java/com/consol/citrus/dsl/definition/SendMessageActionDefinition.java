@@ -271,7 +271,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
             }
         }
 
-        xpathMessageConstructionInterceptor.getxPathExpressions().put(expression, value);
+        xpathMessageConstructionInterceptor.getXPathExpressions().put(expression, value);
         return this;
     }
     

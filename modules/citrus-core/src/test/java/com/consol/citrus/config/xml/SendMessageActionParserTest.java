@@ -99,8 +99,8 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertTrue(messageBuilder.getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
         XpathMessageConstructionInterceptor messageConstructionInterceptor = (XpathMessageConstructionInterceptor)messageBuilder.getMessageInterceptors().get(0);
         
-        Assert.assertEquals(messageConstructionInterceptor.getxPathExpressions().size(), 1);
-        Assert.assertEquals(messageConstructionInterceptor.getxPathExpressions().get("/TestMessage/text()"), "newValue");
+        Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().size(), 1);
+        Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().get("/TestMessage/text()"), "newValue");
         
         // 6th action
         action = getNextTestActionFromTest();

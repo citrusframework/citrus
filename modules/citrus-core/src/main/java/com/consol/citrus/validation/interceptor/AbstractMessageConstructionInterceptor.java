@@ -17,6 +17,8 @@
 package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.support.MessageBuilder;
@@ -30,10 +32,18 @@ import org.springframework.integration.support.MessageBuilder;
  */
 public abstract class AbstractMessageConstructionInterceptor implements MessageConstructionInterceptor {
 
+    /** Logger */
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public Message<?> interceptMessageConstruction(Message<?> message, String messageType, TestContext context) {
-        return MessageBuilder.withPayload(interceptMessagePayload(message.getPayload().toString(), messageType, context))
-                             .copyHeaders(interceptMessageHeaders(message.getHeaders(), messageType, context)).build();
+        if (!supportsMessageType(messageType)) {
+            log.info(String.format("Message interceptor (%s) does not support message type: %s", getClass().getSimpleName(), messageType));
+            return message;
+        } else {
+            return MessageBuilder.withPayload(interceptMessagePayload(message.getPayload().toString(), messageType, context))
+                                 .copyHeaders(interceptMessageHeaders(message.getHeaders(), messageType, context)).build();
+        }
     }
 
     /**
