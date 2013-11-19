@@ -65,14 +65,14 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
         if (message != null && messageInterceptors.size() > 0) {
             Message<T> result = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
 
+            if (dataDictionary != null) {
+                result = (Message<T>) dataDictionary.interceptMessageConstruction(result, messageType, context);
+            }
+
             result = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(result, messageType, context);
 
             for (MessageConstructionInterceptor modifyer : messageInterceptors) {
                 result = (Message<T>) modifyer.interceptMessageConstruction(result, messageType, context);
-            }
-
-            if (dataDictionary != null) {
-                dataDictionary.interceptMessageConstruction(result, messageType, context);
             }
 
             return result;

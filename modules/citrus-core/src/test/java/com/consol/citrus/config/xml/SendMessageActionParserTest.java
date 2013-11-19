@@ -50,7 +50,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
-        
+
+        Assert.assertNull(action.getDataDictionary());
+
         // 2nd action
         action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
@@ -101,7 +103,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         
         Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().size(), 1);
         Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().get("/TestMessage/text()"), "newValue");
-        
+
+        Assert.assertNotNull(action.getDataDictionary());
+
         // 6th action
         action = getNextTestActionFromTest();
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();

@@ -62,7 +62,7 @@
             </receive>
             
             <receive with="myMessageReceiver">
-                <message>
+                <message data-dictionary="myDataDictionary">
                     <data>
                         <![CDATA[
                             <TestMessage>Hello Citrus</TestMessage>
@@ -100,5 +100,8 @@
     <spring:bean id="myMessageReceiver" class="org.easymock.EasyMock" factory-method="createMock">
         <spring:constructor-arg value="com.consol.citrus.message.MessageReceiver"/>
     </spring:bean>
-    
+
+    <spring:bean id="myDataDictionary" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.variable.dictionary.DataDictionary"/>
+    </spring:bean>
 </spring:beans>

@@ -37,12 +37,12 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
 
     @Override
     public Message<?> interceptMessageConstruction(Message<?> message, String messageType, TestContext context) {
-        if (!supportsMessageType(messageType)) {
+        if (supportsMessageType(messageType)) {
+            return MessageBuilder.withPayload(interceptMessagePayload(message.getPayload().toString(), messageType, context))
+                    .copyHeaders(interceptMessageHeaders(message.getHeaders(), messageType, context)).build();
+        } else {
             log.info(String.format("Message interceptor (%s) does not support message type: %s", getClass().getSimpleName(), messageType));
             return message;
-        } else {
-            return MessageBuilder.withPayload(interceptMessagePayload(message.getPayload().toString(), messageType, context))
-                                 .copyHeaders(interceptMessageHeaders(message.getHeaders(), messageType, context)).build();
         }
     }
 

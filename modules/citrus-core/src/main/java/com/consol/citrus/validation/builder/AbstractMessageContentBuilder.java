@@ -68,14 +68,14 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
                 .build();
 
         if (payload != null) {
+            if (dataDictionary != null) {
+                message = (Message<T>) dataDictionary.interceptMessageConstruction(message, messageType, context);
+            }
+
             message = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
 
             for (MessageConstructionInterceptor modifyer : messageInterceptors) {
                 message = (Message<T>) modifyer.interceptMessageConstruction(message, messageType, context);
-            }
-
-            if (dataDictionary != null) {
-                dataDictionary.interceptMessageConstruction(message, messageType, context);
             }
         }
 
@@ -140,6 +140,14 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
     @Override
     public void setDataDictionary(DataDictionary dataDictionary) {
         this.dataDictionary = dataDictionary;
+    }
+
+    /**
+     * Gets the data dictionary.
+     * @return
+     */
+    public DataDictionary getDataDictionary() {
+        return dataDictionary;
     }
 
     /**

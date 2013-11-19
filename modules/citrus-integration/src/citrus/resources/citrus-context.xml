@@ -22,7 +22,8 @@
     <import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
     <import resource="citrus-admin-context.xml"/>
 
-    <context:property-placeholder location="classpath:citrus.properties"/>
+    <context:property-placeholder location="classpath:citrus.properties"
+                                  ignore-unresolvable="true"/>
 
     <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
       <property name="brokerURL" value="tcp://localhost:61616" />
@@ -375,6 +376,22 @@
                                      receive-timeout="5000"/>
                                      
     <citrus:message-channel id="greetings" capacity="5"/>
+
+    <!-- Sample data dictionary for hello service messages -->
+    <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.SimpleMappingXmlDataDictionary">
+      <property name="globalScope" value="false"/>
+      <property name="mappings">
+        <map>
+          <entry key="HelloRequest.MessageId" value="${messageId}"/>
+          <entry key="HelloRequest.CorrelationId" value="${correlationId}"/>
+          <entry key="HelloRequest.User" value="Christoph"/>
+          <entry key="HelloResponse.MessageId" value="${messageId}"/>
+          <entry key="HelloResponse.CorrelationId" value="${correlationId}"/>
+          <entry key="HelloResponse.User" value="HelloService"/>
+          <entry key="HelloResponse.Text" value="Hello Christoph"/>
+        </map>
+      </property>
+    </bean>
     
     <!-- Utility beans -->
     <bean id="purgeJmsQueues" class="com.consol.citrus.actions.PurgeJmsQueuesAction">

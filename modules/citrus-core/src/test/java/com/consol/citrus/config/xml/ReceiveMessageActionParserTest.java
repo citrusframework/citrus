@@ -60,7 +60,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
-        
+
+        Assert.assertNull(action.getDataDictionary());
+
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getMessageSelector().size(), 1);
@@ -133,7 +135,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
         Assert.assertEquals(variableExtractor.getxPathExpressions().size(), 1);
         Assert.assertEquals(variableExtractor.getxPathExpressions().get("/TestMessage/text()"), "text");
-        
+
+        Assert.assertNotNull(action.getDataDictionary());
+
         // 7th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 2);

@@ -81,7 +81,12 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary {
                 Element element = (Element) node;
 
                 if (StringUtils.hasText(DomUtils.getTextValue(element))) {
-                    element.setTextContent((translate(DomUtils.getTextValue(element), XMLUtils.getNodesPathName(element), context)));
+                    element.setTextContent(translate(DomUtils.getTextValue(element), XMLUtils.getNodesPathName(element), context));
+                } else if (!element.hasChildNodes()) {
+                    String translated = translate("", XMLUtils.getNodesPathName(element), context);
+                    if (StringUtils.hasText(translated)) {
+                        element.appendChild(element.getOwnerDocument().createTextNode(translated));
+                    }
                 }
 
                 NamedNodeMap attributes = element.getAttributes();

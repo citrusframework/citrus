@@ -157,4 +157,23 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
     }
+
+    @Test
+    public void testTranslateWithNestedAndEmptyElements() {
+        String messagePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text><value></value></Text><OtherText></OtherText></TestMessage>";
+
+        Map<String, String> mappings = new HashMap<String, String>();
+        mappings.put("TestMessage.Text.value", "Hello!");
+
+        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        dictionary.setMappings(mappings);
+
+        String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
+        Assert.assertEquals(intercepted.trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+                "   <Text>" + System.getProperty("line.separator") +
+                "      <value>Hello!</value>" + System.getProperty("line.separator") +
+                "   </Text>" + System.getProperty("line.separator") +
+                "   <OtherText/>" + System.getProperty("line.separator") +
+                "</TestMessage>");
+    }
 }
