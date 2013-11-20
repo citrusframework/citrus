@@ -22,10 +22,13 @@ import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInter
  * Abstract data dictionary implementation provides global scope handling.
  * @author Christoph Deppisch
  */
-public abstract class AbstractDataDictionary extends AbstractMessageConstructionInterceptor implements DataDictionary {
+public abstract class AbstractDataDictionary<T> extends AbstractMessageConstructionInterceptor implements DataDictionary<T> {
 
     /** Scope defines where dictionary should be applied (explicit or global) */
     private boolean globalScope = true;
+
+    /** Kind of mapping strategy how to identify dictionary item */
+    private PathMappingStrategy pathMappingStrategy = PathMappingStrategy.EXACT_MATCH;
 
     @Override
     public boolean isGlobalScope() {
@@ -35,5 +38,21 @@ public abstract class AbstractDataDictionary extends AbstractMessageConstruction
     @Override
     public void setGlobalScope(boolean scope) {
         this.globalScope = scope;
+    }
+
+    /**
+     * Sets the path mapping strategy.
+     * @param pathMappingStrategy
+     */
+    public void setPathMappingStrategy(PathMappingStrategy pathMappingStrategy) {
+        this.pathMappingStrategy = pathMappingStrategy;
+    }
+
+    /**
+     * Gets the path mapping strategy.
+     * @return
+     */
+    public PathMappingStrategy getPathMappingStrategy() {
+        return pathMappingStrategy;
     }
 }

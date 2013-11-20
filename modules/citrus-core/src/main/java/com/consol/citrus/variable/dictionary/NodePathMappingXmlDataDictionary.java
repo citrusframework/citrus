@@ -18,11 +18,13 @@ package com.consol.citrus.variable.dictionary;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.util.*;
@@ -34,7 +36,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class SimpleMappingXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class NodePathMappingXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
 
     /** Known mappings to this dictionary */
     private Map<String, String> mappings = new HashMap<String, String>();
@@ -42,27 +44,35 @@ public class SimpleMappingXmlDataDictionary extends AbstractXmlDataDictionary im
     /** mapping file resource */
     private Resource mappingFile;
 
-    /** Kind of mapping strategy how to identify dictionary item */
-    private PathMappingStrategy pathMappingStrategy = PathMappingStrategy.EXACT_MATCH;
-
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SimpleMappingXmlDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(NodePathMappingXmlDataDictionary.class);
 
     @Override
-    public String translate(String value, String path, TestContext context) {
-        if (pathMappingStrategy.equals(PathMappingStrategy.EXACT_MATCH)) {
-            if (mappings.containsKey(path)) {
-                return context.replaceDynamicContentInString(mappings.get(path));
+    public String translate(Node node, String value, TestContext context) {
+        String nodePath = XMLUtils.getNodesPathName(node);
+
+        if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT_MATCH)) {
+            if (mappings.containsKey(nodePath)) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
+                }
+                return context.replaceDynamicContentInString(mappings.get(nodePath));
             }
-        } else if (pathMappingStrategy.equals(PathMappingStrategy.ENDS_WITH)) {
+        } else if (getPathMappingStrategy().equals(PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
-                if (path.endsWith(entry.getKey())) {
+                if (nodePath.endsWith(entry.getKey())) {
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                    }
                     return context.replaceDynamicContentInString(entry.getValue());
                 }
             }
-        } else if (pathMappingStrategy.equals(PathMappingStrategy.STARTS_WITH)) {
+        } else if (getPathMappingStrategy().equals(PathMappingStrategy.STARTS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
-                if (path.startsWith(entry.getKey())) {
+                if (nodePath.startsWith(entry.getKey())) {
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                    }
                     return context.replaceDynamicContentInString(entry.getValue());
                 }
             }
@@ -74,7 +84,6 @@ public class SimpleMappingXmlDataDictionary extends AbstractXmlDataDictionary im
     @Override
     public void afterPropertiesSet() throws Exception {
         if (mappingFile != null) {
-
             log.info("Reading mapping file " + mappingFile.getFilename());
             Properties props;
             try {
@@ -84,7 +93,7 @@ public class SimpleMappingXmlDataDictionary extends AbstractXmlDataDictionary im
             }
 
             for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-                String key = ((Map.Entry<Object, Object>)iter.next()).getKey().toString();
+                String key = iter.next().getKey().toString();
 
                 log.info("Loading mapping: " + key + "=" + props.getProperty(key));
 
@@ -104,14 +113,6 @@ public class SimpleMappingXmlDataDictionary extends AbstractXmlDataDictionary im
      */
     public void setMappings(Map<String, String> mappings) {
         this.mappings = mappings;
-    }
-
-    /**
-     * Sets the path mapping strategy.
-     * @param pathMappingStrategy
-     */
-    public void setPathMappingStrategy(PathMappingStrategy pathMappingStrategy) {
-        this.pathMappingStrategy = pathMappingStrategy;
     }
 
     /**

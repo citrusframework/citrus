@@ -34,7 +34,7 @@ import java.io.StringWriter;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary {
+public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<Node> {
 
     @Override
     protected String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
@@ -81,9 +81,9 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary {
                 Element element = (Element) node;
 
                 if (StringUtils.hasText(DomUtils.getTextValue(element))) {
-                    element.setTextContent(translate(DomUtils.getTextValue(element), XMLUtils.getNodesPathName(element), context));
+                    element.setTextContent(translate(element, DomUtils.getTextValue(element), context));
                 } else if (!element.hasChildNodes()) {
-                    String translated = translate("", XMLUtils.getNodesPathName(element), context);
+                    String translated = translate(element, "", context);
                     if (StringUtils.hasText(translated)) {
                         element.appendChild(element.getOwnerDocument().createTextNode(translated));
                     }
@@ -92,7 +92,7 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary {
                 NamedNodeMap attributes = element.getAttributes();
                 for (int i = 0; i < attributes.getLength(); i++) {
                     Attr attribute = (Attr) attributes.item(i);
-                    attribute.setValue(translate(attribute.getNodeValue(), XMLUtils.getNodesPathName(attribute), context));
+                    attribute.setValue(translate(attribute, attribute.getNodeValue(), context));
                 }
             }
 

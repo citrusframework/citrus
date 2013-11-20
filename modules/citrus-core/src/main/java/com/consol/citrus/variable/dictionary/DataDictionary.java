@@ -28,16 +28,16 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface DataDictionary extends MessageConstructionInterceptor {
+public interface DataDictionary<T> extends MessageConstructionInterceptor {
 
     /**
      * Translate value with given path in message content.
      * @param value current value
-     * @param path the element path in message content
+     * @param key the key element in message content
      * @param context the current test context
      * @return
      */
-    String translate(String value, String path, TestContext context);
+    String translate(T key, String value, TestContext context);
 
     /**
      * Sets the path mapping strategy.

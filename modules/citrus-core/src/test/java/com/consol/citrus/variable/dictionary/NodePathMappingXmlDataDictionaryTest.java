@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
+public class NodePathMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testTranslateExactMatchStrategy() {
@@ -38,7 +38,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("TestMessage.Text", "Hello!");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -56,7 +56,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Other", "Bye!");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
@@ -74,7 +74,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("Text", "Hello!");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
@@ -93,7 +93,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Text.name", "newName");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -110,7 +110,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("name", "newName");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
@@ -131,7 +131,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
         context.setVariable("newText", "Hello!");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -147,7 +147,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
         context.setVariable("newText", "Hello!");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappingFile(new ClassPathResource("mapping.properties", this.getClass()));
         dictionary.afterPropertiesSet();
 
@@ -165,7 +165,7 @@ public class SimpleMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("TestMessage.Text.value", "Hello!");
 
-        SimpleMappingXmlDataDictionary dictionary = new SimpleMappingXmlDataDictionary();
+        NodePathMappingXmlDataDictionary dictionary = new NodePathMappingXmlDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
