@@ -19,6 +19,7 @@ package com.consol.citrus.variable.dictionary;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class XpathMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
+public class XpathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testTranslate() throws Exception {
@@ -39,7 +40,7 @@ public class XpathMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("//TestMessage/Text", "Hello!");
         mappings.put("//@name", "bar");
 
-        XpathMappingXmlDataDictionary dictionary = new XpathMappingXmlDataDictionary();
+        XpathXmlDataDictionary dictionary = new XpathXmlDataDictionary();
         dictionary.setXPathMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -57,7 +58,7 @@ public class XpathMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("//ns1:TestMessage/ns1:Text", "Hello!");
         mappings.put("//@name", "bar");
 
-        XpathMappingXmlDataDictionary dictionary = new XpathMappingXmlDataDictionary();
+        XpathXmlDataDictionary dictionary = new XpathXmlDataDictionary();
         dictionary.setXPathMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -75,7 +76,7 @@ public class XpathMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("//foo:TestMessage/foo:Text", "Hello!");
         mappings.put("//@name", "bar");
 
-        XpathMappingXmlDataDictionary dictionary = new XpathMappingXmlDataDictionary();
+        XpathXmlDataDictionary dictionary = new XpathXmlDataDictionary();
         dictionary.setXPathMappings(mappings);
 
         NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
@@ -101,13 +102,28 @@ public class XpathMappingXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
         context.setVariable("hello", "Hello!");
 
-        XpathMappingXmlDataDictionary dictionary = new XpathMappingXmlDataDictionary();
+        XpathXmlDataDictionary dictionary = new XpathXmlDataDictionary();
         dictionary.setXPathMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
+                "</TestMessage>");
+    }
+
+    @Test
+    public void testTranslateFromMappingFile() throws Exception {
+        String messagePayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage><Text>Hello World!</Text><OtherText name=\"foo\">No changes</OtherText></TestMessage>";
+
+        XpathXmlDataDictionary dictionary = new XpathXmlDataDictionary();
+        dictionary.setXPathMappingFile(new ClassPathResource("xpathmapping.properties", this.getClass()));
+        dictionary.afterPropertiesSet();
+
+        String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
+        Assert.assertEquals(intercepted.trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+                "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
+                "   <OtherText name=\"bar\">GoodBye!</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
     }
 }

@@ -16,17 +16,6 @@
 
 package com.consol.citrus.validation.json;
 
-import java.util.Iterator;
-import java.util.Map;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.springframework.integration.Message;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -35,6 +24,16 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.integration.Message;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This message validator implementation is able to validate two JSON text objects. The order of JSON entries can differ
@@ -88,8 +87,6 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
             } else {
                 throw new CitrusRuntimeException("Unsupported json type " + receivedJson.getClass());
             }
-            
-            
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate JSON text:\n" + receivedJsonText, e);
         } catch (ParseException e) {

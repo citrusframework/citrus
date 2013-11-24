@@ -42,7 +42,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class XpathMappingXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class XpathXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
 
     /** XPath expression mappings to this dictionary */
     private Map<String, String> xPathMappings = new HashMap<String, String>();
@@ -54,7 +54,7 @@ public class XpathMappingXmlDataDictionary extends AbstractXmlDataDictionary imp
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathMappingXmlDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(XpathXmlDataDictionary.class);
 
     @Override
     public String translate(Node node, String value, TestContext context) {

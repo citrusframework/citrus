@@ -18,25 +18,22 @@ package com.consol.citrus.variable.dictionary;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.util.*;
 
 /**
- * Very basic data dictionary that holds a list of mappings for message elements. Mapping key is the element path inside
- * the XML structure {@link com.consol.citrus.util.XMLUtils getNodesPathName()}. The mapping value is set as new element
- * value where test variables are supported in value expressions.
+ * Simple json data dictionary implementation holds a set of mappings where keys are json path expressions to match
+ * json object graph.
+ *
  * @author Christoph Deppisch
- * @since 1.4
  */
-public class NodePathMappingXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class JsonPathDataDictionary extends AbstractJsonDataDictionary implements InitializingBean {
 
     /** Known mappings to this dictionary */
     private Map<String, String> mappings = new HashMap<String, String>();
@@ -45,33 +42,31 @@ public class NodePathMappingXmlDataDictionary extends AbstractXmlDataDictionary 
     private Resource mappingFile;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(NodePathMappingXmlDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(NodePathXmlDataDictionary.class);
 
     @Override
-    public String translate(Node node, String value, TestContext context) {
-        String nodePath = XMLUtils.getNodesPathName(node);
-
+    public String translate(String jsonPath, String value, TestContext context) {
         if (getPathMappingStrategy().equals(PathMappingStrategy.EXACT_MATCH)) {
-            if (mappings.containsKey(nodePath)) {
+            if (mappings.containsKey(jsonPath)) {
                 if (log.isDebugEnabled()) {
-                    log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
+                    log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
                 }
-                return context.replaceDynamicContentInString(mappings.get(nodePath));
+                return context.replaceDynamicContentInString(mappings.get(jsonPath));
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
-                if (nodePath.endsWith(entry.getKey())) {
+                if (jsonPath.endsWith(entry.getKey())) {
                     if (log.isDebugEnabled()) {
-                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
                     return context.replaceDynamicContentInString(entry.getValue());
                 }
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.STARTS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
-                if (nodePath.startsWith(entry.getKey())) {
+                if (jsonPath.startsWith(entry.getKey())) {
                     if (log.isDebugEnabled()) {
-                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
+                        log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
                     return context.replaceDynamicContentInString(entry.getValue());
                 }
@@ -84,7 +79,7 @@ public class NodePathMappingXmlDataDictionary extends AbstractXmlDataDictionary 
     @Override
     public void afterPropertiesSet() throws Exception {
         if (mappingFile != null) {
-            log.info("Reading mapping file " + mappingFile.getFilename());
+            log.info("Reading json mapping file " + mappingFile.getFilename());
             Properties props;
             try {
                 props = PropertiesLoaderUtils.loadProperties(mappingFile);
@@ -95,10 +90,10 @@ public class NodePathMappingXmlDataDictionary extends AbstractXmlDataDictionary 
             for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
                 String key = iter.next().getKey().toString();
 
-                log.info("Loading mapping: " + key + "=" + props.getProperty(key));
+                log.info("Loading json mapping: " + key + "=" + props.getProperty(key));
 
                 if (log.isDebugEnabled() && mappings.containsKey(key)) {
-                    log.debug("Overwriting mapping " + key + " old value:" + mappings.get(key)
+                    log.debug("Overwriting json mapping " + key + " old value:" + mappings.get(key)
                             + " new value:" + props.getProperty(key));
                 }
 
