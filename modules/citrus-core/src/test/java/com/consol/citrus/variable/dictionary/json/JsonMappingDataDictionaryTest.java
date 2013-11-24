@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.json;
 
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
+public class JsonMappingDataDictionaryTest extends AbstractTestNGUnitTest {
     @Test
     public void testTranslateExactMatchStrategy() {
         String messagePayload = "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}";
@@ -37,7 +38,7 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("TestMessage.Text", "Hello!");
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, MessageType.JSON.toString(), context);
@@ -52,7 +53,7 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Other", "Bye!");
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
@@ -67,7 +68,7 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("Text", "Hello!");
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
@@ -82,7 +83,7 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("TestMessage.Text", "${helloText}");
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         context.setVariable("helloText", "Hello!");
@@ -99,7 +100,7 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Text[0]", "Hello!");
         mappings.put("TestMessage.Text[1]", "Hello Universe!");
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, MessageType.JSON.toString(), context);
@@ -114,7 +115,7 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Greetings[0].Text", "Hello!");
         mappings.put("TestMessage.Greetings[1].Text", "Hello Universe!");
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, MessageType.JSON.toString(), context);
@@ -125,8 +126,8 @@ public class JsonPathDataDictionaryTest extends AbstractTestNGUnitTest {
     public void testTranslateFromMappingFile() throws Exception {
         String messagePayload = "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}";
 
-        JsonPathDataDictionary dictionary = new JsonPathDataDictionary();
-        dictionary.setMappingFile(new ClassPathResource("jsonmapping.properties", this.getClass()));
+        JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
+        dictionary.setMappingFile(new ClassPathResource("jsonmapping.properties", DataDictionary.class));
         dictionary.afterPropertiesSet();
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, MessageType.JSON.toString(), context);

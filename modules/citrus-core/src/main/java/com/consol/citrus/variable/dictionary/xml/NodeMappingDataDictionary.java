@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -36,7 +36,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class NodePathXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class NodeMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
 
     /** Known mappings to this dictionary */
     private Map<String, String> mappings = new HashMap<String, String>();
@@ -45,7 +45,7 @@ public class NodePathXmlDataDictionary extends AbstractXmlDataDictionary impleme
     private Resource mappingFile;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(NodePathXmlDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
 
     @Override
     public String translate(Node node, String value, TestContext context) {

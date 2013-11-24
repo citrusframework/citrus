@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.json;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

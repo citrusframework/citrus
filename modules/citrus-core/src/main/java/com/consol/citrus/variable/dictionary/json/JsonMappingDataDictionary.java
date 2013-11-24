@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.json;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,7 +34,7 @@ import java.util.*;
  *
  * @author Christoph Deppisch
  */
-public class JsonPathDataDictionary extends AbstractJsonDataDictionary implements InitializingBean {
+public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implements InitializingBean {
 
     /** Known mappings to this dictionary */
     private Map<String, String> mappings = new HashMap<String, String>();
@@ -42,7 +43,7 @@ public class JsonPathDataDictionary extends AbstractJsonDataDictionary implement
     private Resource mappingFile;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(NodePathXmlDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
 
     @Override
     public String translate(String jsonPath, String value, TestContext context) {

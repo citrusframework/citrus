@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.*;

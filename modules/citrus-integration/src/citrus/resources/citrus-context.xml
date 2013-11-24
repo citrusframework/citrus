@@ -378,7 +378,7 @@
     <citrus:message-channel id="greetings" capacity="5"/>
 
     <!-- Sample data dictionary for hello service messages -->
-    <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.NodePathXmlDataDictionary">
+    <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary">
       <property name="globalScope" value="false"/>
       <property name="mappings">
         <map>

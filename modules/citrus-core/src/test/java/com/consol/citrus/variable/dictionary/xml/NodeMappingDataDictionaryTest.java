@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
+public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testTranslateExactMatchStrategy() {
@@ -38,7 +39,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("TestMessage.Text", "Hello!");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -56,7 +57,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Other", "Bye!");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
@@ -74,7 +75,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("Text", "Hello!");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
@@ -93,7 +94,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         mappings.put("TestMessage.Text", "Hello!");
         mappings.put("TestMessage.Text.name", "newName");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -110,7 +111,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("name", "newName");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
@@ -131,7 +132,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
         context.setVariable("newText", "Hello!");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -147,8 +148,8 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
 
         context.setVariable("newText", "Hello!");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
-        dictionary.setMappingFile(new ClassPathResource("mapping.properties", this.getClass()));
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
+        dictionary.setMappingFile(new ClassPathResource("mapping.properties", DataDictionary.class));
         dictionary.afterPropertiesSet();
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);
@@ -165,7 +166,7 @@ public class NodePathXmlDataDictionaryTest extends AbstractTestNGUnitTest {
         Map<String, String> mappings = new HashMap<String, String>();
         mappings.put("TestMessage.Text.value", "Hello!");
 
-        NodePathXmlDataDictionary dictionary = new NodePathXmlDataDictionary();
+        NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
         String intercepted = dictionary.interceptMessagePayload(messagePayload, CitrusConstants.DEFAULT_MESSAGE_TYPE, context);

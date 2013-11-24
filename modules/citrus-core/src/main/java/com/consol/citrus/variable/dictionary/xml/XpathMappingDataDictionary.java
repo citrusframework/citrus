@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable.dictionary;
+package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -42,7 +42,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class XpathXmlDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
 
     /** XPath expression mappings to this dictionary */
     private Map<String, String> xPathMappings = new HashMap<String, String>();
@@ -54,7 +54,7 @@ public class XpathXmlDataDictionary extends AbstractXmlDataDictionary implements
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathXmlDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
 
     @Override
     public String translate(Node node, String value, TestContext context) {
