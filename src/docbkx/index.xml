@@ -16,7 +16,7 @@
             </author>
         </authorgroup>
         <copyright>
-            <year>2013</year>
+            <year>2014</year>
             <holder>ConSol* Software GmbH</holder>
         </copyright>
     </bookinfo>
@@ -44,6 +44,7 @@
     <xi:include href='message-channel.xml'/>
     <xi:include href='functions.xml'/>
     <xi:include href='validation-matchers.xml'/>
+    <xi:include href='data-dictionary.xml'/>
     <xi:include href='testsuite.xml'/>
     <xi:include href='meta-info.xml'/>
     <xi:include href='message-tracing.xml'/>

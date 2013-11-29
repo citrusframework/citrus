@@ -33,6 +33,7 @@ import java.util.*;
  * json object graph.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implements InitializingBean {
 

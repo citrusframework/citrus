@@ -36,6 +36,7 @@ import java.util.Map;
  * through json data supporting nested json objects, arrays and values. Each value is translated with dictionary.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<String> {
 

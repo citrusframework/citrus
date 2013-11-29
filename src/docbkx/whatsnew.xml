@@ -2,47 +2,66 @@
 <chapter id="whatsnew">
   <title>What's new?!</title>
 
-  <para>In the following sections we shortly describe the Citrus evolution over various releases. We want you to get a quick overview of what has happened and all the new things in Citrus.
-  So hopefully you can spot your favorite new feature to discover.</para>
+  <para>In the following sections we shortly describe the Citrus evolution over various releases. We want you to get a
+  quick overview of what has happened and all the new things in Citrus. So hopefully you can spot your favorite new
+  feature to discover.</para>
 
-  <section id ="whatsnew-1-3-1">
-    <title>Enhancements in Citrus 1.3.1</title>
+  <section id ="whatsnew-1-4">
+    <title>Citrus 1.4 changes</title>
+
+    <section id="whatsnew-1-4-data-dictionary">
+      <title>Data dictionaries</title>
+
+      <para>Data dictionaries allow to define message element values in general manner. In terms of setting the same message
+      element value across all test cases and all test actions for a message type the dictionary provides an easy key-value
+      approach.</para>
+
+      <para>The dictionary keys do match to a specific message element defined by XPath expression or document path expression.
+      The respective value is set on all messages in Citrus (inbound and outbound) where the dictionary is used.</para>
+
+      <para>Dictionaries do apply to XML or JSON message data and can be defined in global or specific scope. Find out more detailed
+      information about this topic in <xref linkend="data-dictionary"/></para>
+    </section>
+  </section>
+
+  <section id="whatsnew-1-3">
+    <title>Changes in Citrus 1.3.x</title>
 
     <section id="whatsnew-1-3-1-annotations">
       <title>@CitrusTest and @CitrusXmlTest annotations</title>
 
       <para>With the new Java DSL capabilities Citrus created new ways of executing test cases within a TestNG or
-      JUnit test class. Now we even improved the usage here with two new annotations <emphasis>@CitrusTest</emphasis>
-      and <emphasis>CitrusXmlTest</emphasis>. The integration into the unit test class has never been easier for you.</para>
+        JUnit test class. Now we even improved the usage here with two new annotations <emphasis>@CitrusTest</emphasis>
+        and <emphasis>CitrusXmlTest</emphasis>. The integration into the unit test class has never been easier for you.</para>
 
       <para>The new Citrus annotations go directly to your unit test methods. With this enhancement you can have multiple Citrus
-      test cases in one single Java class and the Citrus tests now are able to coexist with other unit test methods. You can even
-      mix Java DSL and XML Citrus test cases in a single Java class.</para>
+        test cases in one single Java class and the Citrus tests now are able to coexist with other unit test methods. You can even
+        mix Java DSL and XML Citrus test cases in a single Java class.</para>
 
       <para>The XML Citrus tests can be grouped to a single Java class with multiple XML files loaded during execution. There is
-      even a package scan for all Citrus XML files within a directory structure so you do not have to create a Java class for each
-      test case anymore.</para>
+        even a package scan for all Citrus XML files within a directory structure so you do not have to create a Java class for each
+        test case anymore.</para>
 
       <para>We have changed the documentation in this guide so you can see how to use the new annotations. For detailed overview see
-      <xref linkend="run-config-testng"/>. Also see our Citrus blog where we continuously describe the many possibilities that you
-      have with the new annotations.</para>
+        <xref linkend="run-config-testng"/>. Also see our Citrus blog where we continuously describe the many possibilities that you
+        have with the new annotations.</para>
     </section>
 
     <section id="whatsnew-1-3-1-parameters">
       <title>@CitrusParameters annotation</title>
 
       <para>Citrus is able to use the fabulous TestNG data provider capabilities in order to execute a test case several times
-      with different data provided form external resources. The new @CitrusParameters annotation helps to set parameter names
-      which are used as test variable names in the test case.</para>
+        with different data provided form external resources. The new @CitrusParameters annotation helps to set parameter names
+        which are used as test variable names in the test case.</para>
     </section>
 
     <section id="whatsnew-1-3-1-schema-repository-parser">
       <title>Schema repository configuration components</title>
 
       <para>Defining schema repositories and schemas (xsd, wsdl) is common use in Citrus. We have added XML bean definition parsers
-      so defining those components is less verbose. You can use the Citrus <emphasis>citrus:schema-repository</emphasis>
-      and <emphasis>citrus:schema</emphasis> components in your Spring application context configuration. The components do receive several
-      attributes for further configuration. XSD, WSDL and schema collections are supported here.</para>
+        so defining those components is less verbose. You can use the Citrus <emphasis>citrus:schema-repository</emphasis>
+        and <emphasis>citrus:schema</emphasis> components in your Spring application context configuration. The components do receive several
+        attributes for further configuration. XSD, WSDL and schema collections are supported here.</para>
 
       <para>Checkout <xref linkend="xsd-validation"/> for examples how to use the new configuration components.</para>
     </section>
@@ -51,8 +70,8 @@
       <title>Change date function</title>
 
       <para>We have added a new Citrus function <emphasis>citrus:changeDate()</emphasis> that is available for you by default.
-      The function changes a given date value adding or removing a datetime offset (e.g. year, month, day, hour, minute, second).
-      So you can manipulate each date value also those of dynamic nature coming with some message.</para>
+        The function changes a given date value adding or removing a datetime offset (e.g. year, month, day, hour, minute, second).
+        So you can manipulate each date value also those of dynamic nature coming with some message.</para>
 
       <para>See <xref linkend="functions-changedate"/> for examples and detailed syntax usage of this function.</para>
     </section>
@@ -61,15 +80,11 @@
       <title>Weekday validation matcher</title>
 
       <para>The new weekday validation matcher also works on date values. The matcher checks that a given
-      date value evaluates to a expected day of the week. So the user can check that a date field is always a saturday
-      for instance. This is very helpful when checking that a given date value is not a working day for example.</para>
+        date value evaluates to a expected day of the week. So the user can check that a date field is always a saturday
+        for instance. This is very helpful when checking that a given date value is not a working day for example.</para>
 
       <para>See <xref linkend="validation-matcher-weekday"/> for some more detailed description of the matcher's capabilities.</para>
     </section>
-  </section>
-
-  <section id="whatsnew-1-3">
-    <title>Enhancements in Citrus 1.3</title>
 
     <section id="whatsnew-1-3-javadsl">
       <title>Java DSL</title>
@@ -171,7 +186,7 @@
   </section>
 
   <section id="whatsnew-1-2">
-    <title>Enhancements in Citrus 1.2</title>
+    <title>Changes in Citrus 1.2</title>
 
     <section id="whatsnew-1-2-spring">
       <title>Spring version update</title>
