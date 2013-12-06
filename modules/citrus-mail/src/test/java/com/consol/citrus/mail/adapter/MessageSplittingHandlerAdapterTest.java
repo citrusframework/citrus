@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.consol.citrus.mail.adapter;
 
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
@@ -29,19 +30,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageHandlerAdapterTest {
+public class MessageSplittingHandlerAdapterTest {
 
     private MessageHandler messageHandlerMock = EasyMock.createMock(MessageHandler.class);
 
     @Test
     @SuppressWarnings("unchecked")
     public void testTextMessage() throws IOException {
-        MessageHandlerAdapter messageHandlerAdapter = new MessageHandlerAdapter(messageHandlerMock);
+        MessageSplittingHandlerAdapter messageHandlerAdapter = new MessageSplittingHandlerAdapter(messageHandlerMock);
 
         reset(messageHandlerMock);
 
@@ -61,7 +64,7 @@ public class MessageHandlerAdapterTest {
                 try {
                     Assert.assertEquals(message.getPayload().toString(),
                             FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                    MessageHandlerAdapterTest.class).getInputStream())));
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -73,7 +76,7 @@ public class MessageHandlerAdapterTest {
         replay(messageHandlerMock);
 
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
-                new ClassPathResource("text_mail.txt", MessageHandlerAdapterTest.class).getInputStream());
+                new ClassPathResource("text_mail.txt", MessageSplittingHandlerAdapterTest.class).getInputStream());
 
         verify(messageHandlerMock);
     }
@@ -81,7 +84,7 @@ public class MessageHandlerAdapterTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testMultipartMessage() throws IOException {
-        MessageHandlerAdapter messageHandlerAdapter = new MessageHandlerAdapter(messageHandlerMock);
+        MessageSplittingHandlerAdapter messageHandlerAdapter = new MessageSplittingHandlerAdapter(messageHandlerMock);
 
         reset(messageHandlerMock);
 
@@ -96,12 +99,38 @@ public class MessageHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MIME_TYPE), "multipart/mixed");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MIME_TYPE), "text/plain");
 
                 try {
                     Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail.xml",
-                                    MessageHandlerAdapterTest.class).getInputStream())));
+                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                } catch (IOException e) {
+                    Assert.fail(e.getMessage());
+                }
+
+                return null;
+            }
+        }).once();
+
+        expect(messageHandlerMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+            @Override
+            public Message<?> answer() throws Throwable {
+                Message<?> message = (Message<?>) getCurrentArguments()[0];
+
+                Assert.assertNotNull(message.getPayload());
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MIME_TYPE), "text/html");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
+
+                try {
+                    Assert.assertEquals(message.getPayload().toString(),
+                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -113,7 +142,7 @@ public class MessageHandlerAdapterTest {
         replay(messageHandlerMock);
 
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
-                new ClassPathResource("multipart_mail.txt", MessageHandlerAdapterTest.class).getInputStream());
+                new ClassPathResource("multipart_mail.txt", MessageSplittingHandlerAdapterTest.class).getInputStream());
 
         verify(messageHandlerMock);
     }
@@ -121,7 +150,7 @@ public class MessageHandlerAdapterTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testBinaryMessage() throws IOException {
-        MessageHandlerAdapter messageHandlerAdapter = new MessageHandlerAdapter(messageHandlerMock);
+        MessageSplittingHandlerAdapter messageHandlerAdapter = new MessageSplittingHandlerAdapter(messageHandlerMock);
 
         reset(messageHandlerMock);
 
@@ -136,12 +165,38 @@ public class MessageHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MIME_TYPE), "multipart/mixed");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MIME_TYPE), "text/plain");
 
                 try {
                     Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail.xml",
-                                    MessageHandlerAdapterTest.class).getInputStream())));
+                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                } catch (IOException e) {
+                    Assert.fail(e.getMessage());
+                }
+
+                return null;
+            }
+        }).once();
+
+        expect(messageHandlerMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+            @Override
+            public Message<?> answer() throws Throwable {
+                Message<?> message = (Message<?>) getCurrentArguments()[0];
+
+                Assert.assertNotNull(message.getPayload());
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MIME_TYPE), "image/png");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
+
+                try {
+                    Assert.assertEquals(message.getPayload().toString(),
+                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -153,7 +208,7 @@ public class MessageHandlerAdapterTest {
         replay(messageHandlerMock);
 
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
-                new ClassPathResource("binary_mail.txt", MessageHandlerAdapterTest.class).getInputStream());
+                new ClassPathResource("binary_mail.txt", MessageSplittingHandlerAdapterTest.class).getInputStream());
 
         verify(messageHandlerMock);
     }

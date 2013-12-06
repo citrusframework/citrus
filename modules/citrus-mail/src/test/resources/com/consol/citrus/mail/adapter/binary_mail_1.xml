@@ -1,0 +1,11 @@
+<mail-message>
+  <from>foo@mail.com</from>
+  <to>bar@mail.com</to>
+  <cc></cc>
+  <bcc></bcc>
+  <subject>This is brand_logo.png</subject>
+  <body>
+    <contentType>text/plain</contentType>
+    <content><![CDATA[Test: brand_logo.png]]></content>
+  </body>
+</mail-message>

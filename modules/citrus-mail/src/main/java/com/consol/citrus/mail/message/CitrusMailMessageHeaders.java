@@ -47,4 +47,7 @@ public abstract class CitrusMailMessageHeaders {
     /** Mail mime type */
     public static final String MAIL_MIME_TYPE = MAIL_PREFIX + "mimetype";
 
+    /** Attachment file name */
+    public static final String MAIL_FILENAME = MAIL_PREFIX + "filename";
+
 }

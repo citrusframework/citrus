@@ -19,6 +19,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.mail.model.*;
 import com.consol.citrus.message.MessageHandler;
+import com.thoughtworks.xstream.XStream;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.james.mime4j.MimeException;
 import org.apache.james.mime4j.dom.*;
@@ -53,11 +54,11 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     /** Apache james mime4j mail message parser */
     private MessageBuilder messageBuilder = new DefaultMessageBuilder();
 
-    /** Xml message mapper */
-    private MailMessageMapper mailMessageMapper = new MailMessageMapper();
+    /** XML message mapper */
+    private XStream mailMessageMapper = new MailMessageMapper();
 
     /**
-     * Default constructor using message handler implementaiton.
+     * Default constructor using message handler implementation.
      * @param messageHandler
      */
     public MessageHandlerAdapter(MessageHandler messageHandler) {
@@ -76,12 +77,9 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
             Message message = messageBuilder.parseMessage(data);
             Map<String, String> messageHeaders = createMessageHeaders(message);
             MailMessage mailMessage = createMailMessage(messageHeaders);
-            mailMessage.setBody(handlePart(message, messageHeaders));
+            mailMessage.setBody(handlePart(message));
 
-            messageHandler.handleMessage(org.springframework.integration.support.MessageBuilder
-                    .withPayload(mailMessageMapper.toXML(mailMessage))
-                    .copyHeaders(messageHeaders)
-                    .build());
+            invokeMessageHandler(mailMessage, messageHeaders);
         } catch (MimeException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
@@ -90,20 +88,31 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     }
 
     /**
+     * Invokes the message handler with constructed mail message and headers.
+     * @param mailMessage
+     * @param messageHeaders
+     */
+    protected void invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
+        messageHandler.handleMessage(org.springframework.integration.support.MessageBuilder
+                .withPayload(mailMessageMapper.toXML(mailMessage))
+                .copyHeaders(messageHeaders)
+                .build());
+    }
+
+    /**
      * Process message part. Can be a text, binary or multipart instance.
      * @param part
-     * @param messageHeaders
      * @return
      * @throws IOException
      */
-    protected BodyPart handlePart(Entity part, Map<String, String> messageHeaders) throws IOException {
+    protected BodyPart handlePart(Entity part) throws IOException {
         Body body = part.getBody();
         if (body instanceof TextBody) {
-            return handleTextPart((TextBody) body, part.getMimeType(), messageHeaders);
+            return handleTextPart((TextBody) body, part.getMimeType());
         } else if (body instanceof BinaryBody) {
-            return handleBinaryPart((BinaryBody) body, part.getMimeType(), messageHeaders);
+            return handleBinaryPart((BinaryBody) body, part.getMimeType());
         } else if (body instanceof Multipart) {
-            return handleMultipart((Multipart) body, messageHeaders);
+            return handleMultipart((Multipart) body);
         } else {
             throw new CitrusRuntimeException("Unsupported mail body part: " + body.getClass());
         }
@@ -112,17 +121,16 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     /**
      * Construct multipart body with first part being the body content and further parts being the attachments.
      * @param body
-     * @param messageHeaders
      * @return
      * @throws IOException
      */
-    private BodyPart handleMultipart(Multipart body, Map<String, String> messageHeaders) throws IOException {
+    private BodyPart handleMultipart(Multipart body) throws IOException {
         BodyPart bodyPart = null;
         for (Entity entity : body.getBodyParts()) {
             if (bodyPart == null) {
-                bodyPart = handlePart(entity, messageHeaders);
+                bodyPart = handlePart(entity);
             } else {
-                BodyPart attachment = handlePart(entity, messageHeaders);
+                BodyPart attachment = handlePart(entity);
                 bodyPart.addPart(new AttachmentPart(attachment.getContent(), attachment.getContentType(), entity.getFilename()));
             }
         }
@@ -134,11 +142,10 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * Construct simple text body part.
      * @param body
      * @param contentType
-     * @param messageHeaders
      * @return
      * @throws IOException
      */
-    private BodyPart handleBinaryPart(BinaryBody body, String contentType, Map<String, String> messageHeaders) throws IOException {
+    protected BodyPart handleBinaryPart(BinaryBody body, String contentType) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         FileCopyUtils.copy(body.getInputStream(), bos);
         String base64 = Base64.encodeBase64String(bos.toByteArray());
@@ -150,11 +157,10 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * Construct simple binary body part with base64 data.
      * @param body
      * @param contentType
-     * @param messageHeaders
      * @return
      * @throws IOException
      */
-    private BodyPart handleTextPart(TextBody body, String contentType, Map<String, String> messageHeaders) throws IOException {
+    protected BodyPart handleTextPart(TextBody body, String contentType) throws IOException {
         String textBody = FileCopyUtils.copyToString(body.getReader());
         textBody = stripMailBodyEnding(textBody);
 
@@ -197,7 +203,7 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @param messageHeaders
      * @return
      */
-    private MailMessage createMailMessage(Map<String, String> messageHeaders) {
+    protected MailMessage createMailMessage(Map<String, String> messageHeaders) {
         MailMessage message = new MailMessage();
         message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM));
         message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO));
@@ -212,7 +218,7 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @param msg
      * @return
      */
-    private Map<String,String> createMessageHeaders(Message msg) {
+    protected Map<String,String> createMessageHeaders(Message msg) {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put(CitrusMailMessageHeaders.MAIL_FROM, extractMailboxes(msg.getFrom()));
         headers.put(CitrusMailMessageHeaders.MAIL_TO, extractAddresses(msg.getTo()));
@@ -258,5 +264,45 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
         }
 
         return StringUtils.arrayToCommaDelimitedString(adresses.toArray(new String[addressList.size()]));
+    }
+
+    /**
+     * Gets the message handler to invoke with mail message.
+     * @return
+     */
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
+    }
+
+    /**
+     * Sets the message handler.
+     * @return
+     */
+    public MessageBuilder getMessageBuilder() {
+        return messageBuilder;
+    }
+
+    /**
+     * Sets the mail message builder.
+     * @param messageBuilder
+     */
+    public void setMessageBuilder(MessageBuilder messageBuilder) {
+        this.messageBuilder = messageBuilder;
+    }
+
+    /**
+     * Gets the mail message mapper.
+     * @return
+     */
+    public XStream getMailMessageMapper() {
+        return mailMessageMapper;
+    }
+
+    /**
+     * Sets the mail message mapper.
+     * @param mailMessageMapper
+     */
+    public void setMailMessageMapper(XStream mailMessageMapper) {
+        this.mailMessageMapper = mailMessageMapper;
     }
 }

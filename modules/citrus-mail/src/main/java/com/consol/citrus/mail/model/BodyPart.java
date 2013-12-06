@@ -16,6 +16,8 @@
 
 package com.consol.citrus.mail.model;
 
+import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,5 +100,13 @@ public class BodyPart {
      */
     public void setAttachments(List<AttachmentPart> attachments) {
         this.attachments = attachments;
+    }
+
+    /**
+     * Checks if attachments are present.
+     * @return
+     */
+    public boolean hasAttachments() {
+        return !CollectionUtils.isEmpty(attachments);
     }
 }
