@@ -1,0 +1,24 @@
+<mail-message>
+  <from>foo@mail.com</from>
+  <to>bar@mail.com</to>
+  <cc></cc>
+  <bcc></bcc>
+  <subject>Multipart Testmail</subject>
+  <body>
+    <contentType>text/plain</contentType>
+    <content><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.]]></content>
+    <attachments>
+      <attachment>
+        <contentType>text/html</contentType>
+        <content><![CDATA[<html>
+<head>
+</head>
+<body>
+<h1>HTML Attachment</h1>
+</body>
+</html>]]></content>
+        <fileName>index.html</fileName>
+      </attachment>
+    </attachments>
+  </body>
+</mail-message>

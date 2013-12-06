@@ -1,0 +1,29 @@
+From: <foo@mail.com>
+To: <bar@mail.com>
+Subject: Multipart Testmail
+Date: Thu, 26 Oct 2006 13:10:50 +0200
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------030906020503060701080701"
+
+This is a multi-part message in MIME format.
+--------------030906020503060701080701
+Content-type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
+--------------030906020503060701080701
+Content-type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment;
+ filename="index.html"
+
+<html>
+<head>
+</head>
+<body>
+<h1>HTML Attachment</h1>
+</body>
+</html>
+
+--------------030906020503060701080701--

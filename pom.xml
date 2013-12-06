@@ -41,6 +41,7 @@
     <module>modules/citrus-http</module>
     <module>modules/citrus-ssh</module>
     <module>modules/citrus-ws</module>
+    <module>modules/citrus-mail</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-samples</module>
     <module>modules/citrus-admin</module>
@@ -416,6 +417,24 @@
         <artifactId>ant</artifactId>
         <version>1.8.4</version>
         <scope>provided</scope>
+      </dependency>
+
+      <!-- Citrus mail dependencies -->
+      <dependency>
+        <groupId>org.subethamail</groupId>
+        <artifactId>subethasmtp</artifactId>
+        <version>3.1.7</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>apache-mime4j-core</artifactId>
+        <version>0.7.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.james</groupId>
+        <artifactId>apache-mime4j-dom</artifactId>
+        <version>0.7.2</version>
       </dependency>
       
       <!-- Logging -->
