@@ -4,6 +4,7 @@ From: Foo <foo@mail.com>
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Thunderbird/24.1.1
 MIME-Version: 1.0
 To: bar@mail.com
+Cc: FooBar <foobar@mail.com>
 Subject: This is brand_logo.png
 Content-Type: multipart/mixed;
  boundary="------------040201050801090704070007"

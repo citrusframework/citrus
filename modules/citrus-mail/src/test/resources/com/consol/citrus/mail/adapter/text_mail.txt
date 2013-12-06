@@ -1,7 +1,9 @@
 From: <foo@mail.com>
-To: <bar@mail.com>
+To: <bar@mail.com>, <copy@mail.com>
+Cc: <foobar@mail.com>
+Bcc: <secret@mail.com>
+Reply-To: <reply@mail.com>
 Subject: Testmail
-Date: Thu, 26 Oct 2006 13:10:50 +0200
 
 Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
 .

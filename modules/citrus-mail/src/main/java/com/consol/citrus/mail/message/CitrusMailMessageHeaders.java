@@ -33,6 +33,9 @@ public abstract class CitrusMailMessageHeaders {
     /** Special header prefix for http transport headers in SOAP message sender */
     public static final String MAIL_PREFIX = CitrusMessageHeaders.PREFIX + "mail_";
 
+    /** Mail message id */
+    public static final String MAIL_MESSAGE_ID = MAIL_PREFIX + "message_id";
+
     /** Mail recipient from */
     public static final String MAIL_FROM = MAIL_PREFIX + "from";
     /** Mail sender to */
@@ -41,7 +44,10 @@ public abstract class CitrusMailMessageHeaders {
     public static final String MAIL_CC = MAIL_PREFIX + "cc";
     /** Mail blind copy recipients */
     public static final String MAIL_BCC = MAIL_PREFIX + "bcc";
-
+    /** Mail reply to address */
+    public static final String MAIL_REPLY_TO = MAIL_PREFIX + "reply_to";
+    /** Mail delivery date */
+    public static final String MAIL_DATE = MAIL_PREFIX + "date";
     /** Mail subject */
     public static final String MAIL_SUBJECT = MAIL_PREFIX + "subject";
     /** Mail mime type */

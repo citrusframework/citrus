@@ -1,7 +1,7 @@
 <mail-message>
   <from>foo@mail.com</from>
   <to>bar@mail.com</to>
-  <cc></cc>
+  <cc>foobar@mail.com</cc>
   <bcc></bcc>
   <subject>This is brand_logo.png</subject>
   <body>

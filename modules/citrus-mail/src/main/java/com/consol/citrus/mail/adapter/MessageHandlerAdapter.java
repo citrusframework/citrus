@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +57,9 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
 
     /** XML message mapper */
     private XStream mailMessageMapper = new MailMessageMapper();
+
+    /** Mail delivery date format */
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
     /**
      * Default constructor using message handler implementation.
@@ -220,10 +224,13 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      */
     protected Map<String,String> createMessageHeaders(Message msg) {
         Map<String, String> headers = new HashMap<String, String>();
+        headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMessageId());
         headers.put(CitrusMailMessageHeaders.MAIL_FROM, extractMailboxes(msg.getFrom()));
         headers.put(CitrusMailMessageHeaders.MAIL_TO, extractAddresses(msg.getTo()));
         headers.put(CitrusMailMessageHeaders.MAIL_CC, extractAddresses(msg.getCc()));
         headers.put(CitrusMailMessageHeaders.MAIL_BCC, extractAddresses(msg.getBcc()));
+        headers.put(CitrusMailMessageHeaders.MAIL_REPLY_TO, extractAddresses(msg.getReplyTo()));
+        headers.put(CitrusMailMessageHeaders.MAIL_DATE, msg.getDate() != null ? dateFormat.format(msg.getDate()) : null);
         headers.put(CitrusMailMessageHeaders.MAIL_SUBJECT, msg.getSubject());
         headers.put(CitrusMailMessageHeaders.MAIL_MIME_TYPE, msg.getMimeType());
 

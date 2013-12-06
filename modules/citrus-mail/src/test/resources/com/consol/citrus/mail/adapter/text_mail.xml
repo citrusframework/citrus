@@ -1,8 +1,8 @@
 <mail-message>
   <from>foo@mail.com</from>
-  <to>bar@mail.com</to>
-  <cc></cc>
-  <bcc></bcc>
+  <to>bar@mail.com,copy@mail.com</to>
+  <cc>foobar@mail.com</cc>
+  <bcc>secret@mail.com</bcc>
   <subject>Testmail</subject>
   <body>
     <contentType>text/plain</contentType>
