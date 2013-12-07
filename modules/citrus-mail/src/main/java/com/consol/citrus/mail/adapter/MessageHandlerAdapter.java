@@ -112,13 +112,107 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @throws IOException
      */
     protected BodyPart handlePart(MimePart part) throws IOException, MessagingException {
-        if (part.isMimeType("text/*")) {
-            return handleTextPart((String) part.getContent(), parseContentType(part.getContentType()));
-        } else if (part.isMimeType("multipart/*")) {
-            return handleMultipart((Multipart) part.getContent());
+        String contentType = parseContentType(part.getContentType());
+
+        if (part.isMimeType("multipart/*")) {
+            return handleMultiPart((Multipart) part.getContent());
+        } else if (part.isMimeType("text/*")) {
+            return handleTextPart(part, contentType);
+        } else if (part.isMimeType("image/*")) {
+            return handleImageBinaryPart(part, contentType);
+        } else if (part.isMimeType("application/*")) {
+            return handleApplicationContentPart(part, contentType);
         } else {
-            return handleBinaryPart(part, parseContentType(part.getContentType()));
+            return handleBinaryPart(part, contentType);
         }
+    }
+
+    /**
+     * Construct multipart body with first part being the body content and further parts being the attachments.
+     * @param body
+     * @return
+     * @throws IOException
+     */
+    private BodyPart handleMultiPart(Multipart body) throws IOException, MessagingException {
+        BodyPart bodyPart = null;
+        for (int i = 0; i < body.getCount(); i++) {
+            MimePart entity = (MimePart) body.getBodyPart(i);
+
+            if (bodyPart == null) {
+                bodyPart = handlePart(entity);
+            } else {
+                BodyPart attachment = handlePart(entity);
+                bodyPart.addPart(new AttachmentPart(attachment.getContent(), parseContentType(attachment.getContentType()), entity.getFileName()));
+            }
+        }
+
+        return bodyPart;
+    }
+
+    /**
+     * Construct body part form special application data. Based on known application content types delegate to text,
+     * image or binary body construction.
+     * @param applicationData
+     * @param contentType
+     * @return
+     * @throws IOException
+     */
+    protected BodyPart handleApplicationContentPart(MimePart applicationData, String contentType) throws IOException, MessagingException {
+        if (applicationData.isMimeType("application/pdf")) {
+            return handleImageBinaryPart(applicationData, contentType);
+        } else if (applicationData.isMimeType("application/rtf")) {
+            return handleImageBinaryPart(applicationData, contentType);
+        } else if (applicationData.isMimeType("application/java")) {
+            return handleTextPart(applicationData, contentType);
+        } else if (applicationData.isMimeType("application/x-javascript")) {
+            return handleTextPart(applicationData, contentType);
+        } else if (applicationData.isMimeType("application/xhtml+xml")) {
+            return handleTextPart(applicationData, contentType);
+        } else if (applicationData.isMimeType("application/json")) {
+            return handleTextPart(applicationData, contentType);
+        } else if (applicationData.isMimeType("application/postscript")) {
+            return handleTextPart(applicationData, contentType);
+        } else {
+            return handleBinaryPart(applicationData, contentType);
+        }
+    }
+
+    /**
+     * Construct base64 body part from image data.
+     * @param image
+     * @param contentType
+     * @return
+     * @throws IOException
+     */
+    protected BodyPart handleImageBinaryPart(MimePart image, String contentType) throws IOException, MessagingException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        FileCopyUtils.copy(image.getInputStream(), bos);
+        String base64 = Base64.encodeBase64String(bos.toByteArray());
+        return new BodyPart(base64, contentType);
+    }
+
+    /**
+     * Construct simple body part from binary data just adding file name as content.
+     * @param mediaPart
+     * @param contentType
+     * @return
+     * @throws IOException
+     */
+    protected BodyPart handleBinaryPart(MimePart mediaPart, String contentType) throws IOException, MessagingException {
+        String contentId = mediaPart.getContentID() != null ? "(" + mediaPart.getContentID() + ")" : "";
+        return new BodyPart(mediaPart.getFileName() + contentId, contentType);
+    }
+
+    /**
+     * Construct simple binary body part with base64 data.
+     * @param textPart
+     * @param contentType
+     * @return
+     * @throws IOException
+     */
+    protected BodyPart handleTextPart(MimePart textPart, String contentType) throws IOException, MessagingException {
+        String text = (String) textPart.getContent();
+        return new BodyPart(stripMailBodyEnding(text), contentType);
     }
 
     /**
@@ -143,54 +237,6 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
         }
 
         return contentType;
-    }
-
-    /**
-     * Construct multipart body with first part being the body content and further parts being the attachments.
-     * @param body
-     * @return
-     * @throws IOException
-     */
-    private BodyPart handleMultipart(Multipart body) throws IOException, MessagingException {
-        BodyPart bodyPart = null;
-        for (int i = 0; i < body.getCount(); i++) {
-            MimePart entity = (MimePart) body.getBodyPart(i);
-
-            if (bodyPart == null) {
-                bodyPart = handlePart(entity);
-            } else {
-                BodyPart attachment = handlePart(entity);
-                bodyPart.addPart(new AttachmentPart(attachment.getContent(), parseContentType(attachment.getContentType()), entity.getFileName()));
-            }
-        }
-
-        return bodyPart;
-    }
-
-    /**
-     * Construct simple text body part.
-     * @param body
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handleBinaryPart(MimePart body, String contentType) throws IOException, MessagingException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        FileCopyUtils.copy(body.getInputStream(), bos);
-        String base64 = Base64.encodeBase64String(bos.toByteArray());
-
-        return new BodyPart(base64, contentType);
-    }
-
-    /**
-     * Construct simple binary body part with base64 data.
-     * @param text
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handleTextPart(String text, String contentType) throws IOException {
-        return new BodyPart(stripMailBodyEnding(text), contentType);
     }
 
     /**
