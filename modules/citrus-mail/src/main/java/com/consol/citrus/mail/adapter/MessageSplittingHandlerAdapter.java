@@ -59,14 +59,14 @@ public class MessageSplittingHandlerAdapter extends MessageHandlerAdapter {
             getMessageHandler().handleMessage(org.springframework.integration.support.MessageBuilder
                     .withPayload(getMailMessageMapper().toXML(mailMessage))
                     .copyHeaders(messageHeaders)
-                    .setHeader(CitrusMailMessageHeaders.MAIL_MIME_TYPE, bodyPart.getContentType())
+                    .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
                     .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())
                     .build());
         } else {
             getMessageHandler().handleMessage(org.springframework.integration.support.MessageBuilder
                     .withPayload(getMailMessageMapper().toXML(mailMessage))
                     .copyHeaders(messageHeaders)
-                    .setHeader(CitrusMailMessageHeaders.MAIL_MIME_TYPE, bodyPart.getContentType())
+                    .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
                     .build());
         }
 

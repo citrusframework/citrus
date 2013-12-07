@@ -18,27 +18,23 @@ package com.consol.citrus.mail.adapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.mail.model.*;
+import com.consol.citrus.mail.model.BodyPart;
 import com.consol.citrus.message.MessageHandler;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.james.mime4j.MimeException;
-import org.apache.james.mime4j.dom.*;
-import org.apache.james.mime4j.dom.address.Address;
-import org.apache.james.mime4j.dom.address.AddressList;
-import org.apache.james.mime4j.dom.address.Mailbox;
-import org.apache.james.mime4j.dom.address.MailboxList;
-import org.apache.james.mime4j.message.DefaultMessageBuilder;
-import org.springframework.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
+import javax.mail.*;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimePart;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Mail handler adapter invokes message handler for each mail delivery. Adapter converts mail message content to
@@ -52,14 +48,20 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     /** Message handler invoke on mail delivery */
     private final MessageHandler messageHandler;
 
-    /** Apache james mime4j mail message parser */
-    private MessageBuilder messageBuilder = new DefaultMessageBuilder();
-
     /** XML message mapper */
     private XStream mailMessageMapper = new MailMessageMapper();
 
+    /** Java mail session */
+    private Session mailSession;
+
+    /** Java mail properties */
+    private Properties javaMailProperties = new Properties();
+
     /** Mail delivery date format */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(MessageHandlerAdapter.class);
 
     /**
      * Default constructor using message handler implementation.
@@ -78,13 +80,13 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     @Override
     public void deliver(String from, String recipient, InputStream data) {
         try {
-            Message message = messageBuilder.parseMessage(data);
+            MimeMailMessage message = new MimeMailMessage(new MimeMessage(getSession(), data));
             Map<String, String> messageHeaders = createMessageHeaders(message);
             MailMessage mailMessage = createMailMessage(messageHeaders);
-            mailMessage.setBody(handlePart(message));
+            mailMessage.setBody(handlePart(message.getMimeMessage()));
 
             invokeMessageHandler(mailMessage, messageHeaders);
-        } catch (MimeException e) {
+        } catch (MessagingException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
@@ -109,17 +111,38 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @return
      * @throws IOException
      */
-    protected BodyPart handlePart(Entity part) throws IOException {
-        Body body = part.getBody();
-        if (body instanceof TextBody) {
-            return handleTextPart((TextBody) body, part.getMimeType());
-        } else if (body instanceof BinaryBody) {
-            return handleBinaryPart((BinaryBody) body, part.getMimeType());
-        } else if (body instanceof Multipart) {
-            return handleMultipart((Multipart) body);
+    protected BodyPart handlePart(MimePart part) throws IOException, MessagingException {
+        if (part.isMimeType("text/*")) {
+            return handleTextPart((String) part.getContent(), parseContentType(part.getContentType()));
+        } else if (part.isMimeType("multipart/*")) {
+            return handleMultipart((Multipart) part.getContent());
         } else {
-            throw new CitrusRuntimeException("Unsupported mail body part: " + body.getClass());
+            return handleBinaryPart(part, parseContentType(part.getContentType()));
         }
+    }
+
+    /**
+     * Fixed Java mail strange behavior to include next line of text to content type.
+     * @param contentType
+     * @return
+     * @throws IOException
+     */
+    private String parseContentType(String contentType) throws IOException {
+        if (contentType.indexOf(System.lineSeparator()) > 0) {
+            BufferedReader reader = new BufferedReader(new StringReader(contentType));
+
+            try {
+                return reader.readLine();
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    log.warn("Failed to close reader", e);
+                }
+            }
+        }
+
+        return contentType;
     }
 
     /**
@@ -128,14 +151,16 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @return
      * @throws IOException
      */
-    private BodyPart handleMultipart(Multipart body) throws IOException {
+    private BodyPart handleMultipart(Multipart body) throws IOException, MessagingException {
         BodyPart bodyPart = null;
-        for (Entity entity : body.getBodyParts()) {
+        for (int i = 0; i < body.getCount(); i++) {
+            MimePart entity = (MimePart) body.getBodyPart(i);
+
             if (bodyPart == null) {
                 bodyPart = handlePart(entity);
             } else {
                 BodyPart attachment = handlePart(entity);
-                bodyPart.addPart(new AttachmentPart(attachment.getContent(), attachment.getContentType(), entity.getFilename()));
+                bodyPart.addPart(new AttachmentPart(attachment.getContent(), parseContentType(attachment.getContentType()), entity.getFileName()));
             }
         }
 
@@ -149,7 +174,7 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @return
      * @throws IOException
      */
-    protected BodyPart handleBinaryPart(BinaryBody body, String contentType) throws IOException {
+    protected BodyPart handleBinaryPart(MimePart body, String contentType) throws IOException, MessagingException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         FileCopyUtils.copy(body.getInputStream(), bos);
         String base64 = Base64.encodeBase64String(bos.toByteArray());
@@ -159,16 +184,13 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
 
     /**
      * Construct simple binary body part with base64 data.
-     * @param body
+     * @param text
      * @param contentType
      * @return
      * @throws IOException
      */
-    protected BodyPart handleTextPart(TextBody body, String contentType) throws IOException {
-        String textBody = FileCopyUtils.copyToString(body.getReader());
-        textBody = stripMailBodyEnding(textBody);
-
-        return new BodyPart(textBody, contentType);
+    protected BodyPart handleTextPart(String text, String contentType) throws IOException {
+        return new BodyPart(stripMailBodyEnding(text), contentType);
     }
 
     /**
@@ -195,7 +217,11 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
             }
         } finally {
             if (reader != null) {
-                reader.close();
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    log.warn("Failed to close reader", e);
+                }
             }
         }
 
@@ -222,55 +248,19 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @param msg
      * @return
      */
-    protected Map<String,String> createMessageHeaders(Message msg) {
+    protected Map<String,String> createMessageHeaders(MimeMailMessage msg) throws MessagingException, IOException {
         Map<String, String> headers = new HashMap<String, String>();
-        headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMessageId());
-        headers.put(CitrusMailMessageHeaders.MAIL_FROM, extractMailboxes(msg.getFrom()));
-        headers.put(CitrusMailMessageHeaders.MAIL_TO, extractAddresses(msg.getTo()));
-        headers.put(CitrusMailMessageHeaders.MAIL_CC, extractAddresses(msg.getCc()));
-        headers.put(CitrusMailMessageHeaders.MAIL_BCC, extractAddresses(msg.getBcc()));
-        headers.put(CitrusMailMessageHeaders.MAIL_REPLY_TO, extractAddresses(msg.getReplyTo()));
-        headers.put(CitrusMailMessageHeaders.MAIL_DATE, msg.getDate() != null ? dateFormat.format(msg.getDate()) : null);
-        headers.put(CitrusMailMessageHeaders.MAIL_SUBJECT, msg.getSubject());
-        headers.put(CitrusMailMessageHeaders.MAIL_MIME_TYPE, msg.getMimeType());
+        headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMimeMessage().getMessageID());
+        headers.put(CitrusMailMessageHeaders.MAIL_FROM, StringUtils.arrayToCommaDelimitedString(msg.getMimeMessage().getFrom()));
+        headers.put(CitrusMailMessageHeaders.MAIL_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(Message.RecipientType.TO))));
+        headers.put(CitrusMailMessageHeaders.MAIL_CC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(Message.RecipientType.CC))));
+        headers.put(CitrusMailMessageHeaders.MAIL_BCC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(Message.RecipientType.BCC))));
+        headers.put(CitrusMailMessageHeaders.MAIL_REPLY_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getReplyTo())));
+        headers.put(CitrusMailMessageHeaders.MAIL_DATE, msg.getMimeMessage().getSentDate() != null ? dateFormat.format(msg.getMimeMessage().getSentDate()) : null);
+        headers.put(CitrusMailMessageHeaders.MAIL_SUBJECT, msg.getMimeMessage().getSubject());
+        headers.put(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, parseContentType(msg.getMimeMessage().getContentType()));
 
         return headers;
-    }
-
-    /**
-     * Reads all mailboxes in list and return comma separated string.
-     * @param mailboxList
-     * @return
-     */
-    private String extractMailboxes(MailboxList mailboxList) {
-        if (CollectionUtils.isEmpty(mailboxList)) {
-            return "";
-        }
-
-        List<String> mailboxAdresses = new ArrayList<String>(mailboxList.size());
-        for (Mailbox mailbox : mailboxList) {
-            mailboxAdresses.add(mailbox.getAddress());
-        }
-
-        return StringUtils.arrayToCommaDelimitedString(mailboxAdresses.toArray(new String[mailboxList.size()]));
-    }
-
-    /**
-     * Gets comma separated string of all addresses in list.
-     * @param addressList
-     * @return
-     */
-    private String extractAddresses(AddressList addressList) {
-        if (CollectionUtils.isEmpty(addressList)) {
-            return "";
-        }
-
-        List<String> adresses = new ArrayList<String>(addressList.size());
-        for (Address address : addressList) {
-            adresses.add(address.toString());
-        }
-
-        return StringUtils.arrayToCommaDelimitedString(adresses.toArray(new String[addressList.size()]));
     }
 
     /**
@@ -282,19 +272,14 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     }
 
     /**
-     * Sets the message handler.
+     * Return new mail session if not already created before.
      * @return
      */
-    public MessageBuilder getMessageBuilder() {
-        return messageBuilder;
-    }
-
-    /**
-     * Sets the mail message builder.
-     * @param messageBuilder
-     */
-    public void setMessageBuilder(MessageBuilder messageBuilder) {
-        this.messageBuilder = messageBuilder;
+    public synchronized Session getSession() {
+        if (this.mailSession == null) {
+            this.mailSession = Session.getInstance(this.javaMailProperties);
+        }
+        return this.mailSession;
     }
 
     /**

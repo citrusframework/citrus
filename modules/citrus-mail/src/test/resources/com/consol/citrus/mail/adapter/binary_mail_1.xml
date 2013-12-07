@@ -1,11 +1,11 @@
 <mail-message>
-  <from>foo@mail.com</from>
+  <from>Foo <foo@mail.com></from>
   <to>bar@mail.com</to>
-  <cc>foobar@mail.com</cc>
+  <cc>FooBar <foobar@mail.com></cc>
   <bcc></bcc>
   <subject>This is brand_logo.png</subject>
   <body>
-    <contentType>text/plain</contentType>
+    <contentType>text/plain; charset=ISO-8859-15; format=flowed</contentType>
     <content><![CDATA[Test: brand_logo.png]]></content>
   </body>
 </mail-message>

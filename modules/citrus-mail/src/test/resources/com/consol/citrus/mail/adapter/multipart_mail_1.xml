@@ -5,7 +5,7 @@
   <bcc></bcc>
   <subject>Multipart Testmail</subject>
   <body>
-    <contentType>text/plain</contentType>
+    <contentType>text/plain; charset=utf-8</contentType>
     <content><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.]]></content>
   </body>
 </mail-message>

@@ -421,22 +421,17 @@
 
       <!-- Citrus mail dependencies -->
       <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.4.4</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.subethamail</groupId>
         <artifactId>subethasmtp</artifactId>
         <version>3.1.7</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.apache.james</groupId>
-        <artifactId>apache-mime4j-core</artifactId>
-        <version>0.7.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.james</groupId>
-        <artifactId>apache-mime4j-dom</artifactId>
-        <version>0.7.2</version>
-      </dependency>
-      
       <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>

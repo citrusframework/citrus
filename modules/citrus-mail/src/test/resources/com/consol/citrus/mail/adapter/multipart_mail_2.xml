@@ -5,7 +5,7 @@
   <bcc></bcc>
   <subject>Multipart Testmail</subject>
   <body>
-    <contentType>text/html</contentType>
+    <contentType>text/html; charset=utf-8</contentType>
     <content><![CDATA[<html>
 <head>
 </head>
