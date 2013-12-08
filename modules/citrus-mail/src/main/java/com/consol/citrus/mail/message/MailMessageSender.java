@@ -85,7 +85,7 @@ public class MailMessageSender implements MessageSender, BeanNameAware {
 
     @Override
     public void send(Message<?> message) {
-        log.info("Sending mail message to host: '%s:%s'", javaMailSender.getHost(), javaMailSender.getPort());
+        log.info(String.format("Sending mail message to host: '%s://%s:%s'", javaMailSender.getProtocol(), javaMailSender.getHost(), javaMailSender.getPort()));
 
         MimeMessage mimeMessage = createMailMessage(message);
         javaMailSender.send(mimeMessage);
@@ -113,7 +113,7 @@ public class MailMessageSender implements MessageSender, BeanNameAware {
             log.info("Sent message is:" + System.getProperty("line.separator") + mailMessageContent);
         }
 
-        log.info("Message was successfully sent to host: '%s:%s'", javaMailSender.getHost(), javaMailSender.getPort());
+        log.info(String.format("Message was successfully sent to host: '%s://%s:%s'", javaMailSender.getProtocol(), javaMailSender.getHost(), javaMailSender.getPort()));
     }
 
     /**

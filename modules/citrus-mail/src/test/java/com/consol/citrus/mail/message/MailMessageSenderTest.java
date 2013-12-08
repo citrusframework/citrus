@@ -53,6 +53,7 @@ public class MailMessageSenderTest {
 
         expect(javaMailSender.getHost()).andReturn("localhost").times(2);
         expect(javaMailSender.getPort()).andReturn(25).times(2);
+        expect(javaMailSender.getProtocol()).andReturn("smtp").times(2);
         expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
         javaMailSender.send(anyObject(MimeMessage.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
