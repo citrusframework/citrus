@@ -222,7 +222,7 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @throws IOException
      */
     private String parseContentType(String contentType) throws IOException {
-        if (contentType.indexOf(System.lineSeparator()) > 0) {
+        if (contentType.indexOf(System.getProperty("line.separator")) > 0) {
             BufferedReader reader = new BufferedReader(new StringReader(contentType));
 
             try {
@@ -258,7 +258,7 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
                     break;
                 }
 
-                body.append(line + System.lineSeparator());
+                body.append(line + System.getProperty("line.separator"));
                 line = reader.readLine();
             }
         } finally {
