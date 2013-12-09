@@ -19,6 +19,7 @@
     <module>model-http</module>
     <module>model-ssh</module>
     <module>model-ws</module>
+    <module>model-mail</module>
   </modules>
 
 </project>

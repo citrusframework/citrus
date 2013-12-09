@@ -16,14 +16,13 @@
 
 package com.consol.citrus.http.config.xml;
 
-import java.util.List;
-import java.util.Map;
-
+import com.consol.citrus.http.HttpServer;
+import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.http.HttpServer;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +30,7 @@ import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testHttpServerParser() {
         Map<String, HttpServer> servers = beanDefinitionContext.getBeansOfType(HttpServer.class);
         
         Assert.assertEquals(servers.size(), 5);

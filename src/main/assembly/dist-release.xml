@@ -20,6 +20,7 @@
         <include>com.consol.citrus.model:citrus-model-http</include>
         <include>com.consol.citrus.model:citrus-model-ws</include>
         <include>com.consol.citrus.model:citrus-model-ssh</include>
+        <include>com.consol.citrus.model:citrus-model-mail</include>
         <include>com.consol.citrus.ant:citrus-ant-tasks</include>
         <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
       </includes>
@@ -111,6 +112,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-model/model-ssh/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-mail/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

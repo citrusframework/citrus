@@ -24,6 +24,7 @@ import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.integration.Message;
@@ -48,7 +49,7 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailMessageSender implements MessageSender, BeanNameAware {
+public class MailMessageSender implements MessageSender, InitializingBean, BeanNameAware {
 
     /** Mail sender implementation */
     private JavaMailSenderImpl javaMailSender;
@@ -259,6 +260,22 @@ public class MailMessageSender implements MessageSender, BeanNameAware {
     }
 
     /**
+     * Gets the Java mail sender implementation.
+     * @return
+     */
+    public JavaMailSenderImpl getJavaMailSender() {
+        return javaMailSender;
+    }
+
+    /**
+     * Sets the Java mail sender implementation.
+     * @param javaMailSender
+     */
+    public void setJavaMailSender(JavaMailSenderImpl javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
+
+    /**
      * Gets the actor.
      * @return the actor the actor to get.
      */
@@ -282,5 +299,20 @@ public class MailMessageSender implements MessageSender, BeanNameAware {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (StringUtils.hasText(javaMailSender.getUsername()) ||
+                StringUtils.hasText(javaMailSender.getPassword())) {
+
+            Properties javaMailProperties = javaMailSender.getJavaMailProperties();
+            if (javaMailProperties == null) {
+                javaMailProperties = new Properties();
+            }
+
+            javaMailProperties.setProperty("mail.smtp.auth", "true");
+            javaMailSender.setJavaMailProperties(javaMailProperties);
+        }
     }
 }

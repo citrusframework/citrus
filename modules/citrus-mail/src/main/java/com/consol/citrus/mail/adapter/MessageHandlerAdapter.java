@@ -343,4 +343,20 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     public void setMailMessageMapper(XStream mailMessageMapper) {
         this.mailMessageMapper = mailMessageMapper;
     }
+
+    /**
+     * Gets the Java mail properties.
+     * @return
+     */
+    public Properties getJavaMailProperties() {
+        return javaMailProperties;
+    }
+
+    /**
+     * Sets the Java mail properties.
+     * @param javaMailProperties
+     */
+    public void setJavaMailProperties(Properties javaMailProperties) {
+        this.javaMailProperties = javaMailProperties;
+    }
 }

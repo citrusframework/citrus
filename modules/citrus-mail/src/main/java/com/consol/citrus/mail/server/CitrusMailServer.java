@@ -34,7 +34,7 @@ import org.subethamail.smtp.server.SMTPServer;
 public class CitrusMailServer extends AbstractServer implements InitializingBean {
 
     /** Server port */
-    private int port = 25000;
+    private int port = 25;
 
     /** Message handler called for each delivery */
     private MessageHandlerAdapter messageHandlerAdapter;
@@ -43,6 +43,7 @@ public class CitrusMailServer extends AbstractServer implements InitializingBean
     @Override
     protected void startup() {
         smtpServer = new SMTPServer(new SimpleMessageListenerAdapter(messageHandlerAdapter));
+        smtpServer.setSoftwareName(getName());
         smtpServer.setPort(port);
         smtpServer.start();
     }

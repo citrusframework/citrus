@@ -23,6 +23,7 @@ import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -65,9 +66,9 @@ public class MessageSplittingHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
-                    Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
-                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream()))));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -108,9 +109,9 @@ public class MessageSplittingHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
 
                 try {
-                    Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
-                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_1.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream()))));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -137,9 +138,9 @@ public class MessageSplittingHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
 
                 try {
-                    Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml",
-                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("multipart_mail_2.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream()))));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -180,9 +181,9 @@ public class MessageSplittingHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
 
                 try {
-                    Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
-                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_1.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream()))));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }
@@ -209,9 +210,9 @@ public class MessageSplittingHandlerAdapterTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
 
                 try {
-                    Assert.assertEquals(message.getPayload().toString(),
-                            FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
-                                    MessageSplittingHandlerAdapterTest.class).getInputStream())));
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("binary_mail_2.xml",
+                                    MessageSplittingHandlerAdapterTest.class).getInputStream()))));
                 } catch (IOException e) {
                     Assert.fail(e.getMessage());
                 }

@@ -46,7 +46,7 @@ public abstract class AbstractBeanDefinitionParserTest extends AbstractTestNGUni
     /**
      * Creates a new application context with specified child application context. Child application context
      * is named SimpleClassName-[suffix].xml and is located in test class package.
-     * @param string
+     * @param suffix
      * @return
      */
     protected ApplicationContext createApplicationContext(String suffix) {
