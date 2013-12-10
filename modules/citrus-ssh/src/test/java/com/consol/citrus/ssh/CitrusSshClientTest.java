@@ -16,8 +16,6 @@
 
 package com.consol.citrus.ssh;
 
-import java.io.*;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.jcraft.jsch.*;
 import org.easymock.IArgumentMatcher;
@@ -27,8 +25,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.*;
+
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 
 /**
  * @author Roland Huss
@@ -143,6 +144,7 @@ public class CitrusSshClientTest {
     public void withPassword() throws JSchException, IOException {
         client.setPassword("consol");
         session.setUserInfo(getUserInfo("consol"));
+        session.setPassword("consol");
 
         strictHostChecking(false, null);
         standardChannelPrepAndSend();

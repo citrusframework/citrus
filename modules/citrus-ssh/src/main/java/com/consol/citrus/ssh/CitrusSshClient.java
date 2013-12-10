@@ -16,17 +16,16 @@
 
 package com.consol.citrus.ssh;
 
-import java.io.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.AbstractSyncMessageSender;
+import com.consol.citrus.message.ReplyMessageHandler;
+import com.jcraft.jsch.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.AbstractSyncMessageSender;
-import com.consol.citrus.message.ReplyMessageHandler;
-import com.jcraft.jsch.*;
+import java.io.*;
 
 /**
  * A SSH client which sends a request specified in a test-cast as SSH EXEC call to a target host
@@ -195,6 +194,7 @@ public class CitrusSshClient extends AbstractSyncMessageSender {
                 session = jsch.getSession(rUser,host,port);
                 if (StringUtils.hasText(password)) {
                     session.setUserInfo(new UserInfoWithPlainPassword(password));
+                    session.setPassword(password);
                 }
                 session.setConfig("StrictHostKeyChecking",strictHostChecking ? "yes" : "no");
                 session.connect();
