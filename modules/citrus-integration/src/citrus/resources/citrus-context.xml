@@ -6,6 +6,7 @@
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
        xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+       xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:amq="http://activemq.apache.org/schema/core"
@@ -16,6 +17,7 @@
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
        http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
        http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd
+       http://www.citrusframework.org/schema/mail/config http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd
        http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
@@ -376,6 +378,30 @@
                                      receive-timeout="5000"/>
                                      
     <citrus:message-channel id="greetings" capacity="5"/>
+
+    <!-- Citrus mail components -->
+    <citrus-mail:server id="smtpMailServer"
+                        port="25025"
+                        auto-start="true"
+                        message-handler-adapter="channelAdapter"/>
+
+    <bean id="channelAdapter" class="com.consol.citrus.mail.adapter.MessageHandlerAdapter">
+      <constructor-arg>
+        <bean class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
+          <property name="channel" ref="mailMessageChannel"/>
+        </bean>
+      </constructor-arg>
+    </bean>
+
+    <citrus:message-channel id="mailMessageChannel" capacity="5"/>
+
+    <citrus:message-channel-receiver id="mailMessageReceiver"
+                                   channel="mailMessageChannel"
+                                   receive-timeout="5000"/>
+
+    <citrus-mail:message-sender id="mailMessageSender"
+                                host="localhost"
+                                port="25025"/>
 
     <!-- Sample data dictionary for hello service messages -->
     <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary">

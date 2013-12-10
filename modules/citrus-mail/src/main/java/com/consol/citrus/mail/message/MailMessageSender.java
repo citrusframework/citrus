@@ -95,7 +95,7 @@ public class MailMessageSender implements MessageSender, InitializingBean, BeanN
         String mailMessageContent;
         try {
             mimeMessage.writeTo(bos);
-            mailMessageContent = bos.toString(); //TODO use charset
+            mailMessageContent = bos.toString(); //TODO use message charset encoding
         } catch (IOException e) {
             mailMessageContent = message.toString();
         } catch (MessagingException e) {
@@ -131,7 +131,6 @@ public class MailMessageSender implements MessageSender, InitializingBean, BeanN
                 mailMessage = (MailMessage) payload;
             } else if (payload instanceof String) {
                 mailMessage = (MailMessage) mailMessageMapper.fromXML(payload.toString());
-
             }
         }
 
@@ -140,7 +139,7 @@ public class MailMessageSender implements MessageSender, InitializingBean, BeanN
         }
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8"); //TODO use message charset encoding
 
         try {
             mimeMessageHelper.setFrom(mailMessage.getFrom());
@@ -313,6 +312,10 @@ public class MailMessageSender implements MessageSender, InitializingBean, BeanN
 
             javaMailProperties.setProperty("mail.smtp.auth", "true");
             javaMailSender.setJavaMailProperties(javaMailProperties);
+        }
+
+        if (!StringUtils.hasText(javaMailSender.getProtocol())) {
+            javaMailSender.setProtocol("smtp");
         }
     }
 }
