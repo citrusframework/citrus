@@ -82,6 +82,9 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             } catch (Exception e) {
                 testListeners.onTestFailure(this, e);
                 throw new TestCaseFailedException(e);
+            } catch (Error e) {
+                testListeners.onTestFailure(this, e);
+                throw new TestCaseFailedException(e);
             } finally {
                 testListeners.onTestFinish(this);
                 finish(context);
