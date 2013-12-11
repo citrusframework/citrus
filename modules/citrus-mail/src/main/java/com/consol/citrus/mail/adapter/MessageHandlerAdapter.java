@@ -18,23 +18,29 @@ package com.consol.citrus.mail.adapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.mail.model.*;
-import com.consol.citrus.mail.model.BodyPart;
 import com.consol.citrus.message.MessageHandler;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
+import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
-import javax.mail.*;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Mail handler adapter invokes message handler for each mail delivery. Adapter converts mail message content to
@@ -57,6 +63,9 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
     /** Java mail properties */
     private Properties javaMailProperties = new Properties();
 
+    /** Should accept automatically or handled via test case */
+    private boolean autoAccept = true;
+
     /** Mail delivery date format */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
@@ -73,8 +82,30 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
 
     @Override
     public boolean accept(String from, String recipient) {
-        // by default accept all messages
-        return true;
+        if (autoAccept) {
+            return true;
+        }
+
+        org.springframework.integration.Message<?> response = getMessageHandler().handleMessage(MessageBuilder
+                .withPayload(getMailMessageMapper().toXML(createAcceptRequest(from, recipient)))
+                .build());
+
+        if (response == null || response.getPayload() == null) {
+            throw new CitrusRuntimeException("Did not receive accept response. Missing accept response because autoAccept is disabled.");
+        }
+
+        AcceptResponse acceptResponse = null;
+        if (response.getPayload() instanceof AcceptResponse) {
+            acceptResponse = (AcceptResponse) response.getPayload();
+        } else if (response.getPayload() instanceof String) {
+            acceptResponse = (AcceptResponse) getMailMessageMapper().fromXML(response.getPayload().toString());
+        }
+
+        if (acceptResponse == null) {
+            throw new CitrusRuntimeException("Unable to read accept response from paylaod: " + response);
+        }
+
+        return acceptResponse.isAccept();
     }
 
     @Override
@@ -85,7 +116,20 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
             MailMessage mailMessage = createMailMessage(messageHeaders);
             mailMessage.setBody(handlePart(message.getMimeMessage()));
 
-            invokeMessageHandler(mailMessage, messageHeaders);
+            org.springframework.integration.Message response = invokeMessageHandler(mailMessage, messageHeaders);
+
+            if (response != null && response.getPayload() != null) {
+                MailMessageResponse mailResponse = null;
+                if (response.getPayload() instanceof MailMessageResponse) {
+                    mailResponse = (MailMessageResponse) response.getPayload();
+                } else if (response.getPayload() instanceof String) {
+                    mailResponse = (MailMessageResponse) mailMessageMapper.fromXML(response.getPayload().toString());
+                }
+
+                if (mailResponse != null && mailResponse.getCode() != MailMessageResponse.OK_CODE) {
+                    throw new RejectException(mailResponse.getCode(), mailResponse.getMessage());
+                }
+            }
         } catch (MessagingException e) {
             throw new CitrusRuntimeException(e);
         } catch (IOException e) {
@@ -98,8 +142,8 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
      * @param mailMessage
      * @param messageHeaders
      */
-    protected void invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
-        messageHandler.handleMessage(org.springframework.integration.support.MessageBuilder
+    protected org.springframework.integration.Message<?> invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
+        return messageHandler.handleMessage(org.springframework.integration.support.MessageBuilder
                 .withPayload(mailMessageMapper.toXML(mailMessage))
                 .copyHeaders(messageHeaders)
                 .build());
@@ -274,6 +318,10 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
         return body.toString().trim();
     }
 
+    private AcceptRequest createAcceptRequest(String from, String recipient) {
+        return new AcceptRequest(from, recipient);
+    }
+
     /**
      * Creates a new mail message model object from message headers.
      * @param messageHeaders
@@ -326,6 +374,22 @@ public class MessageHandlerAdapter implements SimpleMessageListener {
             this.mailSession = Session.getInstance(this.javaMailProperties);
         }
         return this.mailSession;
+    }
+
+    /**
+     * Is auto accept enabled.
+     * @return
+     */
+    public boolean isAutoAccept() {
+        return autoAccept;
+    }
+
+    /**
+     * Enable/disable auto accept feature.
+     * @param autoAccept
+     */
+    public void setAutoAccept(boolean autoAccept) {
+        this.autoAccept = autoAccept;
     }
 
     /**

@@ -1,0 +1,4 @@
+<accept-request>
+  <from>foo@mail.com</from>
+  <to>bar@mail.com</to>
+</accept-request>

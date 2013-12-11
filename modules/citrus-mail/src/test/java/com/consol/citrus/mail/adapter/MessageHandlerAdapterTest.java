@@ -15,12 +15,14 @@
  */
 package com.consol.citrus.mail.adapter;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
@@ -76,6 +78,7 @@ public class MessageHandlerAdapterTest {
 
         replay(messageHandlerMock);
 
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("text_mail.txt", MessageHandlerAdapterTest.class).getInputStream());
 
@@ -119,6 +122,7 @@ public class MessageHandlerAdapterTest {
 
         replay(messageHandlerMock);
 
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("multipart_mail.txt", MessageHandlerAdapterTest.class).getInputStream());
 
@@ -162,8 +166,84 @@ public class MessageHandlerAdapterTest {
 
         replay(messageHandlerMock);
 
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("binary_mail.txt", MessageHandlerAdapterTest.class).getInputStream());
+
+        verify(messageHandlerMock);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testAutoAcceptDisabled() throws IOException {
+        MessageHandlerAdapter messageHandlerAdapter = new MessageHandlerAdapter(messageHandlerMock);
+
+        reset(messageHandlerMock);
+
+        expect(messageHandlerMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+            @Override
+            public Message<?> answer() throws Throwable {
+                Message<?> message = (Message<?>) getCurrentArguments()[0];
+
+                Assert.assertNotNull(message.getPayload());
+
+                try {
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-request.xml",
+                                    MessageHandlerAdapterTest.class).getInputStream()))));
+                } catch (IOException e) {
+                    Assert.fail(e.getMessage());
+                }
+
+                return MessageBuilder.withPayload(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("accept-response.xml",
+                        MessageHandlerAdapterTest.class).getInputStream()))).build();
+            }
+        }).once();
+
+        replay(messageHandlerMock);
+
+        messageHandlerAdapter.setAutoAccept(false);
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
+
+        verify(messageHandlerMock);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testAutoAcceptDisabledWithTimeout() throws IOException {
+        MessageHandlerAdapter messageHandlerAdapter = new MessageHandlerAdapter(messageHandlerMock);
+
+        reset(messageHandlerMock);
+        expect(messageHandlerMock.handleMessage(anyObject(Message.class))).andReturn(null).once();
+        replay(messageHandlerMock);
+
+        messageHandlerAdapter.setAutoAccept(false);
+        try {
+            messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com");
+            Assert.fail("Missing runtime exception due to missing accept response");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Did not receive accept response"));
+        }
+
+        verify(messageHandlerMock);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testAutoAcceptDisabledWithInvalidAcceptResponse() throws IOException {
+        MessageHandlerAdapter messageHandlerAdapter = new MessageHandlerAdapter(messageHandlerMock);
+
+        reset(messageHandlerMock);
+        expect(messageHandlerMock.handleMessage(anyObject(Message.class))).andReturn((Message) MessageBuilder.withPayload(99L).build()).once();
+        replay(messageHandlerMock);
+
+        messageHandlerAdapter.setAutoAccept(false);
+        try {
+            messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com");
+            Assert.fail("Missing runtime exception due to invalid accept response");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Unable to read accept response"));
+        }
 
         verify(messageHandlerMock);
     }

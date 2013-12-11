@@ -79,6 +79,7 @@ public class MessageSplittingHandlerAdapterTest {
 
         replay(messageHandlerMock);
 
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("text_mail.txt", MessageSplittingHandlerAdapterTest.class).getInputStream());
 
@@ -151,6 +152,7 @@ public class MessageSplittingHandlerAdapterTest {
 
         replay(messageHandlerMock);
 
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("multipart_mail.txt", MessageSplittingHandlerAdapterTest.class).getInputStream());
 
@@ -223,6 +225,7 @@ public class MessageSplittingHandlerAdapterTest {
 
         replay(messageHandlerMock);
 
+        Assert.assertTrue(messageHandlerAdapter.accept("foo@mail.com", "bar@mail.com"));
         messageHandlerAdapter.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("binary_mail.txt", MessageSplittingHandlerAdapterTest.class).getInputStream());
 

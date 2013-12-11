@@ -38,7 +38,10 @@ public class MailMessageMapper extends XStream {
     public MailMessageMapper() {
         super(getXppDriver());
         alias("mail-message", MailMessage.class);
+        alias("mail-response", MailMessageResponse.class);
         alias("attachment", AttachmentPart.class);
+        alias("accept-request", AcceptRequest.class);
+        alias("accept-response", AcceptResponse.class);
     }
 
     /**

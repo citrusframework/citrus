@@ -17,10 +17,14 @@
 package com.consol.citrus.mail.adapter;
 
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
-import com.consol.citrus.mail.model.*;
+import com.consol.citrus.mail.model.AttachmentPart;
+import com.consol.citrus.mail.model.BodyPart;
+import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.message.MessageHandler;
+import org.springframework.integration.Message;
 
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Message handler adapter splits mail message to multiple messages. Each message represents a mail part in
@@ -40,40 +44,50 @@ public class MessageSplittingHandlerAdapter extends MessageHandlerAdapter {
     }
 
     @Override
-    protected void invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
-        split(mailMessage.getBody(), messageHeaders);
+    protected Message<?> invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
+        return split(mailMessage.getBody(), messageHeaders);
     }
 
     /**
      * Split mail message into several messages. Each body and each attachment results in separate message
-     * invoked on message handler.
+     * invoked on message handler. Mail message response if any should be sent only once within test case.
+     * However latest mail response sent by test case is returned, others are ignored.
      *
      * @param bodyPart
      * @param messageHeaders
      */
-    private void split(BodyPart bodyPart, Map<String, String> messageHeaders) {
+    private Message<?> split(BodyPart bodyPart, Map<String, String> messageHeaders) {
         MailMessage mailMessage = createMailMessage(messageHeaders);
         mailMessage.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
 
+        Stack<Message<?>> responseStack = new Stack<Message<?>>();
         if (bodyPart instanceof AttachmentPart) {
-            getMessageHandler().handleMessage(org.springframework.integration.support.MessageBuilder
+            fillStack(getMessageHandler().handleMessage(org.springframework.integration.support.MessageBuilder
                     .withPayload(getMailMessageMapper().toXML(mailMessage))
                     .copyHeaders(messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
                     .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())
-                    .build());
+                    .build()), responseStack);
         } else {
-            getMessageHandler().handleMessage(org.springframework.integration.support.MessageBuilder
+            fillStack(getMessageHandler().handleMessage(org.springframework.integration.support.MessageBuilder
                     .withPayload(getMailMessageMapper().toXML(mailMessage))
                     .copyHeaders(messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
-                    .build());
+                    .build()), responseStack);
         }
 
         if (bodyPart.hasAttachments()) {
             for (AttachmentPart attachmentPart : bodyPart.getAttachments()) {
-                split(attachmentPart, messageHeaders);
+                fillStack(split(attachmentPart, messageHeaders), responseStack);
             }
+        }
+
+        return responseStack.isEmpty() ? null : responseStack.pop();
+    }
+
+    private void fillStack(Message<?> message, Stack<Message<?>> responseStack) {
+        if (message != null) {
+            responseStack.push(message);
         }
     }
 }

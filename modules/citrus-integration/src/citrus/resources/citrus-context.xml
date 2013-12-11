@@ -264,8 +264,7 @@
                        reply-handler="sshResponseReceiver" />
   
     <citrus-ssh:reply-handler id="sshResponseReceiver"/>
-  
-  
+
     <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
     <citrus:jms-message-sender id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}" />
   
@@ -380,6 +379,10 @@
     <citrus:message-channel id="greetings" capacity="5"/>
 
     <!-- Citrus mail components -->
+    <citrus-mail:message-sender id="mailMessageSender"
+                                host="localhost"
+                                port="25025"/>
+
     <citrus-mail:server id="smtpMailServer"
                         port="25025"
                         auto-start="true"
@@ -389,19 +392,19 @@
       <constructor-arg>
         <bean class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
           <property name="channel" ref="mailMessageChannel"/>
+          <property name="replyTimeout" value="500"/>
         </bean>
       </constructor-arg>
     </bean>
 
     <citrus:message-channel id="mailMessageChannel" capacity="5"/>
 
-    <citrus:message-channel-receiver id="mailMessageReceiver"
-                                   channel="mailMessageChannel"
-                                   receive-timeout="5000"/>
+    <citrus:sync-message-channel-receiver id="mailMessageReceiver"
+                                          channel="mailMessageChannel"
+                                          receive-timeout="500"/>
 
-    <citrus-mail:message-sender id="mailMessageSender"
-                                host="localhost"
-                                port="25025"/>
+    <citrus:message-channel-reply-sender id="mailMessageResponseSender"
+                                         reply-channel-holder="mailMessageReceiver"/>
 
     <!-- Sample data dictionary for hello service messages -->
     <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary">
