@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
+package com.consol.citrus.endpoint;
 
-import com.consol.citrus.message.MessageSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 
 /**
- * {@link MessageSender} implementation publishes message to a JMS destination.
- *  
+ * Reply endpoint stands for synchronous communication with sending and receiving synchronous reply messages.
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
+public interface ReplyEndpoint extends Endpoint {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
-    
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
+     * Send synchronous reply message.
+     * @param message
      */
-    public void send(Message<?> message) {
-        getJmsEndpoint().send(message);
-    }
+    void sendReplyMessage(Message<?> message);
+
+    /**
+     * Receive synchronous reply message with correlation key.
+     * @param correlationKey
+     * @param timeout
+     * @return
+     */
+    Message<?> receiveReplyMessage(String correlationKey, long timeout);
+
 }

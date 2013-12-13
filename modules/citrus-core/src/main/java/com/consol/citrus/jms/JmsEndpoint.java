@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,21 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.message.MessageSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.integration.Message;
 
 /**
- * {@link MessageSender} implementation publishes message to a JMS destination.
- *  
+ * Jms endpoint definition adds Jms selector functionality.
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
+public interface JmsEndpoint extends Endpoint {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
-    
     /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
+     * Receive message with a message selector and a receive timeout.
+     * @param selector
+     * @param timeout
+     * @return
      */
-    public void send(Message<?> message) {
-        getJmsEndpoint().send(message);
-    }
+    Message<?> receive(String selector, long timeout);
 }

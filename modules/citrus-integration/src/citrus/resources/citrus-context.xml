@@ -325,10 +325,12 @@
     
     <citrus:jms-sync-message-sender id="syncHelloTopicRequestSender" 
                                     destination-name="${jms.topic.hello.sync.request}"
-                                    reply-handler="syncHelloResponseHandler"
+                                    reply-handler="syncHelloTopicResponseHandler"
                                     reply-timeout="5000"
                                     pub-sub-domain="true"/>
-                                    
+
+    <citrus:jms-reply-message-handler id="syncHelloTopicResponseHandler"/>
+
     <citrus:jms-sync-message-receiver id="syncHelloTopicRequestReceiver"
                                       receive-timeout="5000" 
                                       destination-name="${jms.topic.hello.sync.request}"

@@ -16,17 +16,9 @@
 
 package com.consol.citrus.jms;
 
-import javax.jms.*;
-
-import com.consol.citrus.report.MessageListeners;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.Assert;
-
-import com.consol.citrus.message.*;
 
 /**
  * This JMS message sender is quite similar to Spring's AbstractJmsTemplateBasedAdapter that is 
@@ -37,60 +29,28 @@ import com.consol.citrus.message.*;
  * slight differences.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsReplyMessageSender extends AbstractJmsAdapter implements MessageSender {
     /** Reply destination holder */
     private JmsReplyDestinationHolder replyDestinationHolder;
 
-    /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
-    
-    @Autowired(required = false)
-    private MessageListeners messageListener;
-    
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(JmsReplyMessageSender.class);
+    public JmsReplyMessageSender() {
+        super(new JmsSyncMessageEndpoint());
+    }
+
+    @Override
+    public JmsSyncMessageEndpoint getJmsEndpoint() {
+        return (JmsSyncMessageEndpoint) super.getJmsEndpoint();
+    }
 
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
-        
-        Destination replyDestination;
-        Message<?> replyMessage;
-        
-        if (correlator != null) {
-            Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
-            		"you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
-            
-            String correlationKey = correlator.getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
-            replyDestination = replyDestinationHolder.getReplyDestination(correlationKey);
-            Assert.notNull(replyDestination, "Unable to locate JMS reply destination with correlation key: '" + correlationKey + "'");
-            
-            //remove citrus specific header from message
-            replyMessage = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
-        } else {
-            replyMessage = message;
-            replyDestination = replyDestinationHolder.getReplyDestination();
-            Assert.notNull(replyDestination, "Unable to locate JMS reply destination");
-        }
-        
-        log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
-
-        getJmsTemplate().convertAndSend(replyDestination, replyMessage);
-        
-        if (messageListener != null) {
-            messageListener.onOutboundMessage(replyMessage.toString());
-        } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + replyMessage.toString());
-        }
-        
-        log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
+        getJmsEndpoint().sendReplyMessage(message);
     }
-    
+
     /**
      * Set the reply destination.
      * @param replyDestinationHolder the replyDestinationHolder to set
@@ -98,46 +58,10 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
     public void setReplyDestinationHolder(
             JmsReplyDestinationHolder replyDestinationHolder) {
         this.replyDestinationHolder = replyDestinationHolder;
-    }
 
-    /**
-     * Get the destination name (either a queue name or a topic name).
-     * @return the destinationName
-     */
-    protected String getDestinationName(Destination destination) {
-        try {
-            if (destination != null) {
-                if (destination instanceof Queue) {
-                    return ((Queue)destination).getQueueName();
-                } else if (destination instanceof Topic) {
-                    return ((Topic)destination).getTopicName();
-                } else {
-                    return destination.toString();
-                }
-            } else {
-                return null;
-            }
-        } catch (JMSException e) {
-            log.error("Error while getting destination name", e);
-            return "";
+        if (replyDestinationHolder instanceof JmsSyncMessageReceiver) {
+            setJmsEndpoint(((JmsSyncMessageReceiver) replyDestinationHolder).getJmsEndpoint());
         }
-    }
-
-    /**
-     * In addition to usual initializing steps check that replySestinationHolder is set correctly.
-     */
-    public void afterPropertiesSet() {
-        super.afterPropertiesSet();
-        
-        Assert.notNull(replyDestinationHolder, "Missing required property 'replyDestinationHolder'");
-    }
-    
-    /**
-     * Set the message correlator.
-     * @param correlator the correlator to set
-     */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
-        this.correlator = correlator;
     }
 
     /**
@@ -149,10 +73,18 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
     }
 
     /**
+     * Set the message correlator.
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        getJmsEndpoint().setCorrelator(correlator);
+    }
+
+    /**
      * Gets the correlator.
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return correlator;
+        return getJmsEndpoint().getCorrelator();
     }
 }

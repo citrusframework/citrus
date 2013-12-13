@@ -16,64 +16,40 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.report.MessageListeners;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.Message;
-import org.springframework.integration.message.GenericMessage;
-
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
+import org.springframework.integration.Message;
 
 /**
  * {@link MessageReceiver} implementation consumes messages from aJMS destination. Destination
  * is given by injected instance or destination name.
  *  
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageReceiver {
-    /** Receive timeout */
-    private long receiveTimeout = 5000L;
-    
-    @Autowired(required = false)
-    private MessageListeners messageListener;
-    
+
     /**
-     * Logger
+     * Default constructor.
      */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageReceiver.class);
-    
+    public JmsMessageReceiver() {
+        super();
+    }
+
+    /**
+     * Default constructor using Jms endpoint.
+     * @param jmsEndpoint
+     */
+    public JmsMessageReceiver(JmsMessageEndpoint jmsEndpoint) {
+        super(jmsEndpoint);
+    }
+
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)
      * @throws ActionTimeoutException
      */
     public Message<?> receive(long timeout) {
-        log.info("Waiting for JMS message on destination: '" + getDefaultDestinationName() + "'");
-        
-        getJmsTemplate().setReceiveTimeout(timeout);
-        Object receivedObject = getJmsTemplate().receiveAndConvert();
-        
-        if (receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName() + "'");
-        }
-        
-        Message<?> receivedMessage;
-        if (receivedObject instanceof Message<?>) {
-            receivedMessage = (Message<?>)receivedObject;
-        } else {
-            receivedMessage = new GenericMessage<Object>(receivedObject);
-        }
-
-        log.info("Received JMS message on destination: '" + getDefaultDestinationName() + "'");
-
-        if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage.toString());
-        } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + receivedMessage.toString());
-        }
-        
-        return receivedMessage;
+        return getJmsEndpoint().receive(timeout);
     }
 
     /**
@@ -81,45 +57,21 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @throws ActionTimeoutException
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        log.info("Waiting for JMS message on destination: '" + getDefaultDestinationName() + "(" + selector + ")'");
-        
-        getJmsTemplate().setReceiveTimeout(timeout);
-        Object receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
-        
-        if (receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + getDefaultDestinationName()  + "(" + selector + ")'");
-        }
-        
-        Message<?> receivedMessage;
-        if (receivedObject instanceof Message<?>) {
-            receivedMessage = (Message<?>)receivedObject;
-        } else {
-            receivedMessage = new GenericMessage<Object>(receivedObject);
-        }
-
-        log.info("Received JMS message on destination: '" + getDefaultDestinationName()  + "(" + selector + ")'");
-
-        if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage.toString());
-        } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + receivedMessage.toString());
-        }
-        
-        return receivedMessage;
+        return getJmsEndpoint().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return receive(receiveTimeout);
+        return getJmsEndpoint().receive();
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return receiveSelected(selector, receiveTimeout);
+        return getJmsEndpoint().receive(selector, getJmsEndpoint().getTimeout());
     }
 
     /**
@@ -127,7 +79,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
+        getJmsEndpoint().setTimeout(receiveTimeout);
     }
 
     /**
@@ -135,6 +87,6 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @return the receiveTimeout
      */
     public long getReceiveTimeout() {
-        return receiveTimeout;
+        return getJmsEndpoint().getTimeout();
     }
 }

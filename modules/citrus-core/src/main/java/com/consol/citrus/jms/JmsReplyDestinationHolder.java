@@ -27,6 +27,7 @@ import javax.jms.Destination;
  * provide proper reply message.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public interface JmsReplyDestinationHolder {
     /**

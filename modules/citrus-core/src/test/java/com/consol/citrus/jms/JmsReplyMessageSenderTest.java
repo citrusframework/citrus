@@ -16,22 +16,20 @@
 
 package com.consol.citrus.jms;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.*;
-
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
+import org.springframework.integration.jms.JmsHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.*;
+import javax.jms.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -51,26 +49,22 @@ public class JmsReplyMessageSenderTest {
         JmsReplyMessageSender sender = new JmsReplyMessageSender();
         sender.setJmsTemplate(jmsTemplate);
         
-        JmsReplyDestinationHolder replyDestinationHolder = org.easymock.EasyMock.createMock(JmsReplyDestinationHolder.class);
-        sender.setReplyDestinationHolder(replyDestinationHolder);
-        
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(jmsTemplate, connectionFactory, messageProducer, replyDestinationHolder);
+        reset(jmsTemplate, connectionFactory, messageProducer);
 
-        expect(replyDestinationHolder.getReplyDestination()).andReturn(replyDestination).once();
-        
         jmsTemplate.convertAndSend(replyDestination, message);
         expectLastCall().once();
         
-        replay(jmsTemplate, connectionFactory, messageProducer, replyDestinationHolder);
-        
+        replay(jmsTemplate, connectionFactory, messageProducer);
+
+        sender.getJmsEndpoint().saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
         sender.send(message);
         
-        verify(jmsTemplate, connectionFactory, messageProducer, replyDestinationHolder);
+        verify(jmsTemplate, connectionFactory, messageProducer);
     }
     
     @Test
@@ -78,21 +72,16 @@ public class JmsReplyMessageSenderTest {
         JmsReplyMessageSender sender = new JmsReplyMessageSender();
         sender.setConnectionFactory(connectionFactory);
         
-        JmsReplyDestinationHolder replyDestinationHolder = org.easymock.EasyMock.createMock(JmsReplyDestinationHolder.class);
-        sender.setReplyDestinationHolder(replyDestinationHolder);
-        
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+        reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
-        expect(replyDestinationHolder.getReplyDestination()).andReturn(replyDestination).once();
-        
         expect(session.createProducer(replyDestination)).andReturn(messageProducer).once();
         messageProducer.send((TextMessage)anyObject());
         expectLastCall().once();
@@ -102,11 +91,12 @@ public class JmsReplyMessageSenderTest {
         
         expect(session.getTransacted()).andReturn(false).once();
         
-        replay(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
-        
+        replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
+
+        sender.getJmsEndpoint().saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
         sender.send(message);
         
-        verify(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+        verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
     }
     
     @Test
@@ -114,25 +104,24 @@ public class JmsReplyMessageSenderTest {
         JmsReplyMessageSender sender = new JmsReplyMessageSender();
         sender.setConnectionFactory(connectionFactory);
         
-        JmsReplyDestinationHolder replyDestinationHolder = org.easymock.EasyMock.createMock(JmsReplyDestinationHolder.class);
-        sender.setReplyDestinationHolder(replyDestinationHolder);
-        
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         sender.setCorrelator(correlator);
-        
+
+        Message<String> requestMessage = MessageBuilder.withPayload("")
+                                .setHeader(JmsHeaders.REPLY_TO, replyDestination)
+                                .build();
+
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
+        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, requestMessage.getHeaders().getId());
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+        reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
 
-        expect(replyDestinationHolder.getReplyDestination(MessageHeaders.ID + " = '123456789'")).andReturn(replyDestination).once();
-        
         expect(session.createProducer(replyDestination)).andReturn(messageProducer).once();
         messageProducer.send((TextMessage)anyObject());
         expectLastCall().once();
@@ -142,21 +131,23 @@ public class JmsReplyMessageSenderTest {
         
         expect(session.getTransacted()).andReturn(false).once();
         
-        replay(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
-        
+        replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
+
+        sender.getJmsEndpoint().saveReplyDestination(requestMessage);
         sender.send(message);
         
-        verify(jmsTemplate, connectionFactory, replyDestinationHolder, messageProducer, connection, session);
+        verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
     }
     
     @Test
     public void testSendMessageWithMissingCorrelatorKey() throws JMSException {
         JmsReplyMessageSender sender = new JmsReplyMessageSender();
         sender.setConnectionFactory(connectionFactory);
-        
-        JmsReplyDestinationHolder replyDestinationHolder = org.easymock.EasyMock.createMock(JmsReplyDestinationHolder.class);
-        sender.setReplyDestinationHolder(replyDestinationHolder);
-        
+
+        Message<String> requestMessage = MessageBuilder.withPayload("")
+                .setHeader(JmsHeaders.REPLY_TO, replyDestination)
+                .build();
+
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         sender.setCorrelator(correlator);
         
@@ -166,6 +157,7 @@ public class JmsReplyMessageSenderTest {
                                 .build();
         
         try {
+            sender.getJmsEndpoint().saveReplyDestination(requestMessage);
             sender.send(message);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Can not correlate reply destination"));
@@ -180,9 +172,6 @@ public class JmsReplyMessageSenderTest {
         JmsReplyMessageSender sender = new JmsReplyMessageSender();
         sender.setConnectionFactory(connectionFactory);
         
-        JmsReplyDestinationHolder replyDestinationHolder = org.easymock.EasyMock.createMock(JmsReplyDestinationHolder.class);
-        sender.setReplyDestinationHolder(replyDestinationHolder);
-        
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         sender.setCorrelator(correlator);
         
@@ -192,17 +181,10 @@ public class JmsReplyMessageSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(replyDestinationHolder);
-
-        expect(replyDestinationHolder.getReplyDestination(MessageHeaders.ID + " = '123456789'")).andReturn(null).once();
-
-        replay(replyDestinationHolder);
-        
         try {
             sender.send(message);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to locate JMS reply destination with correlation key"));
-            verify(replyDestinationHolder);
             return;
         }
         

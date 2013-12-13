@@ -16,16 +16,14 @@
 
 package com.consol.citrus.jms;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.message.DefaultReplyMessageCorrelator;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.DefaultReplyMessageCorrelator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +34,7 @@ public class JmsReplyMessageReceiverTest {
     
     @Test
     public void testOnReplyMessage() {
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver();
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -50,7 +48,7 @@ public class JmsReplyMessageReceiverTest {
     
     @Test
     public void testOnReplyMessageWithCorrelatorKey() {
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver();
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -68,10 +66,10 @@ public class JmsReplyMessageReceiverTest {
         
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .build();
-        
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
+
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> receiveSelected(String selector) {
+            public Message<?> findReplyMessage(String correlationKey) {
                 retryCount++;
                 if (retryCount == 5) {
                     return message;
@@ -79,7 +77,7 @@ public class JmsReplyMessageReceiverTest {
                     return null;
                 }
             }
-        };
+        });
         
         Assert.assertEquals(retryCount, 0);
         Assert.assertEquals(replyMessageReceiver.receive(2500), message);
@@ -89,14 +87,14 @@ public class JmsReplyMessageReceiverTest {
     @Test
     public void testReplyMessageRetriesExceeded() {
         retryCount = 0;
-        
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
+
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> receiveSelected(String selector) {
+            public Message<?> findReplyMessage(String correlationKey) {
                 retryCount++;
                 return null;
             }
-        };
+        });
         
         replyMessageReceiver.setPollingInterval(300L);
         
@@ -108,14 +106,14 @@ public class JmsReplyMessageReceiverTest {
     @Test
     public void testIntervalGreaterThanTimeout() {
         retryCount = 0;
-        
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
+
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> receiveSelected(String selector) {
+            public Message<?> findReplyMessage(String correlationKey) {
                 retryCount++;
                 return null;
             }
-        };
+        });
         
         replyMessageReceiver.setPollingInterval(1000L);
         
@@ -127,14 +125,14 @@ public class JmsReplyMessageReceiverTest {
     @Test
     public void testZeroTimeout() {
         retryCount = 0;
-        
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver() {
+
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> receiveSelected(String selector) {
+            public Message<?> findReplyMessage(String correlationKey) {
                 retryCount++;
                 return null;
             }
-        };
+        });
         
         replyMessageReceiver.setPollingInterval(1000L);
         

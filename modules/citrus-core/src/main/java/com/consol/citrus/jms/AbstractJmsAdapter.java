@@ -17,87 +17,63 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.TestActor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.springframework.util.Assert;
 
-import javax.jms.*;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 
 /**
  * Basic adapter class for JMS communication. The adapter uses Spring's {@link JmsTemplate}.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAware {
 
-    /** The connection factory */
-    private ConnectionFactory connectionFactory;
+    /** New JmsEndpoint implementation */
+    private JmsMessageEndpoint jmsEndpoint;
 
-    /** The destination object */
-    private Destination destination;
-
-    /** The destination name */
-    private String destinationName;
-
-    /** The destination resolver */
-    private DestinationResolver destinationResolver;
-
-    /** The JMS template */
-    private JmsTemplate jmsTemplate;
-    
-    /** The message converter */
-    private MessageConverter messageConverter = new SimpleMessageConverter();
-
-    /** The JMS header mapper */
-    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
-    
-    /** Use topics instead of queues */
-    private boolean pubSubDomain = false;
-    
-    /** Test actor linked to this message sender */
-    private TestActor actor;
-
-    /** Name of this adapter */
-    private String name = getClass().getSimpleName();
-    
     /**
-     * Logger
+     * Default constructor.
      */
-    private static Logger log = LoggerFactory.getLogger(AbstractJmsAdapter.class);
-    
+    public AbstractJmsAdapter() {
+        this.jmsEndpoint  = new JmsMessageEndpoint();
+    }
+
+    /**
+     * Default constructor with Jms endpoint.
+     * @param jmsEndpoint
+     */
+    protected AbstractJmsAdapter(JmsMessageEndpoint jmsEndpoint) {
+        this.jmsEndpoint = jmsEndpoint;
+    }
+
+    /**
+     * Gets the Jms endpoint.
+     * @return
+     */
+    public JmsMessageEndpoint getJmsEndpoint() {
+        return jmsEndpoint;
+    }
+
+    /**
+     * Sets the Jms endpoint
+     * @param jmsEndpoint
+     */
+    public void setJmsEndpoint(JmsMessageEndpoint jmsEndpoint) {
+        this.jmsEndpoint = jmsEndpoint;
+    }
+
     /**
      * Initialize default JMS template if not already set.
      */
     public void afterPropertiesSet() {
-        if (jmsTemplate == null) {
-            Assert.isTrue(this.connectionFactory != null, 
-                    "Either a 'jmsTemplate' or 'connectionFactory' is required - none of those was set correctly.");
-            
-            jmsTemplate = new JmsTemplate();
-            
-            jmsTemplate.setConnectionFactory(this.connectionFactory);
-            
-            if (this.destination != null) {
-                jmsTemplate.setDefaultDestination(this.destination);
-            } else if (this.destinationName != null) {
-                jmsTemplate.setDefaultDestinationName(this.destinationName);
-            } 
-            
-            if (this.destinationResolver != null) {
-                jmsTemplate.setDestinationResolver(this.destinationResolver);
-            }
-        }
-        
-        jmsTemplate.setMessageConverter(new JmsMessageConverter(messageConverter, headerMapper));
-        jmsTemplate.setPubSubDomain(pubSubDomain);
+        jmsEndpoint.afterPropertiesSet();
     }
 
     /**
@@ -105,7 +81,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the pubSubDomain
      */
     public boolean isPubSubDomain() {
-        return pubSubDomain;
+        return jmsEndpoint.isPubSubDomain();
     }
 
     /**
@@ -113,7 +89,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param pubSubDomain the pubSubDomain to set
      */
     public void setPubSubDomain(boolean pubSubDomain) {
-        this.pubSubDomain = pubSubDomain;
+        jmsEndpoint.setPubSubDomain(pubSubDomain);
     }
 
     /**
@@ -121,7 +97,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the connectionFactory
      */
     public ConnectionFactory getConnectionFactory() {
-        return connectionFactory;
+        return jmsEndpoint.getConnectionFactory();
     }
 
     /**
@@ -129,7 +105,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+        jmsEndpoint.setConnectionFactory(connectionFactory);
     }
 
     /**
@@ -137,7 +113,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the destination
      */
     public Destination getDestination() {
-        return destination;
+        return jmsEndpoint.getDestination();
     }
 
     /**
@@ -145,7 +121,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param destination the destination to set
      */
     public void setDestination(Destination destination) {
-        this.destination = destination;
+        jmsEndpoint.setDestination(destination);
     }
     
     /**
@@ -153,22 +129,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the destinationName
      */
     public String getDefaultDestinationName() {
-        try {
-            if (getJmsTemplate().getDefaultDestination() != null) {
-                if (getJmsTemplate().getDefaultDestination() instanceof Queue) {
-                    return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
-                } else if (getJmsTemplate().getDefaultDestination() instanceof Topic) {
-                    return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();
-                } else {
-                    return getJmsTemplate().getDefaultDestination().toString();
-                }
-            } else {
-                return getJmsTemplate().getDefaultDestinationName();
-            }
-        } catch (JMSException e) {
-            log.error("Unable to resolve destination name", e);
-            return "";
-        }
+        return jmsEndpoint.getDefaultDestinationName();
     }
     
     /**
@@ -176,7 +137,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the destinationName
      */
     public String getDestinationName() {
-        return destinationName;
+        return jmsEndpoint.getDestinationName();
     }
 
     /**
@@ -184,7 +145,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param destinationName the destinationName to set
      */
     public void setDestinationName(String destinationName) {
-        this.destinationName = destinationName;
+        jmsEndpoint.setDestinationName(destinationName);
     }
 
     /**
@@ -192,7 +153,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the destinationResolver
      */
     public DestinationResolver getDestinationResolver() {
-        return destinationResolver;
+        return jmsEndpoint.getDestinationResolver();
     }
 
     /**
@@ -200,7 +161,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param destinationResolver the destinationResolver to set
      */
     public void setDestinationResolver(DestinationResolver destinationResolver) {
-        this.destinationResolver = destinationResolver;
+        jmsEndpoint.setDestinationResolver(destinationResolver);
     }
 
     /**
@@ -208,7 +169,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the messageConverter
      */
     public MessageConverter getMessageConverter() {
-        return messageConverter;
+        return jmsEndpoint.getMessageConverter();
     }
 
     /**
@@ -216,7 +177,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param messageConverter the messageConverter to set
      */
     public void setMessageConverter(MessageConverter messageConverter) {
-        this.messageConverter = messageConverter;
+        jmsEndpoint.setMessageConverter(messageConverter);
     }
 
     /**
@@ -224,7 +185,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the headerMapper
      */
     public JmsHeaderMapper getHeaderMapper() {
-        return headerMapper;
+        return jmsEndpoint.getHeaderMapper();
     }
 
     /**
@@ -232,7 +193,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param headerMapper the headerMapper to set
      */
     public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        this.headerMapper = headerMapper;
+        jmsEndpoint.setHeaderMapper(headerMapper);
     }
 
     /**
@@ -240,7 +201,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param jmsTemplate the jmsTemplate to set
      */
     public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
+        jmsEndpoint.setJmsTemplate(jmsTemplate);
     }
 
     /**
@@ -248,11 +209,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the jmsTemplate
      */
     public JmsTemplate getJmsTemplate() {
-        if (jmsTemplate == null) {
-            afterPropertiesSet();
-        }
-        
-        return jmsTemplate;
+        return jmsEndpoint.getJmsTemplate();
     }
 
     /**
@@ -260,7 +217,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return actor;
+        return jmsEndpoint.getActor();
     }
 
     /**
@@ -268,12 +225,12 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @param actor the actor to set
      */
     public void setActor(TestActor actor) {
-        this.actor = actor;
+        jmsEndpoint.setActor(actor);
     }
 
     @Override
     public void setBeanName(String name) {
-        this.name = name;
+        jmsEndpoint.setBeanName(name);
     }
 
     /**
@@ -281,6 +238,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return
      */
     public String getName() {
-        return name;
+        return jmsEndpoint.getName();
     }
+
 }
