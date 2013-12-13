@@ -17,6 +17,7 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.endpoint.AbstractMessageEndpoint;
+import com.consol.citrus.endpoint.SelectionEndpoint;
 import org.springframework.integration.Message;
 
 /**
@@ -24,7 +25,7 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractJmsMessageEndpoint extends AbstractMessageEndpoint implements JmsEndpoint {
+public abstract class AbstractJmsMessageEndpoint extends AbstractMessageEndpoint implements SelectionEndpoint {
 
     @Override
     public Message<?> receive(long timeout) {

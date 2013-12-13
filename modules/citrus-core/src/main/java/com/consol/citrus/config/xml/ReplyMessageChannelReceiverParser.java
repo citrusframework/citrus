@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
+package com.consol.citrus.config.xml;
 
-import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.integration.Message;
+import com.consol.citrus.channel.MessageChannelReplyMessageReceiver;
 
 /**
- * Jms endpoint definition adds Jms selector functionality.
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface JmsEndpoint extends Endpoint {
+public class ReplyMessageChannelReceiverParser extends ReplyMessageReceiverParser {
 
-    /**
-     * Receive message with a message selector and a receive timeout.
-     * @param selector
-     * @param timeout
-     * @return
-     */
-    Message<?> receive(String selector, long timeout);
+    @Override
+    protected Class getBeanDefinitionClass() {
+        return MessageChannelReplyMessageReceiver.class;
+    }
 }

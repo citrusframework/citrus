@@ -46,7 +46,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("message-channel-receiver", new MessageChannelReceiverParser());
         registerBeanDefinitionParser("sync-message-channel-sender", new SyncMessageChannelSenderParser());
         registerBeanDefinitionParser("sync-message-channel-receiver", new SyncMessageChannelReceiverParser());
-        registerBeanDefinitionParser("message-channel-reply-handler", new ReplyMessageReceiverParser());
+        registerBeanDefinitionParser("message-channel-reply-handler", new ReplyMessageChannelReceiverParser());
         registerBeanDefinitionParser("message-channel-reply-sender", new ReplyMessageChannelSenderParser());
     }
 

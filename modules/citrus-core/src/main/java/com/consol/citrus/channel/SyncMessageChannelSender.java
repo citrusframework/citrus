@@ -16,71 +16,38 @@
 
 package com.consol.citrus.channel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import com.consol.citrus.message.ReplyMessageHandler;
+import org.springframework.integration.Message;
 
 /**
  * Synchronous message channel sender. After sending message action will listen for reply message. A
  * {@link ReplyMessageHandler} may ask for this reply message and continue with message validation.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class SyncMessageChannelSender extends MessageChannelSender {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SyncMessageChannelSender.class);
-    
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
-    
-    /** Time to wait for reply message to arrive */
-    private long replyTimeout = 5000L;
-    
-    /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
-    
+
+    public SyncMessageChannelSender() {
+        super(new MessageChannelSyncEndpoint());
+    }
+
+    @Override
+    public MessageChannelSyncEndpoint getMessageChannelEndpoint() {
+        return (MessageChannelSyncEndpoint) super.getMessageChannelEndpoint();
+    }
+
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        String destinationChannelName = getDestinationChannelName();
-        
-        log.info("Sending message to channel: '" + destinationChannelName + "'");
-
-        if (log.isDebugEnabled()) {
-            log.debug("Message to sent is:\n" + message.toString());
-        }
-
-        getMessagingTemplate().setReceiveTimeout(replyTimeout);
-        Message<?> replyMessage;
-        
-        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
-        
-        replyMessage = getMessagingTemplate().sendAndReceive(getDestinationChannel(), message);
-        
-        if (replyMessage == null) {
-            throw new CitrusRuntimeException("Reply timed out after " + 
-                    replyTimeout + "ms. Did not receive reply message on reply channel");
-        } else {
-            log.info("Received synchronous repsonse message from reply channel");
-        }
-        
-        if (replyMessageHandler != null) {
-            log.info("Informing reply message handler for further processing");
-            
-            if (correlator != null) {
-                replyMessageHandler.onReplyMessage(replyMessage,
-                    correlator.getCorrelationKey(message));
-            } else {
-                replyMessageHandler.onReplyMessage(replyMessage);
-            }
-        }
+        getMessageChannelEndpoint().send(message);
     }
     
     /**
@@ -89,6 +56,10 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      */
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
         this.replyMessageHandler = replyMessageHandler;
+
+        if (replyMessageHandler instanceof MessageChannelReplyMessageReceiver) {
+            ((MessageChannelReplyMessageReceiver) replyMessageHandler).setMessageChannelEndpoint(getMessageChannelEndpoint());
+        }
     }
 
     /**
@@ -104,7 +75,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
-        this.replyTimeout = replyTimeout;
+        getMessageChannelEndpoint().setTimeout(replyTimeout);
     }
 
     /**
@@ -112,7 +83,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @return the replyTimeout
      */
     public long getReplyTimeout() {
-        return replyTimeout;
+        return getMessageChannelEndpoint().getTimeout();
     }
 
     /**
@@ -120,7 +91,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        this.correlator = correlator;
+        getMessageChannelEndpoint().setCorrelator(correlator);
     }
 
     /**
@@ -128,7 +99,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return correlator;
+        return getMessageChannelEndpoint().getCorrelator();
     }
     
 }

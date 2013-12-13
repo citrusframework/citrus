@@ -16,121 +16,64 @@
 
 package com.consol.citrus.channel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.integration.*;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.ChannelResolver;
-import org.springframework.util.StringUtils;
-
 import com.consol.citrus.TestActor;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.*;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.channel.ChannelResolver;
 
 /**
  * Publish message to a {@link MessageChannel}.
  * 
  * @author Christoph Christoph
+ * @deprecated
  */
 public class MessageChannelSender implements MessageSender, BeanFactoryAware, BeanNameAware {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageChannelSender.class);
-    
-    /** Destination channel */
-    private MessageChannel channel;
-    
-    /** Destination channel name */
-    private String channelName;
-    
-    /** Message channel template */
-    private MessagingTemplate messagingTemplate = new MessagingTemplate();
-    
-    /** The parent bean factory used for channel name resolving */
-    private BeanFactory beanFactory;
-    
-    /** Channel resolver instance */
-    private ChannelResolver channelResolver;
-    
-    /** Test actor linked to this message sender */
-    private TestActor actor;
+    /** New message channel endpoint */
+    private MessageChannelEndpoint messageChannelEndpoint;
 
-    /** This sender's name */
-    private String name = getClass().getSimpleName();
-    
+    /**
+     * Default constructor.
+     */
+    public MessageChannelSender() {
+        this.messageChannelEndpoint = new MessageChannelEndpoint();
+    }
+
+    /**
+     * Default constructor using message endpoint.
+     * @param messageChannelEndpoint
+     */
+    public MessageChannelSender(MessageChannelEndpoint messageChannelEndpoint) {
+        this.messageChannelEndpoint = messageChannelEndpoint;
+    }
+
+    /**
+     * Gets the message endpoint.
+     * @return
+     */
+    public MessageChannelEndpoint getMessageChannelEndpoint() {
+        return messageChannelEndpoint;
+    }
+
+    /**
+     * Sets the message endpoint.
+     * @param messageChannelEndpoint
+     */
+    public void setMessageChannelEndpoint(MessageChannelEndpoint messageChannelEndpoint) {
+        this.messageChannelEndpoint = messageChannelEndpoint;
+    }
+
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        String destinationChannelName = getDestinationChannelName();
-        
-        log.info("Sending message to channel: '" + destinationChannelName + "'");
-
-        if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + message.toString());
-        }
-        
-        try {
-            messagingTemplate.send(getDestinationChannel(), message);
-        } catch (MessageDeliveryException e) {
-            throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
-        }
-        
-        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
-    }
-    
-    /**
-     * Get the destination channel depending on settings in this message sender.
-     * Either a direct channel object is set or a channel name which will be resolved 
-     * to a channel.
-     * 
-     * @return the destination channel object.
-     */
-    protected MessageChannel getDestinationChannel() {
-        if (channel != null) {
-            return channel;
-        } else if (StringUtils.hasText(channelName)) {
-            return resolveChannelName(channelName);
-        } else {
-            throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
-                    "please specify destination channel");
-        }
-    }
-
-    /**
-     * Gets the channel name depending on what is set in this message sender. 
-     * Either channel name is set directly or channel object is consulted for channel name.
-     * 
-     * @return the channel name.
-     */
-    protected String getDestinationChannelName() {
-        if (channel != null) {
-            return channel.toString();
-        } else if (StringUtils.hasText(channelName)) {
-            return channelName;
-        } else {
-            throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
-            		"please specify destination channel");
-        }
-    }
-
-    /**
-     * Resolve the channel by name.
-     * @param channelName the name to resolve
-     * @return the MessageChannel object
-     */
-    protected MessageChannel resolveChannelName(String channelName) {
-        if (channelResolver == null) {
-            channelResolver = new BeanFactoryChannelResolver(beanFactory);
-        }
-        
-        return channelResolver.resolveChannelName(channelName);
+        messageChannelEndpoint.send(message);
     }
 
     /**
@@ -138,7 +81,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param channel the channel to set
      */
     public void setChannel(MessageChannel channel) {
-        this.channel = channel;
+        messageChannelEndpoint.setChannel(channel);
     }
 
     /**
@@ -146,7 +89,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param messagingTemplate the messagingTemplate to set
      */
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+        messageChannelEndpoint.setMessagingTemplate(messagingTemplate);
     }
 
     /**
@@ -154,7 +97,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
+        messageChannelEndpoint.setBeanFactory(beanFactory);
     }
 
     /**
@@ -162,7 +105,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param channelResolver the channelResolver to set
      */
     public void setChannelResolver(ChannelResolver channelResolver) {
-        this.channelResolver = channelResolver;
+        messageChannelEndpoint.setChannelResolver(channelResolver);
     }
 
     /**
@@ -170,7 +113,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param channelName the channelName to set
      */
     public void setChannelName(String channelName) {
-        this.channelName = channelName;
+        messageChannelEndpoint.setChannelName(channelName);
     }
 
     /**
@@ -178,7 +121,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the channel
      */
     public MessageChannel getChannel() {
-        return channel;
+        return messageChannelEndpoint.getChannel();
     }
 
     /**
@@ -186,7 +129,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the channelName
      */
     public String getChannelName() {
-        return channelName;
+        return messageChannelEndpoint.getChannelName();
     }
 
     /**
@@ -194,7 +137,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the messagingTemplate
      */
     public MessagingTemplate getMessagingTemplate() {
-        return messagingTemplate;
+        return messageChannelEndpoint.getMessagingTemplate();
     }
 
     /**
@@ -202,7 +145,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the channelResolver
      */
     public ChannelResolver getChannelResolver() {
-        return channelResolver;
+        return messageChannelEndpoint.getChannelResolver();
     }
 
     /**
@@ -210,7 +153,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return actor;
+        return messageChannelEndpoint.getActor();
     }
 
     /**
@@ -218,16 +161,16 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param actor the actor to set
      */
     public void setActor(TestActor actor) {
-        this.actor = actor;
+        messageChannelEndpoint.setActor(actor);
     }
 
     @Override
     public void setBeanName(String name) {
-        this.name = name;
+        messageChannelEndpoint.setBeanName(name);
     }
 
     @Override
     public String getName() {
-        return name;
+        return messageChannelEndpoint.getName();
     }
 }

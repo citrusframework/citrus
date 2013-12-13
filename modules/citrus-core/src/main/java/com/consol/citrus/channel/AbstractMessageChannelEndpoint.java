@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,19 @@
 
 package com.consol.citrus.channel;
 
-import org.springframework.integration.MessageChannel;
+import com.consol.citrus.endpoint.AbstractMessageEndpoint;
+import com.consol.citrus.endpoint.SelectionEndpoint;
+import org.springframework.integration.Message;
 
 /**
- * Interface defines methods for reply message holders to return message
- * channels for synchronous communication.
- * 
+ * Abstract message channel endpoint adapts to selector receive variant. By default setting null selector.
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public interface ReplyMessageChannelHolder {
-    /**
-     * Get reply message channel with given correlation key.
-     * @param correlationKey
-     * @return
-     */
-    MessageChannel getReplyMessageChannel(String correlationKey);
-    
-    /**
-     * Get reply message channel.
-     * @return
-     */
-    MessageChannel getReplyMessageChannel();
+public abstract class AbstractMessageChannelEndpoint extends AbstractMessageEndpoint implements SelectionEndpoint {
+
+    @Override
+    public Message<?> receive(long timeout) {
+        return receive(null, timeout);
+    }
 }

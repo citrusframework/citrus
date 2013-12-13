@@ -16,15 +16,10 @@
 
 package com.consol.citrus.channel;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.JMSException;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.ReplyMessageHandler;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.springframework.integration.*;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
@@ -32,9 +27,11 @@ import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.message.ReplyMessageHandler;
+import javax.jms.JMSException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -143,26 +140,20 @@ public class SyncMessageChannelSenderTest {
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        replyMessageHandler.onReplyMessage((Message)anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Message replyMessage = (Message) org.easymock.EasyMock.getCurrentArguments()[0];
-                Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-                Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
-                return null;
-            }
-        }).once();
-        
         replay(messagingTemplate, channel, replyMessageHandler);
         
         sender.send(message);
+
+        Message<String> replyMessage = (Message<String>) sender.getMessageChannelEndpoint().findReplyMessage("");
+        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
+        Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
         verify(messagingTemplate, channel, replyMessageHandler);
     }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testSendMessageWithReplyTimeout() throws JMSException {
+    public void testSendMessageWithCustomReplyTimeout() throws JMSException {
         SyncMessageChannelSender sender = new SyncMessageChannelSender();
         sender.setMessagingTemplate(messagingTemplate);
         sender.setChannel(channel);
@@ -187,20 +178,14 @@ public class SyncMessageChannelSenderTest {
         expectLastCall().once();
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
-        
-        replyMessageHandler.onReplyMessage((Message)anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Message replyMessage = (Message) org.easymock.EasyMock.getCurrentArguments()[0];
-                Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-                Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
-                return null;
-            }
-        }).once();
-        
+
         replay(messagingTemplate, channel, replyMessageHandler);
         
         sender.send(message);
+
+        Message<String> replyMessage = (Message<String>) sender.getMessageChannelEndpoint().findReplyMessage("");
+        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
+        Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
         verify(messagingTemplate, channel, replyMessageHandler);
     }
@@ -235,22 +220,13 @@ public class SyncMessageChannelSenderTest {
         
         expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
-        replyMessageHandler.onReplyMessage((Message)anyObject(), (String)anyObject());
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Message replyMessage = (Message) org.easymock.EasyMock.getCurrentArguments()[0];
-                Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-                Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
-                
-                Assert.assertEquals(org.easymock.EasyMock.getCurrentArguments()[1].toString(), 
-                        MessageHeaders.ID + " = '123456789'");
-                return null;
-            }
-        }).once();
-        
         replay(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
         
         sender.send(message);
+
+        Message<String> replyMessage = (Message<String>) sender.getMessageChannelEndpoint().findReplyMessage(MessageHeaders.ID + " = '123456789'");
+        Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
+        Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
         verify(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
     }

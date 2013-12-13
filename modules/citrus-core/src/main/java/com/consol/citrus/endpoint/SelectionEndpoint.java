@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.channel;
+package com.consol.citrus.endpoint;
 
-import org.springframework.integration.MessageChannel;
+import org.springframework.integration.Message;
 
 /**
- * Interface defines methods for reply message holders to return message
- * channels for synchronous communication.
- * 
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public interface ReplyMessageChannelHolder {
+public interface SelectionEndpoint extends Endpoint {
+
     /**
-     * Get reply message channel with given correlation key.
-     * @param correlationKey
+     * Receive message with a message selector and a receive timeout.
+     * @param selector
+     * @param timeout
      * @return
      */
-    MessageChannel getReplyMessageChannel(String correlationKey);
-    
-    /**
-     * Get reply message channel.
-     * @return
-     */
-    MessageChannel getReplyMessageChannel();
+    Message<?> receive(String selector, long timeout);
 }
