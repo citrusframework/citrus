@@ -17,7 +17,8 @@
 package com.consol.citrus.endpoint;
 
 import com.consol.citrus.TestActor;
-import org.springframework.integration.Message;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 
 /**
  * Endpoint interface defines basic send and receive operations on a message endpoint.
@@ -27,17 +28,24 @@ import org.springframework.integration.Message;
 public interface Endpoint {
 
     /**
-     * Sends the message.
-     * @param message the message object to send.
+     * Creates a message producer for this endpoint for sending messages
+     * to this endpoint.
      */
-    void send(Message<?> message);
+    Producer createProducer();
 
     /**
-     * Receive message with a given timeout.
-     * @param timeout
+     * Creates a message consumer for this endpoint. Consumer receives
+     * messages on this endpoint.
      * @return
      */
-    Message<?> receive(long timeout);
+    Consumer createConsumer();
+
+    /**
+     * Gets the endpoint configuration holding all endpoint specific properties such as
+     * endpoint uri, connection timeout, ports, etc.
+     * @return
+     */
+    EndpointConfiguration getEndpointConfiguration();
 
     /**
      * Gets the sending actor.

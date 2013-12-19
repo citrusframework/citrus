@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.channel;
+package com.consol.citrus.messaging;
 
-import com.consol.citrus.endpoint.AbstractMessageEndpoint;
-import com.consol.citrus.endpoint.SelectionEndpoint;
 import org.springframework.integration.Message;
 
 /**
- * Abstract message channel endpoint adapts to selector receive variant. By default setting null selector.
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractMessageChannelEndpoint extends AbstractMessageEndpoint implements SelectionEndpoint {
+public interface SelectiveConsumer extends Consumer {
 
-    @Override
-    public Message<?> receive(long timeout) {
-        return receive(null, timeout);
-    }
+    /**
+     * Receive message with a message selector and a receive timeout.
+     * @param selector
+     * @param timeout
+     * @return
+     */
+    Message<?> receive(String selector, long timeout);
 }

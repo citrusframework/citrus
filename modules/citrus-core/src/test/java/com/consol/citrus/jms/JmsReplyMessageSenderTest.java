@@ -61,7 +61,7 @@ public class JmsReplyMessageSenderTest {
         
         replay(jmsTemplate, connectionFactory, messageProducer);
 
-        sender.getJmsEndpoint().saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
+        ((JmsSyncMessageConsumer)sender.getJmsEndpoint().createConsumer()).saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
         sender.send(message);
         
         verify(jmsTemplate, connectionFactory, messageProducer);
@@ -93,7 +93,7 @@ public class JmsReplyMessageSenderTest {
         
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
-        sender.getJmsEndpoint().saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
+        ((JmsSyncMessageConsumer)sender.getJmsEndpoint().createConsumer()).saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
         sender.send(message);
         
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -133,7 +133,7 @@ public class JmsReplyMessageSenderTest {
         
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
-        sender.getJmsEndpoint().saveReplyDestination(requestMessage);
+        ((JmsSyncMessageConsumer)sender.getJmsEndpoint().createConsumer()).saveReplyDestination(requestMessage);
         sender.send(message);
         
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -157,7 +157,7 @@ public class JmsReplyMessageSenderTest {
                                 .build();
         
         try {
-            sender.getJmsEndpoint().saveReplyDestination(requestMessage);
+            ((JmsSyncMessageConsumer)sender.getJmsEndpoint().createConsumer()).saveReplyDestination(requestMessage);
             sender.send(message);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Can not correlate reply destination"));

@@ -17,6 +17,7 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.messaging.ReplyProducer;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 
@@ -41,26 +42,26 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
 
     @Override
     public Message<?> receive(long timeout) {
-        return getMessageChannelEndpoint().receive(timeout);
+        return getMessageChannelEndpoint().createConsumer().receive(timeout);
     }
 
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        return getMessageChannelEndpoint().receive(selector, timeout);
+        return getMessageChannelEndpoint().createConsumer().receive(selector, timeout);
     }
     
     /**
      * Get the reply message channel with given corelation key.
      */
     public MessageChannel getReplyMessageChannel(String correlationKey) {
-        return getMessageChannelEndpoint().findReplyChannel(correlationKey);
+        return ((MessageChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel(correlationKey);
     }
 
     /**
      * Get the reply message channel.
      */
     public MessageChannel getReplyMessageChannel() {
-        return getMessageChannelEndpoint().findReplyChannel();
+        return ((MessageChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel("");
     }
 
     /**

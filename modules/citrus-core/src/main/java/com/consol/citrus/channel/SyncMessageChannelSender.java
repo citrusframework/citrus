@@ -47,7 +47,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        getMessageChannelEndpoint().send(message);
+        getMessageChannelEndpoint().createProducer().send(message);
     }
     
     /**

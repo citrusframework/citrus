@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
-
-import com.consol.citrus.message.MessageSender;
-import org.springframework.integration.Message;
+package com.consol.citrus.messaging;
 
 /**
- * {@link MessageSender} implementation publishes message to a JMS destination.
- *  
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
+public interface ReplyProducer extends Producer {
 
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     */
-    public void send(Message<?> message) {
-        getJmsEndpoint().createProducer().send(message);
-    }
 }

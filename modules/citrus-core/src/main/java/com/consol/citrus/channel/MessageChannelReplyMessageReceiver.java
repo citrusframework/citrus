@@ -18,6 +18,7 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.messaging.ReplyConsumer;
 import org.springframework.integration.Message;
 
 /**
@@ -65,42 +66,42 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return messageChannelEndpoint.receiveReplyMessage("", messageChannelEndpoint.getTimeout());
+        return messageChannelEndpoint.createConsumer().receive("", messageChannelEndpoint.getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)
      */
     public Message<?> receive(long timeout) {
-        return messageChannelEndpoint.receiveReplyMessage("", timeout);
+        return messageChannelEndpoint.createConsumer().receive("", timeout);
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return messageChannelEndpoint.receiveReplyMessage(selector, messageChannelEndpoint.getTimeout());
+        return messageChannelEndpoint.createConsumer().receive(selector, messageChannelEndpoint.getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        return messageChannelEndpoint.receiveReplyMessage(selector, timeout);
+        return messageChannelEndpoint.createConsumer().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        messageChannelEndpoint.saveReplyMessage(correlationKey, replyMessage);
+        ((MessageChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage(correlationKey, replyMessage);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
-        messageChannelEndpoint.saveReplyMessage("", replyMessage);
+        ((MessageChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage("", replyMessage);
     }
 
     /**

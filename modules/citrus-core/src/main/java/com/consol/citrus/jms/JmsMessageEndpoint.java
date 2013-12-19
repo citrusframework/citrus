@@ -16,23 +16,15 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.report.MessageListeners;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.Message;
-import org.springframework.integration.jms.DefaultJmsHeaderMapper;
+import com.consol.citrus.endpoint.AbstractMessageEndpoint;
+import com.consol.citrus.messaging.*;
 import org.springframework.integration.jms.JmsHeaderMapper;
-import org.springframework.integration.message.GenericMessage;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
-import javax.jms.*;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 
 /**
  * Jms message endpoint capable of sending/receiving messages from Jms message destination. Either uses a Jms connection factory or
@@ -41,163 +33,48 @@ import javax.jms.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
-    /** The connection factory */
-    private ConnectionFactory connectionFactory;
+public class JmsMessageEndpoint extends AbstractMessageEndpoint {
 
-    /** The destination object */
-    private Destination destination;
+    /** Either cached producer or consumer */
+    private JmsMessageProducer jmsMessageProducer;
+    private JmsMessageConsumer jmsMessageConsumer;
 
-    /** The destination name */
-    private String destinationName;
+    /**
+     * Default constructor initializing endpoint configuration.
+     */
+    protected JmsMessageEndpoint() {
+        super(new JmsEndpointConfiguration());
+    }
 
-    /** The destination resolver */
-    private DestinationResolver destinationResolver;
-
-    /** The JMS template */
-    private JmsTemplate jmsTemplate;
-
-    /** The message converter */
-    private MessageConverter messageConverter = new SimpleMessageConverter();
-
-    /** The JMS header mapper */
-    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
-
-    /** Use topics instead of queues */
-    private boolean pubSubDomain = false;
-
-    @Autowired(required = false)
-    private MessageListeners messageListener;
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageEndpoint.class);
-
-    @Override
-    public void send(Message<?> message) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
-
-        String defaultDestinationName = getDefaultDestinationName();
-
-        log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
-
-        getJmsTemplate().convertAndSend(message);
-
-        onOutboundMessage(message);
-
-        log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
+    /**
+     * Constructor with endpoint configuration.
+     * @param endpointConfiguration
+     */
+    protected JmsMessageEndpoint(JmsEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
-        String destinationName;
-
-        if (StringUtils.hasText(selector)) {
-            destinationName = getDefaultDestinationName() + "(" + selector + ")'";
-        } else {
-            destinationName = getDefaultDestinationName();
+    public SelectiveConsumer createConsumer() {
+        if (jmsMessageConsumer == null) {
+            jmsMessageConsumer = new JmsMessageConsumer(getEndpointConfiguration());
         }
 
-        log.info("Waiting for JMS message on destination: '" + destinationName);
-
-        getJmsTemplate().setReceiveTimeout(timeout);
-        Object receivedObject = null;
-
-        if (StringUtils.hasText(selector)) {
-            receivedObject = getJmsTemplate().receiveSelectedAndConvert(selector);
-        } else {
-            receivedObject = getJmsTemplate().receiveAndConvert();
-        }
-
-        if (receivedObject == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName);
-        }
-
-        Message<?> receivedMessage;
-        if (receivedObject instanceof Message<?>) {
-            receivedMessage = (Message<?>)receivedObject;
-        } else {
-            receivedMessage = new GenericMessage<Object>(receivedObject);
-        }
-
-        log.info("Received JMS message on destination: '" + destinationName);
-
-        onInboundMessage(receivedMessage);
-
-        return receivedMessage;
+        return jmsMessageConsumer;
     }
 
-    /**
-     * Informs message listeners if present.
-     * @param receivedMessage
-     */
-    protected void onInboundMessage(Message<?> receivedMessage) {
-        if (messageListener != null) {
-            messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
-        } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
+    @Override
+    public Producer createProducer() {
+        if (jmsMessageProducer == null) {
+            jmsMessageProducer = new JmsMessageProducer(getEndpointConfiguration());
         }
+
+        return jmsMessageProducer;
     }
 
-    /**
-     * Informs message listeners if present.
-     * @param message
-     */
-    protected void onOutboundMessage(Message<?> message) {
-        if (messageListener != null) {
-            messageListener.onOutboundMessage(message.toString());
-        } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
-        }
-    }
-
-    /**
-     * Gets the destination name.
-     * @return the destinationName
-     */
-    public String getDefaultDestinationName() {
-        try {
-            if (getJmsTemplate().getDefaultDestination() != null) {
-                if (getJmsTemplate().getDefaultDestination() instanceof Queue) {
-                    return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
-                } else if (getJmsTemplate().getDefaultDestination() instanceof Topic) {
-                    return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();
-                } else {
-                    return getJmsTemplate().getDefaultDestination().toString();
-                }
-            } else {
-                return getJmsTemplate().getDefaultDestinationName();
-            }
-        } catch (JMSException e) {
-            log.error("Unable to resolve destination name", e);
-            return "";
-        }
-    }
-
-    /**
-     * Initialize default JMS template if not already set.
-     */
-    public void afterPropertiesSet() {
-        if (jmsTemplate == null) {
-            Assert.isTrue(this.connectionFactory != null,
-                    "Either a 'jmsTemplate' or 'connectionFactory' is required - none of those was set correctly.");
-
-            jmsTemplate = new JmsTemplate();
-
-            jmsTemplate.setConnectionFactory(this.connectionFactory);
-
-            if (this.destination != null) {
-                jmsTemplate.setDefaultDestination(this.destination);
-            } else if (this.destinationName != null) {
-                jmsTemplate.setDefaultDestinationName(this.destinationName);
-            }
-
-            if (this.destinationResolver != null) {
-                jmsTemplate.setDestinationResolver(this.destinationResolver);
-            }
-        }
-
-        jmsTemplate.setMessageConverter(new JmsMessageConverter(messageConverter, headerMapper));
-        jmsTemplate.setPubSubDomain(pubSubDomain);
+    @Override
+    public JmsEndpointConfiguration getEndpointConfiguration() {
+        return (JmsEndpointConfiguration) super.getEndpointConfiguration();
     }
 
     /**
@@ -205,7 +82,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the pubSubDomain
      */
     public boolean isPubSubDomain() {
-        return pubSubDomain;
+        return getEndpointConfiguration().isPubSubDomain();
     }
 
     /**
@@ -213,7 +90,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param pubSubDomain the pubSubDomain to set
      */
     public void setPubSubDomain(boolean pubSubDomain) {
-        this.pubSubDomain = pubSubDomain;
+        getEndpointConfiguration().setPubSubDomain(pubSubDomain);
     }
 
     /**
@@ -221,7 +98,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the connectionFactory
      */
     public ConnectionFactory getConnectionFactory() {
-        return connectionFactory;
+        return getEndpointConfiguration().getConnectionFactory();
     }
 
     /**
@@ -229,7 +106,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+        getEndpointConfiguration().setConnectionFactory(connectionFactory);
     }
 
     /**
@@ -237,7 +114,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the destination
      */
     public Destination getDestination() {
-        return destination;
+        return getEndpointConfiguration().getDestination();
     }
 
     /**
@@ -245,7 +122,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param destination the destination to set
      */
     public void setDestination(Destination destination) {
-        this.destination = destination;
+        getEndpointConfiguration().setDestination(destination);
     }
 
     /**
@@ -253,7 +130,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the destinationName
      */
     public String getDestinationName() {
-        return destinationName;
+        return getEndpointConfiguration().getDestinationName();
     }
 
     /**
@@ -261,7 +138,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param destinationName the destinationName to set
      */
     public void setDestinationName(String destinationName) {
-        this.destinationName = destinationName;
+        getEndpointConfiguration().setDestinationName(destinationName);
     }
 
     /**
@@ -269,7 +146,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the destinationResolver
      */
     public DestinationResolver getDestinationResolver() {
-        return destinationResolver;
+        return getEndpointConfiguration().getDestinationResolver();
     }
 
     /**
@@ -277,7 +154,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param destinationResolver the destinationResolver to set
      */
     public void setDestinationResolver(DestinationResolver destinationResolver) {
-        this.destinationResolver = destinationResolver;
+        getEndpointConfiguration().setDestinationResolver(destinationResolver);
     }
 
     /**
@@ -285,7 +162,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the messageConverter
      */
     public MessageConverter getMessageConverter() {
-        return messageConverter;
+        return getEndpointConfiguration().getMessageConverter();
     }
 
     /**
@@ -293,7 +170,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param messageConverter the messageConverter to set
      */
     public void setMessageConverter(MessageConverter messageConverter) {
-        this.messageConverter = messageConverter;
+        getEndpointConfiguration().setMessageConverter(messageConverter);
     }
 
     /**
@@ -301,7 +178,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the headerMapper
      */
     public JmsHeaderMapper getHeaderMapper() {
-        return headerMapper;
+        return getEndpointConfiguration().getHeaderMapper();
     }
 
     /**
@@ -309,7 +186,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param headerMapper the headerMapper to set
      */
     public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        this.headerMapper = headerMapper;
+        getEndpointConfiguration().setHeaderMapper(headerMapper);
     }
 
     /**
@@ -317,7 +194,7 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @param jmsTemplate the jmsTemplate to set
      */
     public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
+        getEndpointConfiguration().setJmsTemplate(jmsTemplate);
     }
 
     /**
@@ -325,10 +202,6 @@ public class JmsMessageEndpoint extends AbstractJmsMessageEndpoint {
      * @return the jmsTemplate
      */
     public JmsTemplate getJmsTemplate() {
-        if (jmsTemplate == null) {
-            afterPropertiesSet();
-        }
-
-        return jmsTemplate;
+        return getEndpointConfiguration().getJmsTemplate();
     }
 }

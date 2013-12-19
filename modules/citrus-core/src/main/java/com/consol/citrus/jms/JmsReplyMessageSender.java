@@ -48,7 +48,7 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        getJmsEndpoint().sendReplyMessage(message);
+        ((JmsSyncMessageConsumer) getJmsEndpoint().createConsumer()).send(message);
     }
 
     /**

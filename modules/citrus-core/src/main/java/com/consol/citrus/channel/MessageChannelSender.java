@@ -73,7 +73,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        messageChannelEndpoint.send(message);
+        messageChannelEndpoint.createProducer().send(message);
     }
 
     /**

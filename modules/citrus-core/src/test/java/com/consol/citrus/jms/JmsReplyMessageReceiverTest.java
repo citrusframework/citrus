@@ -17,6 +17,7 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.message.DefaultReplyMessageCorrelator;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
@@ -69,13 +70,18 @@ public class JmsReplyMessageReceiverTest {
 
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> findReplyMessage(String correlationKey) {
-                retryCount++;
-                if (retryCount == 5) {
-                    return message;
-                } else {
-                    return null;
-                }
+            public SelectiveConsumer createConsumer() {
+                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                    @Override
+                    public Message<?> findReplyMessage(String correlationKey) {
+                        retryCount++;
+                        if (retryCount == 5) {
+                            return message;
+                        } else {
+                            return null;
+                        }
+                    }
+                };
             }
         });
         
@@ -90,9 +96,14 @@ public class JmsReplyMessageReceiverTest {
 
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> findReplyMessage(String correlationKey) {
-                retryCount++;
-                return null;
+            public SelectiveConsumer createConsumer() {
+                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                    @Override
+                    public Message<?> findReplyMessage(String correlationKey) {
+                        retryCount++;
+                        return null;
+                    }
+                };
             }
         });
         
@@ -109,9 +120,14 @@ public class JmsReplyMessageReceiverTest {
 
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> findReplyMessage(String correlationKey) {
-                retryCount++;
-                return null;
+            public SelectiveConsumer createConsumer() {
+                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                    @Override
+                    public Message<?> findReplyMessage(String correlationKey) {
+                        retryCount++;
+                        return null;
+                    }
+                };
             }
         });
         
@@ -128,9 +144,14 @@ public class JmsReplyMessageReceiverTest {
 
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
             @Override
-            public Message<?> findReplyMessage(String correlationKey) {
-                retryCount++;
-                return null;
+            public SelectiveConsumer createConsumer() {
+                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                    @Override
+                    public Message<?> findReplyMessage(String correlationKey) {
+                        retryCount++;
+                        return null;
+                    }
+                };
             }
         });
         

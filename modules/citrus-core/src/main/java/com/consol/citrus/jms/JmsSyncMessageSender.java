@@ -49,7 +49,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        jmsMessageEndpoint.send(message);
+        jmsMessageEndpoint.createProducer().send(message);
     }
 
     /**

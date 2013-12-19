@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
+package com.consol.citrus.messaging;
 
-import com.consol.citrus.endpoint.AbstractMessageEndpoint;
-import com.consol.citrus.endpoint.SelectionEndpoint;
 import org.springframework.integration.Message;
 
 /**
- * Abstract Jms message endpoint adapts to selector receive variant. By default setting null selector.
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractJmsMessageEndpoint extends AbstractMessageEndpoint implements SelectionEndpoint {
+public abstract class AbstractSelectiveMessageConsumer extends AbstractMessageConsumer implements SelectiveConsumer {
+
+    /**
+     * Default constructor using receive timeout setting.
+     *
+     * @param timeout
+     */
+    public AbstractSelectiveMessageConsumer(long timeout) {
+        super(timeout);
+    }
 
     @Override
     public Message<?> receive(long timeout) {

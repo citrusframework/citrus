@@ -18,7 +18,6 @@ package com.consol.citrus.jms;
 
 import com.consol.citrus.TestActor;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
@@ -33,7 +32,7 @@ import javax.jms.Destination;
  * @author Christoph Deppisch
  * @deprecated
  */
-public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAware {
+public abstract class AbstractJmsAdapter implements BeanNameAware {
 
     /** New JmsEndpoint implementation */
     private JmsMessageEndpoint jmsEndpoint;
@@ -67,13 +66,6 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      */
     public void setJmsEndpoint(JmsMessageEndpoint jmsEndpoint) {
         this.jmsEndpoint = jmsEndpoint;
-    }
-
-    /**
-     * Initialize default JMS template if not already set.
-     */
-    public void afterPropertiesSet() {
-        jmsEndpoint.afterPropertiesSet();
     }
 
     /**
@@ -129,7 +121,7 @@ public abstract class AbstractJmsAdapter implements InitializingBean, BeanNameAw
      * @return the destinationName
      */
     public String getDefaultDestinationName() {
-        return jmsEndpoint.getDefaultDestinationName();
+        return jmsEndpoint.getEndpointConfiguration().getDefaultDestinationName();
     }
     
     /**

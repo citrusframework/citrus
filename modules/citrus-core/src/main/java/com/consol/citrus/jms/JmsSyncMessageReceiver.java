@@ -47,26 +47,26 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
 
     @Override
     public Message<?> receive(long timeout) {
-        return getJmsEndpoint().receive(timeout);
+        return getJmsEndpoint().createConsumer().receive(timeout);
     }
     
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        return getJmsEndpoint().receive(selector, timeout);
+        return getJmsEndpoint().createConsumer().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination(java.lang.String)
      */
     public Destination getReplyDestination(String correlationKey) {
-        return getJmsEndpoint().findReplyDestination(correlationKey);
+        return ((JmsSyncMessageConsumer)getJmsEndpoint().createConsumer()).findReplyDestination(correlationKey);
     }
 
     /**
      * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination()
      */
     public Destination getReplyDestination() {
-        return getJmsEndpoint().findReplyDestination();
+        return ((JmsSyncMessageConsumer)getJmsEndpoint().createConsumer()).findReplyDestination();
     }
 
     /**

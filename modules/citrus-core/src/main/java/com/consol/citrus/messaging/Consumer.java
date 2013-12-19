@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint;
+package com.consol.citrus.messaging;
 
 import org.springframework.integration.Message;
 
@@ -22,13 +22,12 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface SelectionEndpoint extends Endpoint {
+public interface Consumer {
 
     /**
-     * Receive message with a message selector and a receive timeout.
-     * @param selector
+     * Receive message with a given timeout.
      * @param timeout
      * @return
      */
-    Message<?> receive(String selector, long timeout);
+    Message<?> receive(long timeout);
 }

@@ -75,7 +75,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receive(long timeout) {
-        return messageChannelEndpoint.receive(timeout);
+        return messageChannelEndpoint.createConsumer().receive(timeout);
     }
 
     /**
@@ -83,7 +83,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        return messageChannelEndpoint.receive(selector, timeout);
+        return messageChannelEndpoint.createConsumer().receive(selector, timeout);
     }
 
     /**

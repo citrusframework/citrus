@@ -72,7 +72,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        messageChannelEndpoint.sendReplyMessage(message);
+        ((MessageChannelSyncConsumer)messageChannelEndpoint.createConsumer()).send(message);
     }
     
     /**

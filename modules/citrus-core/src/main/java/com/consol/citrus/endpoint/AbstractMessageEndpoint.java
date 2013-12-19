@@ -17,8 +17,9 @@
 package com.consol.citrus.endpoint;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.report.MessageListeners;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.integration.Message;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract message endpoint handles send/receive timeout setting and test actors.
@@ -27,17 +28,22 @@ import org.springframework.integration.Message;
  */
 public abstract class AbstractMessageEndpoint implements Endpoint, BeanNameAware {
 
-    /** Send/receive timeout setting */
-    private long timeout = 5000L;
+    @Autowired(required = false)
+    private MessageListeners messageListener;
 
     /** Test actor linked to this endpoint */
     private TestActor actor;
 
-    /** Endpoint name */
-    private String name = getClass().getSimpleName();
+    /** Endpoint configuration */
+    private final EndpointConfiguration endpointConfiguration;
 
-    public Message<?> receive() {
-        return receive(timeout);
+    protected AbstractMessageEndpoint(EndpointConfiguration endpointConfiguration) {
+        this.endpointConfiguration = endpointConfiguration;
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
     }
 
     /**
@@ -61,7 +67,7 @@ public abstract class AbstractMessageEndpoint implements Endpoint, BeanNameAware
      * @return
      */
     public long getTimeout() {
-        return timeout;
+        return endpointConfiguration.getTimeout();
     }
 
     /**
@@ -69,7 +75,7 @@ public abstract class AbstractMessageEndpoint implements Endpoint, BeanNameAware
      * @param timeout
      */
     public void setTimeout(long timeout) {
-        this.timeout = timeout;
+        endpointConfiguration.setTimeout(timeout);
     }
 
     /**
@@ -77,11 +83,21 @@ public abstract class AbstractMessageEndpoint implements Endpoint, BeanNameAware
      * @return
      */
     public String getName() {
-        return name;
+        return endpointConfiguration.getEndpointName();
     }
 
     @Override
     public void setBeanName(String name) {
-        this.name = name;
+        endpointConfiguration.setEndpointName(name);
     }
+
+    /**
+     * Sets the message listeners.
+     * @param messageListener
+     */
+    public void setMessageListener(MessageListeners messageListener) {
+        endpointConfiguration.setMessageListener(messageListener);
+    }
+
+
 }

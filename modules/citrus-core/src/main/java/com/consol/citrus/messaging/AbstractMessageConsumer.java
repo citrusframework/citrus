@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint;
+package com.consol.citrus.messaging;
 
 import org.springframework.integration.Message;
 
 /**
- * Reply endpoint stands for synchronous communication with sending and receiving synchronous reply messages.
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface ReplyEndpoint extends Endpoint {
+public abstract class AbstractMessageConsumer implements Consumer {
+
+    /** Send/receive timeout setting */
+    private long timeout;
 
     /**
-     * Send synchronous reply message.
-     * @param message
-     */
-    void sendReplyMessage(Message<?> message);
-
-    /**
-     * Receive synchronous reply message with correlation key.
-     * @param correlationKey
+     * Default constructor using receive timeout setting.
      * @param timeout
-     * @return
      */
-    Message<?> receiveReplyMessage(String correlationKey, long timeout);
+    public AbstractMessageConsumer(long timeout) {
+        this.timeout = timeout;
+    }
 
+    public Message<?> receive() {
+        return receive(timeout);
+    }
 }

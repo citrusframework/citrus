@@ -66,42 +66,42 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return jmsEndpoint.receiveReplyMessage("", jmsEndpoint.getTimeout());
+        return jmsEndpoint.createConsumer().receive("", jmsEndpoint.getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)
      */
     public Message<?> receive(long timeout) {
-        return jmsEndpoint.receiveReplyMessage("", timeout);
+        return jmsEndpoint.createConsumer().receive("", timeout);
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return jmsEndpoint.receiveReplyMessage(selector, jmsEndpoint.getTimeout());
+        return jmsEndpoint.createConsumer().receive(selector, jmsEndpoint.getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        return jmsEndpoint.receiveReplyMessage(selector, timeout);
+        return jmsEndpoint.createConsumer().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        jmsEndpoint.saveReplyMessage(correlationKey, replyMessage);
+        ((JmsSyncMessageProducer) jmsEndpoint.createProducer()).onReplyMessage(correlationKey, replyMessage);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
-        jmsEndpoint.saveReplyMessage("", replyMessage);
+        ((JmsSyncMessageProducer) jmsEndpoint.createProducer()).onReplyMessage("", replyMessage);
     }
 
     /**
