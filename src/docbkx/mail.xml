@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="mail">
+  <title>Mail support</title>
+
+  <para>Sending and receiving mails is the next interest we are going to talk about. When dealing with mail communication
+  you most certainly need to interact with some sort of IMAP or POP mail server. But in Citrus we do not want to manage
+  mails in a personal inbox. We just need to be able to exchange mail messages the persisting in a user inbox is not part
+  of our business.</para>
+
+  <para>This is why Citrus provides <emphasis>just</emphasis> a SMTP mail server which accepts mail messages from clients.
+  Once the SMTP server has accepted an incoming mail it forwards those data to the running test case. In the test case
+  you can receive the incoming mail message and perform message validation as usual. The mail sending part is easy as
+  Citrus offers a mail client that connects to some SMTP server for sending mails to the outside world.</para>
+
+  <para>Read the next section in order to find out more about the mail message support in Citrus.</para>
+
+  <section id="mail-client">
+    <title>Mail client</title>
+
+    <para>The mail sending part is quite easy and straight forward. We just need to send a mail message to some SMTP server. So
+    Citrus provides a mail client that sends out mail messages.</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>This is how a Citrus mail client component is defined in the Spring application context. You can use this client
+    referenced by its id or name in your test case in a message sending action. The mail message content which will be sent
+    has some general properties set by the user:</para>
+
+    <itemizedlist>
+      <listitem>from: The message sender mail address</listitem>
+      <listitem>to: The message recipient mail address. You can add multiple recipients by using a comma separated list.</listitem>
+      <listitem>cc: Copy recipient mail address. You can add multiple recipients by using a comma separated list.</listitem>
+      <listitem>bcc: Blind copy recipient mail address. You can add multiple recipients by using a comma separated list.</listitem>
+      <listitem>subject: Some subject used as mail head line.</listitem>
+    </itemizedlist>
+
+    <para>As a tester you have to set these general properties in your test case. You can set these properties
+    in a special Citrus mail message payload specified inside your test case:</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>As you can see the mail sending in Citrus works with a special mail message XML representation that was designed for Citrus.
+    The basic mail message has a list of basic mail properties such as <emphasis>from</emphasis>, <emphasis>to</emphasis> or
+    <emphasis>subject</emphasis> and a text body which is either plain text or HTML. You can specify the content type of the mail
+    body very easy (e.g. text/plain or text/html). By default Citrus uses <emphasis>text/plain</emphasis> content type.</para>
+
+    <para>Now mail messages often do also use multipart structures when using attachments for instance. In Citrus you can define
+    attachment content as base64 character sequence. The Citrus mail client will automatically create a proper multipart message
+    using the content types and body parts specified.</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>That completes the basic mail client capabilities. But wait we have not talked about error scenarios where mail communication
+    results in error. When running into mail error scenarios we have to handle the error respectively with exception handling. When
+    the mail server responded with errors Citrus will raise mail exceptions automatically and your test case fails accordingly.</para>
+
+    <para>As a tester you can catch and assert these mail exceptions verifying your error scenario.</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>This is how you can handle some sort of error situation returned by the mail server. Speaking of mail servers we need to
+    also talk about providing a mail server endpoint in Citrus for clients. This is part of our next section.</para>
+  </section>
+
+  <section id="mail-server">
+    <title>Mail server</title>
+
+    <para>Consuming mail messages is a more complicated task as we need to have some sort of server that clients can connect to. In
+    your mail client software you typically point to some IMAP or POP inbox and receive mails from that endpoint. In Citrus we do not
+    want to manage a whole personal mail inbox such as IMAP or POP would provide. We just need a SMTP server endpoint for clients to
+    send mails to. The SMTP server accepts mail messages and forwards those to a running test case for further validation.</para>
+
+    <note>
+      <para>We have no user inbox where incoming mails are stored. The mail server just forwards incoming mails to the running test
+      for validation. After the test the incoming mail message is gone.</para>
+    </note>
+
+    <para>And this is exactly what the Citrus mail server is capable of. The server is a very lightweight SMTP server. All incoming
+    mail client connections are accepted by default and the mail data is converted into a Citrus XML mail interface representation.
+    The XML mail message is then passed to the running test for validation.</para>
+
+    <para>Let us have a look at the Citrus mail server component and how you can add it to the Spring application context.</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>The mail server component receives several server properties such as <emphasis>host</emphasis> and <emphasis>port</emphasis>.
+    A very important configuration is the mail message adapter implementation which is responsible for converting the mail message content
+    into the XML mail message representation. In addition to that the mail adapter implementation connects to the running test case.</para>
+
+    <para>In your test case you can receive the incoming mail message in order to perform the well known XML validation mechanisms
+    within Citrus. The message header and the payload contain all mail information so you can verify the content with
+    expected templates as usual:</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>The general mail properties such as <emphasis>from</emphasis>, <emphasis>to</emphasis>, <emphasis>subject</emphasis>
+    are available as message header information. The message header names do start with a common Citrus mail prefix
+    <emphasis>citrus_mail</emphasis>. Following from that you can verify these special mail message headers in your test
+    as shown above. Citrus offers following mail headers:</para>
+
+    <itemizedlist>
+      <listitem>citrus_mail_from</listitem>
+      <listitem>citrus_mail_to</listitem>
+      <listitem>citrus_mail_cc</listitem>
+      <listitem>citrus_mail_bcc</listitem>
+      <listitem>citrus_mail_subject</listitem>
+      <listitem>citrus_mail_replyTo</listitem>
+      <listitem>citrus_mail_date</listitem>
+    </itemizedlist>
+
+    <para>In addition to that Citrus converts the incoming mail data to a special XML mail representation which is passed as
+    message payload to the test. The mail body parts are represented as body and optional attachment elements. As this is
+    plain XML you can verify the mail message content as usual using Citrus variables, functions and validation matchers.</para>
+
+    <para>Regardless of how the mail message has passed the validation the Citrus SMTP mail server will automatically respond
+    with success codes (SMTP 250 OK) to the calling client. This is the basic Citrus mail server behavior where all client
+    connections are accepted an all mail messages are responded with SMTP 250 OK response codes.</para>
+
+    <para>Now in more advanced usage scenarios the tester may want to control the mail communication outcome. User can force
+    some error scenarios where mail clients are not accepted or mail communication should fail with some SMTP error state for instance.</para>
+
+    <para>By using a more advanced mail message adapter implementation the tester gets more power to sending back mail server response
+    codes to the mail client. Just use the advanced mail adapter implementation in your mail server component configuration:</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>With this mail message adapter set you have to do some additional steps in your test case. First thing that we have to do is to accept
+    the incoming mail connection request. This is done with a special XML accept request/response exchange in your test case:</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>This gives us the power to also decline a mail client connection. You can simulate that the server does not accept the mail
+    client connection by sending back a negative accept response.</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>The mail client will then receive an error response with accept outcome. Another error scenario is the mail server
+    responding with some sort of SMTP error code. This is done with a mail response message like this:</para>
+
+    <programlisting>
+
+    </programlisting>
+
+    <para>The example above accepts the connection and receives the mail content as usual. Now the test returns a negative mail response
+    with some error code reason set. The Citrus SMTP communication will then fail and the calling mail client receives the respective
+    error.</para>
+  </section>
+
+</chapter>

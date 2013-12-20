@@ -39,6 +39,7 @@
     <xi:include href='finally-section.xml'/>
     <xi:include href='jms.xml'/>
     <xi:include href='http.xml'/>
+    <xi:include href='mail.xml'/>
     <xi:include href='ssh.xml'/>
     <xi:include href='soap-webservices.xml'/>
     <xi:include href='message-channel.xml'/>
