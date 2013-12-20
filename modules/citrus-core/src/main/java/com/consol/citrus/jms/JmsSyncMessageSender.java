@@ -39,7 +39,7 @@ import javax.jms.Destination;
 public class JmsSyncMessageSender implements MessageSender, BeanNameAware, DisposableBean {
 
     /** New synchronous JmsEndpoint implementation */
-    private JmsSyncMessageEndpoint jmsMessageEndpoint = new JmsSyncMessageEndpoint();
+    private JmsSyncEndpoint jmsMessageEndpoint = new JmsSyncEndpoint();
 
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;

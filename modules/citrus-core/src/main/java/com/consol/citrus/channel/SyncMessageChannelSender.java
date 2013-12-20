@@ -34,12 +34,12 @@ public class SyncMessageChannelSender extends MessageChannelSender {
     private ReplyMessageHandler replyMessageHandler;
 
     public SyncMessageChannelSender() {
-        super(new MessageChannelSyncEndpoint());
+        super(new ChannelSyncEndpoint());
     }
 
     @Override
-    public MessageChannelSyncEndpoint getMessageChannelEndpoint() {
-        return (MessageChannelSyncEndpoint) super.getMessageChannelEndpoint();
+    public ChannelSyncEndpoint getMessageChannelEndpoint() {
+        return (ChannelSyncEndpoint) super.getMessageChannelEndpoint();
     }
 
     /**

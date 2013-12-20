@@ -29,20 +29,20 @@ import org.springframework.integration.Message;
 public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
 
     /** Synchronous endpoint providing the reply messages */
-    private JmsSyncMessageEndpoint jmsEndpoint;
+    private JmsSyncEndpoint jmsEndpoint;
 
     /**
      * Default constructor.
      */
     public JmsReplyMessageReceiver() {
-        this.jmsEndpoint  = new JmsSyncMessageEndpoint();
+        this.jmsEndpoint  = new JmsSyncEndpoint();
     }
 
     /**
      * Default constructor with Jms endpoint.
      * @param jmsEndpoint
      */
-    protected JmsReplyMessageReceiver(JmsSyncMessageEndpoint jmsEndpoint) {
+    protected JmsReplyMessageReceiver(JmsSyncEndpoint jmsEndpoint) {
         this.jmsEndpoint = jmsEndpoint;
     }
 
@@ -50,7 +50,7 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * Gets the Jms endpoint.
      * @return
      */
-    public JmsSyncMessageEndpoint getJmsEndpoint() {
+    public JmsSyncEndpoint getJmsEndpoint() {
         return jmsEndpoint;
     }
 
@@ -58,7 +58,7 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * Sets the Jms endpoint
      * @param jmsEndpoint
      */
-    public void setJmsEndpoint(JmsSyncMessageEndpoint jmsEndpoint) {
+    public void setJmsEndpoint(JmsSyncEndpoint jmsEndpoint) {
         this.jmsEndpoint = jmsEndpoint;
     }
 
@@ -94,14 +94,14 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        ((JmsSyncMessageProducer) jmsEndpoint.createProducer()).onReplyMessage(correlationKey, replyMessage);
+        ((JmsSyncProducer) jmsEndpoint.createProducer()).onReplyMessage(correlationKey, replyMessage);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
-        ((JmsSyncMessageProducer) jmsEndpoint.createProducer()).onReplyMessage("", replyMessage);
+        ((JmsSyncProducer) jmsEndpoint.createProducer()).onReplyMessage("", replyMessage);
     }
 
     /**

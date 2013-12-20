@@ -16,11 +16,16 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.channel.selector.DispatchingMessageSelector;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.*;
+import org.springframework.integration.Message;
+import org.springframework.integration.MessageChannel;
+import org.springframework.integration.core.MessageSelector;
+import org.springframework.integration.core.PollableChannel;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.util.StringUtils;
 
@@ -28,38 +33,76 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageChannelProducer implements Producer {
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageChannelProducer.class);
+public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
 
-    /** Endpoint configuration*/
-    private MessageChannelEndpointConfiguration endpointConfiguration;
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(ChannelConsumer.class);
+
+    /** Endpoint configuration */
+    private ChannelEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    public MessageChannelProducer(MessageChannelEndpointConfiguration endpointConfiguration) {
+    public ChannelConsumer(ChannelEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration.getTimeout());
         this.endpointConfiguration = endpointConfiguration;
     }
 
+    /**
+     * Default constructor using receive timeout setting.
+     *
+     * @param timeout
+     */
+    public ChannelConsumer(long timeout) {
+        super(timeout);
+    }
+
     @Override
-    public void send(Message<?> message) {
-        String destinationChannelName = getDestinationChannelName();
+    public Message<?> receive(String selector, long timeout) {
+        String destinationChannelName;
+        MessageChannel destinationChannel = getDestinationChannel();
 
-        log.info("Sending message to channel: '" + destinationChannelName + "'");
-
-        if (log.isDebugEnabled()) {
-            log.debug("Message to send is:" + System.getProperty("line.separator") + message.toString());
+        if (StringUtils.hasText(selector)) {
+            destinationChannelName = getDestinationChannelName() + "(" + selector + ")";
+        } else {
+            destinationChannelName = getDestinationChannelName();
         }
 
-        try {
-            endpointConfiguration.getMessagingTemplate().send(getDestinationChannel(), message);
-        } catch (MessageDeliveryException e) {
-            throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
+        log.info("Receiving message from: " + destinationChannelName);
+
+        Message<?> message;
+        if (StringUtils.hasText(selector)) {
+            if (!(destinationChannel instanceof MessageSelectingQueueChannel)) {
+                throw new CitrusRuntimeException("Message channel type '" + endpointConfiguration.getChannel().getClass() +
+                        "' does not support selective receive operations.");
+            }
+
+            MessageSelector messageSelector = new DispatchingMessageSelector(selector, endpointConfiguration.getBeanFactory());
+            MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel) destinationChannel);
+
+            if (timeout <= 0) {
+                message = queueChannel.receive(messageSelector);
+            } else {
+                message = queueChannel.receive(messageSelector, timeout);
+            }
+        } else {
+            if (!(destinationChannel instanceof PollableChannel)) {
+                throw new CitrusRuntimeException("Invalid destination channel type " + destinationChannel.getClass().getName() +
+                        " - must be of type PollableChannel");
+            }
+
+            endpointConfiguration.getMessagingTemplate().setReceiveTimeout(timeout);
+            message = endpointConfiguration.getMessagingTemplate().receive((PollableChannel) destinationChannel);
         }
 
-        log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving message from channel '"
+                    + destinationChannelName + "'");
+        }
+
+        return message;
     }
 
     /**

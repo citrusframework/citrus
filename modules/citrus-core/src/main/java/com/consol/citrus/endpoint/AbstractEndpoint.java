@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractMessageEndpoint implements Endpoint, BeanNameAware {
+public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
 
     @Autowired(required = false)
     private MessageListeners messageListener;
@@ -37,7 +37,7 @@ public abstract class AbstractMessageEndpoint implements Endpoint, BeanNameAware
     /** Endpoint configuration */
     private final EndpointConfiguration endpointConfiguration;
 
-    protected AbstractMessageEndpoint(EndpointConfiguration endpointConfiguration) {
+    protected AbstractEndpoint(EndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
     }
 

@@ -28,10 +28,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsMessageConsumer extends AbstractSelectiveMessageConsumer {
+public class JmsConsumer extends AbstractSelectiveMessageConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageConsumer.class);
+    private static Logger log = LoggerFactory.getLogger(JmsConsumer.class);
 
     /** Endpoint configuration */
     private JmsEndpointConfiguration endpointConfiguration;
@@ -40,7 +40,7 @@ public class JmsMessageConsumer extends AbstractSelectiveMessageConsumer {
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    public JmsMessageConsumer(JmsEndpointConfiguration endpointConfiguration) {
+    public JmsConsumer(JmsEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration.getTimeout());
         this.endpointConfiguration = endpointConfiguration;
     }

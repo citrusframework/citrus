@@ -23,19 +23,19 @@ import com.consol.citrus.messaging.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageChannelSyncEndpoint extends MessageChannelEndpoint {
+public class ChannelSyncEndpoint extends ChannelEndpoint {
 
     /** One of producer or consumer for this endpoint */
-    private MessageChannelSyncProducer messageChannelSyncProducer;
-    private MessageChannelSyncConsumer messageChannelSyncConsumer;
+    private ChannelSyncProducer messageChannelSyncProducer;
+    private ChannelSyncConsumer messageChannelSyncConsumer;
 
-    public MessageChannelSyncEndpoint() {
-        super(new MessageChannelSyncEndpointConfiguration());
+    public ChannelSyncEndpoint() {
+        super(new ChannelSyncEndpointConfiguration());
     }
 
     @Override
-    public MessageChannelSyncEndpointConfiguration getEndpointConfiguration() {
-        return (MessageChannelSyncEndpointConfiguration) super.getEndpointConfiguration();
+    public ChannelSyncEndpointConfiguration getEndpointConfiguration() {
+        return (ChannelSyncEndpointConfiguration) super.getEndpointConfiguration();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MessageChannelSyncEndpoint extends MessageChannelEndpoint {
         }
 
         if (messageChannelSyncConsumer == null) {
-            messageChannelSyncConsumer = new MessageChannelSyncConsumer(getEndpointConfiguration());
+            messageChannelSyncConsumer = new ChannelSyncConsumer(getEndpointConfiguration());
         }
 
         return messageChannelSyncConsumer;
@@ -58,7 +58,7 @@ public class MessageChannelSyncEndpoint extends MessageChannelEndpoint {
         }
 
         if (messageChannelSyncProducer == null) {
-            messageChannelSyncProducer = new MessageChannelSyncProducer(getEndpointConfiguration());
+            messageChannelSyncProducer = new ChannelSyncProducer(getEndpointConfiguration());
         }
 
         return messageChannelSyncProducer;

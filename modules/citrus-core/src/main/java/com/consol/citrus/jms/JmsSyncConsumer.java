@@ -33,7 +33,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsSyncMessageConsumer extends JmsMessageConsumer implements ReplyProducer {
+public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
     /** Map of reply destinations */
     private Map<String, Destination> replyDestinations = new HashMap<String, Destination>();
@@ -42,13 +42,13 @@ public class JmsSyncMessageConsumer extends JmsMessageConsumer implements ReplyP
     private final JmsSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsSyncMessageConsumer.class);
+    private static Logger log = LoggerFactory.getLogger(JmsSyncConsumer.class);
 
     /**
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    public JmsSyncMessageConsumer(JmsSyncEndpointConfiguration endpointConfiguration) {
+    public JmsSyncConsumer(JmsSyncEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }

@@ -35,20 +35,20 @@ import javax.jms.Destination;
 public abstract class AbstractJmsAdapter implements BeanNameAware {
 
     /** New JmsEndpoint implementation */
-    private JmsMessageEndpoint jmsEndpoint;
+    private JmsEndpoint jmsEndpoint;
 
     /**
      * Default constructor.
      */
     public AbstractJmsAdapter() {
-        this.jmsEndpoint  = new JmsMessageEndpoint();
+        this.jmsEndpoint  = new JmsEndpoint();
     }
 
     /**
      * Default constructor with Jms endpoint.
      * @param jmsEndpoint
      */
-    protected AbstractJmsAdapter(JmsMessageEndpoint jmsEndpoint) {
+    protected AbstractJmsAdapter(JmsEndpoint jmsEndpoint) {
         this.jmsEndpoint = jmsEndpoint;
     }
 
@@ -56,7 +56,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * Gets the Jms endpoint.
      * @return
      */
-    public JmsMessageEndpoint getJmsEndpoint() {
+    public JmsEndpoint getJmsEndpoint() {
         return jmsEndpoint;
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * Sets the Jms endpoint
      * @param jmsEndpoint
      */
-    public void setJmsEndpoint(JmsMessageEndpoint jmsEndpoint) {
+    public void setJmsEndpoint(JmsEndpoint jmsEndpoint) {
         this.jmsEndpoint = jmsEndpoint;
     }
 

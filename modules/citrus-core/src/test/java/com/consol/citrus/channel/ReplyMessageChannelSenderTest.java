@@ -58,7 +58,7 @@ public class ReplyMessageChannelSenderTest {
         
         replay(messagingTemplate, replyChannel);
 
-        ((MessageChannelSyncConsumer)sender.getMessageChannelEndpoint().createConsumer()).saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
+        ((ChannelSyncConsumer)sender.getMessageChannelEndpoint().createConsumer()).saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
         sender.send(message);
         
         verify(messagingTemplate, replyChannel);
@@ -96,7 +96,7 @@ public class ReplyMessageChannelSenderTest {
         
         replay(messagingTemplate, replyChannel);
 
-        ((MessageChannelSyncConsumer)sender.getMessageChannelEndpoint().createConsumer()).saveReplyMessageChannel(request);
+        ((ChannelSyncConsumer)sender.getMessageChannelEndpoint().createConsumer()).saveReplyMessageChannel(request);
         sender.send(message);
         
         verify(messagingTemplate, replyChannel);
@@ -185,7 +185,7 @@ public class ReplyMessageChannelSenderTest {
         replay(messagingTemplate, replyChannel);
 
         try {
-            ((MessageChannelSyncConsumer)sender.getMessageChannelEndpoint().createConsumer()).saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
+            ((ChannelSyncConsumer)sender.getMessageChannelEndpoint().createConsumer()).saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
             sender.send(message);
         } catch(CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Failed to send message to channel: "));

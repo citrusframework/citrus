@@ -35,7 +35,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsSyncMessageProducer extends JmsMessageProducer implements ReplyConsumer {
+public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     /** JMS connection */
     private Connection connection = null;
@@ -50,7 +50,7 @@ public class JmsSyncMessageProducer extends JmsMessageProducer implements ReplyC
     private final JmsSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsSyncMessageProducer.class);
+    private static Logger log = LoggerFactory.getLogger(JmsSyncProducer.class);
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -59,7 +59,7 @@ public class JmsSyncMessageProducer extends JmsMessageProducer implements ReplyC
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    public JmsSyncMessageProducer(JmsSyncEndpointConfiguration endpointConfiguration) {
+    public JmsSyncProducer(JmsSyncEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }

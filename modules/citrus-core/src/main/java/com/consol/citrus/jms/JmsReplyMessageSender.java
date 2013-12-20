@@ -36,19 +36,19 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
     private JmsReplyDestinationHolder replyDestinationHolder;
 
     public JmsReplyMessageSender() {
-        super(new JmsSyncMessageEndpoint());
+        super(new JmsSyncEndpoint());
     }
 
     @Override
-    public JmsSyncMessageEndpoint getJmsEndpoint() {
-        return (JmsSyncMessageEndpoint) super.getJmsEndpoint();
+    public JmsSyncEndpoint getJmsEndpoint() {
+        return (JmsSyncEndpoint) super.getJmsEndpoint();
     }
 
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        ((JmsSyncMessageConsumer) getJmsEndpoint().createConsumer()).send(message);
+        ((JmsSyncConsumer) getJmsEndpoint().createConsumer()).send(message);
     }
 
     /**

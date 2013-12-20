@@ -16,40 +16,77 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.messaging.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.channel.ChannelResolver;
 
 /**
+ * Basic message endpoint sends and receives message from Spring message channel. When receiving messages channel must
+ * implement {@link org.springframework.integration.core.PollableChannel} interface. When using message selector channel
+ * must be of type {@link com.consol.citrus.channel.MessageSelectingQueueChannel}.
+ *
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageChannelEndpointConfiguration extends AbstractEndpointConfiguration {
+public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAware {
 
-    /** Destination channel */
-    private MessageChannel channel;
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(ChannelEndpoint.class);
 
-    /** Destination channel name */
-    private String channelName;
+    private ChannelConsumer channelConsumer;
+    private ChannelProducer channelProducer;
 
-    /** Message channel template */
-    private MessagingTemplate messagingTemplate = new MessagingTemplate();
+    /**
+     * Default constructor initializing endpoint configuration.
+     */
+    protected ChannelEndpoint() {
+        super(new ChannelEndpointConfiguration());
+    }
 
-    /** The parent bean factory used for channel name resolving */
-    private BeanFactory beanFactory;
+    /**
+     * Constructor with endpoint configuration.
+     * @param endpointConfiguration
+     */
+    protected ChannelEndpoint(ChannelEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
+    }
 
-    /** Channel resolver instance */
-    private ChannelResolver channelResolver;
+    @Override
+    public SelectiveConsumer createConsumer() {
+        if (channelConsumer == null) {
+            channelConsumer = new ChannelConsumer(getEndpointConfiguration());
+        }
+
+        return channelConsumer;
+    }
+
+    @Override
+    public Producer createProducer() {
+        if (channelProducer == null) {
+            channelProducer = new ChannelProducer(getEndpointConfiguration());
+        }
+
+        return channelProducer;
+    }
+
+    @Override
+    public ChannelEndpointConfiguration getEndpointConfiguration() {
+        return (ChannelEndpointConfiguration) super.getEndpointConfiguration();
+    }
 
     /**
      * Set the message channel.
      * @param channel the channel to set
      */
     public void setChannel(MessageChannel channel) {
-        this.channel = channel;
+        getEndpointConfiguration().setChannel(channel);
     }
 
     /**
@@ -57,7 +94,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @param messagingTemplate the messagingTemplate to set
      */
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+        getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
     }
 
     /**
@@ -65,15 +102,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
-    /**
-     * Gets the bean factory.
-     * @return
-     */
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
+        getEndpointConfiguration().setBeanFactory(beanFactory);
     }
 
     /**
@@ -81,7 +110,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @param channelResolver the channelResolver to set
      */
     public void setChannelResolver(ChannelResolver channelResolver) {
-        this.channelResolver = channelResolver;
+        getEndpointConfiguration().setChannelResolver(channelResolver);
     }
 
     /**
@@ -89,7 +118,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @param channelName the channelName to set
      */
     public void setChannelName(String channelName) {
-        this.channelName = channelName;
+        getEndpointConfiguration().setChannelName(channelName);
     }
 
     /**
@@ -97,7 +126,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @return the channel
      */
     public MessageChannel getChannel() {
-        return channel;
+        return getEndpointConfiguration().getChannel();
     }
 
     /**
@@ -105,7 +134,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @return the channelName
      */
     public String getChannelName() {
-        return channelName;
+        return getEndpointConfiguration().getChannelName();
     }
 
     /**
@@ -113,7 +142,7 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @return the messagingTemplate
      */
     public MessagingTemplate getMessagingTemplate() {
-        return messagingTemplate;
+        return getEndpointConfiguration().getMessagingTemplate();
     }
 
     /**
@@ -121,6 +150,6 @@ public class MessageChannelEndpointConfiguration extends AbstractEndpointConfigu
      * @return the channelResolver
      */
     public ChannelResolver getChannelResolver() {
-        return channelResolver;
+        return getEndpointConfiguration().getChannelResolver();
     }
 }

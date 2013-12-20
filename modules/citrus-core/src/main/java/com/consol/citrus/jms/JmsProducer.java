@@ -26,10 +26,10 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsMessageProducer implements Producer {
+public class JmsProducer implements Producer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageProducer.class);
+    private static Logger log = LoggerFactory.getLogger(JmsProducer.class);
 
     /** Endpoint configuration */
     private JmsEndpointConfiguration endpointConfiguration;
@@ -38,7 +38,7 @@ public class JmsMessageProducer implements Producer {
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    public JmsMessageProducer(JmsEndpointConfiguration endpointConfiguration) {
+    public JmsProducer(JmsEndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
     }
 

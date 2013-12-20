@@ -35,20 +35,20 @@ import org.springframework.integration.support.channel.ChannelResolver;
 public class MessageChannelSender implements MessageSender, BeanFactoryAware, BeanNameAware {
 
     /** New message channel endpoint */
-    private MessageChannelEndpoint messageChannelEndpoint;
+    private ChannelEndpoint messageChannelEndpoint;
 
     /**
      * Default constructor.
      */
     public MessageChannelSender() {
-        this.messageChannelEndpoint = new MessageChannelEndpoint();
+        this.messageChannelEndpoint = new ChannelEndpoint();
     }
 
     /**
      * Default constructor using message endpoint.
      * @param messageChannelEndpoint
      */
-    public MessageChannelSender(MessageChannelEndpoint messageChannelEndpoint) {
+    public MessageChannelSender(ChannelEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 
@@ -56,7 +56,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * Gets the message endpoint.
      * @return
      */
-    public MessageChannelEndpoint getMessageChannelEndpoint() {
+    public ChannelEndpoint getMessageChannelEndpoint() {
         return messageChannelEndpoint;
     }
 
@@ -64,7 +64,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * Sets the message endpoint.
      * @param messageChannelEndpoint
      */
-    public void setMessageChannelEndpoint(MessageChannelEndpoint messageChannelEndpoint) {
+    public void setMessageChannelEndpoint(ChannelEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 

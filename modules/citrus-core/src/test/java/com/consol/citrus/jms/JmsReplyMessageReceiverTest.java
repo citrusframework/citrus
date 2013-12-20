@@ -68,10 +68,10 @@ public class JmsReplyMessageReceiverTest {
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .build();
 
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                return new JmsSyncProducer(getEndpointConfiguration()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -94,10 +94,10 @@ public class JmsReplyMessageReceiverTest {
     public void testReplyMessageRetriesExceeded() {
         retryCount = 0;
 
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                return new JmsSyncProducer(getEndpointConfiguration()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -118,10 +118,10 @@ public class JmsReplyMessageReceiverTest {
     public void testIntervalGreaterThanTimeout() {
         retryCount = 0;
 
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                return new JmsSyncProducer(getEndpointConfiguration()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -142,10 +142,10 @@ public class JmsReplyMessageReceiverTest {
     public void testZeroTimeout() {
         retryCount = 0;
 
-        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncMessageEndpoint() {
+        JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncMessageProducer(getEndpointConfiguration()) {
+                return new JmsSyncProducer(getEndpointConfiguration()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;

@@ -36,20 +36,20 @@ import org.springframework.integration.support.channel.ChannelResolver;
 public class MessageChannelReceiver extends AbstractMessageReceiver implements BeanFactoryAware {
 
     /** New message channel endpoint */
-    private MessageChannelEndpoint messageChannelEndpoint;
+    private ChannelEndpoint messageChannelEndpoint;
 
     /**
      * Default constructor.
      */
     public MessageChannelReceiver() {
-        this.messageChannelEndpoint = new MessageChannelEndpoint();
+        this.messageChannelEndpoint = new ChannelEndpoint();
     }
 
     /**
      * Default constructor using message endpoint.
      * @param messageChannelEndpoint
      */
-    public MessageChannelReceiver(MessageChannelEndpoint messageChannelEndpoint) {
+    public MessageChannelReceiver(ChannelEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 
@@ -57,7 +57,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * Gets the message endpoint.
      * @return
      */
-    public MessageChannelEndpoint getMessageChannelEndpoint() {
+    public ChannelEndpoint getMessageChannelEndpoint() {
         return messageChannelEndpoint;
     }
 
@@ -65,7 +65,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * Sets the message endpoint.
      * @param messageChannelEndpoint
      */
-    public void setMessageChannelEndpoint(MessageChannelEndpoint messageChannelEndpoint) {
+    public void setMessageChannelEndpoint(ChannelEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 

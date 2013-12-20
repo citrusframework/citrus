@@ -18,7 +18,6 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.message.ReplyMessageReceiver;
-import com.consol.citrus.messaging.ReplyConsumer;
 import org.springframework.integration.Message;
 
 /**
@@ -29,20 +28,20 @@ import org.springframework.integration.Message;
 public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
 
     /** Synchronous endpoint providing the reply messages */
-    private MessageChannelSyncEndpoint messageChannelEndpoint;
+    private ChannelSyncEndpoint messageChannelEndpoint;
 
     /**
      * Default constructor.
      */
     public MessageChannelReplyMessageReceiver() {
-        this.messageChannelEndpoint  = new MessageChannelSyncEndpoint();
+        this.messageChannelEndpoint  = new ChannelSyncEndpoint();
     }
 
     /**
      * Default constructor with Jms endpoint.
      * @param messageChannelEndpoint
      */
-    protected MessageChannelReplyMessageReceiver(MessageChannelSyncEndpoint messageChannelEndpoint) {
+    protected MessageChannelReplyMessageReceiver(ChannelSyncEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 
@@ -50,7 +49,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * Gets the message channel endpoint.
      * @return
      */
-    public MessageChannelSyncEndpoint getMessageChannelEndpoint() {
+    public ChannelSyncEndpoint getMessageChannelEndpoint() {
         return messageChannelEndpoint;
     }
 
@@ -58,7 +57,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * Sets the message channel endpoint
      * @param messageChannelEndpoint
      */
-    public void setMessageChannelEndpoint(MessageChannelSyncEndpoint messageChannelEndpoint) {
+    public void setMessageChannelEndpoint(ChannelSyncEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 
@@ -94,14 +93,14 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        ((MessageChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage(correlationKey, replyMessage);
+        ((ChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage(correlationKey, replyMessage);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
-        ((MessageChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage("", replyMessage);
+        ((ChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage("", replyMessage);
     }
 
     /**

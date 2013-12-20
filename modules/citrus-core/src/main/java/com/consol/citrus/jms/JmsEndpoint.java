@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.endpoint.AbstractMessageEndpoint;
+import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.*;
 import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
@@ -33,16 +33,16 @@ import javax.jms.Destination;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsMessageEndpoint extends AbstractMessageEndpoint {
+public class JmsEndpoint extends AbstractEndpoint {
 
     /** Either cached producer or consumer */
-    private JmsMessageProducer jmsMessageProducer;
-    private JmsMessageConsumer jmsMessageConsumer;
+    private JmsProducer jmsProducer;
+    private JmsConsumer jmsConsumer;
 
     /**
      * Default constructor initializing endpoint configuration.
      */
-    protected JmsMessageEndpoint() {
+    protected JmsEndpoint() {
         super(new JmsEndpointConfiguration());
     }
 
@@ -50,26 +50,26 @@ public class JmsMessageEndpoint extends AbstractMessageEndpoint {
      * Constructor with endpoint configuration.
      * @param endpointConfiguration
      */
-    protected JmsMessageEndpoint(JmsEndpointConfiguration endpointConfiguration) {
+    protected JmsEndpoint(JmsEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
     }
 
     @Override
     public SelectiveConsumer createConsumer() {
-        if (jmsMessageConsumer == null) {
-            jmsMessageConsumer = new JmsMessageConsumer(getEndpointConfiguration());
+        if (jmsConsumer == null) {
+            jmsConsumer = new JmsConsumer(getEndpointConfiguration());
         }
 
-        return jmsMessageConsumer;
+        return jmsConsumer;
     }
 
     @Override
     public Producer createProducer() {
-        if (jmsMessageProducer == null) {
-            jmsMessageProducer = new JmsMessageProducer(getEndpointConfiguration());
+        if (jmsProducer == null) {
+            jmsProducer = new JmsProducer(getEndpointConfiguration());
         }
 
-        return jmsMessageProducer;
+        return jmsProducer;
     }
 
     @Override

@@ -17,7 +17,6 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.messaging.ReplyProducer;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 
@@ -32,12 +31,12 @@ import org.springframework.integration.MessageChannel;
 public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder {
 
     public SyncMessageChannelReceiver() {
-        super(new MessageChannelSyncEndpoint());
+        super(new ChannelSyncEndpoint());
     }
 
     @Override
-    public MessageChannelSyncEndpoint getMessageChannelEndpoint() {
-        return (MessageChannelSyncEndpoint) super.getMessageChannelEndpoint();
+    public ChannelSyncEndpoint getMessageChannelEndpoint() {
+        return (ChannelSyncEndpoint) super.getMessageChannelEndpoint();
     }
 
     @Override
@@ -54,14 +53,14 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * Get the reply message channel with given corelation key.
      */
     public MessageChannel getReplyMessageChannel(String correlationKey) {
-        return ((MessageChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel(correlationKey);
+        return ((ChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel(correlationKey);
     }
 
     /**
      * Get the reply message channel.
      */
     public MessageChannel getReplyMessageChannel() {
-        return ((MessageChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel("");
+        return ((ChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel("");
     }
 
     /**

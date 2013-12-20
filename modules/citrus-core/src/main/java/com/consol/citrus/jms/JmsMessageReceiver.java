@@ -40,7 +40,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * Default constructor using Jms endpoint.
      * @param jmsEndpoint
      */
-    public JmsMessageReceiver(JmsMessageEndpoint jmsEndpoint) {
+    public JmsMessageReceiver(JmsEndpoint jmsEndpoint) {
         super(jmsEndpoint);
     }
 

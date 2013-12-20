@@ -22,7 +22,7 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageChannelSyncEndpointConfiguration extends MessageChannelEndpointConfiguration {
+public class ChannelSyncEndpointConfiguration extends ChannelEndpointConfiguration {
 
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;

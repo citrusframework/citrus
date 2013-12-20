@@ -35,20 +35,20 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
     private ReplyMessageChannelHolder replyMessageChannelHolder;
 
     /** New message channel endpoint */
-    private MessageChannelSyncEndpoint messageChannelEndpoint;
+    private ChannelSyncEndpoint messageChannelEndpoint;
 
     /**
      * Default constructor.
      */
     public ReplyMessageChannelSender() {
-        this.messageChannelEndpoint = new MessageChannelSyncEndpoint();
+        this.messageChannelEndpoint = new ChannelSyncEndpoint();
     }
 
     /**
      * Default constructor using message endpoint.
      * @param messageChannelEndpoint
      */
-    public ReplyMessageChannelSender(MessageChannelSyncEndpoint messageChannelEndpoint) {
+    public ReplyMessageChannelSender(ChannelSyncEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 
@@ -56,7 +56,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * Gets the message endpoint.
      * @return
      */
-    public MessageChannelSyncEndpoint getMessageChannelEndpoint() {
+    public ChannelSyncEndpoint getMessageChannelEndpoint() {
         return messageChannelEndpoint;
     }
 
@@ -64,7 +64,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * Sets the message endpoint.
      * @param messageChannelEndpoint
      */
-    public void setMessageChannelEndpoint(MessageChannelSyncEndpoint messageChannelEndpoint) {
+    public void setMessageChannelEndpoint(ChannelSyncEndpoint messageChannelEndpoint) {
         this.messageChannelEndpoint = messageChannelEndpoint;
     }
 
@@ -72,7 +72,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        ((MessageChannelSyncConsumer)messageChannelEndpoint.createConsumer()).send(message);
+        ((ChannelSyncConsumer)messageChannelEndpoint.createConsumer()).send(message);
     }
     
     /**

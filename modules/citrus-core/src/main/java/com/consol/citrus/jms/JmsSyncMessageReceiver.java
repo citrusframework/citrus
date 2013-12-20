@@ -37,12 +37,12 @@ import javax.jms.Destination;
 public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsReplyDestinationHolder {
 
     public JmsSyncMessageReceiver() {
-        super(new JmsSyncMessageEndpoint());
+        super(new JmsSyncEndpoint());
     }
 
     @Override
-    public JmsSyncMessageEndpoint getJmsEndpoint() {
-        return (JmsSyncMessageEndpoint) super.getJmsEndpoint();
+    public JmsSyncEndpoint getJmsEndpoint() {
+        return (JmsSyncEndpoint) super.getJmsEndpoint();
     }
 
     @Override
@@ -59,14 +59,14 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
      * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination(java.lang.String)
      */
     public Destination getReplyDestination(String correlationKey) {
-        return ((JmsSyncMessageConsumer)getJmsEndpoint().createConsumer()).findReplyDestination(correlationKey);
+        return ((JmsSyncConsumer)getJmsEndpoint().createConsumer()).findReplyDestination(correlationKey);
     }
 
     /**
      * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination()
      */
     public Destination getReplyDestination() {
-        return ((JmsSyncMessageConsumer)getJmsEndpoint().createConsumer()).findReplyDestination();
+        return ((JmsSyncConsumer)getJmsEndpoint().createConsumer()).findReplyDestination();
     }
 
     /**

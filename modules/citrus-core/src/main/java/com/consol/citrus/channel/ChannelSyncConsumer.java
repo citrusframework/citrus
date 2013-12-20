@@ -33,21 +33,21 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageChannelSyncConsumer extends MessageChannelConsumer implements ReplyProducer {
+public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProducer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageChannelSyncConsumer.class);
+    private static Logger log = LoggerFactory.getLogger(ChannelSyncConsumer.class);
 
     /** Reply channel store */
     private Map<String, MessageChannel> replyChannels = new HashMap<String, MessageChannel>();
 
     /** Endpoint configuration */
-    private final MessageChannelSyncEndpointConfiguration endpointConfiguration;
+    private final ChannelSyncEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using emdpoint configuration.
      * @param endpointConfiguration
      */
-    public MessageChannelSyncConsumer(MessageChannelSyncEndpointConfiguration endpointConfiguration) {
+    public ChannelSyncConsumer(ChannelSyncEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }

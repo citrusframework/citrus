@@ -29,13 +29,13 @@ import javax.jms.Destination;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsSyncMessageEndpoint extends JmsMessageEndpoint implements DisposableBean {
+public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
 
     /** One of producer or consumer for this endpoint */
-    private JmsSyncMessageProducer jmsSyncMessageProducer;
-    private JmsSyncMessageConsumer jmsSyncMessageConsumer;
+    private JmsSyncProducer jmsSyncMessageProducer;
+    private JmsSyncConsumer jmsSyncMessageConsumer;
 
-    public JmsSyncMessageEndpoint() {
+    public JmsSyncEndpoint() {
         super(new JmsSyncEndpointConfiguration());
     }
 
@@ -51,7 +51,7 @@ public class JmsSyncMessageEndpoint extends JmsMessageEndpoint implements Dispos
         }
 
         if (jmsSyncMessageConsumer == null) {
-            jmsSyncMessageConsumer = new JmsSyncMessageConsumer(getEndpointConfiguration());
+            jmsSyncMessageConsumer = new JmsSyncConsumer(getEndpointConfiguration());
         }
 
         return jmsSyncMessageConsumer;
@@ -64,7 +64,7 @@ public class JmsSyncMessageEndpoint extends JmsMessageEndpoint implements Dispos
         }
 
         if (jmsSyncMessageProducer == null) {
-            jmsSyncMessageProducer = new JmsSyncMessageProducer(getEndpointConfiguration());
+            jmsSyncMessageProducer = new JmsSyncProducer(getEndpointConfiguration());
         }
 
         return jmsSyncMessageProducer;

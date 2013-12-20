@@ -29,15 +29,15 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MessageChannelSyncProducer extends MessageChannelProducer implements ReplyConsumer {
+public class ChannelSyncProducer extends ChannelProducer implements ReplyConsumer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageChannelSyncProducer.class);
+    private static Logger log = LoggerFactory.getLogger(ChannelSyncProducer.class);
 
     /** Store of reply messages */
     private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
 
     /** Endpoint configuration */
-    private final MessageChannelSyncEndpointConfiguration endpointConfiguration;
+    private final ChannelSyncEndpointConfiguration endpointConfiguration;
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -47,7 +47,7 @@ public class MessageChannelSyncProducer extends MessageChannelProducer implement
      *
      * @param endpointConfiguration
      */
-    public MessageChannelSyncProducer(MessageChannelSyncEndpointConfiguration endpointConfiguration) {
+    public ChannelSyncProducer(ChannelSyncEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
