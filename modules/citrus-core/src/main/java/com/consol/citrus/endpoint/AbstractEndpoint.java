@@ -28,6 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
 
+    /** Endpoint name usually the Spring bean id */
+    private String name = getClass().getSimpleName();
+
     @Autowired(required = false)
     private MessageListeners messageListener;
 
@@ -37,6 +40,10 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
     /** Endpoint configuration */
     private final EndpointConfiguration endpointConfiguration;
 
+    /**
+     * Default constructor using endpoint configuration.
+     * @param endpointConfiguration
+     */
     protected AbstractEndpoint(EndpointConfiguration endpointConfiguration) {
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -63,40 +70,6 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
     }
 
     /**
-     * Gets the timeout for sending and receiving messages.
-     * @return
-     */
-    public long getTimeout() {
-        return endpointConfiguration.getTimeout();
-    }
-
-    /**
-     * Sets the timeout for sending and receiving messages..
-     * @param timeout
-     */
-    public void setTimeout(long timeout) {
-        endpointConfiguration.setTimeout(timeout);
-    }
-
-    /**
-     * Gets the endpoint's name - usually the Spring bean name.
-     * @return
-     */
-    public String getName() {
-        return endpointConfiguration.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        endpointConfiguration.setName(name);
-    }
-
-    @Override
-    public void setBeanName(String name) {
-        endpointConfiguration.setName(name);
-    }
-
-    /**
      * Gets the message listeners.
      * @return
      */
@@ -109,7 +82,22 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
      * @param messageListener
      */
     public void setMessageListener(MessageListeners messageListener) {
-        endpointConfiguration.setMessageListener(messageListener);
+        this.messageListener = messageListener;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
     }
 
 }

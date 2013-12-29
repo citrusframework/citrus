@@ -30,6 +30,9 @@ import org.springframework.integration.MessageChannel;
  */
 public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder {
 
+    /**
+     * Default constructor initializing endpoint.
+     */
     public SyncMessageChannelReceiver() {
         super(new ChannelSyncEndpoint());
     }
@@ -68,7 +71,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getChannelEndpoint().setCorrelator(correlator);
+        getChannelEndpoint().getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -76,7 +79,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return getChannelEndpoint().getCorrelator();
+        return getChannelEndpoint().getEndpointConfiguration().getCorrelator();
     }
     
 }

@@ -32,25 +32,25 @@ public class JmsProducer implements Producer {
     private static Logger log = LoggerFactory.getLogger(JmsProducer.class);
 
     /** Endpoint configuration */
-    private JmsEndpointConfiguration endpointConfiguration;
+    private JmsEndpoint endpoint;
 
     /**
-     * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
+     * Default constructor using endpoint.
+     * @param endpoint
      */
-    public JmsProducer(JmsEndpointConfiguration endpointConfiguration) {
-        this.endpointConfiguration = endpointConfiguration;
+    public JmsProducer(JmsEndpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
     @Override
     public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
+        String defaultDestinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
-        endpointConfiguration.getJmsTemplate().convertAndSend(message);
+        endpoint.getEndpointConfiguration().getJmsTemplate().convertAndSend(message);
 
         onOutboundMessage(message);
 
@@ -62,8 +62,8 @@ public class JmsProducer implements Producer {
      * @param message
      */
     protected void onOutboundMessage(Message<?> message) {
-        if (endpointConfiguration.getMessageListener() != null) {
-            endpointConfiguration.getMessageListener().onOutboundMessage(message.toString());
+        if (endpoint.getMessageListener() != null) {
+            endpoint.getMessageListener().onOutboundMessage(message.toString());
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

@@ -82,14 +82,14 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return getJmsEndpoint().createConsumer().receive(getJmsEndpoint().getTimeout());
+        return getJmsEndpoint().createConsumer().receive(getEndpointConfiguration().getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return getJmsEndpoint().createConsumer().receive(selector, getJmsEndpoint().getTimeout());
+        return getJmsEndpoint().createConsumer().receive(selector, getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -97,7 +97,7 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {
-        getJmsEndpoint().setTimeout(receiveTimeout);
+        getEndpointConfiguration().setTimeout(receiveTimeout);
     }
 
     /**
@@ -105,6 +105,6 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      * @return the receiveTimeout
      */
     public long getReceiveTimeout() {
-        return getJmsEndpoint().getTimeout();
+        return getEndpointConfiguration().getTimeout();
     }
 }

@@ -46,8 +46,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     /** Store of reply messages */
     private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
 
-    /** Endpoint configuration */
-    private final JmsSyncEndpointConfiguration endpointConfiguration;
+    /** Endpoint */
+    private final JmsSyncEndpoint endpoint;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmsSyncProducer.class);
@@ -56,19 +56,19 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
 
     /**
-     * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
+     * Default constructor using endpoint.
+     * @param endpoint
      */
-    public JmsSyncProducer(JmsSyncEndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration);
-        this.endpointConfiguration = endpointConfiguration;
+    public JmsSyncProducer(JmsSyncEndpoint endpoint) {
+        super(endpoint);
+        this.endpoint = endpoint;
     }
 
     @Override
     public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
+        String defaultDestinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
@@ -82,7 +82,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             createConnection();
             createSession(connection);
 
-            JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(endpointConfiguration.getMessageConverter(), endpointConfiguration.getHeaderMapper());
+            JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(endpoint.getEndpointConfiguration().getMessageConverter(), endpoint.getEndpointConfiguration().getHeaderMapper());
             javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(message, session);
 
             messageProducer = session.createProducer(getDefaultDestination(session));
@@ -103,7 +103,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             log.info("Message was successfully sent to destination: '{}'", defaultDestinationName);
             log.info("Waiting for reply message on destination: '{}'", replyToDestination);
 
-            javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
+            javax.jms.Message jmsReplyMessage = (endpoint.getEndpointConfiguration().getTimeout() >= 0) ? messageConsumer.receive(endpoint.getEndpointConfiguration().getTimeout()) : messageConsumer.receive();
             Message<?> responseMessage = (Message<?>)jmsMessageConverter.fromMessage(jmsReplyMessage);
 
             log.info("Received reply message on destination: '{}'", replyToDestination);
@@ -131,14 +131,14 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
         Message<?> message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
-            timeLeft -= endpointConfiguration.getPollingInterval();
+            timeLeft -= endpoint.getEndpointConfiguration().getPollingInterval();
 
             if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft) + "ms");
+                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpoint.getEndpointConfiguration().getPollingInterval() : endpoint.getEndpointConfiguration().getPollingInterval() + timeLeft) + "ms");
             }
 
             try {
-                Thread.sleep(timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft);
+                Thread.sleep(timeLeft > 0 ? endpoint.getEndpointConfiguration().getPollingInterval() : endpoint.getEndpointConfiguration().getPollingInterval() + timeLeft);
             } catch (InterruptedException e) {
                 RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
             }
@@ -156,16 +156,16 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      */
     protected void createConnection() throws JMSException {
         if (connection == null) {
-            if (!endpointConfiguration.isPubSubDomain() && endpointConfiguration.getConnectionFactory() instanceof QueueConnectionFactory) {
-                connection = ((QueueConnectionFactory) endpointConfiguration.getConnectionFactory()).createQueueConnection();
-            } else if (endpointConfiguration.isPubSubDomain() && endpointConfiguration.getConnectionFactory() instanceof TopicConnectionFactory) {
-                connection = ((TopicConnectionFactory) endpointConfiguration.getConnectionFactory()).createTopicConnection();
-                connection.setClientID(endpointConfiguration.getName());
+            if (!endpoint.getEndpointConfiguration().isPubSubDomain() && endpoint.getEndpointConfiguration().getConnectionFactory() instanceof QueueConnectionFactory) {
+                connection = ((QueueConnectionFactory) endpoint.getEndpointConfiguration().getConnectionFactory()).createQueueConnection();
+            } else if (endpoint.getEndpointConfiguration().isPubSubDomain() && endpoint.getEndpointConfiguration().getConnectionFactory() instanceof TopicConnectionFactory) {
+                connection = ((TopicConnectionFactory) endpoint.getEndpointConfiguration().getConnectionFactory()).createTopicConnection();
+                connection.setClientID(endpoint.getName());
             } else {
-                log.warn("Not able to create a connection with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
-                        " when using setting 'publish-subscribe-domain' (=" + endpointConfiguration.isPubSubDomain() + ")");
+                log.warn("Not able to create a connection with connection factory '" + endpoint.getEndpointConfiguration().getConnectionFactory() + "'" +
+                        " when using setting 'publish-subscribe-domain' (=" + endpoint.getEndpointConfiguration().isPubSubDomain() + ")");
 
-                connection = endpointConfiguration.getConnectionFactory().createConnection();
+                connection = endpoint.getEndpointConfiguration().getConnectionFactory().createConnection();
             }
 
             connection.start();
@@ -180,13 +180,13 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      */
     protected void createSession(Connection connection) throws JMSException {
         if (session == null) {
-            if (!endpointConfiguration.isPubSubDomain() && connection instanceof QueueConnection) {
+            if (!endpoint.getEndpointConfiguration().isPubSubDomain() && connection instanceof QueueConnection) {
                 session = ((QueueConnection) connection).createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-            } else if (endpointConfiguration.isPubSubDomain() && endpointConfiguration.getConnectionFactory() instanceof TopicConnectionFactory) {
+            } else if (endpoint.getEndpointConfiguration().isPubSubDomain() && endpoint.getEndpointConfiguration().getConnectionFactory() instanceof TopicConnectionFactory) {
                 session = ((TopicConnection) connection).createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
             } else {
-                log.warn("Not able to create a session with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
-                        " when using setting 'publish-subscribe-domain' (=" + endpointConfiguration.isPubSubDomain() + ")");
+                log.warn("Not able to create a session with connection factory '" + endpoint.getEndpointConfiguration().getConnectionFactory() + "'" +
+                        " when using setting 'publish-subscribe-domain' (=" + endpoint.getEndpointConfiguration().isPubSubDomain() + ")");
 
                 session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             }
@@ -209,7 +209,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             messageConsumer = session.createConsumer(replyToDestination,
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'");
         } else {
-            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, endpointConfiguration.getName(),
+            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, endpoint.getName(),
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'", false);
         }
 
@@ -250,13 +250,13 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             } else {
                 return resolveDestinationName(message.getHeaders().getReplyChannel().toString(), session);
             }
-        } else if (endpointConfiguration.getReplyDestination() != null) {
-            return endpointConfiguration.getReplyDestination();
-        } else if (StringUtils.hasText(endpointConfiguration.getReplyDestinationName())) {
-            return resolveDestinationName(endpointConfiguration.getReplyDestinationName(), session);
+        } else if (endpoint.getEndpointConfiguration().getReplyDestination() != null) {
+            return endpoint.getEndpointConfiguration().getReplyDestination();
+        } else if (StringUtils.hasText(endpoint.getEndpointConfiguration().getReplyDestinationName())) {
+            return resolveDestinationName(endpoint.getEndpointConfiguration().getReplyDestinationName(), session);
         }
 
-        if (endpointConfiguration.isPubSubDomain() && session instanceof TopicSession){
+        if (endpoint.getEndpointConfiguration().isPubSubDomain() && session instanceof TopicSession){
             return session.createTemporaryTopic();
         } else {
             return session.createTemporaryQueue();
@@ -272,11 +272,11 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @throws JMSException
      */
     private Destination getDefaultDestination(Session session) throws JMSException {
-        if (endpointConfiguration.getDestination() != null) {
-            return endpointConfiguration.getDestination();
+        if (endpoint.getEndpointConfiguration().getDestination() != null) {
+            return endpoint.getEndpointConfiguration().getDestination();
         }
 
-        return resolveDestinationName(endpointConfiguration.getDestinationName(), session);
+        return resolveDestinationName(endpoint.getEndpointConfiguration().getDestinationName(), session);
     }
 
     /**
@@ -286,7 +286,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @return
      */
     private Destination resolveDestinationName(String name, Session session) throws JMSException {
-        return new DynamicDestinationResolver().resolveDestinationName(session, name, endpointConfiguration.isPubSubDomain());
+        return new DynamicDestinationResolver().resolveDestinationName(session, name, endpoint.getEndpointConfiguration().isPubSubDomain());
     }
 
     /**
@@ -304,8 +304,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param replyMessage
      */
     public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
-        if (endpointConfiguration.getCorrelator() != null) {
-            onReplyMessage(endpointConfiguration.getCorrelator().getCorrelationKey(requestMessage), replyMessage);
+        if (endpoint.getEndpointConfiguration().getCorrelator() != null) {
+            onReplyMessage(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
             onReplyMessage("", replyMessage);
         }
@@ -325,8 +325,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param receivedMessage
      */
     protected void onInboundMessage(Message<?> receivedMessage) {
-        if (endpointConfiguration.getMessageListener() != null) {
-            endpointConfiguration.getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+        if (endpoint.getMessageListener() != null) {
+            endpoint.getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
@@ -336,7 +336,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
         JmsUtils.closeSession(session);
 
         if (connection != null) {
-            ConnectionFactoryUtils.releaseConnection(connection, endpointConfiguration.getConnectionFactory(), true);
+            ConnectionFactoryUtils.releaseConnection(connection, endpoint.getEndpointConfiguration().getConnectionFactory(), true);
         }
     }
 }

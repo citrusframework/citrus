@@ -57,7 +57,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    protected MailClient(MailEndpointConfiguration endpointConfiguration) {
+    public MailClient(MailEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
     }
 
@@ -90,8 +90,8 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
             }
         }
 
-        if (getEndpointConfiguration().getMessageListener() != null) {
-            getEndpointConfiguration().getMessageListener().onOutboundMessage(mailMessageContent);
+        if (getMessageListener() != null) {
+            getMessageListener().onOutboundMessage(mailMessageContent);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + mailMessageContent);
         }

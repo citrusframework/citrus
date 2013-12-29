@@ -55,7 +55,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return getEndpoint().createConsumer().receive("", getEndpoint().getTimeout());
+        return getEndpoint().createConsumer().receive("", getEndpoint().getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -69,7 +69,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return getEndpoint().createConsumer().receive(selector, getEndpoint().getTimeout());
+        return getEndpoint().createConsumer().receive(selector, getEndpoint().getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -98,7 +98,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @return the pollingInterval the pollingInterval to get.
      */
     public long getPollingInterval() {
-        return getEndpoint().getPollingInterval();
+        return getEndpoint().getEndpointConfiguration().getPollingInterval();
     }
 
     /**
@@ -106,7 +106,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @param pollingInterval the pollingInterval to set
      */
     public void setPollingInterval(long pollingInterval) {
-        getEndpoint().setPollingInterval(pollingInterval);
+        getEndpoint().getEndpointConfiguration().setPollingInterval(pollingInterval);
     }
 
 }

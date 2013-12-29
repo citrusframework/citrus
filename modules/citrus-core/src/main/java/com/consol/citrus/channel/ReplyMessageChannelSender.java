@@ -44,7 +44,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * Default constructor.
      */
     public ReplyMessageChannelSender() {
-        this.channelEndpoint = new ChannelSyncEndpoint();
+        this(new ChannelSyncEndpoint());
     }
 
     /**
@@ -79,14 +79,6 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
     }
 
     /**
-     * Sets the message endpoint.
-     * @param channelEndpoint
-     */
-    public void setChannelEndpoint(ChannelSyncEndpoint channelEndpoint) {
-        this.channelEndpoint = channelEndpoint;
-    }
-
-    /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
@@ -101,7 +93,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
         this.replyMessageChannelHolder = replyMessageChannelHolder;
 
         if (replyMessageChannelHolder instanceof SyncMessageChannelReceiver) {
-            setChannelEndpoint(((SyncMessageChannelReceiver) replyMessageChannelHolder).getChannelEndpoint());
+            channelEndpoint = (((SyncMessageChannelReceiver) replyMessageChannelHolder).getChannelEndpoint());
         }
     }
 
@@ -118,7 +110,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        channelEndpoint.setCorrelator(correlator);
+        channelEndpoint.getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -126,7 +118,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @param messagingTemplate the messagingTemplate to set
      */
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        channelEndpoint.setMessagingTemplate(messagingTemplate);
+        channelEndpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
     }
 
     /**
@@ -134,7 +126,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @return the messagingTemplate
      */
     public MessagingTemplate getMessagingTemplate() {
-        return channelEndpoint.getMessagingTemplate();
+        return channelEndpoint.getEndpointConfiguration().getMessagingTemplate();
     }
 
     /**
@@ -142,7 +134,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return channelEndpoint.getCorrelator();
+        return channelEndpoint.getEndpointConfiguration().getCorrelator();
     }
 
     /**

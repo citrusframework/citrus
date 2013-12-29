@@ -73,7 +73,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the pubSubDomain
      */
     public boolean isPubSubDomain() {
-        return jmsEndpoint.isPubSubDomain();
+        return jmsEndpoint.getEndpointConfiguration().isPubSubDomain();
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param pubSubDomain the pubSubDomain to set
      */
     public void setPubSubDomain(boolean pubSubDomain) {
-        jmsEndpoint.setPubSubDomain(pubSubDomain);
+        jmsEndpoint.getEndpointConfiguration().setPubSubDomain(pubSubDomain);
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the connectionFactory
      */
     public ConnectionFactory getConnectionFactory() {
-        return jmsEndpoint.getConnectionFactory();
+        return jmsEndpoint.getEndpointConfiguration().getConnectionFactory();
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        jmsEndpoint.setConnectionFactory(connectionFactory);
+        jmsEndpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
     }
 
     /**
@@ -105,7 +105,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the destination
      */
     public Destination getDestination() {
-        return jmsEndpoint.getDestination();
+        return jmsEndpoint.getEndpointConfiguration().getDestination();
     }
 
     /**
@@ -113,7 +113,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param destination the destination to set
      */
     public void setDestination(Destination destination) {
-        jmsEndpoint.setDestination(destination);
+        jmsEndpoint.getEndpointConfiguration().setDestination(destination);
     }
     
     /**
@@ -129,7 +129,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the destinationName
      */
     public String getDestinationName() {
-        return jmsEndpoint.getDestinationName();
+        return jmsEndpoint.getEndpointConfiguration().getDestinationName();
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param destinationName the destinationName to set
      */
     public void setDestinationName(String destinationName) {
-        jmsEndpoint.setDestinationName(destinationName);
+        jmsEndpoint.getEndpointConfiguration().setDestinationName(destinationName);
     }
 
     /**
@@ -145,7 +145,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the destinationResolver
      */
     public DestinationResolver getDestinationResolver() {
-        return jmsEndpoint.getDestinationResolver();
+        return jmsEndpoint.getEndpointConfiguration().getDestinationResolver();
     }
 
     /**
@@ -153,7 +153,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param destinationResolver the destinationResolver to set
      */
     public void setDestinationResolver(DestinationResolver destinationResolver) {
-        jmsEndpoint.setDestinationResolver(destinationResolver);
+        jmsEndpoint.getEndpointConfiguration().setDestinationResolver(destinationResolver);
     }
 
     /**
@@ -161,7 +161,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the messageConverter
      */
     public MessageConverter getMessageConverter() {
-        return jmsEndpoint.getMessageConverter();
+        return jmsEndpoint.getEndpointConfiguration().getMessageConverter();
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param messageConverter the messageConverter to set
      */
     public void setMessageConverter(MessageConverter messageConverter) {
-        jmsEndpoint.setMessageConverter(messageConverter);
+        jmsEndpoint.getEndpointConfiguration().setMessageConverter(messageConverter);
     }
 
     /**
@@ -177,7 +177,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the headerMapper
      */
     public JmsHeaderMapper getHeaderMapper() {
-        return jmsEndpoint.getHeaderMapper();
+        return jmsEndpoint.getEndpointConfiguration().getHeaderMapper();
     }
 
     /**
@@ -185,7 +185,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param headerMapper the headerMapper to set
      */
     public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        jmsEndpoint.setHeaderMapper(headerMapper);
+        jmsEndpoint.getEndpointConfiguration().setHeaderMapper(headerMapper);
     }
 
     /**
@@ -193,7 +193,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param jmsTemplate the jmsTemplate to set
      */
     public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        jmsEndpoint.setJmsTemplate(jmsTemplate);
+        jmsEndpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
     }
 
     /**
@@ -201,7 +201,7 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the jmsTemplate
      */
     public JmsTemplate getJmsTemplate() {
-        return jmsEndpoint.getJmsTemplate();
+        return jmsEndpoint.getEndpointConfiguration().getJmsTemplate();
     }
 
     /**

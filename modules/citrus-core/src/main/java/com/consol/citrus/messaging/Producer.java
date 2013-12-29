@@ -30,5 +30,4 @@ public interface Producer {
      */
     void send(Message<?> message);
 
-
 }

@@ -34,15 +34,15 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     private static Logger log = LoggerFactory.getLogger(JmsConsumer.class);
 
     /** Endpoint configuration */
-    private JmsEndpointConfiguration endpointConfiguration;
+    private JmsEndpoint endpoint;
 
     /**
-     * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
+     * Default constructor using endpoint.
+     * @param endpoint
      */
-    public JmsConsumer(JmsEndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration.getTimeout());
-        this.endpointConfiguration = endpointConfiguration;
+    public JmsConsumer(JmsEndpoint endpoint) {
+        super(endpoint.getEndpointConfiguration().getTimeout());
+        this.endpoint = endpoint;
     }
 
     @Override
@@ -50,20 +50,20 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         String destinationName;
 
         if (StringUtils.hasText(selector)) {
-            destinationName = endpointConfiguration.getDefaultDestinationName() + "(" + selector + ")'";
+            destinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName() + "(" + selector + ")'";
         } else {
-            destinationName = endpointConfiguration.getDefaultDestinationName();
+            destinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName();
         }
 
         log.info("Waiting for JMS message on destination: '" + destinationName);
 
-        endpointConfiguration.getJmsTemplate().setReceiveTimeout(timeout);
+        endpoint.getEndpointConfiguration().getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = null;
 
         if (StringUtils.hasText(selector)) {
-            receivedObject = endpointConfiguration.getJmsTemplate().receiveSelectedAndConvert(selector);
+            receivedObject = endpoint.getEndpointConfiguration().getJmsTemplate().receiveSelectedAndConvert(selector);
         } else {
-            receivedObject = endpointConfiguration.getJmsTemplate().receiveAndConvert();
+            receivedObject = endpoint.getEndpointConfiguration().getJmsTemplate().receiveAndConvert();
         }
 
         if (receivedObject == null) {
@@ -89,8 +89,8 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * @param receivedMessage
      */
     protected void onInboundMessage(Message<?> receivedMessage) {
-        if (endpointConfiguration.getMessageListener() != null) {
-            endpointConfiguration.getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+        if (endpoint.getMessageListener() != null) {
+            endpoint.getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

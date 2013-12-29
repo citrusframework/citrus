@@ -74,7 +74,7 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getJmsEndpoint().setCorrelator(correlator);
+        getJmsEndpoint().getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -82,6 +82,6 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return getJmsEndpoint().getCorrelator();
+        return getJmsEndpoint().getEndpointConfiguration().getCorrelator();
     }
 }

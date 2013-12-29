@@ -16,11 +16,9 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import org.springframework.beans.factory.DisposableBean;
-
-import javax.jms.Destination;
 
 /**
  * Synchronous Jms message endpoint. When sending messages endpoint sets replyTo message header and waits for synchronous response.
@@ -35,6 +33,9 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
     private JmsSyncProducer jmsSyncMessageProducer;
     private JmsSyncConsumer jmsSyncMessageConsumer;
 
+    /**
+     * Default constructor initializing endpoint.
+     */
     public JmsSyncEndpoint() {
         super(new JmsSyncEndpointConfiguration());
     }
@@ -51,7 +52,7 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         }
 
         if (jmsSyncMessageConsumer == null) {
-            jmsSyncMessageConsumer = new JmsSyncConsumer(getEndpointConfiguration());
+            jmsSyncMessageConsumer = new JmsSyncConsumer(this);
         }
 
         return jmsSyncMessageConsumer;
@@ -64,7 +65,7 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         }
 
         if (jmsSyncMessageProducer == null) {
-            jmsSyncMessageProducer = new JmsSyncProducer(getEndpointConfiguration());
+            jmsSyncMessageProducer = new JmsSyncProducer(this);
         }
 
         return jmsSyncMessageProducer;
@@ -79,67 +80,4 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         }
     }
 
-    /**
-     * Set the reply message correlator.
-     * @param correlator the correlator to set
-     */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getEndpointConfiguration().setCorrelator(correlator);
-    }
-
-    /**
-     * Gets the correlator.
-     * @return the correlator
-     */
-    public ReplyMessageCorrelator getCorrelator() {
-        return getEndpointConfiguration().getCorrelator();
-    }
-
-    /**
-     * Gets the replyDestination.
-     * @return the replyDestination
-     */
-    public Destination getReplyDestination() {
-        return getEndpointConfiguration().getReplyDestination();
-    }
-
-    /**
-     * Set the reply destination.
-     * @param replyDestination the replyDestination to set
-     */
-    public void setReplyDestination(Destination replyDestination) {
-        getEndpointConfiguration().setReplyDestination(replyDestination);
-    }
-
-    /**
-     * Gets the replyDestinationName.
-     * @return the replyDestinationName
-     */
-    public String getReplyDestinationName() {
-        return getEndpointConfiguration().getReplyDestinationName();
-    }
-
-    /**
-     * Set the reply destination name.
-     * @param replyDestinationName the replyDestinationName to set
-     */
-    public void setReplyDestinationName(String replyDestinationName) {
-        getEndpointConfiguration().setReplyDestinationName(replyDestinationName);
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return getEndpointConfiguration().getPollingInterval();
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        getEndpointConfiguration().setPollingInterval(pollingInterval);
-    }
 }

@@ -17,7 +17,6 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.messaging.Consumer;
@@ -66,7 +65,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
     }
 
     @Override
-    public EndpointConfiguration getEndpointConfiguration() {
+    public ChannelEndpointConfiguration getEndpointConfiguration() {
         return channelEndpoint.getEndpointConfiguration();
     }
 
@@ -76,14 +75,6 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      */
     public ChannelEndpoint getChannelEndpoint() {
         return channelEndpoint;
-    }
-
-    /**
-     * Sets the message endpoint.
-     * @param channelEndpoint
-     */
-    public void setChannelEndpoint(ChannelEndpoint channelEndpoint) {
-        this.channelEndpoint = channelEndpoint;
     }
 
     /**
@@ -99,7 +90,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param channel the channel to set
      */
     public void setChannel(MessageChannel channel) {
-        channelEndpoint.setChannel(channel);
+        getEndpointConfiguration().setChannel(channel);
     }
 
     /**
@@ -107,7 +98,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param messagingTemplate the messagingTemplate to set
      */
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        channelEndpoint.setMessagingTemplate(messagingTemplate);
+        getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
     }
 
     /**
@@ -123,7 +114,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param channelResolver the channelResolver to set
      */
     public void setChannelResolver(ChannelResolver channelResolver) {
-        channelEndpoint.setChannelResolver(channelResolver);
+        getEndpointConfiguration().setChannelResolver(channelResolver);
     }
 
     /**
@@ -131,7 +122,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @param channelName the channelName to set
      */
     public void setChannelName(String channelName) {
-        channelEndpoint.setChannelName(channelName);
+        getEndpointConfiguration().setChannelName(channelName);
     }
 
     /**
@@ -139,7 +130,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the channel
      */
     public MessageChannel getChannel() {
-        return channelEndpoint.getChannel();
+        return getEndpointConfiguration().getChannel();
     }
 
     /**
@@ -147,7 +138,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the channelName
      */
     public String getChannelName() {
-        return channelEndpoint.getChannelName();
+        return getEndpointConfiguration().getChannelName();
     }
 
     /**
@@ -155,7 +146,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the messagingTemplate
      */
     public MessagingTemplate getMessagingTemplate() {
-        return channelEndpoint.getMessagingTemplate();
+        return getEndpointConfiguration().getMessagingTemplate();
     }
 
     /**
@@ -163,7 +154,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
      * @return the channelResolver
      */
     public ChannelResolver getChannelResolver() {
-        return channelEndpoint.getChannelResolver();
+        return getEndpointConfiguration().getChannelResolver();
     }
 
     /**

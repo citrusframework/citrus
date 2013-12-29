@@ -16,38 +16,15 @@
 
 package com.consol.citrus.endpoint;
 
-import com.consol.citrus.report.MessageListeners;
-
 /**
  * Abstract endpoint configuration provides basic properties such as message listeners.
  * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractEndpointConfiguration implements EndpointConfiguration {
-    /** The endpoint name usually the Spring bean name */
-    private String endpointName;
 
     /** Send/receive timeout setting */
     private long timeout = 5000L;
-
-    /** Message listeners */
-    private MessageListeners messageListener;
-
-    /**
-     * Gets the message listeners.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
-    }
-
-    /**
-     * Sets the message listeners.
-     * @param messageListener
-     */
-    public void setMessageListener(MessageListeners messageListener) {
-        this.messageListener = messageListener;
-    }
 
     /**
      * Gets the timeout for sending and receiving messages.
@@ -65,19 +42,4 @@ public abstract class AbstractEndpointConfiguration implements EndpointConfigura
         this.timeout = timeout;
     }
 
-    /**
-     * Gets the endpoint name.
-     * @return
-     */
-    public String getName() {
-        return endpointName;
-    }
-
-    /**
-     * Sets the endpoint name.
-     * @param endpointName
-     */
-    public void setName(String endpointName) {
-        this.endpointName = endpointName;
-    }
 }

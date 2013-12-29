@@ -95,7 +95,7 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getJmsEndpoint().setCorrelator(correlator);
+        getJmsEndpoint().getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -103,6 +103,6 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return getJmsEndpoint().getCorrelator();
+        return getJmsEndpoint().getEndpointConfiguration().getCorrelator();
     }
 }

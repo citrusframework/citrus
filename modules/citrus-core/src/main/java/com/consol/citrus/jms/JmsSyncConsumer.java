@@ -39,18 +39,18 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     private Map<String, Destination> replyDestinations = new HashMap<String, Destination>();
 
     /** Endpoint configuration */
-    private final JmsSyncEndpointConfiguration endpointConfiguration;
+    private final JmsSyncEndpoint endpoint;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmsSyncConsumer.class);
 
     /**
      * Default constructor using endpoint configuration.
-     * @param endpointConfiguration
+     * @param endpoint
      */
-    public JmsSyncConsumer(JmsSyncEndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration);
-        this.endpointConfiguration = endpointConfiguration;
+    public JmsSyncConsumer(JmsSyncEndpoint endpoint) {
+        super(endpoint);
+        this.endpoint = endpoint;
     }
 
     @Override
@@ -68,11 +68,11 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         Destination replyDestination;
         Message<?> replyMessage;
 
-        if (endpointConfiguration.getCorrelator() != null) {
+        if (endpoint.getEndpointConfiguration().getCorrelator() != null) {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
                     "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
 
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            String correlationKey = endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
             replyDestination = replyDestinations.remove(correlationKey);
             Assert.notNull(replyDestination, "Unable to locate JMS reply destination with correlation key: '" + correlationKey + "'");
 
@@ -86,7 +86,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
         log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
 
-        endpointConfiguration.getJmsTemplate().convertAndSend(replyDestination, replyMessage);
+        endpoint.getEndpointConfiguration().getJmsTemplate().convertAndSend(replyDestination, replyMessage);
 
         onOutboundMessage(replyMessage);
 
@@ -117,8 +117,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      * @param receivedMessage
      */
     public void saveReplyDestination(Message<?> receivedMessage) {
-        if (endpointConfiguration.getCorrelator() != null) {
-            replyDestinations.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
+        if (endpoint.getEndpointConfiguration().getCorrelator() != null) {
+            replyDestinations.put(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
         } else {
             replyDestinations.put("", (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
         }
@@ -129,8 +129,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      * @param message
      */
     protected void onOutboundMessage(Message<?> message) {
-        if (endpointConfiguration.getMessageListener() != null) {
-            endpointConfiguration.getMessageListener().onOutboundMessage(message.toString());
+        if (endpoint.getMessageListener() != null) {
+            endpoint.getMessageListener().onOutboundMessage(message.toString());
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

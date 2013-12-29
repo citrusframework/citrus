@@ -16,8 +16,8 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 
 /**
  * @author Christoph Deppisch
@@ -29,6 +29,9 @@ public class ChannelSyncEndpoint extends ChannelEndpoint {
     private ChannelSyncProducer messageChannelSyncProducer;
     private ChannelSyncConsumer messageChannelSyncConsumer;
 
+    /**
+     * Default constructor initializing endpoint.
+     */
     public ChannelSyncEndpoint() {
         super(new ChannelSyncEndpointConfiguration());
     }
@@ -62,38 +65,6 @@ public class ChannelSyncEndpoint extends ChannelEndpoint {
         }
 
         return messageChannelSyncProducer;
-    }
-
-    /**
-     * Set the reply message correlator.
-     * @param correlator the correlator to set
-     */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getEndpointConfiguration().setCorrelator(correlator);
-    }
-
-    /**
-     * Gets the correlator.
-     * @return the correlator
-     */
-    public ReplyMessageCorrelator getCorrelator() {
-        return getEndpointConfiguration().getCorrelator();
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return getEndpointConfiguration().getPollingInterval();
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        getEndpointConfiguration().setPollingInterval(pollingInterval);
     }
 
 }

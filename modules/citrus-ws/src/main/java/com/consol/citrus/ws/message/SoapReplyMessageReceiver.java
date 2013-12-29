@@ -62,7 +62,7 @@ public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return getEndpoint().createConsumer().receive("", getEndpoint().getTimeout());
+        return getEndpoint().createConsumer().receive("", getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -76,7 +76,7 @@ public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return getEndpoint().createConsumer().receive(selector, getEndpoint().getTimeout());
+        return getEndpoint().createConsumer().receive(selector, getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -105,7 +105,7 @@ public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
      * @return the pollingInterval the pollingInterval to get.
      */
     public long getPollingInterval() {
-        return getEndpoint().getEndpointConfiguration().getPollingInterval();
+        return getEndpointConfiguration().getPollingInterval();
     }
 
     /**
@@ -113,7 +113,7 @@ public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
      * @param pollingInterval the pollingInterval to set
      */
     public void setPollingInterval(long pollingInterval) {
-        getEndpoint().getEndpointConfiguration().setPollingInterval(pollingInterval);
+        getEndpointConfiguration().setPollingInterval(pollingInterval);
     }
 
 }

@@ -16,25 +16,11 @@
 
 package com.consol.citrus.endpoint;
 
-import com.consol.citrus.report.MessageListeners;
-
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
 public interface EndpointConfiguration {
-
-    /**
-     * Gets the endpoint name usually the Spring bean name.
-     * @return
-     */
-    String getName();
-
-    /**
-     * Sets the endpoint name
-     * @param name
-     */
-    void setName(String name);
 
     /**
      * Gets the timeout either for sending or receiving mesages.
@@ -48,15 +34,4 @@ public interface EndpointConfiguration {
      */
     void setTimeout(long timeout);
 
-    /**
-     * Gets the message listeners.
-     * @return
-     */
-    MessageListeners getMessageListener();
-
-    /**
-     * Sets the message listeners.
-     * @param messageListener
-     */
-    void setMessageListener(MessageListeners messageListener);
 }

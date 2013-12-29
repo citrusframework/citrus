@@ -33,6 +33,9 @@ public class SyncMessageChannelSender extends MessageChannelSender {
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
 
+    /**
+     * Default constructor initializing endpoint.
+     */
     public SyncMessageChannelSender() {
         super(new ChannelSyncEndpoint());
     }
@@ -75,7 +78,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
-        getChannelEndpoint().setTimeout(replyTimeout);
+        getChannelEndpoint().getEndpointConfiguration().setTimeout(replyTimeout);
     }
 
     /**
@@ -83,7 +86,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @return the replyTimeout
      */
     public long getReplyTimeout() {
-        return getChannelEndpoint().getTimeout();
+        return getChannelEndpoint().getEndpointConfiguration().getTimeout();
     }
 
     /**
@@ -91,7 +94,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getChannelEndpoint().setCorrelator(correlator);
+        getChannelEndpoint().getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -99,7 +102,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return getChannelEndpoint().getCorrelator();
+        return getChannelEndpoint().getEndpointConfiguration().getCorrelator();
     }
     
 }
