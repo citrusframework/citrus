@@ -26,6 +26,7 @@ import com.consol.citrus.TestActor;
  * Abstract base class for message receiver implementations.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNameAware {
 
