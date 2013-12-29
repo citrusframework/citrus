@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.config.xml;
 
-import com.consol.citrus.http.HttpServer;
+import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -17,7 +17,8 @@
 package com.consol.citrus.mail.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.mail.message.MailMessageSender;
+import com.consol.citrus.mail.client.MailClient;
+import com.consol.citrus.mail.client.MailEndpointConfiguration;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -28,21 +29,28 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailMessageSenderParser extends AbstractBeanDefinitionParser {
+public class MailClientParser extends AbstractBeanDefinitionParser {
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
-                .genericBeanDefinition(MailMessageSender.class);
+                .genericBeanDefinition(MailClient.class);
 
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("host"), "host");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("protocol"), "protocol");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("username"), "username");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("password"), "password");
+        BeanDefinitionBuilder endpointConfigurationBuilder = BeanDefinitionBuilder
+                .genericBeanDefinition(MailEndpointConfiguration.class);
 
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("properties"), "javaMailProperties");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("host"), "host");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("protocol"), "protocol");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("username"), "username");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("password"), "password");
+
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfigurationBuilder, element.getAttribute("properties"), "javaMailProperties");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
+
+        parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id") + "Configuration", endpointConfigurationBuilder.getBeanDefinition());
+
+        builder.addConstructorArgReference(element.getAttribute("id") + "Configuration");
 
         return builder.getBeanDefinition();
     }

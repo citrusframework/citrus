@@ -21,11 +21,11 @@ import com.consol.citrus.jms.JmsReplyMessageReceiver;
 /**
  * @author Christoph Deppisch
  * @since 1.4
+ * @deprecated
  */
-public class JmsReplyMessageReceiverParser extends ReplyMessageReceiverParser {
+public class JmsReplyMessageReceiverParser extends ReplyMessageReceiverParser<JmsReplyMessageReceiver> {
 
-    @Override
-    protected Class getBeanDefinitionClass() {
-        return JmsReplyMessageReceiver.class;
+    public JmsReplyMessageReceiverParser() {
+        super(JmsReplyMessageReceiver.class);
     }
 }

@@ -21,11 +21,11 @@ import com.consol.citrus.channel.MessageChannelReplyMessageReceiver;
 /**
  * @author Christoph Deppisch
  * @since 1.4
+ * @deprecated
  */
-public class ReplyMessageChannelReceiverParser extends ReplyMessageReceiverParser {
+public class ReplyMessageChannelReceiverParser extends ReplyMessageReceiverParser<MessageChannelReplyMessageReceiver> {
 
-    @Override
-    protected Class getBeanDefinitionClass() {
-        return MessageChannelReplyMessageReceiver.class;
+    public ReplyMessageChannelReceiverParser() {
+        super(MessageChannelReplyMessageReceiver.class);
     }
 }

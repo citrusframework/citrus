@@ -18,9 +18,12 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.callback.ValidationCallback;
@@ -54,8 +57,8 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
     /** Select messages via message selector string */
     private String messageSelectorString;
 
-    /** Message receiver */
-    private MessageReceiver messageReceiver;
+    /** Message endpoint */
+    private Endpoint endpoint;
     
     /** Receive timeout */
     private long receiveTimeout = 0L;
@@ -138,7 +141,8 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @return
      */
     private Message<?> receive() {
-        return receiveTimeout > 0 ? messageReceiver.receive(receiveTimeout) : messageReceiver.receive();
+        return receiveTimeout > 0 ? endpoint.createConsumer().receive(receiveTimeout) :
+                endpoint.createConsumer().receive(endpoint.getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -152,15 +156,24 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
         if (log.isDebugEnabled()) {
             log.debug("Setting message selector: '" + selectorString + "'");
         }
-        
-        if (receiveTimeout > 0) {
-            return messageReceiver.receiveSelected(
-                    context.replaceDynamicContentInString(selectorString), 
-                    receiveTimeout);
+
+        Consumer consumer = endpoint.createConsumer();
+        if (consumer instanceof SelectiveConsumer) {
+            if (receiveTimeout > 0) {
+                return ((SelectiveConsumer)endpoint.createConsumer()).receive(
+                        context.replaceDynamicContentInString(selectorString),
+                        receiveTimeout);
+            } else {
+                return ((SelectiveConsumer)endpoint.createConsumer()).receive(
+                        context.replaceDynamicContentInString(selectorString),
+                        endpoint.getEndpointConfiguration().getTimeout());
+            }
         } else {
-            return messageReceiver.receiveSelected(
-                    context.replaceDynamicContentInString(selectorString));
+            log.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
+            return receive();
         }
+
+
     }
 
     /**
@@ -187,8 +200,8 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      */
     @Override
     public boolean isDisabled(TestContext context) {
-        if (getActor() == null && messageReceiver.getActor() != null) {
-            return messageReceiver.getActor().isDisabled();
+        if (getActor() == null && endpoint.getActor() != null) {
+            return endpoint.getActor().isDisabled();
         }
         
         return super.isDisabled(context);
@@ -219,19 +232,19 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
     }
     
     /**
-     * Set message receiver instance.
-     * @param messageReceiver the messageReceiver to set
+     * Set message endpoint instance.
+     * @param endpoint the message endpoint
      */
-    public void setMessageReceiver(MessageReceiver messageReceiver) {
-        this.messageReceiver = messageReceiver;
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
     /**
-     * Get the message receiver.
-     * @return the messageReceiver
+     * Get the message endpoint.
+     * @return the message endpoint
      */
-    public MessageReceiver getMessageReceiver() {
-        return messageReceiver;
+    public Endpoint getEndpoint() {
+        return endpoint;
     }
 
     /**

@@ -38,8 +38,8 @@ public class SyncMessageChannelSender extends MessageChannelSender {
     }
 
     @Override
-    public ChannelSyncEndpoint getMessageChannelEndpoint() {
-        return (ChannelSyncEndpoint) super.getMessageChannelEndpoint();
+    public ChannelSyncEndpoint getChannelEndpoint() {
+        return (ChannelSyncEndpoint) super.getChannelEndpoint();
     }
 
     /**
@@ -47,7 +47,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        getMessageChannelEndpoint().createProducer().send(message);
+        getChannelEndpoint().createProducer().send(message);
     }
     
     /**
@@ -58,7 +58,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
         this.replyMessageHandler = replyMessageHandler;
 
         if (replyMessageHandler instanceof MessageChannelReplyMessageReceiver) {
-            ((MessageChannelReplyMessageReceiver) replyMessageHandler).setMessageChannelEndpoint(getMessageChannelEndpoint());
+            ((MessageChannelReplyMessageReceiver) replyMessageHandler).setEndpoint(getChannelEndpoint());
         }
     }
 
@@ -75,7 +75,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
-        getMessageChannelEndpoint().setTimeout(replyTimeout);
+        getChannelEndpoint().setTimeout(replyTimeout);
     }
 
     /**
@@ -83,7 +83,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @return the replyTimeout
      */
     public long getReplyTimeout() {
-        return getMessageChannelEndpoint().getTimeout();
+        return getChannelEndpoint().getTimeout();
     }
 
     /**
@@ -91,7 +91,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getMessageChannelEndpoint().setCorrelator(correlator);
+        getChannelEndpoint().setCorrelator(correlator);
     }
 
     /**
@@ -99,7 +99,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return getMessageChannelEndpoint().getCorrelator();
+        return getChannelEndpoint().getCorrelator();
     }
     
 }

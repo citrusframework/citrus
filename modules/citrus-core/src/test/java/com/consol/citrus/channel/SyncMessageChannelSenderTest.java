@@ -144,7 +144,7 @@ public class SyncMessageChannelSenderTest {
         
         sender.send(message);
 
-        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getMessageChannelEndpoint().createProducer()).findReplyMessage("");
+        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getChannelEndpoint().createProducer()).findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
@@ -183,7 +183,7 @@ public class SyncMessageChannelSenderTest {
         
         sender.send(message);
 
-        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getMessageChannelEndpoint().createProducer()).findReplyMessage("");
+        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getChannelEndpoint().createProducer()).findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
@@ -224,7 +224,7 @@ public class SyncMessageChannelSenderTest {
         
         sender.send(message);
 
-        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getMessageChannelEndpoint().createProducer()).findReplyMessage(MessageHeaders.ID + " = '123456789'");
+        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getChannelEndpoint().createProducer()).findReplyMessage(MessageHeaders.ID + " = '123456789'");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         

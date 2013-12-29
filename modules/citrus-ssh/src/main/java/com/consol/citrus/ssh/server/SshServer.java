@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.server;
 
-import java.io.IOException;
-
-import org.apache.sshd.SshServer;
+import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.ssh.SshCommand;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.keyprovider.ResourceKeyPairProvider;
@@ -26,10 +28,7 @@ import org.apache.sshd.server.Command;
 import org.apache.sshd.server.CommandFactory;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.server.AbstractServer;
+import java.io.IOException;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -56,7 +55,7 @@ import com.consol.citrus.server.AbstractServer;
  * @author Roland Huss
  * @since 04.09.12
  */
-public class CitrusSshServer extends AbstractServer {
+public class SshServer extends AbstractServer {
 
     /** Port to listen to **/
     private int port = 22;
@@ -72,11 +71,11 @@ public class CitrusSshServer extends AbstractServer {
     private String allowedKeyPath;
 
     /** Path to our own host keys. If not provided, a default is used. The format of this **/
-    /** file should be PEM, a serialized {@link KeyPair}. **/
+    /** file should be PEM, a serialized {@link java.security.KeyPair}. **/
     private String hostKeyPath;
 
     /** SSH server used **/
-    private SshServer sshd;
+    private org.apache.sshd.SshServer sshd;
 
     /** MessageHandler for validation purposes **/
     private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
@@ -86,7 +85,7 @@ public class CitrusSshServer extends AbstractServer {
         if (!StringUtils.hasText(user)) {
             throw new CitrusRuntimeException("No 'user' provided (mandatory for authentication)");
         }
-        sshd = SshServer.setUpDefaultServer();
+        sshd = org.apache.sshd.SshServer.setUpDefaultServer();
         sshd.setPort(port);
         KeyPairProvider prov =
                 hostKeyPath != null ?

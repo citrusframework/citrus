@@ -17,8 +17,11 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.integration.Message;
@@ -39,7 +42,7 @@ import javax.jms.Destination;
 public class JmsSyncMessageSender implements MessageSender, BeanNameAware, DisposableBean {
 
     /** New synchronous JmsEndpoint implementation */
-    private JmsSyncEndpoint jmsMessageEndpoint = new JmsSyncEndpoint();
+    private JmsSyncEndpoint jmsEndpoint = new JmsSyncEndpoint();
 
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
@@ -49,14 +52,29 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @throws CitrusRuntimeException
      */
     public void send(Message<?> message) {
-        jmsMessageEndpoint.createProducer().send(message);
+        jmsEndpoint.createProducer().send(message);
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return jmsEndpoint.createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return jmsEndpoint.createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return jmsEndpoint.getEndpointConfiguration();
     }
 
     /**
      * Destroy method closing JMS session and connection
      */
     public void destroy() throws Exception {
-        jmsMessageEndpoint.destroy();
+        jmsEndpoint.destroy();
     }
 
     /**
@@ -64,7 +82,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        jmsMessageEndpoint.setConnectionFactory(connectionFactory);
+        jmsEndpoint.setConnectionFactory(connectionFactory);
     }
 
     /**
@@ -75,7 +93,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
         this.replyMessageHandler = replyMessageHandler;
 
         if (replyMessageHandler instanceof JmsReplyMessageReceiver) {
-            ((JmsReplyMessageReceiver) replyMessageHandler).setJmsEndpoint(jmsMessageEndpoint);
+            ((JmsReplyMessageReceiver) replyMessageHandler).setEndpoint(jmsEndpoint);
         }
     }
 
@@ -92,7 +110,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param destination the destination to set
      */
     public void setDestination(Destination destination) {
-        jmsMessageEndpoint.setDestination(destination);
+        jmsEndpoint.setDestination(destination);
     }
 
     /**
@@ -100,7 +118,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param destinationName the destinationName to set
      */
     public void setDestinationName(String destinationName) {
-        jmsMessageEndpoint.setDestinationName(destinationName);
+        jmsEndpoint.setDestinationName(destinationName);
     }
 
     /**
@@ -108,7 +126,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param replyDestination the replyDestination to set
      */
     public void setReplyDestination(Destination replyDestination) {
-        jmsMessageEndpoint.setReplyDestination(replyDestination);
+        jmsEndpoint.setReplyDestination(replyDestination);
     }
 
     /**
@@ -116,7 +134,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param replyDestinationName the replyDestinationName to set
      */
     public void setReplyDestinationName(String replyDestinationName) {
-        jmsMessageEndpoint.setReplyDestinationName(replyDestinationName);
+        jmsEndpoint.setReplyDestinationName(replyDestinationName);
     }
 
     /**
@@ -124,7 +142,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
-        jmsMessageEndpoint.setTimeout(replyTimeout);
+        jmsEndpoint.setTimeout(replyTimeout);
     }
 
     /**
@@ -132,7 +150,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        jmsMessageEndpoint.setCorrelator(correlator);
+        jmsEndpoint.setCorrelator(correlator);
     }
 
     /**
@@ -140,7 +158,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param pubSubDomain the pubSubDomain to set
      */
     public void setPubSubDomain(boolean pubSubDomain) {
-        jmsMessageEndpoint.setPubSubDomain(pubSubDomain);
+        jmsEndpoint.setPubSubDomain(pubSubDomain);
     }
 
     /**
@@ -148,14 +166,14 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the pubSubDomain
      */
     public boolean isPubSubDomain() {
-        return jmsMessageEndpoint.isPubSubDomain();
+        return jmsEndpoint.isPubSubDomain();
     }
 
     /**
      * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
      */
     public void setBeanName(String name) {
-        jmsMessageEndpoint.setBeanName(name);
+        jmsEndpoint.setBeanName(name);
     }
 
     /**
@@ -163,7 +181,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the connectionFactory
      */
     public ConnectionFactory getConnectionFactory() {
-        return jmsMessageEndpoint.getConnectionFactory();
+        return jmsEndpoint.getConnectionFactory();
     }
 
     /**
@@ -171,7 +189,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the destination
      */
     public Destination getDestination() {
-        return jmsMessageEndpoint.getDestination();
+        return jmsEndpoint.getDestination();
     }
 
     /**
@@ -179,7 +197,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the destinationName
      */
     public String getDestinationName() {
-        return jmsMessageEndpoint.getDestinationName();
+        return jmsEndpoint.getDestinationName();
     }
 
     /**
@@ -187,7 +205,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the replyDestination
      */
     public Destination getReplyDestination() {
-        return jmsMessageEndpoint.getReplyDestination();
+        return jmsEndpoint.getReplyDestination();
     }
 
     /**
@@ -195,7 +213,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the replyDestinationName
      */
     public String getReplyDestinationName() {
-        return jmsMessageEndpoint.getReplyDestinationName();
+        return jmsEndpoint.getReplyDestinationName();
     }
 
     /**
@@ -203,7 +221,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the replyTimeout
      */
     public long getReplyTimeout() {
-        return jmsMessageEndpoint.getTimeout();
+        return jmsEndpoint.getTimeout();
     }
 
     /**
@@ -211,7 +229,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return jmsMessageEndpoint.getCorrelator();
+        return jmsEndpoint.getCorrelator();
     }
 
     /**
@@ -219,7 +237,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return jmsMessageEndpoint.getActor();
+        return jmsEndpoint.getActor();
     }
 
     /**
@@ -227,11 +245,16 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
      * @param actor the actor to set
      */
     public void setActor(TestActor actor) {
-        jmsMessageEndpoint.setActor(actor);
+        jmsEndpoint.setActor(actor);
     }
 
     @Override
     public String getName() {
-        return jmsMessageEndpoint.getName();
+        return jmsEndpoint.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        jmsEndpoint.setName(name);
     }
 }

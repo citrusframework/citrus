@@ -32,12 +32,12 @@ public class SendMessageActionConverter implements ObjectConverter<Send, SendMes
 
         if (definition.getActor() != null) {
             action.setActor(definition.getActor().getName());
-        } else if (definition.getMessageSender().getActor() != null) {
-            action.setActor(definition.getMessageSender().getActor().getName());
+        } else if (definition.getEndpoint().getActor() != null) {
+            action.setActor(definition.getEndpoint().getActor().getName());
         }
 
         action.setDescription(definition.getDescription());
-        action.setWith(definition.getMessageSender().getName());
+        action.setWith(definition.getEndpoint().getName());
 
         return action;
     }

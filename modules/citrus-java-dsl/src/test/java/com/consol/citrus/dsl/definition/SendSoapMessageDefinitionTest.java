@@ -87,7 +87,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getMessageSender(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -100,7 +100,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         action = ((SendSoapMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getMessageSender(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         
         Assert.assertTrue(action.isForkMode());
@@ -125,7 +125,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getMessageSender(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -158,7 +158,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getMessageSender(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -195,7 +195,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getMessageSender(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -246,7 +246,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         SendMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        Assert.assertEquals(action.getMessageSender(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
         
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -255,7 +255,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         action = ((SendMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
-        Assert.assertEquals(action.getMessageSender(), messageSender);
+        Assert.assertEquals(action.getEndpoint(), messageSender);
         
         verify(applicationContextMock);
     }

@@ -17,8 +17,11 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
 import org.springframework.integration.core.MessagingTemplate;
@@ -35,44 +38,59 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
     private ReplyMessageChannelHolder replyMessageChannelHolder;
 
     /** New message channel endpoint */
-    private ChannelSyncEndpoint messageChannelEndpoint;
+    private ChannelSyncEndpoint channelEndpoint;
 
     /**
      * Default constructor.
      */
     public ReplyMessageChannelSender() {
-        this.messageChannelEndpoint = new ChannelSyncEndpoint();
+        this.channelEndpoint = new ChannelSyncEndpoint();
     }
 
     /**
      * Default constructor using message endpoint.
-     * @param messageChannelEndpoint
+     * @param channelEndpoint
      */
-    public ReplyMessageChannelSender(ChannelSyncEndpoint messageChannelEndpoint) {
-        this.messageChannelEndpoint = messageChannelEndpoint;
+    public ReplyMessageChannelSender(ChannelSyncEndpoint channelEndpoint) {
+        this.channelEndpoint = channelEndpoint;
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return channelEndpoint.createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return channelEndpoint.createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return channelEndpoint.getEndpointConfiguration();
     }
 
     /**
      * Gets the message endpoint.
      * @return
      */
-    public ChannelSyncEndpoint getMessageChannelEndpoint() {
-        return messageChannelEndpoint;
+    public ChannelSyncEndpoint getChannelEndpoint() {
+        return channelEndpoint;
     }
 
     /**
      * Sets the message endpoint.
-     * @param messageChannelEndpoint
+     * @param channelEndpoint
      */
-    public void setMessageChannelEndpoint(ChannelSyncEndpoint messageChannelEndpoint) {
-        this.messageChannelEndpoint = messageChannelEndpoint;
+    public void setChannelEndpoint(ChannelSyncEndpoint channelEndpoint) {
+        this.channelEndpoint = channelEndpoint;
     }
 
     /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        ((ChannelSyncConsumer)messageChannelEndpoint.createConsumer()).send(message);
+        ((ChannelSyncConsumer) channelEndpoint.createConsumer()).send(message);
     }
     
     /**
@@ -83,7 +101,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
         this.replyMessageChannelHolder = replyMessageChannelHolder;
 
         if (replyMessageChannelHolder instanceof SyncMessageChannelReceiver) {
-            setMessageChannelEndpoint(((SyncMessageChannelReceiver) replyMessageChannelHolder).getMessageChannelEndpoint());
+            setChannelEndpoint(((SyncMessageChannelReceiver) replyMessageChannelHolder).getChannelEndpoint());
         }
     }
 
@@ -100,7 +118,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        messageChannelEndpoint.setCorrelator(correlator);
+        channelEndpoint.setCorrelator(correlator);
     }
 
     /**
@@ -108,7 +126,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @param messagingTemplate the messagingTemplate to set
      */
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        messageChannelEndpoint.setMessagingTemplate(messagingTemplate);
+        channelEndpoint.setMessagingTemplate(messagingTemplate);
     }
 
     /**
@@ -116,7 +134,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @return the messagingTemplate
      */
     public MessagingTemplate getMessagingTemplate() {
-        return messageChannelEndpoint.getMessagingTemplate();
+        return channelEndpoint.getMessagingTemplate();
     }
 
     /**
@@ -124,7 +142,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return messageChannelEndpoint.getCorrelator();
+        return channelEndpoint.getCorrelator();
     }
 
     /**
@@ -132,7 +150,7 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return messageChannelEndpoint.getActor();
+        return channelEndpoint.getActor();
     }
 
     /**
@@ -140,16 +158,21 @@ public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
      * @param actor the actor to set
      */
     public void setActor(TestActor actor) {
-        messageChannelEndpoint.setActor(actor);
+        channelEndpoint.setActor(actor);
     }
 
     @Override
     public void setBeanName(String name) {
-        messageChannelEndpoint.setBeanName(name);
+        channelEndpoint.setBeanName(name);
     }
 
     @Override
     public String getName() {
-        return messageChannelEndpoint.getName();
+        return channelEndpoint.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        channelEndpoint.setName(name);
     }
 }

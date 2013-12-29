@@ -321,7 +321,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver) {
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setMessageReceiver(messageReceiver);
+        action.setEndpoint(messageReceiver);
         testCase.addTestAction(action);
         return new ReceiveTimeoutActionDefinition(action);
     }
@@ -336,7 +336,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
 
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setMessageReceiver(messageReceiver);
+        action.setEndpoint(messageReceiver);
         testCase.addTestAction(action);
         return new ReceiveTimeoutActionDefinition(action);
     }
@@ -464,7 +464,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-        action.setMessageReceiver(messageReceiver);
+        action.setEndpoint(messageReceiver);
 
         testCase.addTestAction(action);
         return new ReceiveSoapMessageActionDefinition(action, applicationContext);
@@ -478,7 +478,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver) {
         ReceiveMessageAction action = new ReceiveMessageAction();
-        action.setMessageReceiver(messageReceiver);
+        action.setEndpoint(messageReceiver);
 
         testCase.addTestAction(action);
         return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
@@ -495,13 +495,13 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
         if (messageReceiver instanceof SoapReplyMessageReceiver) {
             ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-            action.setMessageReceiver(messageReceiver);
+            action.setEndpoint(messageReceiver);
             testCase.addTestAction(action);
 
             return new ReceiveSoapMessageActionDefinition(action, applicationContext);
         } else {
             ReceiveMessageAction action = new ReceiveMessageAction();
-            action.setMessageReceiver(messageReceiver);
+            action.setEndpoint(messageReceiver);
             testCase.addTestAction(action);
 
             return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
@@ -516,7 +516,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
         SendSoapMessageAction action = new SendSoapMessageAction();
-        action.setMessageSender(messageSender);
+        action.setEndpoint(messageSender);
 
         testCase.addTestAction(action);
         return new SendSoapMessageActionDefinition(action);
@@ -530,7 +530,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public SendMessageActionDefinition send(MessageSender messageSender) {
         SendMessageAction action = new SendMessageAction();
-        action.setMessageSender(messageSender);
+        action.setEndpoint(messageSender);
 
         testCase.addTestAction(action);
         return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
@@ -548,13 +548,13 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
         if (messageSender instanceof WebServiceMessageSender) {
             SendSoapMessageAction action = new SendSoapMessageAction();
-            action.setMessageSender(messageSender);
+            action.setEndpoint(messageSender);
 
             testCase.addTestAction(action);
             return new SendSoapMessageActionDefinition(action);
         } else {
             SendMessageAction action = new SendMessageAction();
-            action.setMessageSender(messageSender);
+            action.setEndpoint(messageSender);
 
             testCase.addTestAction(action);
             return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
@@ -572,7 +572,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
 
         SendMessageAction action = new SendMessageAction();
-        action.setMessageSender(messageSender);
+        action.setEndpoint(messageSender);
 
         testCase.addTestAction(action);
         return new SendSoapFaultActionDefinition(action, new PositionHandle(testCase.getActions()));

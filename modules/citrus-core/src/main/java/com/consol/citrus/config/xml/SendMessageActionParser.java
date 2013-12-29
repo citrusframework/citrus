@@ -49,7 +49,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
             builder = parseComponent(element, parserContext);
             builder.addPropertyValue("name", element.getLocalName());
 
-            builder.addPropertyReference("messageSender", messageSenderReference);
+            builder.addPropertyReference("endpoint", messageSenderReference);
         } else {
             throw new BeanCreationException("Missing message sender attrbiute 'with'");
         }

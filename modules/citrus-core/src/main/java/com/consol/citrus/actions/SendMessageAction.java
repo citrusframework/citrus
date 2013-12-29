@@ -18,6 +18,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -41,8 +42,8 @@ import java.util.List;
  * @since 2008
  */
 public class SendMessageAction extends AbstractTestAction {
-    /** The message sender */
-    protected MessageSender messageSender;
+    /** The message endpoint */
+    protected Endpoint endpoint;
     
     /** List of variable extractors responsible for creating variables from received message content */
     private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
@@ -90,11 +91,11 @@ public class SendMessageAction extends AbstractTestAction {
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(new Runnable() {
                 public void run() {
-                    messageSender.send(message);
+                    endpoint.createProducer().send(message);
                 }
             });
         } else {
-            messageSender.send(message);
+            endpoint.createProducer().send(message);
         }
     }
     
@@ -103,8 +104,8 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public boolean isDisabled(TestContext context) {
-        if (getActor() == null && messageSender.getActor() != null) {
-            return messageSender.getActor().isDisabled();
+        if (getActor() == null && endpoint.getActor() != null) {
+            return endpoint.getActor().isDisabled();
         }
         
         return super.isDisabled(context);
@@ -125,11 +126,19 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set the message sender instance.
-     * @param messageSender the messageSender to set
+     * Set message endpoint instance.
+     * @param endpoint the message endpoint
      */
-    public void setMessageSender(MessageSender messageSender) {
-        this.messageSender = messageSender;
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    /**
+     * Get the message endpoint.
+     * @return the message endpoint
+     */
+    public Endpoint getEndpoint() {
+        return endpoint;
     }
 
     /**
@@ -164,14 +173,6 @@ public class SendMessageAction extends AbstractTestAction {
         return messageBuilder;
     }
 
-    /**
-     * Gets the messageSender.
-     * @return the messageSender
-     */
-    public MessageSender getMessageSender() {
-        return messageSender;
-    }
-    
     /**
      * Enables fork mode for this message sender.
      * @param fork the fork to set.

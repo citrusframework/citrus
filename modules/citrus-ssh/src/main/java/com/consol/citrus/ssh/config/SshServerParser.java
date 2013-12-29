@@ -16,11 +16,10 @@
 
 package com.consol.citrus.ssh.config;
 
+import com.consol.citrus.ssh.server.SshServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.ssh.CitrusSshServer;
 
 /**
  * Parser for the configuration of an SSH server
@@ -60,6 +59,6 @@ public class SshServerParser extends AbstractSshParser {
     @Override
     /** {@inheritDoc} */
     protected Class<?> getBeanClass() {
-        return CitrusSshServer.class;
+        return SshServer.class;
     }
 }

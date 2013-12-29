@@ -16,7 +16,6 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.TestActor;
 import com.consol.citrus.message.ReplyMessageReceiver;
 import org.springframework.integration.Message;
 
@@ -27,96 +26,71 @@ import org.springframework.integration.Message;
  */
 public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
 
-    /** Synchronous endpoint providing the reply messages */
-    private ChannelSyncEndpoint messageChannelEndpoint;
-
     /**
      * Default constructor.
      */
     public MessageChannelReplyMessageReceiver() {
-        this.messageChannelEndpoint  = new ChannelSyncEndpoint();
+        this(new ChannelSyncEndpoint());
     }
 
     /**
      * Default constructor with Jms endpoint.
-     * @param messageChannelEndpoint
+     * @param channelEndpoint
      */
-    protected MessageChannelReplyMessageReceiver(ChannelSyncEndpoint messageChannelEndpoint) {
-        this.messageChannelEndpoint = messageChannelEndpoint;
+    protected MessageChannelReplyMessageReceiver(ChannelSyncEndpoint channelEndpoint) {
+        super(channelEndpoint);
     }
 
-    /**
-     * Gets the message channel endpoint.
-     * @return
-     */
-    public ChannelSyncEndpoint getMessageChannelEndpoint() {
-        return messageChannelEndpoint;
+    @Override
+    public ChannelSyncEndpoint getEndpoint() {
+        return (ChannelSyncEndpoint) super.getEndpoint();
     }
 
-    /**
-     * Sets the message channel endpoint
-     * @param messageChannelEndpoint
-     */
-    public void setMessageChannelEndpoint(ChannelSyncEndpoint messageChannelEndpoint) {
-        this.messageChannelEndpoint = messageChannelEndpoint;
+    @Override
+    public ChannelSyncEndpointConfiguration getEndpointConfiguration() {
+        return getEndpoint().getEndpointConfiguration();
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return messageChannelEndpoint.createConsumer().receive("", messageChannelEndpoint.getTimeout());
+        return getEndpoint().createConsumer().receive("", getEndpoint().getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)
      */
     public Message<?> receive(long timeout) {
-        return messageChannelEndpoint.createConsumer().receive("", timeout);
+        return getEndpoint().createConsumer().receive("", timeout);
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return messageChannelEndpoint.createConsumer().receive(selector, messageChannelEndpoint.getTimeout());
+        return getEndpoint().createConsumer().receive(selector, getEndpoint().getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        return messageChannelEndpoint.createConsumer().receive(selector, timeout);
+        return getEndpoint().createConsumer().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        ((ChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage(correlationKey, replyMessage);
+        ((ChannelSyncProducer) getEndpoint().createProducer()).onReplyMessage(correlationKey, replyMessage);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
-        ((ChannelSyncProducer) messageChannelEndpoint.createConsumer()).onReplyMessage("", replyMessage);
-    }
-
-    /**
-     * Gets the actor.
-     * @return the actor the actor to get.
-     */
-    public TestActor getActor() {
-        return messageChannelEndpoint.getActor();
-    }
-
-    /**
-     * Sets the actor.
-     * @param actor the actor to set
-     */
-    public void setActor(TestActor actor) {
-        messageChannelEndpoint.setActor(actor);
+        ((ChannelSyncProducer) getEndpoint().createProducer()).onReplyMessage("", replyMessage);
     }
 
     /**
@@ -124,7 +98,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @return the pollingInterval the pollingInterval to get.
      */
     public long getPollingInterval() {
-        return messageChannelEndpoint.getPollingInterval();
+        return getEndpoint().getPollingInterval();
     }
 
     /**
@@ -132,16 +106,7 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
      * @param pollingInterval the pollingInterval to set
      */
     public void setPollingInterval(long pollingInterval) {
-        messageChannelEndpoint.setPollingInterval(pollingInterval);
+        getEndpoint().setPollingInterval(pollingInterval);
     }
 
-    @Override
-    public void setBeanName(String name) {
-        messageChannelEndpoint.setBeanName(name);
-    }
-
-    @Override
-    public String getName() {
-        return messageChannelEndpoint.getName();
-    }
 }

@@ -16,8 +16,11 @@
 
 package com.consol.citrus.jms;
 
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.springframework.integration.Message;
 
 /**
@@ -42,6 +45,21 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
      */
     public JmsMessageReceiver(JmsEndpoint jmsEndpoint) {
         super(jmsEndpoint);
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return getJmsEndpoint().createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return getJmsEndpoint().createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return getJmsEndpoint().getEndpointConfiguration();
     }
 
     /**

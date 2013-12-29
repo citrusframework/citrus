@@ -16,14 +16,14 @@
 
 package com.consol.citrus.http.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.http.server.HttpServer;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Parser for Http server implementation in Citrus http namespace.
@@ -35,7 +35,7 @@ public class HttpServerParser extends AbstractBeanDefinitionParser {
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition("com.consol.citrus.http.HttpServer");
+            .genericBeanDefinition(HttpServer.class);
         
         String port = element.getAttribute("port");
         if (StringUtils.hasText(port)) {

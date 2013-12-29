@@ -19,7 +19,7 @@ package com.consol.citrus.mail.config.xml;
 import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.mail.adapter.MessageHandlerAdapter;
 import com.consol.citrus.mail.adapter.MessageSplittingHandlerAdapter;
-import com.consol.citrus.mail.server.CitrusMailServer;
+import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,16 +30,16 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class CitrusMailServerParserTest extends AbstractBeanDefinitionParserTest {
+public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
     public void testMailServerParser() {
-        Map<String, CitrusMailServer> servers = beanDefinitionContext.getBeansOfType(CitrusMailServer.class);
+        Map<String, MailServer> servers = beanDefinitionContext.getBeansOfType(MailServer.class);
 
         Assert.assertEquals(servers.size(), 3);
 
         // 1st mail server
-        CitrusMailServer server = servers.get("mailServer1");
+        MailServer server = servers.get("mailServer1");
         Assert.assertEquals(server.getName(), "mailServer1");
         Assert.assertEquals(server.getPort(), 25);
         Assert.assertFalse(server.isAutoStart());

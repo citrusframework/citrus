@@ -16,8 +16,8 @@
 
 package com.consol.citrus.mail.config.handler;
 
-import com.consol.citrus.mail.config.xml.CitrusMailServerParser;
-import com.consol.citrus.mail.config.xml.MailMessageSenderParser;
+import com.consol.citrus.mail.config.xml.MailServerParser;
+import com.consol.citrus.mail.config.xml.MailClientParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -27,7 +27,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 public class CitrusMailConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("server", new CitrusMailServerParser());
-        registerBeanDefinitionParser("message-sender", new MailMessageSenderParser());
+        registerBeanDefinitionParser("server", new MailServerParser());
+        registerBeanDefinitionParser("message-sender", new MailClientParser());
     }
 }

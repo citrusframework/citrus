@@ -16,8 +16,9 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.TestActor;
 import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.springframework.integration.Message;
 
 /**
@@ -28,14 +29,11 @@ import org.springframework.integration.Message;
  */
 public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
 
-    /** Synchronous endpoint providing the reply messages */
-    private JmsSyncEndpoint jmsEndpoint;
-
     /**
      * Default constructor.
      */
     public JmsReplyMessageReceiver() {
-        this.jmsEndpoint  = new JmsSyncEndpoint();
+        this(new JmsSyncEndpoint());
     }
 
     /**
@@ -43,81 +41,69 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * @param jmsEndpoint
      */
     protected JmsReplyMessageReceiver(JmsSyncEndpoint jmsEndpoint) {
-        this.jmsEndpoint = jmsEndpoint;
+        super(jmsEndpoint);
     }
 
-    /**
-     * Gets the Jms endpoint.
-     * @return
-     */
-    public JmsSyncEndpoint getJmsEndpoint() {
-        return jmsEndpoint;
+    @Override
+    public JmsSyncEndpoint getEndpoint() {
+        return (JmsSyncEndpoint) super.getEndpoint();
     }
 
-    /**
-     * Sets the Jms endpoint
-     * @param jmsEndpoint
-     */
-    public void setJmsEndpoint(JmsSyncEndpoint jmsEndpoint) {
-        this.jmsEndpoint = jmsEndpoint;
+    @Override
+    public JmsSyncEndpointConfiguration getEndpointConfiguration() {
+        return getEndpoint().getEndpointConfiguration();
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return getEndpoint().createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return getEndpoint().createProducer();
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return jmsEndpoint.createConsumer().receive("", jmsEndpoint.getTimeout());
+        return getEndpoint().createConsumer().receive("", getEndpoint().getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive(long)
      */
     public Message<?> receive(long timeout) {
-        return jmsEndpoint.createConsumer().receive("", timeout);
+        return getEndpoint().createConsumer().receive("", timeout);
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return jmsEndpoint.createConsumer().receive(selector, jmsEndpoint.getTimeout());
+        return getEndpoint().createConsumer().receive(selector, getEndpoint().getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        return jmsEndpoint.createConsumer().receive(selector, timeout);
+        return getEndpoint().createConsumer().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
      */
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        ((JmsSyncProducer) jmsEndpoint.createProducer()).onReplyMessage(correlationKey, replyMessage);
+        ((JmsSyncProducer) getEndpoint().createProducer()).onReplyMessage(correlationKey, replyMessage);
     }
 
     /**
      * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
      */
     public void onReplyMessage(Message<?> replyMessage) {
-        ((JmsSyncProducer) jmsEndpoint.createProducer()).onReplyMessage("", replyMessage);
-    }
-
-    /**
-     * Gets the actor.
-     * @return the actor the actor to get.
-     */
-    public TestActor getActor() {
-        return jmsEndpoint.getActor();
-    }
-
-    /**
-     * Sets the actor.
-     * @param actor the actor to set
-     */
-    public void setActor(TestActor actor) {
-        jmsEndpoint.setActor(actor);
+        ((JmsSyncProducer) getEndpoint().createProducer()).onReplyMessage("", replyMessage);
     }
 
     /**
@@ -125,7 +111,7 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * @return the pollingInterval the pollingInterval to get.
      */
     public long getPollingInterval() {
-        return jmsEndpoint.getPollingInterval();
+        return getEndpoint().getPollingInterval();
     }
 
     /**
@@ -133,16 +119,7 @@ public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
      * @param pollingInterval the pollingInterval to set
      */
     public void setPollingInterval(long pollingInterval) {
-        jmsEndpoint.setPollingInterval(pollingInterval);
+        getEndpoint().setPollingInterval(pollingInterval);
     }
 
-    @Override
-    public void setBeanName(String name) {
-        jmsEndpoint.setBeanName(name);
-    }
-
-    @Override
-    public String getName() {
-        return jmsEndpoint.getName();
-    }
 }

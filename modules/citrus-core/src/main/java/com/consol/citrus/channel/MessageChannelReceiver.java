@@ -17,9 +17,12 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.AbstractMessageReceiver;
 import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -36,37 +39,53 @@ import org.springframework.integration.support.channel.ChannelResolver;
 public class MessageChannelReceiver extends AbstractMessageReceiver implements BeanFactoryAware {
 
     /** New message channel endpoint */
-    private ChannelEndpoint messageChannelEndpoint;
+    private ChannelEndpoint channelEndpoint;
 
     /**
      * Default constructor.
      */
     public MessageChannelReceiver() {
-        this.messageChannelEndpoint = new ChannelEndpoint();
+        this(new ChannelEndpoint());
     }
 
     /**
      * Default constructor using message endpoint.
-     * @param messageChannelEndpoint
+     * @param channelEndpoint
      */
-    public MessageChannelReceiver(ChannelEndpoint messageChannelEndpoint) {
-        this.messageChannelEndpoint = messageChannelEndpoint;
+    public MessageChannelReceiver(ChannelEndpoint channelEndpoint) {
+        super(channelEndpoint);
+        this.channelEndpoint = channelEndpoint;
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return channelEndpoint.createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return channelEndpoint.createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return channelEndpoint.getEndpointConfiguration();
     }
 
     /**
      * Gets the message endpoint.
      * @return
      */
-    public ChannelEndpoint getMessageChannelEndpoint() {
-        return messageChannelEndpoint;
+    public ChannelEndpoint getChannelEndpoint() {
+        return channelEndpoint;
     }
 
     /**
      * Sets the message endpoint.
-     * @param messageChannelEndpoint
+     * @param channelEndpoint
      */
-    public void setMessageChannelEndpoint(ChannelEndpoint messageChannelEndpoint) {
-        this.messageChannelEndpoint = messageChannelEndpoint;
+    public void setChannelEndpoint(ChannelEndpoint channelEndpoint) {
+        this.channelEndpoint = channelEndpoint;
     }
 
     /**
@@ -75,7 +94,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receive(long timeout) {
-        return messageChannelEndpoint.createConsumer().receive(timeout);
+        return channelEndpoint.createConsumer().receive(timeout);
     }
 
     /**
@@ -83,7 +102,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        return messageChannelEndpoint.createConsumer().receive(selector, timeout);
+        return channelEndpoint.createConsumer().receive(selector, timeout);
     }
 
     /**
@@ -91,7 +110,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @param channel the channel to set
      */
     public void setChannel(PollableChannel channel) {
-        messageChannelEndpoint.setChannel(channel);
+        channelEndpoint.setChannel(channel);
     }
 
     /**
@@ -99,7 +118,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @param messagingTemplate the messagingTemplate to set
      */
     public void setMessagingTemplate(MessagingTemplate messagingTemplate) {
-        messageChannelEndpoint.setMessagingTemplate(messagingTemplate);
+        channelEndpoint.setMessagingTemplate(messagingTemplate);
     }
     
     /**
@@ -107,7 +126,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @see org.springframework.beans.factory.BeanFactoryAware#setBeanFactory(org.springframework.beans.factory.BeanFactory)
      */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        messageChannelEndpoint.setBeanFactory(beanFactory);
+        channelEndpoint.setBeanFactory(beanFactory);
     }
     
     /**
@@ -115,7 +134,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @param channelName the channelName to set
      */
     public void setChannelName(String channelName) {
-        messageChannelEndpoint.setChannelName(channelName);
+        channelEndpoint.setChannelName(channelName);
     }
     
     /**
@@ -123,7 +142,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @param channelResolver the channelResolver to set
      */
     public void setChannelResolver(ChannelResolver channelResolver) {
-        messageChannelEndpoint.setChannelResolver(channelResolver);
+        channelEndpoint.setChannelResolver(channelResolver);
     }
 
     /**
@@ -131,7 +150,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @return the channel
      */
     public PollableChannel getChannel() {
-        return (PollableChannel) messageChannelEndpoint.getChannel();
+        return (PollableChannel) channelEndpoint.getChannel();
     }
 
     /**
@@ -139,7 +158,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @return the channelName
      */
     public String getChannelName() {
-        return messageChannelEndpoint.getChannelName();
+        return channelEndpoint.getChannelName();
     }
 
     /**
@@ -147,7 +166,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @return the messagingTemplate
      */
     public MessagingTemplate getMessagingTemplate() {
-        return messageChannelEndpoint.getMessagingTemplate();
+        return channelEndpoint.getMessagingTemplate();
     }
 
     /**
@@ -155,7 +174,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @return the channelResolver
      */
     public ChannelResolver getChannelResolver() {
-        return messageChannelEndpoint.getChannelResolver();
+        return channelEndpoint.getChannelResolver();
     }
 
     /**
@@ -164,7 +183,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     public void setReceiveTimeout(long receiveTimeout) {
         super.setReceiveTimeout(receiveTimeout);
-        messageChannelEndpoint.setTimeout(receiveTimeout);
+        channelEndpoint.setTimeout(receiveTimeout);
     }
 
     /**
@@ -172,7 +191,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @return the receiveTimeout
      */
     public long getReceiveTimeout() {
-        return messageChannelEndpoint.getTimeout();
+        return channelEndpoint.getTimeout();
     }
 
     /**
@@ -180,7 +199,7 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return messageChannelEndpoint.getActor();
+        return channelEndpoint.getActor();
     }
 
     /**
@@ -189,18 +208,18 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
      */
     public void setActor(TestActor actor) {
         super.setActor(actor);
-        messageChannelEndpoint.setActor(actor);
+        channelEndpoint.setActor(actor);
     }
 
     @Override
     public void setBeanName(String name) {
         super.setBeanName(name);
-        messageChannelEndpoint.setBeanName(name);
+        channelEndpoint.setBeanName(name);
     }
 
     @Override
     public String getName() {
-        return messageChannelEndpoint.getName();
+        return channelEndpoint.getName();
     }
 
 }

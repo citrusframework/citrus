@@ -160,7 +160,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 connection = ((QueueConnectionFactory) endpointConfiguration.getConnectionFactory()).createQueueConnection();
             } else if (endpointConfiguration.isPubSubDomain() && endpointConfiguration.getConnectionFactory() instanceof TopicConnectionFactory) {
                 connection = ((TopicConnectionFactory) endpointConfiguration.getConnectionFactory()).createTopicConnection();
-                connection.setClientID(endpointConfiguration.getEndpointName());
+                connection.setClientID(endpointConfiguration.getName());
             } else {
                 log.warn("Not able to create a connection with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + endpointConfiguration.isPubSubDomain() + ")");
@@ -209,7 +209,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             messageConsumer = session.createConsumer(replyToDestination,
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'");
         } else {
-            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, endpointConfiguration.getEndpointName(),
+            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, endpointConfiguration.getName(),
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'", false);
         }
 

@@ -16,15 +16,6 @@
 
 package com.consol.citrus.ws.actions;
 
-import static org.easymock.EasyMock.*;
-
-import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-import org.springframework.integration.Message;
-import org.springframework.ws.mime.Attachment;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.JmsMessageSender;
 import com.consol.citrus.message.CitrusMessageHeaders;
@@ -32,20 +23,28 @@ import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.client.WebServiceClient;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
+import org.springframework.integration.Message;
+import org.springframework.ws.mime.Attachment;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
     
-    private WebServiceMessageSender messageSender = EasyMock.createMock(WebServiceMessageSender.class);
+    private WebServiceClient webServiceClient = EasyMock.createMock(WebServiceClient.class);
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -54,9 +53,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject(), (Attachment)anyObject());
+        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
@@ -69,20 +68,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentDataTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
         
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -94,9 +93,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setAttachmentData("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         soapMessageAction.setCharsetName("UTF-16");
 
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject(), (Attachment)anyObject());
+        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
@@ -109,45 +108,45 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
         
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentResourceTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -156,9 +155,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject(), (Attachment)anyObject());
+        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
@@ -171,20 +170,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentDataVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -195,9 +194,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject(), (Attachment)anyObject());
+        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
@@ -210,20 +209,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -234,9 +233,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject(), (Attachment)anyObject());
+        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
@@ -249,20 +248,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderContentTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -271,9 +270,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -286,20 +285,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderResourceTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -308,9 +307,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -323,20 +322,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderContentVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -347,9 +346,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -362,20 +361,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderResourceVariableSupportTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setMessageSender(messageSender);
+        soapMessageAction.setEndpoint(webServiceClient);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -386,9 +385,9 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 
-        reset(messageSender);
+        reset(webServiceClient);
         
-        messageSender.send((Message)anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -401,20 +400,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             }
         }).once();
         
-        expect(messageSender.getActor()).andReturn(null).anyTimes();
+        expect(webServiceClient.getActor()).andReturn(null).anyTimes();
         
-        replay(messageSender);
+        replay(webServiceClient);
         
         soapMessageAction.execute(context);
         
-        verify(messageSender);
+        verify(webServiceClient);
     }
     
     @Test
     public void testWrongMessageSenderImplementationTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
         MessageSender jmsMessageSender = new JmsMessageSender();
-        soapMessageAction.setMessageSender(jmsMessageSender);
+        soapMessageAction.setEndpoint(jmsMessageSender);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -425,7 +424,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             soapMessageAction.execute(context);
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Sending SOAP messages requires a " +
-                    "'com.consol.citrus.ws.message.WebServiceMessageSender' but was 'com.consol.citrus.jms.JmsMessageSender'");
+                    "'com.consol.citrus.ws.client.WebServiceClient' but was 'com.consol.citrus.jms.JmsMessageSender'");
             return;
         }
         

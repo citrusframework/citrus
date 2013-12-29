@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.ws.server.WebServer;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -30,12 +31,12 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * 
  * @author Christoph Deppisch
  */
-public class JettyServerParser extends AbstractBeanDefinitionParser {
+public class WebServerParser extends AbstractBeanDefinitionParser {
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition("com.consol.citrus.ws.JettyServer");
+            .genericBeanDefinition(WebServer.class);
         
         
         String port = element.getAttribute(WSParserConstants.PORT_ATTRIBUTE);

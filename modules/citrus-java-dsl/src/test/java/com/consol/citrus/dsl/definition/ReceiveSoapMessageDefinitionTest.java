@@ -88,7 +88,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -126,7 +126,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -170,7 +170,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -220,12 +220,12 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         ReceiveMessageAction action = ((ReceiveSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        Assert.assertEquals(action.getMessageReceiver(), replyMessageReceiver);
+        Assert.assertEquals(action.getEndpoint(), replyMessageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
-        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         verify(applicationContextMock);

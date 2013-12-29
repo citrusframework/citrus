@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.server;
 
-import java.io.*;
-import java.security.PublicKey;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.sshd.common.util.IoUtils;
 import org.apache.sshd.server.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.bouncycastle.openssl.PEMReader;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
+import java.security.PublicKey;
 
 /**
  * Public key authenticator which verifies a single provided public key. The public key

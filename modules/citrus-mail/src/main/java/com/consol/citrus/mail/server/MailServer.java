@@ -31,7 +31,7 @@ import org.subethamail.smtp.server.SMTPServer;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class CitrusMailServer extends AbstractServer implements InitializingBean {
+public class MailServer extends AbstractServer implements InitializingBean {
 
     /** Server port */
     private int port = 25;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.server;
 
 import org.testng.annotations.Test;
 

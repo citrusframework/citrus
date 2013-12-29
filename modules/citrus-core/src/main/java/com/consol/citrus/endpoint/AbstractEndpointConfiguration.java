@@ -69,7 +69,7 @@ public abstract class AbstractEndpointConfiguration implements EndpointConfigura
      * Gets the endpoint name.
      * @return
      */
-    public String getEndpointName() {
+    public String getName() {
         return endpointName;
     }
 
@@ -77,7 +77,7 @@ public abstract class AbstractEndpointConfiguration implements EndpointConfigura
      * Sets the endpoint name.
      * @param endpointName
      */
-    public void setEndpointName(String endpointName) {
+    public void setName(String endpointName) {
         this.endpointName = endpointName;
     }
 }

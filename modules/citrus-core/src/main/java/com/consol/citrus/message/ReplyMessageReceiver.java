@@ -17,13 +17,13 @@
 package com.consol.citrus.message;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Generic implementation for reply message receiver implementations. In addition to the usual
@@ -34,24 +34,39 @@ import java.util.Map;
  *  When invoked by a receiving action inside a test the store reply message is returned.
  *  
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler, BeanNameAware {
 
-    /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
-    
-    /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
-    
-    /** The test actor linked with this reply message receiver */
-    private TestActor actor;
-
-    /** This receiver's name */
-    private String name = getClass().getSimpleName();
-
     /** Logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
-    
+    private static Logger log = LoggerFactory.getLogger(ReplyMessageReceiver.class);
+
+    /** Endpoint holding reply messages */
+    private Endpoint endpoint;
+
+    /**
+     * Default constructor using endpoint field.
+     * @param endpoint
+     */
+    public ReplyMessageReceiver(Endpoint endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return endpoint.createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return endpoint.createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return endpoint.getEndpointConfiguration();
+    }
+
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
@@ -70,57 +85,29 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return getReplyMessage(selector);
+        return receiveSelected(selector, endpoint.getEndpointConfiguration().getTimeout());
     }
 
     /**
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
      */
     public Message<?> receiveSelected(String selector, long timeout) {
-        long timeLeft = timeout;
-        Message<?> message = receiveSelected(selector);
+        Consumer consumer = endpoint.createConsumer();
 
-        while (message == null && timeLeft > 0) {
-            timeLeft -= pollingInterval;
-            
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
-            }
-            
-            try {
-                Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-            
-            message = receiveSelected(selector);
+        if (consumer instanceof SelectiveConsumer) {
+            return ((SelectiveConsumer)endpoint.createConsumer()).receive(selector, timeout);
+        } else {
+            log.warn(String.format("Unable to receive selected with consumer implementation: '%s'", consumer.getClass()));
+            return consumer.receive(endpoint.getEndpointConfiguration().getTimeout());
         }
-        
-        return message;
     }
 
-    /**
-     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
-     */
-    public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
-        replyMessages.put(correlationKey, replyMessage);
-    }
-    
-    /**
-     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
-     */
+    @Override
     public void onReplyMessage(Message<?> replyMessage) {
-        onReplyMessage(replyMessage, "");
     }
 
-    /**
-     * Tries to return a reply message from the local storage. A correlation key
-     * correlates messages in a multi threaded environment.
-     * @param correlationKey
-     * @return the reply message.
-     */
-    public Message<?> getReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
+    @Override
+    public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
     }
 
     /**
@@ -128,7 +115,7 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return actor;
+        return endpoint.getActor();
     }
 
     /**
@@ -136,32 +123,37 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
      * @param actor the actor to set
      */
     public void setActor(TestActor actor) {
-        this.actor = actor;
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
+        endpoint.setActor(actor);
     }
 
     @Override
     public void setBeanName(String name) {
-        this.name = name;
+        endpoint.setName(name);
     }
 
     @Override
     public String getName() {
-        return name;
+        return endpoint.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        endpoint.setName(name);
+    }
+
+    /**
+     * Gets the message endpoint.
+     * @return
+     */
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    /**
+     * Sets the message endpoint.
+     * @param endpoint
+     */
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 }

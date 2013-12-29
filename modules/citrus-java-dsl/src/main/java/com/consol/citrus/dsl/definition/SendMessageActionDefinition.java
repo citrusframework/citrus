@@ -16,28 +16,25 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.dsl.util.PositionHandle;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
 
-import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.dsl.util.PositionHandle;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.MessageUtils;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
-import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action definition creates a send message action with several message payload and header 
@@ -285,7 +282,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         sendSoapMessageAction.setActor(action.getActor());
         sendSoapMessageAction.setDescription(action.getDescription());
         sendSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
-        sendSoapMessageAction.setMessageSender(action.getMessageSender());
+        sendSoapMessageAction.setEndpoint(action.getEndpoint());
         sendSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
         
         positionHandle.switchTestAction(sendSoapMessageAction);

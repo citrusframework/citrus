@@ -16,8 +16,8 @@
 
 package com.consol.citrus.http.message;
 
-import static org.easymock.EasyMock.*;
-
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.http.*;
@@ -27,9 +27,7 @@ import org.springframework.web.client.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
-import com.consol.citrus.message.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -73,9 +71,6 @@ public class HttpMessageSenderTest {
                                     return new ResponseEntity<String>(responseBody, HttpStatus.OK);
                                 }
                         }).once();
-        
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
         
         replay(restTemplate, replyMessageHandler);
         
@@ -123,9 +118,6 @@ public class HttpMessageSenderTest {
                                     return new ResponseEntity<String>(responseBody, HttpStatus.OK);
                                 }
                         }).once();
-        
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
         
         replay(restTemplate, replyMessageHandler);
         
@@ -175,9 +167,6 @@ public class HttpMessageSenderTest {
                                 }
                         }).once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
-        
         replay(restTemplate, replyMessageHandler);
         
         messageSender.send(requestMessage);
@@ -222,9 +211,6 @@ public class HttpMessageSenderTest {
                                 }
                         }).once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
-        
         replay(restTemplate, replyMessageHandler);
         
         messageSender.send(requestMessage);
@@ -266,9 +252,6 @@ public class HttpMessageSenderTest {
                                     return new ResponseEntity<String>(responseBody, HttpStatus.OK);
                                 }
                         }).once();
-        
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
         
         replay(restTemplate, replyMessageHandler);
         
@@ -312,9 +295,6 @@ public class HttpMessageSenderTest {
                                 }
                         }).once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
-        
         replay(restTemplate, replyMessageHandler);
         
         messageSender.send(requestMessage);
@@ -350,9 +330,6 @@ public class HttpMessageSenderTest {
                            .andReturn(new ResponseEntity<String>(responseBody, HttpStatus.OK)).once();
         
         expect(correlator.getCorrelationKey(requestMessage)).andReturn("correlationKey").once();
-        
-        replyMessageHandler.onReplyMessage(anyObject(Message.class), eq("correlationKey"));
-        expectLastCall().once();
         
         replay(restTemplate, replyMessageHandler, correlator);
         
@@ -390,9 +367,6 @@ public class HttpMessageSenderTest {
         expect(restTemplate.exchange(eq("http://localhost:8081/new"), eq(HttpMethod.GET), anyObject(HttpEntity.class), eq(String.class)))
                            .andReturn(new ResponseEntity<String>(responseBody, HttpStatus.OK)).once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
-        
         replay(restTemplate, replyMessageHandler, endpointUriResolver);
         
         messageSender.send(requestMessage);
@@ -425,17 +399,6 @@ public class HttpMessageSenderTest {
         
         expect(restTemplate.exchange(eq(requestUrl), eq(HttpMethod.POST), anyObject(HttpEntity.class), eq(String.class)))
                            .andReturn(new ResponseEntity<String>(responseBody, HttpStatus.FORBIDDEN)).once();
-        
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                Message<?> responseMessage = (Message<?>)getCurrentArguments()[0];
-                
-                Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.FORBIDDEN);
-                Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "FORBIDDEN");
-                return null;
-            }
-        }).once();
         
         replay(restTemplate, replyMessageHandler);
         

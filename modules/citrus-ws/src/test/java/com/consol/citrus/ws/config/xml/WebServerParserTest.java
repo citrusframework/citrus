@@ -16,25 +16,24 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import java.util.Iterator;
-
+import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import com.consol.citrus.ws.server.WebServer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
-import com.consol.citrus.ws.JettyServer;
+import java.util.Iterator;
 
 /**
  * @author Christoph Deppisch
  */
-public class JettyServerParserTest extends AbstractBeanDefinitionParserTest {
+public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
     public void testAssertSoapFaultParser() {
-        Iterator<JettyServer> servers = beanDefinitionContext.getBeansOfType(JettyServer.class).values().iterator();
+        Iterator<WebServer> servers = beanDefinitionContext.getBeansOfType(WebServer.class).values().iterator();
         
         // 1st server
-        JettyServer server = servers.next();
+        WebServer server = servers.next();
         Assert.assertEquals(server.getName(), "jettyServer1");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());

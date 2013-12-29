@@ -28,7 +28,7 @@ import com.consol.citrus.ws.config.xml.*;
 public class CitrusWsConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
-        registerBeanDefinitionParser("jetty-server", new JettyServerParser());
+        registerBeanDefinitionParser("jetty-server", new WebServerParser());
         registerBeanDefinitionParser("message-sender", new WebServiceMessageSenderParser());
         registerBeanDefinitionParser("reply-message-handler", new SoapReplyMessageReceiverParser());
     }

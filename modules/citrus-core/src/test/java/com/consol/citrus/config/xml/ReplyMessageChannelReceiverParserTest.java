@@ -16,13 +16,13 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
 import com.consol.citrus.TestActor;
-import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.channel.MessageChannelReplyMessageReceiver;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +31,7 @@ public class ReplyMessageChannelReceiverParserTest extends AbstractBeanDefinitio
 
     @Test
     public void testFailActionParser() {
-        Map<String, ReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(ReplyMessageReceiver.class);
+        Map<String, MessageChannelReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(MessageChannelReplyMessageReceiver.class);
         
         Assert.assertEquals(messageReceivers.size(), 3);
         Assert.assertTrue(messageReceivers.containsKey("replyMessageChannelReceiver1"));
@@ -39,7 +39,7 @@ public class ReplyMessageChannelReceiverParserTest extends AbstractBeanDefinitio
         Assert.assertTrue(messageReceivers.containsKey("replyMessageChannelReceiver3"));
         
         // 2nd message receiver
-        ReplyMessageReceiver messageReceiver = messageReceivers.get("replyMessageChannelReceiver2");
+        MessageChannelReplyMessageReceiver messageReceiver = messageReceivers.get("replyMessageChannelReceiver2");
         Assert.assertNotNull(messageReceiver.getActor());
         Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
         

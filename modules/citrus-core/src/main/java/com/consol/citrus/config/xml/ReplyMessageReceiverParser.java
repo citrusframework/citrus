@@ -29,8 +29,15 @@ import org.w3c.dom.Element;
  * by several reply message receiver configuration components (e.g. jms, http, message-channel, ssh)
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public class ReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
+public class ReplyMessageReceiverParser<T extends ReplyMessageReceiver> extends AbstractBeanDefinitionParser {
+
+    private Class<T> type;
+
+    public ReplyMessageReceiverParser(Class<T> type) {
+        this.type = type;
+    }
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
@@ -44,7 +51,7 @@ public class ReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
     }
 
     protected Class getBeanDefinitionClass() {
-        return ReplyMessageReceiver.class;
+        return type;
     }
 
 }

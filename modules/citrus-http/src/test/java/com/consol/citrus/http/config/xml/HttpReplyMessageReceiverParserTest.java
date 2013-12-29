@@ -16,13 +16,13 @@
 
 package com.consol.citrus.http.config.xml;
 
-import java.util.Map;
-
 import com.consol.citrus.TestActor;
-import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.http.message.HttpReplyMessageReceiver;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +31,7 @@ public class HttpReplyMessageReceiverParserTest extends AbstractBeanDefinitionPa
 
     @Test
     public void testFailActionParser() {
-        Map<String, ReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(ReplyMessageReceiver.class);
+        Map<String, HttpReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(HttpReplyMessageReceiver.class);
         
         Assert.assertEquals(messageReceivers.size(), 3);
         Assert.assertTrue(messageReceivers.containsKey("httpReplyMessageReceiver1"));
@@ -41,13 +41,13 @@ public class HttpReplyMessageReceiverParserTest extends AbstractBeanDefinitionPa
         Assert.assertTrue(messageReceivers.containsKey("httpReplyMessageReceiver3"));
         
         // 2nd message receiver
-        ReplyMessageReceiver messageReceiver = messageReceivers.get("httpReplyMessageReceiver2");
+        HttpReplyMessageReceiver messageReceiver = messageReceivers.get("httpReplyMessageReceiver2");
         Assert.assertNotNull(messageReceiver.getActor());
         Assert.assertEquals(messageReceiver.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
         
         // 3rd message receiver
         messageReceiver = messageReceivers.get("httpReplyMessageReceiver3");
-        Assert.assertNotNull(messageReceiver.getPollingInterval());
-        Assert.assertEquals(messageReceiver.getPollingInterval(), 550L);
+        Assert.assertNotNull(messageReceiver.getEndpointConfiguration().getPollingInterval());
+        Assert.assertEquals(messageReceiver.getEndpointConfiguration().getPollingInterval(), 550L);
     }
 }

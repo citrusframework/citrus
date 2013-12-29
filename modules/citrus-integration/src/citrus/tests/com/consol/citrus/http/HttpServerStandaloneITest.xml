@@ -33,7 +33,7 @@
           		</header>
             </send>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpResponseReceiverStandalone">
             	<message>
             		<data>
             			<![CDATA[
@@ -65,7 +65,7 @@
           		</header>
             </send>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpResponseReceiverStandalone">
             	<message>
             		<data>
             			<![CDATA[

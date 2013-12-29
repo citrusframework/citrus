@@ -16,30 +16,18 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.w3c.dom.Element;
-
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.ReplyMessageReceiverParser;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 
 /**
  * Parser for reply message receiver component in Citrus ws namespace.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public class SoapReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
+public class SoapReplyMessageReceiverParser extends ReplyMessageReceiverParser<SoapReplyMessageReceiver> {
 
-    @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(SoapReplyMessageReceiver.class);
-        
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
-        
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("polling-interval"), "pollingInterval");
-        
-        return builder.getBeanDefinition();
+    public SoapReplyMessageReceiverParser() {
+        super(SoapReplyMessageReceiver.class);
     }
 }

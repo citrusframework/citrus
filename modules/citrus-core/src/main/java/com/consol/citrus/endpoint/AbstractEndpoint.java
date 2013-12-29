@@ -83,12 +83,25 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
      * @return
      */
     public String getName() {
-        return endpointConfiguration.getEndpointName();
+        return endpointConfiguration.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        endpointConfiguration.setName(name);
     }
 
     @Override
     public void setBeanName(String name) {
-        endpointConfiguration.setEndpointName(name);
+        endpointConfiguration.setName(name);
+    }
+
+    /**
+     * Gets the message listeners.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
     }
 
     /**
@@ -98,6 +111,5 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
     public void setMessageListener(MessageListeners messageListener) {
         endpointConfiguration.setMessageListener(messageListener);
     }
-
 
 }

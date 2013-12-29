@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http;
+package com.consol.citrus.http.server;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.*;
-
-import javax.servlet.ServletContext;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import com.consol.citrus.report.MessageTracingTestListener;
+import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -38,10 +36,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.servlet.RequestCachingServletFilter;
-import com.consol.citrus.report.MessageTracingTestListener;
-import com.consol.citrus.server.AbstractServer;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * Simple Http server implementation starting an embedded Jetty server instance with
@@ -53,13 +51,13 @@ import com.consol.citrus.server.AbstractServer;
 public class HttpServer extends AbstractServer implements ApplicationContextAware {
     /** Server port */
     private int port = 8080;
-    
+
     /** Server resource base */
     private String resourceBase = "src/main/resources";
-    
+
     /** Application context location for request controllers */
     private String contextConfigLocation = "classpath:com/consol/citrus/http/citrus-http-servlet.xml";
-    
+
     /** Server instance to be wrapped */
     private Server jettyServer;
 
@@ -68,31 +66,31 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     
     /** Use root application context as parent to build WebApplicationContext */
     private boolean useRootContextAsParent = false;
-    
+
     /** Do only start one instance after another so we need a static lock object */
     private static Object serverLock = new Object();
     
     /** Set custom connector with custom idle time and other configuration options */
     private Connector connector;
-    
+
     /** Set list of custom connectors with custom configuration options */
     private Connector[] connectors;
-    
+
     /** Servlet mapping path */
     private String servletMappingPath = "/*";
-    
+
     /** Optional servlet name customization */
     private String servletName;
-    
+
     /** Context path */
     private String contextPath = "/";
-    
+
     /** Optional security handler for basic auth */
     private SecurityHandler securityHandler;
-    
+
     /** Optional servlet handler customization */
     private ServletHandler servletHandler;
-    
+
     @Override
     protected void shutdown() {
         if (jettyServer != null) {

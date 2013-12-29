@@ -35,12 +35,12 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
         
         ReceiveTimeoutAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimeout(), 1000L);
-        Assert.assertNotNull(action.getMessageReceiver());
+        Assert.assertNotNull(action.getEndpoint());
         Assert.assertNull(action.getMessageSelector());
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimeout(), 10000L);
-        Assert.assertNotNull(action.getMessageReceiver());
+        Assert.assertNotNull(action.getEndpoint());
         Assert.assertEquals(action.getMessageSelector(), "operation='Test'");
     }
     

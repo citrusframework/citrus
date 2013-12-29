@@ -233,4 +233,12 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
         return jmsEndpoint.getName();
     }
 
+    /**
+     * Sets the adapter's name.
+     * @param name
+     */
+    public void setName(String name) {
+        jmsEndpoint.setName(name);
+    }
+
 }

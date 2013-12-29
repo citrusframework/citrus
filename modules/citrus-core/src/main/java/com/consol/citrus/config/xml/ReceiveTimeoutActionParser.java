@@ -44,7 +44,7 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
         String messageReceiver = element.getAttribute("message-receiver");        
         
         if (StringUtils.hasText(messageReceiver)) {
-        	beanDefinition.addPropertyReference("messageReceiver", messageReceiver);
+        	beanDefinition.addPropertyReference("endpoint", messageReceiver);
         } else {
         	throw new BeanCreationException("Missing 'message-receiver' for expect timeout action");
         }

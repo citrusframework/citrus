@@ -91,7 +91,7 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     private void createJmsTemplate() {
         if (jmsTemplate == null) {
             Assert.isTrue(this.connectionFactory != null,
-                    "Either a 'jmsTemplate' or 'connectionFactory' is required - none of those was set correctly.");
+                    "Neither 'jmsTemplate' nor 'connectionFactory' is set correctly.");
 
             jmsTemplate = new JmsTemplate();
 

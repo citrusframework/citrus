@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.server;
 
 import java.io.*;
 import java.security.PublicKey;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ssh.server.SinglePublicKeyAuthenticator;
 import org.apache.sshd.common.util.SecurityUtils;
 import org.bouncycastle.openssl.PEMReader;
 import org.springframework.util.FileCopyUtils;

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ssh.*;
 import com.jcraft.jsch.*;
 import org.easymock.IArgumentMatcher;
 import org.springframework.integration.Message;
@@ -35,14 +36,14 @@ import static org.testng.Assert.assertNull;
  * @author Roland Huss
  * @since 12.09.12
  */
-public class CitrusSshClientTest {
+public class SshClientTest {
 
     private static final String COMMAND = "ls";
     private static final String STDIN = "Hello world";
 
     private XmlMapper xstream;
     private JSch jsch;
-    private CitrusSshClient client;
+    private SshClient client;
     private ByteArrayOutputStream outStream;
     private Session session;
     private ChannelExec channel;
@@ -53,25 +54,30 @@ public class CitrusSshClientTest {
         xstream = new XmlMapper();
 
         jsch = createMock(JSch.class);
-        client = new CitrusSshClient();
-        client.setHost("planck");
-        client.setUser("roland");
-        client.setPort(1968);
-        client.setConnectionTimeout(CONNECTTION_TIMEOUT);
-        client.setCommandTimeout(2 * 60 * 1000);
+
+        SshEndpointConfiguration endpointConfiguration = new SshEndpointConfiguration();
+        client = new SshClient(endpointConfiguration);
+        client.setJsch(jsch);
+
+        endpointConfiguration.setHost("planck");
+        endpointConfiguration.setUser("roland");
+        endpointConfiguration.setPort(1968);
+        endpointConfiguration.setConnectionTimeout(CONNECTTION_TIMEOUT);
+        endpointConfiguration.setCommandTimeout(2 * 60 * 1000);
+
         session = createMock(Session.class);
         expect(jsch.getSession("roland","planck",1968)).andReturn(session);
 
         channel = createMock(ChannelExec.class);
 
-        ReflectionTestUtils.setField(client,"jsch",jsch);
+        ReflectionTestUtils.setField(client, "jsch", jsch);
 
         outStream = new ByteArrayOutputStream();
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*user.*")
     public void noUser() {
-        client.setUser(null);
+        client.getEndpointConfiguration().setUser(null);
         send();
     }
 
@@ -115,7 +121,7 @@ public class CitrusSshClientTest {
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = ".*/that/does/not/exist.*")
     public void withUnknownPrivateKey() throws JSchException {
         strictHostChecking(false,null);
-        client.setPrivateKeyPath("/file/that/does/not/exist");
+        client.getEndpointConfiguration().setPrivateKeyPath("/file/that/does/not/exist");
         jsch.addIdentity("/file/that/does/not/exist", (String) null);
         expectLastCall().andThrow(new JSchException("No such file"));
         replay(jsch, session, channel);
@@ -125,7 +131,7 @@ public class CitrusSshClientTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*/notthere\\.key.*")
     public void withUnknownPrivateKey2() throws JSchException {
         strictHostChecking(false,null);
-        client.setPrivateKeyPath("classpath:com/consol/citrus/ssh/notthere.key");
+        client.getEndpointConfiguration().setPrivateKeyPath("classpath:com/consol/citrus/ssh/notthere.key");
         jsch.addIdentity("classpath:com/consol/citrus/ssh/notthere.key",(String) null);
         replay(jsch, session, channel);
         send();
@@ -134,7 +140,7 @@ public class CitrusSshClientTest {
     @Test
     public void withPrivateKey() throws JSchException, IOException {
         strictHostChecking(false,null);
-        client.setPrivateKeyPath("classpath:com/consol/citrus/ssh/private.key");
+        client.getEndpointConfiguration().setPrivateKeyPath("classpath:com/consol/citrus/ssh/private.key");
         jsch.addIdentity(isA(String.class), (String) isNull());
         strictHostChecking(false, null);
         standardChannelPrepAndSend();
@@ -142,7 +148,7 @@ public class CitrusSshClientTest {
 
     @Test
     public void withPassword() throws JSchException, IOException {
-        client.setPassword("consol");
+        client.getEndpointConfiguration().setPassword("consol");
         session.setUserInfo(getUserInfo("consol"));
         session.setPassword("consol");
 
@@ -189,9 +195,9 @@ public class CitrusSshClientTest {
 
     private void strictHostChecking(boolean flag,String knownHosts) {
         if (flag) {
-            client.setStrictHostChecking(true);
+            client.getEndpointConfiguration().setStrictHostChecking(true);
             session.setConfig("StrictHostKeyChecking","yes");
-            client.setKnownHosts(knownHosts);
+            client.getEndpointConfiguration().setKnownHosts(knownHosts);
         } else {
             session.setConfig("StrictHostKeyChecking","no");
         }

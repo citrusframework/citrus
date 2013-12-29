@@ -16,225 +16,79 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.TestActor;
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageSender;
-import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.message.ReplyMessageHandler;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.message.*;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
-import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
-import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
-import com.consol.citrus.ws.message.callback.WsAddressingRequestMessageCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
+import com.consol.citrus.ws.client.WebServiceClient;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.Assert;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.core.FaultMessageResolver;
-import org.springframework.ws.client.core.SimpleFaultMessageResolver;
-import org.springframework.ws.client.core.WebServiceMessageCallback;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
-import org.springframework.xml.transform.StringResult;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import java.io.IOException;
 /**
  * Message sender connection as client to a WebService endpoint. The sender supports
  * SOAP attachments in contrary to the normal message senders.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public class WebServiceMessageSender extends WebServiceGatewaySupport implements MessageSender, BeanNameAware {
+public class WebServiceMessageSender extends AbstractSyncMessageSender {
 
-    /** Reply message handler */
-    private ReplyMessageHandler replyMessageHandler;
-    
-    /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
-    
-    /** Resolves dynamic endpoint uri */
-    private EndpointUriResolver endpointResolver;
-    
-    /** WS adressing specific headers */
-    private WsAddressingHeaders addressingHeaders;
-    
-    /** Should http errors be handled with reply message handler or simply throw exception */
-    private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION;
-    
-    /** Test actor linked to this message sender */
-    private TestActor actor;
+    /** New WebServiceClient */
+    private WebServiceClient webServiceClient;
 
-    /** This sender's name */
-    private String name = getClass().getSimpleName();
-    
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(WebServiceMessageSender.class);
-    
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     */
+    public WebServiceMessageSender() {
+        this(new WebServiceClient());
+    }
+
+    public WebServiceMessageSender(WebServiceClient webServiceClient) {
+        super(webServiceClient);
+        this.webServiceClient = webServiceClient;
+    }
+
+    @Override
     public void send(Message<?> message) {
-        send(message, null);
+        webServiceClient.createProducer().send(message);
     }
-    
-    /**
-     * Send message with SOAP attachment.
-     * @param message
-     * @param attachment
-     */
+
     public void send(final Message<?> message, final Attachment attachment) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
-        
-        String endpointUri;
-        if (endpointResolver != null) {
-            endpointUri = endpointResolver.resolveEndpointUri(message, getDefaultUri());
-        } else { // use default uri
-            endpointUri = getDefaultUri();
-        }
-        
-        log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
-
-        if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + message.toString());
-        }
-        
-        if (!(message.getPayload() instanceof String)) {
-        	throw new CitrusRuntimeException("Unsupported payload type '" + message.getPayload().getClass() +
-    				"' Currently only 'java.lang.String' is supported as payload type.");
-        }
-        
-        WebServiceMessageCallback requestCallback;
-        if (addressingHeaders == null) {
-            requestCallback = new SoapRequestMessageCallback(message, attachment);
-        } else {
-            requestCallback = new WsAddressingRequestMessageCallback(message, 
-                    attachment, addressingHeaders);
-        }
-        
-        SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback();
-        getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(message, endpointUri));
-        
-        log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
-        
-        boolean result; 
-        // send and receive message
-        if (endpointResolver != null) {
-            result = getWebServiceTemplate().sendAndReceive(endpointUri, requestCallback, responseCallback);
-        } else { // use default endpoint uri
-            result = getWebServiceTemplate().sendAndReceive(requestCallback, responseCallback);
-        }
-
-        if (result) {
-            log.info("Received SOAP response from endpoint: '" + endpointUri + "'");
-            informReplyMessageHandler(responseCallback.getResponse(), message);
-        } else {
-            log.info("No SOAP response from endpoint: '" + endpointUri + "'");
-        }
+        webServiceClient.send(message, attachment);
     }
-    
-    /**
-     * Informs reply message handler for further processing 
-     * of reply message.
-     * @param responseMessage the reply message.
-     * @param requestMessage the initial request message.
-     */
-    protected void informReplyMessageHandler(Message<?> responseMessage, Message<?> requestMessage) {
-        if (replyMessageHandler != null) {
-            log.info("Informing reply message handler for further processing");
-            
-            if (correlator != null) {
-                replyMessageHandler.onReplyMessage(responseMessage, correlator.getCorrelationKey(requestMessage));
-            } else {
-                replyMessageHandler.onReplyMessage(responseMessage);
-            }
-        }
-    }
-    
-    /**
-     * Handles error response messages constructing a proper response message
-     * which will be propagated to the respective reply message handler for 
-     * further processing.
-     */
-    private class InternalFaultMessageResolver implements FaultMessageResolver {
 
-        /** Request message associated with this response error handler */
-        private Message<?> requestMessage;
-        
-        /** The endpoint that was initially invoked */
-        private String endpointUri;
-        
-        /**
-         * Default constructor provided with request message 
-         * associated with this fault resolver and endpoint uri.
-         */
-        public InternalFaultMessageResolver(Message<?> requestMessage, String endpointUri) {
-            this.requestMessage = requestMessage;
-            this.endpointUri = endpointUri;
-        }
-        
-        /**
-         * Handle fault response message according to error strategy.
-         */
-        public void resolveFault(WebServiceMessage webServiceResponse) throws IOException {
-            if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
-                SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
-                try {
-                    callback.doWithMessage(webServiceResponse);
-                    
-                    Message<?> responseMessage = callback.getResponse();
-                    
-                    if (webServiceResponse instanceof SoapMessage) {
-                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                        Transformer transformer = transformerFactory.newTransformer();
-                        
-                        StringResult faultPayload = new StringResult();
-                        transformer.transform(((SoapMessage)webServiceResponse).getSoapBody().getFault().getSource(), faultPayload);
-                        
-                        responseMessage = MessageBuilder.withPayload(faultPayload.toString()).copyHeaders(responseMessage.getHeaders()).build();
-                    }
-                    
-                    log.info("Received SOAP fault response from endpoint: '" + endpointUri + "'");
-                    informReplyMessageHandler(responseMessage, requestMessage);
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException("Failed to handle fault response message", e);
-                }
-            } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
-                if (webServiceResponse instanceof SoapMessage) {
-                    new SoapFaultMessageResolver().resolveFault(webServiceResponse);
-                } else {
-                    new SimpleFaultMessageResolver().resolveFault(webServiceResponse);
-                }
-            } else {
-                throw new CitrusRuntimeException("Unsupported error strategy: " + errorHandlingStrategy);
-            }
-        }
-
+    @Override
+    public Consumer createConsumer() {
+        return webServiceClient.createConsumer();
     }
-    
-    /**
-     * Set the reply message handler.
-     * @param replyMessageHandler the replyMessageHandler to set
-     */
+
+    @Override
+    public Producer createProducer() {
+        return webServiceClient.createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return webServiceClient.getEndpointConfiguration();
+    }
+
+    @Override
     public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
-        this.replyMessageHandler = replyMessageHandler;
+        super.setReplyMessageHandler(replyMessageHandler);
+
+        if (replyMessageHandler instanceof SoapReplyMessageReceiver) {
+            ((SoapReplyMessageReceiver) replyMessageHandler).setEndpoint(webServiceClient);
+        }
     }
-    
+
     /**
      * Set reply message correlator.
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        this.correlator = correlator;
+        webServiceClient.getEndpointConfiguration().setCorrelator(correlator);
     }
     
     /**
@@ -242,7 +96,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @param endpointResolver the endpointUriResolver to set
      */
     public void setEndpointResolver(EndpointUriResolver endpointResolver) {
-        this.endpointResolver = endpointResolver;
+        webServiceClient.getEndpointConfiguration().setEndpointResolver(endpointResolver);
     }
 
     /**
@@ -250,7 +104,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @param addressingHeaders the addressingHeaders to set
      */
     public void setAddressingHeaders(WsAddressingHeaders addressingHeaders) {
-        this.addressingHeaders = addressingHeaders;
+        webServiceClient.getEndpointConfiguration().setAddressingHeaders(addressingHeaders);
     }
 
     /**
@@ -258,7 +112,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @return the errorHandlingStrategy
      */
     public ErrorHandlingStrategy getErrorHandlingStrategy() {
-        return errorHandlingStrategy;
+        return webServiceClient.getEndpointConfiguration().getErrorHandlingStrategy();
     }
 
     /**
@@ -266,23 +120,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @param errorHandlingStrategy the errorHandlingStrategy to set
      */
     public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
-        this.errorHandlingStrategy = errorHandlingStrategy;
-    }
-
-    /**
-     * Gets the actor.
-     * @return the actor the actor to get.
-     */
-    public TestActor getActor() {
-        return actor;
-    }
-
-    /**
-     * Sets the actor.
-     * @param actor the actor to set
-     */
-    public void setActor(TestActor actor) {
-        this.actor = actor;
+        webServiceClient.getEndpointConfiguration().setErrorHandlingStrategy(errorHandlingStrategy);
     }
 
     /**
@@ -290,7 +128,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @return the correlator the correlator to get.
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return correlator;
+        return webServiceClient.getEndpointConfiguration().getCorrelator();
     }
 
     /**
@@ -298,7 +136,7 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @return the endpointResolver the endpointResolver to get.
      */
     public EndpointUriResolver getEndpointResolver() {
-        return endpointResolver;
+        return webServiceClient.getEndpointConfiguration().getEndpointResolver();
     }
 
     /**
@@ -306,16 +144,62 @@ public class WebServiceMessageSender extends WebServiceGatewaySupport implements
      * @return the addressingHeaders the addressingHeaders to get.
      */
     public WsAddressingHeaders getAddressingHeaders() {
-        return addressingHeaders;
+        return webServiceClient.getEndpointConfiguration().getAddressingHeaders();
     }
 
-    @Override
-    public void setBeanName(String name) {
-        this.name = name;
+    /**
+     * Sets the web service template.
+     * @param webServiceTemplate
+     */
+    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+        webServiceClient.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
     }
 
-    @Override
-    public String getName() {
-        return name;
+    /**
+     * Sets the message factory.
+     * @param messageFactory
+     */
+    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
+        webServiceClient.getEndpointConfiguration().setMessageFactory(messageFactory);
+    }
+
+    /**
+     * Sets the message sender.
+     * @param messageSender
+     */
+    public void setMessageSender(org.springframework.ws.transport.WebServiceMessageSender messageSender) {
+        webServiceClient.getEndpointConfiguration().setMessageSender(messageSender);
+    }
+
+    /**
+     * Gets the default uri.
+     * @param defaultUri
+     */
+    public void setDefaultUri(String defaultUri) {
+        webServiceClient.getEndpointConfiguration().setDefaultUri(defaultUri);
+    }
+
+    /**
+     * Gets the client interceptors.
+     * @return
+     */
+    public ClientInterceptor[] getInterceptors() {
+        return webServiceClient.getEndpointConfiguration().getInterceptors();
+    }
+
+    /**
+     * Sets the client interceptors.
+     * @param interceptors
+     */
+    public void setInterceptors(ClientInterceptor[] interceptors) {
+        webServiceClient.getEndpointConfiguration().setInterceptors(interceptors);
+    }
+
+    /**
+     * Gets the web service client.
+     * @return
+     */
+    public WebServiceClient getWebServiceClient() {
+        return webServiceClient;
     }
 }

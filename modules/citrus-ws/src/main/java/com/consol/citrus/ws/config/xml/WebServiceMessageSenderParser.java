@@ -25,7 +25,7 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 
 /**
  * Parser for ws message sender in Citrus ws namespace.

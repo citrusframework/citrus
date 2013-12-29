@@ -54,8 +54,20 @@ public interface Endpoint {
     TestActor getActor();
 
     /**
-     * Gets the sender name usually the Spring bean name.
+     * Sets the test actor for this endpoint.
+     * @param actor
+     */
+    void setActor(TestActor actor);
+
+    /**
+     * Gets the endpoint name usually the Spring bean name.
      * @return
      */
     String getName();
+
+    /**
+     * Sets the endpoint name.
+     * @param name
+     */
+    void setName(String name);
 }

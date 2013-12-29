@@ -17,7 +17,7 @@
 package com.consol.citrus.mail.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.mail.server.CitrusMailServer;
+import com.consol.citrus.mail.server.MailServer;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -28,12 +28,12 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class CitrusMailServerParser extends AbstractBeanDefinitionParser {
+public class MailServerParser extends AbstractBeanDefinitionParser {
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder
-                .genericBeanDefinition(CitrusMailServer.class);
+                .genericBeanDefinition(MailServer.class);
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-start"), "autoStart");

@@ -16,8 +16,11 @@
 
 package com.consol.citrus.jms;
 
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.springframework.integration.Message;
 
 /**
@@ -49,6 +52,21 @@ public class JmsReplyMessageSender extends AbstractJmsAdapter implements Message
      */
     public void send(Message<?> message) {
         ((JmsSyncConsumer) getJmsEndpoint().createConsumer()).send(message);
+    }
+
+    @Override
+    public Consumer createConsumer() {
+        return getJmsEndpoint().createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return getJmsEndpoint().createProducer();
+    }
+
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return getJmsEndpoint().getEndpointConfiguration();
     }
 
     /**

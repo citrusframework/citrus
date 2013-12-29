@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.mail.message;
+package com.consol.citrus.mail.client;
 
 import com.consol.citrus.mail.adapter.MessageHandlerAdapter;
 import com.consol.citrus.mail.model.MailMessage;
@@ -25,6 +25,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.mail.*;
@@ -38,11 +39,16 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailMessageSenderTest {
+public class MailClientTest {
 
     private JavaMailSenderImpl javaMailSender = EasyMock.createMock(JavaMailSenderImpl.class);
 
-    private MailMessageSender mailMessageSender = new MailMessageSender(javaMailSender);
+    private MailClient mailClient = new MailClient();
+
+    @BeforeClass
+    public void setup() {
+        mailClient.getEndpointConfiguration().setJavaMailSender(javaMailSender);
+    }
 
     @Test
     public void testSendMailMessageObject() throws Exception {
@@ -77,7 +83,7 @@ public class MailMessageSenderTest {
 
         replay(javaMailSender);
 
-        mailMessageSender.send(MessageBuilder.withPayload(mailMessage).build());
+        mailClient.send(MessageBuilder.withPayload(mailMessage).build());
 
         verify(javaMailSender);
     }

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http;
+package com.consol.citrus.http.server;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
@@ -27,7 +25,8 @@ import org.eclipse.jetty.http.HttpHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Simple unit test for HttpServer

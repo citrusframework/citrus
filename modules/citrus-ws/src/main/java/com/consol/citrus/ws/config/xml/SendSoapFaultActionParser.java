@@ -16,8 +16,8 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import java.util.*;
-
+import com.consol.citrus.config.xml.DescriptionElementParser;
+import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -27,8 +27,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.xml.DescriptionElementParser;
-import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
+import java.util.*;
 
 /**
  * Bean definition parser for send soap fault action in test case.
@@ -50,7 +49,7 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
         if (!StringUtils.hasText(messageSenderReference)) {
             throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
         }
-        builder.addPropertyReference("messageSender", messageSenderReference);
+        builder.addPropertyReference("endpoint", messageSenderReference);
         
         DescriptionElementParser.doParse(element, builder);
 

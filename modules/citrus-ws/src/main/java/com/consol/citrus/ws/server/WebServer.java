@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws;
+package com.consol.citrus.ws.server;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.*;
-
-import javax.servlet.ServletContext;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -38,8 +34,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.server.AbstractServer;
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 /**
  * Jetty server implementation wrapping a {@link Server} with Citrus server behaviour, so
@@ -47,7 +45,7 @@ import com.consol.citrus.server.AbstractServer;
  * 
  * @author Christoph Deppisch
  */
-public class JettyServer extends AbstractServer implements ApplicationContextAware {
+public class WebServer extends AbstractServer implements ApplicationContextAware {
 
     /** Server port */
     private int port = 8080;

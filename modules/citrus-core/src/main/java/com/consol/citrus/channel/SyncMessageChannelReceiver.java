@@ -35,32 +35,32 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
     }
 
     @Override
-    public ChannelSyncEndpoint getMessageChannelEndpoint() {
-        return (ChannelSyncEndpoint) super.getMessageChannelEndpoint();
+    public ChannelSyncEndpoint getChannelEndpoint() {
+        return (ChannelSyncEndpoint) super.getChannelEndpoint();
     }
 
     @Override
     public Message<?> receive(long timeout) {
-        return getMessageChannelEndpoint().createConsumer().receive(timeout);
+        return getChannelEndpoint().createConsumer().receive(timeout);
     }
 
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        return getMessageChannelEndpoint().createConsumer().receive(selector, timeout);
+        return getChannelEndpoint().createConsumer().receive(selector, timeout);
     }
     
     /**
      * Get the reply message channel with given corelation key.
      */
     public MessageChannel getReplyMessageChannel(String correlationKey) {
-        return ((ChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel(correlationKey);
+        return ((ChannelSyncConsumer) getChannelEndpoint().createConsumer()).findReplyChannel(correlationKey);
     }
 
     /**
      * Get the reply message channel.
      */
     public MessageChannel getReplyMessageChannel() {
-        return ((ChannelSyncConsumer) getMessageChannelEndpoint().createConsumer()).findReplyChannel("");
+        return ((ChannelSyncConsumer) getChannelEndpoint().createConsumer()).findReplyChannel("");
     }
 
     /**
@@ -68,7 +68,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        getMessageChannelEndpoint().setCorrelator(correlator);
+        getChannelEndpoint().setCorrelator(correlator);
     }
 
     /**
@@ -76,7 +76,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return getMessageChannelEndpoint().getCorrelator();
+        return getChannelEndpoint().getCorrelator();
     }
     
 }

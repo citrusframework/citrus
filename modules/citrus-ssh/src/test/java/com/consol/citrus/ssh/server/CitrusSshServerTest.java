@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.server;
 
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyPair;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.apache.sshd.SshServer;
+import com.consol.citrus.ssh.SshCommand;
+import com.consol.citrus.ssh.server.SshServer;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.server.Command;
@@ -39,7 +40,7 @@ import static org.testng.Assert.*;
 public class CitrusSshServerTest {
 
 
-    private CitrusSshServer server;
+    private SshServer server;
     private int port;
 
     public CitrusSshServerTest() {
@@ -48,7 +49,7 @@ public class CitrusSshServerTest {
 
     @BeforeMethod
     public void beforeTest() {
-        server = new CitrusSshServer();
+        server = new SshServer();
         server.setPort(port);
     }
 
@@ -104,7 +105,7 @@ public class CitrusSshServerTest {
         server.setHostKeyPath("/never/existing/directory");
         server.start();
         try {
-            SshServer sshd = (SshServer) ReflectionTestUtils.getField(server, "sshd");
+            org.apache.sshd.SshServer sshd = (org.apache.sshd.SshServer) ReflectionTestUtils.getField(server, "sshd");
             KeyPairProvider prov = sshd.getKeyPairProvider();
             assertTrue(prov instanceof FileKeyPairProvider);
             KeyPair[] keys = ((FileKeyPairProvider) prov).loadKeys();
@@ -119,7 +120,7 @@ public class CitrusSshServerTest {
         prepareServer(true);
         server.start();
         try {
-            SshServer sshd = (SshServer) ReflectionTestUtils.getField(server, "sshd");
+            org.apache.sshd.SshServer sshd = (org.apache.sshd.SshServer) ReflectionTestUtils.getField(server, "sshd");
             CommandFactory fact = sshd.getCommandFactory();
             Command cmd = fact.createCommand("shutdown now");
             assertTrue(cmd instanceof SshCommand);

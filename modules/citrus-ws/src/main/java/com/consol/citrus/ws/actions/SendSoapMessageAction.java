@@ -22,6 +22,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,9 +70,9 @@ public class SendSoapMessageAction extends SendMessageAction {
             variableExtractor.extractVariables(message, context);
         }
         
-        if (!(messageSender instanceof WebServiceMessageSender)) {
-            throw new CitrusRuntimeException("Sending SOAP messages requires a " +
-            		"'com.consol.citrus.ws.message.WebServiceMessageSender' but was '" + messageSender.getClass().getName() + "'");
+        if (!(endpoint instanceof WebServiceClient) && !(endpoint instanceof WebServiceMessageSender) ) {
+            throw new CitrusRuntimeException(String.format("Sending SOAP messages requires a " +
+            		"'%s' but was '%s'", WebServiceClient.class.getName(), endpoint.getClass().getName()));
         }
         
         final String attachmentContent;
@@ -108,13 +109,19 @@ public class SendSoapMessageAction extends SendMessageAction {
      * @param attachmentContent the optional attachmentContent.
      */
     private void sendSoapMessage(Message<?> message, String attachmentContent) {
-        WebServiceMessageSender webServiceMessageSender = (WebServiceMessageSender) messageSender;
+        WebServiceClient webServiceClient;
+
+        if (endpoint instanceof WebServiceMessageSender) {
+            webServiceClient = ((WebServiceMessageSender) endpoint).getWebServiceClient();
+        } else {
+            webServiceClient = (WebServiceClient) endpoint;
+        }
+
         if (attachmentContent != null) {
             attachment.setContent(attachmentContent);
-            
-            webServiceMessageSender.send(message, attachment);
+            webServiceClient.send(message, attachment);
         } else {
-            webServiceMessageSender.send(message);
+            webServiceClient.send(message);
         }
     }
 

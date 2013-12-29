@@ -28,13 +28,13 @@ public interface EndpointConfiguration {
      * Gets the endpoint name usually the Spring bean name.
      * @return
      */
-    String getEndpointName();
+    String getName();
 
     /**
      * Sets the endpoint name
      * @param name
      */
-    void setEndpointName(String name);
+    void setName(String name);
 
     /**
      * Gets the timeout either for sending or receiving mesages.
