@@ -24,9 +24,6 @@ import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.easymock.EasyMock.*;
 
 /**
@@ -49,35 +46,6 @@ public class SpringBeanMessageHandlerMappingTest {
         expect(applicationContext.getBean("foo", MessageHandler.class)).andReturn(fooMessageHandler).once();
         expect(applicationContext.getBean("bar", MessageHandler.class)).andReturn(barMessageHandler).once();
         expect(applicationContext.getBean("unknown", MessageHandler.class)).andThrow(new NoSuchBeanDefinitionException("unknown")).once();
-
-        replay(applicationContext);
-
-        Assert.assertEquals(messageHandlerMapping.getMessageHandler("foo"), fooMessageHandler);
-        Assert.assertEquals(messageHandlerMapping.getMessageHandler("bar"), barMessageHandler);
-
-        try {
-            messageHandlerMapping.getMessageHandler("unknown");
-            Assert.fail("Missing exception due to unknown mapping key");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
-        }
-
-        verify(applicationContext);
-    }
-
-    @Test
-    public void testGetMessageHandlerWithPrefixSuffix() throws Exception {
-        SpringBeanMessageHandlerMapping messageHandlerMapping = new SpringBeanMessageHandlerMapping();
-
-        messageHandlerMapping.setBeanNamePrefix("pre");
-        messageHandlerMapping.setBeanNameSuffix("after");
-        messageHandlerMapping.setApplicationContext(applicationContext);
-
-        reset(applicationContext);
-
-        expect(applicationContext.getBean("prefooafter", MessageHandler.class)).andReturn(fooMessageHandler).once();
-        expect(applicationContext.getBean("prebarafter", MessageHandler.class)).andReturn(barMessageHandler).once();
-        expect(applicationContext.getBean("preunknownafter", MessageHandler.class)).andThrow(new NoSuchBeanDefinitionException("unknown")).once();
 
         replay(applicationContext);
 

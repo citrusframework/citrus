@@ -25,9 +25,9 @@ import org.springframework.integration.Message;
  * Extracts predicate from message payload via XPath expression evaluation.
  *
  * @author Christoph Deppisch
- * @sonce 1.3.1
+ * @since 1.3.1
  */
-public class XPathPayloadMappingKeyExtractor implements MappingKeyExtractor {
+public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor {
     /** XPath expression evaluated on message payload */
     private String xpathExpression = "local-name(/*)";
 
@@ -35,7 +35,7 @@ public class XPathPayloadMappingKeyExtractor implements MappingKeyExtractor {
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     @Override
-    public String extractMappingKey(Message<?> request) {
+    public String getMappingKey(Message<?> request) {
         return XPathUtils.evaluateAsString(
                             XMLUtils.parseMessagePayload(request.getPayload().toString()),
                             xpathExpression,

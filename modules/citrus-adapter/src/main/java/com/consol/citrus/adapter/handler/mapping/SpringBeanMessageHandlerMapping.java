@@ -22,8 +22,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.util.Assert;
 
 /**
  * Message handler mapping is Spring application context aware and tries to find appropriate Spring bean in
@@ -36,9 +34,6 @@ public class SpringBeanMessageHandlerMapping implements MessageHandlerMapping, A
     /** Application context holding available message handlers */
     protected ApplicationContext applicationContext;
 
-    private String beanNamePrefix = "";
-    private String beanNameSuffix = "";
-
     /**
      * Finds message handler by mapping name.
      *
@@ -50,7 +45,7 @@ public class SpringBeanMessageHandlerMapping implements MessageHandlerMapping, A
         MessageHandler handler;
 
         try {
-            handler = applicationContext.getBean(beanNamePrefix + mappingName + beanNameSuffix, MessageHandler.class);
+            handler = applicationContext.getBean(mappingName, MessageHandler.class);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find matching message handler with bean name '" +
                     mappingName + "' in Spring bean application context", e);
@@ -62,21 +57,5 @@ public class SpringBeanMessageHandlerMapping implements MessageHandlerMapping, A
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
-    }
-
-    /**
-     * Sets the bean name prefix used when resolving bean names.
-     * @param beanNamePrefix
-     */
-    public void setBeanNamePrefix(String beanNamePrefix) {
-        this.beanNamePrefix = beanNamePrefix;
-    }
-
-    /**
-     * Sets the bean name suffix used when resolving bean names.
-     * @param beanNameSuffix
-     */
-    public void setBeanNameSuffix(String beanNameSuffix) {
-        this.beanNameSuffix = beanNameSuffix;
     }
 }

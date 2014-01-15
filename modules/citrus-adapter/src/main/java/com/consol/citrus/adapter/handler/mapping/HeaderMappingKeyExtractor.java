@@ -25,7 +25,7 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class HeaderMappingKeyExtractor implements MappingKeyExtractor {
+public class HeaderMappingKeyExtractor extends AbstractMappingKeyExtractor {
 
     /** Header name to search for */
     private String headerName = "";
@@ -45,15 +45,8 @@ public class HeaderMappingKeyExtractor implements MappingKeyExtractor {
         this.headerName = headerName;
     }
 
-    /**
-     * Extracts the mapping name by searching for specific header name in incoming
-     * request.
-     *
-     * @param request
-     * @return
-     */
     @Override
-    public String extractMappingKey(Message<?> request) {
+    public String getMappingKey(Message<?> request) {
         if (request.getHeaders().containsKey(headerName)) {
             return request.getHeaders().get(headerName).toString();
         } else {
