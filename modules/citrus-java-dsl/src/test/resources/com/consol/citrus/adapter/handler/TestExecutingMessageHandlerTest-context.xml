@@ -2,12 +2,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
-       xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	 
     <context:component-scan base-package="com.consol.citrus.adapter.handler.builder"/>
@@ -18,12 +16,12 @@
           <property name="xpathExpression" value="//Test/@name"/>
         </bean>
       </property>
-      <property name="responseMessageHandler">
-        <bean class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
-          <property name="channelName" value="testSimulator.inbound"/>
-          <property name="replyTimeout" value="5000"/>
-        </bean>
-      </property>
+      <property name="responseMessageHandler" ref="messageChannelHandler"/>
+    </bean>
+
+    <bean id="messageChannelHandler" class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
+      <property name="channelName" value="testSimulator.inbound"/>
+      <property name="replyTimeout" value="5000"/>
     </bean>
 
     <citrus:message-channel id="testSimulator.inbound"/>

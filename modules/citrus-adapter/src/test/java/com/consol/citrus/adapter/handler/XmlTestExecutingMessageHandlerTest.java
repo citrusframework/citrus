@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@
 package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor;
-import com.consol.citrus.dsl.handler.TestExecutingMessageHandler;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -30,13 +28,12 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4
  */
-@ContextConfiguration(locations = { "classpath:com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml"})
-public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
-
+@ContextConfiguration(locations = { "classpath:com/consol/citrus/adapter/handler/XmlTestExecutingMessageHandlerTest-context.xml"})
+public class XmlTestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
     @Autowired
-    private TestExecutingMessageHandler messageHandler;
+    private XmlTestExecutingMessageHandler messageHandler;
 
     /**
      * Test for handler routing by node content
@@ -50,12 +47,12 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
         Message<?> response = messageHandler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"FooTest\"></Test>").build());
 
-        Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
+        Assert.assertEquals(response.getPayload().toString().trim(), "<Test name=\"FooTest\">OK</Test>");
 
         response = messageHandler.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"BarTest\"></Test>").build());
 
-        Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
+        Assert.assertEquals(response.getPayload().toString().trim(), "<Test name=\"BarTest\">OK</Test>");
     }
 
     /**
@@ -68,9 +65,9 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
 
         Message<?> response = messageHandler.handleMessage(
                 MessageBuilder.withPayload(
-                    "<FooBarTest></FooBarTest>").build());
+                        "<FooBarTest></FooBarTest>").build());
 
-        Assert.assertEquals(response.getPayload(), "<FooBarTest>OK</FooBarTest>");
+        Assert.assertEquals(response.getPayload().toString().trim(), "<FooBarTest>OK</FooBarTest>");
     }
 
     /**
@@ -105,7 +102,7 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
                     "<Test name=\"UNKNOWN_TEST\"></Test>").build());
             Assert.fail("Missing exception due to unknown message handler");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+            Assert.assertEquals(e.getMessage(), "Failed to load test case");
         }
     }
 }

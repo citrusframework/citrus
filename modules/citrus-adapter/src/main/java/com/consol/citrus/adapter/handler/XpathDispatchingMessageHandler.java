@@ -16,13 +16,13 @@
 
 package com.consol.citrus.adapter.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.consol.citrus.adapter.handler.mapping.SpringContextLoadingMessageHandlerMapping;
 import com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.InitializingBean;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This message handler implementation dispatches incoming request to other message handlers
@@ -35,7 +35,7 @@ import org.springframework.beans.factory.InitializingBean;
  * will search for a appropriate bean instance in this context according to the mapping expression.
  *
  * @author Christoph Deppisch
- * @deprecated since 1.3.1 in favour of RequestDispatchingMessageHandler with use of XPathMappingNameExtractor and SpringContextLoadingMessageHandlerMapping
+ * @deprecated since 1.3.1 in favour of RequestDispatchingMessageHandler with use of XPathMappingKeyExtractor and SpringBeanMessageHandlerMapping
  */
 @Deprecated
 public class XpathDispatchingMessageHandler extends RequestDispatchingMessageHandler implements InitializingBean {

@@ -8,11 +8,10 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.xml.xpath.XPathExpressionException;
-
 /**
  * Unit Tests for XpathDispatchingMessageHandler
  * @author jza
+ * @deprecated
  */
 public class XpathDispatchingMessageHandlerTest {
 

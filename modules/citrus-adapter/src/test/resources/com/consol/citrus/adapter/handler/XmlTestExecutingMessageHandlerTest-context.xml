@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <bean id="testSimulator" class="com.consol.citrus.adapter.handler.XmlTestExecutingMessageHandler">
+    <property name="mappingKeyExtractor">
+      <bean class="com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor">
+        <property name="xpathExpression" value="//Test/@name"/>
+      </bean>
+    </property>
+    <property name="responseMessageHandler" ref="messageChannelHandler"/>
+  </bean>
+
+  <bean id="messageChannelHandler" class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
+    <property name="channelName" value="testSimulator.inbound"/>
+    <property name="replyTimeout" value="5000"/>
+  </bean>
+
+  <citrus:message-channel id="testSimulator.inbound"/>
+
+  <citrus:sync-message-channel-receiver id="inboundRequestReceiver"
+                                        channel="testSimulator.inbound"
+                                        receive-timeout="5000"/>
+
+  <citrus:message-channel-reply-sender id="outboundResponseSender"
+                                       reply-channel-holder="inboundRequestReceiver"/>
+
+</beans>
