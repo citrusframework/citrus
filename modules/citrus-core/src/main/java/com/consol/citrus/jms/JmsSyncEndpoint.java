@@ -40,6 +40,14 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         super(new JmsSyncEndpointConfiguration());
     }
 
+    /**
+     * Constructor using endpoint configuration.
+     * @param endpointConfiguration
+     */
+    public JmsSyncEndpoint(JmsSyncEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
+    }
+
     @Override
     public JmsSyncEndpointConfiguration getEndpointConfiguration() {
         return (JmsSyncEndpointConfiguration) super.getEndpointConfiguration();

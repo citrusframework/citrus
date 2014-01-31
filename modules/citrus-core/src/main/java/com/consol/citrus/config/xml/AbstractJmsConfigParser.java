@@ -31,6 +31,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * this base parser to configure attributes like connection factory or JMS template.
  *  
  * @author Christoph Deppisch
+ * @deprecated
  */
 public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionParser {
 
@@ -70,7 +71,7 @@ public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionPars
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("pub-sub-domain"), "pubSubDomain");
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
-        
+
         return builder.getBeanDefinition();
     }
     

@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
  * Parser is aware of JMS template if present in element.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public abstract class AbstractJmsTemplateAwareParser extends AbstractJmsConfigParser {
 

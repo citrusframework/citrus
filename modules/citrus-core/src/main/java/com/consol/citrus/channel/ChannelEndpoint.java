@@ -45,7 +45,7 @@ public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAwar
     /**
      * Default constructor initializing endpoint configuration.
      */
-    protected ChannelEndpoint() {
+    public ChannelEndpoint() {
         super(new ChannelEndpointConfiguration());
     }
 
@@ -53,7 +53,7 @@ public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAwar
      * Constructor with endpoint configuration.
      * @param endpointConfiguration
      */
-    protected ChannelEndpoint(ChannelEndpointConfiguration endpointConfiguration) {
+    public ChannelEndpoint(ChannelEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
     }
 

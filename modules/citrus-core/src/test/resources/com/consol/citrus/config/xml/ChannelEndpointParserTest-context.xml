@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <citrus:channel-endpoint id="channelEndpoint1"
+                                   channel-resolver="channelResolver"
+                                   channel-name="channelName"/>
+
+  <citrus:channel-endpoint id="channelEndpoint2"
+                                   timeout="10000"
+                                   channel="channel"/>
+
+  <citrus:channel-endpoint id="channelEndpoint3"
+                                   messaging-template="messagingTemplate"/>
+
+  <citrus:channel-endpoint id="channelEndpoint4"
+                                   channel-resolver="channelResolver"
+                                   channel-name="channelName"
+                                   actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messagingTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.integration.core.MessagingTemplate"/>
+  </bean>
+
+  <bean id="channel" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.integration.core.PollableChannel"/>
+  </bean>
+
+  <bean id="channelResolver" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.integration.support.channel.ChannelResolver"/>
+  </bean>
+</beans>

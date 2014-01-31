@@ -28,6 +28,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * Abstract bean definition parser is aware of message channel attribute.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public abstract class AbstractMessageChannelTemplateAwareParser extends AbstractBeanDefinitionParser {
 

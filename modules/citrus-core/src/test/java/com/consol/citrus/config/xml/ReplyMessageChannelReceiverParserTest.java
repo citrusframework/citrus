@@ -26,11 +26,12 @@ import java.util.Map;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class ReplyMessageChannelReceiverParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testReplyMessageChannelReceiverParser() {
         Map<String, MessageChannelReplyMessageReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(MessageChannelReplyMessageReceiver.class);
         
         Assert.assertEquals(messageReceivers.size(), 3);

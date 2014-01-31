@@ -36,7 +36,7 @@ public class JmsEndpoint extends AbstractEndpoint {
     /**
      * Default constructor initializing endpoint configuration.
      */
-    protected JmsEndpoint() {
+    public JmsEndpoint() {
         super(new JmsEndpointConfiguration());
     }
 
@@ -44,7 +44,7 @@ public class JmsEndpoint extends AbstractEndpoint {
      * Constructor with endpoint configuration.
      * @param endpointConfiguration
      */
-    protected JmsEndpoint(JmsEndpointConfiguration endpointConfiguration) {
+    public JmsEndpoint(JmsEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
     }
 

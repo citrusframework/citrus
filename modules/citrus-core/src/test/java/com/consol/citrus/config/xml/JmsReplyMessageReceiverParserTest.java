@@ -26,6 +26,7 @@ import java.util.Map;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsReplyMessageReceiverParserTest extends AbstractBeanDefinitionParserTest {
 

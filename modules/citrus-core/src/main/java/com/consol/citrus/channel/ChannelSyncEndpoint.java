@@ -36,6 +36,14 @@ public class ChannelSyncEndpoint extends ChannelEndpoint {
         super(new ChannelSyncEndpointConfiguration());
     }
 
+    /**
+     * Constructor using endpoint configuration.
+     * @param endpointConfiguration
+     */
+    public ChannelSyncEndpoint(ChannelSyncEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
+    }
+
     @Override
     public ChannelSyncEndpointConfiguration getEndpointConfiguration() {
         return (ChannelSyncEndpointConfiguration) super.getEndpointConfiguration();

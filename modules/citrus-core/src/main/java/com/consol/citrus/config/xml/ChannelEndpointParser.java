@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,27 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.channel.ChannelEndpoint;
+import com.consol.citrus.channel.ChannelEndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
- * Bean definition parser for jms-sync-message-receiver configuration.
- * 
+ * Channel endpoint parser.
+ *
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public class SyncMessageChannelReceiverParser extends MessageChannelReceiverParser {
+public class ChannelEndpointParser extends AbstractChannelEndpointParser {
 
     @Override
-    protected BeanDefinitionBuilder getBeanDefinitionBuilder(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-                .genericBeanDefinition("com.consol.citrus.channel.SyncMessageChannelReceiver");
+    protected BeanDefinitionBuilder parseEndpoint(Element element, ParserContext parserContext) {
+        return BeanDefinitionBuilder.genericBeanDefinition(ChannelEndpoint.class);
+    }
 
-        BeanDefinitionParserUtils.setPropertyReference(builder, 
-                element.getAttribute("reply-message-correlator"), "correlator");
-        
-        return builder;
+    @Override
+    protected BeanDefinitionBuilder parseEndpointConfiguration(Element element, ParserContext parserContext) {
+        return BeanDefinitionBuilder.genericBeanDefinition(ChannelEndpointConfiguration.class);
     }
 }

@@ -16,22 +16,22 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestActor;
 import com.consol.citrus.channel.MessageChannelReceiver;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class MessageChannelReceiverParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testMessageChannelReceiverParser() {
         Map<String, MessageChannelReceiver> messageReceivers = beanDefinitionContext.getBeansOfType(MessageChannelReceiver.class);
         
         Assert.assertEquals(messageReceivers.size(), 4);

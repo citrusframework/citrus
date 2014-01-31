@@ -21,6 +21,9 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
 import javax.jms.*;
 
 /**
+ * Endpoint configuration sets additional synchronous message handling properties such as
+ * reply destination and message correlator.
+ *
  * @author Christoph Deppisch
  * @since 1.4
  */

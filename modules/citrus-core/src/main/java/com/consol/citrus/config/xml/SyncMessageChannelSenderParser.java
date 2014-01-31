@@ -26,6 +26,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * Bean definition parser for sync-message-channel-sender configuration.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class SyncMessageChannelSenderParser extends AbstractMessageChannelTemplateAwareParser {
 

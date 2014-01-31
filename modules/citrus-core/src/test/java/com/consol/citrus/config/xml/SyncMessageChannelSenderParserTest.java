@@ -16,21 +16,21 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
+import com.consol.citrus.channel.SyncMessageChannelSender;
+import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.channel.SyncMessageChannelSender;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class SyncMessageChannelSenderParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testSyncMessageChannelSenderParser() {
         Map<String, SyncMessageChannelSender> messageSenders = beanDefinitionContext.getBeansOfType(SyncMessageChannelSender.class);
         
         Assert.assertEquals(messageSenders.size(), 3);
