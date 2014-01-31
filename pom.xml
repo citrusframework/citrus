@@ -162,7 +162,7 @@
     <testng.version>6.8</testng.version>
     <slf4j.version>1.7.2</slf4j.version>
   </properties>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -528,6 +528,34 @@
   </dependencies>
   
   <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <excludes>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/citrus/resources</directory>
+        <includes>
+          <include>**</include>
+        </includes>
+        <excludes>
+          <exclude>*.java</exclude>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/citrus/tests</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+        <excludes>
+        </excludes>
+      </testResource>
+    </testResources>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -557,9 +585,10 @@
           <artifactId>maven-install-plugin</artifactId>
           <version>2.3.1</version>
         </plugin>
+
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.10</version>
           <configuration>
             <systemProperties>
               <property>
@@ -571,13 +600,34 @@
                 <value>en</value>
               </property>
             </systemProperties>
-            <!-- never | once | pertest -->
             <forkMode>once</forkMode>
             <failIfNoTests>false</failIfNoTests>
             <argLine>-Xmx256m</argLine>
-            <workingDirectory>${basedir}/target</workingDirectory>
+            <excludes>
+              <exclude>**/integration/**/*.java</exclude>
+            </excludes>
+            <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
+          <executions>
+            <execution>
+              <id>integration-tests</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>test</goal>
+              </goals>
+              <configuration>
+                <reportsDirectory>${project.build.directory}/surefire-reports/integration-tests</reportsDirectory>
+                <excludes>
+                  <exclude>none</exclude>
+                </excludes>
+                <includes>
+                  <include>**/integration/**/*.java</include>
+                </includes>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
+
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.3</version>
@@ -900,7 +950,7 @@
                 <id>copy-citrus-core-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
-                  <outputDirectory>${basedir}/target/site/schema/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/schema/config</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>modules/citrus-model/model-core/src/main/resources/com/consol/citrus/schema</directory>
@@ -919,7 +969,7 @@
                 <id>copy-citrus-http-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
-                  <outputDirectory>${basedir}/target/site/schema/http/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/schema/http/config</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>modules/citrus-model/model-http/src/main/resources/com/consol/citrus/schema</directory>
@@ -937,7 +987,7 @@
                 <id>copy-citrus-ws-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
-                  <outputDirectory>${basedir}/target/site/schema/ws/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/schema/ws/config</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>modules/citrus-model/model-ws/src/main/resources/com/consol/citrus/schema</directory>
@@ -956,7 +1006,7 @@
                 <id>copy-citrus-ssh-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
-                  <outputDirectory>${basedir}/target/site/schema/ssh/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/schema/ssh/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-ssh/src/main/resources/com/consol/citrus/schema</directory>
@@ -974,7 +1024,7 @@
                 <id>copy-citrus-mail-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
-                  <outputDirectory>${basedir}/target/site/schema/mail/config</outputDirectory>
+                  <outputDirectory>${project.build.directory}/site/schema/mail/config</outputDirectory>
                   <resources>
                     <resource>
                       <directory>modules/citrus-model/model-mail/src/main/resources/com/consol/citrus/schema</directory>

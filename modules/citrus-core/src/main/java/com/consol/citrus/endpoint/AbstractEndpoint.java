@@ -31,7 +31,7 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
     /** Endpoint name usually the Spring bean id */
     private String name = getClass().getSimpleName();
 
-    @Autowired(required = false) //TODO autowire does not work here
+    @Autowired(required = false)
     private MessageListeners messageListener;
 
     /** Test actor linked to this endpoint */

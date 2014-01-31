@@ -10,7 +10,9 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
-	 
+
+    <context:property-placeholder location="classpath:com/consol/citrus/context/citrus.properties"/>
+
     <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
 	 
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
@@ -43,14 +45,6 @@
             <citrus:ref schema="testSchema" />
         </citrus:schemas>
     </citrus:schema-repository>
-
-    <bean name="propertyLoader" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-      <property name="locations">
-        <list>
-          <value>citrus.properties</value>
-        </list>
-      </property>
-    </bean>
 
     <bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
 	
