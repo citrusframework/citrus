@@ -33,7 +33,7 @@ import java.util.Map;
 public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testHttpClientParser() {
         Map<String, HttpClient> clients = beanDefinitionContext.getBeansOfType(HttpClient.class);
 
         Assert.assertEquals(clients.size(), 4);
@@ -45,6 +45,8 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertTrue(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory() instanceof HttpComponentsClientHttpRequestFactory);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
         Assert.assertNull(httpClient.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 5000L);
+
 
         // 2nd message sender
         httpClient = clients.get("httpClient2");
@@ -56,6 +58,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getContentType(), "text/xml");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCharset(), "ISO-8859-1");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getEndpointUriResolver(), beanDefinitionContext.getBean("endpointResolver"));
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 10000L);
 
         // 3rd message sender
         httpClient = clients.get("httpClient3");
@@ -71,6 +74,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getClientInterceptors());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors(), beanDefinitionContext.getBean("clientInterceptors"));
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getPollingInterval(), 250L);
     }
 
     @Test

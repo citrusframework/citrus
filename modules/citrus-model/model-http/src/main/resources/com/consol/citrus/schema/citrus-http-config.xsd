@@ -65,6 +65,8 @@
           </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:string"/>
+        <xs:attribute name="polling-interval" type="xs:string"/>
       </xs:complexType>
     </xs:element>
     

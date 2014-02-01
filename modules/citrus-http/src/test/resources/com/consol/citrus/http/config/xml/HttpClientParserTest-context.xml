@@ -15,6 +15,7 @@
                               request-method="GET"
                               content-type="text/xml"
                               charset="ISO-8859-1"
+                              timeout="10000"
                               request-factory="soapRequestFactory"
                               endpoint-resolver="endpointResolver"/>
 
@@ -26,6 +27,7 @@
   <citrus-http:client id="httpClient4"
                               request-url="http://localhost:8080/test"
                               interceptors="clientInterceptors"
+                              polling-interval="250"
                               actor="testActor"/>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
