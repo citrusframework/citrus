@@ -33,6 +33,7 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
  * Parser for Http sender implementation in Citrus http namespace.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
 

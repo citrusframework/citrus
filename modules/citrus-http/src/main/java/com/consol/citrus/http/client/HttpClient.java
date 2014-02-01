@@ -36,6 +36,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
+ * messages are cached in local memory and receive operations are able to fetch responses from this cache later on.
+ *
  * @author Christoph Deppisch
  * @since 1.4
  */
