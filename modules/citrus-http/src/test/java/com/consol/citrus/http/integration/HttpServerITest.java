@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.server;
+package com.consol.citrus.http.integration;
 
-
-import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
- * Server representation in Citrus is a runnable instance accepting client
- * connections.
- *  
  * @author Christoph Deppisch
- * @since 2007
- *
  */
-public interface Server extends Endpoint, Runnable {
+@Test
+public class HttpServerITest extends AbstractTestNGCitrusTest {
 
-    /**
-     * Start the server
-     */
-    void start();
-
-    /**
-     * Stop the server.
-     */
-    void stop();
-
-    /**
-     * Is server running.
-     * @return
-     */
-    boolean isRunning();
+    @CitrusXmlTest(name = "HttpServerITest")
+    public void testHttpServer() {}
 }

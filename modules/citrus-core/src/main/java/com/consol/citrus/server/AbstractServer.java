@@ -16,19 +16,25 @@
 
 package com.consol.citrus.server;
 
+import com.consol.citrus.channel.ChannelSyncEndpoint;
+import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
+import com.consol.citrus.endpoint.*;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base class for {@link Server} implementations.
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractServer implements Server, InitializingBean, DisposableBean, BeanNameAware {
-    /** Name of this server (will be injected through Spring) */
-    private String name = getClass().getSimpleName().toLowerCase();
-    
+public abstract class AbstractServer extends AbstractEndpoint implements Server, InitializingBean, DisposableBean, BeanFactoryAware {
+
     /** Running flag */
     private boolean running = false;
     
@@ -40,15 +46,31 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
     
     /**  Monitor for startup and running lifecycle */
     private Object runningLock = new Object();
+
+    /** Spring bean factory injected */
+    private BeanFactory beanFactory;
+
+    /** Message endpoint for incoming requests */
+    private Endpoint endpoint;
+
+    /** Handler interceptors such as security or logging interceptors */
+    private List<Object> interceptors = new ArrayList<Object>();
     
     /** Logger */
     private Logger log = LoggerFactory.getLogger(getClass());
-    
+
+    /**
+     * Default constructor using endpoint configuration.
+     */
+    public AbstractServer() {
+        super(null);
+    }
+
     /**
      * @see com.consol.citrus.server.Server#start()
      */
     public void start() {
-        log.info("Starting server: " + name + " ...");
+        log.info("Starting server: " + getName() + " ...");
             
         startup();
         
@@ -60,14 +82,14 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
         thread.setDaemon(false);
         thread.start();
         
-        log.info("Started server: " + name);
+        log.info("Started server: " + getName());
     }
 
     /**
      * @see com.consol.citrus.server.Server#stop()
      */
     public void stop() {
-        log.info("Stopping server: " + name + " ...");
+        log.info("Stopping server: " + getName() + " ...");
         
         shutdown();
         
@@ -77,7 +99,7 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
         
         thread = null;
         
-        log.info("Stopped server: " + name);
+        log.info("Stopped server: " + getName());
     }
     
     /** 
@@ -99,6 +121,13 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
+        if (endpoint == null) {
+            ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
+            channelEndpointConfiguration.setChannelName(getName() + ".inbound");
+            channelEndpointConfiguration.setBeanFactory(getBeanFactory());
+            endpoint = new ChannelSyncEndpoint(channelEndpointConfiguration);
+        }
+
         if (autoStart) {
             start();
         }
@@ -125,13 +154,6 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
     }
 
     /**
-     * @see com.consol.citrus.server.Server#getName()
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * @see com.consol.citrus.server.Server#isRunning()
      */
     public boolean isRunning() {
@@ -140,13 +162,21 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
         }
     }
 
-    /**
-     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
-     */
-    public void setBeanName(String name) {
-        this.name = name;
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return endpoint.getEndpointConfiguration();
     }
-    
+
+    @Override
+    public Consumer createConsumer() {
+        return endpoint.createConsumer();
+    }
+
+    @Override
+    public Producer createProducer() {
+        return endpoint.createProducer();
+    }
+
     /**
      * Enable/disable server auto start
      * @param autoStart the autoStart to set
@@ -164,14 +194,6 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
     }
 
     /**
-     * Sets the name.
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * Sets the running.
      * @param running the running to set
      */
@@ -179,4 +201,51 @@ public abstract class AbstractServer implements Server, InitializingBean, Dispos
         this.running = running;
     }
 
+    /**
+     * Gets the Spring bean factory.
+     * @return
+     */
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
+    /**
+     * Sets the Spring bean factory.
+     * @param beanFactory
+     */
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
+
+    /**
+     * Gets the message endpoint invoked on incoming messages.
+     * @return
+     */
+    public Endpoint getEndpoint() {
+        return endpoint;
+    }
+
+    /**
+     * Sets the message endpoint.
+     * @param endpoint
+     */
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
+    }
+
+    /**
+     * Gets the handler interceptors.
+     * @return
+     */
+    public List<Object> getInterceptors() {
+        return interceptors;
+    }
+
+    /**
+     * Sets the handler interceptors.
+     * @param interceptors
+     */
+    public void setInterceptors(List<Object> interceptors) {
+        this.interceptors = interceptors;
+    }
 }

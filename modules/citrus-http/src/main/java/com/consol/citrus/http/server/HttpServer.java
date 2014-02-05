@@ -17,6 +17,7 @@
 package com.consol.citrus.http.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 import com.consol.citrus.report.MessageTracingTestListener;
 import com.consol.citrus.server.AbstractServer;
@@ -34,7 +35,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     private String resourceBase = "src/main/resources";
 
     /** Application context location for request controllers */
-    private String contextConfigLocation = "classpath:com/consol/citrus/http/citrus-http-servlet.xml";
+    private String contextConfigLocation = "classpath:com/consol/citrus/http/citrus-servlet-context.xml";
 
     /** Server instance to be wrapped */
     private Server jettyServer;
@@ -124,7 +124,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             ServletContextHandler contextHandler = new ServletContextHandler();
             contextHandler.setContextPath(contextPath);
             contextHandler.setResourceBase(resourceBase);
-            
+
             //add the root application context as parent to the constructed WebApplicationContext
             if (useRootContextAsParent) {
                 contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
@@ -133,27 +133,12 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             
             if (servletHandler == null) {
                 servletHandler = new ServletHandler();
-                ServletHolder servletHolder = new ServletHolder(new DispatcherServlet());
-                servletHolder.setName(getServletName());
-                servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
-                
-                servletHandler.addServlet(servletHolder);
-                
-                ServletMapping servletMapping = new ServletMapping();
-                servletMapping.setServletName(getServletName());
-                servletMapping.setPathSpec(servletMappingPath);
-                
-                servletHandler.addServletMapping(servletMapping);
+                addDispatcherServlet();
             }
+
             //Add request caching filter when message tracing is enabled
             if (applicationContext.getBeansOfType(MessageTracingTestListener.class).size() > 0) {
-                FilterMapping filterMapping = new FilterMapping();
-                filterMapping.setFilterName("request-caching-filter");
-                filterMapping.setPathSpec("/*");
-                
-                FilterHolder filterHolder = new FilterHolder(new RequestCachingServletFilter());
-                filterHolder.setName("request-caching-filter");
-                servletHandler.addFilter(filterHolder, filterMapping);
+                addRequestCachingFilter();
             }
             
             contextHandler.setServletHandler(servletHandler);
@@ -178,7 +163,38 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             }
         }
     }
-    
+
+    /**
+     * Adds default Spring dispatcher servlet with servlet mapping.
+     */
+    private void addDispatcherServlet() {
+        ServletHolder servletHolder = new ServletHolder(new CitrusDispatcherServlet(this));
+        servletHolder.setName(getServletName());
+        servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+
+        servletHandler.addServlet(servletHolder);
+
+        ServletMapping servletMapping = new ServletMapping();
+        servletMapping.setServletName(getServletName());
+        servletMapping.setPathSpec(servletMappingPath);
+
+        servletHandler.addServletMapping(servletMapping);
+    }
+
+    /**
+     * Adds request caching filter used for not using request data when
+     * logging incoming requests
+     */
+    private void addRequestCachingFilter() {
+        FilterMapping filterMapping = new FilterMapping();
+        filterMapping.setFilterName("request-caching-filter");
+        filterMapping.setPathSpec("/*");
+
+        FilterHolder filterHolder = new FilterHolder(new RequestCachingServletFilter());
+        filterHolder.setName("request-caching-filter");
+        servletHandler.addFilter(filterHolder, filterMapping);
+    }
+
     /**
      * Gets the customized servlet name or default name if not set.
      * @return the servletName
@@ -190,7 +206,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             return getName() + "-servlet";
         }
     }
-    
+
     /**
      * WebApplicationContext implementation that delegates method calls to parent ApplicationContext.
      */
@@ -318,7 +334,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
             return applicationContext.getEnvironment();
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */

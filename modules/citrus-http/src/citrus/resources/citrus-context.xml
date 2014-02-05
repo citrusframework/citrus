@@ -50,10 +50,22 @@
                       request-url="http://localhost:11080/hello"
                       timeout="1000"/>
 
-  <citrus-http:server id="helloStaticHttpServer"
+  <citrus-http:server id="helloHttpServer"
                       port="11080"
                       auto-start="true"
                       context-config-location="classpath:com/consol/citrus/http/citrus-http-servlet.xml"
                       resource-base="src/citrus/resources"/>
+
+  <citrus-http:client id="echoHttpClient"
+                      request-url="http://localhost:12080/echo"
+                      timeout="1000"/>
+
+  <citrus-http:server id="echoHttpServer"
+                      port="12080"
+                      auto-start="true"
+                      root-parent-context="true"
+                      resource-base="src/citrus/resources"/>
+
+  <citrus:message-channel id="echoHttpServer.inbound"/>
 
 </beans>
