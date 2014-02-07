@@ -54,13 +54,14 @@ public class ChannelEndpointAdapterTest {
 
     @Test
     public void testEndpointAdapter() {
-        Message<String> request = MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build();
+        final Message<String> request = MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build();
 
         new SimpleAsyncTaskExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 Message<?> receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(endpointConfiguration.getTimeout());
                 Assert.assertNotNull(receivedMessage);
+                Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
 
                 endpointAdapter.getEndpoint().createProducer().send(MessageBuilder.withPayload("OK").build());
             }
@@ -73,7 +74,6 @@ public class ChannelEndpointAdapterTest {
 
     @Test
     public void testNoResponse() {
-        Message<String> request = MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build();
-        Assert.assertNull(endpointAdapter.handleMessage(request));
+        Assert.assertNull(endpointAdapter.handleMessage(MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build()));
     }
 }

@@ -16,22 +16,19 @@
 
 package com.consol.citrus.jms;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.*;
-
+import com.consol.citrus.message.DefaultReplyMessageCorrelator;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.DefaultReplyMessageCorrelator;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import javax.jms.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -44,9 +41,7 @@ public class JmsSyncMessageReceiverTest {
     private Destination destination = EasyMock.createMock(Destination.class);
     private Destination replyDestination = EasyMock.createMock(Destination.class);
     private MessageConsumer messageConsumer = EasyMock.createMock(MessageConsumer.class);
-    
-    private JmsTemplate jmsTemplate = EasyMock.createMock(JmsTemplate.class);
-    
+
     @Test
     public void testWithReplyDestination() throws JMSException {
         JmsSyncMessageReceiver receiver = new JmsSyncMessageReceiver();
@@ -61,7 +56,7 @@ public class JmsSyncMessageReceiverTest {
         
         Map<String, String> headers = new HashMap<String, String>();
         
-        reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        reset(connectionFactory, destination, connection, session, messageConsumer);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
@@ -79,14 +74,14 @@ public class JmsSyncMessageReceiverTest {
         
         expect(messageConsumer.receive(5000L)).andReturn(jmsTestMessage).once();
         
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        replay(connectionFactory, destination, connection, session, messageConsumer);
         
         Message<?> receivedMessage = receiver.receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         Assert.assertEquals(receiver.getReplyDestination(), replyDestination);
         
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        verify(connectionFactory, destination, connection, session, messageConsumer);
     }
     
     @Test
@@ -106,7 +101,7 @@ public class JmsSyncMessageReceiverTest {
         
         Map<String, String> headers = new HashMap<String, String>();
         
-        reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        reset(connectionFactory, destination, connection, session, messageConsumer);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
@@ -124,7 +119,7 @@ public class JmsSyncMessageReceiverTest {
         
         expect(messageConsumer.receive(5000L)).andReturn(jmsTestMessage).once();
         
-        replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        replay(connectionFactory, destination, connection, session, messageConsumer);
         
         Message<?> receivedMessage = receiver.receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
@@ -134,6 +129,6 @@ public class JmsSyncMessageReceiverTest {
         Assert.assertEquals(receiver.getReplyDestination(
                 correlator.getCorrelationKey(receivedMessage)), replyDestination);
         
-        verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
+        verify(connectionFactory, destination, connection, session, messageConsumer);
     }
 }

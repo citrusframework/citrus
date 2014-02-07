@@ -67,14 +67,15 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the destinationName
      */
     public String getDefaultDestinationName() {
+        Destination defaultDestination = getJmsTemplate().getDefaultDestination();
         try {
-            if (getJmsTemplate().getDefaultDestination() != null) {
-                if (getJmsTemplate().getDefaultDestination() instanceof Queue) {
-                    return ((Queue)getJmsTemplate().getDefaultDestination()).getQueueName();
-                } else if (getJmsTemplate().getDefaultDestination() instanceof Topic) {
-                    return ((Topic)getJmsTemplate().getDefaultDestination()).getTopicName();
+            if (defaultDestination != null) {
+                if (defaultDestination instanceof Queue) {
+                    return ((Queue)defaultDestination).getQueueName();
+                } else if (defaultDestination instanceof Topic) {
+                    return ((Topic)defaultDestination).getTopicName();
                 } else {
-                    return getJmsTemplate().getDefaultDestination().toString();
+                    return defaultDestination.toString();
                 }
             } else {
                 return getJmsTemplate().getDefaultDestinationName();
