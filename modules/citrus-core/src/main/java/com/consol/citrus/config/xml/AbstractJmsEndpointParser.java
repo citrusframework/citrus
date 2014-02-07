@@ -32,8 +32,8 @@ import org.w3c.dom.Element;
 public abstract class AbstractJmsEndpointParser extends AbstractEndpointParser {
 
     @Override
-    protected void enrichEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
-        super.enrichEndpointConfiguration(endpointConfiguration, element, parserContext);
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         String jmsTemplate = element.getAttribute("jms-template");
         String destination = element.getAttribute("destination");

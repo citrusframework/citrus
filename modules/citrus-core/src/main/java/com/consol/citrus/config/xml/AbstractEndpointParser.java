@@ -17,6 +17,8 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -37,10 +39,11 @@ public abstract class AbstractEndpointParser extends AbstractBeanDefinitionParse
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder endpointBuilder = parseEndpoint(element, parserContext);
+        BeanDefinitionBuilder endpointBuilder = BeanDefinitionBuilder.genericBeanDefinition(getEndpointClass());
+        parseEndpoint(endpointBuilder, element, parserContext);
 
-        BeanDefinitionBuilder configurationBuilder = parseEndpointConfiguration(element, parserContext);
-        enrichEndpointConfiguration(configurationBuilder, element, parserContext);
+        BeanDefinitionBuilder configurationBuilder = BeanDefinitionBuilder.genericBeanDefinition(getEndpointConfigurationClass());
+        parseEndpointConfiguration(configurationBuilder, element, parserContext);
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "Configuration";
         BeanDefinitionHolder configurationHolder = new BeanDefinitionHolder(configurationBuilder.getBeanDefinition(), endpointConfigurationId);
@@ -58,28 +61,35 @@ public abstract class AbstractEndpointParser extends AbstractBeanDefinitionParse
     }
 
     /**
-     * Add endpoint configuration properties on bean definition builder.
-     * @param endpointConfiguration
+     * Subclasses must provide endpoint class.
+     * @return
+     */
+    protected abstract Class<? extends Endpoint> getEndpointClass();
+
+    /**
+     * Subclasses must provide endpoint configuration class.
+     * @return
+     */
+    protected abstract Class<? extends EndpointConfiguration> getEndpointConfigurationClass();
+
+    /**
+     * Subclasses can override this parsing method in order to provide proper endpoint configuration bean definition properties.
+     * @param endpointConfigurationBuilder
      * @param element
      * @param parserContext
+     * @return
      */
-    protected void enrichEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("timeout"), "timeout");
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfigurationBuilder, Element element, ParserContext parserContext) {
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("timeout"), "timeout");
     }
 
     /**
-     * Subclasses must implement this parsing method in order to provide proper endpoint configuration bean definition.
+     * Subclasses can implement this parsing method in order to provide detailed endpoint bean definition properties.
+     * @param endpointBuilder
      * @param element
      * @param parserContext
      * @return
      */
-    protected abstract BeanDefinitionBuilder parseEndpointConfiguration(Element element, ParserContext parserContext);
-
-    /**
-     * Subclasses must implement this parsing method in order to provide detailed endpoint bean definition.
-     * @param element
-     * @param parserContext
-     * @return
-     */
-    protected abstract BeanDefinitionBuilder parseEndpoint(Element element, ParserContext parserContext);
+    protected void parseEndpoint(BeanDefinitionBuilder endpointBuilder, Element element, ParserContext parserContext) {
+    }
 }

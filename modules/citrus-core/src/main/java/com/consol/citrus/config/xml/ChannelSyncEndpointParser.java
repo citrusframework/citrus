@@ -18,6 +18,8 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.channel.*;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
@@ -31,20 +33,23 @@ import org.w3c.dom.Element;
 public class ChannelSyncEndpointParser extends AbstractChannelEndpointParser {
 
     @Override
-    protected BeanDefinitionBuilder parseEndpoint(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(ChannelSyncEndpoint.class);
+    protected Class<? extends Endpoint> getEndpointClass() {
+        return ChannelSyncEndpoint.class;
     }
 
     @Override
-    protected BeanDefinitionBuilder parseEndpointConfiguration(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder endpointConfiguration = BeanDefinitionBuilder.genericBeanDefinition(ChannelSyncEndpointConfiguration.class);
+    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
+        return ChannelSyncEndpointConfiguration.class;
+    }
+
+    @Override
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration,
                 element.getAttribute("message-correlator"), "correlator");
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration,
                 element.getAttribute("polling-interval"), "pollingInterval");
-
-        return endpointConfiguration;
     }
 }

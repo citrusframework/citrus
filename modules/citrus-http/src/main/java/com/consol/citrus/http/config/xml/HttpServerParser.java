@@ -17,10 +17,10 @@
 package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractServerParser;
 import com.consol.citrus.http.server.HttpServer;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
@@ -30,23 +30,17 @@ import org.w3c.dom.Element;
  * 
  * @author Christoph Deppisch
  */
-public class HttpServerParser extends AbstractBeanDefinitionParser {
+public class HttpServerParser extends AbstractServerParser {
 
     @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition(HttpServer.class);
-        
+    protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
+        super.parseServer(builder, element, parserContext);
+
         String port = element.getAttribute("port");
         if (StringUtils.hasText(port)) {
             builder.addPropertyValue("port", port);
         }
         
-        String autoStart = element.getAttribute("auto-start");
-        if (StringUtils.hasText(autoStart)) {
-            builder.addPropertyValue("autoStart", autoStart);
-        }
-
         String contextConfigLocation = element.getAttribute("context-config-location");
         if (StringUtils.hasText(contextConfigLocation)) {
             builder.addPropertyValue("contextConfigLocation", contextConfigLocation);
@@ -77,7 +71,10 @@ public class HttpServerParser extends AbstractBeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-path"), "contextPath");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("servlet-handler"), "servletHandler");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("security-handler"), "securityHandler");
-        
-        return builder.getBeanDefinition();
+    }
+
+    @Override
+    protected Class<? extends AbstractServer> getServerClass() {
+        return HttpServer.class;
     }
 }

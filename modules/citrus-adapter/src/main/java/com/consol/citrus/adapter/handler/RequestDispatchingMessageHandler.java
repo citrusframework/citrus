@@ -18,6 +18,7 @@ package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.adapter.handler.mapping.MappingKeyExtractor;
 import com.consol.citrus.adapter.handler.mapping.MessageHandlerMapping;
+import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
 import org.springframework.integration.Message;
 
 /**

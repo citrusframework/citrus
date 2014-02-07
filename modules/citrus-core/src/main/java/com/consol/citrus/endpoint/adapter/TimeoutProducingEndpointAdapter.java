@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler;
+package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.endpoint.AbstractEndpointAdapter;
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.integration.Message;
 
 /**
- * Static endpoint adapter always responds with static response message. No endpoint is provided as this is a
- * static message handler. Clients trying to get endpoint for interaction will receive runtime exception.
+ * Endpoint adapter produces no response message forcing a request timeout on client side.
  *
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class StaticEndpointAdapter extends AbstractEndpointAdapter {
+public class TimeoutProducingEndpointAdapter extends StaticEndpointAdapter {
 
     @Override
-    public Endpoint getEndpoint() {
-        throw new CitrusRuntimeException(String.format("Unable to create endpoint for static message handler type '%s'", getClass()));
+    public Message<?> handleMessageInternal(Message<?> message) {
+        return null;
     }
 }

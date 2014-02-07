@@ -27,8 +27,8 @@ import org.w3c.dom.Element;
 public abstract class AbstractChannelEndpointParser extends AbstractEndpointParser {
 
     @Override
-    protected void enrichEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
-        super.enrichEndpointConfiguration(endpointConfiguration, element, parserContext);
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration,
                 element.getAttribute("channel"), "channel");

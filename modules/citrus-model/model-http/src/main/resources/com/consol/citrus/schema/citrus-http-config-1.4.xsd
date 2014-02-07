@@ -25,6 +25,75 @@
         <xs:documentation>Http server implementation accepts client connections and receives messages via Http transport protocol.</xs:documentation>
       </xs:annotation>
       <xs:complexType>
+        <xs:sequence>
+          <xs:choice minOccurs="0">
+            <xs:element name="channel-endpoint-adapter">
+              <xs:complexType>
+                <xs:attribute name="messaging-template" type="xs:string"/>
+                <xs:attribute name="channel" type="xs:string"/>
+                <xs:attribute name="channel-name" type="xs:string"/>
+                <xs:attribute name="channel-resolver" type="xs:string"/>
+                <xs:attribute name="polling-interval" type="xs:string"/>
+                <xs:attribute name="message-correlator" type="xs:string"/>
+                <xs:attribute name="timeout" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="jms-endpoint-adapter">
+              <xs:complexType>
+                <xs:attribute name="destination" type="xs:string"/>
+                <xs:attribute name="destination-name" type="xs:string"/>
+                <xs:attribute name="connection-factory" type="xs:string"/>
+                <xs:attribute name="jms-template" type="xs:string"/>
+                <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+                <xs:attribute name="reply-destination" type="xs:string"/>
+                <xs:attribute name="reply-destination-name" type="xs:string"/>
+                <xs:attribute name="polling-interval" type="xs:string"/>
+                <xs:attribute name="message-correlator" type="xs:string"/>
+                <xs:attribute name="timeout" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="empty-response-adapter"/>
+            <xs:element name="timeout-producing-adapter"/>
+            <xs:element name="static-response-adapter">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="payload" type="xs:string" minOccurs="1"/>
+                  <xs:element name="header" minOccurs="0">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                          <xs:complexType>
+                            <xs:attribute name="name" type="xs:string" use="required"/>
+                            <xs:attribute name="value" type="xs:string" use="required"/>
+                            <xs:attribute name="type">
+                              <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                  <xs:enumeration value="integer"/>
+                                  <xs:enumeration value="long"/>
+                                  <xs:enumeration value="float"/>
+                                  <xs:enumeration value="double"/>
+                                  <xs:enumeration value="byte"/>
+                                  <xs:enumeration value="short"/>
+                                  <xs:enumeration value="boolean"/>
+                                  <xs:enumeration value="string"/>
+                                </xs:restriction>
+                              </xs:simpleType>
+                            </xs:attribute>
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="endpoint-adapter">
+              <xs:complexType>
+                <xs:attribute name="ref" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="port" type="xs:string"/>
         <xs:attribute name="auto-start" type="xs:boolean"/>

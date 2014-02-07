@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler;
+package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 
 /**
- * Message handler will always return a static response message.
- * 
+ * Endpoint adapter always returning empty response message.
+ *
  * @author Christoph Deppisch
- * @deprecated
+ * @since 1.4
  */
-public class StaticResponseProducingMessageHandler extends StaticResponseEndpointAdapter {
+public class EmptyResponseEndpointAdapter extends StaticEndpointAdapter {
+
+    @Override
+    public Message<?> handleMessageInternal(Message<?> message) {
+        return MessageBuilder.withPayload("").build();
+    }
 }

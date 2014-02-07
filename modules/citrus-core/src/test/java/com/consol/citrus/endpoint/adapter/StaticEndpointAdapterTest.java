@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler;
+package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;

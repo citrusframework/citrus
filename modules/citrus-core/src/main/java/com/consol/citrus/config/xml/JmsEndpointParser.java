@@ -16,11 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.jms.JmsEndpoint;
 import com.consol.citrus.jms.JmsEndpointConfiguration;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for JMS endpoint component.
@@ -30,12 +29,12 @@ import org.w3c.dom.Element;
  */
 public class JmsEndpointParser extends AbstractJmsEndpointParser {
     @Override
-    protected BeanDefinitionBuilder parseEndpoint(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(JmsEndpoint.class);
+    protected Class<? extends Endpoint> getEndpointClass() {
+        return JmsEndpoint.class;
     }
 
     @Override
-    protected BeanDefinitionBuilder parseEndpointConfiguration(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(JmsEndpointConfiguration.class);
+    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass()  {
+        return JmsEndpointConfiguration.class;
     }
 }

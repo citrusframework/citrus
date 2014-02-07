@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.channel.ChannelEndpoint;
-import com.consol.citrus.channel.ChannelEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
- * Channel endpoint parser.
+ * Static endpoint adapter always responds with static response message. No endpoint is provided as this is a
+ * static message handler. Clients trying to get endpoint for interaction will receive runtime exception.
  *
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ChannelEndpointParser extends AbstractChannelEndpointParser {
+public abstract class StaticEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
-    protected Class<? extends Endpoint> getEndpointClass() {
-        return ChannelEndpoint.class;
-    }
-
-    @Override
-    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
-        return ChannelEndpointConfiguration.class;
+    public Endpoint getEndpoint() {
+        throw new CitrusRuntimeException(String.format("Unable to create endpoint for static message handler type '%s'", getClass()));
     }
 }

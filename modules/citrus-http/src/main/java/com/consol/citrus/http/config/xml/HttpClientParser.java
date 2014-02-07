@@ -18,6 +18,8 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractEndpointParser;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.message.ErrorHandlingStrategy;
@@ -35,8 +37,8 @@ import org.w3c.dom.Element;
 public class HttpClientParser extends AbstractEndpointParser {
 
     @Override
-    protected BeanDefinitionBuilder parseEndpointConfiguration(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder endpointConfiguration = BeanDefinitionBuilder.genericBeanDefinition(HttpEndpointConfiguration.class);
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         if (element.hasAttribute("rest-template") && element.hasAttribute("request-factory")) {
             parserContext.getReaderContext().error("When providing a 'rest-template' property, " +
@@ -77,12 +79,15 @@ public class HttpClientParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("interceptors"), "clientInterceptors");
-
-        return endpointConfiguration;
     }
 
     @Override
-    protected BeanDefinitionBuilder parseEndpoint(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(HttpClient.class);
+    protected Class<? extends Endpoint> getEndpointClass() {
+        return HttpClient.class;
+    }
+
+    @Override
+    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
+        return HttpEndpointConfiguration.class;
     }
 }

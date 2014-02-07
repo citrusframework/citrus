@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.channel.ChannelEndpoint;
-import com.consol.citrus.channel.ChannelEndpointConfiguration;
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointConfiguration;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
- * Channel endpoint parser.
- *
  * @author Christoph Deppisch
- * @since 1.4
  */
-public class ChannelEndpointParser extends AbstractChannelEndpointParser {
+public class TimeoutProducingEndpointAdapterTest {
 
-    @Override
-    protected Class<? extends Endpoint> getEndpointClass() {
-        return ChannelEndpoint.class;
-    }
+    @Test
+    public void testHandleMessage() {
+        TimeoutProducingEndpointAdapter messageHandler = new TimeoutProducingEndpointAdapter();
+        Message<?> response = messageHandler.handleMessage(
+                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
 
-    @Override
-    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
-        return ChannelEndpointConfiguration.class;
+        Assert.assertNull(response);
     }
 }
