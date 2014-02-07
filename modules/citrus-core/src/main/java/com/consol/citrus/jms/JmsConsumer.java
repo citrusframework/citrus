@@ -18,6 +18,7 @@ package com.consol.citrus.jms;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
@@ -34,15 +35,20 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     private static Logger log = LoggerFactory.getLogger(JmsConsumer.class);
 
     /** Endpoint configuration */
-    private JmsEndpoint endpoint;
+    private final JmsEndpointConfiguration endpointConfiguration;
+
+    /** Message listener  */
+    private final MessageListeners messageListener;
 
     /**
      * Default constructor using endpoint.
-     * @param endpoint
+     * @param endpointConfiguration
+     * @param messageListener
      */
-    public JmsConsumer(JmsEndpoint endpoint) {
-        super(endpoint.getEndpointConfiguration().getTimeout());
-        this.endpoint = endpoint;
+    public JmsConsumer(JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(endpointConfiguration.getTimeout());
+        this.endpointConfiguration = endpointConfiguration;
+        this.messageListener = messageListener;
     }
 
     @Override
@@ -50,20 +56,20 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         String destinationName;
 
         if (StringUtils.hasText(selector)) {
-            destinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName() + "(" + selector + ")'";
+            destinationName = endpointConfiguration.getDefaultDestinationName() + "(" + selector + ")'";
         } else {
-            destinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName();
+            destinationName = endpointConfiguration.getDefaultDestinationName();
         }
 
         log.info("Waiting for JMS message on destination: '" + destinationName);
 
-        endpoint.getEndpointConfiguration().getJmsTemplate().setReceiveTimeout(timeout);
+        endpointConfiguration.getJmsTemplate().setReceiveTimeout(timeout);
         Object receivedObject = null;
 
         if (StringUtils.hasText(selector)) {
-            receivedObject = endpoint.getEndpointConfiguration().getJmsTemplate().receiveSelectedAndConvert(selector);
+            receivedObject = endpointConfiguration.getJmsTemplate().receiveSelectedAndConvert(selector);
         } else {
-            receivedObject = endpoint.getEndpointConfiguration().getJmsTemplate().receiveAndConvert();
+            receivedObject = endpointConfiguration.getJmsTemplate().receiveAndConvert();
         }
 
         if (receivedObject == null) {
@@ -89,11 +95,18 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * @param receivedMessage
      */
     protected void onInboundMessage(Message<?> receivedMessage) {
-        if (endpoint.getMessageListener() != null) {
-            endpoint.getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+        if (messageListener != null) {
+            messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
     }
 
+    /**
+     * Gets the message listener.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
+    }
 }

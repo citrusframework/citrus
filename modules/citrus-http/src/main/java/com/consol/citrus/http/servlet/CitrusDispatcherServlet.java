@@ -16,14 +16,11 @@
 
 package com.consol.citrus.http.servlet;
 
-import com.consol.citrus.adapter.handler.*;
-import com.consol.citrus.channel.ChannelEndpointConfiguration;
+import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
 import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.jms.JmsEndpointConfiguration;
-import com.consol.citrus.jms.JmsSyncEndpointConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.WebRequestInterceptor;
@@ -88,40 +85,10 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
         if (context.containsBean(MESSAGE_CONTROLLER_BEAN_NAME)) {
             HttpMessageController messageController = context.getBean(MESSAGE_CONTROLLER_BEAN_NAME, HttpMessageController.class);
 
-            if (httpServer.getEndpointConfiguration() == null) {
+            if (httpServer.getEndpointAdapter() == null) {
                 messageController.setMessageHandler(new EmptyResponseProducingMessageHandler());
-            } else if (httpServer.getEndpointConfiguration() instanceof ChannelEndpointConfiguration) {
-                ChannelEndpointConfiguration channelEndpointConfiguration = (ChannelEndpointConfiguration) httpServer.getEndpointConfiguration();
-                MessageChannelConnectingMessageHandler messageHandler = new MessageChannelConnectingMessageHandler();
-                messageHandler.setBeanFactory(context);
-                messageHandler.setReplyTimeout(channelEndpointConfiguration.getTimeout());
-
-                if (channelEndpointConfiguration.getMessagingTemplate() != null) {
-                    messageHandler.setMessagingTemplate(channelEndpointConfiguration.getMessagingTemplate());
-                }
-
-                messageHandler.setChannel(channelEndpointConfiguration.getChannel());
-                messageHandler.setChannelName(channelEndpointConfiguration.getChannelName());
-
-                messageController.setMessageHandler(messageHandler);
-            } else if (httpServer.getEndpointConfiguration() instanceof JmsEndpointConfiguration) {
-                JmsEndpointConfiguration jmsEndpointConfiguration = (JmsEndpointConfiguration) httpServer.getEndpointConfiguration();
-                JmsConnectingMessageHandler messageHandler = new JmsConnectingMessageHandler();
-                messageHandler.setReplyTimeout(jmsEndpointConfiguration.getTimeout());
-
-                if (jmsEndpointConfiguration.getConnectionFactory() != null) {
-                    messageHandler.setConnectionFactory(jmsEndpointConfiguration.getConnectionFactory());
-                }
-
-                messageHandler.setDestination(jmsEndpointConfiguration.getDestination());
-                messageHandler.setDestinationName(jmsEndpointConfiguration.getDestinationName());
-
-                if (jmsEndpointConfiguration instanceof JmsSyncEndpointConfiguration) {
-                    messageHandler.setReplyDestination(((JmsSyncEndpointConfiguration) jmsEndpointConfiguration).getReplyDestination());
-                    messageHandler.setReplyDestinationName(((JmsSyncEndpointConfiguration) jmsEndpointConfiguration).getReplyDestinationName());
-                }
-
-                messageController.setMessageHandler(messageHandler);
+            } else {
+                messageController.setMessageHandler(httpServer.getEndpointAdapter());
             }
         }
     }

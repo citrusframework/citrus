@@ -17,6 +17,7 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
@@ -32,25 +33,30 @@ public class JmsProducer implements Producer {
     private static Logger log = LoggerFactory.getLogger(JmsProducer.class);
 
     /** Endpoint configuration */
-    private JmsEndpoint endpoint;
+    private final JmsEndpointConfiguration endpointConfiguration;
+
+    /** Message listener */
+    private final MessageListeners messageListener;
 
     /**
-     * Default constructor using endpoint.
-     * @param endpoint
+     * Default constructor using endpoint configuration.
+     * @param endpointConfiguration
+     * @param messageListener
      */
-    public JmsProducer(JmsEndpoint endpoint) {
-        this.endpoint = endpoint;
+    public JmsProducer(JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        this.endpointConfiguration = endpointConfiguration;
+        this.messageListener = messageListener;
     }
 
     @Override
     public void send(Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String defaultDestinationName = endpoint.getEndpointConfiguration().getDefaultDestinationName();
+        String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
-        endpoint.getEndpointConfiguration().getJmsTemplate().convertAndSend(message);
+        endpointConfiguration.getJmsTemplate().convertAndSend(message);
 
         onOutboundMessage(message);
 
@@ -62,10 +68,18 @@ public class JmsProducer implements Producer {
      * @param message
      */
     protected void onOutboundMessage(Message<?> message) {
-        if (endpoint.getMessageListener() != null) {
-            endpoint.getMessageListener().onOutboundMessage(message.toString());
+        if (messageListener != null) {
+            messageListener.onOutboundMessage(message.toString());
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
+    }
+
+    /**
+     * Gets the message listener.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.message;
+package com.consol.citrus.endpoint;
 
-import org.springframework.integration.Message;
-
+import com.consol.citrus.message.MessageHandler;
 
 /**
- * MessageHandler processes incoming request messages and provides a proper response message.
+ * Endpoint adapter represents a special message handler that delegates incoming request messages to some message endpoint.
+ * Clients can receive request messages from endpoint and provide proper response messages that will be used as
+ * message handler response.
  *
  * @author Christoph Deppisch
- * @since 2007
+ * @since 1.4
  */
-public interface MessageHandler {
-    /**
-     * Handles a request message and returning a proper response.
-     * @param message the request message.
-     * @return the response message.
-     */
-    Message<?> handleMessage(Message<?> message);
+public interface EndpointAdapter extends MessageHandler {
 
+    /**
+     * Gets message endpoint to interact with tis endpoint adapter.
+     * @return
+     */
+    Endpoint getEndpoint();
 }

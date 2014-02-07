@@ -60,7 +60,7 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         }
 
         if (jmsSyncMessageConsumer == null) {
-            jmsSyncMessageConsumer = new JmsSyncConsumer(this);
+            jmsSyncMessageConsumer = new JmsSyncConsumer(getEndpointConfiguration(), getMessageListener());
         }
 
         return jmsSyncMessageConsumer;
@@ -73,7 +73,7 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         }
 
         if (jmsSyncMessageProducer == null) {
-            jmsSyncMessageProducer = new JmsSyncProducer(this);
+            jmsSyncMessageProducer = new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName());
         }
 
         return jmsSyncMessageProducer;

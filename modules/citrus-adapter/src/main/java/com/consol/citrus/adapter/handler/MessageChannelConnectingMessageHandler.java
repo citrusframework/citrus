@@ -39,6 +39,7 @@ import com.consol.citrus.message.MessageHandler;
  * default response message.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class MessageChannelConnectingMessageHandler implements MessageHandler, BeanFactoryAware {
 

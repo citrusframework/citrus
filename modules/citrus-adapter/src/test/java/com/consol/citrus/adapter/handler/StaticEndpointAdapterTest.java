@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,25 @@
 
 package com.consol.citrus.adapter.handler;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
+import org.testng.annotations.Test;
 
 /**
- * Message handler implementation generating empty response messages.
- * 
  * @author Christoph Deppisch
  */
-public class EmptyResponseProducingMessageHandler extends StaticEndpointAdapter {
+public class StaticEndpointAdapterTest {
 
-    @Override
-    public Message<?> handleMessageInternal(Message<?> message) {
-        return MessageBuilder.withPayload("").build();
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testEndpointAdapter() {
+        EndpointAdapter endpointAdapter = new StaticEndpointAdapter() {
+            @Override
+            protected Message<?> handleMessageInternal(Message<?> message) {
+                return null;
+            }
+        };
+
+        endpointAdapter.getEndpoint();
     }
-
 }

@@ -16,8 +16,9 @@
 
 package com.consol.citrus.adapter.handler;
 
-import javax.jms.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jms.JmsMessageConverter;
+import com.consol.citrus.message.MessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.*;
@@ -31,9 +32,7 @@ import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.JmsMessageConverter;
-import com.consol.citrus.message.MessageHandler;
+import javax.jms.*;
 
 /**
  * Message handler implementation forwarding incoming request to a JMS destination. The handler is
@@ -48,6 +47,7 @@ import com.consol.citrus.message.MessageHandler;
  * can provide a fallback response message.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsConnectingMessageHandler implements MessageHandler, InitializingBean, DisposableBean {
 

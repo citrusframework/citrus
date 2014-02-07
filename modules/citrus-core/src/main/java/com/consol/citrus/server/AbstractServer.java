@@ -16,8 +16,8 @@
 
 package com.consol.citrus.server;
 
-import com.consol.citrus.channel.ChannelSyncEndpoint;
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
+import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.endpoint.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
@@ -50,8 +50,8 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     /** Spring bean factory injected */
     private BeanFactory beanFactory;
 
-    /** Message endpoint for incoming requests */
-    private Endpoint endpoint;
+    /** Message endpoint adapter for incoming requests */
+    private EndpointAdapter endpointAdapter;
 
     /** Handler interceptors such as security or logging interceptors */
     private List<Object> interceptors = new ArrayList<Object>();
@@ -121,11 +121,11 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     public void afterPropertiesSet() throws Exception {
-        if (endpoint == null) {
+        if (endpointAdapter == null) {
             ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
             channelEndpointConfiguration.setChannelName(getName() + ".inbound");
             channelEndpointConfiguration.setBeanFactory(getBeanFactory());
-            endpoint = new ChannelSyncEndpoint(channelEndpointConfiguration);
+            endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
         }
 
         if (autoStart) {
@@ -164,17 +164,17 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
 
     @Override
     public EndpointConfiguration getEndpointConfiguration() {
-        return endpoint.getEndpointConfiguration();
+        return endpointAdapter.getEndpoint().getEndpointConfiguration();
     }
 
     @Override
     public Consumer createConsumer() {
-        return endpoint.createConsumer();
+        return endpointAdapter.getEndpoint().createConsumer();
     }
 
     @Override
     public Producer createProducer() {
-        return endpoint.createProducer();
+        return endpointAdapter.getEndpoint().createProducer();
     }
 
     /**
@@ -218,19 +218,19 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     }
 
     /**
-     * Gets the message endpoint invoked on incoming messages.
+     * Gets the message endpoint adapter.
      * @return
      */
-    public Endpoint getEndpoint() {
-        return endpoint;
+    public EndpointAdapter getEndpointAdapter() {
+        return endpointAdapter;
     }
 
     /**
-     * Sets the message endpoint.
-     * @param endpoint
+     * Sets the message endpoint adapter.
+     * @param endpointAdapter
      */
-    public void setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
+    public void setEndpointAdapter(EndpointAdapter endpointAdapter) {
+        this.endpointAdapter = endpointAdapter;
     }
 
     /**

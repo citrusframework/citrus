@@ -71,7 +71,7 @@ public class JmsReplyMessageReceiverTest {
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(this) {
+                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -97,7 +97,7 @@ public class JmsReplyMessageReceiverTest {
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(this) {
+                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -121,7 +121,7 @@ public class JmsReplyMessageReceiverTest {
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(this) {
+                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -145,7 +145,7 @@ public class JmsReplyMessageReceiverTest {
         JmsReplyMessageReceiver replyMessageReceiver = new JmsReplyMessageReceiver(new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(this) {
+                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
                     public Message<?> findReplyMessage(String correlationKey) {
                         retryCount++;

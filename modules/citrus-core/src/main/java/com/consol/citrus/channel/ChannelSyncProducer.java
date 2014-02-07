@@ -16,7 +16,7 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
         replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(), message);
 
         if (replyMessage == null) {
-            throw new CitrusRuntimeException("Reply timed out after " +
+            throw new ActionTimeoutException("Reply timed out after " +
                     endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply channel");
         } else {
             log.info("Received synchronous repsonse message from reply channel");
