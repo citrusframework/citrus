@@ -172,6 +172,6 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getName(), "httpServer6");
         Assert.assertEquals(server.getPort(), 8086);
         Assert.assertNotNull(server.getEndpointAdapter());
-        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("endpointAdapter", EndpointAdapter.class));
+        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("httpServerAdapter6", EndpointAdapter.class));
     }
 }

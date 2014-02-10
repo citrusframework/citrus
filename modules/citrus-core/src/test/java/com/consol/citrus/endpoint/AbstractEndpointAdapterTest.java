@@ -45,6 +45,11 @@ public class AbstractEndpointAdapterTest {
             public Endpoint getEndpoint() {
                 return null;
             }
+
+            @Override
+            public EndpointConfiguration getEndpointConfiguration() {
+                return null;
+            }
         };
 
         Assert.assertNull(abstractEndpointAdapter.handleMessage(MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build()));
@@ -60,6 +65,11 @@ public class AbstractEndpointAdapterTest {
 
             @Override
             public Endpoint getEndpoint() {
+                return null;
+            }
+
+            @Override
+            public EndpointConfiguration getEndpointConfiguration() {
                 return null;
             }
         };

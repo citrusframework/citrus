@@ -16,29 +16,28 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.channel.ChannelEndpointAdapter;
-import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
+import com.consol.citrus.jms.JmsEndpointAdapter;
+import com.consol.citrus.jms.JmsSyncEndpointConfiguration;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
-import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.beans.factory.xml.*;
 import org.w3c.dom.Element;
 
 /**
- * Parses endpoint adapter bean definition for channel endpoint adapter.
+ * Bean definition parser creates JMS endpoint adapter component.
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {
+public class JmsEndpointAdapterParser extends AbstractBeanDefinitionParser {
 
     @Override
-    public AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ChannelEndpointAdapter.class);
+    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(JmsEndpointAdapter.class);
 
-        BeanDefinitionBuilder endpointConfiguration = BeanDefinitionBuilder.genericBeanDefinition(ChannelSyncEndpointConfiguration.class);
-        new ChannelSyncEndpointParser().parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+        BeanDefinitionBuilder endpointConfiguration = BeanDefinitionBuilder.genericBeanDefinition(JmsSyncEndpointConfiguration.class);
+        new JmsSyncEndpointParser().parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "EndpointAdapterConfiguration";
         BeanDefinitionHolder configurationHolder = new BeanDefinitionHolder(endpointConfiguration.getBeanDefinition(), endpointConfigurationId);

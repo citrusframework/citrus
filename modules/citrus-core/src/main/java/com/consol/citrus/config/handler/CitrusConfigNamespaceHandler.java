@@ -16,9 +16,8 @@
 
 package com.consol.citrus.config.handler;
 
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-
 import com.consol.citrus.config.xml.*;
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * Namespace handler for components in Citrus configuration.
@@ -52,6 +51,11 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("sync-message-channel-receiver", new SyncMessageChannelReceiverParser());
         registerBeanDefinitionParser("message-channel-reply-handler", new ReplyMessageChannelReceiverParser());
         registerBeanDefinitionParser("message-channel-reply-sender", new ReplyMessageChannelSenderParser());
+        registerBeanDefinitionParser("channel-endpoint-adapter", new ChannelEndpointAdapterParser());
+        registerBeanDefinitionParser("jms-endpoint-adapter", new JmsEndpointAdapterParser());
+        registerBeanDefinitionParser("static-response-adapter", new StaticResponseEndpointAdapterParser());
+        registerBeanDefinitionParser("empty-response-adapter", new EmptyResponseEndpointAdapterParser());
+        registerBeanDefinitionParser("timeout-producing-adapter", new TimeoutProducingEndpointAdapterParser());
     }
 
 }

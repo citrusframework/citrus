@@ -33,4 +33,10 @@ public interface EndpointAdapter extends MessageHandler {
      * @return
      */
     Endpoint getEndpoint();
+
+    /**
+     * Gets the endpoint configuration.
+     * @return
+     */
+    EndpointConfiguration getEndpointConfiguration();
 }

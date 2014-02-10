@@ -67,4 +67,9 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
     public Endpoint getEndpoint() {
         return endpoint;
     }
+
+    @Override
+    public JmsSyncEndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
+    }
 }

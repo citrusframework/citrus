@@ -34,8 +34,6 @@ public class HttpServerParser extends AbstractServerParser {
 
     @Override
     protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
-        super.parseServer(builder, element, parserContext);
-
         String port = element.getAttribute("port");
         if (StringUtils.hasText(port)) {
             builder.addPropertyValue("port", port);

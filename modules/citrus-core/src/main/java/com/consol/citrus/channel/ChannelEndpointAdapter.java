@@ -73,4 +73,9 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
         return endpoint;
     }
 
+    @Override
+    public ChannelSyncEndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
+    }
+
 }
