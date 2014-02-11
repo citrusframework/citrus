@@ -66,6 +66,4 @@
                       root-parent-context="true"
                       resource-base="src/citrus/resources"/>
 
-  <citrus:message-channel id="echoHttpServer.inbound"/>
-
 </beans>

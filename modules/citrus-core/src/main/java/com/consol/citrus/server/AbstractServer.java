@@ -35,6 +35,9 @@ import java.util.List;
  */
 public abstract class AbstractServer extends AbstractEndpoint implements Server, InitializingBean, DisposableBean, BeanFactoryAware {
 
+    /** Default channel suffix */
+    public static final String DEFAULT_CHANNEL_ID_SUFFIX = ".inbound";
+
     /** Running flag */
     private boolean running = false;
     
@@ -123,7 +126,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     public void afterPropertiesSet() throws Exception {
         if (endpointAdapter == null) {
             ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
-            channelEndpointConfiguration.setChannelName(getName() + ".inbound");
+            channelEndpointConfiguration.setChannelName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
             channelEndpointConfiguration.setBeanFactory(getBeanFactory());
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
         }

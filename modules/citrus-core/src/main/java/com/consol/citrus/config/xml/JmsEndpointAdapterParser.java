@@ -16,13 +16,13 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.jms.JmsEndpointAdapter;
 import com.consol.citrus.jms.JmsSyncEndpointConfiguration;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.*;
+import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
+import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
@@ -40,13 +40,7 @@ public class JmsEndpointAdapterParser extends AbstractBeanDefinitionParser {
         new JmsSyncEndpointParser().parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "EndpointAdapterConfiguration";
-        BeanDefinitionHolder configurationHolder = new BeanDefinitionHolder(endpointConfiguration.getBeanDefinition(), endpointConfigurationId);
-        registerBeanDefinition(configurationHolder, parserContext.getRegistry());
-        if (shouldFireEvents()) {
-            BeanComponentDefinition componentDefinition = new BeanComponentDefinition(configurationHolder);
-            postProcessComponentDefinition(componentDefinition);
-            parserContext.registerComponent(componentDefinition);
-        }
+        BeanDefinitionParserUtils.registerBean(endpointConfigurationId, endpointConfiguration.getBeanDefinition(), parserContext, shouldFireEvents());
 
         builder.addConstructorArgReference(endpointConfigurationId);
 

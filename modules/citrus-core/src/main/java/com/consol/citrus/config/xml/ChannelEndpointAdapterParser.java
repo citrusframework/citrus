@@ -18,8 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.parsing.BeanComponentDefinition;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -41,13 +40,7 @@ public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {
         new ChannelSyncEndpointParser().parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "EndpointAdapterConfiguration";
-        BeanDefinitionHolder configurationHolder = new BeanDefinitionHolder(endpointConfiguration.getBeanDefinition(), endpointConfigurationId);
-        registerBeanDefinition(configurationHolder, parserContext.getRegistry());
-        if (shouldFireEvents()) {
-            BeanComponentDefinition componentDefinition = new BeanComponentDefinition(configurationHolder);
-            postProcessComponentDefinition(componentDefinition);
-            parserContext.registerComponent(componentDefinition);
-        }
+        BeanDefinitionParserUtils.registerBean(endpointConfigurationId, endpointConfiguration.getBeanDefinition(), parserContext, shouldFireEvents());
 
         builder.addConstructorArgReference(endpointConfigurationId);
 

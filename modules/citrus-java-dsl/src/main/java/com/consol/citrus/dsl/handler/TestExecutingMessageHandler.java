@@ -22,19 +22,14 @@ import com.consol.citrus.adapter.handler.mapping.SpringBeanMessageHandlerMapping
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.integration.Message;
-import org.springframework.util.StringUtils;
-import org.springframework.util.xml.DomUtils;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * Message dispatching message handler triggers test builder instance execution for each incoming request.
@@ -109,7 +104,7 @@ public class TestExecutingMessageHandler extends RequestDispatchingMessageHandle
     public void afterPropertiesSet() throws Exception {
         if (responseMessageHandler == null) {
             MessageChannelConnectingMessageHandler channelConnectingMessageHandler = new MessageChannelConnectingMessageHandler();
-            channelConnectingMessageHandler.setChannelName(name + ".inbound");
+            channelConnectingMessageHandler.setChannelName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
             channelConnectingMessageHandler.setBeanFactory(applicationContext);
             responseMessageHandler = channelConnectingMessageHandler;
         }

@@ -16,7 +16,12 @@
 
 package com.consol.citrus.config.util;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.parsing.BeanComponentDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 
 /**
@@ -102,4 +107,39 @@ public abstract class BeanDefinitionParserUtils {
         }
     }
 
+    /**
+     * Creates new bean definition from bean class and registers new bean in parser registry.
+     * Returns bean definition holder.
+     * @param beanId
+     * @param beanClass
+     * @param parserContext
+     * @param shouldFireEvents
+     */
+    public static BeanDefinitionHolder registerBean(String beanId, Class<?> beanClass, ParserContext parserContext, boolean shouldFireEvents) {
+        return registerBean(beanId, BeanDefinitionBuilder.genericBeanDefinition(beanClass).getBeanDefinition(), parserContext, shouldFireEvents);
+    }
+
+    /**
+     * Registers bean definition in parser registry and returns bean definition holder.
+     * @param beanId
+     * @param beanDefinition
+     * @param parserContext
+     * @param shouldFireEvents
+     * @return
+     */
+    public static BeanDefinitionHolder registerBean(String beanId, BeanDefinition beanDefinition, ParserContext parserContext, boolean shouldFireEvents) {
+        if (parserContext.getRegistry().containsBeanDefinition(beanId)) {
+            return new BeanDefinitionHolder(parserContext.getRegistry().getBeanDefinition(beanId), beanId);
+        }
+
+        BeanDefinitionHolder configurationHolder = new BeanDefinitionHolder(beanDefinition, beanId);
+        BeanDefinitionReaderUtils.registerBeanDefinition(configurationHolder, parserContext.getRegistry());
+
+        if (shouldFireEvents) {
+            BeanComponentDefinition componentDefinition = new BeanComponentDefinition(configurationHolder);
+            parserContext.registerComponent(componentDefinition);
+        }
+
+        return configurationHolder;
+    }
 }
