@@ -100,6 +100,8 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getServletName(), "httpServer4-servlet");
+        Assert.assertNotNull(server.getInterceptors());
+        Assert.assertEquals(server.getInterceptors().size(), 0L);
         
         // 5th message sender
         server = servers.get("httpServer5");
@@ -113,6 +115,8 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getServletName(), "httpServer5-servlet");
+        Assert.assertNotNull(server.getInterceptors());
+        Assert.assertEquals(server.getInterceptors().size(), 2L);
     }
 
     @Test

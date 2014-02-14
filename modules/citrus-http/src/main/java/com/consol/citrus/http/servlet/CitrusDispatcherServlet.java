@@ -16,7 +16,8 @@
 
 package com.consol.citrus.http.servlet;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
@@ -84,11 +85,12 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     protected void configureMessageController(ApplicationContext context) {
         if (context.containsBean(MESSAGE_CONTROLLER_BEAN_NAME)) {
             HttpMessageController messageController = context.getBean(MESSAGE_CONTROLLER_BEAN_NAME, HttpMessageController.class);
+            EndpointAdapter endpointAdapter = httpServer.getEndpointAdapter();
 
-            if (httpServer.getEndpointAdapter() == null) {
-                messageController.setMessageHandler(new EmptyResponseProducingMessageHandler());
+            if (endpointAdapter == null) {
+                messageController.setMessageHandler(new EmptyResponseEndpointAdapter());
             } else {
-                messageController.setMessageHandler(httpServer.getEndpointAdapter());
+                messageController.setMessageHandler(endpointAdapter);
             }
         }
     }
@@ -101,14 +103,16 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     private List<HandlerInterceptor> adaptInterceptors(List<Object> interceptors) {
         List<HandlerInterceptor> handlerInterceptors = new ArrayList<HandlerInterceptor>();
 
-        for (Object interceptor : interceptors) {
-            if (interceptor instanceof HandlerInterceptor) {
-                handlerInterceptors.add((HandlerInterceptor) interceptor);
-            } else if (interceptor instanceof WebRequestInterceptor) {
-                handlerInterceptors.add(new WebRequestHandlerInterceptorAdapter((WebRequestInterceptor) interceptor));
-            } else if (interceptor instanceof MappedInterceptor) {
-                handlerInterceptors.add(new MappedInterceptorAdapter((MappedInterceptor)interceptor,
-                        new UrlPathHelper(), new AntPathMatcher()));
+        if (interceptors != null) {
+            for (Object interceptor : interceptors) {
+                if (interceptor instanceof HandlerInterceptor) {
+                    handlerInterceptors.add((HandlerInterceptor) interceptor);
+                } else if (interceptor instanceof WebRequestInterceptor) {
+                    handlerInterceptors.add(new WebRequestHandlerInterceptorAdapter((WebRequestInterceptor) interceptor));
+                } else if (interceptor instanceof MappedInterceptor) {
+                    handlerInterceptors.add(new MappedInterceptorAdapter((MappedInterceptor)interceptor,
+                            new UrlPathHelper(), new AntPathMatcher()));
+                }
             }
         }
 

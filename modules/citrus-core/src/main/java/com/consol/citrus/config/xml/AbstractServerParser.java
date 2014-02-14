@@ -45,6 +45,8 @@ public abstract class AbstractServerParser extends AbstractBeanDefinitionParser 
             BeanDefinitionParserUtils.registerBean(channelId, MessageSelectingQueueChannel.class, parserContext, shouldFireEvents());
         }
 
+        BeanDefinitionParserUtils.setPropertyReference(serverBuilder, element.getAttribute("interceptors"), "interceptors");
+
         parseServer(serverBuilder, element, parserContext);
 
         return serverBuilder.getBeanDefinition();
