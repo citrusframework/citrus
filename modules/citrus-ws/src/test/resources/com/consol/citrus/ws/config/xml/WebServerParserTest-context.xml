@@ -7,27 +7,28 @@
                                   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                                   http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
     
-    <citrus-ws:jetty-server id="jettyServer1" />
+    <citrus-ws:server id="jettyServer1" />
     
-    <citrus-ws:jetty-server id="jettyServer2"
+    <citrus-ws:server id="jettyServer2"
                             port="8081"
                             root-parent-context="true"
                             context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
                             resource-base="src/citrus/resources"
                             context-path="/citrus"
                             servlet-name="citrus-ws"
-                            servlet-mapping-path="/foo"/>
+                            servlet-mapping-path="/foo"
+                            handleMimeHeaders="true"/>
                             
-    <citrus-ws:jetty-server id="jettyServer3"
+    <citrus-ws:server id="jettyServer3"
                             connector="connector"/>
                             
-    <citrus-ws:jetty-server id="jettyServer4"
+    <citrus-ws:server id="jettyServer4"
                             connectors="connectors"/>
                             
-    <citrus-ws:jetty-server id="jettyServer5"
+    <citrus-ws:server id="jettyServer5"
                             security-handler="securityHandler"/>
                             
-    <citrus-ws:jetty-server id="jettyServer6"
+    <citrus-ws:server id="jettyServer6"
                             servlet-handler="servletHandler"/>
     
     <bean id ="connector" class="org.easymock.EasyMock" factory-method="createMock">

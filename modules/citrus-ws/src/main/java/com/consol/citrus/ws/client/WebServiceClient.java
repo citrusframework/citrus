@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Client sends SOAP WebService messages to some server endpoint via Http protocol. Client waits for synchronous
+ * SOAP response message.
  * @author Christoph Deppisch
  * @since 1.4
  */

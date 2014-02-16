@@ -29,7 +29,7 @@ import java.util.Iterator;
 public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testAssertSoapFaultParser() {
+    public void testWebServerParser() {
         Iterator<WebServer> servers = beanDefinitionContext.getBeansOfType(WebServer.class).values().iterator();
         
         // 1st server
@@ -39,7 +39,7 @@ public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:citrus-ws-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "jettyServer1-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
@@ -71,7 +71,7 @@ public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:citrus-ws-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "jettyServer3-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
@@ -88,7 +88,7 @@ public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:citrus-ws-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "jettyServer4-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
@@ -105,7 +105,7 @@ public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:citrus-ws-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "jettyServer5-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
@@ -122,7 +122,7 @@ public class WebServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:citrus-ws-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "jettyServer6-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");

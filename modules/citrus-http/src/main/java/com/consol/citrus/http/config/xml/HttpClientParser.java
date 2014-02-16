@@ -33,6 +33,7 @@ import org.w3c.dom.Element;
 /**
  * Http client parser sets properties on bean definition for client component.
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public class HttpClientParser extends AbstractEndpointParser {
 

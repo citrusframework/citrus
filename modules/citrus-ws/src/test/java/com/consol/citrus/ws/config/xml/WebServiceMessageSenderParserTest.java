@@ -32,7 +32,7 @@ import java.util.Map;
 public class WebServiceMessageSenderParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testWebServiceMessageSenderParser() {
         Map<String, WebServiceMessageSender> messageSenders = beanDefinitionContext.getBeansOfType(WebServiceMessageSender.class);
         
         Assert.assertEquals(messageSenders.size(), 6);

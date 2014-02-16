@@ -16,15 +16,14 @@
 
 package com.consol.citrus.ws;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-
+import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
@@ -45,14 +44,14 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.MessageUtils;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
-import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
+import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to 
@@ -63,7 +62,7 @@ import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 public class WebServiceEndpoint implements MessageEndpoint {
 
     /** MessageHandler handling incoming requests and providing proper responses */
-    private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
+    private MessageHandler messageHandler = new EmptyResponseEndpointAdapter();
     
     /** Default namespace for all SOAP header entries */
     private String defaultNamespaceUri;

@@ -18,6 +18,7 @@ package com.consol.citrus.ws.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.ws.servlet.CitrusMessageDispatcherServlet;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -32,7 +33,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class WebServer extends AbstractServer implements ApplicationContextAware
     private String resourceBase = "src/main/resources";
     
     /** Application context location for payload mappings etc. */
-    private String contextConfigLocation = "classpath:citrus-ws-servlet.xml";
+    private String contextConfigLocation = "classpath:com/consol/citrus/ws/citrus-servlet-context.xml";
     
     /** Server instance to be wrapped */
     private Server jettyServer;
@@ -88,6 +88,9 @@ public class WebServer extends AbstractServer implements ApplicationContextAware
     
     /** Optional servlet handler customization */
     private ServletHandler servletHandler;
+
+    /** Should handle Http mime headers */
+    private boolean handleMimeHeaders = false;
     
     @Override
     protected void shutdown() {
@@ -131,17 +134,7 @@ public class WebServer extends AbstractServer implements ApplicationContextAware
             
             if (servletHandler == null) {
                 servletHandler = new ServletHandler();
-                ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
-                servletHolder.setName(getServletName());
-                servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
-                
-                servletHandler.addServlet(servletHolder);
-    
-                ServletMapping servletMapping = new ServletMapping();
-                servletMapping.setServletName(getServletName());
-                servletMapping.setPathSpec(servletMappingPath);
-                
-                servletHandler.addServletMapping(servletMapping);
+                addDispatcherServlet();
             }
             
             contextHandler.setServletHandler(servletHandler);
@@ -166,7 +159,24 @@ public class WebServer extends AbstractServer implements ApplicationContextAware
             }
         }
     }
-    
+
+    /**
+     * Adds Citrus message dispatcher servlet.
+     */
+    private void addDispatcherServlet() {
+        ServletHolder servletHolder = new ServletHolder(new CitrusMessageDispatcherServlet(this));
+        servletHolder.setName(getServletName());
+        servletHolder.setInitParameter("contextConfigLocation", contextConfigLocation);
+
+        servletHandler.addServlet(servletHolder);
+
+        ServletMapping servletMapping = new ServletMapping();
+        servletMapping.setServletName(getServletName());
+        servletMapping.setPathSpec(servletMappingPath);
+
+        servletHandler.addServletMapping(servletMapping);
+    }
+
     /**
      * Gets the customized servlet name or default name if not set.
      * @return the servletName
@@ -484,5 +494,21 @@ public class WebServer extends AbstractServer implements ApplicationContextAware
      */
     public void setUseRootContextAsParent(boolean useRootContextAsParent) {
         this.useRootContextAsParent = useRootContextAsParent;
+    }
+
+    /**
+     * Should handle mime headers.
+     * @return
+     */
+    public boolean isHandleMimeHeaders() {
+        return handleMimeHeaders;
+    }
+
+    /**
+     * Enable mime headers in request message which is passed to message handler.
+     * @param handleMimeHeaders the handleMimeHeaders to set
+     */
+    public void setHandleMimeHeaders(boolean handleMimeHeaders) {
+        this.handleMimeHeaders = handleMimeHeaders;
     }
 }

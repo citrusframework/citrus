@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+
+  <citrus-ws:client id="soapClient1"
+                      request-url="http://localhost:8080/test"/>
+
+  <citrus-ws:client id="soapClient2"
+                      timeout="10000"
+                      request-url="http://localhost:8080/test"
+                      message-factory="soapMessageFactory"
+                      endpoint-resolver="endpointResolver"/>
+
+  <citrus-ws:client id="soapClient3"
+                      request-url="http://localhost:8080/test"
+                      web-service-template="wsTemplate"
+                      message-correlator="replyMessageCorrelator"/>
+
+  <citrus-ws:client id="soapClient4"
+                      request-url="http://localhost:8080/test"
+                      message-sender="wsMessageSender"
+                      addressing-headers="wsAddressingHeaders"/>
+
+  <citrus-ws:client id="soapClient5"
+                      request-url="http://localhost:8080/test"
+                      fault-strategy="propagateError"
+                      interceptors="interceptors"
+                      polling-interval="250"/>
+
+  <citrus-ws:client id="soapClient6"
+                      request-url="http://localhost:8080/test"
+                      actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
+  </bean>
+
+  <bean id="endpointResolver" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.adapter.common.endpoint.EndpointUriResolver"/>
+  </bean>
+
+  <bean id="soapMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+  </bean>
+
+  <bean id="wsTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
+  </bean>
+
+  <bean id="wsAddressingHeaders" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.ws.addressing.WsAddressingHeaders"/>
+  </bean>
+
+  <bean id="wsMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.transport.WebServiceMessageSender"/>
+  </bean>
+
+  <util:list id="interceptors">
+    <bean id="interceptor1" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    </bean>
+    <bean id="interceptor2" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+    </bean>
+  </util:list>
+
+</beans>
