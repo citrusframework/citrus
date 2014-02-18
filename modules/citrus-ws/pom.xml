@@ -75,5 +75,11 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
     </dependency>
+
+    <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
