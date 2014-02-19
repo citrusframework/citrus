@@ -45,7 +45,7 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class WebServer extends AbstractServer implements ApplicationContextAware {
+public class WebServiceServer extends AbstractServer implements ApplicationContextAware {
 
     /** Server port */
     private int port = 8080;

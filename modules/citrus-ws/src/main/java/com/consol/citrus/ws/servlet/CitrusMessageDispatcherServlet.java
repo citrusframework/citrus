@@ -20,7 +20,7 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.ws.WebServiceEndpoint;
 import com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor;
-import com.consol.citrus.ws.server.WebServer;
+import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
     /** Soap web server hosting the servlet */
-    private WebServer webServer;
+    private WebServiceServer webServiceServer;
 
     /** Default bean names used in default configuration */
     private static final String ENDPOINT_INTERCEPTOR_BEAN_NAME = "citrusHandlerInterceptor";
@@ -48,10 +48,10 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
     /**
      * Default constructor using http server instance that
      * holds this servlet.
-     * @param webServer
+     * @param webServiceServer
      */
-    public CitrusMessageDispatcherServlet(WebServer webServer) {
-        this.webServer = webServer;
+    public CitrusMessageDispatcherServlet(WebServiceServer webServiceServer) {
+        this.webServiceServer = webServiceServer;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
     protected void configureHandlerInterceptor(ApplicationContext context) {
         if (context.containsBean(ENDPOINT_INTERCEPTOR_BEAN_NAME)) {
             DelegatingEndpointInterceptor endpointInterceptor = context.getBean(ENDPOINT_INTERCEPTOR_BEAN_NAME, DelegatingEndpointInterceptor.class);
-            endpointInterceptor.setInterceptors(adaptInterceptors(webServer.getInterceptors()));
+            endpointInterceptor.setInterceptors(adaptInterceptors(webServiceServer.getInterceptors()));
         }
     }
 
@@ -89,14 +89,14 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
         if (context.containsBean(MESSAGE_ENDPOINT_BEAN_NAME)) {
             WebServiceEndpoint messageEndpoint = context.getBean(MESSAGE_ENDPOINT_BEAN_NAME, WebServiceEndpoint.class);
 
-            EndpointAdapter endpointAdapter = webServer.getEndpointAdapter();
+            EndpointAdapter endpointAdapter = webServiceServer.getEndpointAdapter();
             if (endpointAdapter == null) {
                 messageEndpoint.setMessageHandler(new EmptyResponseEndpointAdapter());
             } else {
                 messageEndpoint.setMessageHandler(endpointAdapter);
             }
 
-            messageEndpoint.setHandleMimeHeaders(webServer.isHandleMimeHeaders());
+            messageEndpoint.setHandleMimeHeaders(webServiceServer.isHandleMimeHeaders());
         }
     }
 
