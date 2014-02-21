@@ -13,13 +13,14 @@
     </description>
   </bean>
 
-  <bean id="helloServicePayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+  <bean id="helloServicePayloadMapping" class="org.springframework.ws.server.endpoint.mapping.XPathPayloadEndpointMapping">
+    <property name="expression" value="local-name(/*)"/>
     <property name="mappings">
       <props>
-        <prop key="{http://citrusframework.org/schemas/samples/HelloService.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
-        <prop key="{http://citrusframework.org/schemas/samples/HelloService.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
-        <prop key="{http://citrusframework.org/schemas/samples/HelloService.xsd}SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
-        <prop key="{http://citrusframework.org/schemas/samples/HelloService.xsd}SoapProbingRequest">probingServiceEndpoint</prop>
+        <prop key="HelloStandaloneRequest">helloServiceEndpoint</prop>
+        <prop key="SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
+        <prop key="SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
+        <prop key="SoapProbingRequest">probingServiceEndpoint</prop>
       </props>
     </property>
     <property name="interceptors">
