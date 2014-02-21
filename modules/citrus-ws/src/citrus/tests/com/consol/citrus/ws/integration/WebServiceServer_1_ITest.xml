@@ -5,7 +5,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="WebServiceServerITest">
+  <testcase name="WebServiceServer_1_ITest">
     <meta-info>
       <author>Christoph Deppisch</author>
       <creationdate>2008-04-25</creationdate>

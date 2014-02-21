@@ -11,11 +11,6 @@
         <ref bean="loggingInterceptor"/>
       </list>
     </property>
-    <property name="smartEndpointInterceptor">
-      <list>
-        <ref bean="citrusEndpointInterceptor"/>
-      </list>
-    </property>
   </bean>
 
   <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>

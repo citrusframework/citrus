@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ import java.util.List;
 public class DelegatingHandlerInterceptor implements HandlerInterceptor {
 
     /** List of interceptors to delegate to when this interceptor is invoked */
-    private List<HandlerInterceptor> interceptors;
+    private List<HandlerInterceptor> interceptors = new ArrayList<HandlerInterceptor>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

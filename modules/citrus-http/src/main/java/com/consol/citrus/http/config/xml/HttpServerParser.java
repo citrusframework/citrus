@@ -22,7 +22,6 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -34,36 +33,13 @@ public class HttpServerParser extends AbstractServerParser {
 
     @Override
     protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
-        String port = element.getAttribute("port");
-        if (StringUtils.hasText(port)) {
-            builder.addPropertyValue("port", port);
-        }
-        
-        String contextConfigLocation = element.getAttribute("context-config-location");
-        if (StringUtils.hasText(contextConfigLocation)) {
-            builder.addPropertyValue("contextConfigLocation", contextConfigLocation);
-        }
-        
-        String resourceBase = element.getAttribute("resource-base");
-        if (StringUtils.hasText(resourceBase)) {
-            builder.addPropertyValue("resourceBase", resourceBase);
-        }
-        
-        String useRootContext = element.getAttribute("root-parent-context");
-        if (StringUtils.hasText(useRootContext)) {
-            builder.addPropertyValue("useRootContextAsParent", Boolean.valueOf(useRootContext));
-        }
-        
-        String connectors = element.getAttribute("connectors");
-        if (StringUtils.hasText(connectors)) {
-            builder.addPropertyReference("connectors", connectors);
-        }
-        
-        String connector = element.getAttribute("connector");
-        if (StringUtils.hasText(connector)) {
-            builder.addPropertyReference("connector", connector);
-        }
-        
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-config-location"), "contextConfigLocation");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("resource-base"), "resourceBase");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("root-parent-context"), "useRootContextAsParent");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("connectors"), "connectors");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("connector"), "connector");
+
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-mapping-path"), "servletMappingPath");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-path"), "contextPath");

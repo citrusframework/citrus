@@ -26,6 +26,10 @@ import org.testng.annotations.Test;
  */
 public class WebServiceServerITest extends AbstractTestNGCitrusTest {
     @Test
-    @CitrusXmlTest
-    public void WebServiceServerITest() {}
+    @CitrusXmlTest()
+    public void WebServiceServer_1_ITest() {}
+
+    @Test
+    @CitrusXmlTest()
+    public void WebServiceServer_2_ITest() {}
 }

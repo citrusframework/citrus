@@ -20,6 +20,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.SmartEndpointInterceptor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ import java.util.List;
 public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor {
 
     /** List of interceptors to delegate to when this interceptor is invoked */
-    private List<EndpointInterceptor> interceptors;
+    private List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
 
     @Override
     public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {

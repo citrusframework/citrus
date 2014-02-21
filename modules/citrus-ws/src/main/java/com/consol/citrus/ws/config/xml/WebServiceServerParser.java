@@ -16,69 +16,34 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractServerParser;
+import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ws.server.WebServiceServer;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Parser for jetty-server component in Citrus ws namespace.
  * 
  * @author Christoph Deppisch
  */
-public class WebServiceServerParser extends AbstractBeanDefinitionParser {
+public class WebServiceServerParser extends AbstractServerParser {
 
     @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition(WebServiceServer.class);
-        
-        
-        String port = element.getAttribute(WSParserConstants.PORT_ATTRIBUTE);
-        
-        if (StringUtils.hasText(port)) {
-            builder.addPropertyValue(WSParserConstants.PORT_PROPERTY, port);
-        }
-        
-        String autoStart = element.getAttribute(WSParserConstants.AUTOSTART_ATTRIBUTE);
-        
-        if (StringUtils.hasText(autoStart)) {
-            builder.addPropertyValue(WSParserConstants.AUTOSTART_PROPERTY, autoStart);
-        }
-        
-        String resourceBase = element.getAttribute(WSParserConstants.RESOURCE_BASE_ATTRIBUTE);
-        
-        if (StringUtils.hasText(resourceBase)) {
-            builder.addPropertyValue(WSParserConstants.RESOURCE_BASE_PROPERTY, resourceBase);
-        }
-        
-        String contextConfigLocation = element.getAttribute(WSParserConstants.CONTEXT_CONFIC_LOCATION_ATTRIBUTE);
-        
-        if (StringUtils.hasText(contextConfigLocation)) {
-            builder.addPropertyValue(WSParserConstants.CONTEXT_CONFIC_LOCATION_PROPERTY, contextConfigLocation);
-        }
-        
+    protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.PORT_ATTRIBUTE), WSParserConstants.PORT_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.AUTOSTART_ATTRIBUTE), WSParserConstants.AUTOSTART_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.RESOURCE_BASE_ATTRIBUTE), WSParserConstants.RESOURCE_BASE_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.CONTEXT_CONFIC_LOCATION_ATTRIBUTE), WSParserConstants.CONTEXT_CONFIC_LOCATION_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute(WSParserConstants.CONNECTORS_ATTRIBUTE), WSParserConstants.CONNECTORS_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute(WSParserConstants.CONNECTOR_ATTRIBUTE), WSParserConstants.CONNECTOR_PROPERTY);
+
         String useRootContext = element.getAttribute(WSParserConstants.USE_ROOT_CONTEXT_ATTRIBUTE);
-        
         if (StringUtils.hasText(useRootContext)) {
             builder.addPropertyValue(WSParserConstants.USE_ROOT_CONTEXT_PROPERTY, Boolean.valueOf(useRootContext));
-        }
-        
-        String connectors = element.getAttribute(WSParserConstants.CONNECTORS_ATTRIBUTE);
-        
-        if (StringUtils.hasText(connectors)) {
-            builder.addPropertyReference(WSParserConstants.CONNECTORS_PROPERTY, connectors);
-        }
-        
-        String connector = element.getAttribute(WSParserConstants.CONNECTOR_ATTRIBUTE);
-        
-        if (StringUtils.hasText(connector)) {
-            builder.addPropertyReference(WSParserConstants.CONNECTOR_PROPERTY, connector);
         }
         
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
@@ -86,7 +51,12 @@ public class WebServiceServerParser extends AbstractBeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-path"), "contextPath");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("servlet-handler"), "servletHandler");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("security-handler"), "securityHandler");
-        
-        return builder.getBeanDefinition();
     }
+
+    @Override
+    protected Class<? extends AbstractServer> getServerClass() {
+        return WebServiceServer.class;
+    }
+
+
 }
