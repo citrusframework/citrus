@@ -100,7 +100,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
      * Get the channel name.
      * @return the channelName
      */
-    protected String getChannelName() {
+    public String getChannelName() {
         if (channel != null) {
             return channel.toString();
         } else {
@@ -112,7 +112,7 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
      * Get the message channel to forward incoming requests to.
      * @return
      */
-    private MessageChannel getChannel() {
+    public MessageChannel getChannel() {
         if (channel != null) {
             return channel;
         } else if (StringUtils.hasText(channelName)) {
@@ -122,13 +122,29 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
             		"is set for message handler.");
         }
     }
-    
+
+    /**
+     * Gets the reply timeout.
+     * @return
+     */
+    public long getReplyTimeout() {
+        return replyTimeout;
+    }
+
     /**
      * Set the reply timeout.
      * @param replyTimeout the replyTimeout to set
      */
     public void setReplyTimeout(long replyTimeout) {
         this.replyTimeout = replyTimeout;
+    }
+
+    /**
+     * Gets the fallback message handler.
+     * @return
+     */
+    public MessageHandler getFallbackMessageHandlerDelegate() {
+        return fallbackMessageHandlerDelegate;
     }
 
     /**
@@ -153,6 +169,14 @@ public class MessageChannelConnectingMessageHandler implements MessageHandler, B
      */
     public void setChannelName(String channelName) {
         this.channelName = channelName;
+    }
+
+    /**
+     * Gets the messaging template.
+     * @return
+     */
+    public MessagingTemplate getMessagingTemplate() {
+        return messagingTemplate;
     }
 
     /**

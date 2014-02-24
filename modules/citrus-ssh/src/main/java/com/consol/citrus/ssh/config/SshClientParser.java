@@ -16,42 +16,58 @@
 
 package com.consol.citrus.ssh.config;
 
-import com.consol.citrus.ssh.CitrusSshClient;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractEndpointParser;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.ssh.client.SshClient;
+import com.consol.citrus.ssh.client.SshEndpointConfiguration;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.w3c.dom.Element;
 
 /**
  * Parse for SSH-client configuration
  *
- * @author Roland Huss
+ * @author Roland Huss, Christoph Deppisch
  * @since 1.3
  */
-public class SshClientParser extends AbstractSshParser {
+public class SshClientParser extends AbstractEndpointParser {
 
     @Override
-    protected String[] getAttributePropertyMapping() {
-        return new String[] {
-                "host","host",
-                "port","port",
-                "private-key-path","privateKeyPath",
-                "private-key-password","privateKeyPassword",
-                "strict-host-checking","strictHostChecking",
-                "known-hosts-path","knownHosts",
-                "command-timeout","commandTimeout",
-                "connection-timeout","connectionTimeout",
-                "user","user",
-                "password","password"
-        };
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "host");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("private-key-path"), "privateKeyPath");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("private-key-password"), "privateKeyPassword");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("strict-host-checking"), "strictHostChecking");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("known-hosts-path"), "knownHosts");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("command-timeout"), "commandTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("connection-timeout"), "connectionTimeout");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("user"), "user");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("password"), "password");
+
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), "correlator");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
     }
 
     @Override
-    protected String[] getAttributePropertyReferenceMapping() {
-        return new String[] {
-                "actor","actor",
-                "reply-handler","replyMessageHandler"
-        };
+    protected void parseEndpoint(BeanDefinitionBuilder endpoint, Element element, ParserContext parserContext) {
+        super.parseEndpoint(endpoint, element, parserContext);
+
+        // legacy support for reply message handler
+        BeanDefinitionParserUtils.setPropertyReference(endpoint, element.getAttribute("reply-handler"), "replyMessageHandler");
     }
 
     @Override
-    protected Class<?> getBeanClass() {
-        return CitrusSshClient.class;
+    protected Class<? extends Endpoint> getEndpointClass() {
+        return SshClient.class;
+    }
+
+    @Override
+    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
+        return SshEndpointConfiguration.class;
     }
 }

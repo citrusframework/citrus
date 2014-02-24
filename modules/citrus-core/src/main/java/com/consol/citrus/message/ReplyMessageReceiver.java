@@ -67,30 +67,22 @@ public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandle
         return endpoint.getEndpointConfiguration();
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive()
-     */
+    @Override
     public Message<?> receive() {
         return receiveSelected("");
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive(long)
-     */
+    @Override
     public Message<?> receive(long timeout) {
         return receiveSelected("", timeout);
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
-     */
+    @Override
     public Message<?> receiveSelected(String selector) {
         return receiveSelected(selector, endpoint.getEndpointConfiguration().getTimeout());
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
-     */
+    @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         Consumer consumer = endpoint.createConsumer();
 

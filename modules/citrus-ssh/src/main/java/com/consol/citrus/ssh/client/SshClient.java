@@ -18,9 +18,11 @@ package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.ReplyMessageHandler;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ssh.SshRequest;
 import com.consol.citrus.ssh.SshResponse;
+import com.consol.citrus.ssh.message.SshReplyMessageReceiver;
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Ssh client connects to ssh server and sends commands to that server.
+ *
  * @author Roland Huss, Christoph Deppisch
  * @since 1.4
  */
@@ -374,5 +378,15 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public void setJsch(JSch jsch) {
         this.jsch = jsch;
+    }
+
+    /**
+     * Legacy reply message handler support.
+     * @param replyMessageHandler
+     */
+    public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
+        if (replyMessageHandler instanceof SshReplyMessageReceiver) {
+            ((SshReplyMessageReceiver) replyMessageHandler).setEndpoint(this);
+        }
     }
 }

@@ -16,8 +16,13 @@
 
 package com.consol.citrus.ssh.server;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
+import com.consol.citrus.adapter.handler.*;
+import com.consol.citrus.channel.ChannelEndpointAdapter;
+import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
+import com.consol.citrus.endpoint.adapter.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jms.JmsEndpointAdapter;
+import com.consol.citrus.jms.JmsSyncEndpointConfiguration;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ssh.SshCommand;
@@ -77,9 +82,6 @@ public class SshServer extends AbstractServer {
     /** SSH server used **/
     private org.apache.sshd.SshServer sshd;
 
-    /** MessageHandler for validation purposes **/
-    private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
-
     @Override
     protected void startup() {
         if (!StringUtils.hasText(user)) {
@@ -96,11 +98,11 @@ public class SshServer extends AbstractServer {
         // Authentication
         boolean authFound = false;
         if (password != null) {
-            sshd.setPasswordAuthenticator(new SimplePasswordAuthenticator(user,password));
+            sshd.setPasswordAuthenticator(new SimplePasswordAuthenticator(user, password));
             authFound = true;
         }
         if (allowedKeyPath != null) {
-            sshd.setPublickeyAuthenticator(new SinglePublicKeyAuthenticator(user,allowedKeyPath));
+            sshd.setPublickeyAuthenticator(new SinglePublicKeyAuthenticator(user, allowedKeyPath));
             authFound = true;
         }
         if (!authFound) {
@@ -110,7 +112,7 @@ public class SshServer extends AbstractServer {
         // Setup message handler
         sshd.setCommandFactory(new CommandFactory() {
             public Command createCommand(String command) {
-                return new SshCommand(command,messageHandler);
+                return new SshCommand(command, getEndpointAdapter());
             }
         });
 
@@ -131,11 +133,27 @@ public class SshServer extends AbstractServer {
     }
 
     /**
+     * Gets the server port.
+     * @return
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
      * Sets the port.
      * @param port the port to set
      */
     public void setPort(int port) {
         this.port = port;
+    }
+
+    /**
+     * Gets the username.
+     * @return
+     */
+    public String getUser() {
+        return user;
     }
 
     /**
@@ -147,11 +165,27 @@ public class SshServer extends AbstractServer {
     }
 
     /**
+     * Gets the user password.
+     * @return
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
      * Sets the password.
      * @param password the password to set
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Gets the allowed key path.
+     * @return
+     */
+    public String getAllowedKeyPath() {
+        return allowedKeyPath;
     }
 
     /**
@@ -163,6 +197,14 @@ public class SshServer extends AbstractServer {
     }
 
     /**
+     * Gets the host key path.
+     * @return
+     */
+    public String getHostKeyPath() {
+        return hostKeyPath;
+    }
+
+    /**
      * Sets the hostKeyPath.
      * @param hostKeyPath the hostKeyPath to set
      */
@@ -171,19 +213,57 @@ public class SshServer extends AbstractServer {
     }
 
     /**
-     * Gets the messageHandler.
-     * @return the messageHandler the messageHandler to get.
-     */
-    public MessageHandler getMessageHandler() {
-        return messageHandler;
-    }
-
-    /**
      * Sets the messageHandler.
      * @param messageHandler the messageHandler to set
      */
     public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+        if (messageHandler instanceof MessageChannelConnectingMessageHandler) {
+            MessageChannelConnectingMessageHandler channelConnectingMessageHandler = (MessageChannelConnectingMessageHandler) messageHandler;
+
+            ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
+            endpointConfiguration.setChannel(channelConnectingMessageHandler.getChannel());
+            endpointConfiguration.setTimeout(channelConnectingMessageHandler.getReplyTimeout());
+            endpointConfiguration.setMessagingTemplate(channelConnectingMessageHandler.getMessagingTemplate());
+
+            ChannelEndpointAdapter endpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
+            endpointAdapter.setFallbackMessageHandler(channelConnectingMessageHandler.getFallbackMessageHandlerDelegate());
+            setEndpointAdapter(endpointAdapter);
+        } else if (messageHandler instanceof JmsConnectingMessageHandler) {
+            JmsConnectingMessageHandler jmsConnectingMessageHandler = (JmsConnectingMessageHandler) messageHandler;
+
+            JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
+
+            if (jmsConnectingMessageHandler.getDestination() != null) {
+                endpointConfiguration.setDestination(jmsConnectingMessageHandler.getDestination());
+            } else {
+                endpointConfiguration.setDestinationName(jmsConnectingMessageHandler.getDestinationName());
+            }
+
+            endpointConfiguration.setTimeout(jmsConnectingMessageHandler.getReplyTimeout());
+            endpointConfiguration.setConnectionFactory(jmsConnectingMessageHandler.getConnectionFactory());
+
+            if (jmsConnectingMessageHandler.getReplyDestination() != null) {
+                endpointConfiguration.setReplyDestination(jmsConnectingMessageHandler.getReplyDestination());
+            } else {
+                endpointConfiguration.setReplyDestinationName(jmsConnectingMessageHandler.getReplyDestinationName());
+            }
+
+            JmsEndpointAdapter endpointAdapter = new JmsEndpointAdapter(endpointConfiguration);
+            endpointAdapter.setFallbackMessageHandler(jmsConnectingMessageHandler.getFallbackMessageHandlerDelegate());
+            setEndpointAdapter(endpointAdapter);
+        } else if (messageHandler instanceof EmptyResponseProducingMessageHandler) {
+            setEndpointAdapter(new EmptyResponseEndpointAdapter());
+        } else if (messageHandler instanceof StaticResponseProducingMessageHandler) {
+            StaticResponseProducingMessageHandler staticResponseProducingMessageHandler = (StaticResponseProducingMessageHandler) messageHandler;
+
+            StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
+            endpointAdapter.setMessagePayload(staticResponseProducingMessageHandler.getMessagePayload());
+            endpointAdapter.setMessageHeader(staticResponseProducingMessageHandler.getMessageHeader());
+            endpointAdapter.setFallbackMessageHandler(staticResponseProducingMessageHandler.getFallbackMessageHandler());
+            setEndpointAdapter(endpointAdapter);
+        } else if(messageHandler instanceof TimeoutProducingMessageHandler) {
+            setEndpointAdapter(new TimeoutProducingEndpointAdapter());
+        }
     }
 
 }

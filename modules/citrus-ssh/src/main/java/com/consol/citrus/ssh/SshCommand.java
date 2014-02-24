@@ -16,8 +16,6 @@
 
 package com.consol.citrus.ssh;
 
-import java.io.*;
-
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.server.*;
@@ -26,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
+
+import java.io.*;
 
 /**
  * A command for delegation to a message handler
@@ -64,29 +64,25 @@ public class SshCommand implements Command, Runnable {
         command = pCommand;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void start(Environment env) throws IOException {
         user = env.getEnv().get(Environment.ENV_USER);
         new Thread(this, "CitrusSshCommand: " + command).start();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void run() {
         try {
             String input = FileUtils.readToString(stdin);
-            SshRequest req = new SshRequest(command,input);
+            SshRequest req = new SshRequest(command, input);
 
             SshResponse resp = sendToMessageHandler(req);
 
-            copyToStream(resp.getStderr(),stderr);
-            copyToStream(resp.getStdout(),stdout);
+            copyToStream(resp.getStderr(), stderr);
+            copyToStream(resp.getStdout(), stdout);
             exitCallback.onExit(resp.getExit());
         } catch (IOException exp) {
-            exitCallback.onExit(1,exp.getMessage());
+            exitCallback.onExit(1, exp.getMessage());
         }
     }
 
@@ -106,27 +102,27 @@ public class SshCommand implements Command, Runnable {
     }
 
 
-    /** {@inheritDoc} */
+    @Override
     public void destroy() {
         log.warn("Destroy has been called");
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void setInputStream(InputStream in) {
         stdin = in;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void setOutputStream(OutputStream out) {
         stdout = out;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void setErrorStream(OutputStream err) {
         stderr = err;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public void setExitCallback(ExitCallback callback) {
         exitCallback = callback;
     }

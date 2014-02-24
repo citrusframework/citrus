@@ -16,13 +16,8 @@
 
 package com.consol.citrus.ssh.server;
 
-import java.io.IOException;
-import java.net.*;
-import java.security.KeyPair;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ssh.SshCommand;
-import com.consol.citrus.ssh.server.SshServer;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.server.Command;
@@ -31,19 +26,21 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.net.*;
+import java.security.KeyPair;
+
 import static org.testng.Assert.*;
 
 /**
  * @author Roland Huss
- * @since 05.09.12
  */
-public class CitrusSshServerTest {
-
+public class SshServerTest {
 
     private SshServer server;
     private int port;
 
-    public CitrusSshServerTest() {
+    public SshServerTest() {
         port = findFreePort();
     }
 
