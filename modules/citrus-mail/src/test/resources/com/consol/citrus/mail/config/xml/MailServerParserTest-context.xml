@@ -11,22 +11,21 @@
 
   <citrus-mail:server id="mailServer2"
                       auto-start="false"
+                      auto-accept="false"
                       port="25000"/>
 
   <citrus-mail:server id="mailServer3"
-                      message-handler-adapter="messageHandlerAdapter"
                       auto-start="false"
-                      port="25000"/>
+                      split-multipart="true"
+                      mail-properties="mailProperties"
+                      endpoint-adapter="endpointAdapter"/>
 
-  <bean id="messageHandlerAdapter" class="com.consol.citrus.mail.adapter.MessageSplittingHandlerAdapter">
-    <constructor-arg>
-      <bean class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler"/>
-    </constructor-arg>
-    <property name="javaMailProperties">
-      <props>
-        <prop key="mail.transport.protocol">smtp</prop>
-      </props>
-    </property>
+  <util:properties id="mailProperties">
+    <prop key="mail.transport.protocol">smtp</prop>
+  </util:properties>
+
+  <bean id="endpointAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
   </bean>
 
 </beans>

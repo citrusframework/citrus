@@ -391,26 +391,7 @@
 
     <citrus-mail:server id="smtpMailServer"
                         port="25025"
-                        auto-start="true"
-                        message-handler-adapter="channelAdapter"/>
-
-    <bean id="channelAdapter" class="com.consol.citrus.mail.adapter.MessageHandlerAdapter">
-      <constructor-arg>
-        <bean class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
-          <property name="channel" ref="mailMessageChannel"/>
-          <property name="replyTimeout" value="500"/>
-        </bean>
-      </constructor-arg>
-    </bean>
-
-    <citrus:message-channel id="mailMessageChannel" capacity="5"/>
-
-    <citrus:sync-message-channel-receiver id="mailMessageReceiver"
-                                          channel="mailMessageChannel"
-                                          receive-timeout="500"/>
-
-    <citrus:message-channel-reply-sender id="mailMessageResponseSender"
-                                         reply-channel-holder="mailMessageReceiver"/>
+                        auto-start="true"/>
 
     <!-- Sample data dictionary for hello service messages -->
     <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary">

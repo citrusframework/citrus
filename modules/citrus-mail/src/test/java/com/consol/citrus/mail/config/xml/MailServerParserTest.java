@@ -16,9 +16,7 @@
 
 package com.consol.citrus.mail.config.xml;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
-import com.consol.citrus.mail.adapter.MessageHandlerAdapter;
-import com.consol.citrus.mail.adapter.MessageSplittingHandlerAdapter;
+import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
@@ -43,21 +41,29 @@ public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getName(), "mailServer1");
         Assert.assertEquals(server.getPort(), 25);
         Assert.assertFalse(server.isAutoStart());
-        Assert.assertEquals(server.getMessageHandlerAdapter().getClass(), MessageHandlerAdapter.class);
-        Assert.assertEquals(server.getMessageHandlerAdapter().getMessageHandler().getClass(),
-                EmptyResponseProducingMessageHandler.class);
+        Assert.assertFalse(server.isSplitMultipart());
+        Assert.assertTrue(server.isAutoAccept());
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), ChannelEndpointAdapter.class);
+        Assert.assertTrue(server.getJavaMailProperties().isEmpty());
 
         // 2nd mail server
         server = servers.get("mailServer2");
         Assert.assertEquals(server.getName(), "mailServer2");
         Assert.assertEquals(server.getPort(), 25000);
         Assert.assertFalse(server.isAutoStart());
+        Assert.assertFalse(server.isSplitMultipart());
+        Assert.assertFalse(server.isAutoAccept());
+        Assert.assertTrue(server.getJavaMailProperties().isEmpty());
 
         // 3rd mail server
         server = servers.get("mailServer3");
         Assert.assertEquals(server.getName(), "mailServer3");
-        Assert.assertEquals(server.getPort(), 25000);
+        Assert.assertEquals(server.getPort(), 25);
         Assert.assertFalse(server.isAutoStart());
-        Assert.assertEquals(server.getMessageHandlerAdapter().getClass(), MessageSplittingHandlerAdapter.class);
+        Assert.assertTrue(server.isSplitMultipart());
+        Assert.assertTrue(server.isAutoAccept());
+        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("endpointAdapter"));
+        Assert.assertEquals(server.getJavaMailProperties(), beanDefinitionContext.getBean("mailProperties"));
+        Assert.assertFalse(server.getJavaMailProperties().isEmpty());
     }
 }

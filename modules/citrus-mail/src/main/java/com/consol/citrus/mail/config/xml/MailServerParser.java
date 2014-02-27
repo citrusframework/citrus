@@ -17,10 +17,10 @@
 package com.consol.citrus.mail.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractServerParser;
 import com.consol.citrus.mail.server.MailServer;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -28,18 +28,19 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailServerParser extends AbstractBeanDefinitionParser {
+public class MailServerParser extends AbstractServerParser {
 
     @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-                .genericBeanDefinition(MailServer.class);
-
+    protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-start"), "autoStart");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-accept"), "autoAccept");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("split-multipart"), "splitMultipart");
 
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-handler-adapter"), "messageHandlerAdapter");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("mail-properties"), "javaMailProperties");
+    }
 
-        return builder.getBeanDefinition();
+    @Override
+    protected Class<? extends AbstractServer> getServerClass() {
+        return MailServer.class;
     }
 }

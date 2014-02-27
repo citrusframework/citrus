@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,11 @@
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="port" type="xs:string"/>
-      <xs:attribute name="message-handler-adapter" type="xs:string"/>
+      <xs:attribute name="endpoint-adapter" type="xs:string"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
+      <xs:attribute name="auto-accept" type="xs:boolean"/>
+      <xs:attribute name="split-multipart" type="xs:boolean"/>
+      <xs:attribute name="mail-properties" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

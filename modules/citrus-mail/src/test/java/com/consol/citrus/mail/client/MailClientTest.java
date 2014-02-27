@@ -16,9 +16,9 @@
 
 package com.consol.citrus.mail.client;
 
-import com.consol.citrus.mail.adapter.MessageHandlerAdapter;
 import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.mail.model.MailMessageMapper;
+import com.consol.citrus.mail.server.MailServer;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
@@ -53,7 +53,7 @@ public class MailClientTest {
     @Test
     public void testSendMailMessageObject() throws Exception {
         MailMessage mailMessage = (MailMessage) new MailMessageMapper().fromXML(
-                new ClassPathResource("text_mail.xml", MessageHandlerAdapter.class).getInputStream());
+                new ClassPathResource("text_mail.xml", MailServer.class).getInputStream());
 
         reset(javaMailSender);
 
