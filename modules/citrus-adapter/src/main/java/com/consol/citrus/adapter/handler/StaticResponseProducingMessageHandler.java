@@ -16,47 +16,13 @@
 
 package com.consol.citrus.adapter.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter;
 
 /**
  * Message handler will always return a static response message.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public class StaticResponseProducingMessageHandler implements MessageHandler {
-    
-    /** Response message payload */
-    private String messagePayload = "";
-    
-    /** Response message header */
-    private Map<String, Object> messageHeader = new HashMap<String, Object>();
-    
-    /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
-     */
-    public Message<?> handleMessage(Message<?> message) {
-        return MessageBuilder.withPayload(messagePayload).copyHeaders(messageHeader).build();
-    }
-
-    /**
-     * Set the response message payload.
-     * @param messagePayload the messagePayload to set
-     */
-    public void setMessagePayload(String messagePayload) {
-        this.messagePayload = messagePayload;
-    }
-
-    /**
-     * Set the response message header.
-     * @param messageHeader the messageHeader to set
-     */
-    public void setMessageHeader(Map<String, Object> messageHeader) {
-        this.messageHeader = messageHeader;
-    }
+public class StaticResponseProducingMessageHandler extends StaticResponseEndpointAdapter {
 }

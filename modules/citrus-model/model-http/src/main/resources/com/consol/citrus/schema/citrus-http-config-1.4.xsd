@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,58 @@
      attributeFormDefault="unqualified">
     
     <xs:element name="server">
-        <xs:complexType>
-            <xs:attribute name="id" type="xs:ID" use="required"/>
-            <xs:attribute name="port" type="xs:string"/>
-            <xs:attribute name="auto-start" type="xs:boolean"/>
-            <xs:attribute name="context-config-location" type="xs:string"/>
-            <xs:attribute name="resource-base" type="xs:string"/>
-            <xs:attribute name="root-parent-context" type="xs:boolean"/>
-            <xs:attribute name="connector" type="xs:string"/>
-            <xs:attribute name="connectors" type="xs:string"/>
-            <xs:attribute name="servlet-name" type="xs:string"/>
-            <xs:attribute name="servlet-mapping-path" type="xs:string"/>
-            <xs:attribute name="context-path" type="xs:string"/>
-            <xs:attribute name="servlet-handler" type="xs:string"/>
-            <xs:attribute name="security-handler" type="xs:string"/>
-        </xs:complexType>
+      <xs:annotation>
+        <xs:documentation>Http server implementation accepts client connections and receives messages via Http transport protocol.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="port" type="xs:string"/>
+        <xs:attribute name="auto-start" type="xs:boolean"/>
+        <xs:attribute name="timeout" type="xs:string"/>
+        <xs:attribute name="context-config-location" type="xs:string"/>
+        <xs:attribute name="resource-base" type="xs:string"/>
+        <xs:attribute name="root-parent-context" type="xs:boolean"/>
+        <xs:attribute name="connector" type="xs:string"/>
+        <xs:attribute name="connectors" type="xs:string"/>
+        <xs:attribute name="servlet-name" type="xs:string"/>
+        <xs:attribute name="servlet-mapping-path" type="xs:string"/>
+        <xs:attribute name="context-path" type="xs:string"/>
+        <xs:attribute name="servlet-handler" type="xs:string"/>
+        <xs:attribute name="security-handler" type="xs:string"/>
+        <xs:attribute name="endpoint-adapter" type="xs:string"/>
+        <xs:attribute name="interceptors" type="xs:string"/>
+      </xs:complexType>
     </xs:element>
-    
+
+    <xs:element name="client">
+      <xs:annotation>
+        <xs:documentation>Http client component sends messages to some Http server instance and receives synchronous response message.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="request-url" type="xs:string"/>
+        <xs:attribute name="request-method" type="xs:string"/>
+        <xs:attribute name="message-correlator" type="xs:string"/>
+        <xs:attribute name="endpoint-resolver" type="xs:string"/>
+        <xs:attribute name="request-factory" type="xs:string"/>
+        <xs:attribute name="rest-template" type="xs:string"/>
+        <xs:attribute name="charset" type="xs:string"/>
+        <xs:attribute name="content-type" type="xs:string"/>
+        <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="error-strategy">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="throwsException"/>
+              <xs:enumeration value="propagateError"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:string"/>
+        <xs:attribute name="polling-interval" type="xs:string"/>
+      </xs:complexType>
+    </xs:element>
+
     <xs:element name="message-sender">
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>

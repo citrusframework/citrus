@@ -23,6 +23,7 @@ import org.springframework.integration.MessageChannel;
  * channels for synchronous communication.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public interface ReplyMessageChannelHolder {
     /**

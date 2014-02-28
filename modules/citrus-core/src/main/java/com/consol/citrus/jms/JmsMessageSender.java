@@ -16,48 +16,39 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.report.MessageListeners;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.Message;
-import org.springframework.util.Assert;
-
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
+import org.springframework.integration.Message;
 
 /**
  * {@link MessageSender} implementation publishes message to a JMS destination.
  *  
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
 
     /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageSender.class);
-    
-    @Autowired(required = false)
-    private MessageListeners messageListener;
-    
-    /**
      * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
      */
     public void send(Message<?> message) {
-        Assert.notNull(message, "Message is empty - unable to send empty message");
-        
-        String defaultDestinationName = getDefaultDestinationName();
-        
-        log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
+        getJmsEndpoint().createProducer().send(message);
+    }
 
-        getJmsTemplate().convertAndSend(message);
+    @Override
+    public Consumer createConsumer() {
+        return getJmsEndpoint().createConsumer();
+    }
 
-        if (messageListener != null) {
-            messageListener.onOutboundMessage(message.toString());
-        } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
-        }
+    @Override
+    public Producer createProducer() {
+        return getJmsEndpoint().createProducer();
+    }
 
-        log.info("Message was successfully sent to destination: '" + defaultDestinationName + "'");
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return getJmsEndpoint().getEndpointConfiguration();
     }
 }

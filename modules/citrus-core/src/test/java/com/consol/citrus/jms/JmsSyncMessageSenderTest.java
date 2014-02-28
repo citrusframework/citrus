@@ -16,21 +16,19 @@
 
 package com.consol.citrus.jms;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import javax.jms.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -184,16 +182,50 @@ public class JmsSyncMessageSenderTest {
         sender.setDestination(destination);
         sender.setReplyDestination(replyDestinationQueue);
         
-        ReplyMessageHandler replyMessageHandler = org.easymock.EasyMock.createMock(ReplyMessageHandler.class);
-        sender.setReplyMessageHandler(replyMessageHandler);
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                                .copyHeaders(headers)
+                                .build();
         
-        reset(replyMessageHandler);
+        Map<String, String> responseHeaders = new HashMap<String, String>();
+        TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
-        replyMessageHandler.onReplyMessage((Message)anyObject());
+        reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
+
+        expect(connectionFactory.createConnection()).andReturn(connection).once();
+        connection.start();
+        expectLastCall().once();
+        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
+
+        expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();
+        expect(messageConsumer.receive(anyLong())).andReturn(jmsResponse).once();
+        
+        expect(session.createProducer(destination)).andReturn(messageProducer).once();
+        messageProducer.send((TextMessage)anyObject());
         expectLastCall().once();
         
-        replay(replyMessageHandler);
+        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
         
+        replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
+        
+        sender.send(message);
+
+        verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
+    }
+    
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
+        JmsSyncMessageSender sender = new JmsSyncMessageSender();
+        sender.setConnectionFactory(connectionFactory);
+        
+        sender.setDestination(destination);
+        sender.setReplyDestination(replyDestinationQueue);
+
+        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        sender.setCorrelator(correlator);
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
@@ -224,57 +256,6 @@ public class JmsSyncMessageSenderTest {
         sender.send(message);
         
         verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
-        verify(replyMessageHandler);
-    }
-    
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
-        JmsSyncMessageSender sender = new JmsSyncMessageSender();
-        sender.setConnectionFactory(connectionFactory);
-        
-        sender.setDestination(destination);
-        sender.setReplyDestination(replyDestinationQueue);
-
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
-        sender.setCorrelator(correlator);
-
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
-        ReplyMessageHandler replyMessageHandler = org.easymock.EasyMock.createMock(ReplyMessageHandler.class);
-        sender.setReplyMessageHandler(replyMessageHandler);
-        
-        Map<String, String> responseHeaders = new HashMap<String, String>();
-        TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
-        
-        reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, replyMessageHandler);
-
-        expect(connectionFactory.createConnection()).andReturn(connection).once();
-        connection.start();
-        expectLastCall().once();
-        expect(connection.createSession(anyBoolean(), anyInt())).andReturn(session).once();
-
-        expect(session.createConsumer(replyDestinationQueue, "JMSCorrelationID = '123456789'")).andReturn(messageConsumer).once();
-        expect(messageConsumer.receive(anyLong())).andReturn(jmsResponse).once();
-        
-        expect(session.createProducer(destination)).andReturn(messageProducer).once();
-        messageProducer.send((TextMessage)anyObject());
-        expectLastCall().once();
-        
-        expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
-        
-        replyMessageHandler.onReplyMessage((Message)anyObject(), (String)anyObject());
-        expectLastCall().once();
-        
-        replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer, replyMessageHandler);
-        
-        sender.send(message);
-        
-        verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer, replyMessageHandler);
     }
     
     @Test

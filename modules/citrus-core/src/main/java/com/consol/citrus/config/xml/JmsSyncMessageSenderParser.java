@@ -27,6 +27,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * Bean definition parser for jms-sync-message-sender configuration.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsSyncMessageSenderParser extends AbstractJmsConfigParser {
 

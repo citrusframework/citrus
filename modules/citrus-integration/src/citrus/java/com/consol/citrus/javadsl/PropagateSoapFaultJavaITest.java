@@ -36,7 +36,7 @@ public class PropagateSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                             "</ns0:SoapFaultForcingRequest>");
         
-        receive("webServiceHelloReplyHandler")
+        receive("webServiceFaultReplyHandler")
             .payload("<SOAP-ENV:Fault xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                                 "<faultcode xmlns:CITRUS=\"http://www.citrusframework.org/faults\">CITRUS:${soapFaultCode}</faultcode>" +
                                 "<faultstring xml:lang=\"en\">${soapFaultString}</faultstring>" +

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@
      attributeFormDefault="unqualified">
    
     <xs:element name="actor">
+        <xs:annotation>
+          <xs:documentation>Test actor combines one or more endpoints. When actor is disabled by configuration
+          respective endpoints will be disabled accordingly.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="name" type="xs:string"/>
@@ -29,6 +33,9 @@
     </xs:element>
 
     <xs:element name="jms-message-sender">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use jms-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType"/>
@@ -37,6 +44,9 @@
     </xs:element>
     
     <xs:element name="jms-message-receiver">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use jms-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType">
@@ -47,6 +57,9 @@
     </xs:element>
     
     <xs:element name="jms-sync-message-sender">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use jms-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType">
@@ -61,6 +74,9 @@
     </xs:element>
     
     <xs:element name="jms-sync-message-receiver">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use jms-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="jmsAdapterType">
@@ -72,6 +88,9 @@
     </xs:element>
     
     <xs:element name="jms-reply-message-handler">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use jms-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="actor" type="xs:string"/>
@@ -80,6 +99,9 @@
     </xs:element>
     
     <xs:element name="jms-reply-message-sender">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use jms-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="reply-destination-holder" type="xs:string"/>
@@ -91,6 +113,9 @@
     </xs:element>
     
     <xs:complexType name="jmsAdapterType">
+        <xs:annotation>
+          <xs:documentation>Basic JMS endpoint properties.</xs:documentation>
+        </xs:annotation>
         <xs:attribute name="id" type="xs:ID"/>
         <xs:attribute name="destination" type="xs:string"/>
         <xs:attribute name="destination-name" type="xs:string"/>
@@ -98,9 +123,41 @@
         <xs:attribute name="jms-template" type="xs:string"/>
         <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
         <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
+
+    <xs:element name="jms-endpoint">
+      <xs:annotation>
+        <xs:documentation>JMS endpoint able to produce and consume messages on a JMS destination (queue or topic).</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="jmsAdapterType"/>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="jms-sync-endpoint">
+      <xs:annotation>
+        <xs:documentation>JMS synchronous endpoint able to produce and consume messages on a synchronous JMS
+        destination with reply message handling.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="jmsAdapterType">
+            <xs:attribute name="reply-destination" type="xs:string"/>
+            <xs:attribute name="reply-destination-name" type="xs:string"/>
+            <xs:attribute name="polling-interval" type="xs:string"/>
+            <xs:attribute name="message-correlator" type="xs:string"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
     
     <xs:element name="message-channel">
+        <xs:annotation>
+          <xs:documentation>Message channel acting as queue channel with extended selector support.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="capacity" type="xs:string"/>
@@ -109,6 +166,9 @@
     </xs:element>
 
     <xs:element name="message-channel-sender">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use channel-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="messageChannelAdapterType"/>
@@ -117,6 +177,9 @@
     </xs:element>
 
     <xs:element name="message-channel-receiver">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use channel-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="messageChannelAdapterType">
@@ -127,6 +190,9 @@
     </xs:element>
     
     <xs:element name="sync-message-channel-sender">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use channel-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="messageChannelAdapterType">
@@ -139,6 +205,9 @@
     </xs:element>
     
     <xs:element name="sync-message-channel-receiver">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use channel-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="messageChannelAdapterType">
@@ -150,6 +219,9 @@
     </xs:element>
     
     <xs:element name="message-channel-reply-handler">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use channel-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="actor" type="xs:string"/>
@@ -158,6 +230,9 @@
     </xs:element>
     
     <xs:element name="message-channel-reply-sender">
+        <xs:annotation>
+          <xs:documentation>Deprecated since 1.4 - use channel-sync-endpoint instead.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="reply-channel-holder" type="xs:string"/>
@@ -168,20 +243,56 @@
     </xs:element>
     
     <xs:complexType name="messageChannelAdapterType">
+        <xs:annotation>
+          <xs:documentation>Basic channel endpoint properties.</xs:documentation>
+        </xs:annotation>
         <xs:attribute name="id" type="xs:ID"/>
         <xs:attribute name="message-channel-template" type="xs:string"/>
+        <xs:attribute name="messaging-template" type="xs:string"/>
         <xs:attribute name="channel" type="xs:string"/>
         <xs:attribute name="channel-name" type="xs:string"/>
         <xs:attribute name="channel-resolver" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
+  
+    <xs:element name="channel-endpoint">
+      <xs:annotation>
+        <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:restriction base="messageChannelAdapterType"/>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="channel-sync-endpoint">
+      <xs:annotation>
+        <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="messageChannelAdapterType">
+            <xs:attribute name="polling-interval" type="xs:string"/>
+            <xs:attribute name="message-correlator" type="xs:string"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
 
     <xs:complexType name="schemaType">
+        <xs:annotation>
+          <xs:documentation>Schema resource properties.</xs:documentation>
+        </xs:annotation>
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="location" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:element name="schema-collection">
+        <xs:annotation>
+          <xs:documentation>Collection of schema resources with same target namespace used for message syntax validation.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
               <xs:element name="schemas">
@@ -200,9 +311,16 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="schema" type="schemaType"/>
+    <xs:element name="schema" type="schemaType">
+      <xs:annotation>
+        <xs:documentation>Defines a schema resource used for message syntax validation.</xs:documentation>
+      </xs:annotation>
+    </xs:element>
 
     <xs:element name="schema-repository">
+        <xs:annotation>
+          <xs:documentation>Defines a schema repository holding one or more schema resources for message syntax validation.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="schemas" minOccurs="0">
@@ -232,6 +350,85 @@
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="schema-mapping-strategy" type="xs:string"/>
         </xs:complexType>
+    </xs:element>
+
+    <!-- Endpoint adapters used in server configuration -->
+
+    <xs:element name="channel-endpoint-adapter">
+      <xs:annotation>
+        <xs:documentation>Channel server endpoint adapter forwards incoming requests to message channel.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="messageChannelAdapterType">
+            <xs:attribute name="polling-interval" type="xs:string"/>
+            <xs:attribute name="message-correlator" type="xs:string"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="jms-endpoint-adapter">
+      <xs:annotation>
+        <xs:documentation>Jms server endpoint adapter forwards incoming requests to jms destination.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="jmsAdapterType">
+            <xs:attribute name="reply-destination" type="xs:string"/>
+            <xs:attribute name="reply-destination-name" type="xs:string"/>
+            <xs:attribute name="polling-interval" type="xs:string"/>
+            <xs:attribute name="message-correlator" type="xs:string"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="empty-response-adapter">
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="timeout-producing-adapter">
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="static-response-adapter">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="payload" type="xs:string" minOccurs="1"/>
+          <xs:element name="header" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                  <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string" use="required"/>
+                    <xs:attribute name="type">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="integer"/>
+                          <xs:enumeration value="long"/>
+                          <xs:enumeration value="float"/>
+                          <xs:enumeration value="double"/>
+                          <xs:enumeration value="byte"/>
+                          <xs:enumeration value="short"/>
+                          <xs:enumeration value="boolean"/>
+                          <xs:enumeration value="string"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:attribute>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID"/>
+      </xs:complexType>
     </xs:element>
 
 </xs:schema>

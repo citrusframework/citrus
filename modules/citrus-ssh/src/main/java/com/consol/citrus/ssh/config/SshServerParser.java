@@ -16,50 +16,34 @@
 
 package com.consol.citrus.ssh.config;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractServerParser;
+import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.ssh.server.SshServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.ssh.CitrusSshServer;
-
 /**
  * Parser for the configuration of an SSH server
  * 
- * @author Roland Huss
+ * @author Roland Huss, Christoph Deppisch
  */
-public class SshServerParser extends AbstractSshParser {
+public class SshServerParser extends AbstractServerParser {
 
-    /** {@inheritDoc} */
-    protected void parseExtra(BeanDefinitionBuilder builder,
-                                                Element element,
-                                                ParserContext pParserContext) {
-        // TODO: Allow an inner bean for specifying the message handler
+    @Override
+    protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("host-key-path"), "hostKeyPath");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("user"), "user");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("password"), "password");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("allowed-key-path"), "allowedKeyPath");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-handler-ref"), "messageHandler");
     }
 
     @Override
-    /** {@inheritDoc} */
-    protected String[] getAttributePropertyMapping() {
-        return new String[] {
-                "port","port",
-                "auto-start","autoStart",
-                "host-key-path","hostKeyPath",
-                "user","user",
-                "password","password",
-                "allowed-key-path","allowedKeyPath",
-        };
-
-    }
-
-    @Override
-    protected String[] getAttributePropertyReferenceMapping() {
-        return new String[] {
-                "message-handler-ref","messageHandler"
-        };
-    }
-
-    @Override
-    /** {@inheritDoc} */
-    protected Class<?> getBeanClass() {
-        return CitrusSshServer.class;
+    protected Class<? extends AbstractServer> getServerClass() {
+        return SshServer.class;
     }
 }

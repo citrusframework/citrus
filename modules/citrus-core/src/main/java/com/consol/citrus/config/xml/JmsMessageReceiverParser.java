@@ -26,6 +26,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * Bean definition parser for jms-message-receiver configuration.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsMessageReceiverParser extends AbstractJmsTemplateAwareParser {
 

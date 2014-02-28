@@ -16,6 +16,7 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.TestActor;
@@ -23,8 +24,9 @@ import com.consol.citrus.TestActor;
 /**
  * Message receiver interface declares message receiving methods.
  * @author Christoph Deppisch
+ * @deprecated
  */
-public interface MessageReceiver {
+public interface MessageReceiver extends Endpoint {
     /**
      * Receive message.
      * @return

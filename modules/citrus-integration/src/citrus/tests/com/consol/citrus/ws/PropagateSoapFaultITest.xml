@@ -33,7 +33,7 @@
                 </message>
             </send>
             
-            <receive with="webServiceHelloReplyHandler" timeout="5000">
+            <receive with="webServiceFaultReplyHandler" timeout="5000">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[

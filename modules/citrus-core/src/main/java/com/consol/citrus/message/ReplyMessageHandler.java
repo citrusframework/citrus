@@ -22,6 +22,7 @@ import org.springframework.integration.Message;
  * Message handler is invoked when a reply message is received.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public interface ReplyMessageHandler {
     /**

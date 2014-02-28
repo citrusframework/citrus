@@ -16,68 +16,39 @@
 
 package com.consol.citrus.http.config.xml;
 
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
-import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.util.StringUtils;
-import org.w3c.dom.Element;
-
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractServerParser;
+import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.server.AbstractServer;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.w3c.dom.Element;
 
 /**
  * Parser for Http server implementation in Citrus http namespace.
  * 
  * @author Christoph Deppisch
  */
-public class HttpServerParser extends AbstractBeanDefinitionParser {
+public class HttpServerParser extends AbstractServerParser {
 
     @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder
-            .genericBeanDefinition("com.consol.citrus.http.HttpServer");
-        
-        String port = element.getAttribute("port");
-        if (StringUtils.hasText(port)) {
-            builder.addPropertyValue("port", port);
-        }
-        
-        String autoStart = element.getAttribute("auto-start");
-        if (StringUtils.hasText(autoStart)) {
-            builder.addPropertyValue("autoStart", autoStart);
-        }
+    protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-config-location"), "contextConfigLocation");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("resource-base"), "resourceBase");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("root-parent-context"), "useRootContextAsParent");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("connectors"), "connectors");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("connector"), "connector");
 
-        String contextConfigLocation = element.getAttribute("context-config-location");
-        if (StringUtils.hasText(contextConfigLocation)) {
-            builder.addPropertyValue("contextConfigLocation", contextConfigLocation);
-        }
-        
-        String resourceBase = element.getAttribute("resource-base");
-        if (StringUtils.hasText(resourceBase)) {
-            builder.addPropertyValue("resourceBase", resourceBase);
-        }
-        
-        String useRootContext = element.getAttribute("root-parent-context");
-        if (StringUtils.hasText(useRootContext)) {
-            builder.addPropertyValue("useRootContextAsParent", Boolean.valueOf(useRootContext));
-        }
-        
-        String connectors = element.getAttribute("connectors");
-        if (StringUtils.hasText(connectors)) {
-            builder.addPropertyReference("connectors", connectors);
-        }
-        
-        String connector = element.getAttribute("connector");
-        if (StringUtils.hasText(connector)) {
-            builder.addPropertyReference("connector", connector);
-        }
-        
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-mapping-path"), "servletMappingPath");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-path"), "contextPath");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("servlet-handler"), "servletHandler");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("security-handler"), "securityHandler");
-        
-        return builder.getBeanDefinition();
+    }
+
+    @Override
+    protected Class<? extends AbstractServer> getServerClass() {
+        return HttpServer.class;
     }
 }

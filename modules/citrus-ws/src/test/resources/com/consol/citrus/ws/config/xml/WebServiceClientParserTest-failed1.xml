@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+
+  <citrus-ws:client id="soapClient"
+                    request-url="http://localhost:8080/test"
+                    web-service-template="wsTemplate"
+                    message-factory="soapMessageFactory"/>
+
+  <bean id="soapMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
+  </bean>
+
+  <bean id="wsTemplate" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
+  </bean>
+</beans>

@@ -32,12 +32,12 @@ public class ReceiveMessageActionConverter implements ObjectConverter<Receive, R
 
         if (definition.getActor() != null) {
             action.setActor(definition.getActor().getName());
-        } else if (definition.getMessageReceiver().getActor() != null) {
-            action.setActor(definition.getMessageReceiver().getActor().getName());
+        } else if (definition.getEndpoint().getActor() != null) {
+            action.setActor(definition.getEndpoint().getActor().getName());
         }
 
         action.setDescription(definition.getDescription());
-        action.setWith(definition.getMessageReceiver().getName());
+        action.setWith(definition.getEndpoint().getName());
 
         return action;
     }

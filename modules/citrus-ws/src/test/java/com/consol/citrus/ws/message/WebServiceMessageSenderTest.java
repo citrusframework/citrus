@@ -16,8 +16,8 @@
 
 package com.consol.citrus.ws.message;
 
-import static org.easymock.EasyMock.*;
-
+import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -27,9 +27,7 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
-import com.consol.citrus.message.*;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -38,11 +36,10 @@ public class WebServiceMessageSenderTest {
 
     private WebServiceTemplate webServiceTemplate = EasyMock.createMock(WebServiceTemplate.class);
     private ReplyMessageHandler replyMessageHandler = EasyMock.createMock(ReplyMessageHandler.class);
-    
+
     @Test
     public void testDefaultUri() {
         WebServiceMessageSender messageSender = new WebServiceMessageSender();
-        
         messageSender.setReplyMessageHandler(replyMessageHandler);
         messageSender.setWebServiceTemplate(webServiceTemplate);
 
@@ -50,7 +47,8 @@ public class WebServiceMessageSenderTest {
         
         reset(webServiceTemplate, replyMessageHandler);
         
-        expect(webServiceTemplate.getDefaultUri()).andReturn("http://localhost:8080/request").once();
+        webServiceTemplate.setDefaultUri("http://localhost:8081/request");
+        expectLastCall().once();
         
         webServiceTemplate.setFaultMessageResolver(anyObject(FaultMessageResolver.class));
         expectLastCall().once();
@@ -58,13 +56,11 @@ public class WebServiceMessageSenderTest {
         expect(webServiceTemplate.sendAndReceive((WebServiceMessageCallback)anyObject(), 
                 (WebServiceMessageCallback)anyObject())).andReturn(true).once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
-        
         replay(webServiceTemplate, replyMessageHandler);
-        
+
+        messageSender.setDefaultUri("http://localhost:8081/request");
         messageSender.send(requestMessage);
-        
+
         verify(webServiceTemplate, replyMessageHandler);
     }
     
@@ -81,8 +77,9 @@ public class WebServiceMessageSenderTest {
         Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
         
         reset(webServiceTemplate, replyMessageHandler, correlator);
-        
-        expect(webServiceTemplate.getDefaultUri()).andReturn("http://localhost:8080/request").once();
+
+        webServiceTemplate.setDefaultUri("http://localhost:8080/request");
+        expectLastCall().once();
         
         webServiceTemplate.setFaultMessageResolver(anyObject(FaultMessageResolver.class));
         expectLastCall().once();
@@ -92,11 +89,9 @@ public class WebServiceMessageSenderTest {
         
         expect(correlator.getCorrelationKey(requestMessage)).andReturn("correlationKey").once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class), eq("correlationKey"));
-        expectLastCall().once();
-        
         replay(webServiceTemplate, replyMessageHandler, correlator);
-        
+
+        messageSender.setDefaultUri("http://localhost:8080/request");
         messageSender.send(requestMessage);
         
         verify(webServiceTemplate, replyMessageHandler, correlator);
@@ -114,23 +109,21 @@ public class WebServiceMessageSenderTest {
         Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
         
         reset(webServiceTemplate, replyMessageHandler, endpointUriResolver);
-        
-        expect(webServiceTemplate.getDefaultUri()).andReturn("http://localhost:8080/request").once();
+
+        webServiceTemplate.setDefaultUri("http://localhost:8080/request");
+        expectLastCall().once();
         
         webServiceTemplate.setFaultMessageResolver(anyObject(FaultMessageResolver.class));
         expectLastCall().once();
-        
         
         expect(endpointUriResolver.resolveEndpointUri(requestMessage, "http://localhost:8080/request")).andReturn("http://localhost:8081/new").once();
         
         expect(webServiceTemplate.sendAndReceive(eq("http://localhost:8081/new"), 
                 (WebServiceMessageCallback)anyObject(), (WebServiceMessageCallback)anyObject())).andReturn(true).once();
         
-        replyMessageHandler.onReplyMessage(anyObject(Message.class));
-        expectLastCall().once();
-        
         replay(webServiceTemplate, replyMessageHandler, endpointUriResolver);
-        
+
+        messageSender.setDefaultUri("http://localhost:8080/request");
         messageSender.send(requestMessage);
         
         verify(webServiceTemplate, replyMessageHandler, endpointUriResolver);
@@ -151,8 +144,9 @@ public class WebServiceMessageSenderTest {
         SoapFault soapFault = EasyMock.createMock(SoapFault.class);
         
         reset(webServiceTemplate, replyMessageHandler, soapFaultMessage, soapBody, soapFault);
-        
-        expect(webServiceTemplate.getDefaultUri()).andReturn("http://localhost:8080/request").once();
+
+        webServiceTemplate.setDefaultUri("http://localhost:8080/request");
+        expectLastCall().once();
         
         webServiceTemplate.setFaultMessageResolver(anyObject(FaultMessageResolver.class));
         expectLastCall().once();
@@ -169,6 +163,7 @@ public class WebServiceMessageSenderTest {
         replay(webServiceTemplate, replyMessageHandler);
         
         try {
+            messageSender.setDefaultUri("http://localhost:8080/request");
             messageSender.send(requestMessage);
             Assert.fail("Missing exception due to soap fault");
         } catch (SoapFaultClientException e) {

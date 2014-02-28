@@ -59,7 +59,7 @@ public class TestExecutingMessageHandler extends XmlTestExecutingMessageHandler 
     }
 
     /**
-     * Prepares the test builder instance before execution. Subclasses may add custom properties to teest builder
+     * Prepares the test builder instance before execution. Subclasses may add custom properties to test builder
      * here.
      * @param request the triggering request message.
      * @param testBuilder the found test builder.

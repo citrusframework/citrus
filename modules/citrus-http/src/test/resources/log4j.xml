@@ -35,6 +35,10 @@
     <level value="INFO"/>
   </logger>
 
+  <logger name="org.eclipse">
+    <level value="INFO"/>
+  </logger>
+
   <!-- Limit the org.apache logger to INFO as its DEBUG is verbose -->
   <logger name="org.apache">
     <level value="INFO"/>

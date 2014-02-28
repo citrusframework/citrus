@@ -80,7 +80,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
             )
         );
         
-        receive("syncHelloResponseHandler")
+        receive("syncHelloTopicResponseHandler")
             .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="citrusEndpointMapping" class="org.springframework.ws.server.endpoint.mapping.UriEndpointMapping">
+    <property name="defaultEndpoint" ref="citrusWsEndpoint"/>
+    <property name="interceptors">
+      <list>
+        <ref bean="loggingInterceptor"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
+  <bean id="citrusEndpointInterceptor" class="com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor"/>
+
+  <!-- Default endpoint for handling incoming requests messages -->
+  <bean id="citrusWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint"/>
+
+</beans>

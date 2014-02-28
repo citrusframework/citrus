@@ -16,15 +16,10 @@
 
 package com.consol.citrus.jms;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.consol.citrus.message.ReplyMessageCorrelator;
+import org.springframework.integration.Message;
 
 import javax.jms.Destination;
-
-import org.springframework.integration.Message;
-import org.springframework.integration.jms.JmsHeaders;
-
-import com.consol.citrus.message.ReplyMessageCorrelator;
 
 /**
  * Synchronous message receiver implementation for JMS. Class receives messages on a JMS destination
@@ -37,64 +32,41 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
  * order to get the proper reply destination.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsReplyDestinationHolder {
-    /** Map of reply destinations */
-    private Map<String, Destination> replyDestinations = new HashMap<String, Destination>();
-    
-    /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
-    
-    /**
-     * @see com.consol.citrus.jms.JmsMessageReceiver#receive(long)
-     */
-    @Override
-    public Message<?> receive(long timeout) {
-        Message<?> receivedMessage = super.receive(timeout);
-        
-        saveReplyDestination(receivedMessage);
-        
-        return receivedMessage;
-    }
-    
-    /**
-     * @see com.consol.citrus.jms.JmsMessageReceiver#receiveSelected(java.lang.String, long)
-     */
-    @Override
-    public Message<?> receiveSelected(String selector, long timeout) {
-        Message<?> receivedMessage = super.receiveSelected(selector, timeout);
-        
-        saveReplyDestination(receivedMessage);
-        
-        return receivedMessage;
+
+    public JmsSyncMessageReceiver() {
+        super(new JmsSyncEndpoint());
     }
 
-    /**
-     * Store the reply destination either straight forward or with a given
-     * message correlation key.
-     * 
-     * @param receivedMessage
-     */
-    private void saveReplyDestination(Message<?> receivedMessage) {
-        if (correlator != null) {
-            replyDestinations.put(correlator.getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
-        } else {
-            replyDestinations.put("", (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
-        }
+    @Override
+    public JmsSyncEndpoint getJmsEndpoint() {
+        return (JmsSyncEndpoint) super.getJmsEndpoint();
+    }
+
+    @Override
+    public Message<?> receive(long timeout) {
+        return getJmsEndpoint().createConsumer().receive(timeout);
+    }
+    
+    @Override
+    public Message<?> receiveSelected(String selector, long timeout) {
+        return getJmsEndpoint().createConsumer().receive(selector, timeout);
     }
 
     /**
      * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination(java.lang.String)
      */
     public Destination getReplyDestination(String correlationKey) {
-        return replyDestinations.remove(correlationKey);
+        return ((JmsSyncConsumer)getJmsEndpoint().createConsumer()).findReplyDestination(correlationKey);
     }
 
     /**
      * @see com.consol.citrus.jms.JmsReplyDestinationHolder#getReplyDestination()
      */
     public Destination getReplyDestination() {
-        return replyDestinations.remove("");
+        return ((JmsSyncConsumer)getJmsEndpoint().createConsumer()).findReplyDestination();
     }
 
     /**
@@ -102,7 +74,7 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        this.correlator = correlator;
+        getJmsEndpoint().getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -110,6 +82,6 @@ public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsRep
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return correlator;
+        return getJmsEndpoint().getEndpointConfiguration().getCorrelator();
     }
 }

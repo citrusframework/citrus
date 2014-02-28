@@ -16,11 +16,11 @@
 
 package com.consol.citrus.http.controller;
 
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
+import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.util.MessageUtils;
 import org.springframework.http.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
@@ -33,11 +33,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UrlPathHelper;
 
-import com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.MessageUtils;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Message controller implementation handling all incoming requests by forwarding to a message 
@@ -50,7 +48,7 @@ import com.consol.citrus.util.MessageUtils;
 public class HttpMessageController {
 
     /** Message handler for incoming requests, providing proper responses */
-    private MessageHandler messageHandler = new EmptyResponseProducingMessageHandler();
+    private MessageHandler messageHandler = new EmptyResponseEndpointAdapter();
 
     /** Header mapper */
     private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.inboundMapper();
@@ -238,5 +236,13 @@ public class HttpMessageController {
      */
     public ResponseEntity<String> getResponseCache() {
         return responseCache;
+    }
+
+    /**
+     * Gets the message handler.
+     * @return
+     */
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
     }
 }

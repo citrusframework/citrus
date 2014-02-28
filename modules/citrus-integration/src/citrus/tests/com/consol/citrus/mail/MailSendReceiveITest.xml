@@ -55,7 +55,7 @@
         </header>
       </send>
 
-      <receive with="mailMessageReceiver">
+      <receive with="smtpMailServer">
         <description>
           Receive mail message: Citrus SMTP server channel -> Citrus
         </description>

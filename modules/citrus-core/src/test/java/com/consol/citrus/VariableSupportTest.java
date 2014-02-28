@@ -16,12 +16,17 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-
-import java.util.*;
-
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
@@ -30,26 +35,22 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Autowired
-    MessageValidator<ValidationContext> validator;
+    private MessageValidator<ValidationContext> validator;
+
+    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
+    private Consumer consumer = EasyMock.createMock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
     
-    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
-    
-    ReceiveMessageAction receiveMessageBean;
+    private ReceiveMessageAction receiveMessageBean;
     
     @Override
     @BeforeMethod
@@ -57,7 +58,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         super.prepareTest();
         
         receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setMessageReceiver(messageReceiver);
+        receiveMessageBean.setEndpoint(endpoint);
 
         receiveMessageBean.setValidator(validator);
     }
@@ -65,7 +66,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsVariablesSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -76,9 +80,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         context.getVariables().put("variable", "text-value");
         
@@ -100,7 +104,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsFunctionSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -111,9 +118,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         context.getVariables().put("variable", "text-value");
         context.getVariables().put("text", "text");
@@ -136,7 +143,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsVariableSupportInExpression() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -147,9 +157,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         context.getVariables().put("expression", "//root/element/sub-elementA");
         
@@ -170,7 +180,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsFunctionSupportInExpression() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -181,9 +194,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         context.getVariables().put("variable", "B");
         
@@ -205,7 +218,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesVariablesSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -219,9 +235,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -254,7 +270,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesFunctionSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -268,9 +287,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -301,7 +320,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testHeaderNameVariablesSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -315,9 +337,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -350,7 +372,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testHeaderNameFunctionSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -364,9 +389,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -395,7 +420,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsVariablesSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -406,9 +434,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");
@@ -447,7 +475,10 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractHeaderValuesVariablesSupport() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
@@ -461,9 +492,9 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
                         .setHeader("header-valueC", "C")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         context.getVariables().put("variableA", "initial");
         context.getVariables().put("variableB", "initial");

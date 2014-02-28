@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:citrus="http://www.citrusframework.org/schema/config"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xmlns:util="http://www.springframework.org/schema/util"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <import resource="classpath:citrus-activemq-context.xml"/>
+  <import resource="classpath:com/consol/citrus/service/hello-service-context.xml"/>
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <bean class="com.consol.citrus.variable.GlobalVariables">
+    <property name="variables">
+      <map>
+        <entry key="project.name" value="Citrus Integration Testing"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean class="com.consol.citrus.variable.GlobalVariablesPropertyLoader">
+    <property name="propertyFiles">
+      <list>
+        <value>classpath:citrus.variables</value>
+      </list>
+    </property>
+  </bean>
+
+  <!-- Xsd schema resources and definitions -->
+  <citrus:schema id="helloSchema" location="classpath:schemas/HelloService.xsd" />
+
+  <citrus:schema-repository id="helloSchemaRepository">
+    <citrus:schemas>
+      <citrus:ref schema="helloSchema" />
+    </citrus:schemas>
+  </citrus:schema-repository>
+
+  <!-- Default namespace mappings used in XPath expression evaluations -->
+  <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
+    <property name="namespaceMappings">
+      <props>
+        <prop key="hs">http://citrusframework.org/schemas/samples/HelloService.xsd</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <!-- Message validators -->
+  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+
+  <!-- JMS message endpoints -->
+  <citrus:jms-endpoint id="helloServiceJmsEndpoint"
+                       destination-name="Citrus.HelloService.Request.Queue"
+                       timeout="${default.timeout}"/>
+
+  <citrus:jms-endpoint id="helloServiceResponseJmsEndpoint"
+                       destination-name="Citrus.HelloService.Response.Queue"
+                       timeout="${default.timeout}"/>
+
+  <citrus:jms-sync-endpoint id="helloServiceJmsSyncEndpoint"
+                       destination-name="Citrus.HelloService.InOut.Queue"
+                       timeout="${default.timeout}"/>
+
+  <citrus:jms-endpoint id="helloServiceJmsTopicEndpoint"
+                       destination-name="Citrus.HelloService.Request.Topic"
+                       timeout="${default.timeout}"
+                       pub-sub-domain="true"/>
+
+  <!-- Message channel endpoints -->
+  <citrus:channel-endpoint id="helloServiceChannelEndpoint"
+                           channel="helloRequests"
+                           timeout="${default.timeout}"/>
+
+  <citrus:channel-endpoint id="helloServiceResponseChannelEndpoint"
+                           channel="helloResponses"
+                           timeout="${default.timeout}"/>
+
+  <!-- Message channel endpoints -->
+  <citrus:channel-sync-endpoint id="helloServiceChannelSyncEndpoint"
+                           channel="helloSyncRequests"
+                           timeout="${default.timeout}"/>
+
+</beans>

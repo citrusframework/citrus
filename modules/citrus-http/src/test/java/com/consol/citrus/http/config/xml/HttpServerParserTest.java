@@ -16,11 +16,20 @@
 
 package com.consol.citrus.http.config.xml;
 
-import com.consol.citrus.http.HttpServer;
+import com.consol.citrus.channel.ChannelEndpointAdapter;
+import com.consol.citrus.channel.ChannelEndpointConfiguration;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.adapter.*;
+import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.jms.JmsEndpointAdapter;
+import com.consol.citrus.jms.JmsEndpointConfiguration;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.jms.ConnectionFactory;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +52,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertEquals(server.getName(), "httpServer1");
         Assert.assertEquals(server.getPort(), 8081);
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
@@ -73,7 +82,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getConnectors().length, beanDefinitionContext.getBean("connectors", List.class).size());
         Assert.assertEquals(server.getName(), "httpServer3");
         Assert.assertEquals(server.getPort(), 8083);
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
@@ -86,11 +95,13 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getServletHandler(), beanDefinitionContext.getBean("servletHandler"));
         Assert.assertEquals(server.getName(), "httpServer4");
         Assert.assertEquals(server.getPort(), 8084);
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getServletName(), "httpServer4-servlet");
+        Assert.assertNotNull(server.getInterceptors());
+        Assert.assertEquals(server.getInterceptors().size(), 0L);
         
         // 5th message sender
         server = servers.get("httpServer5");
@@ -99,10 +110,72 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getSecurityHandler(), beanDefinitionContext.getBean("securityHandler"));
         Assert.assertEquals(server.getName(), "httpServer5");
         Assert.assertEquals(server.getPort(), 8085);
-        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-http-servlet.xml");
+        Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/http/citrus-servlet-context.xml");
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getServletName(), "httpServer5-servlet");
+        Assert.assertNotNull(server.getInterceptors());
+        Assert.assertEquals(server.getInterceptors().size(), 2L);
+    }
+
+    @Test
+    public void testEndpointAdapter() {
+        ApplicationContext beanDefinitionContext = createApplicationContext("adapter");
+
+        Map<String, HttpServer> servers = beanDefinitionContext.getBeansOfType(HttpServer.class);
+
+        Assert.assertEquals(servers.size(), 6);
+
+        // 1st message sender
+        HttpServer server = servers.get("httpServer1");
+        Assert.assertEquals(server.getName(), "httpServer1");
+        Assert.assertEquals(server.getPort(), 8081);
+        Assert.assertNotNull(server.getEndpointAdapter());
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), ChannelEndpointAdapter.class);
+        Assert.assertNotNull(server.getEndpointAdapter().getEndpoint());
+        Assert.assertEquals(server.getEndpointAdapter().getEndpoint().getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(((ChannelEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getChannelName(), "serverChannel");
+
+        // 2nd message sender
+        server = servers.get("httpServer2");
+        Assert.assertEquals(server.getName(), "httpServer2");
+        Assert.assertEquals(server.getPort(), 8082);
+        Assert.assertNotNull(server.getEndpointAdapter());
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), JmsEndpointAdapter.class);
+        Assert.assertNotNull(server.getEndpointAdapter().getEndpoint());
+        Assert.assertEquals(server.getEndpointAdapter().getEndpoint().getEndpointConfiguration().getTimeout(), 2500);
+        Assert.assertEquals(((JmsEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getDestinationName(), "serverQueue");
+        Assert.assertEquals(((JmsEndpointConfiguration)server.getEndpointAdapter().getEndpoint().getEndpointConfiguration()).getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class));
+
+        // 3rd message sender
+        server = servers.get("httpServer3");
+        Assert.assertEquals(server.getName(), "httpServer3");
+        Assert.assertEquals(server.getPort(), 8083);
+        Assert.assertNotNull(server.getEndpointAdapter());
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
+
+        // 4th message sender
+        server = servers.get("httpServer4");
+        Assert.assertEquals(server.getName(), "httpServer4");
+        Assert.assertEquals(server.getPort(), 8084);
+        Assert.assertNotNull(server.getEndpointAdapter());
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), StaticResponseEndpointAdapter.class);
+        Assert.assertEquals(StringUtils.trimAllWhitespace(((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessagePayload()), "<TestMessage><Text>Hello!</Text></TestMessage>");
+        Assert.assertEquals(((StaticResponseEndpointAdapter) server.getEndpointAdapter()).getMessageHeader().get("Operation"), "sayHello");
+
+        // 5th message sender
+        server = servers.get("httpServer5");
+        Assert.assertEquals(server.getName(), "httpServer5");
+        Assert.assertEquals(server.getPort(), 8085);
+        Assert.assertNotNull(server.getEndpointAdapter());
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
+
+        // 6th message sender
+        server = servers.get("httpServer6");
+        Assert.assertEquals(server.getName(), "httpServer6");
+        Assert.assertEquals(server.getPort(), 8086);
+        Assert.assertNotNull(server.getEndpointAdapter());
+        Assert.assertEquals(server.getEndpointAdapter(), beanDefinitionContext.getBean("httpServerAdapter6", EndpointAdapter.class));
     }
 }

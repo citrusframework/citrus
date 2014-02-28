@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.message.ReplyMessageReceiver;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -23,19 +24,24 @@ import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
  * Generic bean definition parser for all reply-message-handler configurations. This parser is referenced
  * by several reply message receiver configuration components (e.g. jms, http, message-channel, ssh)
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public class ReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
+public class ReplyMessageReceiverParser<T extends ReplyMessageReceiver> extends AbstractBeanDefinitionParser {
+
+    private Class<T> type;
+
+    public ReplyMessageReceiverParser(Class<T> type) {
+        this.type = type;
+    }
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ReplyMessageReceiver.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(getBeanDefinitionClass());
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
         
@@ -43,5 +49,9 @@ public class ReplyMessageReceiverParser extends AbstractBeanDefinitionParser {
         
         return builder.getBeanDefinition();
     }
-   
+
+    protected Class getBeanDefinitionClass() {
+        return type;
+    }
+
 }

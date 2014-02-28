@@ -55,7 +55,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
          
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
-        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
         Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
         Assert.assertEquals(action.getTimeout(), 5000);
     }
@@ -86,7 +86,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
          
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
-        Assert.assertEquals(action.getMessageReceiver(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
         Assert.assertEquals(action.getTimeout(), 500);
         
         verify(applicationContextMock);

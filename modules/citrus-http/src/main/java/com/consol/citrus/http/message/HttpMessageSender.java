@@ -16,23 +16,21 @@
 
 package com.consol.citrus.http.message;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.message.*;
-import com.consol.citrus.util.MessageUtils;
-import org.springframework.http.*;
-import org.springframework.http.client.*;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.integration.Message;
-import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.mapping.HeaderMapper;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.StringUtils;
-import org.springframework.web.client.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * Message sender implementation sending messages over Http.
@@ -41,215 +39,57 @@ import org.springframework.web.client.*;
  * messages to the service endpoint.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class HttpMessageSender extends AbstractSyncMessageSender {
 
-    /** Http url as service destination */
-    private String requestUrl;
+    /** New Http client */
+    private final HttpClient httpClient;
 
-    /** Request method */
-    private HttpMethod requestMethod = HttpMethod.POST;
-    
-    /** The request charset */
-    private String charset = "UTF-8";
-    
-    /** Default content type */
-    private String contentType = "text/plain";
-
-    /** The rest template */
-    private RestTemplate restTemplate;
-    
-    /** Resolves dynamic endpoint uri */
-    private EndpointUriResolver endpointUriResolver = new MessageHeaderEndpointUriResolver();
-    
-    /** Header mapper */
-    private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.outboundMapper();
-    
-    /** Should http errors be handled with reply message handler or simply throw exception */
-    private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
-
-    /**
-     * Default constructor.
-     */
     public HttpMessageSender() {
-        restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        this(new HttpClient());
     }
-    
-    /**
-     * Constructor using custom client request factory.
-     * @param requestFactory the custom request factory.
-     */
-    public HttpMessageSender(ClientHttpRequestFactory requestFactory) {
-        restTemplate = new RestTemplate();
-        restTemplate.setRequestFactory(requestFactory);
+
+    public HttpMessageSender(HttpClient httpClient) {
+        super(httpClient);
+        this.httpClient = httpClient;
     }
-    
-    /**
-     * Constructor using custom rest template.
-     * @param restTemplate the custom rest template.
-     */
-    public HttpMessageSender(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-    
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     * @throws CitrusRuntimeException
-     */
+
+    @Override
     public void send(Message<?> message) {
-        String endpointUri;
-        if (endpointUriResolver != null) {
-            endpointUri = endpointUriResolver.resolveEndpointUri(message, getRequestUrl());
-        } else {
-            endpointUri = getRequestUrl();
-        }
-        
-        log.info("Sending HTTP message to: '" + endpointUri + "'");
-
-        if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:\n" + message.getPayload().toString());
-        }
-
-        HttpMethod method = requestMethod;
-        if (message.getHeaders().containsKey(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD)) {
-            method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
-        }
-        
-        HttpEntity<?> requestEntity = generateRequest(message, method);
-        
-        restTemplate.setErrorHandler(new InternalResponseErrorHandler(message));
-        ResponseEntity<?> response = restTemplate.exchange(endpointUri, method, requestEntity, String.class);
-        
-        log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
-        
-        informReplyMessageHandler(buildResponseMessage(response.getHeaders(), 
-                                                       response.getBody() != null ? response.getBody() : "", 
-                                                       response.getStatusCode()), message);
+        httpClient.createProducer().send(message);
     }
 
-    /**
-     * Builds the actual integration message from HTTP response entity.
-     * @param headers HTTP headers which will be transformed into Message headers
-     * @param responseBody the HTTP body of the response
-     * @param statusCode HTTP status code received
-     * @return the response message
-     */
-    private Message<?> buildResponseMessage(HttpHeaders headers, Object responseBody, HttpStatus statusCode) {
-        Map<String, ?> mappedHeaders = headerMapper.toHeaders(headers);
-        
-        Message<?> responseMessage = MessageBuilder.withPayload(responseBody)
-                                            .copyHeaders(mappedHeaders)
-                                            .copyHeaders(getCustomHeaders(headers, mappedHeaders))
-                                            .setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, statusCode)
-                                            .setHeader(CitrusHttpMessageHeaders.HTTP_VERSION, "HTTP/1.1") //TODO check if we have access to version information
-                                            .setHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE, statusCode.name())
-                                            .build();
-        
-        return responseMessage;
+    @Override
+    public Consumer createConsumer() {
+        return httpClient.createConsumer();
     }
 
-    /**
-     * Message headers consist of standard HTTP message headers and custom headers.
-     * This method assumes that all header entries that were not initially mapped 
-     * by header mapper implementations are custom headers.
-     * 
-     * @param httpHeaders all message headers in their pre nature.
-     * @param mappedHeaders the previously mapped header entries (all standard headers). 
-     * @return
-     */
-    private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, ?> mappedHeaders) {
-        Map<String, String> customHeaders = new HashMap<String, String>();
-        
-        for (Entry<String, List<String>> header : httpHeaders.entrySet()) {
-            if (!mappedHeaders.containsKey(header.getKey())) {
-                customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
-            }
-        }
-        
-        return customHeaders;
+    @Override
+    public Producer createProducer() {
+        return httpClient.createProducer();
     }
 
-    /**
-     * Generate http request entity from Spring Integration message.
-     * @param requestMessage
-     * @param method
-     * @return
-     */
-    private HttpEntity<?> generateRequest(Message<?> requestMessage, HttpMethod method) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        headerMapper.fromHeaders(requestMessage.getHeaders(), httpHeaders);
-        
-        Map<String, ?> messageHeaders = requestMessage.getHeaders();
-        for (Entry<String, ?> header : messageHeaders.entrySet()) {
-            if (!header.getKey().startsWith(CitrusMessageHeaders.PREFIX) && 
-                    !MessageUtils.isSpringInternalHeader(header.getKey()) &&
-                    !httpHeaders.containsKey(header.getKey())) {
-                httpHeaders.add(header.getKey(), header.getValue().toString());
-            }
-        }
-        
-        Object payload = requestMessage.getPayload();
-        if (httpHeaders.getContentType() == null) {
-            httpHeaders.setContentType(MediaType.parseMediaType(contentType.contains("charset") ? contentType : contentType + ";charset=" + charset));
-        }
-        
-        if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)) {
-            return new HttpEntity<Object>(payload, httpHeaders);
-        }
-        
-        return new HttpEntity<Object>(httpHeaders);
+    @Override
+    public EndpointConfiguration getEndpointConfiguration() {
+        return httpClient.getEndpointConfiguration();
     }
-    
-    /**
-     * Handles error response messages constructing a proper response message
-     * which will be propagated to the respective reply message handler for 
-     * further processing.
-     */
-    private class InternalResponseErrorHandler implements ResponseErrorHandler {
 
-        /** Request message associated with this response error handler */
-        private Message<?> requestMessage;
-        
-        /**
-         * Default constructor provided with request message 
-         * associated with this error handler.
-         */
-        public InternalResponseErrorHandler(Message<?> requestMessage) {
-            this.requestMessage = requestMessage;
-        }
-        
-        /**
-         * Check for error HTTP status code in response message. 
-         * Delegates to default Spring implementation.
-         */
-        public boolean hasError(ClientHttpResponse response) throws IOException {
-            return new DefaultResponseErrorHandler().hasError(response);
-        }
+    @Override
+    public void setReplyMessageHandler(ReplyMessageHandler replyMessageHandler) {
+        super.setReplyMessageHandler(replyMessageHandler);
 
-        /**
-         * Handle error response message according to error strategy.
-         */
-        public void handleError(ClientHttpResponse response) throws IOException {
-            if (errorHandlingStrategy.equals(ErrorHandlingStrategy.PROPAGATE)) {
-                informReplyMessageHandler(buildResponseMessage(response.getHeaders(), 
-                                                           response.getBody() != null ? response.getBody() : "", 
-                                                           response.getStatusCode()), requestMessage);
-            } else if (errorHandlingStrategy.equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
-                new DefaultResponseErrorHandler().handleError(response);
-            } else {
-                throw new CitrusRuntimeException("Unsupported error strategy: " + errorHandlingStrategy);
-            }
+        if (replyMessageHandler instanceof HttpReplyMessageReceiver) {
+            ((HttpReplyMessageReceiver) replyMessageHandler).setEndpoint(httpClient);
         }
-
     }
-    
+
     /**
      * Get the complete request URL.
      * @return the urlPath
      */
     public String getRequestUrl() {
-        return requestUrl;
+        return httpClient.getEndpointConfiguration().getRequestUrl();
     }
 
     /**
@@ -257,7 +97,23 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param url the url to set
      */
     public void setRequestUrl(String url) {
-        this.requestUrl = url;
+        httpClient.getEndpointConfiguration().setRequestUrl(url);
+    }
+
+    /**
+     * Sets the request factory.
+     * @param requestFactory
+     */
+    public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
+        httpClient.getEndpointConfiguration().setRequestFactory(requestFactory);
+    }
+
+    /**
+     * Gets the request factory.
+     * @return
+     */
+    public ClientHttpRequestFactory getRequestFactory() {
+        return httpClient.getEndpointConfiguration().getRequestFactory();
     }
 
     /**
@@ -265,7 +121,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param endpointUriResolver the endpointUriResolver to set
      */
     public void setEndpointUriResolver(EndpointUriResolver endpointUriResolver) {
-        this.endpointUriResolver = endpointUriResolver;
+        httpClient.getEndpointConfiguration().setEndpointUriResolver(endpointUriResolver);
     }
 
     /**
@@ -273,7 +129,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param restTemplate the restTemplate to set
      */
     public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+        httpClient.getEndpointConfiguration().setRestTemplate(restTemplate);
     }
 
     /**
@@ -281,7 +137,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param requestMethod the requestMethod to set
      */
     public void setRequestMethod(HttpMethod requestMethod) {
-        this.requestMethod = requestMethod;
+        httpClient.getEndpointConfiguration().setRequestMethod(requestMethod);
     }
 
     /**
@@ -289,7 +145,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param charset the charset to set
      */
     public void setCharset(String charset) {
-        this.charset = charset;
+        httpClient.getEndpointConfiguration().setCharset(charset);
     }
 
     /**
@@ -297,7 +153,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param headerMapper the headerMapper to set
      */
     public void setHeaderMapper(HeaderMapper<HttpHeaders> headerMapper) {
-        this.headerMapper = headerMapper;
+        httpClient.getEndpointConfiguration().setHeaderMapper(headerMapper);
     }
 
     /**
@@ -305,7 +161,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param contentType the contentType to set
      */
     public void setContentType(String contentType) {
-        this.contentType = contentType;
+        httpClient.getEndpointConfiguration().setContentType(contentType);
     }
 
     /**
@@ -313,7 +169,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the errorHandlingStrategy
      */
     public ErrorHandlingStrategy getErrorHandlingStrategy() {
-        return errorHandlingStrategy;
+        return httpClient.getEndpointConfiguration().getErrorHandlingStrategy();
     }
 
     /**
@@ -321,7 +177,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param errorHandlingStrategy the errorHandlingStrategy to set
      */
     public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
-        this.errorHandlingStrategy = errorHandlingStrategy;
+        httpClient.getEndpointConfiguration().setErrorHandlingStrategy(errorHandlingStrategy);
     }
 
     /**
@@ -329,7 +185,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the requestMethod
      */
     public HttpMethod getRequestMethod() {
-        return requestMethod;
+        return httpClient.getEndpointConfiguration().getRequestMethod();
     }
 
     /**
@@ -337,7 +193,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the charset
      */
     public String getCharset() {
-        return charset;
+        return httpClient.getEndpointConfiguration().getCharset();
     }
 
     /**
@@ -345,7 +201,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the contentType
      */
     public String getContentType() {
-        return contentType;
+        return httpClient.getEndpointConfiguration().getContentType();
     }
 
     /**
@@ -353,7 +209,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the restTemplate
      */
     public RestTemplate getRestTemplate() {
-        return restTemplate;
+        return httpClient.getEndpointConfiguration().getRestTemplate();
     }
 
     /**
@@ -361,7 +217,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the endpointUriResolver
      */
     public EndpointUriResolver getEndpointUriResolver() {
-        return endpointUriResolver;
+        return httpClient.getEndpointConfiguration().getEndpointUriResolver();
     }
 
     /**
@@ -369,7 +225,7 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @return the headerMapper
      */
     public HeaderMapper<HttpHeaders> getHeaderMapper() {
-        return headerMapper;
+        return httpClient.getEndpointConfiguration().getHeaderMapper();
     }
 
     /**
@@ -377,7 +233,23 @@ public class HttpMessageSender extends AbstractSyncMessageSender {
      * @param interceptors the interceptors to set
      */
     public void setInterceptors(List<ClientHttpRequestInterceptor> interceptors) {
-        restTemplate.setInterceptors(interceptors);
+        httpClient.getEndpointConfiguration().setClientInterceptors(interceptors);
+    }
+
+    /**
+     * Set the reply message correlator.
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        httpClient.getEndpointConfiguration().setCorrelator(correlator);
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return httpClient.getEndpointConfiguration().getCorrelator();
     }
 
 }

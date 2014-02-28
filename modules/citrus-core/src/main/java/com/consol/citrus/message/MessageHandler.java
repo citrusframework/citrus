@@ -20,8 +20,7 @@ import org.springframework.integration.Message;
 
 
 /**
- * MessageHandler processing a request message and 
- * returning a proper response message.
+ * MessageHandler processes incoming request messages and provides a proper response message.
  *
  * @author Christoph Deppisch
  * @since 2007
@@ -33,4 +32,5 @@ public interface MessageHandler {
      * @return the response message.
      */
     Message<?> handleMessage(Message<?> message);
+
 }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.integration.Message;
 
@@ -25,23 +26,22 @@ import com.consol.citrus.TestActor;
  * Abstract base class for message receiver implementations.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNameAware {
 
-    /** Receive timeout in ms */
-    private long receiveTimeout = 5000L;
-    
-    /** The test actor linked to this message receiver */
-    private TestActor actor;
+    /** Message endpoint */
+    private final Endpoint endpoint;
 
-    /** This receiver's name */
-    private String name = getClass().getSimpleName();
+    protected AbstractMessageReceiver(Endpoint endpoint) {
+        this.endpoint = endpoint;
+    }
     
     /**
      * @see com.consol.citrus.message.MessageReceiver#receive()
      */
     public Message<?> receive() {
-        return receive(receiveTimeout);
+        return receive(endpoint.getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -53,7 +53,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNa
      * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
      */
     public Message<?> receiveSelected(String selector) {
-        return receiveSelected(selector, receiveTimeout);
+        return receiveSelected(selector, endpoint.getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -66,7 +66,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNa
      * @param receiveTimeout the receiveTimeout to set
      */
     public void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
+        endpoint.getEndpointConfiguration().setTimeout(receiveTimeout);
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNa
      * @return the receiveTimeout
      */
     public long getReceiveTimeout() {
-        return receiveTimeout;
+        return endpoint.getEndpointConfiguration().getTimeout();
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNa
      * @return the actor the actor to get.
      */
     public TestActor getActor() {
-        return actor;
+        return endpoint.getActor();
     }
 
     /**
@@ -90,16 +90,21 @@ public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNa
      * @param actor the actor to set
      */
     public void setActor(TestActor actor) {
-        this.actor = actor;
+        endpoint.setActor(actor);
     }
 
     @Override
     public void setBeanName(String name) {
-        this.name = name;
+        endpoint.setName(name);
     }
 
     @Override
     public String getName() {
-        return name;
+        return endpoint.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        endpoint.setName(name);
     }
 }

@@ -16,14 +16,13 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestActor;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -48,7 +47,7 @@ public class SoapReplyMessageReceiverParserTest extends AbstractBeanDefinitionPa
         
         // 3rd message receiver
         messageReceiver = messageReceivers.get("webServiceReplyMessageReceiver3");
-        Assert.assertNotNull(messageReceiver.getPollingInterval());
-        Assert.assertEquals(messageReceiver.getPollingInterval(), 550L);
+        Assert.assertNotNull(messageReceiver.getEndpointConfiguration().getPollingInterval());
+        Assert.assertEquals(messageReceiver.getEndpointConfiguration().getPollingInterval(), 550L);
     }
 }

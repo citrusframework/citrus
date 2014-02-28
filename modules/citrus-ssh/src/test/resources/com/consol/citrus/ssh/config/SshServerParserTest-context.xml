@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd">
+
+  <citrus-ssh:server id="sshServer1"
+                     auto-start="false"
+                     port="22"/>
+
+  <citrus-ssh:server id="sshServer2"
+                     auto-start="false"
+                     port="10022"
+                     allowed-key-path="classpath:com/consol/citrus/ssh/citrus_pub.pem"
+                     host-key-path="classpath:com/consol/citrus/ssh/citrus.pem"
+                     user="foo"
+                     password="bar"/>
+
+  <citrus-ssh:server id="sshServer3"
+                     auto-start="false"
+                     message-handler-ref="sshMessageHandler"/>
+
+  <citrus-ssh:server id="sshServer4"
+                     auto-start="false"
+                     endpoint-adapter="sshServerAdapter"/>
+
+  <bean id="sshMessageHandler" class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler" />
+
+  <bean id="sshServerAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+  </bean>
+
+</beans>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,8 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="endpoint-adapter" type="xs:string"/>
+          <xs:attribute name="interceptors" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
@@ -160,7 +162,7 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="reply-handler" type="xs:string" use="required">
+      <xs:attribute name="reply-handler" type="xs:string">
         <xs:annotation>
           <xs:documentation>
             Reference to reply handler which receives the SSH answer as a message.
@@ -175,6 +177,9 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="message-correlator" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+      <xs:attribute name="polling-interval" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

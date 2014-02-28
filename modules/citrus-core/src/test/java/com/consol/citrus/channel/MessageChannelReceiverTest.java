@@ -16,21 +16,22 @@
 
 package com.consol.citrus.channel;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
+import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
-import org.springframework.integration.core.*;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.core.PollableChannel;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,7 +41,7 @@ public class MessageChannelReceiverTest {
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
     private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
-    
+
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
@@ -203,7 +204,7 @@ public class MessageChannelReceiverTest {
         try {
             messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
             Assert.fail("Missing exception due to unsupported operation");
-        } catch (UnsupportedOperationException e) {
+        } catch (CitrusRuntimeException e) {
             Assert.assertNotNull(e.getMessage());
         }
         

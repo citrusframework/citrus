@@ -16,13 +16,8 @@
 
 package com.consol.citrus.channel;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.JMSException;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.integration.*;
@@ -31,8 +26,11 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import javax.jms.JMSException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -48,26 +46,22 @@ public class ReplyMessageChannelSenderTest {
         ReplyMessageChannelSender sender = new ReplyMessageChannelSender();
         sender.setMessagingTemplate(messagingTemplate);
         
-        ReplyMessageChannelHolder replyChannelHolder = org.easymock.EasyMock.createMock(ReplyMessageChannelHolder.class);
-        sender.setReplyMessageChannelHolder(replyChannelHolder);
-        
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messagingTemplate, replyChannel, replyChannelHolder);
+        reset(messagingTemplate, replyChannel);
 
-        expect(replyChannelHolder.getReplyMessageChannel()).andReturn(replyChannel).once();
-        
         messagingTemplate.send(replyChannel, message);
         expectLastCall().once();
         
-        replay(messagingTemplate, replyChannel, replyChannelHolder);
-        
+        replay(messagingTemplate, replyChannel);
+
+        ((ChannelSyncConsumer)sender.getChannelEndpoint().createConsumer()).saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
         sender.send(message);
         
-        verify(messagingTemplate, replyChannel, replyChannelHolder);
+        verify(messagingTemplate, replyChannel);
     }
     
     @Test
@@ -75,14 +69,13 @@ public class ReplyMessageChannelSenderTest {
         ReplyMessageChannelSender sender = new ReplyMessageChannelSender();
         sender.setMessagingTemplate(messagingTemplate);
         
-        ReplyMessageChannelHolder replyChannelHolder = org.easymock.EasyMock.createMock(ReplyMessageChannelHolder.class);
-        sender.setReplyMessageChannelHolder(replyChannelHolder);
-        
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         sender.setCorrelator(correlator);
-        
+
+        Message<String> request = MessageBuilder.withPayload("").setReplyChannel(replyChannel).build();
+
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
+        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, request.getHeaders().getId());
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
@@ -91,10 +84,8 @@ public class ReplyMessageChannelSenderTest {
                                 .removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR)
                                 .build();
         
-        reset(messagingTemplate, replyChannel, replyChannelHolder);
+        reset(messagingTemplate, replyChannel);
 
-        expect(replyChannelHolder.getReplyMessageChannel(MessageHeaders.ID + " = '123456789'")).andReturn(replyChannel).once();
-        
         messagingTemplate.send(eq(replyChannel), (Message<?>)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
@@ -103,11 +94,12 @@ public class ReplyMessageChannelSenderTest {
             }
         }).once();
         
-        replay(messagingTemplate, replyChannel, replyChannelHolder);
-        
+        replay(messagingTemplate, replyChannel);
+
+        ((ChannelSyncConsumer)sender.getChannelEndpoint().createConsumer()).saveReplyMessageChannel(request);
         sender.send(message);
         
-        verify(messagingTemplate, replyChannel, replyChannelHolder);
+        verify(messagingTemplate, replyChannel);
     }
     
     @Test
@@ -141,9 +133,6 @@ public class ReplyMessageChannelSenderTest {
         ReplyMessageChannelSender sender = new ReplyMessageChannelSender();
         sender.setMessagingTemplate(messagingTemplate);
         
-        ReplyMessageChannelHolder replyChannelHolder = org.easymock.EasyMock.createMock(ReplyMessageChannelHolder.class);
-        sender.setReplyMessageChannelHolder(replyChannelHolder);
-        
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         sender.setCorrelator(correlator);
         
@@ -153,17 +142,10 @@ public class ReplyMessageChannelSenderTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(replyChannelHolder);
-
-        expect(replyChannelHolder.getReplyMessageChannel(MessageHeaders.ID + " = '123456789'")).andReturn(null).once();
-
-        replay(replyChannelHolder);
-        
         try {
             sender.send(message);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to locate reply channel"));
-            verify(replyChannelHolder);
             return;
         }
         
@@ -190,31 +172,27 @@ public class ReplyMessageChannelSenderTest {
         ReplyMessageChannelSender sender = new ReplyMessageChannelSender();
         sender.setMessagingTemplate(messagingTemplate);
         
-        ReplyMessageChannelHolder replyChannelHolder = org.easymock.EasyMock.createMock(ReplyMessageChannelHolder.class);
-        sender.setReplyMessageChannelHolder(replyChannelHolder);
-        
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
-        reset(messagingTemplate, replyChannel, replyChannelHolder);
+        reset(messagingTemplate, replyChannel);
 
-        expect(replyChannelHolder.getReplyMessageChannel()).andReturn(replyChannel).once();
-        
         messagingTemplate.send(replyChannel, message);
         expectLastCall().andThrow(new MessageDeliveryException("Internal error!")).once();
         
-        replay(messagingTemplate, replyChannel, replyChannelHolder);
-       
+        replay(messagingTemplate, replyChannel);
+
         try {
+            ((ChannelSyncConsumer)sender.getChannelEndpoint().createConsumer()).saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
             sender.send(message);
         } catch(CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Failed to send message to channel: "));
             Assert.assertNotNull(e.getCause());
             Assert.assertEquals(e.getCause().getClass(), MessageDeliveryException.class);
             Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
-            verify(messagingTemplate, replyChannel, replyChannelHolder);
+            verify(messagingTemplate, replyChannel);
             
             return;
         }

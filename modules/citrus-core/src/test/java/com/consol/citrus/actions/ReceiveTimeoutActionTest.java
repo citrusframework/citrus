@@ -16,69 +16,84 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
-
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.messaging.SelectiveConsumer;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
-	
-    private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
-    
+
+    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
+    private SelectiveConsumer consumer = EasyMock.createMock(SelectiveConsumer.class);
+    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+
 	@Test
 	public void testReceiveTimeout() {
 		ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-		receiveTimeout.setMessageReceiver(messageReceiver);
-		
-		reset(messageReceiver);
-        expect(messageReceiver.receive(1000L)).andReturn(null).once();
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+		receiveTimeout.setEndpoint(endpoint);
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(1000L)).andReturn(null).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
 		receiveTimeout.execute(context);
-		
-		verify(messageReceiver);
+
+        verify(endpoint, consumer, endpointConfiguration);
 	}
 	
 	@Test
     public void testReceiveTimeoutCustomTimeout() {
         ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setMessageReceiver(messageReceiver);
+        receiveTimeout.setEndpoint(endpoint);
         
         receiveTimeout.setTimeout(500L);
-        
-        reset(messageReceiver);
-        expect(messageReceiver.receive(500L)).andReturn(null).once();
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(500L)).andReturn(null).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         receiveTimeout.execute(context);
-        
-        verify(messageReceiver);
+
+        verify(endpoint, consumer, endpointConfiguration);
     }
 	
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveTimeoutFail() {
         ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setMessageReceiver(messageReceiver);
+        receiveTimeout.setEndpoint(endpoint);
         
         Message message = MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build();
-        
-        reset(messageReceiver);
-        expect(messageReceiver.receive(1000L)).andReturn(message).once();
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(1000L)).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         try {
             receiveTimeout.execute(context);
@@ -93,16 +108,20 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveTimeoutWithMessageSelectorString() {
         ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setMessageReceiver(messageReceiver);
+        receiveTimeout.setEndpoint(endpoint);
         receiveTimeout.setMessageSelector("Operation = 'sayHello'");
-        
-        reset(messageReceiver);
-        expect(messageReceiver.receiveSelected("Operation = 'sayHello'", 1000L)).andReturn(null).once();
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive("Operation = 'sayHello'", 1000L)).andReturn(null).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         receiveTimeout.execute(context);
         
-        verify(messageReceiver);
+        verify(endpoint, consumer, endpointConfiguration);
     }
 }

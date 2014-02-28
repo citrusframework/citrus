@@ -16,22 +16,22 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.JmsSyncMessageSender;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class JmsSyncMessageSenderParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testFailActionParser() {
+    public void testJmsSyncMessageSenderParser() {
         Map<String, JmsSyncMessageSender> messageSenders = beanDefinitionContext.getBeansOfType(JmsSyncMessageSender.class);
         
         Assert.assertEquals(messageSenders.size(), 4);

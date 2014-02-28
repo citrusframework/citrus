@@ -16,12 +16,16 @@
 
 package com.consol.citrus;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-
-import java.util.*;
-
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
@@ -30,25 +34,22 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class XPathTest extends AbstractTestNGUnitTest {
     @Autowired
-    MessageValidator<ValidationContext> validator;
-    
-    MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
-    
-    ReceiveMessageAction receiveMessageBean;
+    private MessageValidator<ValidationContext> validator;
+
+    private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
+    private Consumer consumer = EasyMock.createMock(Consumer.class);
+    private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
+
+    private ReceiveMessageAction receiveMessageBean;
     
     @Override
     @BeforeMethod
@@ -56,7 +57,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         super.prepareTest();
         
         receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setMessageReceiver(messageReceiver);
+        receiveMessageBean.setEndpoint(endpoint);
 
         receiveMessageBean.setValidator(validator);
     }
@@ -64,7 +65,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPath() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -77,9 +81,9 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -105,7 +109,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPathWithDefaultNamespace() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root xmlns='http://test'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -118,9 +125,9 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -146,7 +153,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPathWithExplicitNamespace() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -159,9 +169,9 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -183,7 +193,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testUsingXPathWithExplicitNamespaceInElementDefinition() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<root xmlns='http://test'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -196,9 +209,9 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("//:element/:sub-elementA", "text-value");
@@ -225,7 +238,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsUsingXPathWithResultTypes() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -238,9 +254,9 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
         
         HashMap<String, String> validateMessageElements = new HashMap<String, String>();
         validateMessageElements.put("node://:element/:sub-elementA", "text-value");
@@ -273,7 +289,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageValuesUsingXPathWithResultTypes() {
-        reset(messageReceiver);
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
         Message message = MessageBuilder.withPayload("<ns1:root xmlns='http://test' xmlns:ns1='http://citrus'>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -286,10 +305,10 @@ public class XPathTest extends AbstractTestNGUnitTest {
                         + "</ns1:root>")
                         .build();
         
-        expect(messageReceiver.receive()).andReturn(message);
-        expect(messageReceiver.getActor()).andReturn(null).anyTimes();
-        replay(messageReceiver);
-        
+        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("node://:element/:sub-elementA", "elementA");
         extractMessageElements.put("node://:element/:sub-elementA/@attribute", "elementAttribute");

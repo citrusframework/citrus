@@ -27,12 +27,13 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.message.MessageSender.ErrorHandlingStrategy;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 
 /**
  * Parser for Http sender implementation in Citrus http namespace.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
 
@@ -48,9 +49,9 @@ public class HttpMessageSenderParser extends AbstractBeanDefinitionParser {
                 		"no 'request-factory' should be set!");
             }
             
-            builder.addConstructorArgReference(restTemplate);
+            builder.addPropertyReference("restTemplate", restTemplate);
         } else {
-            BeanDefinitionParserUtils.addConstructorArgReference(builder, element.getAttribute("request-factory"));
+            BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("request-factory"), "requestFactory");
         }
         
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("request-url"), "requestUrl");

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.integration.Message;
 
 import com.consol.citrus.TestActor;
@@ -25,8 +26,9 @@ import com.consol.citrus.TestActor;
  * specific message endpoint. Each message transport may have dedicated message sender implementations.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public interface MessageSender {
+public interface MessageSender extends Endpoint {
     /**
      * Sends the message.
      * @param message the message object to send.
@@ -44,47 +46,5 @@ public interface MessageSender {
      * @return
      */
     String getName();
-    
-    /**
-     * Enumeration representing the different error handling strategies for this
-     * reply message handler.
-     */
-    public enum ErrorHandlingStrategy {
-        THROWS_EXCEPTION("throwsException"),
-        PROPAGATE("propagateError");
-        
-        /** Name representation */
-        private String name;
-        
-        /**
-         * Default constructor using String name representation field.
-         * @param name
-         */
-        private ErrorHandlingStrategy(String name) {
-            this.name = name;
-        }
-        
-        /**
-         * Gets the strategy from given name representation.
-         * @param name
-         * @return
-         */
-        public static ErrorHandlingStrategy fromName(String name) {
-            for (ErrorHandlingStrategy strategy : values()) {
-                if (strategy.getName().equals(name)) {
-                    return strategy;
-                }
-            }
-            
-            throw new IllegalArgumentException("Unknown error handling strategy: " + name);
-        }
-        
-        /**
-         * Gets the name representation.
-         * @return the name
-         */
-        public String getName() {
-            return name;
-        }
-    }
+
 }

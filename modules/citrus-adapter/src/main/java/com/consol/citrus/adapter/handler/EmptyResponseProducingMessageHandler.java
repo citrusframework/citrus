@@ -16,22 +16,13 @@
 
 package com.consol.citrus.adapter.handler;
 
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 
 /**
  * Message handler implementation generating empty response messages.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
-public class EmptyResponseProducingMessageHandler implements MessageHandler {
-
-    /**
-     * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
-     */
-    public Message<?> handleMessage(Message<?> message) {
-        return MessageBuilder.withPayload("").build();
-    }
+public class EmptyResponseProducingMessageHandler extends EmptyResponseEndpointAdapter {
 }

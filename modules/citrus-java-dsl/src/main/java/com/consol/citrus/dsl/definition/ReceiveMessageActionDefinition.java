@@ -604,7 +604,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         
         receiveSoapMessageAction.setActor(action.getActor());
         receiveSoapMessageAction.setDescription(action.getDescription());
-        receiveSoapMessageAction.setMessageReceiver(action.getMessageReceiver());
+        receiveSoapMessageAction.setEndpoint(action.getEndpoint());
         receiveSoapMessageAction.setMessageSelector(action.getMessageSelector());
         receiveSoapMessageAction.setMessageSelectorString(action.getMessageSelectorString());
         receiveSoapMessageAction.setMessageType(action.getMessageType());

@@ -16,16 +16,9 @@
 
 package com.consol.citrus.channel;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
-import org.springframework.util.StringUtils;
-
-import com.consol.citrus.message.ReplyMessageCorrelator;
 
 /**
  * Synchronous message channel receiver. Receives a message on a {@link MessageChannel} destination and
@@ -33,73 +26,44 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
  * provide synchronous reply.
  * 
  * @author Christoph Deppisch
+ * @deprecated
  */
 public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder {
-    /** Reply channel store */
-    private Map<String, MessageChannel> replyChannels = new HashMap<String, MessageChannel>();
-    
-    /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
-    
+
     /**
-     * Logger
+     * Default constructor initializing endpoint.
      */
-    private static Logger log = LoggerFactory.getLogger(SyncMessageChannelReceiver.class);
-    
+    public SyncMessageChannelReceiver() {
+        super(new ChannelSyncEndpoint());
+    }
+
+    @Override
+    public ChannelSyncEndpoint getChannelEndpoint() {
+        return (ChannelSyncEndpoint) super.getChannelEndpoint();
+    }
+
     @Override
     public Message<?> receive(long timeout) {
-        Message<?> receivedMessage = super.receive(timeout);
-        
-        saveReplyMessageChannel(receivedMessage);
-        
-        return receivedMessage;
+        return getChannelEndpoint().createConsumer().receive(timeout);
     }
 
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
-        Message<?> receivedMessage = super.receiveSelected(selector, timeout);
-        
-        saveReplyMessageChannel(receivedMessage);
-        
-        return receivedMessage;
-    }
-    
-    /**
-     * Store reply message channel.
-     * @param receivedMessage
-     */
-    private void saveReplyMessageChannel(Message<?> receivedMessage) {
-        MessageChannel replyChannel;
-        
-        if (receivedMessage.getHeaders().getReplyChannel() instanceof MessageChannel) {
-            replyChannel = (MessageChannel)receivedMessage.getHeaders().getReplyChannel();
-        } else if (StringUtils.hasText((String)receivedMessage.getHeaders().getReplyChannel())){
-            replyChannel = resolveChannelName(receivedMessage.getHeaders().getReplyChannel().toString());
-        } else {
-            log.warn("Unable to retrieve reply message channel for message \n" + 
-                    receivedMessage + "\n - no reply channel found in message headers!");
-            return;
-        }
-        
-        if (correlator != null) {
-            replyChannels.put(correlator.getCorrelationKey(receivedMessage), replyChannel);
-        } else {
-            replyChannels.put("", replyChannel);
-        }
+        return getChannelEndpoint().createConsumer().receive(selector, timeout);
     }
     
     /**
      * Get the reply message channel with given corelation key.
      */
     public MessageChannel getReplyMessageChannel(String correlationKey) {
-        return replyChannels.remove(correlationKey);
+        return ((ChannelSyncConsumer) getChannelEndpoint().createConsumer()).findReplyChannel(correlationKey);
     }
 
     /**
      * Get the reply message channel.
      */
     public MessageChannel getReplyMessageChannel() {
-        return replyChannels.remove("");
+        return ((ChannelSyncConsumer) getChannelEndpoint().createConsumer()).findReplyChannel("");
     }
 
     /**
@@ -107,7 +71,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * @param correlator the correlator to set
      */
     public void setCorrelator(ReplyMessageCorrelator correlator) {
-        this.correlator = correlator;
+        getChannelEndpoint().getEndpointConfiguration().setCorrelator(correlator);
     }
 
     /**
@@ -115,7 +79,7 @@ public class SyncMessageChannelReceiver extends MessageChannelReceiver implement
      * @return the correlator
      */
     public ReplyMessageCorrelator getCorrelator() {
-        return correlator;
+        return getChannelEndpoint().getEndpointConfiguration().getCorrelator();
     }
     
 }

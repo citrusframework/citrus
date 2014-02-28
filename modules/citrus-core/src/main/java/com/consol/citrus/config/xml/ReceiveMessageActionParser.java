@@ -54,7 +54,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             builder = parseComponent(element, parserContext);
             builder.addPropertyValue("name", element.getLocalName());
             
-            builder.addPropertyReference("messageReceiver", messageReceiverReference);
+            builder.addPropertyReference("endpoint", messageReceiverReference);
         } else {
             throw new BeanCreationException("Missing proper message receiver reference - attriute should not be empty");
         }

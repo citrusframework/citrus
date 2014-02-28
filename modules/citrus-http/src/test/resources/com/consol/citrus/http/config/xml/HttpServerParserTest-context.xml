@@ -35,7 +35,17 @@
     <citrus-http:server id="httpServer5"
                         auto-start="false"
                         port="8085"
-                        security-handler="securityHandler"/>                    
+                        security-handler="securityHandler"
+                        interceptors="interceptors"/>
+
+    <util:list id="interceptors">
+      <bean id="interceptor1" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="org.springframework.web.servlet.HandlerInterceptor"/>
+      </bean>
+      <bean id="interceptor2" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="org.springframework.web.servlet.HandlerInterceptor"/>
+      </bean>
+    </util:list>
     
     <util:list id="connectors">
         <bean id="connector1" class="org.easymock.EasyMock" factory-method="createMock">

@@ -16,16 +16,14 @@
 
 package com.consol.citrus.channel;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.consol.citrus.message.ReplyMessageReceiver;
+import com.consol.citrus.message.DefaultReplyMessageCorrelator;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.DefaultReplyMessageCorrelator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -34,7 +32,7 @@ public class ReplyMessageChannelReceiverTest {
 
     @Test
     public void testOnReplyMessage() {
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
+        MessageChannelReplyMessageReceiver replyMessageReceiver = new MessageChannelReplyMessageReceiver(new ChannelSyncEndpoint());
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -48,7 +46,7 @@ public class ReplyMessageChannelReceiverTest {
     
     @Test
     public void testOnReplyMessageWithCorrelatorKey() {
-        ReplyMessageReceiver replyMessageReceiver = new ReplyMessageReceiver();
+        MessageChannelReplyMessageReceiver replyMessageReceiver = new MessageChannelReplyMessageReceiver(new ChannelSyncEndpoint());
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")

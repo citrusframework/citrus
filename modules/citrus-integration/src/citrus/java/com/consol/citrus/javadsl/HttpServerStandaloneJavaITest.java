@@ -36,7 +36,7 @@ public class HttpServerStandaloneJavaITest extends TestNGCitrusTestBuilder {
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}");
         
-        receive("httpResponseReceiver")
+        receive("httpResponseReceiverStandalone")
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
@@ -50,7 +50,7 @@ public class HttpServerStandaloneJavaITest extends TestNGCitrusTestBuilder {
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}");
         
-        receive("httpResponseReceiver")
+        receive("httpResponseReceiverStandalone")
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")

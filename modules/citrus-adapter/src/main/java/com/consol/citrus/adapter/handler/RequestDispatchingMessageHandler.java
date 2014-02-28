@@ -18,7 +18,7 @@ package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.adapter.handler.mapping.MappingKeyExtractor;
 import com.consol.citrus.adapter.handler.mapping.MessageHandlerMapping;
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
 import org.springframework.integration.Message;
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class RequestDispatchingMessageHandler implements MessageHandler {
+public class RequestDispatchingMessageHandler extends StaticEndpointAdapter {
 
     /** Extracts message value predicate for dispatching */
     private MappingKeyExtractor mappingKeyExtractor;
@@ -38,7 +38,7 @@ public class RequestDispatchingMessageHandler implements MessageHandler {
     private MessageHandlerMapping messageHandlerMapping;
 
     @Override
-    public Message<?> handleMessage(Message<?> message) {
+    public Message<?> handleMessageInternal(Message<?> message) {
         return dispatchMessage(message, mappingKeyExtractor.extractMappingKey(message));
     }
 

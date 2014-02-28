@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
@@ -117,14 +116,14 @@
                               
     <citrus-ws:message-sender id="webServiceFaultPropagatingHelloRequestSender"
                               request-url="http://localhost:8071/hello"
-                              reply-handler="webServiceHelloReplyHandler"
+                              reply-handler="webServiceFaultReplyHandler"
                               message-factory="messageFactory"
                               interceptors="clientInterceptors"
                               fault-strategy="propagateError"/>
                               
     <citrus-ws:message-sender id="wsAddressingHelloRequestSender"
                               request-url="http://localhost:8071/hello"
-                              reply-handler="webServiceHelloReplyHandler"
+                              reply-handler="webServiceAdressingReplyHandler"
                               message-factory="messageFactory"
                               interceptors="clientInterceptors"
                               addressing-headers="wsAddressing200408"/>
@@ -155,7 +154,9 @@
     </util:list>
     
     <citrus-ws:reply-message-handler id="webServiceHelloReplyHandler"/>
-    
+    <citrus-ws:reply-message-handler id="webServiceFaultReplyHandler"/>
+    <citrus-ws:reply-message-handler id="webServiceAdressingReplyHandler"/>
+
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer" 
                         port="8072"
@@ -178,7 +179,9 @@
                                 request-factory="basicAuthClientRequestFactory"
                                 interceptors="httpClientInterceptors"
                                 actor="helloClient"/>
-    
+
+    <citrus-http:reply-message-handler id="httpResponseReceiver"/>
+
     <util:list id="httpClientInterceptors">
         <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
     </util:list>
@@ -211,10 +214,10 @@
                                 request-url="http://localhost:8073/test"
                                 request-method="POST"
                                 content-type="text/xml"
-                                reply-handler="httpResponseReceiver"
+                                reply-handler="httpResponseReceiverStandalone"
                                 interceptors="httpClientInterceptors"/>
   
-    <citrus-http:reply-message-handler id="httpResponseReceiver"/>
+    <citrus-http:reply-message-handler id="httpResponseReceiverStandalone"/>
   
     <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
 
@@ -253,7 +256,7 @@
                        private-key-password="consol"
                        strict-host-checking="false"
                        host="localhost"
-                       reply-handler="sshResponseReceiver" />
+                       reply-handler="sshFaultReceiver" />
   
     <citrus-ssh:client id="sshClientWithWrongUser"
                        port="9072"
@@ -261,9 +264,10 @@
                        private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
                        strict-host-checking="false"
                        host="localhost"
-                       reply-handler="sshResponseReceiver" />
+                       reply-handler="sshFaultReceiver" />
   
     <citrus-ssh:reply-handler id="sshResponseReceiver"/>
+    <citrus-ssh:reply-handler id="sshFaultReceiver"/>
 
     <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
     <citrus:jms-message-sender id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}" />
@@ -325,10 +329,12 @@
     
     <citrus:jms-sync-message-sender id="syncHelloTopicRequestSender" 
                                     destination-name="${jms.topic.hello.sync.request}"
-                                    reply-handler="syncHelloResponseHandler"
+                                    reply-handler="syncHelloTopicResponseHandler"
                                     reply-timeout="5000"
                                     pub-sub-domain="true"/>
-                                    
+
+    <citrus:jms-reply-message-handler id="syncHelloTopicResponseHandler"/>
+
     <citrus:jms-sync-message-receiver id="syncHelloTopicRequestReceiver"
                                       receive-timeout="5000" 
                                       destination-name="${jms.topic.hello.sync.request}"
@@ -379,32 +385,13 @@
     <citrus:message-channel id="greetings" capacity="5"/>
 
     <!-- Citrus mail components -->
-    <citrus-mail:message-sender id="mailMessageSender"
+    <citrus-mail:client id="mailMessageSender"
                                 host="localhost"
                                 port="25025"/>
 
     <citrus-mail:server id="smtpMailServer"
                         port="25025"
-                        auto-start="true"
-                        message-handler-adapter="channelAdapter"/>
-
-    <bean id="channelAdapter" class="com.consol.citrus.mail.adapter.MessageHandlerAdapter">
-      <constructor-arg>
-        <bean class="com.consol.citrus.adapter.handler.MessageChannelConnectingMessageHandler">
-          <property name="channel" ref="mailMessageChannel"/>
-          <property name="replyTimeout" value="500"/>
-        </bean>
-      </constructor-arg>
-    </bean>
-
-    <citrus:message-channel id="mailMessageChannel" capacity="5"/>
-
-    <citrus:sync-message-channel-receiver id="mailMessageReceiver"
-                                          channel="mailMessageChannel"
-                                          receive-timeout="500"/>
-
-    <citrus:message-channel-reply-sender id="mailMessageResponseSender"
-                                         reply-channel-holder="mailMessageReceiver"/>
+                        auto-start="true"/>
 
     <!-- Sample data dictionary for hello service messages -->
     <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary">

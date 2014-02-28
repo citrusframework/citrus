@@ -17,14 +17,17 @@
 package com.consol.citrus.server;
 
 
+import com.consol.citrus.endpoint.Endpoint;
+
 /**
- * Server interface in Citrus.
+ * Server representation in Citrus is a runnable instance accepting client
+ * connections.
  *  
  * @author Christoph Deppisch
  * @since 2007
  *
  */
-public interface Server extends Runnable {
+public interface Server extends Endpoint, Runnable {
 
     /**
      * Start the server
@@ -41,10 +44,4 @@ public interface Server extends Runnable {
      * @return
      */
     boolean isRunning();
-
-    /**
-     * Get server name.
-     * @return
-     */
-    String getName();
 }

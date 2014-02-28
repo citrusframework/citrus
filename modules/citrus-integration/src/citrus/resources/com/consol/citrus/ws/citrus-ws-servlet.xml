@@ -13,15 +13,16 @@
         </description>
     </bean>
     
-    <bean id="helloServicePayloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
-        <property name="mappings">
-            <props>
-                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest">helloServiceEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
-                <prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}SoapProbingRequest">probingServiceEndpoint</prop>
-            </props>
-        </property>
+    <bean id="helloServicePayloadMapping" class="org.springframework.ws.server.endpoint.mapping.XPathPayloadEndpointMapping">
+      <property name="expression" value="local-name(/*)"/>
+      <property name="mappings">
+        <props>
+            <prop key="HelloStandaloneRequest">helloServiceEndpoint</prop>
+            <prop key="SoapFaultForcingRequest">soapFaultGeneratingEndpoint</prop>
+            <prop key="SoapMessageWithAttachmentRequest">defaultWsEndpoint</prop>
+            <prop key="SoapProbingRequest">probingServiceEndpoint</prop>
+        </props>
+      </property>
         <property name="interceptors">
             <list>
                 <ref bean="loggingInterceptor"/>
