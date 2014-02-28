@@ -97,10 +97,14 @@
     <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
   </util:list>
 
+  <bean id="soapEndpointUriResolver"
+        class="com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver"/>
+
   <!-- Soap message endpoints -->
   <citrus-ws:client id="helloSoapClient"
                     request-url="http://localhost:13080/hello"
                     interceptors="clientInterceptors"
+                    endpoint-resolver="soapEndpointUriResolver"
                     timeout="1000"/>
 
   <citrus-ws:client id="helloSoapFaultClient"

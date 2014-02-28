@@ -37,7 +37,19 @@ public abstract class CitrusSoapMessageHeaders {
     
     /** Special status code header */
     public static final String HTTP_STATUS_CODE = HTTP_PREFIX + "status_code";
-    
+
+    /** Server context path */
+    public static final String HTTP_CONTEXT_PATH = HTTP_PREFIX + "context_path";
+
+    /** Full http request uri */
+    public static final String HTTP_REQUEST_URI = HTTP_PREFIX + "request_uri";
+
+    /** Http request method */
+    public static final String HTTP_REQUEST_METHOD = HTTP_PREFIX + "method";
+
+    /** Http query parameters */
+    public static final String HTTP_QUERY_PARAMS = HTTP_PREFIX + "query_params";
+
     /** SOAP action header name */
     public static final String SOAP_ACTION = SOAP_PREFIX + "action";
     

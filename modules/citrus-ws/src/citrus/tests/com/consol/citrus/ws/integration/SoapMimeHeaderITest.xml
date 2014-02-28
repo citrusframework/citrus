@@ -37,6 +37,7 @@
           </data>
         </message>
         <header>
+          <element name="citrus_endpoint_uri" value="http://localhost:13080/hello/endpoint?timeout=1000"/>
           <element name="{http://citrusframework.org/test}Operation" value="sayHello"/>
           <element name="citrus_http_operation" value="sayHello"/>
           <element name="citrus_soap_action" value="sayHello"/>
@@ -60,6 +61,10 @@
           <element name="Operation" value="sayHello"/>
           <element name="operation" value="sayHello"/>
           <element name="citrus_soap_action" value= "sayHello"/>
+          <element name="citrus_http_request_uri" value="/hello/endpoint"/>
+          <element name="citrus_http_method" value="POST"/>
+          <element name="citrus_http_context_path" value= ""/>
+          <element name="citrus_http_query_params" value= "timeout=1000"/>
         </header>
         <extract>
           <header name="jms_messageId" variable="internal_correlation_id"/>

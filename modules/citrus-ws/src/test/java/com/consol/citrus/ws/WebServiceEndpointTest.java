@@ -16,15 +16,9 @@
 
 package com.consol.citrus.ws;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.ByteArrayInputStream;
-import java.util.*;
-
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPMessage;
-
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.integration.Message;
@@ -43,16 +37,20 @@ import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPMessage;
+import java.io.ByteArrayInputStream;
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class WebServiceEndpointTest {
 
-    MessageContext messageContext = EasyMock.createMock(MessageContext.class);
+    private MessageContext messageContext = EasyMock.createMock(MessageContext.class);
     
     @Test
     public void testMessageProcessing() throws Exception {

@@ -16,31 +16,35 @@
 
 package com.consol.citrus.ws.message.converter;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.transform.*;
-
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.context.TransportContext;
+import org.springframework.ws.transport.context.TransportContextHolder;
+import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.transform.StringResult;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.transform.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author Christoph Deppisch
@@ -72,14 +76,14 @@ public class SoapMessageConverter {
      * Takes care of soap message headers, http mime headers and soap attachments.
      * 
      * @param message the initial web service message.
-     * @param optional message context.
+     * @param messageContext optional message context.
      * @return the constructed integration message.
      * @throws IOException
      * @throws TransformerException
      */
     public Message<?> convert(WebServiceMessage message, MessageContext messageContext) throws IOException, TransformerException {
         StringResult payloadResult = new StringResult();
-        
+
         if (message.getPayloadSource() != null) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -100,10 +104,41 @@ public class SoapMessageConverter {
                 handleMimeHeaders(soapMessage, messageBuilder);
             }
         }
-        
+
+        handleHttpHeaders(messageBuilder);
+
         return messageBuilder.build();
     }
-    
+
+    private void handleHttpHeaders(MessageBuilder<String> messageBuilder) {
+        TransportContext transportContext = TransportContextHolder.getTransportContext();
+        if (transportContext == null) {
+            log.warn("Unable to get complete set of http request headers - no transport context available");
+            return;
+        }
+
+        WebServiceConnection connection = transportContext.getConnection();
+        if (connection instanceof HttpServletConnection) {
+            UrlPathHelper pathHelper = new UrlPathHelper();
+            HttpServletConnection servletConnection = (HttpServletConnection) connection;
+            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletConnection.getHttpServletRequest()));
+            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletConnection.getHttpServletRequest()));
+
+            String queryParams = pathHelper.getOriginatingQueryString(servletConnection.getHttpServletRequest());
+            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
+
+            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_METHOD, servletConnection.getHttpServletRequest().getMethod().toString());
+        } else {
+            log.warn("Unable to get complete set of http request headers");
+
+            try {
+                messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, connection.getUri());
+            } catch (URISyntaxException e) {
+                log.warn("Unable to get http request uri from http connection", e);
+            }
+        }
+    }
+
     /**
      * Converts a web service message to a integration message representation.
      * 
