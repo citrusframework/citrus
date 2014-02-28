@@ -7,17 +7,17 @@
                             http://www.citrusframework.org/schema/mail/config http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd
                             http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-  <citrus-mail:message-sender id="mailSender1"
+  <citrus-mail:client id="mailClient1"
                        host="localhost"
                        port="25000"/>
 
-  <citrus-mail:message-sender id="mailSender2"
+  <citrus-mail:client id="mailClient2"
                        host="localhost"
                        port="25000"
                        username="mailus"
                        password="secret"/>
 
-  <citrus-mail:message-sender id="mailSender3"
+  <citrus-mail:client id="mailClient3"
                        host="localhost"
                        port="25000"
                        actor="testActor"

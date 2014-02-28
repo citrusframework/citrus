@@ -36,15 +36,15 @@ public class MailClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(senders.size(), 3);
 
         // 1st mail sender
-        MailClient sender = senders.get("mailSender1");
-        Assert.assertEquals(sender.getName(), "mailSender1");
+        MailClient sender = senders.get("mailClient1");
+        Assert.assertEquals(sender.getName(), "mailClient1");
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getHost(), "localhost");
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
         Assert.assertNull(sender.getActor());
 
         // 2nd mail sender
-        sender = senders.get("mailSender2");
-        Assert.assertEquals(sender.getName(), "mailSender2");
+        sender = senders.get("mailClient2");
+        Assert.assertEquals(sender.getName(), "mailClient2");
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getHost(), "localhost");
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getUsername(), "mailus");
@@ -53,8 +53,8 @@ public class MailClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(sender.getActor());
 
         // 3rd mail sender
-        sender = senders.get("mailSender3");
-        Assert.assertEquals(sender.getName(), "mailSender3");
+        sender = senders.get("mailClient3");
+        Assert.assertEquals(sender.getName(), "mailClient3");
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getHost(), "localhost");
         Assert.assertEquals(sender.getEndpointConfiguration().getJavaMailSender().getPort(), 25000);
         Assert.assertNotNull(sender.getActor());

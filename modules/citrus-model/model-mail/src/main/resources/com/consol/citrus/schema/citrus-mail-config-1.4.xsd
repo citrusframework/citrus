@@ -32,7 +32,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="message-sender">
+  <xs:element name="client">
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
       <xs:attribute name="host" type="xs:string" use="required"/>

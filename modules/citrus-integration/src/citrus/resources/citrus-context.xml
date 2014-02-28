@@ -385,7 +385,7 @@
     <citrus:message-channel id="greetings" capacity="5"/>
 
     <!-- Citrus mail components -->
-    <citrus-mail:message-sender id="mailMessageSender"
+    <citrus-mail:client id="mailMessageSender"
                                 host="localhost"
                                 port="25025"/>
 

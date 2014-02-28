@@ -28,6 +28,6 @@ public class CitrusMailConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     public void init() {
         registerBeanDefinitionParser("server", new MailServerParser());
-        registerBeanDefinitionParser("message-sender", new MailClientParser());
+        registerBeanDefinitionParser("client", new MailClientParser());
     }
 }
