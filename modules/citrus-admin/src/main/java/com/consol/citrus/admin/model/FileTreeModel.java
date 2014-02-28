@@ -72,7 +72,7 @@ public class FileTreeModel {
     }
 
     public void setFolders(String[] folders) {
-        this.folders = folders;
+        this.folders = Arrays.copyOf(folders, folders.length);
     }
 
     public List<TestFileModel> getXmlFiles() {

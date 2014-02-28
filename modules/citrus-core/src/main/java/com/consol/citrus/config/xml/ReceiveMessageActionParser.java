@@ -73,20 +73,21 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         
         validationContexts.add(getXmlMessageValidationContext(element));
-        validationContexts.add(getScriptValidationContext(element));
-        
-        builder.addPropertyValue("validationContexts", validationContexts);
-        
+
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
+            String messageType = messageElement.getAttribute("type");
+            if (!StringUtils.hasText(messageType)) {
+                messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
+            } else {
+                builder.addPropertyValue("messageType", messageType);
+            }
+
+            validationContexts.add(getScriptValidationContext(messageElement, messageType));
+
             String messageValidator = messageElement.getAttribute("validator");
             if (StringUtils.hasText(messageValidator)) {
                 builder.addPropertyReference("validator", messageValidator);
-            }
-            
-            String messageType = messageElement.getAttribute("type");
-            if (StringUtils.hasText(messageType)) {
-                builder.addPropertyValue("messageType", messageType);
             }
 
             String dataDictionary = messageElement.getAttribute("data-dictionary");
@@ -94,6 +95,8 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
             }
         }
+
+        builder.addPropertyValue("validationContexts", validationContexts);
         
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 
@@ -180,7 +183,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         XmlMessageValidationContext context = new XmlMessageValidationContext();
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-        
+
         if (messageElement != null) {
             String schemaValidation = messageElement.getAttribute("schema-validation");
             if (StringUtils.hasText(schemaValidation)) {
@@ -218,7 +221,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 context.setNamespaces(namespaces);
             }
         }
-        
+
         AbstractMessageContentBuilder<?> messageBuilder = constructMessageBuilder(messageElement);
         parseHeaderElements(element, messageBuilder);
         
@@ -229,51 +232,42 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
     /**
      * Construct the message validation context.
-     * @param element
+     * @param messageElement
      * @return
      */
-    private ScriptValidationContext getScriptValidationContext(Element element) {
-        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-        String messageType = messageElement.getAttribute("type");
-
-        if (!StringUtils.hasText(messageType)) {
-            messageType = CitrusConstants.DEFAULT_MESSAGE_TYPE;
-        }
-
+    private ScriptValidationContext getScriptValidationContext(Element messageElement, String messageType) {
         ScriptValidationContext context = new ScriptValidationContext(messageType);
 
-        if (messageElement != null) {
-            boolean done = false;
-            List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
-            if (validateElements.size() > 0) {
-                for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
-                    Element validateElement = (Element) iter.next();
-                    
-                    Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
-                    
-                    // check for nested validate script child node
-                    if (scriptElement != null) {
-                        if (!done) {
-                            done = true;
-                        } else {
-                            throw new BeanCreationException("Found multiple validation script definitions - " +
-                            		"only supporting a single validation script for message validation");
-                        }
-    
-                        String type = scriptElement.getAttribute("type");
-                        context.setScriptType(type);
-                        
-                        String filePath = scriptElement.getAttribute("file");
-                        if (StringUtils.hasText(filePath)) {
-                            context.setValidationScriptResourcePath(filePath);
-                        } else {
-                            context.setValidationScript(DomUtils.getTextValue(scriptElement));
-                        }
+        boolean done = false;
+        List<?> validateElements = DomUtils.getChildElementsByTagName(messageElement, "validate");
+        if (validateElements.size() > 0) {
+            for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
+                Element validateElement = (Element) iter.next();
+
+                Element scriptElement = DomUtils.getChildElementByTagName(validateElement, "script");
+
+                // check for nested validate script child node
+                if (scriptElement != null) {
+                    if (!done) {
+                        done = true;
+                    } else {
+                        throw new BeanCreationException("Found multiple validation script definitions - " +
+                                "only supporting a single validation script for message validation");
+                    }
+
+                    String type = scriptElement.getAttribute("type");
+                    context.setScriptType(type);
+
+                    String filePath = scriptElement.getAttribute("file");
+                    if (StringUtils.hasText(filePath)) {
+                        context.setValidationScriptResourcePath(filePath);
+                    } else {
+                        context.setValidationScript(DomUtils.getTextValue(scriptElement));
                     }
                 }
             }
         }
-        
+
         return context;
     }
     
