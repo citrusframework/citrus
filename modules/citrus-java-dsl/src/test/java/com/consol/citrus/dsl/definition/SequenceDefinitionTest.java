@@ -16,12 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Sequence;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -42,5 +44,42 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
         Sequence container = (Sequence)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 2);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
+    }
+
+    @Test
+    public void testSequenceBuilderWithAnonymousAction() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                sequential(
+                        echo("${var}"),
+                        new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                context.setVariable("anonymous", "anonymous");
+                            }
+                        },
+                        sleep(5.0),
+                        new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                context.getVariable("anonymous");
+                            }
+                        });
+            }
+        };
+
+        builder.run(null, null);
+
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Sequence.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), "sequential");
+
+        Sequence container = (Sequence)builder.testCase().getActions().get(0);
+        assertEquals(container.getActions().size(), 4);
+        assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
+        assertTrue(container.getActions().get(1).getClass().isAnonymousClass());
+        assertEquals(container.getActions().get(2).getClass(), SleepAction.class);
+        assertTrue(container.getActions().get(3).getClass().isAnonymousClass());
     }
 }

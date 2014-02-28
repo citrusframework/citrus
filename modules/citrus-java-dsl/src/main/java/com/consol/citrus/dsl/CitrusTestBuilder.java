@@ -787,7 +787,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             action.setAction(testAction);
         }
 
-        testCase.getActions().remove((testCase.getActions().size()) - 1);
+        if (!testAction.getClass().isAnonymousClass()) {
+          testCase.getActions().remove((testCase.getActions().size()) - 1);
+        }
+
         testCase.addTestAction(action);
 
         return new AssertDefinition(action);
@@ -808,8 +811,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -848,7 +853,6 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
         AssertSoapFault action = new AssertSoapFault();
-        action.setAction(testAction);
 
         if (testAction instanceof AbstractActionDefinition<?>) {
             action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
@@ -856,7 +860,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             action.setAction(testAction);
         }
 
-        testCase.getActions().remove((testCase.getActions().size()) - 1);
+        if (!testAction.getClass().isAnonymousClass()) {
+            testCase.getActions().remove((testCase.getActions().size()) - 1);
+        }
+
         testCase.addTestAction(action);
 
         return new AssertSoapFaultDefinition(action, applicationContext);
@@ -875,8 +882,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -899,8 +908,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -923,8 +934,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -947,8 +960,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -970,8 +985,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -993,8 +1010,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                container.addTestAction(action);
+            } else {
                 container.addTestAction(action);
             }
         }
@@ -1035,8 +1054,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
                 testCase.getFinallyChain().add(((AbstractActionDefinition<?>) action).getAction());
-            } else {
+            } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
+                testCase.getFinallyChain().add(action);
+            } else {
                 testCase.getFinallyChain().add(action);
             }
         }

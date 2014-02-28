@@ -16,13 +16,16 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Assert;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class AssertDefinitionTest extends AbstractTestNGUnitTest {
     @Test
@@ -50,4 +53,35 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
         assertEquals(container.getMessage(), "Unknown variable 'foo'");
         assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
     }
+
+    @Test
+    public void testAssertBuilderWithAnonymousAction() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                assertException(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                context.getVariable("foo");
+                            }
+                        })
+                    .exception(CitrusRuntimeException.class)
+                    .message("Unknown variable 'foo'");
+            }
+        };
+
+        builder.run(null, null);
+
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Assert.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), "assert");
+
+        Assert container = (Assert)(builder.testCase().getTestAction(0));
+
+        assertEquals(container.getActions().size(), 1);
+        assertTrue(container.getAction().getClass().isAnonymousClass());
+        assertEquals(container.getException(), CitrusRuntimeException.class);
+        assertEquals(container.getMessage(), "Unknown variable 'foo'");
+    }
+
 }

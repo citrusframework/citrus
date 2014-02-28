@@ -16,6 +16,8 @@
 
 package com.consol.citrus.javadsl;
 
+import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.testng.annotations.Test;
@@ -33,6 +35,23 @@ public class SequentialJavaITest extends TestNGCitrusTestBuilder {
             sleep(1.0),
             echo("Hello Citrus"),
             stopTime()
+        );
+
+        sequential(
+            echo("Hello Citrus"),
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    context.setVariable("anonymous", "anonymous");
+                }
+            },
+            sleep(1.0),
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    log.info(context.getVariable("anonymous"));
+                }
+            }
         );
     }
 }

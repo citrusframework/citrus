@@ -16,6 +16,8 @@
 
 package com.consol.citrus.javadsl;
 
+import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -70,5 +72,12 @@ public class AssertJavaITest extends TestNGCitrusTestBuilder {
                     .exception(CitrusRuntimeException.class)
                     .message("Must be failing"))
                 .exception(ValidationException.class);
+
+        assertException(new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                context.getVariable("foo");
+            }
+        }).exception(CitrusRuntimeException.class).message("Unknown variable 'foo'");
     }
 }

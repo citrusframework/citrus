@@ -16,6 +16,8 @@
 
 package com.consol.citrus.javadsl;
 
+import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.testng.annotations.Test;
@@ -41,9 +43,18 @@ public class IterateJavaITest extends TestNGCitrusTestBuilder {
         iterate(echo("index is: ${i}")).condition("i = 0").index("i");
         
         iterate(echo("index is: ${i}")).condition("${max} gt= i").index("i");
-        
+
         iterate(echo("index is: ${i}")).condition("i lt= 50").index("i")
                                        .startsWith(0)
                                        .step(5);
+
+        AbstractTestAction anonymous = new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                log.info(context.getVariable("index"));
+            }
+        };
+
+        iterate(variables().add("index", "${i}"), anonymous).condition("i lt 5").index("i");
     }
 }

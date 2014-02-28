@@ -16,7 +16,9 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
@@ -42,7 +44,42 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
         assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
         assertEquals(builder.testCase().getActions().get(0).getName(), "iterate");
         
-        Iterate container = (Iterate)builder.testCase().getActions().get(0);   
+        Iterate container = (Iterate)builder.testCase().getActions().get(0);
+        assertEquals(container.getActionCount(), 1);
+        assertEquals(container.getIndexName(), "i");
+        assertEquals(container.getCondition(), "i lt 5");
+        assertEquals(container.getStep(), 1);
+        assertEquals(container.getIndex(), 0);
+    }
+
+    @Test
+    public void testIterateBuilderWithAnonymousAction() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                AbstractTestAction anonymous = new AbstractTestAction() {
+                    @Override
+                    public void doExecute(TestContext context) {
+                        log.info(context.getVariable("index"));
+                    }
+                };
+
+                iterate(variables().add("index", "${i}"), anonymous)
+                        .index("i")
+                        .startsWith(0)
+                        .step(1)
+                        .condition("i lt 5");
+            }
+        };
+
+        builder.run(null, null);
+
+        assertEquals(builder.testCase().getActions().size(), 1);
+        assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
+        assertEquals(builder.testCase().getActions().get(0).getName(), "iterate");
+
+        Iterate container = (Iterate)builder.testCase().getActions().get(0);
+        assertEquals(container.getActionCount(), 2);
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getCondition(), "i lt 5");
         assertEquals(container.getStep(), 1);
