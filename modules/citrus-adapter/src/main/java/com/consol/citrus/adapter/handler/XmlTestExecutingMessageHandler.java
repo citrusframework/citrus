@@ -18,9 +18,12 @@ package com.consol.citrus.adapter.handler;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.adapter.handler.mapping.SpringBeanMessageHandlerMapping;
+import com.consol.citrus.channel.ChannelEndpointAdapter;
+import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
 import org.springframework.context.ApplicationContext;
@@ -125,9 +128,11 @@ public class XmlTestExecutingMessageHandler extends RequestDispatchingMessageHan
      */
     public void afterPropertiesSet() throws Exception {
         if (responseMessageHandler == null) {
-            MessageChannelConnectingMessageHandler channelConnectingMessageHandler = new MessageChannelConnectingMessageHandler();
-            channelConnectingMessageHandler.setChannelName(name + ".inbound");
-            channelConnectingMessageHandler.setBeanFactory(applicationContext);
+            ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
+            endpointConfiguration.setChannelName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
+            endpointConfiguration.setBeanFactory(applicationContext);
+
+            ChannelEndpointAdapter channelConnectingMessageHandler = new ChannelEndpointAdapter(endpointConfiguration);
             responseMessageHandler = channelConnectingMessageHandler;
         }
 
