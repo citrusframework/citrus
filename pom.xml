@@ -162,7 +162,6 @@
     <testng.version>6.8</testng.version>
     <slf4j.version>1.7.2</slf4j.version>
     <sonar.host.url>http://labs.consol.de/sonar</sonar.host.url>
-    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
   </properties>
 
   <dependencyManagement>
