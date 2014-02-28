@@ -26,6 +26,7 @@ import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
+import org.subethamail.smtp.RejectException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -446,6 +447,59 @@ public class MailServerTest {
         Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
         mailServer.deliver("foo@mail.com", "bar@mail.com",
                 new ClassPathResource("binary_mail.txt", MailServer.class).getInputStream());
+
+        verify(endpointAdapterMock);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSimulateError() throws IOException {
+        MailServer mailServer = new MailServer();
+        mailServer.setEndpointAdapter(endpointAdapterMock);
+
+        reset(endpointAdapterMock);
+
+        expect(endpointAdapterMock.handleMessage(anyObject(Message.class))).andAnswer(new IAnswer() {
+            @Override
+            public Message<?> answer() throws Throwable {
+                Message<?> message = (Message<?>) getCurrentArguments()[0];
+
+                Assert.assertNotNull(message.getPayload());
+                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE));
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+
+                try {
+                    Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
+                            StringUtils.trimAllWhitespace(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("text_mail.xml",
+                                    MailServer.class).getInputStream()))));
+                } catch (IOException e) {
+                    Assert.fail(e.getMessage());
+                }
+
+                return MessageBuilder.withPayload(FileCopyUtils.copyToString(new InputStreamReader(new ClassPathResource("error-response.xml",
+                        MailServer.class).getInputStream()))).build();
+            }
+        }).once();
+
+        replay(endpointAdapterMock);
+
+        Assert.assertTrue(mailServer.accept("foo@mail.com", "bar@mail.com"));
+
+        try {
+            mailServer.deliver("foo@mail.com", "bar@mail.com",
+                    new ClassPathResource("text_mail.txt", MailServer.class).getInputStream());
+            throw new CitrusRuntimeException("Missing reject exception due to simulated error");
+        } catch (RejectException e) {
+            Assert.assertEquals(e.getCode(), 443);
+            Assert.assertEquals(e.getErrorResponse(), "443 Failed!");
+        }
 
         verify(endpointAdapterMock);
     }

@@ -58,6 +58,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
 
     /** Handler interceptors such as security or logging interceptors */
     private List<Object> interceptors = new ArrayList<Object>();
+
+    /** Timeout delegated to default endpoint adapter if not set explicitly */
+    private long defaultTimeout = 1000;
     
     /** Logger */
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -128,6 +131,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
             channelEndpointConfiguration.setChannelName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
             channelEndpointConfiguration.setBeanFactory(getBeanFactory());
+            channelEndpointConfiguration.setTimeout(defaultTimeout);
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
         }
 
@@ -250,5 +254,21 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      */
     public void setInterceptors(List<Object> interceptors) {
         this.interceptors = interceptors;
+    }
+
+    /**
+     * Gets the defaultTimeout for sending and receiving messages.
+     * @return
+     */
+    public long getDefaultTimeout() {
+        return defaultTimeout;
+    }
+
+    /**
+     * Sets the defaultTimeout for sending and receiving messages..
+     * @param defaultTimeout
+     */
+    public void setDefaultTimeout(long defaultTimeout) {
+        this.defaultTimeout = defaultTimeout;
     }
 }

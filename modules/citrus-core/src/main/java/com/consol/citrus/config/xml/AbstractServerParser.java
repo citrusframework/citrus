@@ -37,6 +37,7 @@ public abstract class AbstractServerParser extends AbstractBeanDefinitionParser 
         BeanDefinitionBuilder serverBuilder = BeanDefinitionBuilder.genericBeanDefinition(getServerClass());
 
         BeanDefinitionParserUtils.setPropertyValue(serverBuilder, element.getAttribute("auto-start"), "autoStart");
+        BeanDefinitionParserUtils.setPropertyValue(serverBuilder, element.getAttribute("timeout"), "defaultTimeout");
 
         if (element.hasAttribute("endpoint-adapter")) {
             BeanDefinitionParserUtils.setPropertyReference(serverBuilder, element.getAttribute("endpoint-adapter"), "endpointAdapter");
