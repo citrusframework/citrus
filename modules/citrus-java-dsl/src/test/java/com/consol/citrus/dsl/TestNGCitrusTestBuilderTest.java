@@ -39,7 +39,16 @@ public class TestNGCitrusTestBuilderTest {
 
     @Test
     public void testNG() {
-        FooTest builder = new FooTest(applicationContextMock);
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                description("This is a Test");
+                author("Christoph");
+                status(Status.FINAL);
+
+                echo("Hello Citrus!");
+            }
+        };
 
         reset(applicationContextMock);
 
@@ -52,7 +61,7 @@ public class TestNGCitrusTestBuilderTest {
         builder.run(null, null);
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getName(), "FooTest");
+        Assert.assertEquals(builder.testCase().getName(), "");
         Assert.assertEquals(builder.testCase().getPackageName(), "com.consol.citrus.dsl");
         
         Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
@@ -61,23 +70,6 @@ public class TestNGCitrusTestBuilderTest {
         Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), Status.FINAL);
 
         verify(applicationContextMock);
-    }
-
-    public static class FooTest extends MockBuilder {
-
-        /** Constructor */
-        public FooTest(ApplicationContext applicationContext) {
-            super(applicationContext);
-        }
-
-        @Override
-        public void configure() {
-            description("This is a Test");
-            author("Christoph");
-            status(Status.FINAL);
-
-            echo("Hello Citrus!");
-        }
     }
 
 }
