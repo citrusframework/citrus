@@ -20,8 +20,9 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import org.springframework.context.ApplicationContext;
-import org.testng.IHookCallBack;
-import org.testng.ITestResult;
+import org.testng.*;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 
 /**
  * Test instance for {@link TestNGCitrusTestBuilder} used in unit tests in order to provide
@@ -31,8 +32,28 @@ import org.testng.ITestResult;
  */
 public class MockBuilder extends TestNGCitrusTestBuilder {
 
+    /**
+     * Default constructor.
+     */
+    public MockBuilder() {
+    }
+
+    /**
+     * Default constructor using an application context.
+     * @param applicationContext
+     */
     public MockBuilder(ApplicationContext applicationContext) {
         setApplicationContext(applicationContext);
+    }
+
+    @Override
+    @BeforeSuite(alwaysRun = true)
+    public void beforeSuite(ITestContext testContext) throws Exception {
+    }
+
+    @Override
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite(ITestContext testContext) {
     }
 
     @Override
