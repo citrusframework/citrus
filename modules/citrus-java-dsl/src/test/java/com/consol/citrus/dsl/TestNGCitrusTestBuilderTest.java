@@ -18,7 +18,6 @@ package com.consol.citrus.dsl;
 
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.dsl.definition.MockBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import org.easymock.EasyMock;
@@ -62,21 +61,5 @@ public class TestNGCitrusTestBuilderTest {
 
         verify(applicationContextMock);
     }
-    
-    private static class FooTest extends MockBuilder {
 
-        /** Constructor */
-        public FooTest(ApplicationContext applicationContext) {
-            super(applicationContext);
-        }
-
-        @Override
-        public void configure() {
-            description("This is a Test");
-            author("Christoph");
-            status(Status.FINAL);
-            
-            echo("Hello Citrus!");
-        }
-    }
 }
