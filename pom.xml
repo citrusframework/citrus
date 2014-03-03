@@ -612,7 +612,7 @@
           <executions>
             <execution>
               <id>integration-tests</id>
-              <phase>integration-test</phase>
+              <phase>test</phase>
               <goals>
                 <goal>test</goal>
               </goals>
