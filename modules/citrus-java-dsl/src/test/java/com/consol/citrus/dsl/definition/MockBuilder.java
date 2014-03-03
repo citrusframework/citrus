@@ -18,11 +18,9 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import org.springframework.context.ApplicationContext;
-import org.testng.*;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
 
 /**
  * Test instance for {@link TestNGCitrusTestBuilder} used in unit tests in order to provide
@@ -30,43 +28,31 @@ import org.testng.annotations.BeforeSuite;
  * 
  * @author Christoph Deppisch
  */
-public class MockBuilder extends TestNGCitrusTestBuilder {
+public class MockBuilder extends CitrusTestBuilder {
 
     /**
-     * Default constructor.
-     */
-    public MockBuilder() {
-    }
-
-    /**
-     * Default constructor using an application context.
+     * Constructor using an application context.
      * @param applicationContext
      */
     public MockBuilder(ApplicationContext applicationContext) {
-        setApplicationContext(applicationContext);
+        super(applicationContext);
     }
 
     @Override
-    @BeforeSuite(alwaysRun = true)
-    public void beforeSuite(ITestContext testContext) throws Exception {
-    }
-
-    @Override
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-    }
-
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
-        init();
+    public void execute() {
         configure();
     }
-    
+
+    @Override
+    public void execute(TestContext context) {
+        configure();
+    }
+
     /**
      * Provide public access to test case for unit test assertions.
      * @return
      */
     public TestCase testCase() {
-        return getTestCase(new TestContext());
+        return getTestCase();
     }
 }

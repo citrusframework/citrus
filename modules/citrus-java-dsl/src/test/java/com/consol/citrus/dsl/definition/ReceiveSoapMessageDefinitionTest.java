@@ -79,7 +79,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
@@ -117,7 +117,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
@@ -161,7 +161,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(attachmentResource.getInputStream()).andReturn(new ByteArrayInputStream("someAttachmentData".getBytes())).once();
         replay(resource, attachmentResource);
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);
@@ -191,28 +191,28 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithReceiverName() {
         SoapReplyMessageReceiver replyMessageReceiver = EasyMock.createMock(SoapReplyMessageReceiver.class);
         
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
-            @Override
-            public void configure() {
-                receive("replyMessageReceiver")
-                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-                
-                receive("fooMessageReceiver")
-                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
-            }
-        };
-        
         reset(applicationContextMock);
-        
+
         expect(applicationContextMock.getBean("replyMessageReceiver", MessageReceiver.class)).andReturn(replyMessageReceiver).once();
         expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
+
         replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                receive("replyMessageReceiver")
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+                receive("fooMessageReceiver")
+                    .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            }
+        };
+
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveSoapMessageAction.class);

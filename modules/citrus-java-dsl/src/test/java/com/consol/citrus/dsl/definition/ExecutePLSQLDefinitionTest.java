@@ -46,7 +46,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
           
-        builder.run(null, null);
+        builder.execute();
           
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
@@ -74,7 +74,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
         expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream("testScript".getBytes())).once();
         replay(sqlResource);
         
-        builder.run(null, null);
+        builder.execute();
           
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);
@@ -98,7 +98,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
           
-        builder.run(null, null);
+        builder.execute();
           
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecutePLSQLAction.class);

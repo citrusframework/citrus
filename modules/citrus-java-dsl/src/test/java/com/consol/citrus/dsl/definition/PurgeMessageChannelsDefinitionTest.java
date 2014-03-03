@@ -56,7 +56,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.run(null, null);
+        builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);
@@ -70,6 +70,14 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeChannelBuilderWithNames() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -81,15 +89,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        reset(applicationContextMock);
-
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+        builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);
@@ -105,6 +105,14 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMissingChannelResolver() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -112,16 +120,8 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
                         .channel("ch1");
             }
         };
-        
-        reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);

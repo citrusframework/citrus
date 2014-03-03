@@ -48,7 +48,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(scriptResource);
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
@@ -71,7 +71,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
@@ -96,7 +96,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(scriptTemplate, file);
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
@@ -116,7 +116,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);

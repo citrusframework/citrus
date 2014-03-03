@@ -20,4 +20,15 @@
     <module>skins/citrus-default-skin</module>
     <module>archetypes/citrus-archetype</module>
   </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <failIfNoTests>false</failIfNoTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

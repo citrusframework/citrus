@@ -41,7 +41,7 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 			}
 		};
 		
-		builder.run(null, null);
+		builder.execute();
 		
 		
 		Assert.assertEquals(builder.testCase().getActions().size(), 2);

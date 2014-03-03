@@ -44,7 +44,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 			}
 		};
 	
-		builder.run(null, null);
+		builder.execute();
 		Assert.assertEquals(builder.testCase().getActions().size(), 1);
 		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TransformAction.class);
 		
@@ -74,7 +74,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
         expect(xsltResource.getInputStream()).andReturn(new ByteArrayInputStream("xsltSource".getBytes())).once();
         replay(xmlResource, xsltResource);
 		
-		builder.run(null, null);
+		builder.execute();
 		Assert.assertEquals(builder.testCase().getActions().size(), 1);
 		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TransformAction.class);
 		

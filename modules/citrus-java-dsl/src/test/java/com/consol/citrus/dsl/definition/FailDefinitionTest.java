@@ -33,7 +33,7 @@ public class FailDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);

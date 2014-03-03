@@ -32,7 +32,7 @@ public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
             
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), LoadPropertiesAction.class);

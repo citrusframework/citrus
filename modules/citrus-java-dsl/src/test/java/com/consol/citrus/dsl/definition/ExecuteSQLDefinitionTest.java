@@ -49,7 +49,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
@@ -77,7 +77,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);

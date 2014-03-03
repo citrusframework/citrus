@@ -69,7 +69,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -99,7 +99,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -132,7 +132,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayload".getBytes())).once();
         replay(resource);
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -155,6 +155,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithReceiverName() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -162,17 +171,8 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -196,7 +196,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -225,7 +225,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -273,7 +273,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -326,7 +326,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
         replay(resource);
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -374,7 +374,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -397,6 +397,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatorName() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -407,17 +416,8 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validator("plainTextValidator");
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -452,7 +452,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -477,7 +477,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -494,6 +494,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -504,16 +513,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        reset(applicationContextMock);
-
-        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
-        replay(applicationContextMock);
-
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -544,7 +544,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -563,6 +563,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderExtractCombined() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -575,16 +584,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        reset(applicationContextMock);
-
-        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -622,7 +622,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -645,6 +645,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScript() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
         
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -654,17 +663,8 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validator("groovyMessageValidator");
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -691,6 +691,18 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         File resourceFile = EasyMock.createMock(File.class);
         
+        reset(applicationContextMock, resource, resourceFile);
+
+        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        expect(resource.getFile()).andReturn(resourceFile).once();
+        expect(resourceFile.getAbsolutePath()).andReturn("/path/to/file/File.groovy").once();
+
+        replay(applicationContextMock, resource, resourceFile);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -700,20 +712,8 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validator("groovyMessageValidator");
             }
         };
-        
-        reset(applicationContextMock, resource, resourceFile);
-        
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        expect(resource.getFile()).andReturn(resourceFile).once();
-        expect(resourceFile.getAbsolutePath()).andReturn("/path/to/file/File.groovy").once();
-        
-        replay(applicationContextMock, resource, resourceFile);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -738,6 +738,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScriptAndHeader() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
         
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -748,17 +757,8 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .header("operation", "sayHello");
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).andReturn(validator).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -799,7 +799,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -832,7 +832,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -864,7 +864,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -896,7 +896,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
@@ -927,7 +927,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);

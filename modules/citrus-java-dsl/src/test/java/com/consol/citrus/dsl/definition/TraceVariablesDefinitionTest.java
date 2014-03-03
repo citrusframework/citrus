@@ -34,7 +34,7 @@ public class TraceVariablesDefinitionTest extends AbstractTestNGUnitTest {
 			}
 		};
 			
-		builder.run(null, null);
+		builder.execute();
 		
 		Assert.assertEquals(builder.testCase().getActions().size(), 2);
 		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TraceVariablesAction.class);

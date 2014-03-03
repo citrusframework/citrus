@@ -20,6 +20,8 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -38,7 +40,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.run(null, null);
+        builder.execute();
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
@@ -55,6 +57,9 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testIterateBuilderWithAnonymousAction() {
         MockBuilder builder = new MockBuilder(applicationContext) {
+            /** Logger */
+            private Logger log = LoggerFactory.getLogger(IterateDefinitionTest.class);
+
             @Override
             public void configure() {
                 AbstractTestAction anonymous = new AbstractTestAction() {
@@ -72,7 +77,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.run(null, null);
+        builder.execute();
 
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);

@@ -48,7 +48,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
          
-        builder.run(null, null);
+        builder.execute();
          
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
@@ -62,6 +62,15 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveTimeoutBuilderWithReceiverName() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -69,17 +78,8 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
                     .timeout(500);
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
          
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);

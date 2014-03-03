@@ -47,6 +47,15 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         actions.add(new SleepAction());
         rootTemplate.setActions(actions);
         
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -55,17 +64,8 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
                     .parameter("text", "Citrus rocks!");
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Template.class);
@@ -90,6 +90,15 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         actions.add(new EchoAction());
         rootTemplate.setActions(actions);
         
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
@@ -97,17 +106,8 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
                     .globalContext(false);
             }
         };
-        
-        reset(applicationContextMock);
-        
-        expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        
-        replay(applicationContextMock);
-        
-        builder.run(null, null);
+
+        builder.execute();
         
         assertEquals(builder.testCase().getActions().size(), 1);
         assertEquals(builder.testCase().getActions().get(0).getClass(), Template.class);

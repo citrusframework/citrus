@@ -43,7 +43,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.run(null, null);
+        builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
@@ -85,7 +85,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.run(null, null);
+        builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
@@ -125,7 +125,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.run(null, null);
+        builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 3);
         Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
@@ -165,7 +165,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.run(null, null);
+        builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 3);
         Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");

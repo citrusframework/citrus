@@ -602,7 +602,7 @@
               </property>
             </systemProperties>
             <forkMode>once</forkMode>
-            <failIfNoTests>false</failIfNoTests>
+            <failIfNoTests>true</failIfNoTests>
             <argLine>-Xmx256m</argLine>
             <excludes>
               <exclude>**/integration/**/*.java</exclude>
@@ -624,6 +624,7 @@
                 <includes>
                   <include>**/integration/**/*.java</include>
                 </includes>
+                <failIfNoTests>false</failIfNoTests>
               </configuration>
             </execution>
           </executions>
