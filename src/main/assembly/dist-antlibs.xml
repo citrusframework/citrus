@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+
+  <id>antlibs</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <includeSiteDirectory>false</includeSiteDirectory>
+
+  <moduleSets>
+    <moduleSet>
+      <includes>
+        <include>com.consol.citrus:citrus-core</include>
+        <include>com.consol.citrus:citrus-ws</include>
+        <include>com.consol.citrus:citrus-http</include>
+        <include>com.consol.citrus:citrus-ssh</include>
+        <include>com.consol.citrus:citrus-mail</include>
+        <include>com.consol.citrus:citrus-java-dsl</include>
+        <include>com.consol.citrus:citrus-adapter</include>
+        <include>com.consol.citrus.model:citrus-model-core</include>
+        <include>com.consol.citrus.model:citrus-model-http</include>
+        <include>com.consol.citrus.model:citrus-model-ws</include>
+        <include>com.consol.citrus.model:citrus-model-ssh</include>
+        <include>com.consol.citrus.model:citrus-model-mail</include>
+      </includes>
+      <binaries>
+        <outputDirectory>lib</outputDirectory>
+        <unpack>false</unpack>
+        <includeDependencies>true</includeDependencies>
+        <dependencySets>
+          <dependencySet>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+          </dependencySet>
+        </dependencySets>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+
+</assembly>

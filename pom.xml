@@ -602,7 +602,7 @@
               </property>
             </systemProperties>
             <forkMode>once</forkMode>
-            <failIfNoTests>false</failIfNoTests>
+            <failIfNoTests>true</failIfNoTests>
             <argLine>-Xmx256m</argLine>
             <excludes>
               <exclude>**/integration/**/*.java</exclude>
@@ -612,7 +612,7 @@
           <executions>
             <execution>
               <id>integration-tests</id>
-              <phase>test</phase>
+              <phase>integration-test</phase>
               <goals>
                 <goal>test</goal>
               </goals>
@@ -1168,21 +1168,37 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>assembly-antlibs</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/dist-antlibs.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     
     <profile>
-        <id>assembly-bundle</id>
-        <build>
-            <plugins>
-                <plugin>
-                  <artifactId>maven-assembly-plugin</artifactId>
-                  <configuration>
-                    <descriptorRefs>
-                      <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                  </configuration>
-                </plugin>
-            </plugins>
-        </build>
+      <id>assembly-bundle</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>
