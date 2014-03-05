@@ -96,7 +96,7 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     formats like JSON messages.</para>
   </section>
 
-  <section id="xml-data-dictionary">
+  <section id="json-data-dictionary">
     <title>JSON data dictionaries</title>
 
     <para>JSON data dictionaries complement with XML data dictionaries. As usual we have to add the JSON data dictionary to the basic
