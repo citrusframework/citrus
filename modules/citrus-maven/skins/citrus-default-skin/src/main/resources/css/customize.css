@@ -313,8 +313,16 @@ pre.license {
   background: none;
 }
 
-.str, .atv {
+.tag {
   color: #434399;
+}
+
+.str, .atv {
+  color: teal;
+}
+
+.atn {
+  color: blue;
 }
 
 #newsfeed ul, #newsarchive ul {
@@ -361,4 +369,8 @@ footer a, footer a:hover {
 .row {
     margin-left: -20px;
     margin-bottom: 10px;
+}
+
+h3.config-header {
+    background: #eee;
 }
