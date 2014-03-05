@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<body>
+<div class="container box">
+  <h1 class="page-header">Configuration sheet <small>How to setup Citrus configuration components</small></h1>
+
+  <div class="container">
+    <div class="row">
+      <div class="span11">
+        <h3>JMS Support</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span4">
+        <p>The Java Message Service (JMS) is a well known and commonly used messaging API. Producer and consumer do exchange messages via TCP/IP protocol
+        using a JMS message broker. With JMS you can construct both synchronous and asynchronous communication patterns.</p>
+
+        <p>In Citrus JMS producer and consumer components are bound to a JMS endpoint which can be a queue or topic destination.</p>
+      </div>
+      <div class="span7"></div>
+    </div>
+    <div class="row">
+      <div class="span4">When using JMS components in Citrus you need a connection factory. The default bean id <b>connectionFactory</b>
+      is automatically recognized by all Citrus JMS components.</div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;bean id=&quot;connectionFactory&quot; class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+    &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
+&lt;/bean&gt;</pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span11">
+        <h4>JMS Endpoints</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span4">
+        <p>A JMS endpoint can be a queue or a topic destination. Producer and consumer components can send/receive messages
+        to/from this endpoint. JMS endpoints are configured in the Citrus application context.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+                        destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+                        timeout=&quot;10000&quot;/&gt;</pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span4">
+        <p>Besides defining a JMS endpoint with a destination name you can also reference a destination object
+        instance directly. This way you could do a JNDI lookup for instance.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+                        destination=&quot;helloServiceQueue&quot;/&gt;
+
+&lt;amq:queue id=&quot;helloServiceQueue&quot; physicalName=&quot;Citrus.HelloService.Request.Queue&quot;/></pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span4">
+        <p>Sending and receiving messages from a topic destination is very easy. Just use the <b>sub-pub-domain</b> attribute
+        which stands for <b>pub</b>lish <b>sub</b>scribe communication pattern. All consumers connected to a topic destination
+        will receive incoming messages simultaneously.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus:jms-endpoint id=&quot;helloServiceTopicEndpoint&quot;
+                        destination-name=&quot;Citrus.HelloService.Request.Topic&quot;
+                        pub-sub-domain=&quot;true&quot;/&gt;</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
