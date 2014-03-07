@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <body>
+    <div class="container box">
+      <h1 class="page-header">Migration sheet <small>How to migrate from Citrus 1.x to 1.4</small></h1>
+
+      <p>Citrus configuration components have changed in the past release <b>1.4</b>. This is mainly because Citrus users often struggled with the
+        configuration as it was too complex to setup. Especially when setting up a server instance with message channel connectors, message
+        senders and receivers, reply handlers and reply destination holders.</p>
+
+      <p>Our primary goal was to simplify the configuration without loosing the great extendability and customization capabilities of Citrus. Unfortunately code refactoring comes
+        with API changes. This is why many classes and components of the Citrus API were marked as <b>deprecated</b>. This means that your customized test actions, senders and receivers as well as
+        customized components may have to be changed in future.</p>
+
+      <p>The good news though is that you should be able to just use the old configuration in Citrus <b>1.4</b> as it was before. This is because API has been marked as
+        deprecated but has not been removed yet. The hard cut comes with one of the next Citrus releases most likely with <b>2.0</b>. So if you update to Citrus <b>1.4</b>
+        you should be fine with the old configuration but you should consider to switch to the new configuration to be ready for upcoming releases.</p>
+
+      <p>In this migration sheet we would like to give you a brief overview on the new configuration components in comparison to the old configuration. Hopefully you will agree that most of configuration has
+        become more easy and straight forward to use.</p>
+
+      <div class="container">
+        <div class="row">
+          <div class="span11">
+            <h3 class="config-header">Channels</h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>Message channels do represent a in memory messaging solution in Citrus. Producer and consumer components are linked via channels. Message channels do support both synchronous and asynchronous
+              communication pattern. In Citrus <b>1.4</b> a new endpoint component was introduced that fits both synchronous and asynchronous communication as sender and receiver.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h4>Channel Endpoints</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The new channel endpoint replaces the message sender and receiver components. So endpoints can be used to produce and consumer messages on a channel. See the configuration changes in direct comparison.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span5">
+            <h5>Old: Citrus 1.x</h5>
+            <pre class="prettyprint">&lt;citrus:message-channel id=&quot;helloServiceChannel&quot;/&gt;
+
+&lt;citrus:message-channel-sender id=&quot;channelRequestSender&quot;
+                            channel=&quot;helloServiceChannel&quot;/&gt;
+
+&lt;citrus:message-channel-receiver id=&quot;channelResponseReceiver&quot;
+                            channel=&quot;helloServiceChannel&quot;
+                            receive-timeout=&quot;5000&quot;/&gt;</pre>
+          </div>
+          <div class="span6">
+            <h5>New: Citrus 1.4</h5>
+            <pre class="prettyprint">&lt;citrus:message-channel id=&quot;helloServiceChannel&quot;/&gt;
+
+&lt;citrus:channel-endpoint id=&quot;helloServiceChannelEndpoint&quot;
+                            channel-name=&quot;helloServiceChannel&quot;
+                            timeout=&quot;5000&quot;/&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>You can send and receive messages to/from the endpoint. So interacting with endpoints in a test case is quite easy. Just reference the id of the endpoint
+              in your send and receive test actions. This pattern is valid for all endpoint components in Citrus.</p>
+
+            <pre class="prettyprint">&lt;send with=&quot;helloServiceChannelEndpoint&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+
+            <pre class="prettyprint">&lt;receive with=&quot;helloServiceChannelEndpoint&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h4>Synchronous Channel Endpoints</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>In synchronous communication we had to link message sender or receiver with a reply message handler or reply destination holder manually. See how
+            things have become more easy with the new endpoint configuration.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span5">
+            <h5>Old: Citrus 1.x</h5>
+            <pre class="prettyprint">&lt;citrus:sync-message-channel-sender
+                id=&quot;helloServiceMsgSender&quot;
+                channel=&quot;helloServiceChannel&quot;
+                reply-handler=&quot;helloServiceReplyMsgHandler&quot;
+                reply-timeout=&quot;1000&quot;/&gt;
+
+&lt;citrus:message-channel-reply-handler
+                id=&quot;helloServiceReplyHandler&quot;
+                polling-interval=&quot;1000&quot;/&gt;</pre>
+
+            <pre class="prettyprint">&lt;citrus:sync-message-channel-receiver
+                id=&quot;helloServiceMsgReceiver&quot;
+                channel=&quot;helloServiceChannel&quot;/&gt;
+
+&lt;citrus:message-channel-reply-sender
+                id=&quot;helloServiceReplySender&quot;
+                reply-channel-holder=&quot;helloServiceMsgReceiver&quot;/&gt;</pre>
+          </div>
+          <div class="span6">
+            <h5>New: Citrus 1.4</h5>
+            <pre class="prettyprint">&lt;citrus:channel-sync-endpoint id=&quot;helloServiceSyncChannelEndpoint&quot;
+                                  channel=&quot;helloServiceChannel&quot;
+                                  timeout=&quot;1000&quot;
+                                  polling-interval=&quot;1000&quot;/&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The new synchronous endpoint can be used in both directions. It does not matter if you initiate the synchronous communication and wait for a response
+              to arrive or if you are in charge of responding synchronously. We also do not have to manually link reply handlers. This component has been removed completely.</p>
+
+            <p>When sending a message to this synchronous endpoint the producer will wait synchronously for the response message to arrive on the reply destination.
+              You can receive the reply message in your test case using the same endpoint component.</p>
+
+            <pre class="prettyprint">&lt;send with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+
+           <pre class="prettyprint">&lt;receive with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+
+            <p>When initially receiving a message from a synchronous channel endpoint you are able to send a synchronous response back. Again just use the same endpoint reference in your test case.
+              The handling of temporary reply destinations is done automatically in the back.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h3 class="config-header">JMS Support</h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>Just like channels the Java Message Service (JMS) can construct both synchronous and asynchronous communication patterns. In Citrus <b>1.4</b> the same endpoint logic as we have seen with
+              channels is also used to realize the sending and receiving on JMS destinations.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h4>JMS Endpoints</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>A JMS endpoint can be a queue or a topic destination. The new JMS endpoint replaces the message sender and receiver components for queue and topic destinations. In your test case you can send or receive
+              messages on the same endpoint.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span5">
+            <h5>Old: Citrus 1.x</h5>
+            <pre class="prettyprint">&lt;citrus:jms-message-sender id=&quot;helloServiceMessageSender&quot;
+          destination-name=&quot;Citrus.HelloService.Request.Queue&quot;/&gt;
+
+&lt;citrus:jms-message-receiver id=&quot;helloServiceMessageReceiver&quot;
+          destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+          receive-timeout=&quot;5000&quot;/&gt;</pre>
+          </div>
+          <div class="span6">
+            <h5>New: Citrus 1.4</h5>
+            <pre class="prettyprint">&lt;citrus:jms-endpoint id=&quot;helloServiceJmsEndpoint&quot;
+                    destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+                    timeout=&quot;5000&quot;/&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h4>JMS Synchronous Endpoints</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>Synchronous JMS communication is also represented by endpoints. The synchronous JMS endpoints replaces the synchronous sender and receiver comonents
+              in combination with the reply handler and reply destination holder components. Configuration has become more clear - hope you agree.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span5">
+            <h5>Old: Citrus 1.x</h5>
+            <pre class="prettyprint">&lt;citrus:jms-sync-message-sender
+            id=&quot;helloServiceMsgSender&quot;
+            destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
+            reply-handler=&quot;helloServiceReplyHandler&quot;
+            reply-message-correlator=&quot;replyMessageCorrelator&quot;
+            reply-timeout=&quot;5000&quot;/&gt;
+
+&lt;citrus:jms-reply-message-handler
+            id=&quot;helloServiceReplyHandler&quot;/&gt;</pre>
+
+            <pre class="prettyprint">&lt;citrus:jms-sync-message-receiver
+            id=&quot;helloServiceMsgReceiver&quot;
+            receive-timeout=&quot;5000&quot;
+            destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
+            reply-message-correlator=&quot;replyMessageCorrelator&quot;/&gt;
+
+&lt;citrus:jms-reply-message-sender
+            id=&quot;helloServiceReplySender&quot;
+            reply-destination-holder=&quot;helloServiceMsgReceiver&quot;
+            reply-message-correlator=&quot;replyMessageCorrelator&quot;/&gt;</pre>
+          </div>
+          <div class="span6">
+            <h5>New: Citrus 1.4</h5>
+            <pre class="prettyprint">&lt;citrus:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+                      destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
+                      message-correlator=&quot;replyMessageCorrelator&quot;
+                      timeout=&quot;5000&quot;/&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>By default the synchronous endpoint uses temporary reply destinations as usual. You can also use static reply destinations, too. In addition to that you can use
+              reply message correlators and message selectors with the endpoint. You do not loose any configuration capabilities in comparison to the old message sender
+              and receiver configuration.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h3 class="config-header">SOAP WebServices</h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>When using SOAP WebServices over Http it is time to look at the new client and server components in Citrus <b>1.4</b>. Especially on the server side a lot has become more
+              easy to use. You can now use the server component directly in your test case receive and send actions. No need for separate sender and receiver components and the separate
+              Spring application context for setting up the Spring WS components on the server. See how configuration has changed.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h4>SOAP client</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The SOAP client component replaces the old message sender component. As you will see not much has changed here but you do not have to use the reply message handler anymore.
+              In your test case you use the same client component for sending the SOAP request and receiving the synchronous SOAP response.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span5">
+            <h5>Old: Citrus 1.x</h5>
+            <pre class="prettyprint">&lt;citrus-ws:message-sender id=&quot;helloServiceRequestSender&quot;
+                 request-url=&quot;http://localhost:8071/hello&quot;
+                 reply-handler=&quot;helloServiceReplyHandler&quot;/&gt;
+
+&lt;citrus-ws:reply-message-handler id=&quot;helloServiceReplyHandler&quot;/&gt;</pre>
+          </div>
+          <div class="span6">
+            <h5>New: Citrus 1.4</h5>
+            <pre class="prettyprint">&lt;citrus-ws:client id=&quot;helloSoapClient&quot;
+                     request-url=&quot;http://localhost:8080/hello&quot;
+                     timeout=&quot;60000&quot;/&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h4>SOAP server</h4>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The server side configuration has been a huge point where users did struggle to set up everything correctly. As usual Citrus starts an embedded Http server capable of handling
+              incoming SOAP requests. In Citrus <b>1.x</b> the user had to set up a complete Spring application context with message channel connectors and separate message senders and receivers.</p>
+
+            <p>Fortunately this is not the case anymore. Just see how configuration is simplified in comparison to each other.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span5">
+            <h5>Old: Citrus 1.x</h5>
+            <pre class="prettyprint">&lt;citrus-ws:jetty-server id=&quot;helloSoapServer&quot;
+       port=&quot;8080&quot;
+       auto-start=&quot;true&quot;
+       context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
+       resource-base=&quot;src/citrus/resources&quot;/&gt;
+
+&lt;citrus:message-channel id=&quot;helloServiceChannel&quot;/&gt;
+
+&lt;citrus:sync-message-channel-receiver
+        id=&quot;helloServiceMsgReceiver&quot;
+        channel=&quot;helloServiceChannel&quot;/&gt;
+
+&lt;citrus:message-channel-reply-sender
+        id=&quot;helloServiceReplySender&quot;
+        reply-channel-holder=&quot;helloServiceMsgReceiver&quot;/&gt;</pre>
+          </div>
+          <div class="span6">
+            <h5>New: Citrus 1.4</h5>
+            <pre class="prettyprint">&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
+                   port=&quot;8080&quot;
+                   auto-start=&quot;true&quot;/&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The new server component does make use of some endpoint adapter behind the scenes. Basically this is a Spring WS SOAP endpoint and has not changed. But you do not need to define all the Spring WS handlers
+              and endpoints in the <b>citrus-ws-servlet.xml</b> application context. All this is done now automatically in the background. The good new is that you are still able to customize these Spring WS components.
+              The new Citrus SOAP server is therefore ready for powerful customizations such as default response generation, WS Adressing support, WS Security support, Basic authentication and many more. In a basic setup you
+              do not need those so you do not need to struggle with that.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>Interacting with the SOAP server in your test case is as simple as using the client side. Just reference the server id in the send and receive test actions.</p>
+
+            <pre class="prettyprint">&lt;receive with=&quot;helloSoapServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The SOAP server will automatically correlate incoming request and response messages. So sending back a synchronous SOAP response is straight forward.</p>
+
+            <pre class="prettyprint">&lt;send with=&quot;helloSoapServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <h3 class="config-header">Http REST support</h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span11">
+            <p>The Http communication components for REST services do follow the same patterns as described in the SOAP section before. You have a new citrus-http client component without
+              the reply message handler. And you have the new http server component that just follows the same rules as the SOAP server discussed before. Configuration now should be more easy and
+              straight forward.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </body>
+</html>
