@@ -34,14 +34,14 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         
         // 1st server
         WebServiceServer server = servers.next();
-        Assert.assertEquals(server.getName(), "jettyServer1");
+        Assert.assertEquals(server.getName(), "soapServer1");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
-        Assert.assertEquals(server.getServletName(), "jettyServer1-servlet");
+        Assert.assertEquals(server.getServletName(), "soapServer1-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertNull(server.getSecurityHandler());
@@ -50,7 +50,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         
         // 2nd server
         server = servers.next();
-        Assert.assertEquals(server.getName(), "jettyServer2");
+        Assert.assertEquals(server.getName(), "soapServer2");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8081);
@@ -66,14 +66,14 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         
         // 3rd server
         server = servers.next();
-        Assert.assertEquals(server.getName(), "jettyServer3");
+        Assert.assertEquals(server.getName(), "soapServer3");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
-        Assert.assertEquals(server.getServletName(), "jettyServer3-servlet");
+        Assert.assertEquals(server.getServletName(), "soapServer3-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertNull(server.getSecurityHandler());
@@ -83,14 +83,14 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         
         // 4th server
         server = servers.next();
-        Assert.assertEquals(server.getName(), "jettyServer4");
+        Assert.assertEquals(server.getName(), "soapServer4");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
-        Assert.assertEquals(server.getServletName(), "jettyServer4-servlet");
+        Assert.assertEquals(server.getServletName(), "soapServer4-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertNull(server.getSecurityHandler());
@@ -100,14 +100,14 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         
         // 5th server
         server = servers.next();
-        Assert.assertEquals(server.getName(), "jettyServer5");
+        Assert.assertEquals(server.getName(), "soapServer5");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
-        Assert.assertEquals(server.getServletName(), "jettyServer5-servlet");
+        Assert.assertEquals(server.getServletName(), "soapServer5-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertNotNull(server.getSecurityHandler());
@@ -117,14 +117,14 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         
         // 6th server
         server = servers.next();
-        Assert.assertEquals(server.getName(), "jettyServer6");
+        Assert.assertEquals(server.getName(), "soapServer6");
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isRunning());
         Assert.assertEquals(server.getPort(), 8080);
         Assert.assertEquals(server.getResourceBase(), "src/main/resources");
         Assert.assertEquals(server.getContextConfigLocation(), "classpath:com/consol/citrus/ws/citrus-servlet-context.xml");
         Assert.assertEquals(server.getContextPath(), "/");
-        Assert.assertEquals(server.getServletName(), "jettyServer6-servlet");
+        Assert.assertEquals(server.getServletName(), "soapServer6-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertNull(server.getSecurityHandler());

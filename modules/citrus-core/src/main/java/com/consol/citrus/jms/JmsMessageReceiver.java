@@ -17,7 +17,6 @@
 package com.consol.citrus.jms;
 
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
@@ -62,32 +61,22 @@ public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageRec
         return getJmsEndpoint().getEndpointConfiguration();
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive(long)
-     * @throws ActionTimeoutException
-     */
+    @Override
     public Message<?> receive(long timeout) {
         return getJmsEndpoint().createConsumer().receive(timeout);
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
-     * @throws ActionTimeoutException
-     */
+    @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         return getJmsEndpoint().createConsumer().receive(selector, timeout);
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive()
-     */
+    @Override
     public Message<?> receive() {
         return getJmsEndpoint().createConsumer().receive(getEndpointConfiguration().getTimeout());
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
-     */
+    @Override
     public Message<?> receiveSelected(String selector) {
         return getJmsEndpoint().createConsumer().receive(selector, getEndpointConfiguration().getTimeout());
     }

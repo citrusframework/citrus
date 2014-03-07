@@ -6,7 +6,7 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="ReceiveMessageActionParserTest">
         <actions>
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[
@@ -19,7 +19,7 @@
                 </header>
             </receive>
             
-            <receive with="myMessageReceiver" timeout="1000">
+            <receive with="myMessageEndpoint" timeout="1000">
                 <selector>
                     <element name="operation" value="Test"/>
                 </selector>
@@ -28,7 +28,7 @@
                 </message>
             </receive>
             
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <selector>
                     <value>operation = 'Test'</value>
                 </selector>
@@ -41,7 +41,7 @@
                 </message>
             </receive>
             
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <message>
                     <builder type="groovy">
                         <![CDATA[
@@ -55,13 +55,13 @@
                 </header>
             </receive>
             
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <message>
                     <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
                 </message>
             </receive>
             
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <message data-dictionary="myDataDictionary">
                     <data>
                         <![CDATA[
@@ -75,7 +75,7 @@
                 </extract>
             </receive>
             
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[
@@ -88,7 +88,7 @@
                 </message>
             </receive>
             
-            <receive with="myMessageReceiver">
+            <receive with="myMessageEndpoint">
                 <message>
                     <validate path="/TestMessage/text" value="Hello Citrus"/>
                     <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
@@ -97,8 +97,8 @@
         </actions>
     </testcase>
     
-    <spring:bean id="myMessageReceiver" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.consol.citrus.message.MessageReceiver"/>
+    <spring:bean id="myMessageEndpoint" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </spring:bean>
 
     <spring:bean id="myDataDictionary" class="org.easymock.EasyMock" factory-method="createMock">

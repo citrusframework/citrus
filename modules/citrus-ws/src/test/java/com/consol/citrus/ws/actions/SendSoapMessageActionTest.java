@@ -16,10 +16,10 @@
 
 package com.consol.citrus.ws.actions;
 
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.JmsMessageSender;
+import com.consol.citrus.jms.JmsEndpoint;
 import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
@@ -410,10 +410,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testWrongMessageSenderImplementationTest() throws Exception {
+    public void testWrongEndpointImplementationTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        MessageSender jmsMessageSender = new JmsMessageSender();
-        soapMessageAction.setEndpoint(jmsMessageSender);
+        Endpoint jmsEndpoint = new JmsEndpoint();
+        soapMessageAction.setEndpoint(jmsEndpoint);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -424,10 +424,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             soapMessageAction.execute(context);
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Sending SOAP messages requires a " +
-                    "'com.consol.citrus.ws.client.WebServiceClient' but was 'com.consol.citrus.jms.JmsMessageSender'");
+                    "'com.consol.citrus.ws.client.WebServiceClient' but was 'com.consol.citrus.jms.JmsEndpoint'");
             return;
         }
         
-        Assert.fail("Missing exception because of unsupported MessageSender implementation");
+        Assert.fail("Missing exception because of unsupported endpoint implementation");
     }
 }

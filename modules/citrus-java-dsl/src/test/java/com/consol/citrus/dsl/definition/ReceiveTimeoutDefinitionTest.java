@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -33,7 +33,7 @@ import static org.easymock.EasyMock.*;
 
 public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
     
-    private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
+    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
     
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
      
@@ -42,7 +42,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                expectTimeout(messageReceiver)
+                expectTimeout(messageEndpoint)
                     .timeout(5000)
                     .selector("TestMessageSelectorString");
             }
@@ -55,7 +55,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
          
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
         Assert.assertEquals(action.getTimeout(), 5000);
     }
@@ -64,7 +64,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveTimeoutBuilderWithReceiverName() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean("fooMessageReceiver", Endpoint.class)).andReturn(messageEndpoint).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -86,7 +86,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
          
         ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getTimeout(), 500);
         
         verify(applicationContextMock);

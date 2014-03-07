@@ -22,14 +22,16 @@ import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.core.io.Resource;
-import org.springframework.util.*;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import org.testng.*;
 
 import javax.jms.ConnectionFactory;
@@ -249,20 +251,20 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     /**
      * Creates a new receive timeout action definition
      * for further configuration.
-     * @param messageReceiver
+     * @param messageEndpoint
      * @return
      */
-    public ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver) {
-        return testBuilder.expectTimeout(messageReceiver);
+    public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
+        return testBuilder.expectTimeout(messageEndpoint);
     }
 
     /**
-     * Creates a new receive timeout action definition from message receiver name as String.
-     * @param messageReceiverName
+     * Creates a new receive timeout action definition from message endpoint name as String.
+     * @param messageEndpointName
      * @return
      */
-    public ReceiveTimeoutActionDefinition expectTimeout(String messageReceiverName) {
-        return testBuilder.expectTimeout(messageReceiverName);
+    public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName) {
+        return testBuilder.expectTimeout(messageEndpointName);
     }
 
     /**
@@ -349,27 +351,37 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
      * Creates special SOAP receive message action definition with message receiver instance.
      * @param messageReceiver
      * @return
+     * @deprecated
      */
     public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         return testBuilder.receive(messageReceiver);
     }
 
     /**
-     * Creates receive message action definition with message receiver instance.
-     * @param messageReceiver
+     * Creates special SOAP receive message action definition with web service server instance.
+     * @param server
      * @return
      */
-    public ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver) {
-        return testBuilder.receive(messageReceiver);
+    public ReceiveSoapMessageActionDefinition receive(WebServiceServer server) {
+        return testBuilder.receive(server);
     }
 
     /**
-     * Creates receive message action definition with messsage receiver name.
-     * @param messageReceiverName
+     * Creates receive message action definition with message endpoint instance.
+     * @param messageEndpoint
      * @return
      */
-    public ReceiveMessageActionDefinition receive(String messageReceiverName) {
-        return testBuilder.receive(messageReceiverName);
+    public ReceiveMessageActionDefinition receive(Endpoint messageEndpoint) {
+        return testBuilder.receive(messageEndpoint);
+    }
+
+    /**
+     * Creates receive message action definition with messsage endpoint name.
+     * @param messageEndpointName
+     * @return
+     */
+    public ReceiveMessageActionDefinition receive(String messageEndpointName) {
+        return testBuilder.receive(messageEndpointName);
     }
 
     /**
@@ -382,32 +394,41 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     }
 
     /**
-     * Create send message action definition with message sender instance.
-     * @param messageSender
+     * Create special SOAP send message action definition with web service client instance.
+     * @param client
      * @return
      */
-    public SendMessageActionDefinition send(MessageSender messageSender) {
-        return testBuilder.send(messageSender);
+    public SendSoapMessageActionDefinition send(WebServiceClient client) {
+        return testBuilder.send(client);
     }
 
     /**
-     * Create send message action definition with message sender name. According to message sender type
+     * Create send message action definition with message endpoint instance.
+     * @param messageEndpoint
+     * @return
+     */
+    public SendMessageActionDefinition send(Endpoint messageEndpoint) {
+        return testBuilder.send(messageEndpoint);
+    }
+
+    /**
+     * Create send message action definition with message endpoint name. According to message endpoint type
      * we can create a SOAP specific message sending action.
-     * @param messageSenderName
+     * @param messageEndpointName
      * @return
      */
-    public SendMessageActionDefinition send(String messageSenderName) {
-        return testBuilder.send(messageSenderName);
+    public SendMessageActionDefinition send(String messageEndpointName) {
+        return testBuilder.send(messageEndpointName);
     }
 
     /**
-     * Create SOAP fault send message action definition with message sender name. Returns SOAP fault definition with
+     * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
      * specific properties for SOAP fault messages.
-     * @param messageSenderName
+     * @param messageEndpointName
      * @return
      */
-    public SendSoapFaultActionDefinition sendSoapFault(String messageSenderName) {
-        return testBuilder.sendSoapFault(messageSenderName);
+    public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName) {
+        return testBuilder.sendSoapFault(messageEndpointName);
     }
 
     /**

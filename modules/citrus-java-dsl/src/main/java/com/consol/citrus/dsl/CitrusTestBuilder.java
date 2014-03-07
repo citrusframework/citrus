@@ -22,17 +22,18 @@ import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.util.PositionHandle;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.*;
+import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -316,27 +317,27 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * Creates a new receive timeout action definition
      * for further configuration.
      *
-     * @param messageReceiver
+     * @param messageEndpoint
      * @return
      */
-    public ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver) {
+    public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setEndpoint(messageReceiver);
+        action.setEndpoint(messageEndpoint);
         testCase.addTestAction(action);
         return new ReceiveTimeoutActionDefinition(action);
     }
 
     /**
-     * Creates a new receive timeout action definition from message receiver name as String.
+     * Creates a new receive timeout action definition from message endpoint name as String.
      *
-     * @param messageReceiverName
+     * @param messageEndpointName
      * @return
      */
-    public ReceiveTimeoutActionDefinition expectTimeout(String messageReceiverName) {
-        MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
+    public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName) {
+        Endpoint messageEndpoint = applicationContext.getBean(messageEndpointName, Endpoint.class);
 
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setEndpoint(messageReceiver);
+        action.setEndpoint(messageEndpoint);
         testCase.addTestAction(action);
         return new ReceiveTimeoutActionDefinition(action);
     }
@@ -461,6 +462,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      *
      * @param messageReceiver
      * @return
+     * @deprecated
      */
     public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
@@ -471,37 +473,51 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Creates receive message action definition with message receiver instance.
+     * Creates special SOAP receive message action definition with web service server instance.
      *
-     * @param messageReceiver
+     * @param server
      * @return
      */
-    public ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver) {
+    public ReceiveSoapMessageActionDefinition receive(WebServiceServer server) {
+        ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
+        action.setEndpoint(server);
+
+        testCase.addTestAction(action);
+        return new ReceiveSoapMessageActionDefinition(action, applicationContext);
+    }
+
+    /**
+     * Creates receive message action definition with message endpoint instance.
+     *
+     * @param messageEndpoint
+     * @return
+     */
+    public ReceiveMessageActionDefinition receive(Endpoint messageEndpoint) {
         ReceiveMessageAction action = new ReceiveMessageAction();
-        action.setEndpoint(messageReceiver);
+        action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
         return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
 
     /**
-     * Creates receive message action definition with messsage receiver name.
+     * Creates receive message action definition with messsage endpoint name.
      *
-     * @param messageReceiverName
+     * @param messageEndpointName
      * @return
      */
-    public ReceiveMessageActionDefinition receive(String messageReceiverName) {
-        MessageReceiver messageReceiver = applicationContext.getBean(messageReceiverName, MessageReceiver.class);
+    public ReceiveMessageActionDefinition receive(String messageEndpointName) {
+        Endpoint messageEndpoint = applicationContext.getBean(messageEndpointName, Endpoint.class);
 
-        if (messageReceiver instanceof SoapReplyMessageReceiver) {
+        if (messageEndpoint instanceof SoapReplyMessageReceiver || messageEndpoint instanceof WebServiceServer) {
             ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-            action.setEndpoint(messageReceiver);
+            action.setEndpoint(messageEndpoint);
             testCase.addTestAction(action);
 
             return new ReceiveSoapMessageActionDefinition(action, applicationContext);
         } else {
             ReceiveMessageAction action = new ReceiveMessageAction();
-            action.setEndpoint(messageReceiver);
+            action.setEndpoint(messageEndpoint);
             testCase.addTestAction(action);
 
             return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
@@ -513,6 +529,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      *
      * @param messageSender
      * @return
+     * @deprecated
      */
     public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
         SendSoapMessageAction action = new SendSoapMessageAction();
@@ -523,38 +540,52 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Create send message action definition with message sender instance.
+     * Create special SOAP send message action definition with web service client instance.
      *
-     * @param messageSender
+     * @param client
      * @return
      */
-    public SendMessageActionDefinition send(MessageSender messageSender) {
+    public SendSoapMessageActionDefinition send(WebServiceClient client) {
+        SendSoapMessageAction action = new SendSoapMessageAction();
+        action.setEndpoint(client);
+
+        testCase.addTestAction(action);
+        return new SendSoapMessageActionDefinition(action);
+    }
+
+    /**
+     * Create send message action definition with message endpoint instance.
+     *
+     * @param messageEndpoint
+     * @return
+     */
+    public SendMessageActionDefinition send(Endpoint messageEndpoint) {
         SendMessageAction action = new SendMessageAction();
-        action.setEndpoint(messageSender);
+        action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
         return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
     }
 
     /**
-     * Create send message action definition with message sender name. According to message sender type
+     * Create send message action definition with message endpoint name. According to message endpoint type
      * we can create a SOAP specific message sending action.
      *
-     * @param messageSenderName
+     * @param messageEndpointName
      * @return
      */
-    public SendMessageActionDefinition send(String messageSenderName) {
-        MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
+    public SendMessageActionDefinition send(String messageEndpointName) {
+        Endpoint messageEndpoint = applicationContext.getBean(messageEndpointName, Endpoint.class);
 
-        if (messageSender instanceof WebServiceMessageSender) {
+        if (messageEndpoint instanceof WebServiceMessageSender || messageEndpoint instanceof WebServiceClient) {
             SendSoapMessageAction action = new SendSoapMessageAction();
-            action.setEndpoint(messageSender);
+            action.setEndpoint(messageEndpoint);
 
             testCase.addTestAction(action);
             return new SendSoapMessageActionDefinition(action);
         } else {
             SendMessageAction action = new SendMessageAction();
-            action.setEndpoint(messageSender);
+            action.setEndpoint(messageEndpoint);
 
             testCase.addTestAction(action);
             return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
@@ -562,17 +593,17 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Create SOAP fault send message action definition with message sender name. Returns SOAP fault definition with
+     * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
      * specific properties for SOAP fault messages.
      *
-     * @param messageSenderName
+     * @param messageEndpointName
      * @return
      */
-    public SendSoapFaultActionDefinition sendSoapFault(String messageSenderName) {
-        MessageSender messageSender = applicationContext.getBean(messageSenderName, MessageSender.class);
+    public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName) {
+        Endpoint messageEndpoint = applicationContext.getBean(messageEndpointName, Endpoint.class);
 
         SendMessageAction action = new SendMessageAction();
-        action.setEndpoint(messageSender);
+        action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
         return new SendSoapFaultActionDefinition(action, new PositionHandle(testCase.getActions()));

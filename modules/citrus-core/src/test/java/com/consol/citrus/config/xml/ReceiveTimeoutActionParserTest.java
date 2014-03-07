@@ -31,7 +31,7 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
     @Test
     public void testReceiveTimeoutActionParser() {
         assertActionCount(2);
-        assertActionClassAndName(ReceiveTimeoutAction.class, "expect-timeout:myMessageReceiver");
+        assertActionClassAndName(ReceiveTimeoutAction.class, "expect-timeout:myMessageEndpoint");
         
         ReceiveTimeoutAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimeout(), 1000L);

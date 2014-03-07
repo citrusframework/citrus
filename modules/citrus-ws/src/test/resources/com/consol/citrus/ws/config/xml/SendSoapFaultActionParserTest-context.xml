@@ -8,7 +8,7 @@
                                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
     <testcase name="SendSoapFaultActionParserTest">
         <actions>
-            <ws:send-fault with="soapMessageSender">
+            <ws:send-fault with="soapServer">
               <ws:fault>
                   <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:FAULT-1000</ws:fault-code>
                   <ws:fault-string>FaultString</ws:fault-string>
@@ -25,7 +25,7 @@
               </ws:header>
             </ws:send-fault>
             
-            <ws:send-fault with="soapMessageSender">
+            <ws:send-fault with="soapServer">
               <ws:fault>
                   <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:FAULT-1001</ws:fault-code>
                   <ws:fault-string>FaultString</ws:fault-string>
@@ -39,8 +39,8 @@
         </actions>
     </testcase>
     
-    <spring:bean id="soapMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.consol.citrus.message.MessageSender"/>
+    <spring:bean id="soapServer" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.ws.server.WebServiceServer"/>
     </spring:bean>
     
 </spring:beans>

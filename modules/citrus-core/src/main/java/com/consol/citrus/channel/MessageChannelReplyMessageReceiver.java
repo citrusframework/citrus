@@ -51,44 +51,32 @@ public class MessageChannelReplyMessageReceiver extends ReplyMessageReceiver {
         return getEndpoint().getEndpointConfiguration();
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive()
-     */
+    @Override
     public Message<?> receive() {
         return getEndpoint().createConsumer().receive("", getEndpoint().getEndpointConfiguration().getTimeout());
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive(long)
-     */
+    @Override
     public Message<?> receive(long timeout) {
         return getEndpoint().createConsumer().receive("", timeout);
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
-     */
+    @Override
     public Message<?> receiveSelected(String selector) {
         return getEndpoint().createConsumer().receive(selector, getEndpoint().getEndpointConfiguration().getTimeout());
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
-     */
+    @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         return getEndpoint().createConsumer().receive(selector, timeout);
     }
 
-    /**
-     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message, java.lang.String)
-     */
+    @Override
     public void onReplyMessage(Message<?> replyMessage, String correlationKey) {
         ((ChannelSyncProducer) getEndpoint().createProducer()).onReplyMessage(correlationKey, replyMessage);
     }
 
-    /**
-     * @see com.consol.citrus.message.ReplyMessageHandler#onReplyMessage(org.springframework.integration.Message)
-     */
+    @Override
     public void onReplyMessage(Message<?> replyMessage) {
         ((ChannelSyncProducer) getEndpoint().createProducer()).onReplyMessage("", replyMessage);
     }

@@ -16,7 +16,6 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import com.consol.citrus.message.ReplyMessageHandler;
 import org.springframework.integration.Message;
@@ -45,10 +44,7 @@ public class SyncMessageChannelSender extends MessageChannelSender {
         return (ChannelSyncEndpoint) super.getChannelEndpoint();
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     * @throws CitrusRuntimeException
-     */
+    @Override
     public void send(Message<?> message) {
         getChannelEndpoint().createProducer().send(message);
     }

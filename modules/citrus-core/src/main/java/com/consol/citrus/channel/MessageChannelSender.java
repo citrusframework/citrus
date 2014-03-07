@@ -17,7 +17,6 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
@@ -77,10 +76,7 @@ public class MessageChannelSender implements MessageSender, BeanFactoryAware, Be
         return channelEndpoint;
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     * @throws CitrusRuntimeException
-     */
+    @Override
     public void send(Message<?> message) {
         channelEndpoint.createProducer().send(message);
     }

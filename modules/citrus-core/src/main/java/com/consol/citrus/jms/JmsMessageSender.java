@@ -30,9 +30,7 @@ import org.springframework.integration.Message;
  */
 public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
 
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     */
+    @Override
     public void send(Message<?> message) {
         getJmsEndpoint().createProducer().send(message);
     }

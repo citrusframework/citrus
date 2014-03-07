@@ -19,15 +19,14 @@ package com.consol.citrus.dsl;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.container.Catch;
-import com.consol.citrus.container.Parallel;
-import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.message.MessageReceiver;
-import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
+import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
@@ -168,18 +167,18 @@ public interface TestBuilder extends ApplicationContextAware {
      * Creates a new receive timeout action definition
      * for further configuration.
      *
-     * @param messageReceiver
+     * @param messageEndpoint
      * @return
      */
-    ReceiveTimeoutActionDefinition expectTimeout(MessageReceiver messageReceiver);
+    ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint);
 
     /**
-     * Creates a new receive timeout action definition from message receiver name as String.
+     * Creates a new receive timeout action definition from message endpoint name as String.
      *
-     * @param messageReceiverName
+     * @param messageEndpointName
      * @return
      */
-    ReceiveTimeoutActionDefinition expectTimeout(String messageReceiverName);
+    ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName);
 
     /**
      * Creates a new fail action.
@@ -257,58 +256,76 @@ public interface TestBuilder extends ApplicationContextAware {
      *
      * @param messageReceiver
      * @return
+     * @deprecated
      */
     ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver);
 
     /**
-     * Creates receive message action definition with message receiver instance.
+     * Creates special SOAP receive message action definition with web service server instance.
      *
-     * @param messageReceiver
+     * @param server
      * @return
      */
-    ReceiveMessageActionDefinition receive(MessageReceiver messageReceiver);
+    ReceiveSoapMessageActionDefinition receive(WebServiceServer server);
 
     /**
-     * Creates receive message action definition with messsage receiver name.
+     * Creates receive message action definition with message endpoint instance.
      *
-     * @param messageReceiverName
+     * @param messageEndpoint
      * @return
      */
-    ReceiveMessageActionDefinition receive(String messageReceiverName);
+    ReceiveMessageActionDefinition receive(Endpoint messageEndpoint);
+
+    /**
+     * Creates receive message action definition with messsage endpoint name.
+     *
+     * @param messageEndpointName
+     * @return
+     */
+    ReceiveMessageActionDefinition receive(String messageEndpointName);
+
+    /**
+     * Create special SOAP send message action definition with web service client instance.
+     *
+     * @param client
+     * @return
+     */
+    SendSoapMessageActionDefinition send(WebServiceClient client);
 
     /**
      * Create special SOAP send message action definition with message sender instance.
      *
      * @param messageSender
      * @return
+     * @deprecated
      */
     SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender);
 
     /**
-     * Create send message action definition with message sender instance.
+     * Create send message action definition with message endpoint instance.
      *
-     * @param messageSender
+     * @param messageEndpoint
      * @return
      */
-    SendMessageActionDefinition send(MessageSender messageSender);
+    SendMessageActionDefinition send(Endpoint messageEndpoint);
 
     /**
-     * Create send message action definition with message sender name. According to message sender type
+     * Create send message action definition with message endpoint name. According to message endpoint type
      * we can create a SOAP specific message sending action.
      *
-     * @param messageSenderName
+     * @param messageEndpointName
      * @return
      */
-    SendMessageActionDefinition send(String messageSenderName);
+    SendMessageActionDefinition send(String messageEndpointName);
 
     /**
-     * Create SOAP fault send message action definition with message sender name. Returns SOAP fault definition with
+     * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
      * specific properties for SOAP fault messages.
      *
-     * @param messageSenderName
+     * @param messageEndpointName
      * @return
      */
-    SendSoapFaultActionDefinition sendSoapFault(String messageSenderName);
+    SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName);
 
     /**
      * Add sleep action with default delay time.

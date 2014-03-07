@@ -4,9 +4,10 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
     <testcase name="SendMessageActionParserTest">
         <actions>
-            <send with="myMessageSender">
+            <send with="myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[
@@ -19,13 +20,13 @@
                 </header>
             </send>
             
-            <send with="myMessageSender">
+            <send with="myMessageEndpoint">
                 <message>
                     <resource file="classpath:com/consol/citrus/actions/test-request-payload.xml"/>
                 </message>
             </send>
             
-            <send with="myMessageSender">
+            <send with="myMessageEndpoint">
                 <message>
                     <builder type="groovy">
                         <![CDATA[
@@ -39,13 +40,13 @@
                 </header>
             </send>
             
-            <send with="myMessageSender">
+            <send with="myMessageEndpoint">
                 <message>
                     <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
                 </message>
             </send>
             
-            <send with="myMessageSender">
+            <send with="myMessageEndpoint">
                 <message data-dictionary="myDataDictionary">
                     <data>
                         <![CDATA[
@@ -59,7 +60,7 @@
                 </extract>
             </send>
             
-            <send with="myMessageSender">
+            <send with="myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[
@@ -81,8 +82,8 @@
         </actions>
     </testcase>
     
-    <spring:bean id="myMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.consol.citrus.message.MessageSender"/>
+    <spring:bean id="myMessageEndpoint" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </spring:bean>
 
     <spring:bean id="myDataDictionary" class="org.easymock.EasyMock" factory-method="createMock">

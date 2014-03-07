@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -25,6 +26,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +48,8 @@ import static org.easymock.EasyMock.*;
 public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private WebServiceMessageSender soapMessageSender = EasyMock.createMock(WebServiceMessageSender.class);
-    
+    private WebServiceClient soapClient = EasyMock.createMock(WebServiceClient.class);
+
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
     private Resource resource = EasyMock.createMock(Resource.class);
@@ -63,16 +66,45 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         testAttachment.setContentType("text/plain");
         testAttachment.setCharsetName("UTF-8");
     }
+
+    @Test
+    public void testLegacySender() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                send(soapMessageSender)
+                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
+
+        Assert.assertFalse(action.isForkMode());
+    }
     
     @Test
     public void testFork() {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                send(soapMessageSender)
+                send(soapClient)
                     .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
                 
-                send(soapMessageSender)
+                send(soapClient)
                     .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
                     .fork(true);
             }
@@ -87,7 +119,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -100,7 +132,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         action = ((SendSoapMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
         
         Assert.assertTrue(action.isForkMode());
@@ -111,7 +143,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                send(soapMessageSender)
+                send(soapClient)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .attatchment(testAttachment);
             }
@@ -125,7 +157,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -144,7 +176,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                send(soapMessageSender)
+                send(soapClient)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
             }
@@ -158,7 +190,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -177,7 +209,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                send(soapMessageSender)
+                send(soapClient)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), resource);
             }
@@ -195,7 +227,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
@@ -216,8 +248,8 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean("soapMessageSender", MessageSender.class)).andReturn(soapMessageSender).once();
-        expect(applicationContextMock.getBean("messageSender", MessageSender.class)).andReturn(messageSender).once();
+        expect(applicationContextMock.getBean("soapClient", Endpoint.class)).andReturn(soapClient).once();
+        expect(applicationContextMock.getBean("messageSender", Endpoint.class)).andReturn(messageSender).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -227,7 +259,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                send("soapMessageSender")
+                send("soapClient")
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header("operation", "soapOperation")
                     .soap()
@@ -246,7 +278,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         SendMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
+        Assert.assertEquals(action.getEndpoint(), soapClient);
         
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");

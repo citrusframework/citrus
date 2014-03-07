@@ -36,7 +36,7 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         
         // 1st action
         SendMessageAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapMessageSender"));
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
         Assert.assertNotNull(action.getMessageBuilder());
         Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
         
@@ -53,7 +53,7 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         
         // 2nd action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapMessageSender"));
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
         Assert.assertNotNull(action.getMessageBuilder());
         Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
         

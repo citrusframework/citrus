@@ -8,7 +8,7 @@
                                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
     <testcase name="SendSoapMessageActionParserTest">
         <actions>
-            <ws:send with="mySoapMessageSender">
+            <ws:send with="mySoapClient">
                 <message>
                     <data>
                         <![CDATA[
@@ -23,7 +23,7 @@
                 </ws:attachment>
             </ws:send>
             
-            <ws:send with="mySoapMessageSender">
+            <ws:send with="mySoapClient">
                 <message>
                     <data>
                         <![CDATA[
@@ -36,7 +36,7 @@
                 </ws:attachment>
             </ws:send>
             
-            <ws:send with="mySoapMessageSender" fork="true">
+            <ws:send with="mySoapClient" fork="true">
                 <message>
                     <data>
                         <![CDATA[
@@ -48,8 +48,8 @@
         </actions>
     </testcase>
     
-    <spring:bean id="mySoapMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="com.consol.citrus.message.MessageSender"/>
+    <spring:bean id="mySoapClient" class="org.easymock.EasyMock" factory-method="createMock">
+        <spring:constructor-arg value="com.consol.citrus.ws.client.WebServiceClient"/>
     </spring:bean>
     
 </spring:beans>

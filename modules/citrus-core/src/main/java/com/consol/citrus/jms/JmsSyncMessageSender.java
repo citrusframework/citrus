@@ -18,7 +18,6 @@ package com.consol.citrus.jms;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
@@ -47,10 +46,7 @@ public class JmsSyncMessageSender implements MessageSender, BeanNameAware, Dispo
     /** Reply message handler */
     private ReplyMessageHandler replyMessageHandler;
 
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     * @throws CitrusRuntimeException
-     */
+    @Override
     public void send(Message<?> message) {
         jmsEndpoint.createProducer().send(message);
     }

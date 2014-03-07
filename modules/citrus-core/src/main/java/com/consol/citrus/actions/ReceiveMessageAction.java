@@ -20,7 +20,6 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -41,7 +40,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * This action receives messages from a service destination. Action uses a {@link MessageReceiver} 
+ * This action receives messages from a service destination. Action uses a {@link com.consol.citrus.endpoint.Endpoint}
  * to receive the message, this means that action is independent from any message transport.
  * 
  * The received message is validated using a {@link MessageValidator} supporting expected 
@@ -93,10 +92,10 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
     }
 
     /**
-     * Method receives a message via {@link MessageReceiver} instance
+     * Method receives a message via {@link com.consol.citrus.endpoint.Endpoint} instance
      * constructs a validation context and starts the message validation
      * via {@link MessageValidator}.
-     * 
+     *
      * @throws CitrusRuntimeException
      */
     @Override

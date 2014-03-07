@@ -17,9 +17,7 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.AbstractMessageReceiver;
-import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 import org.springframework.beans.BeansException;
@@ -79,18 +77,11 @@ public class MessageChannelReceiver extends AbstractMessageReceiver implements B
         return channelEndpoint;
     }
 
-    /**
-     * @see MessageReceiver#receive(long)
-     * @throws ActionTimeoutException
-     */
     @Override
     public Message<?> receive(long timeout) {
         return channelEndpoint.createConsumer().receive(timeout);
     }
 
-    /**
-     * @see MessageReceiver#receiveSelected(String, long)
-     */
     @Override
     public Message<?> receiveSelected(String selector, long timeout) {
         return channelEndpoint.createConsumer().receive(selector, timeout);

@@ -36,29 +36,21 @@ public abstract class AbstractMessageReceiver implements MessageReceiver, BeanNa
     protected AbstractMessageReceiver(Endpoint endpoint) {
         this.endpoint = endpoint;
     }
-    
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive()
-     */
+
+    @Override
     public Message<?> receive() {
         return receive(endpoint.getEndpointConfiguration().getTimeout());
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receive(long)
-     */
+    @Override
     public abstract Message<?> receive(long timeout);
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String)
-     */
+    @Override
     public Message<?> receiveSelected(String selector) {
         return receiveSelected(selector, endpoint.getEndpointConfiguration().getTimeout());
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageReceiver#receiveSelected(java.lang.String, long)
-     */
+    @Override
     public abstract Message<?> receiveSelected(String selector, long timeout);
 
     /**

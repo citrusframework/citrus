@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
-import com.consol.citrus.message.MessageReceiver;
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -31,10 +31,10 @@ public class ReceiveTimeoutJavaITest extends TestNGCitrusTestBuilder {
     
     @Autowired
     @Qualifier("dummyMessageReceiver")
-    private MessageReceiver messageReceiver;
+    private Endpoint messageEndpoint;
     
     @CitrusTest
     public void ReceiveTimeoutJavaITest() {
-        expectTimeout(messageReceiver).timeout(500);
+        expectTimeout(messageEndpoint).timeout(500);
     }
 }

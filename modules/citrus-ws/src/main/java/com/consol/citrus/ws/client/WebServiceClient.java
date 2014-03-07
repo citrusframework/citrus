@@ -74,9 +74,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         return (WebServiceEndpointConfiguration) super.getEndpointConfiguration();
     }
 
-    /**
-     * @see com.consol.citrus.message.MessageSender#send(org.springframework.integration.Message)
-     */
+    @Override
     public void send(Message<?> message) {
         send(message, null);
     }

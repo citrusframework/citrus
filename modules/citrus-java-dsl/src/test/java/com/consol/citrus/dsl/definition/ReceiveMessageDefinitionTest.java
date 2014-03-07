@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
@@ -54,17 +55,48 @@ import static org.easymock.EasyMock.*;
 public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private MessageReceiver messageReceiver = EasyMock.createMock(MessageReceiver.class);
-    
+    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
+
     private Resource resource = EasyMock.createMock(Resource.class);
     
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+
+    @Test
+    public void testLegacyReceiverBuilder() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                receive(messageReceiver)
+                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+    }
     
     @Test
     public void testReceiveBuilder() {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
             }
         };
@@ -78,7 +110,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -94,7 +126,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
@@ -108,7 +140,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -123,7 +155,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload(resource);
             }
         };
@@ -141,7 +173,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -157,7 +189,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithReceiverName() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBean("fooMessageReceiver", MessageReceiver.class)).andReturn(messageReceiver).once();
+        expect(applicationContextMock.getBean("fooMessageReceiver", Endpoint.class)).andReturn(messageEndpoint).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -179,7 +211,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         verify(applicationContextMock);
@@ -190,7 +222,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .timeout(1000L);
             }
@@ -204,7 +236,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getReceiveTimeout(), 1000L);
     }
     
@@ -213,12 +245,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header("operation", "sayHello")
                     .header("foo", "bar");
                 
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .header("operation", "sayHello")
                     .header("foo", "bar")
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -234,7 +266,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
@@ -247,7 +279,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
@@ -263,11 +295,11 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                 
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
             }
@@ -282,7 +314,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
@@ -295,7 +327,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
@@ -311,11 +343,11 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header(resource);
                 
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
                     .header(resource);
             }
@@ -335,7 +367,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
@@ -347,7 +379,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
@@ -366,7 +398,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .messageType(MessageType.PLAINTEXT)
                     .payload("TestMessage")
                     .header("operation", "sayHello")
@@ -382,7 +414,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getValidator(), validator);
         
@@ -409,7 +441,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .messageType(MessageType.PLAINTEXT)
                     .payload("TestMessage")
                     .header("operation", "sayHello")
@@ -425,7 +457,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getValidator(), validator);
         
@@ -446,7 +478,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .selector(messageSelector);
             }
@@ -461,7 +493,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
     }
@@ -471,7 +503,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .selector("operation = 'sayHello'");
             }
@@ -486,7 +518,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertEquals(action.getMessageSelectorString(), "operation = 'sayHello'");
@@ -506,7 +538,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                     .extractFromPayload("/TestRequest/Message", "text")
                     .extractFromPayload("/TestRequest/Message/@lang", "language");
@@ -522,7 +554,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
@@ -537,7 +569,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                     .extractFromHeader("operation", "ops")
                     .extractFromHeader("requestId", "id");
@@ -553,7 +585,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
@@ -575,7 +607,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                     .extractFromHeader("operation", "ops")
                     .extractFromHeader("requestId", "id")
@@ -593,7 +625,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         
         Assert.assertEquals(action.getVariableExtractors().size(), 2);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
@@ -614,7 +646,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .messageType(MessageType.PLAINTEXT)
                     .payload("TestMessage")
                     .header("operation", "sayHello")
@@ -630,7 +662,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getValidationCallback(), callback);
         
@@ -657,7 +689,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .messageType(MessageType.JSON)
                     .validateScript("assert true")
                     .validator("groovyMessageValidator");
@@ -672,7 +704,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
         
@@ -706,7 +738,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .messageType(MessageType.JSON)
                     .validateScript(resource)
                     .validator("groovyMessageValidator");
@@ -721,7 +753,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
         
@@ -750,7 +782,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .messageType(MessageType.JSON)
                     .validateScript("assert true")
                     .validator("groovyMessageValidator")
@@ -766,7 +798,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidator(), validator);
         
@@ -793,7 +825,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
                     .validateNamespace("pfx", "http://www.consol.de/schemas/test");
             }
@@ -808,7 +840,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -825,7 +857,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                     .validate("Foo.operation", "foo")
                     .validate("Foo.message", "control");
@@ -841,7 +873,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -858,7 +890,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>?</Message></TestRequest>")
                     .ignore("TestRequest.Message");
             }
@@ -873,7 +905,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -890,7 +922,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>?</Message></TestRequest>")
                     .xsd("testSchema");
             }
@@ -905,7 +937,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
@@ -921,7 +953,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                receive(messageReceiver)
+                receive(messageEndpoint)
                     .payload("<TestRequest><Message>?</Message></TestRequest>")
                     .xsdSchemaRepository("testSchemaRepository");
             }
@@ -936,7 +968,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        Assert.assertEquals(action.getEndpoint(), messageReceiver);
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 1);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
         
