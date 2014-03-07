@@ -139,6 +139,14 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
     }
 
     /**
+     * Action creating a new test variable during a test.
+     * @return
+     */
+    public CreateVariablesAction setVariable(String variableName, String value) {
+        return testBuilder.setVariable(variableName, value);
+    }
+
+    /**
      * Adds a custom test action implementation.
      * @param testAction
      */

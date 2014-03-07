@@ -212,6 +212,19 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
+     * Action creating a new test variable during a test.
+     *
+     * @return
+     */
+    public CreateVariablesAction setVariable(String variableName, String value) {
+        CreateVariablesAction action = new CreateVariablesAction();
+        action.getVariables().put(variableName, value);
+        testCase.addTestAction(action);
+
+        return action;
+    }
+
+    /**
      * Adds a custom test action implementation.
      *
      * @param testAction

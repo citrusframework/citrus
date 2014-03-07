@@ -40,15 +40,19 @@
     variable("id", "54321");
     
     echo("Current variable value: ${myVariable}");
-    
-    variable("myVariable", "${id}");
-    variable("newVariable", "this is a test");
+
+    setVariable("myVariable", "${id}");
+    setVariable("newVariable", "this is a test");
     
     echo("Current variable value: ${myVariable}");
     
     echo("New variable 'newVariable' has the value: ${newVariable}");
 }</programlisting>
-    
-    <para>The new variables are valid for the rest of the test. Actions reference them as usual through a variable expression.</para>
-    
+
+    <note>
+      <para>Please note the difference between the <emphasis>variable()</emphasis> method and the <emphasis>setVariable()</emphasis> method. The first initializes the test case with the test variables. So all
+        variables defined with this method are valid from the very beginning of the test. In contrary to that the <emphasis>setVariable()</emphasis> is executed within the test action chain. The newly created
+        variables are then valid for the rest of the test. Trailing actions can reference the variables as usual with the variable expression.</para>
+    </note>
+
 </section>

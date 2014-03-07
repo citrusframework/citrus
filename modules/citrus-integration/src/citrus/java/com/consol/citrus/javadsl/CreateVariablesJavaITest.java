@@ -41,5 +41,9 @@ public class CreateVariablesJavaITest extends TestNGCitrusTestBuilder {
         echo("New variable 'new' has the value: ${new}");
         
         groovy("assert ${myVariable} == 54321");
+
+        setVariable("foo", "bar");
+
+        echo("foo = '${foo}'");
     }
 }

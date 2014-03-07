@@ -31,17 +31,23 @@ public class CreateVariablesDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 variables().add("foo", "bar")
                            .add("text", "Hello Citrus!");
+
+                setVariable("foobar", "bars");
             }
         };
         
         builder.execute();
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().size(), 2);
         Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), CreateVariablesAction.class);
-        
+        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), CreateVariablesAction.class);
+
         CreateVariablesAction action = (CreateVariablesAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), "create-variables");
         Assert.assertEquals(action.getVariables().toString(), "{foo=bar, text=Hello Citrus!}");
-        
+
+        action = (CreateVariablesAction)builder.testCase().getActions().get(1);
+        Assert.assertEquals(action.getName(), "create-variables");
+        Assert.assertEquals(action.getVariables().toString(), "{foobar=bars}");
     }
 }

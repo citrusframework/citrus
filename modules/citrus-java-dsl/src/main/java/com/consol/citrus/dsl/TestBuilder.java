@@ -105,6 +105,13 @@ public interface TestBuilder extends ApplicationContextAware {
     CreateVariablesActionDefinition variables();
 
     /**
+     * Action creating a new test variable during a test.
+     *
+     * @return
+     */
+    CreateVariablesAction setVariable(String variableName, String value);
+
+    /**
      * Adds a custom test action implementation.
      *
      * @param testAction
