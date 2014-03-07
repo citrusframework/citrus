@@ -50,11 +50,27 @@
       </div>
       <div class="span7">
         <pre class="prettyprint">&lt;send with=&quot;helloServiceChannelEndpoint&quot;&gt;
-  &lt;message&gt;...&lt;/message&gt;
-&lt;/send&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
 
-&lt;receive with=&quot;helloServiceChannelEndpoint&quot;&gt;
-  &lt;message&gt;...&lt;/message&gt;
+<pre class="prettyprint">&lt;receive with=&quot;helloServiceChannelEndpoint&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
 &lt;/receive&gt;</pre>
       </div>
     </div>
@@ -87,11 +103,27 @@
       </div>
       <div class="span7">
         <pre class="prettyprint">&lt;send with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
-  &lt;message&gt;...&lt;/message&gt;
-&lt;/send&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
 
-&lt;receive with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
-  &lt;message&gt;...&lt;/message&gt;
+<pre class="prettyprint">&lt;receive with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
 &lt;/receive&gt;</pre>
       </div>
     </div>
@@ -202,6 +234,415 @@
                         reply-destination-name=&quot;Citrus.HelloService.Reply.Queue&quot;/&gt;</pre>
       </div>
     </div>
+
+    <div class="row">
+      <div class="span11">
+        <h3 class="config-header">SOAP WebServices</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>SOAP WebServices over Http is a wide spread communication scenario in modern enterprise applications. A SOAP WebService client is posting
+          a SOAP request to a Http server waiting synchronously for the response message. Citrus provides both SOAP client and server components in order
+          to meet both directions of this scenario.</p>
+      </div>
+      <div class="span7">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>You have to add the citrus-ws XML namespace to your application context root element in order to use the SOAP components.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xmlns:citrus-ws=&quot;http://www.citrusframework.org/schema/ws/config&quot;
+          xsi:schemaLocation=&quot;http://www.citrusframework.org/schema/ws/config
+       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>When using SOAP message protocol in Citrus you need a message factory which takes care on creating the SOAP envelope, header and body elements. The message
+          factory is a simple Spring bean that you add to the context. By default the id <b>messageFactory</b> is recognized by all Citrus SOAP components.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h4>SOAP client</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The SOAP client component is responsible for sending a SOAP request to the server. As SOAP via Http follows the synchronous communication pattern the client waits
+          for the response to arrive. The <b>request-url</b> attribute defines the Http server endpoint URL where the SOAP messages go to.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-ws:client id=&quot;helloSoapClient&quot;
+                     request-url=&quot;http://localhost:8080/hello&quot;
+                     timeout=&quot;60000&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>Sending messages with this client in a test case is quite easy as you can simply reference the client in the send action by its id.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;send with=&quot;helloSoapClient&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>You can receive the synchronous response in your test case using the receive action with the same SOAP client id in reference.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;receive with=&quot;helloSoapClient&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h4>SOAP server</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>Citrus is also able to simulate the server side of the SOAP communication. Therefore Citrus starts an embedded Http server capable of handling
+          incoming SOAP requests. The tester can then specify the SOAP response which is sent back to the calling client.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
+                   port=&quot;8080&quot;
+                   auto-start=&quot;true&quot;
+                   resource-base=&quot;src/citrus/resources&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The server component does make use of some endpoint adapter behind the scenes. Basically this is a Spring WS SOAP endpoint. The Citrus SOAP server
+          is therefore ready for powerful customizations such as default response generation, WS Adressing support, WS Security support,
+          Basic authentication and many more.</p>
+      </div>
+      <div class="span7">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>Interacting with the SOAP server in your test case is as simple as using the client side. Just reference the server id in the send and receive test actions.</p>
+        <p>Notice that you do not need to specify the SOAP envelope and body elements. These are taken care of by the SOAP message factory that we have added to the application context.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;receive with=&quot;helloSoapServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+      &lt;/v1:HelloRequest&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The SOAP server will automatically correlate incoming request and response messages. So sending back a synchronous SOAP response is straight forward.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;send with=&quot;helloSoapServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+        &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+      &lt;/v1:HelloResponse&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h3 class="config-header">Http REST support</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>Http REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a Http client sending
+          Http requests usually in JSON data format to a Http server. As Http is a synchronous protocol by nature the client receives the server response synchronously.
+          Citrus provides REST Http client and server components and a powerful JSON message data support when sending and receiving messages.</p>
+      </div>
+      <div class="span7">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>You have to add the citrus-http XML namespace to your application context root element in order to use the Http REST components.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xmlns:citrus-http=&quot;http://www.citrusframework.org/schema/http/config&quot;
+          xsi:schemaLocation=&quot;http://www.citrusframework.org/schema/http/config
+       http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h4>Http REST client</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>On the client side we have a simple Http message sender component connecting to the server. Again the <b>request-url</b> attribute defines the Http server
+          endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-http:client id=&quot;helloHttpClient&quot;
+                     request-url=&quot;http://localhost:8080/hello&quot;
+                     timeout=&quot;60000&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h4>Http REST server</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>On the server side Citrus offers an embedded Http server which is capable of handling incoming REST requests. The tester than is able to define
+          the synchronous response which is sent back to the calling client.</p>
+
+        <p>The server component is capable of receiving a lot of customizations and extensions such as Basic authentication. In the test case you can interact
+          with the server by the well known send and receive test actions. You simply reference the server id inside the test case actions as shown before.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-http:server id=&quot;helloHttpServer&quot;
+                   port=&quot;8080&quot;
+                   auto-start=&quot;true&quot;
+                   resource-base=&quot;src/citrus/resources&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h3 class="config-header">Mail support</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>Sending and receiving mail messages via SMTP is our next topic. Citrus is able to send mails to some SMTP server and Citrus is able to
+          simulate a SMTP server for incoming mail messages.</p>
+      </div>
+      <div class="span7">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>You have to add the citrus-mail XML namespace to your application context root element in order to use the mail components.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+          xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xmlns:citrus-mail=&quot;http://www.citrusframework.org/schema/mail/config&quot;
+          xsi:schemaLocation=&quot;http://www.citrusframework.org/schema/mail/config
+       http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h4>Mail client</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The client connects to some SMTP server in order to send mail messages. These messages can be plain text or HTML content. Multipart messages
+          with binary and text attachments are also supported. The client component receives a destination <b>host</b> and <b>port</b> configuration.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-mail:client id=&quot;simpleMailClient&quot;
+                     host=&quot;localhost&quot;
+                     port=&quot;25025&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The mail content inside the test case is represented by a special Citrus mail XML payload. The mail client will convert the XML into a proper mail
+          multipart message before sending. This way you can use the well known XML features that we have in Citrus when sending out mail content.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;send with=&quot;simpleMailClient&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;mail-message&gt;
+        &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
+        &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
+        &lt;cc&gt;&lt;/cc&gt;
+        &lt;bcc&gt;&lt;/bcc&gt;
+        &lt;subject&gt;This is a test mail message&lt;/subject&gt;
+        &lt;body&gt;
+          &lt;contentType&gt;text/plain; charset=utf-8&lt;/contentType&gt;
+          &lt;content&gt;Hello Citrus mail server!&lt;/content&gt;
+        &lt;/body&gt;
+      &lt;/mail-message&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span11">
+        <h4>Mail SMTP server</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The mail server is a simple embedded SMTP server that accepts incoming mails. The incoming mail content is automatically converted to a Citrus XML
+          representation. A test case can easily receive the mail content and validate the mail parts using the powerful XML comparison mechanism.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-mail:server id=&quot;simpleMailServer&quot;
+                   port=&quot;25025&quot;
+                   auto-start=&quot;true&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>When receiving mail content in the test case you specify the expected mail content in XML representation. The XML comparison feature makes it easy for you
+          to validate the incoming mail content.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;receive with=&quot;simpleMailServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        &lt;mail-message&gt;
+          &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
+          &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
+          &lt;cc&gt;&lt;/cc&gt;
+          &lt;bcc&gt;&lt;/bcc&gt;
+          &lt;subject&gt;This is a test mail message&lt;/subject&gt;
+          &lt;body&gt;
+            &lt;contentType&gt;text/plain; charset=utf-8&lt;/contentType&gt;
+            &lt;content&gt;Hello Citrus mail server!&lt;/content&gt;
+          &lt;/body&gt;
+        &lt;/mail-message&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>By default the Citrus mail server accepts all incoming client connections automatically. In a more advanced mode the server is able to ask the test case for
+          client accept permission for each incoming mail connection. In addition to that the server is able to split multipart messages. This means that the server will
+          create a XML message representation for each body part in the mail message (e.g. mail attachments).</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;citrus-mail:server id=&quot;advancedMailServer&quot;
+                   auto-accept=&quot;false&quot;
+                   split-multipart=&quot;true&quot;
+                   port=&quot;25025&quot;
+                   auto-start=&quot;true&quot;/&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>When the auto accept is disabled you as a tester have to explicitly provide an accept response. Therefore you receive an accept request for each incoming mail message with mail sender
+          and recipient.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;receive with=&quot;advancedMailServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;accept-request&gt;
+        &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
+        &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
+      &lt;/accept-request&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/receive&gt;</pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span4">
+        <p>The test then responds with a accept response stating success or denial. When the accept outcome is <b>true</b> you can receive the mail
+          content as usual in a next test case step. When the accept outcome is <b>false</b> the mail client connection is denied with SMTP server error.</p>
+      </div>
+      <div class="span7">
+        <pre class="prettyprint">&lt;send with=&quot;advancedMailServer&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+      &lt;accept-response&gt;
+        &lt;accept&gt;true&lt;/accept&gt;
+      &lt;/accept-response&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</pre>
+      </div>
+    </div>
+
   </div>
 </div>
 

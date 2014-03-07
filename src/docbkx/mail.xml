@@ -12,6 +12,30 @@
   you can receive the incoming mail message and perform message validation as usual. The mail sending part is easy as
   Citrus offers a mail client that connects to some SMTP server for sending mails to the outside world.</para>
 
+  <note>
+    <para>As usual Citrus provides a customized mail configuration schema that
+      is used in Spring configuration files. Simply include the citrus-mail namespace in the configuration XML files as follows.</para>
+
+    <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+      xmlns:citrus-mail=&quot;http://www.citrusframework.org/schema/mail/config&quot;
+      xsi:schemaLocation=&quot;
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.citrusframework.org/schema/config
+      http://www.citrusframework.org/schema/config/citrus-config.xsd
+      http://www.citrusframework.org/schema/mail/config
+      http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd&quot;&gt;
+
+      [...]
+
+      &lt;/beans&gt;</programlisting>
+
+    <para>Now you are ready to use the customized Http configuration elements with the
+      citrus-http namespace prefix.</para>
+  </note>
+
   <para>Read the next section in order to find out more about the mail message support in Citrus.</para>
 
   <section id="mail-client">
