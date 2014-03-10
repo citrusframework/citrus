@@ -38,7 +38,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                     "</ns0:SoapMessageWithAttachmentRequest>")
-                .attatchment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt")),
+                .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt")),
             sequential(
                 receive("webServiceRequestReceiver")
                     .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
@@ -71,7 +71,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                     "</ns0:SoapMessageWithAttachmentRequest>")
-                .attatchment("MySoapAttachment", "text/plain", "This is an attachment!"),
+                .attachment("MySoapAttachment", "text/plain", "This is an attachment!"),
             sequential(
                 receive("webServiceRequestReceiver")
                     .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
