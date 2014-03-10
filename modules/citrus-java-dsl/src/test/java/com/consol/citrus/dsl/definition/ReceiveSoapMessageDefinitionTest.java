@@ -76,7 +76,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 receive(server)
                         .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
-                        .attatchment(testAttachment);
+                        .attachment(testAttachment);
             }
         };
 
@@ -114,7 +114,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
                 receive(messageEndpoint)
                     .soap()
                     .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
-                    .attatchment(testAttachment);
+                    .attachment(testAttachment);
             }
         };
         
@@ -152,7 +152,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
                 receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .soap()
-                    .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
+                    .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
             }
         };
         
@@ -191,7 +191,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
                 receive(messageEndpoint)
                     .payload(resource)
                     .soap()
-                    .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource);
+                    .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource);
             }
         };
         

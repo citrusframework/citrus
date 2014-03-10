@@ -47,7 +47,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                     .schemaValidation(false)
                     .extractFromHeader("jms_messageId", "internal_correlation_id")
                     .soap()
-                    .attatchment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
+                    .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
                     .timeout(5000L),
                 send("webServiceResponseSender")
                     .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
@@ -80,7 +80,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                     .schemaValidation(false)
                     .extractFromHeader("jms_messageId", "internal_correlation_id")
                     .soap()
-                    .attatchment("MySoapAttachment", "text/plain", "This is an attachment!")
+                    .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
                     .timeout(5000L),
                 send("webServiceResponseSender")
                     .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +

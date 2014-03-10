@@ -16,13 +16,6 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
@@ -32,6 +25,12 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.integration.Message;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Special SOAP receive message action definition adds SOAP specific properties.
@@ -56,7 +55,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @param content
      * @return
      */
-    public ReceiveSoapMessageActionDefinition attatchment(String contentId, String contentType, String content) {
+    public ReceiveSoapMessageActionDefinition attachment(String contentId, String contentType, String content) {
         getAction().setContentId(contentId);
         getAction().setContentType(contentType);
         getAction().setAttachmentData(content);
@@ -71,7 +70,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @param contentResource
      * @return
      */
-    public ReceiveSoapMessageActionDefinition attatchment(String contentId, String contentType, Resource contentResource) {
+    public ReceiveSoapMessageActionDefinition attachment(String contentId, String contentType, Resource contentResource) {
         getAction().setContentId(contentId);
         getAction().setContentType(contentType);
         
@@ -86,7 +85,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
     
     /**
      * Sets the charset name for this send action definition's control attachment.
-     * @param charset
+     * @param charsetName
      * @return
      */
     public ReceiveSoapMessageActionDefinition charset(String charsetName) {
@@ -99,7 +98,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @param attachment
      * @return
      */
-    public ReceiveSoapMessageActionDefinition attatchment(SoapAttachment attachment) {
+    public ReceiveSoapMessageActionDefinition attachment(SoapAttachment attachment) {
         getAction().setContentId(attachment.getContentId());
         getAction().setContentType(attachment.getContentType());
         getAction().setAttachmentData(attachment.getContent());
