@@ -145,7 +145,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 send(soapClient)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                    .attatchment(testAttachment);
+                    .attachment(testAttachment);
             }
         };
         
@@ -178,7 +178,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 send(soapClient)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                    .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
+                    .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
             }
         };
         
@@ -211,7 +211,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 send(soapClient)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                    .attatchment(testAttachment.getContentId(), testAttachment.getContentType(), resource);
+                    .attachment(testAttachment.getContentId(), testAttachment.getContentType(), resource);
             }
         };
         
@@ -263,7 +263,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header("operation", "soapOperation")
                     .soap()
-                    .attatchment(testAttachment);
+                    .attachment(testAttachment);
 
                 send("messageSender")
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");

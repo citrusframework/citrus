@@ -50,7 +50,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
      * @param content
      * @return
      */
-    public SendSoapMessageActionDefinition attatchment(String contentId, String contentType, String content) {
+    public SendSoapMessageActionDefinition attachment(String contentId, String contentType, String content) {
         getAction().setContentId(contentId);
         getAction().setContentType(contentType);
         getAction().setAttachmentData(content);
@@ -65,7 +65,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
      * @param contentResource
      * @return
      */
-    public SendSoapMessageActionDefinition attatchment(String contentId, String contentType, Resource contentResource) {
+    public SendSoapMessageActionDefinition attachment(String contentId, String contentType, Resource contentResource) {
         getAction().setContentId(contentId);
         getAction().setContentType(contentType);
         
@@ -93,7 +93,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
      * @param attachment
      * @return
      */
-    public SendSoapMessageActionDefinition attatchment(SoapAttachment attachment) {
+    public SendSoapMessageActionDefinition attachment(SoapAttachment attachment) {
         getAction().setContentId(attachment.getContentId());
         getAction().setContentType(attachment.getContentType());
         getAction().setAttachmentData(attachment.getContent());
