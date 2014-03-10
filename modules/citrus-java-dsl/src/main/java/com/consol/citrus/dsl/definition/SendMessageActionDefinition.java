@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -31,10 +35,6 @@ import org.springframework.integration.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Action definition creates a send message action with several message payload and header 
@@ -278,16 +278,31 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      */
     public SendSoapMessageActionDefinition soap() {
         SendSoapMessageAction sendSoapMessageAction = new SendSoapMessageAction();
-        
         sendSoapMessageAction.setActor(action.getActor());
         sendSoapMessageAction.setDescription(action.getDescription());
         sendSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
         sendSoapMessageAction.setEndpoint(action.getEndpoint());
         sendSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
-        
+
         positionHandle.switchTestAction(sendSoapMessageAction);
-        
+
         return new SendSoapMessageActionDefinition(sendSoapMessageAction);
     }
-    
+
+    /**
+     * Enable features specific for an HTTP REST endpoint. This includes setting the
+     * HTTP method and the endpoint URI.
+     *
+     * Example:
+     * <pre>
+     *     send("httpSender").method(HttpMethod.GET).uri("http://localhost:8080/jolokia");
+     * </pre>
+     *
+     *
+     * @return HTTP specific definition.
+     */
+    public SendHttpMessageActionDefinition http() {
+        return new SendHttpMessageActionDefinition(action,positionHandle);
+    }
+
 }
