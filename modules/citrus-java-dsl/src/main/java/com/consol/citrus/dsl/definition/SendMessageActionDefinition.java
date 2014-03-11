@@ -16,10 +16,6 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -35,6 +31,10 @@ import org.springframework.integration.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Action definition creates a send message action with several message payload and header 
@@ -62,6 +62,16 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         super(action);
         
         this.positionHandle = positionHandle;
+    }
+
+    /**
+     * Sets the fork mode for this send action definition.
+     * @param forkMode
+     * @return
+     */
+    public SendMessageActionDefinition fork(boolean forkMode) {
+        getAction().setForkMode(forkMode);
+        return this;
     }
     
     /**
@@ -302,7 +312,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @return HTTP specific definition.
      */
     public SendHttpMessageActionDefinition http() {
-        return new SendHttpMessageActionDefinition(action,positionHandle);
+        return new SendHttpMessageActionDefinition(action, positionHandle);
     }
 
 }

@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -289,6 +290,35 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpoint(), messageSender);
         
+        verify(applicationContextMock);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+          expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+    public void testSendBuilderWithSoapAndHttpMixed() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("soapClient", Endpoint.class)).andReturn(soapClient).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                send("soapClient")
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("operation", "soapOperation")
+                        .soap()
+                        .attachment(testAttachment)
+                        .http();
+            }
+        };
+
+        builder.execute();
+
         verify(applicationContextMock);
     }
     

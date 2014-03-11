@@ -16,16 +16,15 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
-import org.springframework.oxm.Marshaller;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import org.springframework.core.io.Resource;
+import org.springframework.integration.Message;
+import org.springframework.oxm.Marshaller;
+
+import java.io.IOException;
 
 /**
  * Send action definition adding SOAP specific properties like SOAP attachment and
@@ -80,7 +79,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
     
     /**
      * Sets the charset name for this send action definition's attachment.
-     * @param charset
+     * @param charsetName
      * @return
      */
     public SendSoapMessageActionDefinition charset(String charsetName) {
@@ -102,15 +101,10 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
         
         return this;
     }
-    
-    /**
-     * Sets the fork mode for this send action definition.
-     * @param forkMode
-     * @return
-     */
+
+    @Override
     public SendSoapMessageActionDefinition fork(boolean forkMode) {
-        getAction().setForkMode(forkMode);
-        return this;
+        return (SendSoapMessageActionDefinition) super.fork(forkMode);
     }
     
     @Override
@@ -162,5 +156,9 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
     public SendSoapMessageAction getAction() {
         return (SendSoapMessageAction)super.getAction();
     }
-    
+
+    @Override
+    public SendHttpMessageActionDefinition http() {
+        throw new CitrusRuntimeException("Invalid use of http and soap action definition");
+    }
 }
