@@ -34,13 +34,23 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testJsonValidation() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
-        
+
         Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
         Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        
+
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
-    
+
+    @Test
+    public void testSloppyJsonValidation() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator().sloppy();
+
+        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("{\"id\":\"x123456789x\"}").build();
+
+        validator.validateMessagePayload(receivedMessage, controlMessage, context);
+    }
+
     @Test
     public void testJsonValidationNestedObjects() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
@@ -54,7 +64,7 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testJsonValidationWithArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
-        
+
         Message<String> receivedMessage = MessageBuilder.withPayload("[" +
         		"{\"text\":\"Hello World!\", \"index\":1}, " +
         		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
@@ -63,10 +73,24 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         		"{\"text\":\"Hello World!\", \"index\":1}, " +
         		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
         		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
-        
+
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
-    
+
+    @Test
+    public void testSloppyJsonValidationWithArrays() {
+        JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        validator.setSloppy(true);
+
+        Message<String> receivedMessage = MessageBuilder.withPayload("[" +
+        		"{\"text\":\"Hello World!\", \"index\":1}, " +
+        		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
+        		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
+        Message<String> controlMessage = MessageBuilder.withPayload("[{\"text\":\"Hello World!\", \"index\":1}] ").build();
+
+        validator.validateMessagePayload(receivedMessage, controlMessage, context);
+    }
+
     @Test
     public void testJsonValidationWithNestedArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
