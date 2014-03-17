@@ -37,6 +37,12 @@
             <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>lib</outputDirectory>
           </dependencySet>
+          <dependencySet>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib-test</outputDirectory>
+            <scope>test</scope>
+          </dependencySet>
         </dependencySets>
       </binaries>
     </moduleSet>
