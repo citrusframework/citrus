@@ -16,15 +16,14 @@
 
 package com.consol.citrus.doxia.xhtml;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML.Tag;
-
 import org.apache.maven.doxia.markup.HtmlMarkup;
 import org.apache.maven.doxia.sink.*;
 import org.apache.maven.doxia.util.HtmlTools;
+
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.html.HTML.Tag;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Sink basically generates HTML output as is. Just takes care on HEAD, BODY and special elements rendering.
@@ -38,7 +37,6 @@ public class HtmlSink extends AbstractXmlSink {
     
     /**
      * @param writer
-     * @param encoding
      */
     public HtmlSink(Writer writer) {
         this.writer = writer;

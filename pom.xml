@@ -162,6 +162,7 @@
     <testng.version>6.8</testng.version>
     <slf4j.version>1.7.2</slf4j.version>
     <sonar.host.url>http://labs.consol.de/sonar</sonar.host.url>
+    <docbkx.img.path>images</docbkx.img.path>
   </properties>
 
   <dependencyManagement>
@@ -745,9 +746,9 @@
             <foCustomization>src/docbkx/styles/reference-pdf.xsl</foCustomization>
             <htmlCustomization>src/docbkx/styles/reference-html.xsl</htmlCustomization>
             <htmlStylesheet>css/reference.css</htmlStylesheet>
-            <imgSrcPath>${basedir}/src/docbkx/images/</imgSrcPath>
-            <admonGraphicsPath>file:${basedir}/src/docbkx/images/admons/</admonGraphicsPath>
-            <calloutGraphicsPath>file:${basedir}/src/docbkx/images/callouts/</calloutGraphicsPath>
+            <imgSrcPath>${docbkx.img.path}/</imgSrcPath>
+            <admonGraphicsPath>${docbkx.img.path}/admons/</admonGraphicsPath>
+            <calloutGraphicsPath>${docbkx.img.path}/callouts/</calloutGraphicsPath>
             <admonGraphicsExtension>.jpg</admonGraphicsExtension>
             <calloutGraphicsExtension>.jpg</calloutGraphicsExtension>
             <!-- produce single-page html output -->
@@ -824,6 +825,7 @@
       </distributionManagement>
       <properties>
         <site.url>http://build.int.consol.de/citrus</site.url>
+        <docbkx.img.path>images</docbkx.img.path>
       </properties>
     </profile>
     
@@ -845,6 +847,7 @@
       </distributionManagement>
       <properties>
         <site.url>http://www.citrusframework.org</site.url>
+        <docbkx.img.path>images</docbkx.img.path>
       </properties>
     </profile>
     
@@ -866,6 +869,7 @@
       </distributionManagement>
       <properties>
         <site.url>http://www.citrusframework.org</site.url>
+        <docbkx.img.path>file:${basedir}/src/docbkx/images</docbkx.img.path>
       </properties>
     </profile>
     
