@@ -24,7 +24,7 @@
       <property name="replyTimeout" value="5000"/>
     </bean>
 
-    <citrus:message-channel id="testSimulator.inbound"/>
+    <citrus:channel id="testSimulator.inbound"/>
 
     <citrus:sync-message-channel-receiver id="inboundRequestReceiver"
             channel="testSimulator.inbound"

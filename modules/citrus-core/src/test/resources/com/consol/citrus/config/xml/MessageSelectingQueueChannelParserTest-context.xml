@@ -5,9 +5,15 @@
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
     
-    <citrus:message-channel id="channel1"/>
+    <citrus:channel id="channel1"/>
                                  
-    <citrus:message-channel id="channel2" capacity="5"/>
+    <citrus:channel id="channel2" capacity="5"/>
     
-    <citrus:message-channel id="channel3" polling-interval="550"/>
+    <citrus:channel id="channel3" polling-interval="550"/>
+
+    <citrus:message-channel id="channel4"/>
+
+    <citrus:message-channel id="channel5" capacity="5"/>
+
+    <citrus:message-channel id="channel6" polling-interval="550"/>
 </beans>

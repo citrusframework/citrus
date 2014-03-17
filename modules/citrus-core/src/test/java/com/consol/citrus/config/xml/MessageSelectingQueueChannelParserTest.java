@@ -16,13 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
+import com.consol.citrus.channel.MessageSelectingQueueChannel;
+import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.channel.MessageSelectingQueueChannel;
-import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -33,7 +32,7 @@ public class MessageSelectingQueueChannelParserTest extends AbstractBeanDefiniti
     public void testMessageSelectingQueueChannelParser() {
         Map<String, MessageSelectingQueueChannel> channels = beanDefinitionContext.getBeansOfType(MessageSelectingQueueChannel.class);
         
-        Assert.assertEquals(channels.size(), 3);
+        Assert.assertEquals(channels.size(), 6);
         
         // 1st channel
         Assert.assertTrue(channels.containsKey("channel1"));
@@ -44,6 +43,17 @@ public class MessageSelectingQueueChannelParserTest extends AbstractBeanDefiniti
         
         // 3rd chanel with polling interval
         channel = channels.get("channel3");
+        Assert.assertEquals(channel.getPollingInterval(), 550);
+
+        // 4th channel
+        Assert.assertTrue(channels.containsKey("channel4"));
+
+        // 5th chanel with capacity
+        channel = channels.get("channel5");
+        Assert.assertEquals(channel.getRemainingCapacity(), 5);
+
+        // 6th chanel with polling interval
+        channel = channels.get("channel6");
         Assert.assertEquals(channel.getPollingInterval(), 550);
     }
 }

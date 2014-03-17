@@ -137,7 +137,7 @@
         we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel
         implementation in our configuration.</para>
         
-        <programlisting>&lt;citrus:message-channel id=&quot;orders&quot; capacity=&quot;5&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus:channel id=&quot;orders&quot; capacity=&quot;5&quot;/&gt;</programlisting>
         
         <para>The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That's it! 
         Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in <xref linkend="message-selector"/> and

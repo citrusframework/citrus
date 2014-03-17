@@ -165,6 +165,17 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="channel">
+        <xs:annotation>
+            <xs:documentation>Message channel acting as queue channel with extended selector support.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:ID" use="required"/>
+            <xs:attribute name="capacity" type="xs:string"/>
+            <xs:attribute name="polling-interval" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="message-channel-sender">
         <xs:annotation>
           <xs:documentation>Deprecated since 1.4 - use channel-endpoint instead.</xs:documentation>

@@ -375,14 +375,14 @@
     
     <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
     
-    <citrus:message-channel-sender id="channelRequestSender" 
+    <citrus:message-channel-sender id="channelRequestSender"
                                    channel="greetings"/>
     
     <citrus:message-channel-receiver id="channelResponseReceiver" 
                                      channel="greetings"
                                      receive-timeout="5000"/>
                                      
-    <citrus:message-channel id="greetings" capacity="5"/>
+    <citrus:channel id="greetings" capacity="5"/>
 
     <!-- Citrus mail components -->
     <citrus-mail:client id="mailMessageSender"

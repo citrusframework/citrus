@@ -44,7 +44,7 @@
                          ref="helloService"/>
 
   <int:channel id="helloRequests"/>
-  <citrus:message-channel id="helloResponses" capacity="5"/>
+  <citrus:channel id="helloResponses" capacity="5"/>
 
   <int:channel id="helloJmsRequests"/>
   <int:channel id="helloJmsResponses"/>
