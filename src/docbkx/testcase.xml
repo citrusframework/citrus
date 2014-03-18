@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="testcase">
-  <title>Test case</title>
+  <title>Test cases</title>
 
-  <para>Now let us start writing test cases! A test case in Citrus describes all steps for a certain use case. The Citrus 
-  integration test holds different test actions that are executed in sequence during the test. Typically with message-based 
-  enterprise applications the sending and receiving of messages represent the main actions inside a test. But you will learn 
-  that Citrus is able to add much more logic to your test, such as connecting to the database, transforming data, adding loops 
-  and iterations. With the default Citrus action set you can accomplish very complex use case integration tests. We will introduce 
-  all possible actions step by step and learn how to use various message transports within the test.</para>
+  <para>Now let us start writing test cases! A test case in Citrus describes all steps for a certain use case in one single file.
+  The Citrus test holds a sequence of test actions. Each action represents a very special purpose such as sending or receiving a message.
+  Typically with message-based enterprise applications the sending and receiving of messages represent the main actions inside a test.</para>
+
+  <para>However you will learn that Citrus is more than just a simple SOAP client for instance. Each test case can hold complex actions such
+  as connecting to the database, transforming data, adding loops and conditional steps. With the default Citrus action set you can accomplish
+  very complex use case integration tests. Later in this guide we will briefly discuss all available test actions and learn how to use
+  various message transports within the test. For now we will concentrate on the basic test case structure.</para>
 
   <mediaobject>
     <imageobject role="fo">
@@ -19,16 +21,19 @@
     </imageobject>
   </mediaobject>
     
-  <para>The figure above describes a typical test action sequence in Citrus. A list of test actions with purpose to send and receive 
-  messages using predefined Citrus MessageSender and MessageReceiver components. So how do we define those test cases? In general Citrus specifies 
-  test cases as Java classes. With TestNG or JUnit you can execute the Citrus tests within your Java runtime as you would do within unit testing.
-  You can code the Citrus test in a single Java class doing assertions and using Spring's dependency injection mechanisms. If you are not familiar
-  to writing Java code you can also write Citrus tests as XML files. Whatever test language you choose for Citrus the whole test case description 
-  takes place in one single file (Java or XML). This chapter will introduce the custom XML schema language as well as the Java domain specific 
-  language so you will be able to write Citrus test cases no matter what knowledge base you belong to.</para>
+  <para>The figure above describes a typical test action sequence in Citrus. A list of sending and receiving test actions composing a typical
+  test case here. Each action references a predefined Citrus endpoint component that we are going to talk about later on.</para>
+
+  <para>So how do we define those test cases? In general Citrus specifies test cases as Java classes. With TestNG or JUnit you can execute the
+  Citrus tests within your Java runtime as you would do within unit testing. You can code the Citrus test in a single Java class doing assertions
+  and using Spring's dependency injection mechanisms.</para>
+
+  <para>If you are not familiar to writing Java code you can also write Citrus tests as XML files. Whatever test language you choose for Citrus
+  the whole test case description takes place in one single file (Java or XML). This chapter will introduce the custom XML schema language as
+  well as the Java domain specific language so you will be able to write Citrus test cases no matter what knowledge base you belong to.</para>
 
   <section id="testcase-defining">
-    <title>Defining a test case</title>
+    <title>Writing a test case</title>
 
     <para>Put simply, a Citrus test case is nothing but a simple Spring XML configuration file. The Spring framework has become a state of the art 
     development framework for enterprise Java applications. As you work with Citrus you will also learn how to use the Spring Ioc (Inversion of control)
@@ -55,8 +60,9 @@
     
     <para>Citrus can execute these Spring bean definitions as normal test cases - no problem, but the pure Spring XML
     syntax is very verbose and probably not the best way to describe a test case in Citrus. In particular you have to know a lot of Citrus internals 
-    such as Java class and property names. In addition to that as test scenarios get more complex and the test cases grow in size we need a more effective 
-    way of writing tests. Therefore Citrus provides a custom XML schema definition for writing test cases which is much more adequate for our testing purpose.</para>
+    such as Java class names and property names. In addition to that as test scenarios get more complex the test cases grow in size. So we need a
+    more effective and comfortable way of writing tests. Therefore Citrus provides a custom XML schema definition for writing test cases
+    which is much more adequate for our testing purpose.</para>
     
     <para>The custom XML schema aims to reach the convenience of domain specific languages (DSL). Let us have a look 
     at the Citrus test describing XML language by introducing a first very simple test case definition:</para>
@@ -132,7 +138,7 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
         the different language types just as you like within your Citrus project which gives you the best of flexibility.</para>
     </note>
     
-    <para>Now let us continue with the basic test case attributes and properties that you will come accross while writing new tests. A typical test case defines these basic attributes 
+    <para>Now let us continue with the basic test case attributes and properties that you will come across while writing new tests. A typical test case defines these basic attributes
     that we are going to discuss in detail in the next sections.</para>
     
     <section id="testcase-description">
@@ -253,7 +259,7 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
     </section>
     
     <section id="testcase-actions">
-        <title>Actions</title>
+        <title>Test Actions</title>
         
         <para>Now we get close to the main part of writing an integration test. A Citrus test case defines a sequence of actions that will take 
         place during the test. Actions by default are executed sequentially in the same order as they are defined in the test case definition.</para>

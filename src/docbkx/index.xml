@@ -22,7 +22,8 @@
     </bookinfo>
     <toc/>
     <xi:include href='preface.xml'/>
-    <xi:include href='whatsnew.xml'/>
+    <xi:include href='changes-new.xml'/>
+    <xi:include href='changes-history.xml'/>
     <xi:include href='introduction.xml'/>
     <xi:include href='setup.xml'/>
     

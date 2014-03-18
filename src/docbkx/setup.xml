@@ -2,12 +2,15 @@
 <chapter id="setup">
   <title>Setup</title>
 
-  <para>This chapter will tell you how to get started with Citrus. It deals with the installation and set up of the framework, 
+  <para>This chapter discusses how to get started with Citrus. It deals with the installation and set up of the framework,
   so you are ready to start writing test cases after reading this chapter.</para> 
   
-  <para>Usually you would use Citrus as a library in your project or as a standalone Java application. Following these two setup
-  variations Citrus can be invoked either by using Ant or Maven. This chapter describes the Citrus project setup possibilities, 
-  choose one of them that fits best to include Citrus into your project.</para>
+  <para>Usually you would use Citrus as a dependency library in your project. In Maven you would just add Citrus as a test-scoped
+  dependency in your POM. When using ANT you can also run Citrus as normal Java application from your build.xml. As Citrus tests
+  are nothing but normal unit tests you could also use JUnit or TestNG ant tasks to execute the Citrus test cases.</para>
+
+  <para>This chapter describes the Citrus project setup possibilities, choose one of them that fits best to include Citrus into
+  your project.</para>
   
   <section id="setup-using-maven">
     <title>Using Maven</title>
@@ -166,7 +169,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     <title>Using Ant</title>
 
     <para>Ant is a very popular way to compile, test, package and execute Java projects. The Apache project has 
-    effectively become a standard in managing Java projects. You can run Citrus test cases with Ant as Citrus is nothing but a
+    effectively become a standard in building Java projects. You can run Citrus test cases with Ant as Citrus is nothing but a
     Java application. This section describes the steps to setup a proper Citrus Ant project.</para>
 
     <section id="setup-prerequisits">
@@ -174,7 +177,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       
       <para>Before we start with the Citrus setup be sure to meet the following preconditions. The following software should
       be installed on your computer, in order to use the Citrus framework:</para>
-  
+
       <itemizedlist>
           <listitem>
               <para>Java 1.6 or higher</para>
@@ -204,12 +207,11 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       <para>Citrus comes to you as a zipped archive in one of the following packages:</para>
       
       <itemizedlist>
-          <listitem><para><emphasis>citrus-x.x-with-dependencies</emphasis></para></listitem>
+          <listitem><para><emphasis>citrus-x.x-release</emphasis></para></listitem>
           <listitem><para><emphasis>citrus-x.x-src</emphasis></para></listitem>
       </itemizedlist>
       
-      <para>Usually you would choose the archive including all dependency libraries to start using Citrus. Besides that the package 
-      includes the Citrus binaries as well as the reference documentation and some sample applications.</para>
+      <para>The release package includes the Citrus binaries as well as the reference documentation and some sample applications.</para>
       
       <para>In case you want to get in touch with developing and debugging Citrus you can also go with the source archive 
       which gives you the complete Citrus Java code sources. The whole Citrus project is also accessible for you on 
@@ -221,13 +223,17 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       <title>Installation</title>
   
       <para>After downloading the Citrus archives we extract those into an appropriate location on the local 
-      storage. We are seeking for the Citrus project artefacts coming as normal Java archives (e.g. citrus-core.jar, 
+      storage. We are seeking for the Citrus project artifacts coming as normal Java archives (e.g. citrus-core.jar,
       citrus-ws.jar, etc.)</para>
       
       <para>You have to include those Citrus Java archives as well as all dependency libraries to your Ant Java classpath. Usually
-      you would copy all libraries into your project's lib directory and declare those libraries in the Ant build file. 
-      See the following sample Ant build script which uses the Citrus project artefacts in combination with the Citrus Ant tasks 
-      to setup and run the tests.</para>
+      you would copy all libraries into your project's lib directory and declare those libraries in the Ant build file. As this approach
+      can be very time consuming I recommend to use a dependency management API such as Apache Ivy which gives you automatic dependency
+      resolution like that from Maven. In particular this comes in handy with all the 3rd party dependencies that would be resolved
+      automatically.</para>
+
+      <para>No matter what approach you are using to set up the ANT classpath see the following sample Ant build script which uses
+      the Citrus project artifacts in combination with the Citrus Ant tasks to run the tests.</para>
       
       <programlisting>&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot;&gt;
   

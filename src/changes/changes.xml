@@ -16,14 +16,29 @@
   
   <body>
     <release version="1.4" date="01.01.2014" descripton="1.4 release">
+        <action dev="christophd" type="fix">
+          CITRUS-197 Attachment spelling in Java DSL
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-194 Misleading create variables action in Java DSL
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-187 Class cast exceptions when using object variable value
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-186 AssertionErrors not handled
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-185 SSHClient with just username/password
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-184 Mail adapter
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-183 SOAP Http Uri as header
+        </action>
         <action dev="christophd" type="add">
           CITRUS-166 XML data dictionary
-        </action>
-        <action dev="christophd" type="add">
-          CITRUS-171 FTP server adapter
-        </action>
-        <action dev="christophd" type="add">
-          CITRUS-172 LDAP server adapter
         </action>
     </release>
 

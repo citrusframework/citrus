@@ -131,17 +131,7 @@
         The synchronous sender receives the reply message and provides it to the reply handler. Once the reply handler has received the reply message 
         it can be handed over to a validator component as usual for further message validation.</para>
         
-        <mediaobject>
-          <imageobject role="fo">
-            <imagedata align="center" width="450px" scale="100" fileref="figure_007.jpg" format="JPG" />
-          </imageobject>
-          
-          <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_007.jpg" format="JPG" />
-          </imageobject>
-        </mediaobject>
-        
-        <para>The respective test case makes use of both synchronous message sender and reply handler in order to complete the synchronous 
+        <para>The respective test case makes use of both synchronous message sender and reply handler in order to complete the synchronous
         communication steps.</para>
         
         <programlisting>&lt;testcase name=&quot;syncMessagingTest&quot;&gt;
@@ -193,18 +183,18 @@
         header in order to receive the synchronous answer on this dynamic destination. So Citrus has to send the reply to the 
         temporary destination, which is dynamic of course. You can handle this with the synchronous message receiver in combination 
         with a reply sender.</para>
-        
+
         <mediaobject>
           <imageobject role="fo">
-            <imagedata align="center" width="450px" scale="100" fileref="figure_008.jpg" format="JPG" />
+            <imagedata align="center" width="450px" scale="100" fileref="figure_007.jpg" format="JPG" />
           </imageobject>
-          
+
           <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_008.jpg" format="JPG" />
+            <imagedata align="center" display="block" fileref="figure_007.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
         
-        <programlisting>&lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot; 
+        <programlisting>&lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot;
                     destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;
                     receive-timeout=&quot;5000&quot;/&gt;
                                      
