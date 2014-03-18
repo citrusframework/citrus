@@ -23,7 +23,6 @@
     <toc/>
     <xi:include href='preface.xml'/>
     <xi:include href='changes-new.xml'/>
-    <xi:include href='changes-history.xml'/>
     <xi:include href='introduction.xml'/>
     <xi:include href='setup.xml'/>
     
@@ -51,7 +50,7 @@
     <xi:include href='meta-info.xml'/>
     <xi:include href='message-tracing.xml'/>
     <xi:include href='reporting.xml'/>
-    
+
     <appendix id="samples">
         <title>Citrus Samples</title>
         
@@ -65,5 +64,14 @@
         </itemizedlist>
             
         <xi:include href='samples-flightbooking.xml'/>
+    </appendix>
+
+    <appendix id="changes-history">
+        <title>Change History</title>
+
+        <para>In the following sections we you will find out what has happened in the past Citrus releases.</para>
+
+        <xi:include href='changes-1-2.xml'/>
+        <xi:include href='changes-1-3.xml'/>
     </appendix>
 </book>
