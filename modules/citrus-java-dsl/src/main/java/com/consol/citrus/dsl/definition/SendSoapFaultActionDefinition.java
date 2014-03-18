@@ -32,7 +32,7 @@ import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
  * 
  * @author Christoph Deppisch
  */
-public class SendSoapFaultActionDefinition extends SendMessageActionDefinition {
+public class SendSoapFaultActionDefinition extends SendMessageActionDefinition<SendMessageAction,SendSoapFaultActionDefinition> {
 
     private SoapFaultAwareMessageBuilder soapFaultMessageBuilder = new SoapFaultAwareMessageBuilder();
     
@@ -101,33 +101,33 @@ public class SendSoapFaultActionDefinition extends SendMessageActionDefinition {
         }
         return this;
     }
-    
+
     /**
      * Adds message header name value pair.
      * @param name
      * @param value
      */
-    public SendMessageActionDefinition header(String name, Object value) {
+    public SendSoapFaultActionDefinition header(String name, Object value) {
         soapFaultMessageBuilder.getMessageHeaders().put(name, value);
         return this;
     }
-    
+
     /**
      * Adds message header data. Message header data is used in SOAP
      * messages for instance as header XML fragment.
      * @param data
      */
-    public SendMessageActionDefinition header(String data) {
+    public SendSoapFaultActionDefinition header(String data) {
         soapFaultMessageBuilder.setMessageHeaderData(data);
         return this;
     }
-    
+
     /**
      * Adds message header data as file resource. Message header data is used in SOAP
      * messages for instance as header XML fragment.
      * @param resource
      */
-    public SendMessageActionDefinition header(Resource resource) {
+    public SendSoapFaultActionDefinition header(Resource resource) {
         try {
             soapFaultMessageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
         } catch (IOException e) {

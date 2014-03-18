@@ -16,15 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
-import org.springframework.oxm.Marshaller;
-
-import java.io.IOException;
 
 /**
  * Send action definition adding SOAP specific properties like SOAP attachment and
@@ -32,7 +30,7 @@ import java.io.IOException;
  * 
  * @author Christoph Deppisch
  */
-public class SendSoapMessageActionDefinition extends SendMessageActionDefinition {
+public class SendSoapMessageActionDefinition extends SendMessageActionDefinition<SendSoapMessageAction,SendSoapMessageActionDefinition> {
 
     /**
      * Default constructor using action.
@@ -103,58 +101,8 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
     }
 
     @Override
-    public SendSoapMessageActionDefinition fork(boolean forkMode) {
-        return (SendSoapMessageActionDefinition) super.fork(forkMode);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition message(Message<String> message) {
-        return (SendSoapMessageActionDefinition) super.message(message);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition payload(Object payload, Marshaller marshaller) {
-        return (SendSoapMessageActionDefinition) super.payload(payload, marshaller);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition payload(Resource payloadResource) {
-        return (SendSoapMessageActionDefinition) super.payload(payloadResource);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition payload(String payload) {
-        return (SendSoapMessageActionDefinition) super.payload(payload);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition header(String name, Object value) {
-        return (SendSoapMessageActionDefinition) super.header(name, value);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition description(String description) {
-        return (SendSoapMessageActionDefinition) super.description(description);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition extractFromHeader(String headerName, String variable) {
-        return (SendSoapMessageActionDefinition) super.extractFromHeader(headerName, variable);
-    }
-    
-    @Override
-    public SendSoapMessageActionDefinition extractFromPayload(String xpath, String variable) {
-        return (SendSoapMessageActionDefinition) super.extractFromPayload(xpath, variable);
-    }
-    
-    @Override
     public SendSoapMessageActionDefinition soap() {
         return this;
-    }
-    
-    @Override
-    public SendSoapMessageAction getAction() {
-        return (SendSoapMessageAction)super.getAction();
     }
 
     @Override

@@ -31,24 +31,48 @@ public class MessageHeaderEndpointUriResolverTest {
     @Test
     public void testEndpointMapping() {
         MessageHeaderEndpointUriResolver endpointUriResolver = new MessageHeaderEndpointUriResolver();
-        
+
         Message<?> testMessage;
-        
-        testMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+
+        testMessage = createBuilder()
                 .setHeader(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, "http://localhost:8080/request")
                 .build();
-        
+
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage), "http://localhost:8080/request");
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), "http://localhost:8080/request");
     }
-    
+    @Test
+    public void testEndpointMappingWithPath() {
+        MessageHeaderEndpointUriResolver endpointUriResolver = new MessageHeaderEndpointUriResolver();
+
+        Message<?> testMessage;
+
+        for (String[] test : new String[][] {
+                { "http://localhost:8080/request", "/test", "http://localhost:8080/request/test" },
+                { "http://localhost:8080/request/", "/test", "http://localhost:8080/request/test" },
+                { "http://localhost:8080/request", "test", "http://localhost:8080/request/test"},
+                { "http://localhost:8080/request////", "test", "http://localhost:8080/request/test"},
+                { "http://localhost:8080/request/", "////test", "http://localhost:8080/request/test"},
+                { "http://localhost:8080/request", "test/", "http://localhost:8080/request/test/"},
+        }) {
+            testMessage = createBuilder()
+                    .setHeader(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, test[0])
+                    .setHeader(MessageHeaderEndpointUriResolver.ENDPOINT_PATH_HEADER_NAME,test[1])
+                    .build();
+
+            Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage), test[2]);
+            Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), test[2]);
+
+        }
+    }
+
     @Test
     public void testDefaultEndpoint() {
         MessageHeaderEndpointUriResolver endpointUriResolver = new MessageHeaderEndpointUriResolver();
         
         Message<?> testMessage;
         
-        testMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        testMessage = createBuilder().build();
         
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), "http://localhost:8080/default");
     }
@@ -59,7 +83,7 @@ public class MessageHeaderEndpointUriResolverTest {
         
         Message<?> testMessage;
         
-        testMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        testMessage = createBuilder().build();
         
         try {
             endpointUriResolver.resolveEndpointUri(testMessage);
@@ -70,5 +94,9 @@ public class MessageHeaderEndpointUriResolverTest {
         }
         
         Assert.fail("Missing CitrusRuntimeException caused by unresolvable endpoint uri");
+    }
+
+    private MessageBuilder<String> createBuilder() {
+        return MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
     }
 }

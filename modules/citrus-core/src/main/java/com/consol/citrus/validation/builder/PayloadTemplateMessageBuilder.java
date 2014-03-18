@@ -17,15 +17,10 @@
 package com.consol.citrus.validation.builder;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.util.StringUtils;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 
 /**
  * @author Christoph Deppisch

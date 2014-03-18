@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -32,17 +36,15 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Action definition creates a send message action with several message payload and header 
  * constructing build methods.
  * 
  * @author Christoph Deppisch
  */
-public class SendMessageActionDefinition extends AbstractActionDefinition<SendMessageAction> {
+public class SendMessageActionDefinition<A extends SendMessageAction,T extends SendMessageActionDefinition> extends AbstractActionDefinition<A> {
+
+    private final T self;
 
     /** Variable extractors filled within this definition */
     private MessageHeaderVariableExtractor headerExtractor;
@@ -58,10 +60,11 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param action
      * @param positionHandle
      */
-    public SendMessageActionDefinition(SendMessageAction action, PositionHandle positionHandle) {
+    public SendMessageActionDefinition(A action, PositionHandle positionHandle) {
         super(action);
         
         this.positionHandle = positionHandle;
+        this.self = (T) this;
     }
 
     /**
@@ -69,9 +72,9 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param forkMode
      * @return
      */
-    public SendMessageActionDefinition fork(boolean forkMode) {
+    public T fork(boolean forkMode) {
         getAction().setForkMode(forkMode);
-        return this;
+        return self;
     }
     
     /**
@@ -79,7 +82,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param message
      * @return
      */
-    public SendMessageActionDefinition message(Message<String> message) {
+    public T message(Message<String> message) {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData(message.getPayload());
         
@@ -94,7 +97,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         
         action.setMessageBuilder(messageBuilder);
         
-        return this;
+        return self;
     }
     
     /**
@@ -102,7 +105,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param payload
      * @return
      */
-    public SendMessageActionDefinition payload(String payload) {
+    public T payload(String payload) {
         if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
             ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadData(payload);
         } else {
@@ -112,7 +115,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
             action.setMessageBuilder(messageBuilder);
         }
         
-        return this;
+        return self;
     }
     
     /**
@@ -120,7 +123,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param payloadResource
      * @return
      */
-    public SendMessageActionDefinition payload(Resource payloadResource) {
+    public T payload(Resource payloadResource) {
         try {
             if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
                 ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadData(FileUtils.readToString(payloadResource));
@@ -134,7 +137,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
     
-        return this;
+        return self;
     }
     
     /**
@@ -143,7 +146,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param marshaller
      * @return
      */
-    public SendMessageActionDefinition payload(Object payload, Marshaller marshaller) {
+    public T payload(Object payload, Marshaller marshaller) {
         StringResult result = new StringResult();
         
         try {
@@ -163,7 +166,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
             action.setMessageBuilder(messageBuilder);
         }
         
-        return this;
+        return self;
     }
 
     /**
@@ -171,66 +174,57 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param name
      * @param value
      */
-    public SendMessageActionDefinition header(String name, Object value) {
-        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-            ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).getMessageHeaders().put(name, value);
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.getMessageHeaders().put(name, value);
-            
-            action.setMessageBuilder(messageBuilder);
-        }
-        
-        return this;
+    public T header(String name, Object value) {
+        getOrCreateMessageBuilder().getMessageHeaders().put(name, value);
+        return self;
     }
-    
+
     /**
      * Adds message header data to this definition's message sending action. Message header data is used in SOAP
      * messages for instance as header XML fragment.
      * @param data
      */
-    public SendMessageActionDefinition header(String data) {
-        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-            ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).setMessageHeaderData(data);
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setMessageHeaderData(data);
-            
-            action.setMessageBuilder(messageBuilder);
-        }
-        
-        return this;
+    public T header(String data) {
+        getOrCreateMessageBuilder().setMessageHeaderData(data);
+        return self;
     }
-    
+
     /**
      * Adds message header data as file resource to this definition's message sending action. Message header data is used in SOAP
      * messages for instance as header XML fragment.
      * @param resource
      */
-    public SendMessageActionDefinition header(Resource resource) {
+    public T header(Resource resource) {
         try {
-            if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-                ((AbstractMessageContentBuilder<?>)action.getMessageBuilder()).setMessageHeaderData(FileUtils.readToString(resource));
-            } else {
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
-                
-                action.setMessageBuilder(messageBuilder);
-            }
+            getOrCreateMessageBuilder().setMessageHeaderData(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
-        
-        return this;
+        return self;
     }
-    
+
+    /**
+     * Get message builder, if already registered or create a new message builder and registrer it
+     *
+     * @return the message builder in use
+     */
+    protected AbstractMessageContentBuilder<String> getOrCreateMessageBuilder() {
+        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
+            return (AbstractMessageContentBuilder<String>) action.getMessageBuilder();
+        } else {
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            action.setMessageBuilder(messageBuilder);
+            return messageBuilder;
+        }
+    }
+
     /**
      * Extract message header entry as variable before message is sent.
      * @param headerName
      * @param variable
      * @return
      */
-    public SendMessageActionDefinition extractFromHeader(String headerName, String variable) {
+    public T extractFromHeader(String headerName, String variable) {
         if (headerExtractor == null) {
             headerExtractor = new MessageHeaderVariableExtractor();
             
@@ -238,7 +232,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         }
         
         headerExtractor.getHeaderMappings().put(headerName, variable);
-        return this;
+        return self;
     }
     
     /**
@@ -247,7 +241,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param variable
      * @return
      */
-    public SendMessageActionDefinition extractFromPayload(String xpath, String variable) {
+    public T extractFromPayload(String xpath, String variable) {
         if (xpathExtractor == null) {
             xpathExtractor = new XpathPayloadVariableExtractor();
             
@@ -255,7 +249,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         }
         
         xpathExtractor.getxPathExpressions().put(xpath, variable);
-        return this;
+        return self;
     }
 
     /**
@@ -264,7 +258,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
      * @param value
      * @return
      */
-    public SendMessageActionDefinition xpath(String expression, String value) {
+    public T xpath(String expression, String value) {
         if (xpathMessageConstructionInterceptor == null) {
             xpathMessageConstructionInterceptor = new XpathMessageConstructionInterceptor();
 
@@ -279,7 +273,7 @@ public class SendMessageActionDefinition extends AbstractActionDefinition<SendMe
         }
 
         xpathMessageConstructionInterceptor.getXPathExpressions().put(expression, value);
-        return this;
+        return self;
     }
     
     /**
