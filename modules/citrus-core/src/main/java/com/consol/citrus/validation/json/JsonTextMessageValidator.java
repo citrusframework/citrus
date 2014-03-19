@@ -16,9 +16,6 @@
 
 package com.consol.citrus.validation.json;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -35,20 +32,25 @@ import org.springframework.integration.Message;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * This message validator implementation is able to validate two JSON text objects. The order of JSON entries can differ
  * as specified in JSON protocol. Tester defines an expected control JSON text with optional ignored entries.
  * 
  * JSONArray as well as nested JSONObjects are supported, too.
+ *
+ * Validator offers two different modes to operate. By default strict mode is set and the validator will also check the exact amount of
+ * control object fields to match. No additional fields in received JSON data structure will be accepted. In soft mode validator
+ * allows additional fields in received JSON data structure so the control JSON object can be a partial subset.
  * 
  * @author Christoph Deppisch
  */
 public class JsonTextMessageValidator extends ControlMessageValidator {
 
-    // Whether the control message is allowed to be only a partial of the full message
-    private boolean sloppy = false;
-
-
+    /** Should also check exact amount of object fields */
+    private boolean strict = true;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -111,7 +113,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
      */
     @SuppressWarnings("rawtypes")
     public void validateJson(JSONObject receivedJson, JSONObject controlJson, TestContext context) {
-        if (!sloppy) {
+        if (strict) {
             Assert.isTrue(controlJson.size() == receivedJson.size(),
                           ValidationUtils.buildValueMismatchErrorMessage("Number of JSON entries not equal", controlJson.size(), receivedJson.size()));
         }
@@ -164,7 +166,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                     log.debug("Validating JSONArray containing " + jsonArrayControl.size() + " entries");
                 }
 
-                if (!sloppy) {
+                if (strict) {
                     Assert.isTrue(jsonArrayControl.size() == jsonArrayReceived.size(),
                                   ValidationUtils.buildValueMismatchErrorMessage("JSONArray size mismatch for JSON entry '" + controlJsonEntry.getKey() + "'",
                                                                                  jsonArrayControl.size(), jsonArrayReceived.size()));
@@ -200,17 +202,22 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
         return messageType.equalsIgnoreCase(MessageType.JSON.toString());
     }
 
-    public void setSloppy(boolean pSloppy) {
-            sloppy = pSloppy;
+    /**
+     * Set the validator strict mode.
+     * @param strict
+     */
+    public void setStrict(boolean strict) {
+        this.strict = strict;
     }
 
     /**
-     * Set the validator to be sloppy.
-     *
+     * Set the validator strict mode.
+     * @param strict
      * @return this object for chaining
      */
-    public JsonTextMessageValidator sloppy() {
-        sloppy = true;
+    public JsonTextMessageValidator strict(boolean strict) {
+        setStrict(strict);
         return this;
     }
+
 }

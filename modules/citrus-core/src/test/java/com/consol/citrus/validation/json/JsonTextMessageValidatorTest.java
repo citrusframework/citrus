@@ -43,7 +43,7 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSloppyJsonValidation() {
-        JsonTextMessageValidator validator = new JsonTextMessageValidator().sloppy();
+        JsonTextMessageValidator validator = new JsonTextMessageValidator().strict(false);
 
         Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
         Message<String> controlMessage = MessageBuilder.withPayload("{\"id\":\"x123456789x\"}").build();
@@ -80,7 +80,7 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testSloppyJsonValidationWithArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
-        validator.setSloppy(true);
+        validator.setStrict(false);
 
         Message<String> receivedMessage = MessageBuilder.withPayload("[" +
         		"{\"text\":\"Hello World!\", \"index\":1}, " +
