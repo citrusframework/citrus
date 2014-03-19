@@ -40,10 +40,17 @@ import java.util.Map;
  * as specified in JSON protocol. Tester defines an expected control JSON text with optional ignored entries.
  * 
  * JSONArray as well as nested JSONObjects are supported, too.
+ *
+ * Validator offers two different modes to operate. By default strict mode is set and the validator will also check the exact amount of
+ * control object fields to match. No additional fields in received JSON data structure will be accepted. In soft mode validator
+ * allows additional fields in received JSON data structure so the control JSON object can be a partial subset.
  * 
  * @author Christoph Deppisch
  */
 public class JsonTextMessageValidator extends ControlMessageValidator {
+
+    /** Should also check exact amount of object fields */
+    private boolean strict = true;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -106,8 +113,10 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
      */
     @SuppressWarnings("rawtypes")
     public void validateJson(JSONObject receivedJson, JSONObject controlJson, TestContext context) {
-        Assert.isTrue(controlJson.size() == receivedJson.size(), 
-                ValidationUtils.buildValueMismatchErrorMessage("Number of JSON entries not equal", controlJson.size(), receivedJson.size()));
+        if (strict) {
+            Assert.isTrue(controlJson.size() == receivedJson.size(),
+                          ValidationUtils.buildValueMismatchErrorMessage("Number of JSON entries not equal", controlJson.size(), receivedJson.size()));
+        }
         
         for (Iterator it = controlJson.entrySet().iterator(); it.hasNext();) {
             Map.Entry controlJsonEntry = (Map.Entry) it.next();
@@ -156,11 +165,12 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                 if (log.isDebugEnabled()) {
                     log.debug("Validating JSONArray containing " + jsonArrayControl.size() + " entries");
                 }
-                
-                Assert.isTrue(jsonArrayControl.size() == jsonArrayReceived.size(), 
-                        ValidationUtils.buildValueMismatchErrorMessage("JSONArray size mismatch for JSON entry '" + controlJsonEntry.getKey() + "'", 
-                                jsonArrayControl.size(), jsonArrayReceived.size()));
-                
+
+                if (strict) {
+                    Assert.isTrue(jsonArrayControl.size() == jsonArrayReceived.size(),
+                                  ValidationUtils.buildValueMismatchErrorMessage("JSONArray size mismatch for JSON entry '" + controlJsonEntry.getKey() + "'",
+                                                                                 jsonArrayControl.size(), jsonArrayReceived.size()));
+                }
                 for (int i = 0; i < jsonArrayControl.size(); i++) {
                     if (jsonArrayControl.get(i).getClass().isAssignableFrom(JSONObject.class)) {
                         Assert.isTrue(jsonArrayReceived.get(i).getClass().isAssignableFrom(JSONObject.class), 
@@ -191,4 +201,23 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
     public boolean supportsMessageType(String messageType) {
         return messageType.equalsIgnoreCase(MessageType.JSON.toString());
     }
+
+    /**
+     * Set the validator strict mode.
+     * @param strict
+     */
+    public void setStrict(boolean strict) {
+        this.strict = strict;
+    }
+
+    /**
+     * Set the validator strict mode.
+     * @param strict
+     * @return this object for chaining
+     */
+    public JsonTextMessageValidator strict(boolean strict) {
+        setStrict(strict);
+        return this;
+    }
+
 }

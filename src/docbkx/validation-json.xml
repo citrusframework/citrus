@@ -18,7 +18,12 @@
         <listitem>
             <para>com.consol.citrus.validation.json.JsonTextMessageValidator: Basic JSON message validator implementation compares JSON objects (expected and received). 
             The order of JSON entries can differ as specified in JSON protocol. Tester defines an expected control JSON object with test variables and ignored entries. 
-            JSONArray as well as nested JSONObjects are supported, too.</para>
+            JSONArray as well as nested JSONObjects are supported, too.
+
+            The JSON validator offers two different modes to operate. By default <emphasis>strict</emphasis> mode is set and the validator will also check the exact
+            amount of control object fields to match. No additional fields in received JSON data structure will be accepted. In <emphasis>soft</emphasis> mode validator
+            allows additional fields in received JSON data structure so the control JSON object can be a partial subset in which case only the control fields are validated.
+            Additional fields in the received JSON data structure are ignored then.</para>
         </listitem>
         <listitem>
             <para>com.consol.citrus.validation.script.GroovyJsonMessageValidator: Extended groovy message validator provides specific JSON slurper support. With JSON slurper 
