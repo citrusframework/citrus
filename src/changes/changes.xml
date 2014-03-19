@@ -40,8 +40,8 @@
         <action dev="christophd" type="add">
           CITRUS-166 XML data dictionary
         </action>
-        <action dev="roland" type="add">
-          Allow the JSON Text Validator to be sloppy by setting a property
+        <action dev="roland" type="update">
+          CITRUS-198 JSON text validator strict mode
         </action>
     </release>
 
