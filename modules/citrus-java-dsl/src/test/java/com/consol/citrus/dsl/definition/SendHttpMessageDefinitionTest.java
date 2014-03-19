@@ -16,7 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import java.util.HashMap;
+
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -32,8 +35,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
 
 import static org.easymock.EasyMock.*;
 
@@ -117,13 +118,14 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testHttpRequestUri() {
+    public void testHttpRequestUriAndPath() {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
                         .http()
-                        .uri("http://localhost:8080/test")
+                        .uri("http://localhost:8080/")
+                        .path("/test")
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
@@ -141,8 +143,9 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/test");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(MessageHeaderEndpointUriResolver.ENDPOINT_PATH_HEADER_NAME), "/test");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,

@@ -20,6 +20,7 @@ import org.springframework.integration.Message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
+import org.springframework.integration.MessageHeaders;
 
 /**
  * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
@@ -31,7 +32,8 @@ public class MessageHeaderEndpointUriResolver implements EndpointUriResolver {
 
     /** Static header entry name specifying the dynamic endpoint uri */
     public static final String ENDPOINT_URI_HEADER_NAME = CitrusMessageHeaders.PREFIX + "endpoint_uri";
-    
+    public static final String ENDPOINT_PATH_HEADER_NAME = CitrusMessageHeaders.PREFIX + "endpoint_path";
+
     /** Default fallback uri */
     private String defaultEndpointUri;
     
@@ -39,27 +41,36 @@ public class MessageHeaderEndpointUriResolver implements EndpointUriResolver {
      * Get the endpoint uri according to message header entry.
      */
     public String resolveEndpointUri(Message<?> message) {
-        if (message.getHeaders().containsKey(ENDPOINT_URI_HEADER_NAME)) {
-            return message.getHeaders().get(ENDPOINT_URI_HEADER_NAME).toString();
-        }
-        
-        if (defaultEndpointUri != null) {
-            return defaultEndpointUri;
-        } else {
-            throw new CitrusRuntimeException("Unable to resolve dynamic endpoint uri for this message - missing header entry '" + 
-                    ENDPOINT_URI_HEADER_NAME + "' specifying the endpoint uri neither default endpoint uri is set");
-        }
+        return resolveEndpointUri(message,defaultEndpointUri);
     }
     
     /**
      * Get the endpoint uri according to message header entry with fallback default uri.
      */
     public String resolveEndpointUri(Message<?> message, String defaultUri) {
-        if (message.getHeaders().containsKey(ENDPOINT_URI_HEADER_NAME)) {
-            return message.getHeaders().get(ENDPOINT_URI_HEADER_NAME).toString();
+        MessageHeaders headers = message.getHeaders();
+        String uri = headers.containsKey(ENDPOINT_URI_HEADER_NAME) ?
+                headers.get(ENDPOINT_URI_HEADER_NAME).toString() :
+                defaultUri;
+
+        if (uri == null) {
+            throw new CitrusRuntimeException("Unable to resolve dynamic endpoint uri for this message - missing header entry '" +
+                    ENDPOINT_URI_HEADER_NAME + "' specifying the endpoint uri neither default endpoint uri is set");
         }
-        
-        return defaultUri;
+
+        return headers.containsKey(ENDPOINT_PATH_HEADER_NAME) ?
+                appendPath(uri, headers.get(ENDPOINT_PATH_HEADER_NAME).toString()) :
+                uri;
+    }
+
+    private String appendPath(String uri, String path) {
+        while (uri.endsWith("/")) {
+            uri = uri.substring(0,uri.length() - 1);
+            }
+        while (path.startsWith("/") && path.length() > 0) {
+            path = path.length() == 1 ? "" : path.substring(1);
+        }
+        return uri + "/" + path;
     }
 
     /**
