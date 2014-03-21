@@ -577,7 +577,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
+        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -601,7 +601,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             action.setEndpoint(messageEndpoint);
 
             testCase.addTestAction(action);
-            return new SendMessageActionDefinition(action, new PositionHandle(testCase.getActions()));
+            return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
         }
     }
 
