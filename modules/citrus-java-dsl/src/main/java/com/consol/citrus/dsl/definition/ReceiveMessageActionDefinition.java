@@ -48,11 +48,14 @@ import java.util.Map;
  * 
  * @author Christoph Deppisch
  */
-public class ReceiveMessageActionDefinition extends AbstractActionDefinition<ReceiveMessageAction> {
+public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T extends ReceiveMessageActionDefinition> extends AbstractActionDefinition<A> {
+
+    /** Self reference for generics support */
+    private final T self;
 
     /** Message type for this action definition */
     private MessageType messageType = MessageType.valueOf(CitrusConstants.DEFAULT_MESSAGE_TYPE);
-    
+
     /** Validation context used in this action definition */
     private ControlMessageValidationContext validationContext;
     
@@ -75,10 +78,12 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param ctx
      * @param positionHandle
      */
-    public ReceiveMessageActionDefinition(ReceiveMessageAction action, ApplicationContext ctx, PositionHandle positionHandle) {
+    public ReceiveMessageActionDefinition(A action, ApplicationContext ctx, PositionHandle positionHandle) {
         super(action);
         this.applicationContext = ctx;
         this.positionHandle = positionHandle;
+
+        this.self = (T) this;
     }
     
     /**
@@ -86,9 +91,9 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param receiveTimeout
      * @return
      */
-    public ReceiveMessageActionDefinition timeout(long receiveTimeout) {
+    public T timeout(long receiveTimeout) {
         action.setReceiveTimeout(receiveTimeout);
-        return this;
+        return self;
     }
     
     /**
@@ -96,7 +101,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param controlMessage
      * @return
      */
-    public ReceiveMessageActionDefinition message(Message<?> controlMessage) {
+    public T message(Message<?> controlMessage) {
         if (validationContext != null) {
             throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
         }
@@ -105,7 +110,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         
         validationContext.setControlMessage(controlMessage);
         
-        return this;
+        return self;
     }
     
     /**
@@ -113,7 +118,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param payload
      * @return
      */
-    public ReceiveMessageActionDefinition payload(String payload) {
+    public T payload(String payload) {
         if (validationContext != null) {
             if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
                 ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadData(payload);
@@ -128,8 +133,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             messageBuilder.setPayloadData(payload);
             validationContext.setMessageBuilder(messageBuilder);
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -178,7 +183,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param payloadResource
      * @return
      */
-    public ReceiveMessageActionDefinition payload(Resource payloadResource) {
+    public T payload(Resource payloadResource) {
         try {
             if (validationContext != null) {
                 if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
@@ -202,8 +207,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -212,7 +217,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param value
      * @return
      */
-    public ReceiveMessageActionDefinition header(String name, Object value) {
+    public T header(String name, Object value) {
         if (validationContext != null) {
             if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
                 ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessageHeaders().put(name, value);
@@ -227,8 +232,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             messageBuilder.getMessageHeaders().put(name, value);
             validationContext.setMessageBuilder(messageBuilder);
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -237,7 +242,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param data
      * @return
      */
-    public ReceiveMessageActionDefinition header(String data) {
+    public T header(String data) {
         if (validationContext != null) {
             if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
                 ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderData(data);
@@ -258,8 +263,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             messageBuilder.setMessageHeaderData(data);
             validationContext.setMessageBuilder(messageBuilder);
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -268,7 +273,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param resource
      * @return
      */
-    public ReceiveMessageActionDefinition header(Resource resource) {
+    public T header(Resource resource) {
         try {
             if (validationContext != null) {
                 if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
@@ -292,9 +297,9 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
-        }    
-        
-        return this;
+        }
+
+        return self;
     }
     
     /**
@@ -302,12 +307,12 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param validationScript
      * @return
      */
-    public ReceiveMessageActionDefinition validateScript(String validationScript) {
+    public T validateScript(String validationScript) {
         initializeScriptValidationContext();
         
         scriptValidationContext.setValidationScript(validationScript);
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -315,7 +320,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param scriptResource
      * @return
      */
-    public ReceiveMessageActionDefinition validateScript(Resource scriptResource) {
+    public T validateScript(Resource scriptResource) {
         initializeScriptValidationContext();
         
         try {
@@ -323,8 +328,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource file", e);
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -332,11 +337,11 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param type
      * @return
      */
-    public ReceiveMessageActionDefinition validateScriptType(String type) {
+    public T validateScriptType(String type) {
         initializeScriptValidationContext();
         scriptValidationContext.setScriptType(type);
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -344,10 +349,10 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param messageType
      * @return
      */
-    public ReceiveMessageActionDefinition messageType(MessageType messageType) {
+    public T messageType(MessageType messageType) {
         this.messageType = messageType;
         action.setMessageType(messageType.toString());
-        return this;
+        return self;
     }
     
     /**
@@ -355,7 +360,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param enabled
      * @return
      */
-    public ReceiveMessageActionDefinition schemaValidation(boolean enabled) {
+    public T schemaValidation(boolean enabled) {
         initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
@@ -363,8 +368,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to enable/disable schema validation on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -373,7 +378,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param namespaceUri
      * @return
      */
-    public ReceiveMessageActionDefinition validateNamespace(String prefix, String namespaceUri) {
+    public T validateNamespace(String prefix, String namespaceUri) {
         initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
@@ -381,8 +386,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to validate namespaces on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -391,7 +396,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param controlValue
      * @return
      */
-    public ReceiveMessageActionDefinition validate(String path, String controlValue) {
+    public T validate(String path, String controlValue) {
         initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
@@ -399,8 +404,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to set path validation expression on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -408,7 +413,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param path
      * @return
      */
-    public ReceiveMessageActionDefinition ignore(String path) {
+    public T ignore(String path) {
         initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
@@ -416,8 +421,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to ignore path expression on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -426,9 +431,9 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param controlValue
      * @return
      */
-    public ReceiveMessageActionDefinition xpath(String xPathExpression, String controlValue) {
+    public T xpath(String xPathExpression, String controlValue) {
         validate(xPathExpression, controlValue);
-        return this;
+        return self;
     }
     
     /**
@@ -436,7 +441,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param schemaName
      * @return
      */
-    public ReceiveMessageActionDefinition xsd(String schemaName) {
+    public T xsd(String schemaName) {
         initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
@@ -444,8 +449,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to xsd schema on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -453,7 +458,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param schemaRepository
      * @return
      */
-    public ReceiveMessageActionDefinition xsdSchemaRepository(String schemaRepository) {
+    public T xsdSchemaRepository(String schemaRepository) {
         initializeValidationContext();
         
         if (validationContext instanceof XmlMessageValidationContext) {
@@ -461,8 +466,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to xsd schema repository on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -471,7 +476,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param namespaceUri
      * @return
      */
-    public ReceiveMessageActionDefinition namespace(String prefix, String namespaceUri) {
+    public T namespace(String prefix, String namespaceUri) {
         initializeValidationContext();
         initializeXpathVariableExtractor();
         
@@ -482,8 +487,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to set namespace declaration on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -491,7 +496,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param namespaceMappings
      * @return
      */
-    public ReceiveMessageActionDefinition namespaces(Map<String, String> namespaceMappings) {
+    public T namespaces(Map<String, String> namespaceMappings) {
         initializeValidationContext();
         initializeXpathVariableExtractor();
         
@@ -502,8 +507,8 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         } else {
             throw new CitrusRuntimeException("Unable to set namespace declaration on non XML message type");
         }
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -511,10 +516,10 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param messageSelector
      * @return
      */
-    public ReceiveMessageActionDefinition selector(String messageSelector) {
+    public T selector(String messageSelector) {
         action.setMessageSelectorString(messageSelector);
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -522,10 +527,10 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param messageSelector
      * @return
      */
-    public ReceiveMessageActionDefinition selector(Map<String, String> messageSelector) {
+    public T selector(Map<String, String> messageSelector) {
         action.setMessageSelector(messageSelector);
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -533,9 +538,9 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param validator
      * @return
      */
-    public ReceiveMessageActionDefinition validator(MessageValidator<? extends ValidationContext> validator) {
+    public T validator(MessageValidator<? extends ValidationContext> validator) {
         action.setValidator(validator);
-        return this;
+        return self;
     }
     
     /**
@@ -544,13 +549,13 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @return
      */
     @SuppressWarnings("unchecked")
-    public ReceiveMessageActionDefinition validator(String validatorName) {
+    public T validator(String validatorName) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
         
         MessageValidator<? extends ValidationContext> validator = applicationContext.getBean(validatorName, MessageValidator.class);
         
         action.setValidator(validator);
-        return this;
+        return self;
     }
     
     /**
@@ -559,7 +564,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param variable
      * @return
      */
-    public ReceiveMessageActionDefinition extractFromHeader(String headerName, String variable) {
+    public T extractFromHeader(String headerName, String variable) {
         if (headerExtractor == null) {
             headerExtractor = new MessageHeaderVariableExtractor();
             
@@ -567,7 +572,7 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         }
         
         headerExtractor.getHeaderMappings().put(headerName, variable);
-        return this;
+        return self;
     }
     
     /**
@@ -576,10 +581,10 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param variable
      * @return
      */
-    public ReceiveMessageActionDefinition extractFromPayload(String xpath, String variable) {
+    public T extractFromPayload(String xpath, String variable) {
         initializeXpathVariableExtractor();
         xpathExtractor.getxPathExpressions().put(xpath, variable);
-        return this;
+        return self;
     }
     
     /**
@@ -588,11 +593,11 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
      * @param callback
      * @return
      */
-    public ReceiveMessageActionDefinition validationCallback(ValidationCallback callback) {
+    public T validationCallback(ValidationCallback callback) {
         callback.setApplicationContext(applicationContext);
         action.setValidationCallback(callback);
-        
-        return this;
+
+        return self;
     }
     
     /**
@@ -616,7 +621,70 @@ public class ReceiveMessageActionDefinition extends AbstractActionDefinition<Rec
         
         positionHandle.switchTestAction(receiveSoapMessageAction);
         
-        return new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction, applicationContext);
+        ReceiveSoapMessageActionDefinition soapMessageActionDefinition = new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction, applicationContext);
+        soapMessageActionDefinition.setMessageType(messageType);
+        soapMessageActionDefinition.setValidationContext(validationContext);
+        soapMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
+        soapMessageActionDefinition.setHeaderExtractor(headerExtractor);
+        soapMessageActionDefinition.setXpathExtractor(xpathExtractor);
+
+        return soapMessageActionDefinition;
+    }
+
+    /**
+     * Enable HTTP specific properties on this receiving message action.
+     * @return
+     */
+    public ReceiveHttpMessageActionDefinition http() {
+        ReceiveHttpMessageActionDefinition httpMessageActionDefinition = new ReceiveHttpMessageActionDefinition(action, applicationContext, positionHandle);
+
+        httpMessageActionDefinition.setMessageType(messageType);
+        httpMessageActionDefinition.setValidationContext(validationContext);
+        httpMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
+        httpMessageActionDefinition.setHeaderExtractor(headerExtractor);
+        httpMessageActionDefinition.setXpathExtractor(xpathExtractor);
+
+        return httpMessageActionDefinition;
+    }
+
+    /**
+     * Sets the message type.
+     * @param messageType
+     */
+    protected void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
+
+    /**
+     * Sets the xpath extractor.
+     * @param xpathExtractor
+     */
+    protected void setXpathExtractor(XpathPayloadVariableExtractor xpathExtractor) {
+        this.xpathExtractor = xpathExtractor;
+    }
+
+    /**
+     * Sets the header extractor.
+     * @param headerExtractor
+     */
+    protected void setHeaderExtractor(MessageHeaderVariableExtractor headerExtractor) {
+        this.headerExtractor = headerExtractor;
+    }
+
+    /**
+     * Sets the script message validator.
+     * @param scriptValidationContext
+     */
+    protected void setScriptValidationContext(ScriptValidationContext scriptValidationContext) {
+        this.scriptValidationContext = scriptValidationContext;
+    }
+
+    /**
+     * Sets the validation context.
+     * @param validationContext
+     */
+    protected void setValidationContext(ControlMessageValidationContext validationContext) {
+        this.validationContext = validationContext;
     }
 
 }

@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -268,6 +269,31 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         verify(applicationContextMock);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class,
+            expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+    public void testReceiveBuilderWithSoapAndHttpMixed() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .soap()
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .header("operation", "soapOperation")
+                        .http();
+            }
+        };
+
+        builder.execute();
     }
     
 }

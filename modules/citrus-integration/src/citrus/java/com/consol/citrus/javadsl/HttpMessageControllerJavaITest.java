@@ -19,6 +19,7 @@ package com.consol.citrus.javadsl;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
 
 /**
@@ -42,23 +43,24 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
             sequential(
-                receive("httpRequestReceiver")
-                    .header("Host", "localhost:8072")
-                    .header("Content-Type", "text/html;charset=ISO-8859-1")
-                    .header("Accept", "application/xml;charset=UTF-8")
-                    .header("citrus_http_method", "GET")
-                    .header("citrus_http_request_uri", "/")
-                    .header("citrus_http_context_path", "")
-                    .header("citrus_http_query_params", "")
+                    receive("httpRequestReceiver")
+                            .header("Host", "localhost:8072")
+                            .header("Content-Type", "text/html;charset=ISO-8859-1")
+                            .header("Accept", "application/xml;charset=UTF-8")
+                            .http()
+                            .method(HttpMethod.GET)
+                            .uri("/")
+                            .contextPath("")
+                            .queryParam("", "")
             )
         );
         
         receive("httpResponseReceiver")
             .timeout(2000L)
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
-        
+            .http()
+            .status(HttpStatus.OK)
+            .version("HTTP/1.1");
+
         
         echo("Use context path variables.");
         
@@ -71,22 +73,23 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
             sequential(
-                receive("httpRequestReceiver")
-                    .header("Host", "localhost:8072")
-                    .header("Content-Type", "text/html;charset=ISO-8859-1")
-                    .header("Accept", "application/xml;charset=UTF-8")
-                    .header("citrus_http_method", "GET")
-                    .header("citrus_http_request_uri", "/test/user/${id}")
-                    .header("citrus_http_context_path", "")
-                    .header("citrus_http_query_params", "")
+                    receive("httpRequestReceiver")
+                            .http()
+                            .header("Host", "localhost:8072")
+                            .header("Content-Type", "text/html;charset=ISO-8859-1")
+                            .header("Accept", "application/xml;charset=UTF-8")
+                            .method(HttpMethod.GET)
+                            .uri("/test/user/${id}")
+                            .contextPath("")
+                            .queryParam("", "")
             )
         );
         
         receive("httpResponseReceiver")
             .timeout(2000L)
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .http()
+            .status(HttpStatus.OK)
+            .version("HTTP/1.1");
         
         echo("Use query parameter and context path variables.");
         
@@ -103,20 +106,22 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 
             sequential(
                 receive("httpRequestReceiver")
+                    .http()
                     .header("Host", "localhost:8072")
                     .header("Content-Type", "text/html;charset=ISO-8859-1")
                     .header("Accept", "application/xml;charset=UTF-8")
-                    .header("citrus_http_method", "GET")
-                    .header("citrus_http_request_uri", "/test/user")
-                    .header("citrus_http_context_path", "")
-                    .header("citrus_http_query_params", "id=${id}&name=TestUser")
+                    .method(HttpMethod.GET)
+                    .uri("/test/user")
+                    .contextPath("")
+                    .queryParam("id", "${id}")
+                    .queryParam("name", "TestUser")
             )
         );
         
         receive("httpResponseReceiver")
             .timeout(2000L)
-            .header("citrus_http_status_code", "200")
-            .header("citrus_http_version", "HTTP/1.1")
-            .header("citrus_http_reason_phrase", "OK");
+            .http()
+            .status(HttpStatus.OK)
+            .version("HTTP/1.1");
     }
 }
