@@ -22,6 +22,9 @@
         <action dev="christophd" type="fix">
           CITRUS-197 Attachment spelling in Java DSL
         </action>
+        <action dev="christophd" type="add">
+          CITRUS-195 Java DSL Http specific send options
+        </action>
         <action dev="christophd" type="fix">
           CITRUS-194 Misleading create variables action in Java DSL
         </action>
