@@ -30,7 +30,7 @@ import org.springframework.http.HttpMethod;
  * @author roland
  * @since 1.4
  */
-public class SendHttpMessageActionDefinition extends SendMessageActionDefinition<SendMessageAction,SendHttpMessageActionDefinition> {
+public class SendHttpMessageActionDefinition extends SendMessageActionDefinition<SendMessageAction, SendHttpMessageActionDefinition> {
 
     /**
      * Constructor delegating to the parent constructor
@@ -62,7 +62,7 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      */
     public SendHttpMessageActionDefinition uri(String uri) {
         // Set the endpoint URL properly.
-        header(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME,uri);
+        header(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
         return this;
     }
 
@@ -71,14 +71,14 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      * multiple slashes on the concatenation point between endpoint URL and path are squeezed
      * to a single '/'. This works only if the HTTP endpoint used
      * doesn't provide an own endpoint URI resolver so that the default endpoint URI resolver, which
-     * evaluates the message header <code>citrus_endpoint_uri</code> and <code>citrus_endpoint_path</code>
+     * evaluates the message header <code>citrus_endpoint_uri</code> and <code>citrus_request_path</code>
      * for resolving the endpoint uri.
      *
      * @param path to set
      * @return chained definition builder
      */
     public SendHttpMessageActionDefinition path(String path) {
-        header(MessageHeaderEndpointUriResolver.ENDPOINT_PATH_HEADER_NAME,path);
+        header(MessageHeaderEndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
         return this;
     }
 

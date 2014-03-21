@@ -16,8 +16,6 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.HashMap;
-
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -35,6 +33,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
 
 import static org.easymock.EasyMock.*;
 
@@ -145,7 +145,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(MessageHeaderEndpointUriResolver.ENDPOINT_PATH_HEADER_NAME), "/test");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(MessageHeaderEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,

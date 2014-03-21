@@ -32,7 +32,7 @@ public class MessageHeaderEndpointUriResolver implements EndpointUriResolver {
 
     /** Static header entry name specifying the dynamic endpoint uri */
     public static final String ENDPOINT_URI_HEADER_NAME = CitrusMessageHeaders.PREFIX + "endpoint_uri";
-    public static final String ENDPOINT_PATH_HEADER_NAME = CitrusMessageHeaders.PREFIX + "endpoint_path";
+    public static final String REQUEST_PATH_HEADER_NAME = CitrusMessageHeaders.PREFIX + "request_path";
 
     /** Default fallback uri */
     private String defaultEndpointUri;
@@ -41,7 +41,7 @@ public class MessageHeaderEndpointUriResolver implements EndpointUriResolver {
      * Get the endpoint uri according to message header entry.
      */
     public String resolveEndpointUri(Message<?> message) {
-        return resolveEndpointUri(message,defaultEndpointUri);
+        return resolveEndpointUri(message, defaultEndpointUri);
     }
     
     /**
@@ -49,28 +49,39 @@ public class MessageHeaderEndpointUriResolver implements EndpointUriResolver {
      */
     public String resolveEndpointUri(Message<?> message, String defaultUri) {
         MessageHeaders headers = message.getHeaders();
-        String uri = headers.containsKey(ENDPOINT_URI_HEADER_NAME) ?
+
+        String requestUri = headers.containsKey(ENDPOINT_URI_HEADER_NAME) ?
                 headers.get(ENDPOINT_URI_HEADER_NAME).toString() :
                 defaultUri;
 
-        if (uri == null) {
-            throw new CitrusRuntimeException("Unable to resolve dynamic endpoint uri for this message - missing header entry '" +
-                    ENDPOINT_URI_HEADER_NAME + "' specifying the endpoint uri neither default endpoint uri is set");
+        if (requestUri == null) {
+            throw new CitrusRuntimeException("Unable to resolve dynamic endpoint uri! Neither header entry '" +
+                    ENDPOINT_URI_HEADER_NAME + "' nor default endpoint uri is set");
         }
 
-        return headers.containsKey(ENDPOINT_PATH_HEADER_NAME) ?
-                appendPath(uri, headers.get(ENDPOINT_PATH_HEADER_NAME).toString()) :
-                uri;
+        return headers.containsKey(REQUEST_PATH_HEADER_NAME) ?
+                appendRequestPath(requestUri, headers.get(REQUEST_PATH_HEADER_NAME).toString()) :
+                requestUri;
     }
 
-    private String appendPath(String uri, String path) {
-        while (uri.endsWith("/")) {
-            uri = uri.substring(0,uri.length() - 1);
-            }
+    /**
+     * Appends optional request path to endpoint uri.
+     * @param uri
+     * @param path
+     * @return
+     */
+    private String appendRequestPath(String uri, String path) {
+        String requestUri = uri;
+
+        while (requestUri.endsWith("/")) {
+            requestUri = requestUri.substring(0, requestUri.length() - 1);
+        }
+
         while (path.startsWith("/") && path.length() > 0) {
             path = path.length() == 1 ? "" : path.substring(1);
         }
-        return uri + "/" + path;
+
+        return requestUri + "/" + path;
     }
 
     /**

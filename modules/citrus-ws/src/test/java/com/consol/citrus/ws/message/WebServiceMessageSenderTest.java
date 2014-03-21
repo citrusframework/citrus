@@ -53,7 +53,7 @@ public class WebServiceMessageSenderTest {
         webServiceTemplate.setFaultMessageResolver(anyObject(FaultMessageResolver.class));
         expectLastCall().once();
         
-        expect(webServiceTemplate.sendAndReceive((WebServiceMessageCallback)anyObject(), 
+        expect(webServiceTemplate.sendAndReceive(eq("http://localhost:8081/request"), (WebServiceMessageCallback)anyObject(),
                 (WebServiceMessageCallback)anyObject())).andReturn(true).once();
         
         replay(webServiceTemplate, replyMessageHandler);
@@ -84,7 +84,7 @@ public class WebServiceMessageSenderTest {
         webServiceTemplate.setFaultMessageResolver(anyObject(FaultMessageResolver.class));
         expectLastCall().once();
         
-        expect(webServiceTemplate.sendAndReceive((WebServiceMessageCallback)anyObject(), 
+        expect(webServiceTemplate.sendAndReceive(eq("http://localhost:8080/request"), (WebServiceMessageCallback)anyObject(),
                 (WebServiceMessageCallback)anyObject())).andReturn(true).once();
         
         expect(correlator.getCorrelationKey(requestMessage)).andReturn("correlationKey").once();
@@ -157,7 +157,7 @@ public class WebServiceMessageSenderTest {
         
         replay(soapFaultMessage, soapBody, soapFault);
         
-        expect(webServiceTemplate.sendAndReceive((WebServiceMessageCallback)anyObject(), 
+        expect(webServiceTemplate.sendAndReceive(eq("http://localhost:8080/request"), (WebServiceMessageCallback)anyObject(),
                 (WebServiceMessageCallback)anyObject())).andThrow(new SoapFaultClientException(soapFaultMessage)).once();
         
         replay(webServiceTemplate, replyMessageHandler);

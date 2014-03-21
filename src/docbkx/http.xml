@@ -108,8 +108,13 @@
         
         <tip><para>And another tip for you regarding dynamic endpoint URI in Http message sender. Similar to the endpoint resolving mechanism in SOAP sending action you can dynamically set
         the called endpoint URI on Http message sender. By default Citrus will check a specific header entry for dynamic endpoint URI which is simply defined for each message sending action
-        inside the test. See the next short example and you will see that it is very simple.</para>
-        
+        inside the test.</para>
+
+        <para>The <emphasis>dynamicEndpointResolver</emphasis> bean must implement the EndpointUriResolver interface in order to resolve
+          dynamic endpoint uri values. Citrus offers a default implementation, the <emphasis>MessageHeaderEndpointUriResolver</emphasis>, which
+          uses a specific message header for setting dynamic endpoint uri. The message header needs to specify the header
+          <emphasis>citrus_endpoint_uri</emphasis> with a valid request uri.</para>
+
         <programlisting>&lt;header&gt;
     &lt;element name=&quot;citrus_endpoint_uri&quot; value=&quot;http://localhost:8080/customers/${customerId}&quot;/&gt;
 &lt;/header&gt;</programlisting>

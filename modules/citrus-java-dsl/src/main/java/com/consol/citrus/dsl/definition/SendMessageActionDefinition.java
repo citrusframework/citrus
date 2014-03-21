@@ -16,10 +16,6 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -36,14 +32,19 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Action definition creates a send message action with several message payload and header 
  * constructing build methods.
  * 
  * @author Christoph Deppisch
  */
-public class SendMessageActionDefinition<A extends SendMessageAction,T extends SendMessageActionDefinition> extends AbstractActionDefinition<A> {
+public class SendMessageActionDefinition<A extends SendMessageAction, T extends SendMessageActionDefinition> extends AbstractActionDefinition<A> {
 
+    /** Self reference for generics support */
     private final T self;
 
     /** Variable extractors filled within this definition */

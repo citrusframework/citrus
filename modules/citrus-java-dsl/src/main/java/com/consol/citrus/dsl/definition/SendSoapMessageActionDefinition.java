@@ -16,13 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 /**
  * Send action definition adding SOAP specific properties like SOAP attachment and
@@ -30,7 +30,7 @@ import org.springframework.core.io.Resource;
  * 
  * @author Christoph Deppisch
  */
-public class SendSoapMessageActionDefinition extends SendMessageActionDefinition<SendSoapMessageAction,SendSoapMessageActionDefinition> {
+public class SendSoapMessageActionDefinition extends SendMessageActionDefinition<SendSoapMessageAction, SendSoapMessageActionDefinition> {
 
     /**
      * Default constructor using action.

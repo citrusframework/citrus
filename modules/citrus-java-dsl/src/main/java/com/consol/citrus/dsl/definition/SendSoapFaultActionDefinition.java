@@ -16,15 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 /**
  * Action definition creates a send message action with several message payload and header 
@@ -32,7 +31,7 @@ import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
  * 
  * @author Christoph Deppisch
  */
-public class SendSoapFaultActionDefinition extends SendMessageActionDefinition<SendMessageAction,SendSoapFaultActionDefinition> {
+public class SendSoapFaultActionDefinition extends SendMessageActionDefinition<SendMessageAction, SendSoapFaultActionDefinition> {
 
     private SoapFaultAwareMessageBuilder soapFaultMessageBuilder = new SoapFaultAwareMessageBuilder();
     

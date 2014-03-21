@@ -16,12 +16,6 @@
 
 package com.consol.citrus.dsl;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.jms.ConnectionFactory;
-import javax.sql.DataSource;
-
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
@@ -43,6 +37,11 @@ import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+
+import javax.jms.ConnectionFactory;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Citrus test builder offers builder pattern methods in order to configure a
@@ -578,7 +577,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition<SendMessageAction,SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
+        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -602,7 +601,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             action.setEndpoint(messageEndpoint);
 
             testCase.addTestAction(action);
-            return new SendMessageActionDefinition<SendMessageAction,SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
+            return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
         }
     }
 
