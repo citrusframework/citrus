@@ -98,7 +98,7 @@
   </util:list>
 
   <bean id="soapEndpointUriResolver"
-        class="com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver"/>
+        class="com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
 
   <!-- Soap message endpoints -->
   <citrus-ws:client id="helloSoapClient"

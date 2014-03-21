@@ -176,7 +176,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @param value
      */
     public T header(String name, Object value) {
-        getOrCreateMessageBuilder().getMessageHeaders().put(name, value);
+        getMessageContentBuilder().getMessageHeaders().put(name, value);
         return self;
     }
 
@@ -186,7 +186,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @param data
      */
     public T header(String data) {
-        getOrCreateMessageBuilder().setMessageHeaderData(data);
+        getMessageContentBuilder().setMessageHeaderData(data);
         return self;
     }
 
@@ -197,7 +197,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      */
     public T header(Resource resource) {
         try {
-            getOrCreateMessageBuilder().setMessageHeaderData(FileUtils.readToString(resource));
+            getMessageContentBuilder().setMessageHeaderData(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
@@ -209,7 +209,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      *
      * @return the message builder in use
      */
-    protected AbstractMessageContentBuilder<String> getOrCreateMessageBuilder() {
+    protected AbstractMessageContentBuilder<String> getMessageContentBuilder() {
         if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
             return (AbstractMessageContentBuilder<String>) action.getMessageBuilder();
         } else {

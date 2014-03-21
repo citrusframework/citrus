@@ -16,79 +16,11 @@
 
 package com.consol.citrus.adapter.common.endpoint;
 
-import org.springframework.integration.Message;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import org.springframework.integration.MessageHeaders;
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 
 /**
- * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
- * target endpoint uri.
- * 
  * @author Christoph Deppisch
+ * @deprecated in favour of {@link com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver}
  */
-public class MessageHeaderEndpointUriResolver implements EndpointUriResolver {
-
-    /** Static header entry name specifying the dynamic endpoint uri */
-    public static final String ENDPOINT_URI_HEADER_NAME = CitrusMessageHeaders.PREFIX + "endpoint_uri";
-    public static final String REQUEST_PATH_HEADER_NAME = CitrusMessageHeaders.PREFIX + "request_path";
-
-    /** Default fallback uri */
-    private String defaultEndpointUri;
-    
-    /**
-     * Get the endpoint uri according to message header entry.
-     */
-    public String resolveEndpointUri(Message<?> message) {
-        return resolveEndpointUri(message, defaultEndpointUri);
-    }
-    
-    /**
-     * Get the endpoint uri according to message header entry with fallback default uri.
-     */
-    public String resolveEndpointUri(Message<?> message, String defaultUri) {
-        MessageHeaders headers = message.getHeaders();
-
-        String requestUri = headers.containsKey(ENDPOINT_URI_HEADER_NAME) ?
-                headers.get(ENDPOINT_URI_HEADER_NAME).toString() :
-                defaultUri;
-
-        if (requestUri == null) {
-            throw new CitrusRuntimeException("Unable to resolve dynamic endpoint uri! Neither header entry '" +
-                    ENDPOINT_URI_HEADER_NAME + "' nor default endpoint uri is set");
-        }
-
-        return headers.containsKey(REQUEST_PATH_HEADER_NAME) ?
-                appendRequestPath(requestUri, headers.get(REQUEST_PATH_HEADER_NAME).toString()) :
-                requestUri;
-    }
-
-    /**
-     * Appends optional request path to endpoint uri.
-     * @param uri
-     * @param path
-     * @return
-     */
-    private String appendRequestPath(String uri, String path) {
-        String requestUri = uri;
-
-        while (requestUri.endsWith("/")) {
-            requestUri = requestUri.substring(0, requestUri.length() - 1);
-        }
-
-        while (path.startsWith("/") && path.length() > 0) {
-            path = path.length() == 1 ? "" : path.substring(1);
-        }
-
-        return requestUri + "/" + path;
-    }
-
-    /**
-     * Sets the default fallback endpoint uri.
-     * @param defaultEndpointUri the defaultUri to set
-     */
-    public void setDefaultEndpointUri(String defaultEndpointUri) {
-        this.defaultEndpointUri = defaultEndpointUri;
-    }
+public class MessageHeaderEndpointUriResolver extends DynamicEndpointUriResolver {
 }

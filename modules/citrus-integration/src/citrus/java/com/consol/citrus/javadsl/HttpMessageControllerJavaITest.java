@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
+import org.springframework.http.HttpMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -34,8 +35,9 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
         
         parallel(
             send("httpMessageSender")
-                .header("citrus_endpoint_uri", "http://localhost:8072")
-                .header("citrus_http_method", "GET")
+                .http()
+                .uri("http://localhost:8072")
+                .method(HttpMethod.GET)
                 .header("Content-Type", "text/html")
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
@@ -62,8 +64,9 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
         
         parallel(
             send("httpMessageSender")
-                .header("citrus_endpoint_uri", "http://localhost:8072/test/user/${id}")
-                .header("citrus_http_method", "GET")
+                .http()
+                .uri("http://localhost:8072/test/user/${id}")
+                .method(HttpMethod.GET)
                 .header("Content-Type", "text/html")
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
@@ -89,8 +92,12 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
         
         parallel(
             send("httpMessageSender")
-                .header("citrus_endpoint_uri", "http://localhost:8072/test/user?id=${id}&name=TestUser")
-                .header("citrus_http_method", "GET")
+                .http()
+                .uri("http://localhost:8072/test")
+                .method(HttpMethod.GET)
+                .path("user")
+                .queryParam("id", "${id}")
+                .queryParam("name", "TestUser")
                 .header("Content-Type", "text/html")
                 .header("Accept", "application/xml;charset=UTF-8"),
                 

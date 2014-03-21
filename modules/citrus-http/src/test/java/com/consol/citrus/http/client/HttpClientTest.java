@@ -16,9 +16,10 @@
 
 package com.consol.citrus.http.client;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.http.*;

@@ -16,8 +16,9 @@
 
 package com.consol.citrus.ws.client;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.message.*;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -28,7 +29,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.verify;
 
 /**
  * @author Christoph Deppisch

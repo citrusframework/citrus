@@ -16,10 +16,11 @@
 
 package com.consol.citrus.http.client;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
-import com.consol.citrus.message.*;
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.*;
@@ -53,7 +54,7 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
     private ClientHttpRequestFactory requestFactory;
 
     /** Resolves dynamic endpoint uri */
-    private EndpointUriResolver endpointUriResolver = new MessageHeaderEndpointUriResolver();
+    private EndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
     /** Header mapper */
     private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.outboundMapper();

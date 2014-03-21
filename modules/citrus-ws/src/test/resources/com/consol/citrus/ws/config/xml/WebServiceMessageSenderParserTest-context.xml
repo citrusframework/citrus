@@ -49,7 +49,7 @@
     </bean>
     
     <bean id="endpointResolver" class="org.easymock.EasyMock" factory-method="createMock">
-        <constructor-arg value="com.consol.citrus.adapter.common.endpoint.EndpointUriResolver"/>
+        <constructor-arg value="com.consol.citrus.endpoint.resolver.EndpointUriResolver"/>
     </bean>
     
     <bean id="soapMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">

@@ -17,11 +17,12 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
 import com.consol.citrus.dsl.util.PositionHandle;
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.StringUtils;
 
 /**
  * Special method for HTTP senders. This definition is used to set the Citrus special headers with special
@@ -62,7 +63,7 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      */
     public SendHttpMessageActionDefinition uri(String uri) {
         // Set the endpoint URL properly.
-        header(MessageHeaderEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
+        header(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
         return this;
     }
 
@@ -78,7 +79,30 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      * @return chained definition builder
      */
     public SendHttpMessageActionDefinition path(String path) {
-        header(MessageHeaderEndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
+        header(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
+        return this;
+    }
+
+    /**
+     * Adds a query param to the request uri.
+     * @param name
+     * @param value
+     * @return
+     */
+    public SendHttpMessageActionDefinition queryParam(String name, String value) {
+        String queryParams = null;
+        if (getMessageContentBuilder().getMessageHeaders().containsKey(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME)) {
+            queryParams = getMessageContentBuilder().getMessageHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME).toString();
+        }
+
+        if (StringUtils.hasText(queryParams)) {
+            queryParams += "," + name + "=" + value;
+        } else {
+            queryParams = name + "=" + value;
+        }
+
+        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParams);
+
         return this;
     }
 

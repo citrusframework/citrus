@@ -16,8 +16,8 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
 import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;

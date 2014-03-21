@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;

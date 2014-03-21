@@ -111,7 +111,7 @@
         inside the test.</para>
 
         <para>The <emphasis>dynamicEndpointResolver</emphasis> bean must implement the EndpointUriResolver interface in order to resolve
-          dynamic endpoint uri values. Citrus offers a default implementation, the <emphasis>MessageHeaderEndpointUriResolver</emphasis>, which
+          dynamic endpoint uri values. Citrus offers a default implementation, the <emphasis>DynamicEndpointUriResolver</emphasis>, which
           uses a specific message header for setting dynamic endpoint uri. The message header needs to specify the header
           <emphasis>citrus_endpoint_uri</emphasis> with a valid request uri.</para>
 

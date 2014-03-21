@@ -16,9 +16,9 @@
 
 package com.consol.citrus.ws.client;
 
-import com.consol.citrus.adapter.common.endpoint.EndpointUriResolver;
-import com.consol.citrus.adapter.common.endpoint.MessageHeaderEndpointUriResolver;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
@@ -53,7 +53,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     private ReplyMessageCorrelator correlator = null;
 
     /** Resolves dynamic endpoint uri */
-    private EndpointUriResolver endpointResolver = new MessageHeaderEndpointUriResolver();
+    private EndpointUriResolver endpointResolver = new DynamicEndpointUriResolver();
 
     /** WS adressing specific headers */
     private WsAddressingHeaders addressingHeaders;
