@@ -6,17 +6,21 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="RepeatOnErrorUntilTrueParserTest">
         <actions>
-            <repeat-onerror-until-true condition="i lt 3">
+            <repeat-onerror-until-true condition="i gt 3">
                 <echo><message>Hello Citrus!</message></echo>
             </repeat-onerror-until-true>
             
-            <repeat-onerror-until-true condition="index lt= 2" index="index">
+            <repeat-onerror-until-true condition="index gt= 2" index="index">
                 <echo><message>Hello Citrus!</message></echo>
             </repeat-onerror-until-true>
             
-            <repeat-onerror-until-true condition="i lt= 10" index="i" auto-sleep="5">
+            <repeat-onerror-until-true condition="i gt= 10" index="i" auto-sleep="5">
                 <echo><message>Hello Citrus!</message></echo>
                 <echo><message>Hello You!</message></echo>
+            </repeat-onerror-until-true>
+
+            <repeat-onerror-until-true condition="i gt= 5" auto-sleep="0.25">
+                <echo><message>Hello Citrus!</message></echo>
             </repeat-onerror-until-true>
         </actions>
     </testcase>

@@ -44,7 +44,7 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionDefinition<R
 	
 	/**
      * Sets the index variable name.
-     * @param name
+     * @param indexName
      * @return
      */
 	public RepeatOnErrorUntilTrueDefinition index(String indexName) {
@@ -67,7 +67,7 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionDefinition<R
 	 * @param autoSleep
 	 * @return
 	 */
-	public RepeatOnErrorUntilTrueDefinition autoSleep(long autoSleep) {
+	public RepeatOnErrorUntilTrueDefinition autoSleep(double autoSleep) {
 		action.setAutoSleep(autoSleep);
 		return this;
 	}

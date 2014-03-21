@@ -35,7 +35,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
     /** Auto sleep in seconds */
-    private long autoSleep = 1;
+    private double autoSleep = 1.0;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
@@ -53,50 +53,53 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
      */
     @Override
     public void executeIteration(TestContext context) {
-        do {
+        CitrusRuntimeException exception = null;
+
+        while(!checkCondition()) {
             try {
+                exception = null;
                 executeActions(context);
                 break;
             } catch (CitrusRuntimeException e) {
-                index++;
-                if (checkCondition()) {
-                    throw new CitrusRuntimeException(e);
-                } else {
-                    index--;
-                    log.info("Caught exception of type " + e.getClass().getName() + " '" + 
-                            e.getMessage() + "' - repeating because of error");
-                }
-            } finally {
+                exception = e;
+
+                log.info("Caught exception of type " + e.getClass().getName() + " '" +
+                        e.getMessage() + "' - performing retry #" + index);
+
+                doAutoSleep();
                 index++;
             }
-        } while (!checkCondition());
+        }
+
+        if (exception != null) {
+            log.info("All retries have failed - raising exception " + exception.getClass().getName());
+            throw exception;
+        }
     }
 
     /**
-     * Executes the nested test actions.
-     * @param context
+     * Sleep amount of time in between iterations.
      */
-    protected void executeActions(TestContext context) {
+    private void doAutoSleep() {
         if (autoSleep > 0) {
-            log.info("Sleeping " + autoSleep + " seconds");
+            long autoSleepMs = Math.round(autoSleep * 1000L);
+            log.info("Sleeping " + autoSleepMs + " milliseconds");
 
             try {
-                Thread.sleep(autoSleep * 1000L);
+                Thread.sleep(autoSleepMs);
             } catch (InterruptedException e) {
                 log.error("Error during doc generation", e);
             }
 
-            log.info("Returning after " + autoSleep + " seconds");
+            log.info("Returning after " + autoSleepMs + " milliseconds");
         }
-
-        super.executeActions(context);
     }
 
     /**
      * Setter for auto sleep time (in seconds).
      * @param autoSleep
      */
-    public void setAutoSleep(long autoSleep) {
+    public void setAutoSleep(double autoSleep) {
         this.autoSleep = autoSleep;
     }
 
@@ -104,7 +107,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
      * Gets the autoSleep.
      * @return the autoSleep
      */
-    public long getAutoSleep() {
+    public double getAutoSleep() {
         return autoSleep;
     }
 }

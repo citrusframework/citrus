@@ -67,7 +67,7 @@
         query(testDataSource)
             .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")
             .validate("CNT_ORDERS", "1")
-    ).until("i = 5").index("i").autoSleep(1L);
+    ).until("i = 5").index("i").autoSleep(1);
 }</programlisting>
     
     <para>We surrounded the database check with a repeat-onerror container having the auto-sleep property set to 1 second. The repeat container

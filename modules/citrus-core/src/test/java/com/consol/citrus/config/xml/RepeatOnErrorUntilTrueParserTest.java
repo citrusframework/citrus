@@ -28,29 +28,36 @@ import com.consol.citrus.testng.AbstractActionParserTest;
 public class RepeatOnErrorUntilTrueParserTest extends AbstractActionParserTest<RepeatOnErrorUntilTrue> {
 
     @Test
-    public void testFailActionParser() {
-        assertActionCount(3);
+    public void testRepeatOnErrorParser() {
+        assertActionCount(4);
         assertActionClassAndName(RepeatOnErrorUntilTrue.class, "repeat-onerror-until-true");
         
         RepeatOnErrorUntilTrue action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i lt 3");
+        Assert.assertEquals(action.getCondition(), "i gt 3");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 1);
+        Assert.assertEquals(action.getAutoSleep(), 1.0);
         Assert.assertEquals(action.getActionCount(), 1);
         
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "index lt= 2");
+        Assert.assertEquals(action.getCondition(), "index gt= 2");
         Assert.assertEquals(action.getIndexName(), "index");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 1);
+        Assert.assertEquals(action.getAutoSleep(), 1.0);
         Assert.assertEquals(action.getActionCount(), 1);
         
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getCondition(), "i lt= 10");
+        Assert.assertEquals(action.getCondition(), "i gt= 10");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 5);
+        Assert.assertEquals(action.getAutoSleep(), 5.0);
         Assert.assertEquals(action.getActionCount(), 2);
+
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getCondition(), "i gt= 5");
+        Assert.assertEquals(action.getIndexName(), "i");
+        Assert.assertEquals(action.getIndex(), 1);
+        Assert.assertEquals(action.getAutoSleep(), 0.25);
+        Assert.assertEquals(action.getActionCount(), 1);
     }
 }

@@ -697,7 +697,7 @@
             </xs:sequence>
             <xs:attribute name="index" type="xs:string"/>
             <xs:attribute name="condition" type="xs:string" use="required"/>
-            <xs:attribute name="auto-sleep" type="xs:int"/>
+            <xs:attribute name="auto-sleep" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
