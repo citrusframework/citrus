@@ -17,6 +17,9 @@
   <body>
     <release version="1.4" date="01.01.2014" descripton="1.4 release">
         <action dev="christophd" type="fix">
+          CITRUS-199 Auto sleep &lt; 1 second
+        </action>
+        <action dev="christophd" type="fix">
           CITRUS-197 Attachment spelling in Java DSL
         </action>
         <action dev="christophd" type="fix">
