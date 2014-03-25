@@ -31,7 +31,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void groovyTest() {
     groovy("println 'Hello Citrus'");
     groovy("println 'The variable is: ${time}'");
     

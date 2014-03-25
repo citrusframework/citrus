@@ -36,7 +36,8 @@
 @Qualifier("channelResolver")
 private ChannelResolver channelResolver;
 
-protected void configure() {
+@CitrusTest
+public void purgeTest() {
     purgeChannels()
         .channelResolver(channelResolver)
         .channelNames("ch1", "ch2", "ch3")
@@ -62,7 +63,8 @@ private MessageChannel channel2;
 @Qualifier("channel3")
 private MessageChannel channel3;
 
-protected void configure() {
+@CitrusTest
+public void purgeTest() {
     purgeChannels()
         .channels(channel1, channel2)
         .channel(channel3);
@@ -109,7 +111,8 @@ public class TimeBasedMessageSelector implements MessageSelector {
 @Qualifier("specialMessageSelector")
 private MessageSelector specialMessageSelector;
 
-protected void configure() {
+@CitrusTest
+public void purgeTest() {
     purgeChannels()
         .channelNames("ch1", "ch2", "ch3")
         .selector(specialMessageSelector);

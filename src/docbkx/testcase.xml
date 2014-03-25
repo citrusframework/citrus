@@ -268,8 +268,6 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
         <programlisting>&lt;actions&gt;
     &lt;action&gt;[...]&lt;/action&gt;
     &lt;action&gt;[...]&lt;/action&gt;
-    &lt;action&gt;[...]&lt;/action&gt;
-    &lt;action&gt;[...]&lt;/action&gt;
 &lt;/actions&gt;</programlisting>
 
         <para>All actions have individual names and properties that define the respective behavior. Citrus offers a wide range of test actions from scratch, 
@@ -291,14 +289,14 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
   
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;finally&gt;
-    &lt;action&gt;[...]&lt;/action&gt;
-    &lt;action&gt;[...]&lt;/action&gt;
-    &lt;action&gt;[...]&lt;/action&gt;
-    &lt;action&gt;[...]&lt;/action&gt;
+    &lt;echo&gt;
+        &lt;message&gt;Do finally - regardless of what has happened before&lt;/message&gt;
+    &lt;/echo&gt;
 &lt;/finally&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-        <programlisting language="java">protected void configure() {
+        <programlisting language="java">@CitrusTest
+public void sampleTest() {
     echo("Hello Test Framework");
     
     doFinally(
@@ -332,7 +330,8 @@ date=citrus:currentDate('yyyy-MM-dd')</programlisting>
 &lt;/testcase&gt;</programlisting>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void sampleTest() {
     description("This is a Test");
     author("Christoph");
     status(Status.FINAL);

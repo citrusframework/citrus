@@ -18,7 +18,8 @@
 &lt;/testcase&gt;</programlisting>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void assertTest() {
     assertException(echo("Current date is: ${date}"))
         .exception(com.consol.citrus.exceptions.CitrusRuntimeException.class)
         .message("Unknown variable ${date}");

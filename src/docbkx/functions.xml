@@ -259,12 +259,12 @@
     <section id="functions-random-enum-value">
         <title>citrus:randomEnumValue()</title>
         <para>
-              This function returns one of its supplied arguments. Furthermore you can specify a custom function
-              with a preconfigured list of values (the enumeration). The function will randomly return an entry when called without arguments. 
-              This promotes code reuse and facilitates refactoring.
+            This function returns one of its supplied arguments. Furthermore you can specify a custom function
+            with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments.
+            This promotes code reuse and facilitates refactoring.
         </para>
         <para>
-              In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
+            In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)
         </para>
         <programlisting>&lt;variable name="httpStatusCode" value="citrus:randomEnumValue('200', '401', '500')" /&gt;</programlisting>
         <para>

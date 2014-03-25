@@ -54,7 +54,8 @@
     <para>Of course you can also use the finally block in the Java test case DSL. Find following example to see how it works:</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void finallySectionTest() {
     variable("orderId", "citrus:randomNumber(5)");
     variable("date", "citrus:currentDate('dd.MM.yyyy')");
 
@@ -68,8 +69,9 @@
     );
 }</programlisting>
 
-    <note>Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The configure method
-    is called by the Java DSL test case builder not at test runtime but before that. This means that a try-finally block within the configure() method will never 
-    perform the finally during the test run. Only adding the finally section as part of the test case with doFinally() will result in expected behavior.</note>
+    <note>Java developers might ask why not use try-finally Java block instead? The answer is simple yet very important to understand. The <emphasis>@CitrusTest</emphasis>
+    annotated method is called at design time of the test case. The method builds the test case afterwards the test is executed at runtime. This means that a try-finally
+    block within the <emphasis>@CitrusTest</emphasis> annotated method will never perform during the test run but at design time before the test gets executed.
+    This is why we have to add the finally section as part of the test case with <emphasis>doFinally()</emphasis>.</note>
     
 </chapter>

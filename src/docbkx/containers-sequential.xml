@@ -25,7 +25,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void sequentialTest() {
     sequential(
         stopTime(),
         sleep(1.0),

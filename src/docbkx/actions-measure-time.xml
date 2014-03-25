@@ -28,7 +28,8 @@
 &lt;/testcase&gt;</programlisting>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void stopTimeTest() {
     stopTime();
     stopTime("time_line_id");
     sleep(3500L); // do something

@@ -25,7 +25,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void antRunTest() {
     variable("today", "citrus:currentDate()");
     
     antrun("classpath:com/consol/citrus/actions/build.xml")
@@ -69,7 +70,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void antRunTest() {
     variable("today", "citrus:currentDate()");
     
     antrun("classpath:com/consol/citrus/actions/build.xml")
@@ -99,8 +101,9 @@
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@Autowired
 private BuildListener customBuildListener;
-    
-protected void configure() {
+
+@CitrusTest
+public void antRunTest() {
     antrun("classpath:com/consol/citrus/actions/build.xml")
         .target("sayHello")
         .propertyFile("classpath:com/consol/citrus/actions/build.properties")

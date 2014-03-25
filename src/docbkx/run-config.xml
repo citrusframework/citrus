@@ -254,7 +254,7 @@ public class SampleTest extends JUnit4CitrusTestBuilder {
     }
 }</programlisting>
 
-      <para>The Java DLS test case looks quite familiar as we also use the JUnit4 <emphasis>@Test</emphasis> annotation in order
+      <para>The Java DSL test case looks quite familiar as we also use the JUnit4 <emphasis>@Test</emphasis> annotation in order
       to mark our test for unit test execution. In addition to that we extend from a basic JUnit4 Citrus test builder which enables
       the Java domain specific language features. The Citrus test logic goes directly to the configure method. There is no need
       for a XML test file anymore.</para>

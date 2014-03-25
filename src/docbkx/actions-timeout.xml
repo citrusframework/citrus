@@ -22,8 +22,9 @@
     <programlisting language="java">@Autowired
 @Qualifier("myMessageReceiver")
 private MessageReceiver myMessageReceiver;
-    
-protected void configure() {
+
+@CitrusTest
+public void expectTimeoutTest() {
     expectTimeout(myMessageReceiver)
         .timeout(500);
 }</programlisting>
@@ -48,7 +49,8 @@ protected void configure() {
 &lt;expect-timeout/&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void expectTimeoutTest() {
     expectTimeout(myMessageReceiver)
         .selector("MessageId = '123456789'")
         .timeout(500);

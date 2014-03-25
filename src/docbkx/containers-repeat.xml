@@ -24,7 +24,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void repeatTest() {
     repeat(echo("index is: ${i}"))
         .until("(i gt 5) or (i = 3)")
         .index("i");

@@ -18,7 +18,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void iterateTest() {
     iterate(
         echo("index is: ${i}")
     ).condition("i lt 5").index("i");

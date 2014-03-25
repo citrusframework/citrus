@@ -53,7 +53,8 @@ public class SpecialDatabaseCleanupAction extends AbstractTestAction {
     <programlisting language="java">@Autowired
 private SpecialDatabaseCleanupAction cleanUpDatabaseAction;
 
-protected void configure() {
+@CitrusTest
+public void genericActionTest() {
     echo("Now let's include our special test action");
     
     action(cleanUpDatabaseAction);
@@ -63,7 +64,8 @@ protected void configure() {
 
     <para>Using anonymous class implementations is also possible.</para>
     
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void genericActionTest() {
     echo("Now let's call our special test action anonymously");
     
     action(new AbstractTestAction() {

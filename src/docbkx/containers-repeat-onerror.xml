@@ -21,7 +21,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void repeatOnErrorTest() {
     repeatOnError(
         echo("index is: ${i}"),
         fail("Force loop to fail!")
@@ -62,7 +63,8 @@
 &lt;/repeat-onerror-until-true&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void repeatOnErrorTest() {
     repeatOnError(
         query(testDataSource)
             .statement("SELECT COUNT(1) AS CNT_ORDERS FROM ORDERS WHERE CUSTOMER_ID='${customerId}'")

@@ -55,7 +55,8 @@
     <para>The same action in Java DSL now looks quite familiar to us although attribute naming is slightly different:</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void inputActionTest() {
     variable("userinput", "");
     variable("userinput1", "");
     variable("userinput2", "y");

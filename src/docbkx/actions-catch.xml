@@ -22,7 +22,8 @@
 &lt;/testcase&gt;</programlisting>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void catchTest() {
     catchException(CitrusRuntimeException.class, echo("Current date is: ${date}"));
 }</programlisting>
 
@@ -36,7 +37,9 @@
     <para>Catching exceptions like this may only fit to very error prone action blocks where failures do not harm the test case success. Otherwise a failure 
     in a test action should always reflect to the whole test case to fail with errors.</para>
     
-    <note>Java developers might ask why not use try-catch Java block instead? The answer is simple yet very important to understand. The configure() method
-    is called by the Java DSL test case builder not at test runtime but before that. This means that a try-catch block within the configure() method will never 
-    perform during the test run. Only adding the catch test action as part of the test case will result in expected behavior.</note>
+    <note>Java developers might ask why not use try-catch Java block instead? The answer is simple yet very important to understand. The test method
+    is called by the Java DSL test case builder for building the Citrus test. This can be referred to as the design time of the test. After the building test method
+    was processed the test gets executed, which can be called the runtime of the test. This means that a try-catch block within the design time method will never
+    perform during the test run. The only reliable way to add the catch capability to the test as part of the test case runtime is to use the Citrus test action which
+    gets executed during test runtime.</note>
 </section>

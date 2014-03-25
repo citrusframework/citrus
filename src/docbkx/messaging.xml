@@ -305,7 +305,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     Java and the code completion capabilities of your IDE you will not have problems to code the test action.</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void messagingTest() {
     receive("getCustomerResponseReceiver")
         .payload("&lt;ResponseMessage&gt;" +
                     "&lt;MessageHeader&gt;" +
@@ -383,7 +384,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
         All these impediments let me suggest to use external file resources in Java DSL when dealing with large complex XML data.</para>
         
         <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("getCustomerResponseReceiver")
         .payload(new ClassPathResource("com/consol/citrus/message/data/GetCustomerResponse.xml"))
         .header("Operation", "GetCustomer")
@@ -501,7 +503,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
         if you need clarification:</para>
         
         <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("getCustomerResponseReceiver")
         .payload(new ClassPathResource("com/consol/citrus/message/data/GetCustomerResponse.xml"))
         .header("Operation", "GetCustomer")
@@ -526,7 +529,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
 &lt;/message&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("getCustomerResponseReceiver")
         .validate("//MessageHeader/RequestTag", "${requestTag}")
         .validate("//CorrelationId", "${correlationId}")
@@ -572,7 +576,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
 &lt;/header&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("getCustomerResponseReceiver")
         .header("Operation", "GetCustomer")
         .header("RequestTag", "${requestTag}");
@@ -601,7 +606,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
 &lt;/extract&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-        <programlisting language="java">protected void configure() {
+        <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("getCustomerResponseReceiver")
         .extractFromHeader("Operation", "operation")
         .extractFromPayload("//MessageBody/Customer/Id", "customerId");
@@ -644,7 +650,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
 &lt;/selector&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-        <programlisting language="java">protected void configure() {
+        <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("getCustomerResponseReceiver")
         .selector("correlationId='Lx1x123456789' AND operation='getOrders'");
 }</programlisting>
@@ -685,7 +692,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     callback functionality. With this piece you can marshal received message payloads and code validation steps on Java objects.</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive(bookResponseMessageReceiver)
       .validationCallback(new MarshallingValidationCallback&lt;AddBookResponseMessage&gt;() {
           @Override
@@ -702,7 +710,8 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     <programlisting language="java">@Autowired
 private Unmarshaller unmarshaller;
 
-protected void configure() {
+@CitrusTest
+public void receiveMessageTest() {
     receive(bookResponseMessageReceiver)
         .validationCallback(new MarshallingValidationCallback&lt;AddBookResponseMessage&gt;(unmarshaller) {
             @Override
@@ -719,7 +728,8 @@ protected void configure() {
     <programlisting language="java">@Autowired
 private Marshaller marshaller;
 
-protected void configure() {
+@CitrusTest
+public void sendMessageTest() {
     send(bookRequestMessageSender)
             .payload(createAddBookRequestMessage("978-citrus:randomNumber(10)"), marshaller)
             .header("citrus_soap_action", "addBook");
@@ -846,7 +856,8 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
 &lt;/receive&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-        <programlisting language="java">protected void configure() {
+        <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("helloResponseReceiver")
         .validateScript("assert root.MessageId.text() == '${messageId}';" +
                         "assert root.CorrelationId.text() == '${correlationId}';")
@@ -879,7 +890,8 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
 &lt;/receive&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
-        <programlisting language="java">protected void configure() {
+        <programlisting language="java">@CitrusTest
+public void receiveMessageTest() {
     receive("helloResponseReceiver")
         .validateScript(new FileSystemResource("validationScript.groovy"))
         .header("Operation, "sayHello")

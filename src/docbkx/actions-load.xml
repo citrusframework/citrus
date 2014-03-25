@@ -23,7 +23,8 @@ greeting.text=Hello Test Framework</programlisting>
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void loadPropertiesTest() {
     load("file:tests/resources/load.properties");
     
     traceVariables();

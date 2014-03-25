@@ -129,7 +129,7 @@
         
         <para>Sending Http messages was quite easy and straight forward. Receiving Http messages is a little bit more complicated, because Citrus 
         has to provide server functionality listening on a local port for client connections. Once a client connection 
-        is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server, which is a preconfigured Jetty  
+        is accepted the Http server must also provide a proper Http response to the client. Citrus ships with an embedded Http server, which is a configured Jetty
         server instance with Spring web application context support.</para>
         
         <programlisting>&lt;citrus-http:server id=&quot;simpleHttpServer&quot; 

@@ -35,7 +35,8 @@
 &lt;/testcase&gt;</programlisting>
 
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void createVariableTest() {
     variable("myVariable", "12345");
     variable("id", "54321");
     

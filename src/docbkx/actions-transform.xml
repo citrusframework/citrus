@@ -66,7 +66,8 @@
     <para>The Java DSL alternative for transforming data via XSTL in Citrus looks like follows:</para>
     
     <para><emphasis>Java DSL</emphasis></para>
-    <programlisting language="java">protected void configure() {
+    <programlisting language="java">@CitrusTest
+public void transformTest() {
     transform()
         .source("&lt;TestRequest&gt;" +
                     "&lt;Message&gt;Hello World!&lt;/Message&gt;" +

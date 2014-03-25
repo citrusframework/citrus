@@ -31,7 +31,8 @@
 @Qualifier("connectionFactory")
 private ConnectionFactory connectionFactory;
 
-protected void configure() {
+@CitrusTest
+public void purgeTest() {
     purgeQueues()
         .queue("Some.JMS.QUEUE.Name")
         .queue("Another.JMS.QUEUE.Name");
@@ -108,8 +109,9 @@ private Queue jmsQueueHelloRequestIn;
 @Autowired
 @Qualifier("jmsQueueHelloResponseOut")
 private Queue jmsQueueHelloResponseOut;
-    
-protected void configure() {
+
+@CitrusTest
+public void purgeTest() {
     purgeQueues()
         .queue(jmsQueueHelloRequestIn)
         .queue(jmsQueueHelloResponseOut);
