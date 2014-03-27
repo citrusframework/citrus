@@ -14,8 +14,7 @@
     <para>First of all let us have a look at a validation matcher statement in action so we understand how to use them in a test case.</para>
         
     <programlisting>&lt;message&gt;
-    &lt;data&gt;
-        &lt;![CDATA[
+    &lt;payload&gt;
         &lt;RequestMessage&gt;
             &lt;MessageBody&gt;
                 &lt;Customer&gt;
@@ -24,8 +23,7 @@
                 &lt;/Customer&gt;
             &lt;/MessageBody&gt;
         &lt;/RequestMessage&gt;
-        ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
 &lt;/message&gt;</programlisting>
         
     <para>The listing above describes a normal message validation block inside a receive test action. We use some inline message payload template as CDATA. As you know Citrus will compare the
@@ -65,21 +63,19 @@
         the &lt;last-login&gt; timestamp changes its value continuously. This breaks the static validation for CDATA elements in XML. Fortunately the new XML validation matcher provides a solution for us:</para>
         
         <programlisting>&lt;message&gt;
-    &lt;data&gt;
-        &lt;![CDATA[
-            &lt;GetCustomerMessage&gt;
-                  &lt;CustomerDetails&gt;
-                      &lt;Id&gt;5&lt;/Id&gt;
-                      &lt;Name&gt;Christoph&lt;/Name&gt;
-                      &lt;Configuration&gt;citrus:cdataSection('@matchesXml('&lt;config&gt;
-                            &lt;premium&gt;${isPremium}&lt;/premium&gt;
-                            &lt;last-login&gt;@ignore@&lt;/last-login&gt;
-                            &lt;link&gt;http://www.citrusframework.org/customer/5&lt;/link&gt;
-                        &lt;/config&gt;')@')&lt;/Configuration&gt;
-                  &lt;/CustomerDetails&gt;
-            &lt;/GetCustomerMessage&gt;
-        ]]&gt;
-    &lt;/data&gt;
+    &lt;payload&gt;
+        &lt;GetCustomerMessage&gt;
+            &lt;CustomerDetails&gt;
+                &lt;Id&gt;5&lt;/Id&gt;
+                &lt;Name&gt;Christoph&lt;/Name&gt;
+                &lt;Configuration&gt;citrus:cdataSection('@matchesXml('&lt;config&gt;
+                    &lt;premium&gt;${isPremium}&lt;/premium&gt;
+                    &lt;last-login&gt;@ignore@&lt;/last-login&gt;
+                    &lt;link&gt;http://www.citrusframework.org/customer/5&lt;/link&gt;
+                  &lt;/config&gt;')@')&lt;/Configuration&gt;
+            &lt;/CustomerDetails&gt;
+        &lt;/GetCustomerMessage&gt;
+    &lt;/payload&gt;
 &lt;/message&gt;</programlisting>
 
         <para>With the validation matcher you are able to validate the nested XML with full validation power. Ignoring elements is possible and we can also use variables in our control XML.</para>

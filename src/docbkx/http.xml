@@ -57,13 +57,11 @@
         
         <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-                &lt;testRequestMessage&gt;
-                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                &lt;/testRequestMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
+        &lt;payload&gt;
+            &lt;testRequestMessage&gt;
+                &lt;text&gt;Hello HttpServer&lt;/text&gt;
+            &lt;/testRequestMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;citrus_http_method&quot; value=&quot;PUT&quot;/&gt;
@@ -205,7 +203,7 @@
     &lt;property name=&quot;messagePayload&quot;&gt;
         &lt;value&gt;
         &lt;![CDATA[
-            &lt;ns0:Response 
+            &lt;ns0:Response
                 xmlns:ns0=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
                 &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
                 &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
@@ -295,13 +293,11 @@
         
         <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-                &lt;testRequestMessage&gt;
-                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                &lt;/testRequestMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
+        &lt;payload&gt;
+            &lt;testRequestMessage&gt;
+                &lt;text&gt;Hello HttpServer&lt;/text&gt;
+            &lt;/testRequestMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
@@ -331,13 +327,11 @@ Content-Length: 175
         
         <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-                &lt;testRequestMessage&gt;
-                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                &lt;/testRequestMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
+        &lt;payload&gt;
+            &lt;testRequestMessage&gt;
+                &lt;text&gt;Hello HttpServer&lt;/text&gt;
+            &lt;/testRequestMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
@@ -353,13 +347,11 @@ Content-Length: 175
         
         <programlisting>&lt;send with=&quot;httpResponseSender&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-                &lt;testResponseMessage&gt;
-                    &lt;text&gt;Hello Citrus Client&lt;/text&gt;
-                &lt;/testResponseMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
+        &lt;payload&gt;
+            &lt;testResponseMessage&gt;
+                &lt;text&gt;Hello Citrus Client&lt;/text&gt;
+            &lt;/testResponseMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
@@ -388,13 +380,11 @@ Server: Jetty(7.0.0.pre5)
         
         <programlisting>&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-                &lt;testResponseMessage&gt;
-                    &lt;text&gt;Hello Test Framework&lt;/text&gt;
-                &lt;/testResponseMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
+        &lt;payload&gt;
+            &lt;testResponseMessage&gt;
+                &lt;text&gt;Hello Test Framework&lt;/text&gt;
+            &lt;/testResponseMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;CustomHeaderId&quot; value=&quot;${custom_header_id}&quot;/&gt;
@@ -444,13 +434,11 @@ Server: Jetty(7.0.0.pre5)
         
         <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-                &lt;testRequestMessage&gt;
-                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                &lt;/testRequestMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
+        &lt;payload&gt;
+            &lt;testRequestMessage&gt;
+                &lt;text&gt;Hello HttpServer&lt;/text&gt;
+            &lt;/testRequestMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
 &lt;/send&gt;
         
@@ -483,13 +471,11 @@ Server: Jetty(7.0.0.pre5)
            message=&quot;403 Forbidden&quot;&gt;
     &lt;send with=&quot;httpMessageSender&quot;&gt;
         &lt;message&gt;
-            &lt;data&gt;
-                &lt;![CDATA[
-                    &lt;testRequestMessage&gt;
-                        &lt;text&gt;Hello HttpServer&lt;/text&gt;
-                    &lt;/testRequestMessage&gt;
-                ]]&gt;
-            &lt;/data&gt;
+            &lt;payload&gt;
+                &lt;testRequestMessage&gt;
+                    &lt;text&gt;Hello HttpServer&lt;/text&gt;
+                &lt;/testRequestMessage&gt;
+            &lt;/payload&gt;
         &lt;/message&gt;
     &lt;/send&gt;
 &lt;/assert&gt;</programlisting>

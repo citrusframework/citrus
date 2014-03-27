@@ -166,15 +166,13 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     <para>We set the global scope property to <emphasis>false</emphasis> so the dictionary is handled in explicit scope. This means that
     you have to set the data dictionary explicitly in your test actions:</para>
 
-    <programlisting>&quot;send with=&quot;myMessageSender&quot;&gt;
-  &quot;message data-dictionary=&quot;specialDataDictionary&quot;&gt;
-    &quot;data&gt;
-      &quot;![CDATA[
-        &quot;TestMessage&gt;Hello Citrus&quot;/TestMessage&gt;
-      ]]&gt;
-    &quot;/data&gt;
-  &quot;/message&gt;
-&quot;/send&gt;</programlisting>
+    <programlisting>&lt;send with=&quot;myMessageSender&quot;&gt;
+  &lt;message data-dictionary=&quot;specialDataDictionary&quot;&gt;
+    &lt;payload&gt;
+      &lt;TestMessage&gt;Hello Citrus&quot;/TestMessage&gt;
+    &lt;/payload&gt;
+  &lt;/message&gt;
+&lt;/send&gt;</programlisting>
 
     <para>The sample above is a sending test action with an explicit data dictionary reference set. Before sending the message the dictionary is asked
     for translation. So all matching message element values will be set by the dictionary accordingly. Other global data dictionaries do also apply for this message

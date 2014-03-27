@@ -80,66 +80,53 @@
     <programlisting>&lt;testcase name=&quot;SendMessageTest&quot;&gt;
     &lt;description&gt;Basic send message example&lt;/description&gt;
     &lt;variables&gt;
-        &lt;variable name=&quot;requestTag&quot; value=&quot;Rx123456789&quot;/&gt;
-        &lt;variable name=&quot;correlationId&quot; value=&quot;Cx1x123456789&quot;/&gt;
+        &lt;variable name=&quot;text&quot; value=&quot;Hello Citrus!&quot;/&gt;
+        &lt;variable name=&quot;messageId&quot; value=&quot;Mx1x123456789&quot;/&gt;
     &lt;/variables&gt;
     &lt;actions&gt;
-        &lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
+        &lt;send with=&quot;helloServiceClient&quot;&gt;
             &lt;message&gt;
-                &lt;data&gt;
-                    &lt;![CDATA[
-                    &lt;RequestMessage&gt;
-                        &lt;MessageHeader&gt;
-                            &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                            &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                            &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                            &lt;VersionId&gt;2&lt;/VersionId&gt;
-                        &lt;/MessageHeader&gt;
-                        &lt;MessageBody&gt;
-                            &lt;Customer&gt;
-                                &lt;Id&gt;1&lt;/Id&gt;
-                            &lt;/Customer&gt;
-                        &lt;/MessageBody&gt;
-                    &lt;/RequestMessage&gt;
-                    ]]&gt;
-                &lt;/data&gt;
-                &lt;element path=&quot;/MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+                &lt;payload&gt;
+                    &lt;TestMessage&gt;
+                        &lt;Text&gt;${text}&lt;/Text&gt;
+                    &lt;/TestMessage&gt;
+                &lt;/payload&gt;
             &lt;/message&gt;
             &lt;header&gt;
-                &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-                &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+                &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
+                &lt;element name=&quot;MessageId&quot; value=&quot;${messageId}&quot;/&gt;
             &lt;/header&gt;
         &lt;/send&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
     
-    <para>The test uses two variable definitions (<emphasis>requestTag</emphasis> and <emphasis>correlationId</emphasis>), 
-    so first of all let us recap what variables do. Test variables are defined at the very beginning of the test case and 
-    are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the 
-    expression <literal>${variable-name}</literal>.</para> 
+    <para>The sample uses both header and payload as message parts to send. In both parts you can use variable definitions
+    (see <emphasis>${text}</emphasis> and <emphasis>${messageId}</emphasis>). So first of all let us recap what variables do.
+    Test variables are defined at the very beginning of the test case and are valid throughout all actions that take place in
+    the test. This means that actions can simply reference a variable by the expression <literal>${variable-name}</literal>.</para>
     
     <tip>
         <para>Use variables wherever you can! At least the important entities of a test should be defined as variables at the 
         beginning. The test case improves maintainability and flexibility when using variables.</para>
     </tip>
     
-    <para>Now lets have a closer look at the sending action. The 'with' attribute might catch someone's attention in first place. 
-    So what does the 'with' attribute do? This attribute references a message sender definition by name. As previously mentioned the 
-    message sender definition lives in a separate configuration file and contains the actual message transport configurations. In this example the 
-    <emphasis>&quot;getCustomerRequestMessageSender&quot;</emphasis> is used to send the message over JMS to a destination queue.</para>
+    <para>Now lets have a closer look at the sending action. The 'with' attribute might catch your attention first.
+    This attribute references a message endpoint in Citrus configuration by name. As previously mentioned the message endpoint
+    definition lives in a separate configuration file and contains the actual message transport settings. In this example the
+    <emphasis>&quot;helloServiceClient&quot;</emphasis> is referenced which is a special client endpoint for sending out messages via
+    HTTP for instance.</para>
     
-    <para>The test case is not aware of any transport details, because it does not have to. The advantages are obvious: On the one hand many test 
-    cases may reuse a single message sender definition in order to send messages of type 'getCustomerRequest'. Secondly test cases are independent of
-    message transport details. Connection factories, user credentials, endpoint urls are not present in the test cases but are configured in a central
-    place - the actual message sender configuration.</para>
+    <para>The test case is not aware of any transport details, because it does not have to. The advantages are obvious: On the one hand multiple test
+    cases can reference the message endpoint definition for better reuse. Secondly test cases are independent of message transport details.
+    So connection factories, user credentials, endpoint uri values and so on are not present in the test case.</para>
     
-    <para>In other words the attribute &quot;with&quot; in the &lt;send&gt; element specifies which message sender definition 
-    to use for sending the message. Once again all available message senders are configured in a separate Spring configuration file. 
-    We will come to this later. Be sure to always pick the right message sender type in order to publish your message to the right 
-    destination endpoint.</para>
+    <para>In other words the <emphasis>&quot;with&quot;</emphasis> attribute of the <emphasis>&lt;send&gt;</emphasis> element specifies
+    which message endpoint definition to use and therefore where the message should go to. Once again all available message endpoints are
+    configured in a separate Citrus configuration file. We will come to this later on. Be sure to always pick the right message endpoint type
+    in order to publish your message to the right destination.</para>
     
-    <para>If you do not like the XML language you can also use pure Java code to define the same test. In Java aou would also make use of the message sender 
-    pattern. The same test as shown above in Java DSL looks like this:</para>
+    <para>If you do not like the XML language you can also use pure Java code to define the same test. In Java you would also make use of the message endpoint
+    definition and reference this instance. The same test as shown above in Java DSL looks like this:</para>
     
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">import org.testng.ITestContext;
@@ -154,35 +141,26 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     public void sendMessageTest() {
         description("Basic send message example");
     
-        variable("requestTag", "Rx123456789");
-        variable("correlationId", "Cx1x123456789");
+        variable("text", "Hello Citrus!");
+        variable("messageId", "Mx1x123456789");
     
-        send("getCustomerRequestMessageSender")
-            .payload("&lt;RequestMessage&gt;" +
-                        "&lt;MessageHeader&gt;" +
-                            "&lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;" +
-                            "&lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;" +
-                            "&lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;" +
-                            "&lt;VersionId&gt;2&lt;/VersionId&gt;" +
-                        "&lt;/MessageHeader&gt;" +
-                        "&lt;MessageBody&gt;" +
-                            "&lt;Customer&gt;" +
-                                "&lt;Id&gt;1&lt;/Id&gt;" +
-                            "&lt;/Customer&gt;" +
-                        "&lt;/MessageBody&gt;" +
-                    "&lt;/RequestMessage&gt;")
-            .header("Operation", "GetCustomer")
-            .header("RequestTag", "${requestTag}");
+        send("helloServiceClient")
+            .payload("&lt;TestMessage&gt;" +
+                        "&lt;Text&gt;${text}&lt;/Text&gt;" +
+                    "&lt;/TestMessage&gt;")
+            .header("Operation", "sayHello")
+            .header("RequestTag", "${messageId}");
     }
 }</programlisting>
 
-    <para>The same message sender is referenced within the sending message action. The payload is constructed as plain Java character sequence which is a bit verbose. 
-    We will se later on how we can improve this. For now it is important to understand the combination of send test action and a message sender.</para>
+    <para>Instead of using the XML tags for send we use methods from <emphasis>TestNGCitrusTestBuilder</emphasis> class. The same message endpoint
+    is referenced within the send message action. The payload is constructed as plain Java character sequence which is a bit verbose. We will see
+    later on how we can improve this. For now it is important to understand the combination of send test action and a message endpoints.</para>
     
     <tip>
-        <para>It is good practice to follow a naming convention when choosing names for message senders and receivers. The intended
-        purpose of the message sender as well as the sending/receiving actor should be clear when choosing the name. For instance messageSender1,
-        messageSender2 will not give you much hints to the purpose of the message sender.</para>
+        <para>It is good practice to follow naming conventions when defining names for message endpoints. The intended purpose of the message
+        endpoint as well as the sending/receiving actor should be clear when choosing the name. For instance messageEndpoint1,
+        messageEndpoint2 will not give you much hints to the purpose of the message endpoint.</para>
     </tip>
     
     <para>Now that the message sender pattern is clear we can concentrate on how to specify the message content to be sent. 
@@ -193,11 +171,14 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
             <para><emphasis>message</emphasis>: This element constructs the message to be sent. There are several child elements available:</para>
             <itemizedlist mark="opencircle">
                 <listitem>
-                    <para><emphasis>data</emphasis>: Inline CDATA definition of the message payload (instead of &lt;resource&gt; element)</para>                
+                    <para><emphasis>payload</emphasis>: Nested XML payload as direct child node.</para>
                 </listitem>
                 <listitem>
-                    <para><emphasis>resource</emphasis>: External file resource holding the message payload (instead of &lt;data&gt; element)</para>
-                    <para>The syntax would be: &lt;resource file="file:xmlData/NumberDeallocationRequest.xml" /&gt;</para>
+                    <para><emphasis>data</emphasis>: Inline CDATA definition of the message payload</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis>resource</emphasis>: External file resource holding the message payload</para>
+                    <para>The syntax would be: &lt;resource file="classpath:com/consol/citrus/messages/TestRequest.xml" /&gt;</para>
                     <para>The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:) 
                     or classpath resource (classpath:).</para>
                 </listitem>
@@ -221,108 +202,86 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     </itemizedlist>
     
     <para>The most important thing when dealing with sending actions is to prepare the message payload and header. You are able to construct the message payload either by 
-    inline CDATA (&lt;data&gt;) or external file (&lt;resource&gt;). Before sending takes place you can explicitly overwrite some message values explicitly. You can think of 
-    overwriting specific message elements with variable values for instance. The example above uses the variable ${correlationId} directly in the XML payload definition. In addition to 
-    that you can use XPath expressions for overwriting message contents before sending. The &quot;/MessageHeader/RequestTag&quot; XPath expression for instance overwrites 
-    the respective request tag value in the message. The two approaches of overwriting message elements before sending can coexist simultaneously.</para>
+    nested XML chil nodes (payload), as inline CDATA (&lt;data&gt;) or external file (&lt;resource&gt;). Before sending takes place you can explicitly overwrite some message
+    values explicitly. You can think of overwriting specific message elements with variable values for instance. The example above uses the variable ${text} directly in the
+    XML payload definition. In addition to that you can use XPath expressions for overwriting message contents before sending. The two approaches of overwriting message
+    elements before sending can coexist simultaneously.</para>
      
-    <para>The message header is part of our duty of defining proper messages, too. So Citrus uses name-value pairs like &quot;Operation&quot; and &quot;RequestTag&quot; in the 
-    example above to set message header entries. Depending on what message sender is used and which message transport underneath the header values will be shipped in different ways.
+    <para>The message header is part of our duty of defining proper messages, too. So Citrus uses name-value pairs like &quot;Operation&quot; and &quot;MessageId&quot; in the
+    example above to set message header entries. Depending on what message endpoint is used and which message transport underneath the header values will be shipped in different ways.
     In JMS the headers go to the header section of the message, in Http we set mime headers accordingly, in SOAP we can access the SOAP header elements and so on. Citrus aims to do
     the hard work for you. So Citrus knows how to set headers on different message transports.</para>
     
     <note>
-      <para>In case you don't like to define the message payload in a simple CDATA section, you also have the possibility to use explicit payload setting with XML schema 
-      validation. In this case you need to use the <literal>&lt;payload&gt;</literal> instead of the <literal>&lt;data&gt;</literal> element. With this alternative you can 
-      validate the payload with XML schema during designtime. With XML editors you also have XSD auto completion when constructing your payload. See following example for 
-      usage explanation:</para>
+      <para>Sometimes the nested XML message payload elements may cause XSD schema validation rule violations. This is because of variable values not fitting the XSD schema rules
+      for example. In this scenario you could also use simple CDATA sections as payload data. In this case you need to use the <literal>&lt;data&gt;</literal> element in contrast
+      to the <literal>&lt;payload&gt;</literal> element that we have used in our examples so far.</para>
+
+      <para>With this alternative you can skip the XML schema validation from your IDE at design time. Unfortunately you will loose the XSD auto completion features many XML editors
+      offer when constructing your payload. See following example for usage explanation:</para>
       
       <programlisting>&lt;testcase name=&quot;sendMessageTest&quot;&gt;
     &lt;actions&gt;
-        &lt;send with=&quot;helloRequestSender&quot;&gt;
+        &lt;send with=&quot;helloServiceClient&quot;&gt;
             &lt;message&gt;
-                &lt;payload&gt;
+                &lt;data&gt;
+                    &lt;![CDATA[
                     &lt;hlo:HelloRequest xmlns:hlo=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
-                        &lt;hlo:MessageId&gt;${messageId}&lt;/hlo:MessageId&gt;
-                        &lt;hlo:CorrelationId&gt;${correlationId}&lt;/hlo:CorrelationId&gt;
-                        &lt;hlo:User&gt;${user}&lt;/hlo:User&gt;
-                        &lt;hlo:Text&gt;Hello TestFramework&lt;/hlo:Text&gt;
+                        &lt;hlo:Text&gt;Hello Citrus!&lt;/hlo:Text&gt;
                     &lt;/hlo:HelloRequest&gt;
-                &lt;/payload&gt;
+                    ]]&gt;
+                &lt;/data&gt;
             &lt;/message&gt;
             ...
         &lt;/send&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-      <para>This alternative works for receiving message action, too. We will see this in the next section when dealing with message receipt within Citrus.</para>
+      <para>This alternative works for receiving message actions, too. We will see this in the next sections.</para>
     </note>
     
-    <para>This is basically how you send messages in Citrus. The test case is responsible for constructing the message content while the predefined message senders hold transport specific
-    settings. All test cases reused the predefined message sender components to publish the messages to a destination. The variable support in message payload and message header 
-    enables you to add dynamic values.</para>
+    <para>This is basically how to send messages in Citrus. The test case is responsible for constructing the message content while the predefined message endpoint holds transport specific
+    settings. Test cases reference endpoint components to publish messages to the outside world. The variable support in message payload and message header
+    enables you to add dynamic values before sending out the message.</para>
   </section>
   
   <section id="message-receiving">
     <title>Receiving messages</title>
 
-    <para>Now after sending a message with Citrus we would like to receive a message inside the test. Let us again have a look at a simple example showing how it works.</para>
+    <para>Now we have a look at the message receiving part inside the test. A simple example shows how it works.</para>
     
     <para><emphasis>XML DSL</emphasis></para>
-    <programlisting>&lt;receive with=&quot;getCustomerResponseReceiver&quot;&gt;
+    <programlisting>&lt;receive with=&quot;helloServiceServer&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;
-            &lt;![CDATA[
-            &lt;ResponseMessage&gt;
-                &lt;MessageHeader&gt;
-                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                    &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                    &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                    &lt;VersionId&gt;2&lt;/VersionId&gt;
-                &lt;/MessageHeader&gt;
-                &lt;MessageBody&gt;
-                    &lt;Customer&gt;
-                        &lt;Id&gt;1&lt;/Id&gt;
-                    &lt;/Customer&gt;
-                &lt;/MessageBody&gt;
-            &lt;/ResponseMessage&gt;
-            ]]&gt;
-        &lt;/data&gt;
-        &lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+        &lt;payload&gt;
+            &lt;TestMessage&gt;
+                &lt;Text&gt;${text}&lt;/Text&gt;
+            &lt;/TestMessage&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
-        &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-        &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+        &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
+        &lt;element name=&quot;MessageId&quot; value=&quot;${messageId}&quot;/&gt;
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
     
-    <para>Knowing the send action of the previous chapter we can identify some common mechanisms that apply for both 
-    sending and receiving actions. This time the test uses a predefined message receiver in order to receive the message 
-    over a certain transport. Again the test is not aware of the transport details (e.g. JMS connection factory, 
-    queue names, etc.) but the message receiver component does know this information.</para>
+    <para>If we recap the send action of the previous chapter we can identify some common mechanisms that apply for both
+    sending and receiving actions. This time the test uses a predefined message server endpoint in order to receive the message.
+    Again the test is not aware of the transport details such as JMS connections, endpoint uri, and so on. The message endpoint
+    component encapsulates this information.</para>
     
-    <para>Before go into detail on validating the received message we have a quick look at the Java DSL variant on the receive action. As you are familiar with
-    Java and the code completion capabilities of your IDE you will not have problems to code the test action.</para>
+    <para>Before we go into detail on validating the received message we have a quick look at the Java DSL variation for the
+    receive action. The same receive action as above looks like this in Java DSL.</para>
     
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void messagingTest() {
-    receive("getCustomerResponseReceiver")
-        .payload("&lt;ResponseMessage&gt;" +
-                    "&lt;MessageHeader&gt;" +
-                        "&lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;" +
-                        "&lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;" +
-                        "&lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;" +
-                        "&lt;VersionId&gt;2&lt;/VersionId&gt;" +
-                    "&lt;/MessageHeader&gt;" +
-                    "&lt;MessageBody&gt;" +
-                        "&lt;Customer&gt;" +
-                            "&lt;Id&gt;1&lt;/Id&gt;" +
-                        "&lt;/Customer&gt;" +
-                    "&lt;/MessageBody&gt;" +
-                "&lt;/ResponseMessage&gt;")
-        .header("Operation", "GetCustomer")
-        .header("RequestTag", "${requestTag}");
+    receive("helloServiceServer")
+        .payload("&lt;TestMessage&gt;" +
+                    "&lt;Text&gt;${text}&lt;/Text&gt;" +
+                "&lt;/TestMessage&gt;")
+        .header("Operation", "sayHello")
+        .header("MessageId", "${messageId}");
 }</programlisting>
     
     <para>While the action tries to receive a message the whole test execution will be delayed. This is

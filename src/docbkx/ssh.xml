@@ -127,28 +127,24 @@
       
       <programlisting>&lt;send with=&quot;sshClientSender&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
-          &lt;ssh-request&gt;
-            &lt;command&gt;shutdown&lt;/command&gt;
-            &lt;stdin&gt;input&lt;/stdin&gt;
-          &lt;/ssh-request&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;payload&gt;
+        &lt;ssh-request&gt;
+          &lt;command&gt;shutdown&lt;/command&gt;
+          &lt;stdin&gt;input&lt;/stdin&gt;
+        &lt;/ssh-request&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;
   
 &lt;receive with=&quot;sshResponseReceiver&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
-          &lt;ssh-response&gt;
-              &lt;stdout&gt;Hello Citrus&lt;/stdout&gt;
-              &lt;stderr/&gt;
-              &lt;exit&gt;0&lt;/exit&gt;
-          &lt;/ssh-response&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;payload&gt;
+        &lt;ssh-response&gt;
+            &lt;stdout&gt;Hello Citrus&lt;/stdout&gt;
+            &lt;stderr/&gt;
+            &lt;exit&gt;0&lt;/exit&gt;
+        &lt;/ssh-response&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
       
@@ -230,27 +226,23 @@
       
       <programlisting>&lt;receive with=&quot;sshRequestReceiver&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
-          &lt;ssh-request&gt;
-             &lt;command&gt;shutdown&lt;/command&gt;
-             &lt;stdin&gt;input&lt;/stdin&gt;
-          &lt;/ssh-request&gt;
-       ]]&gt;
-    &lt;/data&gt;
+    &lt;payload&gt;
+        &lt;ssh-request&gt;
+           &lt;command&gt;shutdown&lt;/command&gt;
+           &lt;stdin&gt;input&lt;/stdin&gt;
+        &lt;/ssh-request&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;
 
 &lt;send with=&quot;sshResponseSender&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
-          &lt;ssh-response&gt;
-              &lt;stdout&gt;Hello Citrus&lt;/stdout&gt;
-              &lt;exit&gt;0&lt;/exit&gt;
-          &lt;/ssh-response&gt;
-         ]]&gt;
-    &lt;/data&gt;
+    &lt;payload&gt;
+        &lt;ssh-response&gt;
+            &lt;stdout&gt;Hello Citrus&lt;/stdout&gt;
+            &lt;exit&gt;0&lt;/exit&gt;
+        &lt;/ssh-response&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</programlisting>
     </section>
