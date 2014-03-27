@@ -38,6 +38,11 @@ import java.util.Map.Entry;
  * @since 2006
  */
 public class TestCase extends AbstractActionContainer implements BeanNameAware {
+	
+	/**
+	 * Counter for the test number - can be used for logging purposes (e.g. when executing tests in parallel)
+	 */
+	private static int testNumber = 0;
 
     /** Further chain of test actions to be executed in any case (Success, error)
      * Usually used to clean up database in any case of test result */
@@ -123,6 +128,11 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             }
         }
 
+        /* Filling standard variables with test name and test number - can be used for logging,
+         * e.g. in case of parallel test execution */ 
+        context.setVariable("test.name", getName());
+        context.setVariable("test.number", ++testNumber);
+
         /* Debug print all variables */
         if (context.hasVariables() && log.isDebugEnabled()) {
             log.debug("Global variables:");
@@ -134,6 +144,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         /* execute the test actions */
         for (TestAction action: actions) {
             if (!action.isDisabled(context)) {
+            	String actionIndexStr="     "+(getActionIndex(action)+1) + "/" + getActionCount();
+            	actionIndexStr=actionIndexStr.substring(actionIndexStr.length()-5);
+                context.setVariable("test.action.index", actionIndexStr);
+                
                 testActionListeners.onTestActionStart(this, action);
                 setLastExecutedAction(action);
 
