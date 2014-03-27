@@ -28,7 +28,7 @@ public class ContainsIgnoreCaseValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, String control) throws ValidationException {
         
-        if (!value.toLowerCase().contains(control.toLowerCase())) {
+        if (value == null || !value.toLowerCase().contains(control.toLowerCase())) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value is '" + value
