@@ -332,10 +332,10 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertNull(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderResourcePath());
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
+        Assert.assertNull(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessageHeaderResourcePath());
     }
     
     @Test
@@ -384,9 +384,9 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
-        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "otherHeaderData");
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessageHeaderData(), "otherHeaderData");
         
         verify(resource);
     }

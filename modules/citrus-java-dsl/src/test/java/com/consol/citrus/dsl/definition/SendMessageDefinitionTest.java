@@ -18,19 +18,21 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageSender;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -81,7 +83,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testSendBuilder() {
+    public void testSendBuilderWithMessageInstance() {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
@@ -105,6 +107,78 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
+    }
+
+    @Test
+    public void testSendBuilderWithObjectMessageInstance() {
+        final Message message = MessageBuilder.withPayload(new Integer(10)).setHeader("operation", "foo").build();
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .message(message);
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().getId(), message.getHeaders().getId());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get("operation"), "foo");
+
+        Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size());
+        Assert.assertEquals(constructed.getHeaders().get("operation"), "foo");
+        Assert.assertEquals(constructed.getHeaders().getId(), message.getHeaders().getId());
+    }
+
+    @Test
+    public void testSendBuilderWithObjectMessageInstanceAdditionalHeader() {
+        final Message message = MessageBuilder.withPayload(new Integer(10)).setHeader("operation", "foo").build();
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .message(message)
+                        .header("additional", "new");
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
+
+        StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "new");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().getId(), message.getHeaders().getId());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get("operation"), "foo");
+
+        Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size() + 1);
+        Assert.assertEquals(constructed.getHeaders().get("operation"), "foo");
+        Assert.assertEquals(constructed.getHeaders().get("additional"), "new");
     }
     
     @Test

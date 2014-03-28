@@ -83,21 +83,24 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @param message
      * @return
      */
-    public T message(Message<String> message) {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData(message.getPayload());
-        
-        Map<String, Object> headers = new HashMap<String, Object>();
-        for (String headerName : message.getHeaders().keySet()) {
-            if (!MessageUtils.isSpringInternalHeader(headerName)) {
-                headers.put(headerName, message.getHeaders().get(headerName));
+    public T message(Message<?> message) {
+        if (message.getPayload() != null && message.getPayload() instanceof String) {
+            PayloadTemplateMessageBuilder messageBuilder = getPayloadTemplateMessageBuilder();
+            messageBuilder.setPayloadData(message.getPayload().toString());
+
+            Map<String, Object> headers = new HashMap<String, Object>();
+            for (String headerName : message.getHeaders().keySet()) {
+                if (!MessageUtils.isSpringInternalHeader(headerName)) {
+                    headers.put(headerName, message.getHeaders().get(headerName));
+                }
             }
+
+            messageBuilder.getMessageHeaders().putAll(headers);
+            action.setMessageBuilder(messageBuilder);
+        } else {
+            action.setMessageBuilder(new StaticMessageContentBuilder(message));
         }
-        
-        messageBuilder.setMessageHeaders(headers);
-        
-        action.setMessageBuilder(messageBuilder);
-        
+
         return self;
     }
     
@@ -107,15 +110,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @return
      */
     public T payload(String payload) {
-        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
-            ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadData(payload);
-        } else {
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadData(payload);
-            
-            action.setMessageBuilder(messageBuilder);
-        }
-        
+        getPayloadTemplateMessageBuilder().setPayloadData(payload);
         return self;
     }
     
@@ -126,14 +121,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      */
     public T payload(Resource payloadResource) {
         try {
-            if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
-                ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadData(FileUtils.readToString(payloadResource));
-            } else {
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
-                
-                action.setMessageBuilder(messageBuilder);
-            }
+            getPayloadTemplateMessageBuilder().setPayloadData(FileUtils.readToString(payloadResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
@@ -205,13 +193,29 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     }
 
     /**
-     * Get message builder, if already registered or create a new message builder and registrer it
+     * Get message builder, if already registered or create a new message builder and register it
      *
      * @return the message builder in use
      */
-    protected AbstractMessageContentBuilder<String> getMessageContentBuilder() {
+    protected AbstractMessageContentBuilder<?> getMessageContentBuilder() {
         if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-            return (AbstractMessageContentBuilder<String>) action.getMessageBuilder();
+            return (AbstractMessageContentBuilder<?>) action.getMessageBuilder();
+        } else {
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            action.setMessageBuilder(messageBuilder);
+            return messageBuilder;
+        }
+    }
+
+    /**
+     * Forces a payload template message builder.
+     * @return
+     */
+    protected PayloadTemplateMessageBuilder getPayloadTemplateMessageBuilder() {
+        MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+
+        if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+            return (PayloadTemplateMessageBuilder) messageContentBuilder;
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             action.setMessageBuilder(messageBuilder);

@@ -36,7 +36,6 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -105,7 +104,6 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         if (validationContext != null) {
             throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
         }
-        
         initializeValidationContext();
         
         validationContext.setControlMessage(controlMessage);
@@ -119,65 +117,10 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T payload(String payload) {
-        if (validationContext != null) {
-            if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
-                ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadData(payload);
-            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
-                validationContext.setControlMessage(MessageBuilder.withPayload(payload).copyHeaders(message.getHeaders()).build());
-            }
-        } else {
-            initializeValidationContext();
-            
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setPayloadData(payload);
-            validationContext.setMessageBuilder(messageBuilder);
-        }
-
+        getPayloadTemplateMessageBuilder().setPayloadData(payload);
         return self;
     }
     
-    /**
-     * Creates new validation context according to message type.
-     */
-    private void initializeValidationContext() {
-        if (validationContext == null) {
-            if (messageType.equals(MessageType.XML)) {
-                validationContext = new XmlMessageValidationContext();
-            } else {
-                validationContext = new ControlMessageValidationContext(messageType.toString());
-            }
-            
-            action.getValidationContexts().add(validationContext);
-        }
-    }
-    
-    /**
-     * Creates new script validation context.
-     */
-    private void initializeScriptValidationContext() {
-        if (scriptValidationContext == null) {
-            scriptValidationContext = new ScriptValidationContext(messageType.toString());
-            
-            action.getValidationContexts().add(scriptValidationContext);
-        }
-    }
-    
-    /**
-     * Creates new variable extractor and adds it to test action.
-     */
-    private void initializeXpathVariableExtractor() {
-        if (xpathExtractor == null) {
-            xpathExtractor = new XpathPayloadVariableExtractor();
-
-            if (applicationContext.getBeansOfType(NamespaceContextBuilder.class).size() > 0) {
-                xpathExtractor.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
-            }
-
-            action.getVariableExtractors().add(xpathExtractor);
-        }
-    }
-
     /**
      * Expect this message payload data in received message.
      * @param payloadResource
@@ -185,25 +128,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public T payload(Resource payloadResource) {
         try {
-            if (validationContext != null) {
-                if (validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
-                    ((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).setPayloadData(FileUtils.readToString(payloadResource));
-                } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                    messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
-    
-                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
-                    messageBuilder.setMessageHeaders(message.getHeaders());
-                    
-                    validationContext.setMessageBuilder(messageBuilder);
-                }
-            } else {
-                initializeValidationContext();
-                
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder.setPayloadData(FileUtils.readToString(payloadResource));
-                validationContext.setMessageBuilder(messageBuilder);
-            }
+            getPayloadTemplateMessageBuilder().setPayloadData(FileUtils.readToString(payloadResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
@@ -218,21 +143,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T header(String name, Object value) {
-        if (validationContext != null) {
-            if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-                ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessageHeaders().put(name, value);
-            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
-                validationContext.setControlMessage(MessageBuilder.fromMessage(message).setHeader(name, value).build());
-            }
-        } else {
-            initializeValidationContext();
-            
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.getMessageHeaders().put(name, value);
-            validationContext.setMessageBuilder(messageBuilder);
-        }
-
+        getMessageContentBuilder().getMessageHeaders().put(name, value);
         return self;
     }
     
@@ -243,30 +154,10 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T header(String data) {
-        if (validationContext != null) {
-            if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-                ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderData(data);
-            } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                // convert to payload template message builder
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                
-                Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
-                messageBuilder.setPayloadData(message.getPayload().toString());
-                messageBuilder.getMessageHeaders().putAll(message.getHeaders());
-                messageBuilder.setMessageHeaderData(data);
-                validationContext.setMessageBuilder(messageBuilder);
-            }
-        } else {
-            initializeValidationContext();
-            
-            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            messageBuilder.setMessageHeaderData(data);
-            validationContext.setMessageBuilder(messageBuilder);
-        }
-
+        getMessageContentBuilder().setMessageHeaderData(data);
         return self;
     }
-    
+
     /**
      * Expect this message header data in received message from file resource. Message header data is used in 
      * SOAP messages as XML fragment for instance.
@@ -275,26 +166,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public T header(Resource resource) {
         try {
-            if (validationContext != null) {
-                if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-                    ((AbstractMessageContentBuilder<?>)validationContext.getMessageBuilder()).setMessageHeaderData(FileUtils.readToString(resource));
-                } else if (validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder<?>) {
-                    // convert to payload template message builder
-                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                    
-                    Message<?> message = ((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).buildMessageContent(null, messageType.toString());
-                    messageBuilder.setPayloadData(message.getPayload().toString());
-                    messageBuilder.getMessageHeaders().putAll(message.getHeaders());
-                    messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
-                    validationContext.setMessageBuilder(messageBuilder);
-                }
-            } else {
-                initializeValidationContext();
-                
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder.setMessageHeaderData(FileUtils.readToString(resource));
-                validationContext.setMessageBuilder(messageBuilder);
-            }
+            getMessageContentBuilder().setMessageHeaderData(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }
@@ -309,7 +181,6 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public T validateScript(String validationScript) {
         initializeScriptValidationContext();
-        
         scriptValidationContext.setValidationScript(validationScript);
 
         return self;
@@ -361,17 +232,10 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T schemaValidation(boolean enabled) {
-        initializeValidationContext();
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).setSchemaValidation(enabled);
-        } else {
-            throw new CitrusRuntimeException("Unable to enable/disable schema validation on non XML message type");
-        }
-
+        getXmlValidationContext().setSchemaValidation(enabled);
         return self;
     }
-    
+
     /**
      * Validates XML namespace with prefix and uri.
      * @param prefix
@@ -379,14 +243,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validateNamespace(String prefix, String namespaceUri) {
-        initializeValidationContext();
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).getControlNamespaces().put(prefix, namespaceUri);
-        } else {
-            throw new CitrusRuntimeException("Unable to validate namespaces on non XML message type");
-        }
-
+        getXmlValidationContext().getControlNamespaces().put(prefix, namespaceUri);
         return self;
     }
     
@@ -397,14 +254,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validate(String path, String controlValue) {
-        initializeValidationContext();
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).getPathValidationExpressions().put(path, controlValue);
-        } else {
-            throw new CitrusRuntimeException("Unable to set path validation expression on non XML message type");
-        }
-
+        getXmlValidationContext().getPathValidationExpressions().put(path, controlValue);
         return self;
     }
     
@@ -414,14 +264,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T ignore(String path) {
-        initializeValidationContext();
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).getIgnoreExpressions().add(path);
-        } else {
-            throw new CitrusRuntimeException("Unable to ignore path expression on non XML message type");
-        }
-
+        getXmlValidationContext().getIgnoreExpressions().add(path);
         return self;
     }
     
@@ -442,14 +285,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T xsd(String schemaName) {
-        initializeValidationContext();
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).setSchema(schemaName);
-        } else {
-            throw new CitrusRuntimeException("Unable to xsd schema on non XML message type");
-        }
-
+        getXmlValidationContext().setSchema(schemaName);
         return self;
     }
     
@@ -459,14 +295,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T xsdSchemaRepository(String schemaRepository) {
-        initializeValidationContext();
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).setSchemaRepository(schemaRepository);
-        } else {
-            throw new CitrusRuntimeException("Unable to xsd schema repository on non XML message type");
-        }
-
+        getXmlValidationContext().setSchemaRepository(schemaRepository);
         return self;
     }
     
@@ -477,17 +306,10 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T namespace(String prefix, String namespaceUri) {
-        initializeValidationContext();
         initializeXpathVariableExtractor();
-        
         xpathExtractor.getNamespaces().put(prefix, namespaceUri);
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).getNamespaces().put(prefix, namespaceUri);
-        } else {
-            throw new CitrusRuntimeException("Unable to set namespace declaration on non XML message type");
-        }
 
+        getXmlValidationContext().getNamespaces().put(prefix, namespaceUri);
         return self;
     }
     
@@ -497,17 +319,10 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T namespaces(Map<String, String> namespaceMappings) {
-        initializeValidationContext();
         initializeXpathVariableExtractor();
-        
         xpathExtractor.getNamespaces().putAll(namespaceMappings);
-        
-        if (validationContext instanceof XmlMessageValidationContext) {
-            ((XmlMessageValidationContext)validationContext).getNamespaces().putAll(namespaceMappings);
-        } else {
-            throw new CitrusRuntimeException("Unable to set namespace declaration on non XML message type");
-        }
 
+        getXmlValidationContext().getNamespaces().putAll(namespaceMappings);
         return self;
     }
     
@@ -645,6 +460,96 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         httpMessageActionDefinition.setXpathExtractor(xpathExtractor);
 
         return httpMessageActionDefinition;
+    }
+
+    /**
+     * Gets the message builder on the validation context. Constructs message content builder if necessary.
+     * @return
+     */
+    protected AbstractMessageContentBuilder<?> getMessageContentBuilder() {
+        if (validationContext == null) {
+            initializeValidationContext();
+        }
+
+        if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
+            return (AbstractMessageContentBuilder<?>) validationContext.getMessageBuilder();
+        } else {
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            validationContext.setMessageBuilder(messageBuilder);
+            return messageBuilder;
+        }
+    }
+
+    /**
+     * Forces a payload template message builder.
+     * @return
+     */
+    protected PayloadTemplateMessageBuilder getPayloadTemplateMessageBuilder() {
+        MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+
+        if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+            return (PayloadTemplateMessageBuilder) messageContentBuilder;
+        } else {
+            PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+            validationContext.setMessageBuilder(messageBuilder);
+            return messageBuilder;
+        }
+    }
+
+    /**
+     * Creates new validation context according to message type.
+     */
+    private void initializeValidationContext() {
+        if (validationContext == null) {
+            if (messageType.equals(MessageType.XML)) {
+                validationContext = new XmlMessageValidationContext();
+            } else {
+                validationContext = new ControlMessageValidationContext(messageType.toString());
+            }
+
+            action.getValidationContexts().add(validationContext);
+        }
+    }
+
+    /**
+     * Creates new script validation context.
+     */
+    private void initializeScriptValidationContext() {
+        if (scriptValidationContext == null) {
+            scriptValidationContext = new ScriptValidationContext(messageType.toString());
+
+            action.getValidationContexts().add(scriptValidationContext);
+        }
+    }
+
+    /**
+     * Creates new variable extractor and adds it to test action.
+     */
+    private void initializeXpathVariableExtractor() {
+        if (xpathExtractor == null) {
+            xpathExtractor = new XpathPayloadVariableExtractor();
+
+            if (applicationContext.getBeansOfType(NamespaceContextBuilder.class).size() > 0) {
+                xpathExtractor.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
+            }
+
+            action.getVariableExtractors().add(xpathExtractor);
+        }
+    }
+
+    /**
+     * Gets the validation context as XML validation context an raises exception if existing validation context is
+     * not a XML validation context.
+     * @return
+     */
+    private XmlMessageValidationContext getXmlValidationContext() {
+        initializeValidationContext();
+
+        if (validationContext instanceof XmlMessageValidationContext) {
+            return ((XmlMessageValidationContext)validationContext);
+        } else {
+            throw new CitrusRuntimeException("Unable to set XML property on validation context type " + validationContext);
+        }
     }
 
     /**

@@ -17,13 +17,10 @@
 package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
-import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Message builder returning a static message every time the build mechanism is called. This
@@ -32,16 +29,10 @@ import java.util.List;
  *  
  * @author Christoph Deppisch
  */
-public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> {
-
-    /** List of manipulators for static message payload */
-    private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<MessageConstructionInterceptor>();
+public class StaticMessageContentBuilder<T> extends AbstractMessageContentBuilder<T> {
 
     /** The static message to build here */
     private Message<T> message;
-
-    /** Optional data dictionary that explicitly modifies control message content before construction */
-    private DataDictionary dataDictionary;
 
     /**
      * Default constructor with static message to be built by this message builder.
@@ -49,36 +40,38 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
     public StaticMessageContentBuilder(Message<T> message) {
         this.message = message;
     }
-    
+
+    @Override
+    public Message<T> buildMessageContent(TestContext context, String messageType) {
+        if (getMessageHeaders().isEmpty()
+                && !StringUtils.hasText(getMessageHeaderData())
+                && !StringUtils.hasText(getMessageHeaderResourcePath())
+                && getMessageInterceptors().isEmpty()
+                && getDataDictionary() == null) {
+            return message;
+        } else {
+            return super.buildMessageContent(context, messageType);
+        }
+    }
+
+    @Override
+    protected T buildMessagePayload(TestContext context) {
+        return message.getPayload();
+    }
+
+    @Override
+    protected Map<String, Object> buildMessageHeaders(TestContext context) {
+        Map<String, Object> headers = super.buildMessageHeaders(context);
+        headers.putAll(message.getHeaders());
+
+        return headers;
+    }
+
     /**
-     * Default constructor with static message to be built by this message builder. 
+     * Default constructor with static message to be built by this message builder.
      */
     public static <T> StaticMessageContentBuilder<T> withMessage(Message<T> message) {
         return new StaticMessageContentBuilder<T>(message);
-    }
-    
-    /**
-     * Returns the static message every time.
-     */
-    @Override
-    public Message<T> buildMessageContent(TestContext context, String messageType) {
-        if (message != null && messageInterceptors.size() > 0) {
-            Message<T> result = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
-
-            if (dataDictionary != null) {
-                result = (Message<T>) dataDictionary.interceptMessageConstruction(result, messageType, context);
-            }
-
-            result = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(result, messageType, context);
-
-            for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                result = (Message<T>) modifyer.interceptMessageConstruction(result, messageType, context);
-            }
-
-            return result;
-        }
-
-        return message;
     }
 
     /**
@@ -89,33 +82,4 @@ public class StaticMessageContentBuilder<T> implements MessageContentBuilder<T> 
         return message;
     }
 
-    /**
-     * Adds a new interceptor to the message construction process.
-     * @param interceptor
-     */
-    public void add(MessageConstructionInterceptor interceptor) {
-        messageInterceptors.add(interceptor);
-    }
-
-    @Override
-    public void setDataDictionary(DataDictionary dataDictionary) {
-        this.dataDictionary = dataDictionary;
-    }
-
-    /**
-     * Gets the messageInterceptors.
-     * @return the messageInterceptors
-     */
-    public List<MessageConstructionInterceptor> getMessageInterceptors() {
-        return messageInterceptors;
-    }
-
-    /**
-     * Sets the messageInterceptors.
-     * @param messageInterceptors the messageInterceptors to set
-     */
-    public void setMessageInterceptors(
-            List<MessageConstructionInterceptor> messageInterceptors) {
-        this.messageInterceptors = messageInterceptors;
-    }
 }
