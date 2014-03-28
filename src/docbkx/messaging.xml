@@ -88,7 +88,7 @@
             &lt;message&gt;
                 &lt;payload&gt;
                     &lt;TestMessage&gt;
-                        &lt;Text&gt;${text}&lt;/Text&gt;
+                        &lt;Body&gt;${text}&lt;/Body&gt;
                     &lt;/TestMessage&gt;
                 &lt;/payload&gt;
             &lt;/message&gt;
@@ -146,7 +146,7 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     
         send("helloServiceClient")
             .payload("&lt;TestMessage&gt;" +
-                        "&lt;Text&gt;${text}&lt;/Text&gt;" +
+                        "&lt;Body&gt;${text}&lt;/Body&gt;" +
                     "&lt;/TestMessage&gt;")
             .header("Operation", "sayHello")
             .header("RequestTag", "${messageId}");
@@ -227,7 +227,7 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
                 &lt;data&gt;
                     &lt;![CDATA[
                     &lt;hlo:HelloRequest xmlns:hlo=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
-                        &lt;hlo:Text&gt;Hello Citrus!&lt;/hlo:Text&gt;
+                        &lt;hlo:Body&gt;Hello Citrus!&lt;/hlo:Body&gt;
                     &lt;/hlo:HelloRequest&gt;
                     ]]&gt;
                 &lt;/data&gt;
@@ -255,7 +255,7 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     &lt;message&gt;
         &lt;payload&gt;
             &lt;TestMessage&gt;
-                &lt;Text&gt;${text}&lt;/Text&gt;
+                &lt;Body&gt;${text}&lt;/Body&gt;
             &lt;/TestMessage&gt;
         &lt;/payload&gt;
     &lt;/message&gt;
@@ -278,26 +278,26 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
 public void messagingTest() {
     receive("helloServiceServer")
         .payload("&lt;TestMessage&gt;" +
-                    "&lt;Text&gt;${text}&lt;/Text&gt;" +
+                    "&lt;Body&gt;${text}&lt;/Body&gt;" +
                 "&lt;/TestMessage&gt;")
         .header("Operation", "sayHello")
         .header("MessageId", "${messageId}");
 }</programlisting>
     
-    <para>While the action tries to receive a message the whole test execution will be delayed. This is
-    important to ensure the step by step test workflow processing. At this time the test case waits for the message to arrive.
-    Of course you can specify message timeouts so the receiver will only wait a given amount of time. Following from that a timeout exception fails 
-    the test in case the message does not arrive in time. Citrus defines default timeout settings for all message receiving tasks.</para>
+    <para>The receive action waits for a message to arrive. The whole test execution is stopped while waiting for the message. This is
+    important to ensure the step by step test workflow processing. Of course you can specify message timeouts so the receiver will only
+    wait a given amount of time before raising a timeout error. Following from that timeout exception the test case fails as the message
+    did not arrive in time. Citrus defines default timeout settings for all message receiving tasks.</para>
     
-    <para>In best case the message has arrived in time and the content can be validated as next step. This validation can be done in various ways. 
-    On the one hand you can specify a whole XML message that you expect as control template. In this case the received XML structure will
-    be compared to the expected XML message content element by element. On the other hand you can use explicit element validation where only a 
+    <para>In a good case scenario the message arrives in time and the content can be validated as a next step. This validation can be done
+    in various ways. On the one hand you can specify a whole XML message that you expect as control template. In this case the received message
+    structure is compared to the expected message content element by element. On the other hand you can use explicit element validation where only a
     small subset of message elements is included into validation.</para>
     
     <para>Besides the message payload Citrus will also perform validation on the received message header values. Test variable usage is 
     supported as usual during the whole validation process for payload and header checks.</para>
     
-    <para>In general the validation component (validator) in Citrus works hand in hand with a message reveiving component as the following
+    <para>In general the validation component (validator) in Citrus works hand in hand with a message receiving component as the following
     figure shows:</para>
     
     <mediaobject>
@@ -319,76 +319,75 @@ public void messagingTest() {
         <para>Once Citrus has received a message the tester can validate the message contents in various ways. First of all the tester can compare 
         the whole message payload to a predefined control message template.</para>
         
-        <para>The receiving action offers following XML elements for control message templates:</para>
+        <para>The receiving action offers following elements for control message templates:</para>
         <itemizedlist mark="opencircle">
             <listitem>
-                <para><emphasis>&lt;data&gt;</emphasis>: Defines an inline XML message template as nested CDATA</para>
+              <para><emphasis>&lt;payload&gt;</emphasis>: Defines the message payload as nested XML message template. The whole message payload is defined
+              inside the test case.</para>
             </listitem>
             <listitem>
-                <para><emphasis>&lt;resource&gt;</emphasis>: Defines an expected XML message template via external file resources</para>
+                <para><emphasis>&lt;data&gt;</emphasis>: Defines an inline XML message template as nested CDATA. Slightly different to the payload variation as
+                we define the whole message payload inside the test case as CDATA section.</para>
+            </listitem>
+            <listitem>
+                <para><emphasis>&lt;resource&gt;</emphasis>: Defines an expected XML message template via external file resources. This time the payload is loaded
+                at runtime from the external file.</para>
             </listitem>
         </itemizedlist>
         
-        <para>Both ways inline CDATA XML or external file resource give us a control message template. Citrus uses this
-        control template for extended XML tree comparison. All elements, namespaces, attributes and node values are validated in XML DOM tree comparison.
-        Only in case received message and control message are equal to each other the message validation will succeed. In case differences occur Citrus gives
-        detailed error messages and the test fails.</para>
+        <para>Both ways inline payload definition or external file resource give us a control message template that the test case expects to arrive. Citrus uses this
+        control template for extended message comparison. All elements, namespaces, attributes and node values are validated in this comparison. When using XML message payloads
+        Citrus will navigate through the whole XML structure validating each element and its content. Same with JSON payloads.</para>
+
+        <para>Only in case received message and control message are equal to each other as expected the message validation will pass. In case differences occur Citrus gives
+        detailed error messages and the test case fails.</para>
         
-        <para>Now up to now the control message template is very static. Message comparison in this high extend has to be much more robust. This is why Citrus supports
-        various ways to add dynamic message content and ignored elements to the XML tree validation. The tester can enrich the expected message template with test variables 
-        or some elements can be completely ignored in validation.</para>
+        <para>The control message template is not necessarily very static. Citrus supports various ways to add dynamic message content on the one side and on the other side Citrus can
+        ignore some elements that are not part of message comparison (e.g. when generated content or timestamps are part of the message content). The tester can enrich the expected
+        message template with test variables or ignore expressions so we get a more robust validation mechanism. We will talk about this in the next sections to come.</para>
         
-        <para>The Java DSL has a significant disadvantage. Java does not support multiline character sequence values as Strings. Thisb is why you have to use verbose String
-        concatenation when constructing XML message payload content. In addition to that reserved characters like quotes must be escaped and line breaks must be explicitly added.
-        All these impediments let me suggest to use external file resources in Java DSL when dealing with large complex XML data.</para>
+        <para>When using the Citrus Java DSL you will face a verbose message payload definition. This is because Java does not support multiline character sequence values as Strings.
+        We have to use verbose String concatenation when constructing XML message payload contents for instance. In addition to that reserved characters like quotes must be escaped
+        and line breaks must be explicitly added. All these impediments let me suggest to use external file resources in Java DSL when dealing with large complex message payload data.
+        Here is an example:</para>
         
         <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("getCustomerResponseReceiver")
-        .payload(new ClassPathResource("com/consol/citrus/message/data/GetCustomerResponse.xml"))
-        .header("Operation", "GetCustomer")
-        .header("RequestTag", "${requestTag}");
+    receive("helloServiceServer")
+        .payload(new ClassPathResource("com/consol/citrus/message/data/TestRequest.xml"))
+        .header("Operation", "sayHello")
+        .header("MessageId", "${messageId}");
 }</programlisting>
     </section>
     
     <section id="message-dynamic-validation">
         <title>Dynamic message values</title>
         
-        <para>Some elements in our message payload might be of variable nature. Just think of identifiers that should not be static in our expected message template.
-        Instead of repeating the ids several times hardcoded in our test we overwrite those elements with variable values. This can be done with XPath or inline variable
-        declarations. Lets have a look at a example listing showing both ways to overwrite message tempalte content before validation:</para>
+        <para>Some elements in our message payload might be of dynamic nature. Just think of generated identifiers or timestamps. Also we do not want to repeat the same static identifier several
+        times in our test cases. This is the time where test variables and dynamic message element overwrite come in handy. The idea is simple. We want to overwrite a specific message element in our
+        payload with a dynamic value. This can be done with XPath or inline variable declarations. Lets have a look at an example listing showing both ways:</para>
         
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;message&gt;
-    &lt;data&gt;
-        &lt;![CDATA[
-        &lt;RequestMessage&gt;
-            &lt;MessageHeader&gt;
-                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                &lt;RequestTag&gt;_&lt;/RequestTag&gt;
-                &lt;VersionId&gt;2&lt;/VersionId&gt;
-            &lt;/MessageHeader&gt;
-            &lt;MessageBody&gt;
-                &lt;Customer&gt;
-                    &lt;Id&gt;1&lt;/Id&gt;
-                &lt;/Customer&gt;
-            &lt;/MessageBody&gt;
-        &lt;/RequestMessage&gt;
-        ]]&gt;
-    &lt;/data&gt;
-    &lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+    &lt;payload&gt;
+        &lt;TestMessage&gt;
+            &lt;MessageId&gt;${messageId}&lt;/MessageId&gt;
+            &lt;CreatedBy&gt;_&lt;/CreatedBy&gt;
+            &lt;VersionId&gt;${version}&lt;/VersionId&gt;
+        &lt;/TestMessage&gt;
+    &lt;/payload&gt;
+    &lt;element path=&quot;/TestMessage/CreatedBy&quot; value=&quot;${user}&quot;/&gt;
 &lt;/message&gt;</programlisting>
         
-        <para>The program listing shows both ways of setting variable values inside a message template. First of all you can
-        simply place variable expressions inside the message (see how ${correlationId} is used). Secondly you can also use 
+        <para>The program listing above shows ways of setting variable values inside a message template. First of all you can
+        simply place variable expressions inside the message (see how ${messageId} is used). In addition to that you can also use
         XPath expressions to explicitly overwrite message elements before validation.</para>
         
-        <para><literal>&lt;element path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;</literal></para>
+        <para><literal>&lt;element path=&quot;/TestMessage/CreatedBy&quot; value=&quot;${user}&quot;/&gt;</literal></para>
         
-        <para>The XPath expression evaluates to the message template, searches for the right element and replaces the element value. Of course 
-        this works with attributes too.</para>
+        <para>The XPath expression evaluates and searches for the right element in the message payload. The previously defined variable
+        <emphasis>${user}</emphasis> replaces the element value. Of course this works with XML attributes too.</para>
         
         <para>Both ways via XPath or inline variable expressions are equal to each other. With respect to the complexity of XML namespaces and XPath you may
         find the inline variable expression more comfortable to use. Anyway feel free to choose the way that fits best for you. This is how we can add dynamic variable
@@ -404,105 +403,67 @@ public void receiveMessageTest() {
         <para>Some elements in the message payload might not apply for validation at all. Just think of communication timestamps an dynamic values inside a 
         message:</para>
         
-        <programlisting>[...]
-    &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-[...]</programlisting>
-        
-        <para>The timestamp value will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.</para>
+        <para>The timestamp value in our next example will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.</para>
         
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting> &lt;message&gt;
-    &lt;data&gt;
-        &lt;![CDATA[
-        &lt;ResponseMessage&gt;
-            &lt;MessageHeader&gt;
-                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
-                &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
-                &lt;VersionId&gt;2&lt;/VersionId&gt;
-            &lt;/MessageHeader&gt;
-            &lt;MessageBody&gt;
-                &lt;Customer&gt;
-                    &lt;Id&gt;1&lt;/Id&gt;
-                &lt;/Customer&gt;
-            &lt;/MessageBody&gt;
-        &lt;/ResponseMessage&gt;
-        ]]&gt;
-    &lt;/data&gt;
-    &lt;ignore path=&quot;//ResponseMessage/MessageHeader/Timestamp&quot;/&gt;
+    &lt;payload&gt;
+        &lt;TestMessage&gt;
+            &lt;MessageId&gt;${messageId}&lt;/MessageId&gt;
+            &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+            &lt;VersionId&gt;@ignore@&lt;/VersionId&gt;
+        &lt;/TestMessage&gt;
+    &lt;/payload&gt;
+    &lt;ignore path=&quot;/TestMessage/Timestamp&quot;/&gt;
 &lt;/message&gt;</programlisting>
         
-        <para>If you do not like XPath you could also use another possibility to ignore message contents. The next example uses the special <emphasis>@ignore@</emphasis> placeholder
-        directly in the message content:</para>
+        <para>Although we have given a static timestamp value in the payload data the element is ignored during validation as the ignore XPath expression matches the element. In addition to that
+        we also ignored the version id element in this example. This time with an inline <emphasis>@ignore@</emphasis> expression. This is for those of you that do not like XPath. As a result the
+        ignored message elements are automatically skipped when Citrus compares and validates message contents and do not break the test case.</para>
         
-        <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;message&gt;
-    &lt;data&gt;
-        &lt;![CDATA[
-        &lt;ResponseMessage&gt;
-            &lt;MessageHeader&gt;
-                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
-                &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
-                &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
-                &lt;VersionId&gt;2&lt;/VersionId&gt;
-            &lt;/MessageHeader&gt;
-            &lt;MessageBody&gt;
-                &lt;Customer&gt;
-                    &lt;Id&gt;1&lt;/Id&gt;
-                &lt;/Customer&gt;
-            &lt;/MessageBody&gt;
-        &lt;/ResponseMessage&gt;
-        ]]&gt;
-    &lt;/data&gt;
-&lt;/message&gt;</programlisting>
-        
-        <para>The ignored message elements are automatically skipped when Citrus compares and validates message contents.</para>
-        
-        <para>When using Java as the test case DSL the <emphasis>@ignore@</emphasis> placeholder as well as XPath expression ignore can be used seamlessly. Here is an examnple
-        if you need clarification:</para>
+        <para>When using the Java DSL the <emphasis>@ignore@</emphasis> placeholder as well as XPath expressions can be used seamlessly. Here is an example of that:</para>
         
         <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("getCustomerResponseReceiver")
-        .payload(new ClassPathResource("com/consol/citrus/message/data/GetCustomerResponse.xml"))
-        .header("Operation", "GetCustomer")
-        .header("RequestTag", "${requestTag}")
-        .ignore("//ResponseMessage/MessageHeader/Timestamp");
+    receive("helloServiceServer")
+        .payload(new ClassPathResource("com/consol/citrus/message/data/TestRequest.xml"))
+        .header("Operation", "sayHello")
+        .header("MessageId", "${messageId}")
+        .ignore("/TestMessage/Timestamp");
 }</programlisting>
+
+        <para>Of course you can use the inline <emphasis>@ignore@</emphasis> placeholder in an external file resource, too.</para>
     </section>
     
     <section id="message-validation-elements">
         <title>Explicit message element validation</title>
         
-        <para>In the previous sections we have seen how to validate whole XML fragments with control message templates. In some cases 
-        this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements. The definition 
+        <para>In the previous sections we have seen how to validate whole message element structure with control message templates. All elements are validated
+        and compared. In some cases this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements. The definition
         of control templates in combination with several ignore statements is not appropriate in this case. You would rather want
         to use explicit element validation.</para>
         
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;message&gt;
-  &lt;validate path=&quot;//MessageHeader/RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
-  &lt;validate path=&quot;//CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
-  &lt;validate path=&quot;//MessageBody/Number&quot; value=&quot;123456789&quot;/&gt;
+  &lt;validate path=&quot;/TestRequest/MessageId&quot; value=&quot;${messageId}&quot;/&gt;
+  &lt;validate path=&quot;/TestRequest/VersionId&quot; value=&quot;2&quot;/&gt;
 &lt;/message&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("getCustomerResponseReceiver")
-        .validate("//MessageHeader/RequestTag", "${requestTag}")
-        .validate("//CorrelationId", "${correlationId}")
-        .validate("//MessageBody/Number", "123456789")
-        .header("Operation", "GetCustomer")
-        .header("RequestTag", "${requestTag}");
-}</programlisting>  
+    receive("helloServiceServer")
+        .validate("/TestRequest/MessageId", "${messageId}")
+        .validate("//VersionId", "2")
+        .header("Operation", "sayHello");
+}</programlisting>
         
-        <para>Instead of comparing the whole message some message elements are validated explicitly over XPath. Citrus evaluates the XPath expression on the received message and 
+        <para>Instead of comparing the whole message some message elements are validated explicitly over XPath. Citrus evaluates the XPath expression on the received message and
         compares the result value to the control value. The basic message structure as well as all other message elements are not included into this explicit validation.</para> 
         
         <note>
-            <para>If this type of element validation is chosen neither &lt;data&gt; nor &lt;resource&gt; template definitions are allowed in XML.</para>
+            <para>If this type of element validation is chosen neither &lt;payload&gt; nor &lt;data&gt; nor &lt;resource&gt; template definitions are allowed in Citrus XML test cases.</para>
         </note>
         
         <tip>
@@ -510,13 +471,13 @@ public void receiveMessageTest() {
             familiar with XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every 
             element hierarchy in the XML tree is represented with a simple dot - for example:</para>
             
-            <para><literal>message.body.text</literal></para>
+            <para><literal>TestRequest.VersionId</literal></para>
             
-            <para>The expression will search the XML tree for the respective &lt;message&gt;&lt;body&gt;&lt;text&gt; element. Attributes 
+            <para>The expression will search the XML tree for the respective &lt;TestRequest&gt;&lt;VersionId&gt; element. Attributes
             are supported too. In case the last element in the dot-notated expression is a XML attribute the framework will automatically 
             find it.</para>
             
-            <para>Of course this dot-notated syntax is very simple and might not be applicable for more complex tree walkings. 
+            <para>Of course this dot-notated syntax is very simple and might not be applicable for more complex tree navigation.
             XPath is much more powerful - no doubt. However the dot-notated syntax might help those of you that are not familiar with XPath.
             So the dot-notation is supported wherever XPath expressions might apply.</para>
         </tip>  
@@ -537,64 +498,63 @@ public void receiveMessageTest() {
         <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("getCustomerResponseReceiver")
-        .header("Operation", "GetCustomer")
-        .header("RequestTag", "${requestTag}");
+    receive("helloServiceServer")
+        .header("Operation", "sayHello")
+        .header("MessageId", "${messageId}");
 }</programlisting>
         
-        <para>Message headers often occur as name-value pairs. So each header element that we specify in validation has to be present in the received message. In addition 
-        to that the header value has to fit the given control value. If a header entry is not found by its name or the value does not fit accordingly Citrus will raise 
+        <para>Message headers are represented as name-value pairs. Each expected header element identified by its name has to be present in the received message. In addition
+        to that the header value is compared to the given control value. If a header entry is not found by its name or the value does not fit accordingly Citrus will raise
         validation errors and the test case will fail.</para>
         
         <note>Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML fragments. Citrus supports these kind of
-        headers too. Please see the SOAP chapter for more details on this specifica.</note>
+        headers too. Please see the SOAP chapter for more details.</note>
     </section>
     
     <section id="message-content-extract">
         <title>Saving message content to variables</title>
         
-        <para>Imagine you receive a message in your test holding some generated message identifier. You have no chance to predict the identifier value
-        because it was generated at runtime by a foreign application. You can ignore the value in order to not break your validation, but in many cases you might need to return 
-        this identifier in the respective response message. So Citrus needs to offer a way to save dynamic message content that is not known to the tester for reuse in later test steps. 
+        <para>Imagine you receive a message in your test with some generated message identifier values. You have no chance to predict the identifier value
+        because it was generated at runtime by a foreign application. You can ignore the value in order to protect your validation. But in many cases you might need to return
+        this identifier in the respective response message or somewhat later on in the test. So we have to save the dynamic message content for reuse in later test steps.
         The solution is simple and very powerful. We can extract dynamic values from received messages and save those to test variables. Add this code to your message receiving action.</para>
         
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;extract&gt;
     &lt;header name=&quot;Operation&quot; variable=&quot;operation&quot;/&gt;
-    &lt;message path=&quot;//MessageBody/Customer/Id&quot; variable=&quot;customerId&quot;/&gt;
+    &lt;message path=&quot;/TestRequest/VersionId&quot; variable=&quot;versionId&quot;/&gt;
 &lt;/extract&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("getCustomerResponseReceiver")
+    receive("helloServiceServer")
         .extractFromHeader("Operation", "operation")
-        .extractFromPayload("//MessageBody/Customer/Id", "customerId");
+        .extractFromPayload("//TestRequest/VersionId", "versionId");
         
     echo("Extracted operation from header is: ${operation}");
-    echo("Extracted customerId from header is: ${customerId}");
+    echo("Extracted version from payload is: ${versionId}");
 }</programlisting>
         
-        <para>As you can see Citrus is able to store both header and message payload content into test variables. It does not matter if you use new test variables 
-        or existing variables as target. The extraction will automatically create a new variable in case it does not exist. The time the variable was created from message extraction 
-        all following test actions can access the variables as usual. So you could reuse the variable value in response messages or other test steps ahead.</para>
+        <para>As you can see Citrus is able to extract both header and message payload content into test variables. It does not matter if you use new test variables
+        or existing variables as target. The extraction will automatically create a new variable in case it does not exist. The time the variable was created
+        all following test actions can access the test variables as usual. So you can reference the variable values in response messages or other test steps ahead.</para>
     </section>
     
     <section id="message-selector">
         <title>Message selectors</title>
         
         <para>The <emphasis>&lt;selector&gt;</emphasis> element inside the receiving action defines key-value pairs in order to 
-        filter the messages being received. The key value pairs apply to the message headers. This means that a receiver will 
-        only accept messages that meet the key-value pairs in its header. Using this mechanism you can explicitly listen for 
-        messages that belong to your test. This is very helpful to avoid receiving messages from other tests that are still available 
-        on the message destination.</para>
+        filter the messages being received. The filter applies to the message headers. This means that a receiver will
+        only accept messages matching a header element value. In messaging applications the header information often holds message ids,
+        correlation ids, operation names and so on. With this information given you can explicitly listen for messages that belong to your test case.
+        This is very helpful to avoid receiving messages that are still available on the message destination.</para>
         
         <para>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry 
-        situations where the application's error handling automatically tries to solve a communication problem that occurred 
+        situations where the application error handling automatically tries to solve a communication problem that occurred
         during previous test cases. As a result a message destination (e.g. a JMS message queue) contains messages that are not valid any more for the currently 
-        running test case. The test case might fail because the received message does not apply to the currently tested use case. The messages
-        received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer information 
-        etc.).</para>
+        running test case. The test case might fail because the received message does not apply to the actual use case. So we will definitely run into validation errors
+        as the expected message control values do not match.</para>
         
         <para>Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages 
         that apply for the use case that is being tested. The Java Messaging System (JMS) came up with a message header selector that will 
@@ -604,27 +564,27 @@ public void receiveMessageTest() {
         
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;selector&gt;
-    &lt;element&gt; name="correlationId" value="Lx1x123456789"&lt;/element&gt;
+    &lt;element&gt; name="correlationId" value="Cx1x123456789"&lt;/element&gt;
     &lt;element&gt; name="operation" value="getOrders"&lt;/element&gt;
 &lt;/selector&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("getCustomerResponseReceiver")
-        .selector("correlationId='Lx1x123456789' AND operation='getOrders'");
+    receive("testServiceEndpoint")
+        .selector("correlationId='Cx1x123456789' AND operation='getOrders'");
 }</programlisting>
         
-        <para>This example shows how selectors work. The selector will only accept messages that meet the correlation id and the operation 
+        <para>This example shows how message selectors work. The selector will only accept messages that meet the correlation id and the operation
         in the header values. All other messages on the message destination are ignored. The selector elements are automatically associated to 
-        each other using the logical AND operator. This means that the message selector string would look like this: <emphasis>correlationId = 'Lx1x123456789' AND operation = 'getOrders'</emphasis>.</para>
+        each other using the logical AND operator. This means that the message selector string would look like this: <emphasis>correlationId = 'Cx1x123456789' AND operation = 'getOrders'</emphasis>.</para>
         
         <para>Instead of using several elements in the selector you can also define a selector string directly which gives you more power in constructing the selection logic yourself. This way
         you can use <emphasis>AND</emphasis> logical operators yourself.</para>
         
         <programlisting>&lt;selector&gt;
     &lt;value&gt;
-        correlationId = 'Cx1x123456789' AND messageId = '987654321'
+        correlationId = 'Cx1x123456789' AND operation = 'getOrders'
     &lt;/value&gt;
 &lt;/selector&gt;</programlisting>
         
@@ -640,14 +600,14 @@ public void receiveMessageTest() {
     </section>
     
     <para>At this point you know the two most important test actions in Citrus. Sending and receiving actions will become the main components of your integration tests when dealing 
-    with loosely coupled message based components in a SOA. It is very easy to create message flows, meaning a sequence of sending and receiving messages in your test case. 
-    You can replicate use cases and test your message exchange with extended message validation possibilities.</para>
+    with loosely coupled message based components in a enterprise application environment. It is very easy to create complex message flows, meaning a sequence of sending and receiving actions in your test case.
+    You can replicate use cases and test your message exchange with extended message validation capabilities.</para>
   </section>
   
   <section id="validation-callback">
     <title>Validation callback</title>
     
-    <para>The Java DSL offers some additional validation tricks and functionalities when dealing with messages that are sent and received over Citrus. One of them is the validation
+    <para>The Java DSL offers some additional validation tricks and possibilities when dealing with messages that are sent and received over Citrus. One of them is the validation
     callback functionality. With this piece you can marshal received message payloads and code validation steps on Java objects.</para>
     
     <para><emphasis>Java DSL</emphasis></para>
@@ -662,8 +622,8 @@ public void receiveMessageTest() {
       });
 }</programlisting>
     
-    <para>By default the validation callback needs a XML unmarshaller implementation for transforming the XML payload to a Java object. Citrus will automatically search for a Unmarshaller bean
-    in your Spring application context if nothing specific is set. Of course you can also set the unmarshaller explicitly.</para>
+    <para>By default the validation callback needs some XML unmarshaller implementation for transforming the XML payload to a Java object. Citrus will automatically search for the unmarshaller bean
+    in your Spring application context if nothing specific is set. Of course you can also set the unmarshaller instance explicitly.</para>
     
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@Autowired
@@ -680,7 +640,7 @@ public void receiveMessageTest() {
         });
 }</programlisting>
 
-    <para>Obviously working on marshalled Java objects is much more comfortable than using the XML String concatenation. This is why you can also use this feature 
+    <para>Obviously working on Java objects is much more comfortable than using the XML String concatenation. This is why you can also use this feature
     when sending messages.</para>
     
     <para><emphasis>Java DSL</emphasis></para>
@@ -705,12 +665,15 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
     requestMessage.setBook(book);
     return requestMessage;
 }</programlisting>
+
+    <para>The example above creates a <emphasis>AddBookRequestMessage</emphasis> object and puts this as payload to a send action. In combination with a marshaller instance Citrus is
+    able to create a proper XML message payload then.</para>
   </section>
   
   <section id="groovy-utils">
     <title>Groovy utils for send and receive</title>
     
-    <para>Groovy offers some nice and easy to use features for working with XML structures. You can use those in Citrus within the send and receive test actions in order
+    <para>Groovy is a great JVM language and offers some nice and easy to use features for working with XML structures. You can use those in Citrus within the send and receive test actions in order
     to construct message payloads via Groovy scripts.</para>
     
     <section id="groovy-markupbuilder">
@@ -721,34 +684,28 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         generates the XML message payload with exactly the same result:</para>
         
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
+        <programlisting>&lt;send with=&quot;helloServiceClient&quot;&gt;
     &lt;message&gt;
         &lt;builder type=&quot;groovy&quot;&gt;
-            markupBuilder.RequestMessage{
-                MessageHeader{
-                    CorrelationId('${correlationId}')
-                    Timestamp('2001-12-17T09:30:47.0Z')
-                    RequestTag('_')
+            markupBuilder.TestMessage {
+                    MessageId('${messageId}')
+                    Timestamp('?')
                     VersionId('2')
-                }
-                MessageBody{
-                    Customer{
-                        Id('1')
-                    }
+                    Text('Hello Citrus!')
                 }
             }
         &lt;/builder&gt;
-        &lt;element path=&quot;/MessageHeader/RequestTag&quot; 
-                    value=&quot;${requestTag}&quot;/&gt;
+        &lt;element path=&quot;/TestMessage/Timestamp&quot;
+                    value=&quot;${createDate}&quot;/&gt;
     &lt;/message&gt;
     &lt;header&gt;
-        &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-        &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+        &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
+        &lt;element name=&quot;MessageId&quot; value=&quot;${messageId}&quot;/&gt;
     &lt;/header&gt;
 &lt;/send&gt;</programlisting>
-        
-        <para>The MarkupBuilder code is directly written into the well-known message element. As you can see from the example above, the MarkupBuilder syntax 
-        is very easy and follows the simple rule: <emphasis>markupBuilder.ROOT-ELEMENT{ CHILD-ELEMENTS }</emphasis>. However the tester has to follwow some simple rules and
+
+        <para>The MarkupBuilder code is directly written into the message element. As you can see from the example above, you can mix XPath and Groovy markup builder code. The MarkupBuilder syntax
+        is very easy and follows the simple rule: <emphasis>markupBuilder.ROOT-ELEMENT{ CHILD-ELEMENTS }</emphasis>. However the tester has to follow some simple rules and
         naming conventions when using the Citrus MarkupBuilder extension:</para>
         
         <itemizedlist>
@@ -761,16 +718,16 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         <para>The Groovy MarkupBuilder script may also be used within receive actions as shown in the following listing:</para>
         
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;send with=&quot;helloRequestSender&quot;&gt;
+        <programlisting>&lt;send with=&quot;helloServiceClient&quot;&gt;
     &lt;message&gt;
         &lt;builder type=&quot;groovy&quot; file=&quot;classpath:com/consol/citrus/groovy/helloRequest.groovy&quot;/&gt;
     &lt;/message&gt;
 &lt;/send&gt;
 
-&lt;receive with="helloResponseReceiver" timeout="5000"&gt;
+&lt;receive with="helloServiceClient" timeout="5000"&gt;
     &lt;message&gt;
         &lt;builder type=&quot;groovy&quot;&gt;
-            markupBuilder.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+            markupBuilder.TestResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
                 MessageId('${messageId}')
                 CorrelationId('${correlationId}')
                 User('HelloService')
@@ -796,7 +753,7 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         Here is an example how to validate messages with Groovy script:</para>
 
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;receive with=&quot;helloResponseReceiver&quot; timeout=&quot;5000&quot;&gt;
+        <programlisting>&lt;receive with=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
     &lt;message&gt;
         &lt;validate&gt;
             &lt;script type=&quot;groovy&quot;&gt;
@@ -817,7 +774,7 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         <para><emphasis>Java DSL</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("helloResponseReceiver")
+    receive("helloServiceClient")
         .validateScript("assert root.MessageId.text() == '${messageId}';" +
                         "assert root.CorrelationId.text() == '${correlationId}';")
         .header("Operation, "sayHello")
@@ -836,7 +793,7 @@ public void receiveMessageTest() {
         as validaton scripts. The syntax looks like follows:</para>
 
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;receive with=&quot;helloResponseReceiver&quot; timeout=&quot;5000&quot;&gt;
+        <programlisting>&lt;receive with=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
     &lt;message&gt;
         &lt;validate&gt;
           &lt;script type=&quot;groovy&quot; file=&quot;classpath:validationScript.groovy&quot;/&gt;
@@ -851,7 +808,7 @@ public void receiveMessageTest() {
         <para><emphasis>Java DSL</emphasis></para>
         <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive("helloResponseReceiver")
+    receive("helloServiceClient")
         .validateScript(new FileSystemResource("validationScript.groovy"))
         .header("Operation, "sayHello")
         .header("CorrelationId", "${correlationId}")
