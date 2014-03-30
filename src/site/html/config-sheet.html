@@ -49,27 +49,23 @@
               This pattern is valid for all endpoint components in Citrus.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;send with=&quot;helloServiceChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloServiceChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
 
-            <pre class="prettyprint">&lt;receive with=&quot;helloServiceChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;helloServiceChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -100,27 +96,23 @@
 
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;send with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
 
-            <pre class="prettyprint">&lt;receive with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
 
@@ -298,15 +290,13 @@
             <p>Sending messages with this client in a test case is quite easy as you can simply reference the client in the send action by its id.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;send with=&quot;helloSoapClient&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloSoapClient&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
           </div>
@@ -317,15 +307,13 @@
             <p>You can receive the synchronous response in your test case using the receive action with the same SOAP client id in reference.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;receive with=&quot;helloSoapClient&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;helloSoapClient&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -366,15 +354,13 @@
             <p>Notice that you do not need to specify the SOAP envelope and body elements. These are taken care of by the SOAP message factory that we have added to the application context.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;receive with=&quot;helloSoapServer&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;helloSoapServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -385,15 +371,13 @@
             <p>The SOAP server will automatically correlate incoming request and response messages. So sending back a synchronous SOAP response is straight forward.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;send with=&quot;helloSoapServer&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloSoapServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
           </div>
@@ -520,10 +504,9 @@
               multipart message before sending. This way you can use the well known XML features that we have in Citrus when sending out mail content.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;send with=&quot;simpleMailClient&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;simpleMailClient&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;mail-message&gt;
         &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
         &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
@@ -535,8 +518,7 @@
           &lt;content&gt;Hello Citrus mail server!&lt;/content&gt;
         &lt;/body&gt;
       &lt;/mail-message&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
           </div>
@@ -566,10 +548,9 @@
               to validate the incoming mail content.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;receive with=&quot;simpleMailServer&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;simpleMailServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
         &lt;mail-message&gt;
           &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
           &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
@@ -581,8 +562,7 @@
             &lt;content&gt;Hello Citrus mail server!&lt;/content&gt;
           &lt;/body&gt;
         &lt;/mail-message&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -609,16 +589,14 @@
               and recipient.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;receive with=&quot;advancedMailServer&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;advancedMailServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;accept-request&gt;
         &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
         &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
       &lt;/accept-request&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -630,15 +608,13 @@
               content as usual in a next test case step. When the accept outcome is <b>false</b> the mail client connection is denied with SMTP server error.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;send with=&quot;advancedMailServer&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;advancedMailServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;accept-response&gt;
         &lt;accept&gt;true&lt;/accept&gt;
       &lt;/accept-response&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
           </div>

@@ -73,27 +73,23 @@
             <p>You can send and receive messages to/from the endpoint. So interacting with endpoints in a test case is quite easy. Just reference the id of the endpoint
               in your send and receive test actions. This pattern is valid for all endpoint components in Citrus.</p>
 
-            <pre class="prettyprint">&lt;send with=&quot;helloServiceChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloServiceChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
 
-            <pre class="prettyprint">&lt;receive with=&quot;helloServiceChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;helloServiceChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -150,27 +146,23 @@
             <p>When sending a message to this synchronous endpoint the producer will wait synchronously for the response message to arrive on the reply destination.
               You can receive the reply message in your test case using the same endpoint component.</p>
 
-            <pre class="prettyprint">&lt;send with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
 
-           <pre class="prettyprint">&lt;receive with=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
+           <pre class="prettyprint">&lt;receive endpoint=&quot;helloServiceSyncChannelEndpoint&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
 
@@ -376,15 +368,13 @@
           <div class="span11">
             <p>Interacting with the SOAP server in your test case is as simple as using the client side. Just reference the server id in the send and receive test actions.</p>
 
-            <pre class="prettyprint">&lt;receive with=&quot;helloSoapServer&quot;&gt;
+            <pre class="prettyprint">&lt;receive endpoint=&quot;helloSoapServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
       &lt;/v1:HelloRequest&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
           </div>
@@ -394,15 +384,13 @@
           <div class="span11">
             <p>The SOAP server will automatically correlate incoming request and response messages. So sending back a synchronous SOAP response is straight forward.</p>
 
-            <pre class="prettyprint">&lt;send with=&quot;helloSoapServer&quot;&gt;
+            <pre class="prettyprint">&lt;send endpoint=&quot;helloSoapServer&quot;&gt;
   &lt;message&gt;
-    &lt;data&gt;
-      &lt;![CDATA[
+    &lt;payload&gt;
       &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
         &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
       &lt;/v1:HelloResponse&gt;
-      ]]&gt;
-    &lt;/data&gt;
+    &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/send&gt;</pre>
           </div>
