@@ -214,7 +214,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 value=&quot;citrus:concat('Mx1x', citrus:randomNumber(10))&quot;/&gt;
         &lt;/variables&gt;
         &lt;actions&gt;
-            &lt;send with=&quot;travelAgencyBookingRequestSender&quot;&gt;
+            &lt;send endpoint=&quot;travelAgencyBookingRequestSender&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -255,7 +255,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/header&gt;
             &lt;/send&gt;
             
-            &lt;receive with=&quot;smartAirlineBookingRequestReceiver&quot;&gt;
+            &lt;receive endpoint=&quot;smartAirlineBookingRequestReceiver&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -291,7 +291,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/extract&gt;
             &lt;/receive&gt;
             
-            &lt;send with=&quot;smartAirlineBookingResponseSender&quot;&gt;
+            &lt;send endpoint=&quot;smartAirlineBookingResponseSender&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -318,7 +318,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/header&gt;
             &lt;/send&gt;
             
-            &lt;receive with=&quot;royalAirlineBookingRequestReceiver&quot;&gt;
+            &lt;receive endpoint=&quot;royalAirlineBookingRequestReceiver&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -354,7 +354,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/extract&gt;
             &lt;/receive&gt;
             
-            &lt;send with=&quot;royalAirlineBookingResponseSender&quot;&gt;
+            &lt;send endpoint=&quot;royalAirlineBookingResponseSender&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -381,7 +381,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/header&gt;
             &lt;/send&gt;
             
-            &lt;receive with=&quot;travelAgencyBookingResponseReceiver&quot;&gt;
+            &lt;receive endpoint=&quot;travelAgencyBookingResponseReceiver&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -433,7 +433,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         <para>The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic 
         Spring configuration we have done before.</para>
         
-        <para><literal>&lt;send with=&quot;travelAgencyBookingRequestSender&quot;&gt;</literal></para>
+        <para><literal>&lt;send endpoint=&quot;travelAgencyBookingRequestSender&quot;&gt;</literal></para>
         
         <para>The sending action chooses a message sender to actually send the message using a message transport (JMS, Http, SOAP, etc.).
         After sending this first "TravelBookingRequestMessage" request the test case expects the first "FlightBookingRequestMessage" 

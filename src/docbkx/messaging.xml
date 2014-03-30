@@ -84,7 +84,7 @@
         &lt;variable name=&quot;messageId&quot; value=&quot;Mx1x123456789&quot;/&gt;
     &lt;/variables&gt;
     &lt;actions&gt;
-        &lt;send with=&quot;helloServiceClient&quot;&gt;
+        &lt;send endpoint=&quot;helloServiceClient&quot;&gt;
             &lt;message&gt;
                 &lt;payload&gt;
                     &lt;TestMessage&gt;
@@ -222,7 +222,7 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
       
       <programlisting>&lt;testcase name=&quot;sendMessageTest&quot;&gt;
     &lt;actions&gt;
-        &lt;send with=&quot;helloServiceClient&quot;&gt;
+        &lt;send endpoint=&quot;helloServiceClient&quot;&gt;
             &lt;message&gt;
                 &lt;data&gt;
                     &lt;![CDATA[
@@ -251,7 +251,7 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     <para>Now we have a look at the message receiving part inside the test. A simple example shows how it works.</para>
     
     <para><emphasis>XML DSL</emphasis></para>
-    <programlisting>&lt;receive with=&quot;helloServiceServer&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;helloServiceServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;TestMessage&gt;
@@ -684,7 +684,7 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         generates the XML message payload with exactly the same result:</para>
         
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;send with=&quot;helloServiceClient&quot;&gt;
+        <programlisting>&lt;send endpoint=&quot;helloServiceClient&quot;&gt;
     &lt;message&gt;
         &lt;builder type=&quot;groovy&quot;&gt;
             markupBuilder.TestMessage {
@@ -718,13 +718,13 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         <para>The Groovy MarkupBuilder script may also be used within receive actions as shown in the following listing:</para>
         
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;send with=&quot;helloServiceClient&quot;&gt;
+        <programlisting>&lt;send endpoint=&quot;helloServiceClient&quot;&gt;
     &lt;message&gt;
         &lt;builder type=&quot;groovy&quot; file=&quot;classpath:com/consol/citrus/groovy/helloRequest.groovy&quot;/&gt;
     &lt;/message&gt;
 &lt;/send&gt;
 
-&lt;receive with="helloServiceClient" timeout="5000"&gt;
+&lt;receive endpoint="helloServiceClient" timeout="5000"&gt;
     &lt;message&gt;
         &lt;builder type=&quot;groovy&quot;&gt;
             markupBuilder.TestResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
@@ -753,7 +753,7 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         Here is an example how to validate messages with Groovy script:</para>
 
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;receive with=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
     &lt;message&gt;
         &lt;validate&gt;
             &lt;script type=&quot;groovy&quot;&gt;
@@ -793,7 +793,7 @@ public void receiveMessageTest() {
         as validaton scripts. The syntax looks like follows:</para>
 
         <para><emphasis>XML DSL</emphasis></para>
-        <programlisting>&lt;receive with=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;helloServiceClient&quot; timeout=&quot;5000&quot;&gt;
     &lt;message&gt;
         &lt;validate&gt;
           &lt;script type=&quot;groovy&quot; file=&quot;classpath:validationScript.groovy&quot;/&gt;

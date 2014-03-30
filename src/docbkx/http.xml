@@ -55,7 +55,7 @@
         <para>The request method is statically set to <emphasis>POST</emphasis> in the example above. You can also set/overwrite the Http request method inside the 
         sending test action which gives more flexibility. Use something like this in your test:</para>
         
-        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+        <programlisting>&lt;send endpoint=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;testRequestMessage&gt;
@@ -291,7 +291,7 @@
         and server need to handle. You can set and validate these Http headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some Http headers are 
         explicitly set before the request is sent.</para>
         
-        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+        <programlisting>&lt;send endpoint=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;testRequestMessage&gt;
@@ -325,7 +325,7 @@ Content-Length: 175
         <para>On server side testers are interested in validating the Http headers. Within Citrus receive action you simply define the expected header entries. The Http specific headers are automatically available for validation
         as you can see in this example:</para>
         
-        <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpRequestReceiver&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;testRequestMessage&gt;
@@ -345,7 +345,7 @@ Content-Length: 175
         <para>Now that we have accepted the client request and validated the contents we are able to send back a proper Http response message. Same thing here with Http specific headers. The Http protcol defines several headers marking the success or failure of
         the server operation. In the test case you can set those headers for the response message with convention header names. See the following example to find out how that works for you.</para>
         
-        <programlisting>&lt;send with=&quot;httpResponseSender&quot;&gt;
+        <programlisting>&lt;send endpoint=&quot;httpResponseSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;testResponseMessage&gt;
@@ -378,7 +378,7 @@ Server: Jetty(7.0.0.pre5)
         
         <para>The only thing that is missing right now is the validation of Http status codes when receiving the server response in a Citrus test case. It is very easy as you can use the Citrus reserved header names for validation, too.</para>
         
-        <programlisting>&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpResponseReceiver&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;testResponseMessage&gt;
@@ -401,7 +401,7 @@ Server: Jetty(7.0.0.pre5)
         <para>The next example receives a Http GET method request on server side. Here the GET request does not have any message payload, so the validation just works on the information given in the message header. We assume
         the client to call <emphasis>http://localhost:8080/app/users?id=123456789</emphasis>. As a tester we need to validate the request method, request URI, context path and the query parameters.</para>
         
-        <programlisting>&lt;receive with=&quot;httpRequestReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpRequestReceiver&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;&lt;/data&gt;
     &lt;/message&gt;
@@ -432,7 +432,7 @@ Server: Jetty(7.0.0.pre5)
         <para>So far we have received response messages with Http status code <emphasis>200 OK</emphasis>. How to deal with server errors like <emphasis>404 Not Found</emphasis> or <emphasis>500 Internal server error</emphasis>? The default Http message client
         error strategy is to propagate server error response messages to the reply message handler for validation. We simply check on Http status code and status text for error validation.</para>
         
-        <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+        <programlisting>&lt;send endpoint=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;testRequestMessage&gt;
@@ -442,7 +442,7 @@ Server: Jetty(7.0.0.pre5)
     &lt;/message&gt;
 &lt;/send&gt;
         
-&lt;receive with=&quot;httpResponseReceiver&quot;&gt;
+&lt;receive endpoint=&quot;httpResponseReceiver&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;&lt;![CDATA[]]&gt;&lt;/data&gt;
     &lt;/message&gt;
@@ -469,7 +469,7 @@ Server: Jetty(7.0.0.pre5)
         
         <programlisting>&lt;assert exception=&quot;org.springframework.web.client.HttpClientErrorException&quot; 
            message=&quot;403 Forbidden&quot;&gt;
-    &lt;send with=&quot;httpMessageSender&quot;&gt;
+    &lt;send endpoint=&quot;httpMessageSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
                 &lt;testRequestMessage&gt;

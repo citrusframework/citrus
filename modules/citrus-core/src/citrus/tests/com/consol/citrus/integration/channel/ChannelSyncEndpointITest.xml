@@ -29,7 +29,7 @@
         <message>Test 1: Send JMS request and receive sync response (inline CDATA payload)</message>
       </echo>
 
-      <send with="helloServiceChannelSyncEndpoint">
+      <send endpoint="helloServiceChannelSyncEndpoint">
         <description>Send synchronous JMS request: Citrus -> HelloService</description>
         <message>
           <data>
@@ -49,7 +49,7 @@
         </header>
       </send>
 
-      <receive with="helloServiceChannelSyncEndpoint">
+      <receive endpoint="helloServiceChannelSyncEndpoint">
         <description>Receive synchronous JMS response: HelloService -> Citrus</description>
         <message>
           <data>
@@ -73,7 +73,7 @@
         <message>Test 2: Send JMS request and receive sync response (file resource payload)</message>
       </echo>
 
-      <send with="helloServiceChannelSyncEndpoint">
+      <send endpoint="helloServiceChannelSyncEndpoint">
         <description>Send synchronous channel request: Citrus -> HelloService</description>
         <message>
           <resource file="classpath:com/consol/citrus/templates/HelloRequest.xml"/>
@@ -84,7 +84,7 @@
         </header>
       </send>
 
-      <receive with="helloServiceChannelSyncEndpoint">
+      <receive endpoint="helloServiceChannelSyncEndpoint">
         <description>Receive synchronous channel response: HelloService -> Citrus</description>
         <message>
           <resource file="classpath:com/consol/citrus/templates/HelloResponse.xml"/>
@@ -100,7 +100,7 @@
       </echo>
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="Failed to receive message - message is not available">
-        <receive with="helloServiceChannelSyncEndpoint" timeout="300">
+        <receive endpoint="helloServiceChannelSyncEndpoint" timeout="300">
           <description>Receive channel timeout: HelloService -> Citrus</description>
           <selector>
             <element name="CorrelationId" value="doesNotExist"/>

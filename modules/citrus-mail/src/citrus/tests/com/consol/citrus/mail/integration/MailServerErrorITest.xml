@@ -31,7 +31,7 @@
 
       <parallel>
         <assert exception="org.springframework.mail.MailSendException">
-          <send with="advancedMailClient">
+          <send endpoint="advancedMailClient">
             <description>
               Send mail: Citrus -> Citrus SMTP server
             </description>
@@ -59,7 +59,7 @@
         </assert>
 
         <sequential>
-          <receive with="advancedMailServer">
+          <receive endpoint="advancedMailServer">
             <description>
               Receive accept request for incoming mail
             </description>
@@ -75,7 +75,7 @@
             </message>
           </receive>
 
-          <send with="advancedMailServer">
+          <send endpoint="advancedMailServer">
             <description>
               Send accept response and accept incoming mail.
             </description>
@@ -90,7 +90,7 @@
             </message>
           </send>
 
-          <receive with="advancedMailServer">
+          <receive endpoint="advancedMailServer">
             <description>
               Receive mail message: Citrus SMTP server channel -> Citrus
             </description>
@@ -119,7 +119,7 @@
             </header>
           </receive>
 
-          <send with="advancedMailServer">
+          <send endpoint="advancedMailServer">
             <description>
               Send mail response OK
             </description>

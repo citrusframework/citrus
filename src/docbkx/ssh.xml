@@ -125,7 +125,7 @@
       
       <para>Once defines as client component in the Spring application context test cases can reference the client in every send test action.</para>
       
-      <programlisting>&lt;send with=&quot;sshClientSender&quot;&gt;
+      <programlisting>&lt;send endpoint=&quot;sshClientSender&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ssh-request&gt;
@@ -136,7 +136,7 @@
   &lt;/message&gt;
 &lt;/send&gt;
   
-&lt;receive with=&quot;sshResponseReceiver&quot;&gt;
+&lt;receive endpoint=&quot;sshResponseReceiver&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ssh-response&gt;
@@ -224,7 +224,7 @@
       <para>Once the SSH server component is added to the Spring application context with a proper message handler like the MessageChannel
       forwarding message handler we can receive incoming requests in a test case and provide a respone message for the client.</para>
       
-      <programlisting>&lt;receive with=&quot;sshRequestReceiver&quot;&gt;
+      <programlisting>&lt;receive endpoint=&quot;sshRequestReceiver&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ssh-request&gt;
@@ -235,7 +235,7 @@
   &lt;/message&gt;
 &lt;/receive&gt;
 
-&lt;send with=&quot;sshResponseSender&quot;&gt;
+&lt;send endpoint=&quot;sshResponseSender&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ssh-response&gt;

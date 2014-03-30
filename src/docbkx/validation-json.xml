@@ -38,7 +38,7 @@
     
     <para>What is now to do? We have to tell the test case receiving action that we expect a message format other than XML.</para>
     
-    <programlisting>&lt;receive with=&quot;httpMessageReceiver&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;httpMessageReceiver&quot;&gt;
     &lt;message type=&quot;json&quot;&gt;
         &lt;data&gt;
           {
@@ -64,7 +64,7 @@
 
     <programlisting>&lt;bean id=&quot;groovyJsonMessageValidator&quot; class=&quot;com.consol.citrus.validation.script.GroovyJsonMessageValidator&quot;/&gt;</programlisting>
     
-    <programlisting>&lt;receive with=&quot;httpMessageReceiver&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;httpMessageReceiver&quot;&gt;
     &lt;message type=&quot;json&quot; validator=&quot;groovyJsonMessageValidator&quot;&gt;
         &lt;validate&gt;
             &lt;script type=&quot;groovy&quot;&gt;
@@ -97,7 +97,7 @@
     
     <para>So much for receiving JSON message data in Citrus. Of course sending JSON messages in Citrus is also very easy. Just use JSON message payloads in your sending message action.</para>
     
-    <programlisting>&lt;send with=&quot;httpMessageSender&quot;&gt;
+    <programlisting>&lt;send endpoint=&quot;httpMessageSender&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;
           {

@@ -20,7 +20,7 @@
     </variables>
 
     <actions>
-      <send with="helloSoapFaultClient">
+      <send endpoint="helloSoapFaultClient">
         <message>
           <data>
             <![CDATA[
@@ -32,7 +32,7 @@
         </message>
       </send>
 
-      <receive with="helloSoapFaultClient" timeout="5000">
+      <receive endpoint="helloSoapFaultClient" timeout="5000">
         <message schema-validation="false">
           <data>
             <![CDATA[

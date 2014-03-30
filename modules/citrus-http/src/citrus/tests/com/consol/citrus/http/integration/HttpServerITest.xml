@@ -27,7 +27,7 @@
         <message>Test: Receive Http request via server instance and send back response.</message>
       </echo>
 
-      <send with="echoHttpClient" fork="true">
+      <send endpoint="echoHttpClient" fork="true">
         <message>
           <data>
             <![CDATA[
@@ -46,7 +46,7 @@
         </header>
       </send>
 
-      <receive with="echoHttpServer">
+      <receive endpoint="echoHttpServer">
         <message>
           <data>
             <![CDATA[
@@ -65,7 +65,7 @@
         </header>
       </receive>
 
-      <send with="echoHttpServer">
+      <send endpoint="echoHttpServer">
         <message>
           <data>
             <![CDATA[
@@ -89,7 +89,7 @@
         </header>
       </send>
 
-      <receive with="echoHttpClient">
+      <receive endpoint="echoHttpClient">
         <message>
           <data>
             <![CDATA[

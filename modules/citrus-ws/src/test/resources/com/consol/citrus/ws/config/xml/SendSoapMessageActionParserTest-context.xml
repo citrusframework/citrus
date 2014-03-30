@@ -23,7 +23,7 @@
                 </ws:attachment>
             </ws:send>
             
-            <ws:send with="mySoapClient">
+            <ws:send endpoint="mySoapClient">
                 <message>
                     <data>
                         <![CDATA[
@@ -36,7 +36,7 @@
                 </ws:attachment>
             </ws:send>
             
-            <ws:send with="mySoapClient" fork="true">
+            <ws:send endpoint="mySoapClient" fork="true">
                 <message>
                     <data>
                         <![CDATA[

@@ -157,7 +157,7 @@
             <para>We would like to pick up the <emphasis>GoodbyeMessage</emphasis> in our test case. The <emphasis>HelloMessage</emphasis> should be left on the message channel as we are not interested
             in it right now. We can define a root qname message selector in the receive action like this:</para>
             
-            <programlisting>&lt;receive with=&quot;channelReceiver&quot;&gt;
+            <programlisting>&lt;receive endpoint=&quot;channelReceiver&quot;&gt;
     &lt;selector&gt;
         &lt;element name=&quot;root-qname&quot; value=&quot;GoodbyeMessage&quot;/&gt;
     &lt;/selector&gt;

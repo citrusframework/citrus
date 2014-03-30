@@ -29,7 +29,7 @@
         <message>Test 1: Send mail to Citrus smtp server and receive mail via mail message channel</message>
       </echo>
 
-      <send with="simpleMailClient">
+      <send endpoint="simpleMailClient">
         <description>
           Send mail: Citrus -> Citrus SMTP server
         </description>
@@ -55,7 +55,7 @@
         </header>
       </send>
 
-      <receive with="simpleMailServer">
+      <receive endpoint="simpleMailServer">
         <description>
           Receive mail message: Citrus SMTP server channel -> Citrus
         </description>

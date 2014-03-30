@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 import org.springframework.beans.factory.BeanCreationException;
@@ -33,7 +34,6 @@ import java.util.*;
  * Bean definition parser for send soap fault action in test case.
  * 
  * @author Christoph Deppisch
- * @since 2010
  */
 public class SendSoapFaultActionParser implements BeanDefinitionParser {
 
@@ -41,16 +41,23 @@ public class SendSoapFaultActionParser implements BeanDefinitionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
-        builder.addPropertyValue("name", element.getLocalName());
-
-        String messageSenderReference = element.getAttribute("with");
-
-        if (!StringUtils.hasText(messageSenderReference)) {
-            throw new BeanCreationException("Mandatory 'with' attribute has to be set!");
+        String messageSenderReference = null;
+        if (element.hasAttribute("with")) {
+            messageSenderReference = element.getAttribute("with");
+        } else if (element.hasAttribute("endpoint")) {
+            messageSenderReference = element.getAttribute("endpoint");
         }
-        builder.addPropertyReference("endpoint", messageSenderReference);
-        
+
+        BeanDefinitionBuilder builder;
+        if (StringUtils.hasText(messageSenderReference)) {
+            builder = BeanDefinitionBuilder.genericBeanDefinition(SendMessageAction.class);
+            builder.addPropertyValue("name", element.getLocalName());
+
+            builder.addPropertyReference("endpoint", messageSenderReference);
+        } else {
+            throw new BeanCreationException("Missing proper message endpoint reference for sending action - 'endpoint' attribute is required and should not be empty");
+        }
+
         DescriptionElementParser.doParse(element, builder);
 
         SoapFaultAwareMessageBuilder messageBuilder = new SoapFaultAwareMessageBuilder();

@@ -20,7 +20,7 @@
 
     <actions>
       <parallel>
-        <ws:send with="helloSoapClient">
+        <ws:send endpoint="helloSoapClient">
           <message>
             <data>
               <![CDATA[
@@ -36,7 +36,7 @@
         </ws:send>
 
         <sequential>
-          <ws:receive with="soapRequestEndpoint">
+          <ws:receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -54,7 +54,7 @@
             </ws:attachment>
           </ws:receive>
 
-          <send with="soapResponseEndpoint">
+          <send endpoint="soapResponseEndpoint">
             <message>
               <data>
                 <![CDATA[
@@ -72,7 +72,7 @@
         </sequential>
       </parallel>
 
-      <receive with="helloSoapClient">
+      <receive endpoint="helloSoapClient">
         <message schema-validation="false">
           <data>
             <![CDATA[
@@ -86,7 +86,7 @@
       </receive>
 
       <parallel>
-        <ws:send with="helloSoapClient">
+        <ws:send endpoint="helloSoapClient">
           <message>
             <data>
               <![CDATA[
@@ -106,7 +106,7 @@
         </ws:send>
 
         <sequential>
-          <ws:receive with="soapRequestEndpoint">
+          <ws:receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -128,7 +128,7 @@
             </ws:attachment>
           </ws:receive>
 
-          <send with="soapResponseEndpoint">
+          <send endpoint="soapResponseEndpoint">
             <message>
               <data>
                 <![CDATA[
@@ -146,7 +146,7 @@
         </sequential>
       </parallel>
 
-      <receive with="helloSoapClient">
+      <receive endpoint="helloSoapClient">
         <message schema-validation="false">
           <data>
             <![CDATA[

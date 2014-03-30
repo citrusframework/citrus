@@ -44,13 +44,13 @@
     <para>Now all test actions that are using these message receiver and message sender instances are linked to the test actor. In addition to that you can also explicitly link test actions to 
     test actors in a test.</para>
     
-    <programlisting>&lt;receive with=&quot;royalAirlineBookingRequestReceiver&quot; actor=&quot;royalairline&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;royalAirlineBookingRequestReceiver&quot; actor=&quot;royalairline&quot;&gt;
     &lt;message&gt;
         [...]
     &lt;/message&gt;
 &lt;/receive&gt;
 
-&lt;send with=&quot;royalAirlineBookingResponseSender&quot; actor=&quot;royalairline&quot;&gt;
+&lt;send endpoint=&quot;royalAirlineBookingResponseSender&quot; actor=&quot;royalairline&quot;&gt;
     &lt;message&gt;
         [...]
     &lt;/message&gt;

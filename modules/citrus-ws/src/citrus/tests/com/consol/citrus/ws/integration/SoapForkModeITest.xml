@@ -23,7 +23,7 @@
     </variables>
 
     <actions>
-      <ws:send with="helloSoapClient" fork="true">
+      <ws:send endpoint="helloSoapClient" fork="true">
         <message>
           <data>
             <![CDATA[
@@ -41,7 +41,7 @@
         </header>
       </ws:send>
 
-      <receive with="soapRequestEndpoint">
+      <receive endpoint="soapRequestEndpoint">
         <message schema-validation="false">
           <data>
             <![CDATA[
@@ -62,7 +62,7 @@
         </extract>
       </receive>
 
-      <send with="soapResponseEndpoint">
+      <send endpoint="soapResponseEndpoint">
         <message>
           <data>
             <![CDATA[
@@ -80,7 +80,7 @@
         </header>
       </send>
 
-      <receive with="helloSoapClient" timeout="5000">
+      <receive endpoint="helloSoapClient" timeout="5000">
         <message schema-validation="false">
           <data>
             <![CDATA[

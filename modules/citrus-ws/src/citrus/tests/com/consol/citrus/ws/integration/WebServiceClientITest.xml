@@ -20,7 +20,7 @@
     </variables>
 
     <actions>
-      <send with="helloSoapClient">
+      <send endpoint="helloSoapClient">
         <message>
           <data>
             <![CDATA[
@@ -39,7 +39,7 @@
         </header>
       </send>
 
-      <receive with="helloSoapClient">
+      <receive endpoint="helloSoapClient">
         <message schema-validation="false">
           <data>
             <![CDATA[

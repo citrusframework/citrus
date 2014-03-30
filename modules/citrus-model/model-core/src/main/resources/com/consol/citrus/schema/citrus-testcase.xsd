@@ -131,6 +131,7 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="with" type="xs:string"/>
+        <xs:attribute name="endpoint" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
         <xs:attribute name="fork" type="xs:boolean"/>
     </xs:complexType>
@@ -293,6 +294,7 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="with" type="xs:string"/>
+        <xs:attribute name="endpoint" type="xs:string"/>
         <xs:attribute name="timeout" type="xs:int"/>
         <xs:attribute name="actor" type="xs:string"/>
     </xs:complexType>

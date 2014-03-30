@@ -268,7 +268,7 @@
         
         <para>When validating SOAP header XML fragments you need to define the whole XML header fragment as expected header data like this:</para>
         
-        <programlisting>&lt;receive with=&quot;soapMessageHandler&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;soapMessageHandler&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;&lt;![CDATA[
                 &lt;c:ResponseMessage xmlns:c=&quot;http://citrusframework.org/schema&quot;&gt;
@@ -315,7 +315,7 @@
 
       <para>With this configuration Citrus will handle all available mime headers passing those to the test case for normal header validation.</para>
       
-      <programlisting>&lt;ws:receive with=&quot;webServiceRequestReceiver&quot;&gt;
+      <programlisting>&lt;ws:receive endpoint=&quot;webServiceRequestReceiver&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;ns0:SoapMessageRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
@@ -336,7 +336,7 @@
       headers to our sending action. We mark some headers with following prefix <literal>&quot;citrus_http_&quot;</literal>. This tells the SOAP message sender to add these headers to the 
       Http header section outside the SOAP envelope. Keep in mind that header elements without this prefix go right into the SOAP header section by default.</para>
       
-      <programlisting>&lt;ws:send with=&quot;webServiceRequestSender&quot;&gt;
+      <programlisting>&lt;ws:send endpoint=&quot;webServiceRequestSender&quot;&gt;
   [...]
   &lt;header&gt;
     &lt;element name=&quot;citrus_http_operation&quot; value=&quot;foo&quot;/&gt;
@@ -364,7 +364,7 @@
             <para>Please keep in mind that we use the citrus-ws extension for sending SOAP faults in our test case, as shown in this very 
             simple example:</para>
             
-            <programlisting>&lt;ws:send-fault with=&quot;webServiceResponseSender&quot;&gt;
+            <programlisting>&lt;ws:send-fault endpoint=&quot;webServiceResponseSender&quot;&gt;
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
         &lt;ws:fault-string&gt;Invalid request&lt;/ws:fault-string&gt;
@@ -443,7 +443,7 @@ Server: Jetty(7.0.0.pre5)
             (SoapFaultClientException). A tester can assert this kind of exception in a test case in order to expect the SOAP error.</para>
             
             <programlisting>&lt;assert class=&quot;org.springframework.ws.soap.client.SoapFaultClientException&quot;&gt;
-    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+    &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
                 &lt;ns0:SoapFaultForcingRequest
@@ -465,7 +465,7 @@ Server: Jetty(7.0.0.pre5)
             <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
            fault-string=&quot;Invalid request&quot;&gt;
            fault-actor=&quot;SERVER&quot;&gt;
-    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+    &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
                 &lt;ns0:SoapFaultForcingRequest
@@ -547,7 +547,7 @@ Server: Jetty(7.0.0.pre5)
           &lt;/ns0:FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
-    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+    &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
                 &lt;ns0:SoapFaultForcingRequest
@@ -578,7 +578,7 @@ Server: Jetty(7.0.0.pre5)
           &lt;/ns0:FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
-    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+    &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         [...]
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
@@ -604,7 +604,7 @@ Server: Jetty(7.0.0.pre5)
             <para>So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault 
             like this.</para>
 
-            <programlisting>&lt;send with=&quot;soapMessageSender&quot;&gt;
+            <programlisting>&lt;send endpoint=&quot;soapMessageSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;ns0:SoapFaultForcingRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
@@ -614,7 +614,7 @@ Server: Jetty(7.0.0.pre5)
     &lt;/message&gt;
 &lt;/send&gt;
 
-&lt;receive with=&quot;soapResponseHandler&quot; timeout=&quot;5000&quot;&gt;
+&lt;receive endpoint=&quot;soapResponseHandler&quot; timeout=&quot;5000&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;SOAP-ENV:Fault xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
@@ -634,7 +634,7 @@ Server: Jetty(7.0.0.pre5)
             <para>SOAP fault details can hold one or more SOAP fault detail elements. In the previous sections we have used SOAP fault details in sending and receiving actions as single element. In order 
             to meet the SOAP specification Citrus is also able to handle multiple SOAP fault detail elements in a message. You just use many fault-detail elements in your test action like this:</para>
             
-            <programlisting>&lt;ws:send-fault with=&quot;webServiceResponseSender&quot;&gt;
+            <programlisting>&lt;ws:send-fault endpoint=&quot;webServiceResponseSender&quot;&gt;
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
         &lt;ws:fault-string&gt;Invalid request&lt;/ws:fault-string&gt;
@@ -711,7 +711,7 @@ Server: Jetty(7.0.0.pre5)
           &lt;/ns0:ErrorDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
-    &lt;send with=&quot;webServiceHelloRequestSender&quot;&gt;
+    &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         [...]
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
@@ -730,7 +730,7 @@ Server: Jetty(7.0.0.pre5)
         a reply message sender. The Http error situation is simulated according to the special Http header <emphasis>citrus_http_status</emphasis> in the Citrus SOAP response definition. In case this header
         is set to a value other than 200 OK the Citrus SOAP server sends an empty SOAP response with Http error status code set accordingly.</para>
         
-        <programlisting>&lt;receive with="soapMessageReceiver"&gt;
+        <programlisting>&lt;receive endpoint="soapMessageReceiver"&gt;
   &lt;message&gt;
       &lt;payload&gt;
           &lt;ns0:Message xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
@@ -740,7 +740,7 @@ Server: Jetty(7.0.0.pre5)
   &lt;/message&gt;
 &lt;/receive>
 
-&lt;send with="soapResponseSender"&gt;
+&lt;send endpoint="soapResponseSender"&gt;
     &lt;message&gt;
         &lt;data&gt;&lt;/data&gt;
     &lt;/message&gt;
@@ -763,7 +763,7 @@ Server: Jetty(7.0.0.pre5)
             
             <para>As client Citrus is able to add attachments to SOAP messages. I think it is best to look at an example in order to understand how it works.</para>
             
-            <programlisting>&lt;ws:send with=&quot;webServiceRequestSender&quot;&gt;
+            <programlisting>&lt;ws:send endpoint=&quot;webServiceRequestSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;ns0:SoapMessageWithAttachment xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
@@ -795,7 +795,7 @@ Server: Jetty(7.0.0.pre5)
             <para>When Citrus calls SOAP WebServices as a client we may receive SOAP responses with attachments. The tester can validate
             received SOAP messages with attachment content quite easy. As usual let us have a look at an example first.</para>
             
-            <programlisting>&lt;ws:receive with=&quot;webServiceRequestReceiver&quot;&gt;
+            <programlisting>&lt;ws:receive endpoint=&quot;webServiceRequestReceiver&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
             &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
@@ -1038,7 +1038,7 @@ Server: Jetty(7.0.0.pre5)
         message sender will automatically open a new Java Thread for the synchronous communication and the test is able to continue with execution although the
         synchronous HTTP SOAP response has not arrived yet.</para>
         
-        <programlisting>&lt;ws:send with=&quot;webServiceRequestSender&quot; fork=&quot;true&quot;&gt;
+        <programlisting>&lt;ws:send endpoint=&quot;webServiceRequestSender&quot; fork=&quot;true&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
@@ -1057,7 +1057,7 @@ Server: Jetty(7.0.0.pre5)
         A proper <emphasis>&quot;timeout&quot;</emphasis> setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message. 
         The following listing sets the receive timeout to 10 seconds, so the action waits for the forked send action to deliver the SOAP response in time.
             <programlisting>
-&lt;ws:receive with=&quot;webServiceReplyHandler&quot; timeout=&quot;10000&quot;&gt;
+&lt;ws:receive endpoint=&quot;webServiceReplyHandler&quot; timeout=&quot;10000&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ns0:SoapMessageWithAttachmentResponse xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;

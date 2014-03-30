@@ -25,7 +25,7 @@
     <actions>
       <parallel>
         <assert exception="org.springframework.ws.client.WebServiceTransportException" message="Server Error [500]">
-          <ws:send with="helloSoapClient">
+          <ws:send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -47,7 +47,7 @@
         </assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -70,7 +70,7 @@
             </extract>
           </receive>
 
-          <send with="soapResponseEndpoint">
+          <send endpoint="soapResponseEndpoint">
             <message>
               <data></data>
             </message>

@@ -24,7 +24,7 @@
     <actions>
       <ws:assert fault-code="{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand"
                  fault-string="One or more mandatory SOAP header blocks not understood">
-        <send with="helloWsAddressingSoapClient">
+        <send endpoint="helloWsAddressingSoapClient">
           <message>
             <data>
               <![CDATA[

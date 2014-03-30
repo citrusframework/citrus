@@ -23,7 +23,7 @@
                 </ws:attachment>
             </ws:receive>
             
-            <ws:receive with="mySoapServer">
+            <ws:receive endpoint="mySoapServer">
                 <message>
                     <data>
                         <![CDATA[

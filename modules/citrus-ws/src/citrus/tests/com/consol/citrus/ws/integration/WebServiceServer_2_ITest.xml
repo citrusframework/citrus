@@ -27,7 +27,7 @@
         <message>Test: Receive Http SOAP request via server instance and send back SOAP response.</message>
       </echo>
 
-      <send with="echoSoapClient" fork="true">
+      <send endpoint="echoSoapClient" fork="true">
         <message>
           <data>
             <![CDATA[
@@ -46,7 +46,7 @@
         </header>
       </send>
 
-      <receive with="echoSoapServer">
+      <receive endpoint="echoSoapServer">
         <message>
           <data>
             <![CDATA[
@@ -65,7 +65,7 @@
         </header>
       </receive>
 
-      <send with="echoSoapServer">
+      <send endpoint="echoSoapServer">
         <message>
           <data>
             <![CDATA[
@@ -84,7 +84,7 @@
         </header>
       </send>
 
-      <receive with="echoSoapClient">
+      <receive endpoint="echoSoapClient">
         <message>
           <data>
             <![CDATA[

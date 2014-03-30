@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
@@ -41,17 +42,21 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String messageSenderReference = element.getAttribute("with");
-        
-        BeanDefinitionBuilder builder;
+        String messageEndpointReference = null;
+        if (element.hasAttribute("with")) {
+            messageEndpointReference = element.getAttribute("with");
+        } else if (element.hasAttribute("endpoint")) {
+            messageEndpointReference = element.getAttribute("endpoint");
+        }
 
-        if (StringUtils.hasText(messageSenderReference)) {
+        BeanDefinitionBuilder builder;
+        if (StringUtils.hasText(messageEndpointReference)) {
             builder = parseComponent(element, parserContext);
             builder.addPropertyValue("name", element.getLocalName());
 
-            builder.addPropertyReference("endpoint", messageSenderReference);
+            builder.addPropertyReference("endpoint", messageEndpointReference);
         } else {
-            throw new BeanCreationException("Missing message sender attrbiute 'with'");
+            throw new BeanCreationException("Missing proper message endpoint reference for sending action - 'endpoint' attribute is required and should not be empty");
         }
         
         DescriptionElementParser.doParse(element, builder);
@@ -101,6 +106,6 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      * @return
      */
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.SendMessageAction");
+        return BeanDefinitionBuilder.genericBeanDefinition(SendMessageAction.class);
     }
 }

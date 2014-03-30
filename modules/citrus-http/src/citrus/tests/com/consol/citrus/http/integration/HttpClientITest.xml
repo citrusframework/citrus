@@ -27,7 +27,7 @@
         <message>Test: Send Http request and receive sync response</message>
       </echo>
 
-      <send with="helloHttpClient">
+      <send endpoint="helloHttpClient">
         <message>
           <data>
             <![CDATA[
@@ -46,7 +46,7 @@
         </header>
       </send>
 
-      <receive with="helloHttpClient">
+      <receive endpoint="helloHttpClient">
         <message>
           <data>
             <![CDATA[

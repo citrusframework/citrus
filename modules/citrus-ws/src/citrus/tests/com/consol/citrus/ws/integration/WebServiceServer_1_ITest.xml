@@ -22,7 +22,7 @@
 
     <actions>
       <parallel>
-        <send with="helloSoapClient">
+        <send endpoint="helloSoapClient">
           <message>
             <data>
               <![CDATA[
@@ -41,7 +41,7 @@
         </send>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -62,7 +62,7 @@
             </extract>
           </receive>
 
-          <send with="soapResponseEndpoint">
+          <send endpoint="soapResponseEndpoint">
             <message>
               <data>
                 <![CDATA[
@@ -82,7 +82,7 @@
         </sequential>
       </parallel>
 
-      <receive with="helloSoapClient">
+      <receive endpoint="helloSoapClient">
         <message schema-validation="false">
           <data>
             <![CDATA[

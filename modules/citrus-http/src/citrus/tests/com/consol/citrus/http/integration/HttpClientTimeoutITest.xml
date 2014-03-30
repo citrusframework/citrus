@@ -23,7 +23,7 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Failed to receive message - message is not available">
-        <receive with="helloHttpClient">
+        <receive endpoint="helloHttpClient">
           <message>
             <data>
               <![CDATA[]]>

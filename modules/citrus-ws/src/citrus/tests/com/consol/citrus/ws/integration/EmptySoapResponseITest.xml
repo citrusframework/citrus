@@ -15,7 +15,7 @@
     </meta-info>
 
     <actions>
-      <send with="helloSoapClient">
+      <send endpoint="helloSoapClient">
         <message>
           <data>
             <![CDATA[

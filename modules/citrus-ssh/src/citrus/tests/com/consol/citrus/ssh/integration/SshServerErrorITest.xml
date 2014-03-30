@@ -25,7 +25,7 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
-        <send with="sshClientWithWrongKey">
+        <send endpoint="sshClientWithWrongKey">
           <message>
             <data>
               <![CDATA[
@@ -41,7 +41,7 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
               message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
-        <send with="sshClientWithWrongUser">
+        <send endpoint="sshClientWithWrongUser">
           <message>
             <data>
               <![CDATA[

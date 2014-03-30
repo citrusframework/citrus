@@ -166,7 +166,7 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     <para>We set the global scope property to <emphasis>false</emphasis> so the dictionary is handled in explicit scope. This means that
     you have to set the data dictionary explicitly in your test actions:</para>
 
-    <programlisting>&lt;send with=&quot;myMessageSender&quot;&gt;
+    <programlisting>&lt;send endpoint=&quot;myMessageSender&quot;&gt;
   &lt;message data-dictionary=&quot;specialDataDictionary&quot;&gt;
     &lt;payload&gt;
       &lt;TestMessage&gt;Hello Citrus&quot;/TestMessage&gt;

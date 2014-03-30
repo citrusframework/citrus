@@ -20,13 +20,13 @@
                 </header>
             </send>
             
-            <send with="myMessageEndpoint">
+            <send endpoint="myMessageEndpoint">
                 <message>
                     <resource file="classpath:com/consol/citrus/actions/test-request-payload.xml"/>
                 </message>
             </send>
             
-            <send with="myMessageEndpoint">
+            <send endpoint="myMessageEndpoint">
                 <message>
                     <builder type="groovy">
                         <![CDATA[
@@ -40,13 +40,13 @@
                 </header>
             </send>
             
-            <send with="myMessageEndpoint">
+            <send endpoint="myMessageEndpoint">
                 <message>
                     <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
                 </message>
             </send>
             
-            <send with="myMessageEndpoint">
+            <send endpoint="myMessageEndpoint">
                 <message data-dictionary="myDataDictionary">
                     <data>
                         <![CDATA[
@@ -60,7 +60,7 @@
                 </extract>
             </send>
             
-            <send with="myMessageEndpoint">
+            <send endpoint="myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[

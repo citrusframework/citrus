@@ -17,6 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -46,17 +47,21 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String messageReceiverReference = element.getAttribute("with");
-        
-        BeanDefinitionBuilder builder;
+        String messageEndpointReference = null;
+        if (element.hasAttribute("with")) {
+            messageEndpointReference = element.getAttribute("with");
+        } else if (element.hasAttribute("endpoint")) {
+            messageEndpointReference = element.getAttribute("endpoint");
+        }
 
-        if (StringUtils.hasText(messageReceiverReference)) {
+        BeanDefinitionBuilder builder;
+        if (StringUtils.hasText(messageEndpointReference)) {
             builder = parseComponent(element, parserContext);
             builder.addPropertyValue("name", element.getLocalName());
             
-            builder.addPropertyReference("endpoint", messageReceiverReference);
+            builder.addPropertyReference("endpoint", messageEndpointReference);
         } else {
-            throw new BeanCreationException("Missing proper message receiver reference - attriute should not be empty");
+            throw new BeanCreationException("Missing proper message endpoint reference for receiving action - 'endpoint' attribute is required and should not be empty");
         }
         
         DescriptionElementParser.doParse(element, builder);
@@ -347,6 +352,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @return
      */
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.actions.ReceiveMessageAction");
+        return BeanDefinitionBuilder.genericBeanDefinition(ReceiveMessageAction.class);
     }
 }

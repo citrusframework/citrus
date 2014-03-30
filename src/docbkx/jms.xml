@@ -136,7 +136,7 @@
         
         <programlisting>&lt;testcase name=&quot;syncMessagingTest&quot;&gt;
     &lt;actions&gt;
-        &lt;send with=&quot;mySyncMessageSender&quot;&gt;
+        &lt;send endpoint=&quot;mySyncMessageSender&quot;&gt;
             &lt;message&gt;
                 &lt;data&gt;
                     [...]
@@ -144,7 +144,7 @@
             &lt;/message&gt;
         &lt;/send&gt;
         
-        &lt;receive with=&quot;myReplyMessageHandler&quot;&gt;
+        &lt;receive endpoint=&quot;myReplyMessageHandler&quot;&gt;
             &lt;message&gt;
                 &lt;data&gt;
                     [...]

@@ -26,7 +26,7 @@
       <parallel>
         <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request">
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -43,7 +43,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -61,7 +61,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -91,7 +91,7 @@
         <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000"
                    fault-string="Invalid request"
                    fault-actor="SERVER">
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -108,7 +108,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -126,7 +126,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -167,7 +167,7 @@
               </ns0:FaultDetail>
             ]]>
           </ws:fault-detail>
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -184,7 +184,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -202,7 +202,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -243,7 +243,7 @@
               </ns0:FaultDetail>
             ]]>
           </ws:fault-detail>
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -260,7 +260,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -278,7 +278,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -320,7 +320,7 @@
               </ns0:FaultDetail>
             ]]>
           </ws:fault-detail>
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -337,7 +337,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -355,7 +355,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -397,7 +397,7 @@
               </ns0:FaultDetail>
             ]]>
           </ws:fault-detail>
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -414,7 +414,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -432,7 +432,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -479,7 +479,7 @@
               </MessageDetail>
             ]]>
           </ws:fault-detail>
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -496,7 +496,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -514,7 +514,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
@@ -577,7 +577,7 @@
               </ns0:FaultDetail>
             ]]>
           </ws:fault-detail>
-          <send with="helloSoapClient">
+          <send endpoint="helloSoapClient">
             <message>
               <data>
                 <![CDATA[
@@ -594,7 +594,7 @@
         </ws:assert>
 
         <sequential>
-          <receive with="soapRequestEndpoint">
+          <receive endpoint="soapRequestEndpoint">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -612,7 +612,7 @@
             </extract>
           </receive>
 
-          <ws:send-fault with="soapResponseEndpoint">
+          <ws:send-fault endpoint="soapResponseEndpoint">
             <ws:fault>
               <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
               <ws:fault-string>Invalid request</ws:fault-string>
