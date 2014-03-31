@@ -47,8 +47,8 @@ public class LoggingReporterTest {
         reporter.onStart();
         reporter.onStartSuccess();
         reporter.onTestStart(test);
-        reporter.onTestActionStart(test, echo);
-        reporter.onTestActionFinish(test, echo);
+        reporter.onTestActionStart(test, echo, null);
+        reporter.onTestActionFinish(test, echo, null);
         reporter.onTestFinish(test);
         reporter.onTestSuccess(test);
         reporter.onFinish();
@@ -63,7 +63,7 @@ public class LoggingReporterTest {
         reporter.onStart();
         reporter.onStartSuccess();
         reporter.onTestStart(test);
-        reporter.onTestActionStart(test, echo);
+        reporter.onTestActionStart(test, echo, null);
         reporter.onTestFinish(test);
         reporter.onTestFailure(test, new CitrusRuntimeException("Failed!"));
         reporter.onFinish();
@@ -104,8 +104,8 @@ public class LoggingReporterTest {
         reporter.onStart();
         reporter.onStartSuccess();
         reporter.onTestStart(test);
-        reporter.onTestActionStart(test, echo);
-        reporter.onTestActionFinish(test, echo);
+        reporter.onTestActionStart(test, echo, null);
+        reporter.onTestActionFinish(test, echo, null);
         reporter.onTestFinish(test);
         reporter.onTestSuccess(test);
         reporter.onFinish();

@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.TestCase;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.context.TestContext;
 
 /**
  * Class broadcasting test action events to all available test action listeners 
@@ -40,27 +42,27 @@ public class TestActionListeners implements TestActionListener {
     /**
      * @see com.consol.citrus.report.TestActionListener#onTestActionFinish(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
-    public void onTestActionFinish(TestCase testCase, TestAction testAction) {
+    public void onTestActionFinish(TestCase testCase, TestAction testAction, TestContext context) {
         for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionFinish(testCase, testAction);
+            listener.onTestActionFinish(testCase, testAction, context);
         }
     }
 
     /**
      * @see com.consol.citrus.report.TestActionListener#onTestActionSkipped(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
-    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
+    public void onTestActionSkipped(TestCase testCase, TestAction testAction, TestContext context) {
         for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionSkipped(testCase, testAction);
+            listener.onTestActionSkipped(testCase, testAction, context);
         }
     }
 
     /**
      * @see com.consol.citrus.report.TestActionListener#onTestActionStart(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
-    public void onTestActionStart(TestCase testCase, TestAction testAction) {
+    public void onTestActionStart(TestCase testCase, TestAction testAction, TestContext context) {
         for (TestActionListener listener : testActionListeners) {
-            listener.onTestActionStart(testCase, testAction);
+            listener.onTestActionStart(testCase, testAction, context);
         }
     }
 

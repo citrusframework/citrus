@@ -148,14 +148,14 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             	actionIndexStr=actionIndexStr.substring(actionIndexStr.length()-5);
                 context.setVariable("test.action.index", actionIndexStr);
                 
-                testActionListeners.onTestActionStart(this, action);
+                testActionListeners.onTestActionStart(this, action, context);
                 setLastExecutedAction(action);
 
                 /* execute the test action and validate its success */
                 action.execute(context);
-                testActionListeners.onTestActionFinish(this, action);
+                testActionListeners.onTestActionFinish(this, action, context);
             } else {
-                testActionListeners.onTestActionSkipped(this, action);
+                testActionListeners.onTestActionSkipped(this, action, context);
             }
         }
     }
