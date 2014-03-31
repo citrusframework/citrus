@@ -53,12 +53,19 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<St
         try {    
             //construct control message payload
             String messagePayload = "";
-            if (scriptResourcePath != null){
-                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
-                        FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context))));
-            } else if (scriptData != null){
-                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
+     
+            String scriptInput = "";
+            if(scriptResourcePath != null) {
+                scriptInput += FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context));
             }
+            if(scriptData != null) {
+                scriptInput += scriptData;
+            }
+            
+            if(scriptInput.length() > 0) {
+                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptInput));
+            }
+
             
             return messagePayload;
         } catch (IOException e) {

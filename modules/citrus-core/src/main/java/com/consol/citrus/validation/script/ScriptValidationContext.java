@@ -68,13 +68,14 @@ public class ScriptValidationContext implements ValidationContext {
      */
     public String getValidationScript(TestContext context) {
         try {
+            StringBuffer result = new StringBuffer();
             if (validationScriptResourcePath != null) {
-                return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(validationScriptResourcePath, context)));
-            } else if (validationScript != null) {
-                return context.replaceDynamicContentInString(validationScript);
-            } else {
-                return "";
-            }
+                result.append(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(validationScriptResourcePath, context))));
+            } 
+            if (validationScript != null) {
+                result.append(context.replaceDynamicContentInString(validationScript));
+            } 
+            return result.toString();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to load validation script resource", e);
         }

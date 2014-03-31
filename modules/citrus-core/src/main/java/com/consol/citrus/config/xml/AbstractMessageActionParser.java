@@ -84,9 +84,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             String scriptResourcePath = builderElement.getAttribute("file");
             if (StringUtils.hasText(scriptResourcePath)) {
                 scriptMessageBuilder.setScriptResourcePath(scriptResourcePath);
-            } else {
-                scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement));
-            }
+            } 
+            scriptMessageBuilder.setScriptData(DomUtils.getTextValue(builderElement));
         }
         
         return scriptMessageBuilder;
