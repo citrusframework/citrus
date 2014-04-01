@@ -58,6 +58,38 @@
       <para>Read more about the new mail module in <xref linkend="mail"/></para>
     </section>
 
+    <section id="new-1-4-global-variables">
+      <title>Global variables component</title>
+
+      <para>We added a global variables XML configuration component for more comfortable usage in basic Spring application context
+        configuration. Find out how to us it in <xref linkend="testcase-global-variables"/></para>
+    </section>
+
+    <section id="new-1-4-json-validator-mode">
+      <title>Json text validator mode</title>
+
+      <para>The Json text validator is now able to operate in two different modes. The strict mode is the default known comparison which
+        includes also the check on all subobjects and array elements. Sometimes it may be accurate to only validate a subset of all Json
+        objects in the structure. Therefore the non-strict mode is loose and does not check on subelement counts. See more description
+        in <xref linkend="validation-json"/></para>
+    </section>
+
+    <section id="new-1-4-http-options">
+      <title>HTTP REST specific Java DSL options</title>
+
+      <para>When sending and receiving HTTP messages on REST APIs you can now use interface specific options in the Java DSL. This refers to
+        request uri, context path, query parameters and HTTP status codes. With this enhancement you are now more comfortable in handling REST API calls in Citrus.
+        Find out how to us it in <xref linkend="http"/></para>
+    </section>
+
+    <section id="new-1-4-soap-http-uri">
+      <title>SOAP HTTP validation</title>
+
+      <para>While receiving SOAP messages over HTTP we are now able to also verify the used HTTP uri, context-path and query parameters. You can expect clients to
+        use those values in your receive action as you would do in normal HTTP communication within Citrus. This completes the HTTP server
+        validation when using SOAP over HTTP. Read more about it in <xref linkend="soap-webservices"/></para>
+    </section>
+
   </section>
 
   <section id="new-bugfixes">
