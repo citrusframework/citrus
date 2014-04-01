@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.4" date="01.01.2014" descripton="1.4 release">
+    <release version="1.4" date="11.04.2014" descripton="1.4 release">
+        <action dev="christophd" type="add">
+          CITRUS-200 Global variables component
+        </action>
         <action dev="christophd" type="fix">
           CITRUS-199 Auto sleep &lt; 1 second
         </action>
