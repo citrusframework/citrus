@@ -15,13 +15,9 @@
                                 ignore-unresolvable="true"/>
 
   <!-- Global variables -->
-  <bean class="com.consol.citrus.variable.GlobalVariables">
-    <property name="variables">
-      <map>
-        <entry key="project.name" value="Citrus Soap Integration Testing"/>
-      </map>
-    </property>
-  </bean>
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Soap Integration Testing"/>
+  </citrus:global-variables>
 
   <citrus:schema-repository id="schemaRepository">
     <citrus:schemas>

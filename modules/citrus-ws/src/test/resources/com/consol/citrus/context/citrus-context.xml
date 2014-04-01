@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd"
        default-autowire="byType">
 	
-   <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
-      <property name="locations">
-          <list>
-             <value>classpath:com/consol/citrus/ws/schema/error-details.xsd</value>
-          </list>
-      </property>
-   </bean>
+   <citrus:schema-repository id="schemaRepository">
+      <citrus:locations>
+        <citrus:location path="classpath:com/consol/citrus/ws/schema/error-details.xsd"/>
+      </citrus:locations>
+   </citrus:schema-repository>
    
-   <bean class="com.consol.citrus.variable.GlobalVariables">
-      <property name="variables">
-          <map>
-              <entry key="project.name" value="Citrus Integration Testing"/>
-          </map>
-      </property>
-   </bean>
+   <citrus:global-variables>
+      <citrus:variable name="project.name" value="Citrus Integration Testing"/>
+   </citrus:global-variables>
     
    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
    

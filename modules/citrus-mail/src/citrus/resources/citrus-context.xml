@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
        http://www.citrusframework.org/schema/mail/config http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd">
 
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>
 
-  <bean class="com.consol.citrus.variable.GlobalVariables">
-    <property name="variables">
-      <map>
-        <entry key="project.name" value="Citrus Mail Integration Testing"/>
-      </map>
-    </property>
-  </bean>
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Mail Integration Testing"/>
+  </citrus:global-variables>
 
   <!-- Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>

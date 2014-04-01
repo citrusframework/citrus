@@ -15,13 +15,9 @@
                                 ignore-unresolvable="true"/>
 
   <!-- Global variables -->
-  <bean class="com.consol.citrus.variable.GlobalVariables">
-    <property name="variables">
-      <map>
-        <entry key="project.name" value="Citrus Http Integration Testing"/>
-      </map>
-    </property>
-  </bean>
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Http Integration Testing"/>
+  </citrus:global-variables>
 
   <!-- Xsd schema resources and definitions -->
   <citrus:schema-repository id="helloSchemaRepository">

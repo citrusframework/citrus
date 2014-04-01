@@ -363,6 +363,27 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="global-variables">
+      <xs:annotation>
+        <xs:documentation>Global scoped test variables - valid in all test cases</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="variable" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+              <xs:attribute name="value" type="xs:string" use="required"/>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:attribute name="path" use="required"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
     <!-- Endpoint adapters used in server configuration -->
 
     <xs:element name="channel-endpoint-adapter">

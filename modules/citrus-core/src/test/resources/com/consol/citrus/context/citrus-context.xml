@@ -48,13 +48,9 @@
 
     <bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
 	
-    <bean class="com.consol.citrus.variable.GlobalVariables">
-        <property name="variables">
-            <map>
-                <entry key="project.name" value="Citrus Unit Tests"/>
-            </map>
-        </property>
-    </bean>
+    <citrus:global-variables>
+        <citrus:variable name="project.name" value="Citrus Unit Tests"/>
+    </citrus:global-variables>
     
     <bean class="com.consol.citrus.variable.GlobalVariablesPropertyLoader">
         <property name="propertyFiles">

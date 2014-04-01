@@ -34,6 +34,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("schema", new SchemaParser());
         registerBeanDefinitionParser("schema-collection", new SchemaCollectionParser());
         registerBeanDefinitionParser("actor", new TestActorParser());
+        registerBeanDefinitionParser("global-variables", new GlobalVariablesParser());
         registerBeanDefinitionParser("jms-endpoint", new JmsEndpointParser());
         registerBeanDefinitionParser("jms-sync-endpoint", new JmsSyncEndpointParser());
         registerBeanDefinitionParser("jms-message-sender", new JmsMessageSenderParser());

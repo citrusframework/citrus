@@ -31,13 +31,9 @@
         <property name="brokerURL" value="${jms.server.url}" />
     </bean>
     
-    <bean class="com.consol.citrus.variable.GlobalVariables">
-        <property name="variables">
-            <map>
-                <entry key="project.name" value="Citrus Greeting sample"/>
-            </map>
-        </property>
-    </bean>
+    <citrus:global-variables>
+        <citrus:variable name="project.name" value="Citrus Greeting sample"/>
+    </citrus:global-variables>
     
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
 

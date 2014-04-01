@@ -33,14 +33,11 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  */
 public class TestActorParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(TestActor.class);
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("name"), "name");
-        
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("disabled"), "disabled");
         
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());

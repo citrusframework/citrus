@@ -33,13 +33,9 @@
         <property name="watchTopicAdvisories" value="false"/>
     </bean>
     
-    <bean class="com.consol.citrus.variable.GlobalVariables">
-        <property name="variables">
-            <map>
-                <entry key="project.name" value="Citrus FlightBooking sample"/>
-            </map>
-        </property>
-    </bean>
+    <citrus:global-variables>
+        <citrus:variable name="project.name" value="Citrus FlightBooking sample"/>
+    </citrus:global-variables>
     
     <!-- Default namespace mappings used in XPath expression evaluations -->
     <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">

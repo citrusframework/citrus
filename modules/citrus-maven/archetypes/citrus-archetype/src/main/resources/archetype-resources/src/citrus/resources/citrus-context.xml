@@ -16,13 +16,9 @@
 
     <citrus:schema-repository id="schemaRepository"/>
 
-    <bean class="com.consol.citrus.variable.GlobalVariables">
-        <property name="variables">
-            <map>
-                <entry key="project.name" value="Citrus Integration Tests"/>
-            </map>
-        </property>
-    </bean>
+    <citrus:global-variables>
+        <citrus:variable name="project.name" value="Citrus Integration Tests"/>
+    </citrus:global-variables>
     	
     <!-- Message Validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>

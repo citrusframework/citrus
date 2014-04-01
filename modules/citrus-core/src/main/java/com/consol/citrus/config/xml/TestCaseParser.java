@@ -16,10 +16,12 @@
 
 package com.consol.citrus.config.xml;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.TestCaseFactory;
+import com.consol.citrus.variable.VariableUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -30,11 +32,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.*;
-import com.consol.citrus.TestCaseMetaInfo.Status;
-import com.consol.citrus.config.TestActionRegistry;
-import com.consol.citrus.config.TestCaseFactory;
-import com.consol.citrus.variable.VariableUtils;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Bean definition parser for test case.
@@ -44,10 +44,7 @@ import com.consol.citrus.variable.VariableUtils;
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class TestCaseParser implements BeanDefinitionParser {
 
-    /**
-     * (non-Javadoc)
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
 	public final BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder testCaseFactory = BeanDefinitionBuilder.rootBeanDefinition(TestCaseFactory.class);
         BeanDefinitionBuilder testcase = BeanDefinitionBuilder.rootBeanDefinition(TestCase.class);

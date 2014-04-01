@@ -514,7 +514,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Creates receive message action definition with messsage endpoint name.
+     * Creates receive message action definition with message endpoint name.
      *
      * @param messageEndpointName
      * @return
