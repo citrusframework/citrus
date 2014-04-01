@@ -236,8 +236,8 @@
 
         <div class="row">
           <div class="span4">
-            <p>SOAP WebServices over Http is a wide spread communication scenario in modern enterprise applications. A SOAP WebService client is posting
-              a SOAP request to a Http server waiting synchronously for the response message. Citrus provides both SOAP client and server components in order
+            <p>SOAP WebServices over HTTP is a wide spread communication scenario in modern enterprise applications. A SOAP WebService client is posting
+              a SOAP request to a HTTP server waiting synchronously for the response message. Citrus provides both SOAP client and server components in order
               to meet both directions of this scenario.</p>
           </div>
           <div class="span7">
@@ -275,8 +275,8 @@
 
         <div class="row">
           <div class="span4">
-            <p>The SOAP client component is responsible for sending a SOAP request to the server. As SOAP via Http follows the synchronous communication pattern the client waits
-              for the response to arrive. The <b>request-url</b> attribute defines the Http server endpoint URL where the SOAP messages go to.</p>
+            <p>The SOAP client component is responsible for sending a SOAP request to the server. As SOAP via HTTP follows the synchronous communication pattern the client waits
+              for the response to arrive. The <b>request-url</b> attribute defines the HTTP server endpoint URL where the SOAP messages go to.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;citrus-ws:client id=&quot;helloSoapClient&quot;
@@ -327,7 +327,7 @@
 
         <div class="row">
           <div class="span4">
-            <p>Citrus is also able to simulate the server side of the SOAP communication. Therefore Citrus starts an embedded Http server capable of handling
+            <p>Citrus is also able to simulate the server side of the SOAP communication. Therefore Citrus starts an embedded HTTP server capable of handling
               incoming SOAP requests. The tester can then specify the SOAP response which is sent back to the calling client.</p>
           </div>
           <div class="span7">
@@ -385,15 +385,15 @@
 
         <div class="row">
           <div class="span11">
-            <h3 class="config-header">Http REST support</h3>
+            <h3 class="config-header">HTTP REST support</h3>
           </div>
         </div>
 
         <div class="row">
           <div class="span4">
-            <p>Http REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a Http client sending
-              Http requests usually in JSON data format to a Http server. As Http is a synchronous protocol by nature the client receives the server response synchronously.
-              Citrus provides REST Http client and server components and a powerful JSON message data support when sending and receiving messages.</p>
+            <p>REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a HTTP client sending
+              HTTP requests usually in JSON data format to a HTTP server. As HTTP is a synchronous protocol by nature the client receives the server response synchronously.
+              Citrus provides REST HTTP client and server components and a powerful JSON message data support when sending and receiving messages.</p>
           </div>
           <div class="span7">
           </div>
@@ -401,7 +401,7 @@
 
         <div class="row">
           <div class="span4">
-            <p>You have to add the citrus-http XML namespace to your application context root element in order to use the Http REST components.</p>
+            <p>You have to add the citrus-http XML namespace to your application context root element in order to use the HTTP REST components.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
@@ -414,13 +414,13 @@
 
         <div class="row">
           <div class="span11">
-            <h4>Http REST client</h4>
+            <h4>HTTP REST client</h4>
           </div>
         </div>
 
         <div class="row">
           <div class="span4">
-            <p>On the client side we have a simple Http message sender component connecting to the server. Again the <b>request-url</b> attribute defines the Http server
+            <p>On the client side we have a simple HTTP message sender component connecting to the server. Again the <b>request-url</b> attribute defines the HTTP server
               endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages.</p>
           </div>
           <div class="span7">
@@ -432,13 +432,13 @@
 
         <div class="row">
           <div class="span11">
-            <h4>Http REST server</h4>
+            <h4>HTTP REST server</h4>
           </div>
         </div>
 
         <div class="row">
           <div class="span4">
-            <p>On the server side Citrus offers an embedded Http server which is capable of handling incoming REST requests. The tester than is able to define
+            <p>On the server side Citrus offers an embedded HTTP server which is capable of handling incoming REST requests. The tester than is able to define
               the synchronous response which is sent back to the calling client.</p>
 
             <p>The server component is capable of receiving a lot of customizations and extensions such as Basic authentication. In the test case you can interact
