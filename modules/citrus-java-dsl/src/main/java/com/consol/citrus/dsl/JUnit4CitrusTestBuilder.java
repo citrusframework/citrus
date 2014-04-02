@@ -396,6 +396,16 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
     }
 
     /**
+     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
+     * specific properties for SOAP fault messages.
+     * @param messageEndpoint
+     * @return
+     */
+    public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
+        return testBuilder.sendSoapFault(messageEndpoint);
+    }
+
+    /**
      * Add sleep action with default delay time.
      */
     public SleepAction sleep() {

@@ -335,6 +335,15 @@ public interface TestBuilder extends ApplicationContextAware {
     SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName);
 
     /**
+     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
+     * specific properties for SOAP fault messages.
+     *
+     * @param messageEndpoint
+     * @return
+     */
+    SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint);
+
+    /**
      * Add sleep action with default delay time.
      */
     SleepAction sleep();

@@ -523,11 +523,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
             return new ReceiveSoapMessageActionDefinition(action, applicationContext);
         } else {
-            ReceiveMessageAction action = new ReceiveMessageAction();
-            action.setEndpoint(messageEndpoint);
-            testCase.addTestAction(action);
-
-            return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
+            return receive(messageEndpoint);
         }
     }
 
@@ -591,11 +587,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             testCase.addTestAction(action);
             return new SendSoapMessageActionDefinition(action);
         } else {
-            SendMessageAction action = new SendMessageAction();
-            action.setEndpoint(messageEndpoint);
-
-            testCase.addTestAction(action);
-            return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
+            return send(messageEndpoint);
         }
     }
 
@@ -608,7 +600,17 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName) {
         Endpoint messageEndpoint = applicationContext.getBean(messageEndpointName, Endpoint.class);
+        return sendSoapFault(messageEndpoint);
+    }
 
+    /**
+     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
+     * specific properties for SOAP fault messages.
+     *
+     * @param messageEndpoint
+     * @return
+     */
+    public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
         SendMessageAction action = new SendMessageAction();
         action.setEndpoint(messageEndpoint);
 
