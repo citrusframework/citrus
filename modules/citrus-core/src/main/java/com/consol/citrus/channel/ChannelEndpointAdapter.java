@@ -20,6 +20,9 @@ import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.integration.Message;
 
 /**
@@ -30,7 +33,7 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
+public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements BeanFactoryAware {
 
     /** Endpoint handling incoming requests */
     private ChannelSyncEndpoint endpoint;
@@ -78,4 +81,8 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
         return endpointConfiguration;
     }
 
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        endpointConfiguration.setBeanFactory(beanFactory);
+    }
 }

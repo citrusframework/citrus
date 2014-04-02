@@ -54,19 +54,13 @@ import java.util.*;
  */
 public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
-    /**
-     * This builders test case
-     */
+    /** This builders test case */
     private TestCase testCase;
 
-    /**
-     * The test variables to set before execution
-     */
+    /** The test variables to set before execution */
     private Map<String, Object> variables;
 
-    /**
-     * Spring bean application context
-     */
+    /** Spring bean application context */
     private ApplicationContext applicationContext;
 
     /** Default constructor */
