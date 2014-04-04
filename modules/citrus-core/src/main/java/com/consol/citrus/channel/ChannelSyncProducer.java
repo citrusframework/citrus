@@ -73,7 +73,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
             throw new ActionTimeoutException("Reply timed out after " +
                     endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply channel");
         } else {
-            log.info("Received synchronous repsonse message from reply channel");
+            log.info("Received synchronous response message from reply channel");
         }
 
         onReplyMessage(message, replyMessage);
