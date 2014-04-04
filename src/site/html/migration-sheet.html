@@ -13,12 +13,12 @@
         with API changes. This is why many classes and components of the Citrus API were marked as <b>deprecated</b>. This means that your customized test actions, senders and receivers as well as
         customized components may have to be changed in future.</p>
 
-      <p>The good news though is that you should be able to just use the old configuration in Citrus <b>1.4</b> as it was before. This is because API has been marked as
+      <p>The good news though is that you will be able to just use the old configuration in Citrus <b>1.4</b> as it was before. This is because API has been marked as
         deprecated but has not been removed yet. The hard cut comes with one of the next Citrus releases most likely with <b>2.0</b>. So if you update to Citrus <b>1.4</b>
-        you should be fine with the old configuration but you should consider to switch to the new configuration to be ready for upcoming releases.</p>
+        you should be fine with the old configuration but you should consider switching to the new configuration to be ready for upcoming releases.</p>
 
-      <p>In this migration sheet we would like to give you a brief overview on the new configuration components in comparison to the old configuration. Hopefully you will agree that most of configuration has
-        become more easy and straight forward to use.</p>
+      <p>In this migration sheet we would like to give you a brief overview on the new configuration components comparing them to the old configuration. Hopefully you will agree that the new configuration is
+        more intuitive and straight forward to use.</p>
 
       <div class="container">
         <div class="row">
@@ -29,8 +29,8 @@
 
         <div class="row">
           <div class="span11">
-            <p>Message channels do represent a in memory messaging solution in Citrus. Producer and consumer components are linked via channels. Message channels do support both synchronous and asynchronous
-              communication pattern. In Citrus <b>1.4</b> a new endpoint component was introduced that fits both synchronous and asynchronous communication as sender and receiver.</p>
+            <p>Message channels represent the in memory messaging solution in Citrus. Producer and consumer components are linked via channels. Message channels support both synchronous and asynchronous
+              communication patterns. In Citrus <b>1.4</b> a new endpoint component was introduced that fits both synchronous and asynchronous communication as sender and receiver.</p>
           </div>
         </div>
 
@@ -42,7 +42,8 @@
 
         <div class="row">
           <div class="span11">
-            <p>The new channel endpoint replaces the message sender and receiver components. So endpoints can be used to produce and consumer messages on a channel. See the configuration changes in direct comparison.</p>
+            <p>The new channel endpoint replaces the old message sender and receiver components. Speaking so the endpoints can be used to produce and consumer messages on a channel. This is for
+              synchronous and asynchronous communication. First we talk about asynchronous communication. See the configuration changes in direct comparison.</p>
           </div>
         </div>
 
@@ -70,7 +71,7 @@
 
         <div class="row">
           <div class="span11">
-            <p>You can send and receive messages to/from the endpoint. So interacting with endpoints in a test case is quite easy. Just reference the id of the endpoint
+            <p>You can send and receive messages both to and from the endpoint. So interacting with endpoints in a test case is quite easy. Just reference the id of the endpoint
               in your send and receive test actions. This pattern is valid for all endpoint components in Citrus.</p>
 
             <pre class="prettyprint">&lt;send endpoint=&quot;helloServiceChannelEndpoint&quot;&gt;
@@ -104,7 +105,7 @@
         <div class="row">
           <div class="span11">
             <p>In synchronous communication we had to link message sender or receiver with a reply message handler or reply destination holder manually. See how
-            things have become more easy with the new endpoint configuration.</p>
+            things have become easier with the new endpoint configuration.</p>
           </div>
         </div>
 
@@ -167,7 +168,7 @@
 &lt;/receive&gt;</pre>
 
             <p>When initially receiving a message from a synchronous channel endpoint you are able to send a synchronous response back. Again just use the same endpoint reference in your test case.
-              The handling of temporary reply destinations is done automatically in the back.</p>
+              The handling of temporary reply destinations is done automatically behind the scenes.</p>
           </div>
         </div>
 
@@ -224,7 +225,7 @@
         <div class="row">
           <div class="span11">
             <p>Synchronous JMS communication is also represented by endpoints. The synchronous JMS endpoints replaces the synchronous sender and receiver comonents
-              in combination with the reply handler and reply destination holder components. Configuration has become more clear - hope you agree.</p>
+              in combination with the reply handler and reply destination holder components. Configuration has become more clear - we hope you agree.</p>
           </div>
         </div>
 
@@ -277,9 +278,9 @@
 
         <div class="row">
           <div class="span11">
-            <p>When using SOAP WebServices over HTTP it is time to look at the new client and server components in Citrus <b>1.4</b>. Especially on the server side a lot has become more
-              easy to use. You can now use the server component directly in your test case receive and send actions. No need for separate sender and receiver components and the separate
-              Spring application context for setting up the Spring WS components on the server. See how configuration has changed.</p>
+            <p>When using SOAP WebServices over HTTP it is time to look at the new client and server components in Citrus <b>1.4</b>. Especially on the server side a lot of simplifications
+              have been made. You can now use the server component directly in your test case receive and send actions. There is no need for separate sender and receiver components as well
+              as a separate Spring application context for setting up the Spring WS components on the server. See how configuration has changed.</p>
           </div>
         </div>
 
@@ -321,7 +322,7 @@
 
         <div class="row">
           <div class="span11">
-            <p>The server side configuration has been a huge point where users did struggle to set up everything correctly. As usual Citrus starts an embedded HTTP server capable of handling
+            <p>The server side configuration has been a huge point where users struggled to set up everything correctly. As usual Citrus starts an embedded HTTP server capable of handling
               incoming SOAP requests. In Citrus <b>1.x</b> the user had to set up a complete Spring application context with message channel connectors and separate message senders and receivers.</p>
 
             <p>Fortunately this is not the case anymore. Just see how configuration is simplified in comparison to each other.</p>
@@ -357,7 +358,7 @@
 
         <div class="row">
           <div class="span11">
-            <p>The new server component does make use of some endpoint adapter behind the scenes. Basically this is a Spring WS SOAP endpoint and has not changed. But you do not need to define all the Spring WS handlers
+            <p>The new server component makes use of an endpoint adapter behind the scenes. Basically this is a Spring WS SOAP endpoint and has not changed. But you do not need to define all the Spring WS handlers
               and endpoints in the <b>citrus-ws-servlet.xml</b> application context. All this is done now automatically in the background. The good new is that you are still able to customize these Spring WS components.
               The new Citrus SOAP server is therefore ready for powerful customizations such as default response generation, WS Adressing support, WS Security support, Basic authentication and many more. In a basic setup you
               do not need those so you do not need to struggle with that.</p>

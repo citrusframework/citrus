@@ -5,9 +5,28 @@
     <div class="container box">
       <h1 class="page-header">Configuration sheet <small>How to setup Citrus configuration components</small></h1>
 
-      <p>Citrus components are configured in the Spring application context (<b>citrus-context.xml</b>) as bean definitions.
-        The Citrus components do follow specific XML namespaces and XSD schema rules. You may have to add these namespace
-        definitions to the configuration file root element.</p>
+      <p>Citrus components are configured in the Spring application context (<b>citrus-context.xml</b>) as Spring bean definitions.
+        In the following sheet we will give you a brief overview on the Citrus configuration components.</p>
+
+      <div class="container">
+        <div class="row">
+          <div class="span4">
+            <p>The Citrus components follow specific XML schema rules. You have to add these namespace
+              definitions to the configuration file root element.</p>
+          </div>
+          <div class="span7">
+            <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/config
+          http://www.citrusframework.org/schema/config/citrus-config.xsd&quot;&gt;
+  [...]
+&lt;/beans&gt;</pre>
+          </div>
+        </div>
+      </div>
 
       <div class="container">
         <div class="row">
@@ -18,11 +37,17 @@
 
         <div class="row">
           <div class="span4">
-            <p>Message channels do represent a in memory messaging solution in Citrus. Producer and consumer components are linked via channels. As this
-              transport mechanism is also used in Spring integration API you are able to connect to all Spring integration message adapters via channels.</p>
+            <p>Message channels represent the in memory messaging solution in Citrus. Producer and consumer components are linked via channels. As this
+              transport mechanism is also used in Spring integration API you are able to connect to all Spring integration message adapters via channels.
+              Citrus offers a channel component that can be used both by Citrus and Spring Integration components.</p>
+
+            <p>The channel is a queue channel with optional <b>capacity</b> and <b>polling-interval</b> settings. You can also use the default Spring Integration
+              channel implementations in combination with the Citrus components.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;citrus:channel id=&quot;helloServiceChannel&quot;/&gt;</pre>
+            <pre class="prettyprint">&lt;citrus:channel id=&quot;helloServiceChannel&quot;
+                          capacity=&quot;100&quot;
+                          polling-interval=&quot;250&quot;/&gt;</pre>
           </div>
         </div>
 
@@ -34,8 +59,8 @@
 
         <div class="row">
           <div class="span4">
-            <p>Producer and consumer components do send/receive messages to/from a channel endpoint. By default the endpoint is asynchronous when configured
-              in the Citrus application context.</p>
+            <p>Citrus offers a channel endpoint component that is able to create producer and consumer components. Producer and consumer send and receive messages both to
+              and from a channel endpoint. By default the endpoint is asynchronous when configured in the Citrus application context.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;citrus:channel-endpoint id=&quot;helloServiceChannelEndpoint&quot;
@@ -79,9 +104,9 @@
 
         <div class="row">
           <div class="span4">
-            <p>By default channels are asynchronous. But sometimes it may be necessary to wait for a synchronous response message. Or in the other direction to send back
-              a synchronous response message. In Citrus synchronous communication is also represented by endpoints. The synchronous endpoints will wait for response messages
-              to arrive on a reply destination. By default this reply destination is temporary for each message sent/received.</p>
+            <p>By default channel endpoints in Citrus are asynchronous. In case you need to wait for a synchronous response message on a channel you have to use synchronous
+              channel endpoints accordingly. The synchronous endpoint automatically takes care on creating and managing reply destinations for the synchronous response messages.
+              By default the reply destination is temporary for each message sent or received.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;citrus:channel-sync-endpoint id=&quot;helloServiceSyncChannelEndpoint&quot;
@@ -91,8 +116,9 @@
 
         <div class="row">
           <div class="span4">
-            <p>When initially sending a message to this endpoint the producer will wait synchronously for the response message to arrive on the reply destination.
-              You can receive the reply message in your test case using the same endpoint component.</p>
+            <p>When sending a message to this endpoint in the first place the producer will wait synchronously for the response message
+              to arrive on the reply destination. You can receive the reply message in your test case using the same endpoint component.
+              So we have two actions on the same endpoint, first send then receive.</p>
 
           </div>
           <div class="span7">
@@ -116,8 +142,10 @@
   &lt;/message&gt;
 &lt;/receive&gt;</pre>
 
-            <p>When initially receiving a message from a synchronous channel endpoint you are able to send a synchronous response back. Again just use the same endpoint reference in your test case.
-              The handling of temporary reply destinations is done automatically in the back.</p>
+            <p>When initiating the communication by receiving a message from a synchronous channel endpoint
+              you are able to send a synchronous response back. Again just use the same endpoint reference in your test case.
+              The handling of temporary reply destinations is done automatically behind the scenes. So we have again two actions in our test case,
+              but this time first receive then send.</p>
           </div>
         </div>
 
@@ -155,9 +183,9 @@
 
         <div class="row">
           <div class="span4">
-            <p>A JMS endpoint can be a queue or a topic destination. Producer and consumer components can send/receive messages
-              to/from this endpoint. By default the endpoint is asynchronous, which means that you send or receive a message and you are done.
-              JMS endpoints are configured in the Citrus application context.</p>
+            <p>A JMS endpoint can be a queue or a topic destination. Producer and consumer components can send or receive messages both
+              to and from this endpoint. By default the endpoint is asynchronous, which means that you send or receive a message with the endpoint
+              and you are done. JMS endpoints are configured in the Citrus application context.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
@@ -169,7 +197,7 @@
         <div class="row">
           <div class="span4">
             <p>Besides defining a JMS endpoint with a destination name you can also reference a destination object
-              instance directly. This way you could do a JNDI lookup for instance.</p>
+              instance directly. This way you can resolve destinations with a JNDI lookup for instance.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
@@ -207,7 +235,7 @@
         <div class="row">
           <div class="span4">
             <p>Synchronous JMS communication is also represented by endpoints. The synchronous JMS endpoints will wait for response messages to arrive
-              on some reply destination. By default this reply destination is temporary for each message sent/received.</p>
+              on some reply destination. By default this reply destination is temporary for each message sent or received.</p>
           </div>
           <div class="span7">
             <pre class="prettyprint">&lt;citrus:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
@@ -237,8 +265,8 @@
         <div class="row">
           <div class="span4">
             <p>SOAP WebServices over HTTP is a wide spread communication scenario in modern enterprise applications. A SOAP WebService client is posting
-              a SOAP request to a HTTP server waiting synchronously for the response message. Citrus provides both SOAP client and server components in order
-              to meet both directions of this scenario.</p>
+              a SOAP request via HTTP to a server. SOAP via HTTP is a synchronous message protocol by default so the client is waiting synchronously for
+              the response message. Citrus provides both SOAP client and server components in order to meet both directions of this scenario.</p>
           </div>
           <div class="span7">
           </div>
