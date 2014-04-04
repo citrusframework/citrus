@@ -1,0 +1,62 @@
+/*
+ * Copyright 2006-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.jms;
+
+import com.consol.citrus.endpoint.*;
+
+import javax.jms.ConnectionFactory;
+import java.util.Map;
+
+/**
+ * Jms endpoint component able to create endpoint from endpoint uri with parameters.
+ *
+ * @author Christoph Deppisch
+ */
+public class JmsEndpointComponent extends AbstractEndpointComponent {
+    @Override
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+        JmsEndpoint endpoint;
+
+        if (resourcePath.startsWith("sync")) {
+            JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
+
+            endpoint = new JmsSyncEndpoint(endpointConfiguration);
+        } else {
+            endpoint = new JmsEndpoint();
+        }
+
+        if (resourcePath.contains("topic:")) {
+            endpoint.getEndpointConfiguration().setPubSubDomain(true);
+        }
+
+        // set destination name
+        if (resourcePath.indexOf(":") > 0) {
+            endpoint.getEndpointConfiguration().setDestinationName(resourcePath.substring(resourcePath.lastIndexOf(":") + 1));
+        } else {
+            endpoint.getEndpointConfiguration().setDestinationName(resourcePath);
+        }
+
+        // set default jms connection factory
+        if (getApplicationContext().containsBean("connectionFactory")) {
+            endpoint.getEndpointConfiguration().setConnectionFactory(getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
+        }
+
+        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters);
+
+        return endpoint;
+    }
+}

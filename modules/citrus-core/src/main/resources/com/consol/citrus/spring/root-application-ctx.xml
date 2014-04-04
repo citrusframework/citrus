@@ -50,5 +50,7 @@
     <bean class="com.consol.citrus.functions.FunctionRegistry"/>
     
     <bean class="com.consol.citrus.validation.MessageValidatorRegistry"/>
+
+    <bean id="citrusEndpointResolver" class="com.consol.citrus.endpoint.resolver.DefaultEndpointResolver"/>
     
 </beans>

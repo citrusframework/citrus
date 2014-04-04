@@ -1,0 +1,161 @@
+/*
+ * Copyright 2006-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.endpoint;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
+
+/**
+ * Default endpoint component reads component name from endpoint uri and parses parameters from uri.
+ * @author Christoph Deppisch
+ */
+public abstract class AbstractEndpointComponent implements EndpointComponent {
+
+    /** Component name usually the Spring bean id */
+    private String name;
+
+    /** Spring application context */
+    private ApplicationContext applicationContext;
+
+    @Override
+    public Endpoint createEndpoint(String endpointUri) {
+        try {
+            URI uri = new URI(endpointUri);
+            String path = uri.getSchemeSpecificPart();
+
+            if (path.startsWith("//")) {
+                path = path.substring(2);
+            }
+
+            Map<String, String> parameters = new LinkedHashMap<String, String>();
+            if (path.contains("?")) {
+                String parameterString = endpointUri.substring(endpointUri.indexOf("?") + 1);
+                StringTokenizer tok = new StringTokenizer(parameterString, "&");
+
+                while (tok.hasMoreElements()) {
+                    String[] parameterValue = tok.nextToken().split("=");
+                    if (parameterValue.length != 2) {
+                        throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
+                    }
+
+                    parameters.put(parameterValue[0], parameterValue[1]);
+                }
+            }
+
+            return createEndpoint(path, parameters);
+        } catch (URISyntaxException e) {
+            throw new CitrusRuntimeException(String.format("Unable to parse endpoint uri '%s'", endpointUri));
+        }
+    }
+
+    /**
+     * Sets properties on endpoint configuration using method reflection.
+     * @param endpointConfiguration
+     * @param parameters
+     */
+    protected void enrichEndpointConfiguration(EndpointConfiguration endpointConfiguration, Map<String, String> parameters) {
+        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
+            Field field = ReflectionUtils.findField(endpointConfiguration.getClass(), parameterEntry.getKey());
+
+            if (field == null) {
+                throw new CitrusRuntimeException(String.format("Unable to find parameter field on endpoint configuration '%s'", parameterEntry.getKey()));
+            }
+
+            Method setter = ReflectionUtils.findMethod(endpointConfiguration.getClass(), "set" + parameterEntry.getKey().substring(0, 1).toUpperCase() + parameterEntry.getKey().substring(1), field.getType());
+
+            if (setter == null) {
+                throw new CitrusRuntimeException(String.format("Unable to find parameter setter on endpoint configuration '%s'",
+                        "set" + parameterEntry.getKey().substring(0, 1).toUpperCase() + parameterEntry.getKey().substring(1)));
+            }
+
+            ReflectionUtils.invokeMethod(setter, endpointConfiguration, getTypedParameterValue(field.getType(), parameterEntry.getValue()));
+        }
+    }
+
+    /**
+     * Convert parameter value string to required type from setter method argument.
+     * @param fieldType
+     * @param value
+     * @return
+     */
+    private Object getTypedParameterValue(Class<?> fieldType, String value) {
+        if (fieldType.isAssignableFrom(String.class)) {
+            return value;
+        } else if (fieldType.isAssignableFrom(Integer.class)) {
+            return Integer.valueOf(value);
+        } else if (fieldType.isAssignableFrom(Long.class)) {
+            return Long.valueOf(value);
+        } else if (fieldType.isAssignableFrom(Boolean.class)) {
+            return Boolean.valueOf(value);
+        } else if (fieldType.isAssignableFrom(Double.class)) {
+            return Double.valueOf(value);
+        }
+
+        // try to resolve bean in application context
+        if (applicationContext.containsBean(value)) {
+            Object bean = applicationContext.getBean(value);
+            if (fieldType.isAssignableFrom(bean.getClass())) {
+                return bean;
+            }
+        }
+
+        throw new CitrusRuntimeException(String.format("Unable to convert parameter '%s' to required type '%s'", value, fieldType.getName()));
+    }
+
+    /**
+     * Create endpoint instance from uri resource and parameters.
+     * @param resourcePath
+     * @param parameters
+     * @return
+     */
+    protected abstract Endpoint createEndpoint(String resourcePath, Map<String, String> parameters);
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Gets the Spring application context.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+}
