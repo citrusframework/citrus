@@ -17,13 +17,13 @@
       with working over the basic concepts and components in Citrus.</para>
 
       <para>The outcome is a new Citrus 1.4 which has new configuration components for sending and receiving messages. Also the
-        client and server components for HTTP and SOAP have changed in terms of simplification of configuration. Unfortunately
-        refactoring comes along with code deprecation. This is why you may have to change your project configuration in the future when
-        you are coming from Citrus 1.3.x and earlier versions.</para>
+        client and server components for HTTP and SOAP have changed in terms of simplification. Unfortunately
+        refactoring comes along with code deprecation. This is why you have to also change your project code and configuration in the future.
+        This is especially when you have made code adjustments and extensions to the Citrus API.</para>
 
       <para>The good news now is that with Citrus 1.4 both old and new configuration works fine, so you do not have to change your
-        existing project configuration immediately. Have a look at what has been marked as deprecated in Citrus 1.4 and what has
-        changed in configuration.</para>
+        existing project configuration when coming from Citrus 1.3.x and earlier versions. But there is a lot of code marked as deprecated in Citrus 1.4.
+        Have a look at what has been marked as deprecated and update your code to use the new API.</para>
 
       <para>We have set up a migration sheet for users coming from Citrus 1.3.x and earlier versions in order to find a quick overview
         of what has changed and how to use the new configuration components: <ulink url="http://citrusframework.org/migration-sheet.html">Citrus 1.4 migration-sheet</ulink></para>
@@ -62,23 +62,24 @@
       <title>Global variables component</title>
 
       <para>We added a global variables XML configuration component for more comfortable usage in basic Spring application context
-        configuration. Find out how to us it in <xref linkend="testcase-global-variables"/></para>
+        configuration. The component is able to create new global variables that are valid across all Citrus test cases. This can also
+        be done by loading a property file from an external file resource. Find out how to us it in <xref linkend="testcase-global-variables"/></para>
     </section>
 
     <section id="new-1-4-json-validator-mode">
       <title>Json text validator mode</title>
 
-      <para>The Json text validator is now able to operate in two different modes. The strict mode is the default known comparison which
-        includes also the check on all subobjects and array elements. Sometimes it may be accurate to only validate a subset of all Json
-        objects in the structure. Therefore the non-strict mode is loose and does not check on subelement counts. See more description
-        in <xref linkend="validation-json"/></para>
+      <para>The Json text validator is now able to operate in two different modes. The <emphasis>strict</emphasis> mode is the default mode and validation includes
+        also a strict check on all sub-objects and JSON array elements. So if there is an object missing the validation will fail immediately. Sometimes it may be
+        accurate to only validate a subset of all JSON objects in the data structure. Therefore the non-strict mode does not check on object attribute counts.
+        See more description in <xref linkend="validation-json"/></para>
     </section>
 
     <section id="new-1-4-http-options">
       <title>HTTP REST specific Java DSL options</title>
 
       <para>When sending and receiving HTTP messages on REST APIs you can now use interface specific options in the Java DSL. This refers to
-        request uri, context path, query parameters and HTTP status codes. With this enhancement you are now more comfortable in handling REST API calls in Citrus.
+        request uri, context path, query parameters and HTTP status codes for instance. With this enhancement you are now more comfortable in handling REST API calls in Citrus.
         Find out how to us it in <xref linkend="http"/></para>
     </section>
 
@@ -90,14 +91,14 @@
         validation when using SOAP over HTTP. Read more about it in <xref linkend="soap-webservices"/></para>
     </section>
 
-  </section>
+    <section id="new-1-4-bugfixes">
+      <title>Bugfixes</title>
 
-  <section id="new-bugfixes">
-    <title>Bugfixes</title>
-    
-    <para>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues
-      makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in
-      JIRA (<ulink url="https://citrusframework.atlassian.net/secure/ReleaseNote.jspa?projectId=10000&amp;version=10003">https://citrusframework.atlassian.net</ulink>).</para>
+      <para>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues
+        makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release in
+        JIRA (<ulink url="https://citrusframework.atlassian.net/secure/ReleaseNote.jspa?projectId=10000&amp;version=10003">https://citrusframework.atlassian.net</ulink>).</para>
+    </section>
+
   </section>
 
 </chapter>

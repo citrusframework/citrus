@@ -48,17 +48,17 @@
             in case no matching schema definition file is found inside the schema repository. So if you explicitly do not want to validate the XML schema for some reason you have to disable
             the validation explicitly in your test with <emphasis>schema-validation=&quot;false&quot;</emphasis>.</para>
             
-            <programlisting>&lt;receive endpoint=&quot;getCustomerRequestReceiver&quot;&gt;
+            <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema-validation=&quot;false&quot;&gt;
-        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
-             value=&quot;${requestTag}&quot;/&gt;
-        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
+        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
+             value=&quot;${messageId}&quot;/&gt;
+        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
              value=&quot;${correlationId}&quot;/&gt;
-        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://citrus/default&quot;/&gt;
+        &lt;namespace prefix=&quot;ns1&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
     &lt;/message&gt;
     &lt;header&gt;
-        &lt;element name=&quot;Operation&quot; value=&quot;GetCustomer&quot;/&gt;
-        &lt;element name=&quot;RequestTag&quot; value=&quot;${requestTag}&quot;/&gt;
+        &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
+        &lt;element name=&quot;MessageId&quot; value=&quot;${messageId}&quot;/&gt;
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
             
@@ -245,13 +245,13 @@
         in some schema repository. There comes a time where you as a tester just have to pick the right schema definition by yourself. You can overrule all schema mapping strategies in Citrus
         by directly setting the desired schema in your receiving message action.</para>
         
-        <programlisting>&lt;receive endpoint=&quot;getCustomerRequestReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema=&quot;helloSchema&quot;&gt;
-        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
-             value=&quot;${requestTag}&quot;/&gt;
-        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
-             value=&quot;${correlationId}&quot;/&gt;
-        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://citrus/default&quot;/&gt;
+        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
+        value=&quot;${messageId}&quot;/&gt;
+        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
+        value=&quot;${correlationId}&quot;/&gt;
+        &lt;namespace prefix=&quot;ns1&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
     &lt;/message&gt;
 &lt;/receive&gt;
 
@@ -265,13 +265,13 @@
         <para>Another possibility would be to set a custom schema repository at this point. This means you can have more than one schema repository in your Citrus project 
         and you pick the right one by yourself in the receive action.</para>
         
-        <programlisting>&lt;receive endpoint=&quot;getCustomerRequestReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema-repository=&quot;mySpecialSchemaRepository&quot;&gt;
-        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:RequestTag&quot; 
-             value=&quot;${requestTag}&quot;/&gt;
-        &lt;validate path=&quot;//ns2:RequestMessage/ns2:MessageHeader/ns2:CorrelationId&quot; 
-             value=&quot;${correlationId}&quot;/&gt;
-        &lt;namespace prefix=&quot;ns2&quot; value=&quot;http://citrus/default&quot;/&gt;
+        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
+        value=&quot;${messageId}&quot;/&gt;
+        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
+        value=&quot;${correlationId}&quot;/&gt;
+        &lt;namespace prefix=&quot;ns1&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
@@ -293,7 +293,7 @@
         
         <para>First thing you can do about DTD validation is to specify an inline DTD in your expected message template.</para>
         
-        <programlisting>&lt;receive endpoint=&quot;getTestMessageReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema-validation=&quot;false&quot;&gt;
         &lt;data&gt;
         &lt;![CDATA[
@@ -317,7 +317,7 @@
         <para>In most cases the DTD is referenced as external .dtd file resource. You can do this in your expected message 
         template as well.</para>
         
-        <programlisting>&lt;receive endpoint=&quot;getTestMessageReceiver&quot;&gt;
+        <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema-validation=&quot;false&quot;&gt;
         &lt;data&gt;
         &lt;![CDATA[

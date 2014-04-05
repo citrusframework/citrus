@@ -25,7 +25,7 @@
     
     <para>Now we can tell the test case receiving action that we want to use the XHTML message validation in our test case.</para>
     
-    <programlisting>&lt;receive endpoint=&quot;httpMessageReceiver&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message type=&quot;xhtml&quot;&gt;
         &lt;data&gt;
           &lt;![CDATA[

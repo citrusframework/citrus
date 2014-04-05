@@ -8,25 +8,16 @@
       <p>Citrus components are configured in the Spring application context (<b>citrus-context.xml</b>) as Spring bean definitions.
         In the following sheet we will give you a brief overview on the Citrus configuration components.</p>
 
-      <div class="container">
-        <div class="row">
-          <div class="span4">
-            <p>The Citrus components follow specific XML schema rules. You have to add these namespace
-              definitions to the configuration file root element.</p>
-          </div>
-          <div class="span7">
-            <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+      <p>The Citrus components follow specific XML schema rules. You have to add these namespace
+        definitions to the configuration file root element.</p>
+
+      <pre class="prettyprint">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
         xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://www.citrusframework.org/schema/config
-          http://www.citrusframework.org/schema/config/citrus-config.xsd&quot;&gt;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd&quot;&gt;
   [...]
 &lt;/beans&gt;</pre>
-          </div>
-        </div>
-      </div>
 
       <div class="container">
         <div class="row">
@@ -454,6 +445,8 @@
           <div class="span7">
             <pre class="prettyprint">&lt;citrus-http:client id=&quot;helloHttpClient&quot;
                      request-url=&quot;http://localhost:8080/hello&quot;
+                     request-method=&quot;POST&quot;
+                     content-type=&quot;application/xml&quot;
                      timeout=&quot;60000&quot;/&gt;</pre>
           </div>
         </div>
@@ -466,7 +459,7 @@
 
         <div class="row">
           <div class="span4">
-            <p>On the server side Citrus offers an embedded HTTP server which is capable of handling incoming REST requests. The tester than is able to define
+            <p>On the server side Citrus offers an embedded HTTP server which is capable of handling incoming REST requests. The tester then is able to define
               the synchronous response which is sent back to the calling client.</p>
 
             <p>The server component is capable of receiving a lot of customizations and extensions such as Basic authentication. In the test case you can interact

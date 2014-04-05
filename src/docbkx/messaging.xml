@@ -679,8 +679,8 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
     <section id="groovy-markupbuilder">
         <title>Groovy MarkupBuilder</title>
         
-        <para>With the Groovy MarkupBuilder the tester may build XML message payloads in a simple way, without having to write the typical XML tag overhead. 
-        For example we use the code listing from <xref linkend="message-sending"/>, but now we use a Groovy script instead of plain CDATA XML section. The Groovy MarkupBuilder 
+        <para>With the Groovy MarkupBuilder you can build XML message payloads in a simple way, without having to write the typical XML overhead.
+        For example we use a Groovy script to construct the XML message to be sent out. Instead of a plain CDATA XML section or the nested payload XML data we write a Groovy script snippet. The Groovy MarkupBuilder
         generates the XML message payload with exactly the same result:</para>
         
         <para><emphasis>XML DSL</emphasis></para>
@@ -704,8 +704,8 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
     &lt;/header&gt;
 &lt;/send&gt;</programlisting>
 
-        <para>The MarkupBuilder code is directly written into the message element. As you can see from the example above, you can mix XPath and Groovy markup builder code. The MarkupBuilder syntax
-        is very easy and follows the simple rule: <emphasis>markupBuilder.ROOT-ELEMENT{ CHILD-ELEMENTS }</emphasis>. However the tester has to follow some simple rules and
+        <para>We use the <emphasis>builder</emphasis> element with type <emphasis>groovy</emphasis> and the MarkupBuilder code is directly written to this element. As you can see from the example above, you can mix XPath
+        and Groovy markup builder code. The MarkupBuilder syntax is very easy and follows the simple rule: <emphasis>markupBuilder.ROOT-ELEMENT{ CHILD-ELEMENTS }</emphasis>. However the tester has to follow some simple rules and
         naming conventions when using the Citrus MarkupBuilder extension:</para>
         
         <itemizedlist>
@@ -740,8 +740,8 @@ private AddBookRequestMessage createAddBookRequestMessage(String isbn) {
         <para>As you can see it is also possible to define the script as external file resource. In addition to that namespace support is given as normal attribute definition 
         within the round brackets after the element name.</para>
         
-        <para>The MarkupBuilder implementation in Groovy opens great possibilities in defining message payloads in Citrus test cases. We do not need to write XML tag 
-        overhead and we can construct complex message payloads with Groovy logic like iterations and conditions. For detailed MarkupBuilder descriptions please see the
+        <para>The MarkupBuilder implementation in Groovy offers great possibilities in defining message payloads. We do not need to write XML tag
+        overhead and we can construct complex message payloads with Groovy logic like iterations and conditional elements. For detailed MarkupBuilder descriptions please see the
         official Groovy documentation.</para> 
     </section>
 

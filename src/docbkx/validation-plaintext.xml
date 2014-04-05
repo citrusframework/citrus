@@ -11,7 +11,7 @@
     
     <para>In the test case receiving action we tell Citrus to use plain text message validation.</para>
     
-    <programlisting>&lt;receive endpoint=&quot;httpMessageReceiver&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message type=&quot;plaintext&quot;&gt;
         &lt;data&gt;Hello World!&lt;/data&gt;
     &lt;/message&gt;
@@ -22,7 +22,7 @@
     
     <para>By the way sending plain text messages in Citrus is also very easy. Just use the plain text message payload data in your sending message action.</para>
     
-    <programlisting>&lt;send endpoint=&quot;httpMessageSender&quot;&gt;
+    <programlisting>&lt;send endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;Hello World!&lt;/data&gt;
     &lt;/message&gt;

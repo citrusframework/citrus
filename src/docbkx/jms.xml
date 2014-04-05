@@ -3,7 +3,7 @@
     <title>JMS support</title>
 
     <para>Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous
-    communication. So in this chapter we explain how to setup JMS message senders and receivers for synchronous and asynchronous
+    communication. So in this chapter we explain how to setup JMS message endpoints for synchronous and asynchronous
     outbound and inbound communication</para>
     
     <note>
@@ -27,79 +27,81 @@
         <para>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</para>
     </note>
     
-    <section id="jms-sender">
-        <title>JMS message sender</title>
+    <section id="jms-endpoints">
+        <title>JMS endpoints</title>
         
-        <para>First of all we deal with asynchronous message senders, which means that Citrus is publishing messages to a JMS destination
-        (queue or topic). The test case itself does not know about JMS transport details like queue names or connection 
-        credentials. This information is stored in the basic Spring configuration. So let us have a look at a simple JMS message sender 
+        <para>By default Citrus JMS endpoints are asynchronous. So let us first of all deal with asynchronous messaging which
+        means that we will not wait for any response message after sending or receiving a message.</para>
+
+        <para>The test case itself should not know about JMS transport details like queue names or connection credentials. This information is stored in the
+        endpoint component configuration that lives in the basic Spring configuration file in Citrus. So let us have a look at a simple JMS message endpoint
         configuration in Citrus.</para>
-        
+
+        <programlisting>&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+          destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+          timeout=&quot;10000&quot;/&gt;</programlisting>
+
+        <para>The endpoint component receives an unique id and a JMS destination name. This can be a queue or topic destination. We will deal with JMS topics later on.
+        For now the timeout setting completes our first JMS endpoint component definition.</para>
+
+        <para>The endpoint needs a JMS connection factory for connecting to a JMS message broker. The connection factory is also added as Spring bean to the Citrus
+        application context (citrus-context.xml).</para>
+
         <programlisting>&lt;bean id=&quot;connectionFactory&quot; 
          class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
     &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
-&lt;/bean&gt;
+&lt;/bean&gt;</programlisting>
+        
+        <para>The JMS connection factory receives the JMS message broker URL and is able to hold many other connection specific options.
+        In this example we use the Apache ActiveMQ connection factory implementation as we want to use the ActiveMQ message broker. Citrus works by default with a
+        bean id <emphasis>connectionFactory</emphasis>. All Citrus JMS component will automatically recognize this connection factory.</para>
 
-&lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                           destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;/&gt;</programlisting>
-        
-        <para>The JMS connection factory is responsible for connecting to a JMS message broker. In this example we use the Apache ActiveMQ 
-        connection factory implementation as we use a ActiveMQ message broker.</para>
-        
         <tip>
             <para>Spring makes it very easy to connect to other JMS broker implementations too (e.g. Apache ActiveMQ, TIBCO Enterprise Messaging Service, 
-            IBM Websphere MQ). Just substitute the implementing class in the connectionFactory bean.</para>
+            IBM Websphere MQ). Just add the required connection factory implementation as <emphasis>connectionFactory</emphasis> bean.</para>
         </tip>
         
         <note>
-            <para>All of the JMS senders and receivers that require a reference to a JMS connection factory will automatically look for a bean 
-            named "connectionFactory" by default. That is why you don't see a "connection-factory" attribute in many of the examples. 
-            However, you can use the "connection-factory" attribute in order to use other connection factory instances with different bean 
+            <para>All of the Citrus JMS endpoint components will automatically look for a bean named <emphasis>connectionFactory</emphasis> by default.
+            You can use the <emphasis>connection-factory</emphasis> endpoint attribute in order to use another connection factory instance with different bean
             names.</para>
             
-            <programlisting>&lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                              destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;
-                              connection-factory=&quot;myConnectionFacotry&quot;/&gt;</programlisting> 
+            <programlisting>&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+      destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+      connection-factory=&quot;myConnectionFacotry&quot;/&gt;</programlisting>
               
-            <para>Alternatively you may want to directly specify a Spring jmsTemplate.</para>
+            <para>As an alternative to that you may want to use a special Spring jms template implementation as custom bean in your endpoint.</para>
             
-            <programlisting>&lt;citrus:jms-message-sender id=&quot;getOrdersRequestSender&quot; 
-                            destination-name=&quot;Citrus.JMS.Order.Queue.Out&quot;
-                            jms-template=&quot;myJmsTemplate&quot;/&gt;</programlisting>
+            <programlisting>&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+              destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+              jms-template=&quot;myJmsTemplate&quot;/&gt;</programlisting>
         </note>
-    </section>
-    
-    <para>The message sender is now ready for usage inside a test. Many sending actions and test cases reference the message sender. The 
-    message sender will simply publish the message to the defined JMS destination. The communication is supposed to be asynchronous, which
-    means that the sender will not wait for a synchronous response. The sender fires and forgets the message immediately.</para>
-    
-    <section id="jms-receiver">
-        <title>JMS message receiver</title>
-        
-        <para>Now lets deal with receiving an async message over JMS. The message receiver definition is located again in the Spring 
-        configuration files. We assume that a connection factory has been configured as shown in the previous section.</para>
-        
-        <programlisting>&lt;citrus:jms-message-receiver id=&quot;getOrdersResponseReceiver&quot; 
-                                destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;/&gt;</programlisting>
-        
-        <para> The receiver acts as a message driven listener. This means that the message receiver connects to the given destination 
-        and waits for messages to arrive.</para>
+
+        <para>The endpoint is now ready to be used inside a test case. Inside a test case you can send or receive messages using this endpoint. The test actions
+        can reference the JMS endpoint using its identifier. When sending a message the message endpoint creates a JMS message producer and will simply publish
+        the message to the defined JMS destination. As the communication is asynchronous by default producer does not wait for a synchronous response.</para>
+
+        <para>When receiving a messages with this endpoint the endpoint creates a JMS consumer on the JMS destination. The endpoint then acts as a message driven
+        listener. This means that the message consumer connects to the given destination and waits for messages to arrive.</para>
         
         <note>
-            <para>Besides the destination-name attribute you can also provide a reference to a Destination implementation.</para>
+            <para>Besides the destination-name attribute you can also provide a reference to a destination implementation.</para>
             
-            <programlisting>&lt;citrus:jms-message-receiver id=&quot;getOrdersResponseReceiver&quot; 
-                                destination=&quot;orderInboundQueue&quot;/&gt;</programlisting>
+            <programlisting>&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+                                destination=&quot;helloServiceQueue&quot;/&gt;
+
+&lt;amq:queue id=&quot;helloServiceQueue&quot; physicalName=&quot;Citrus.HelloService.Request.Queue&quot;/></programlisting>
             
-            <para>This destination reference applies to all JMS aware message sender and receiver implementations.</para>
+            <para>The destination attribute references to a JMS destination object in the Spring application context. In the example above we used the ActiveMQ queue destination
+            component. The destination reference can also refer to a JNDI lookup for instance.</para>
         </note>
     </section>
     
-    <section id="jms-sync-sender">
-        <title>JMS synchronous message sender</title>
+    <section id="jms-sync-endpoints">
+        <title>JMS synchronous endpoints</title>
         
-        <para>When using synchronous message senders Citrus will define a reply-to-queue destination in the message header and wait 
-        synchronously for the response on this destination.</para>
+        <para>When using synchronous message endpoints Citrus will manage a reply destination for receiving a synchronous response message on the reply destination. The following
+        figure illustrates that we now have two destinations in our communication scenario.</para>
         
         <mediaobject>
           <imageobject role="fo">
@@ -111,78 +113,62 @@
           </imageobject>
         </mediaobject>
         
-        <para>In the Spring XML configuration the synchronous message senders are quite similar to the asynchronous brothers.</para>
+        <para>The synchronous message endpoint component is similar to the asynchronous brother that we have discussed before. The only difference is that the endpoint will automatically manage
+        a reply destination behind the scenes. By default Citrus uses temporary reply destinations that get automatically deleted after the communication handshake is done. Again we need to use a
+        JMS connection factory in the Spring XML configuration as the component need to connect to a JMS message broker.</para>
         
-        <programlisting>&lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
-                            destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
-                            reply-handler=&quot;getCustomerReplyHandler&quot;
-                            reply-timeout=&quot;1000&quot;/&gt;
-                            
-&lt;citrus:jms-reply-message-handler id=&quot;getCustomerReplyHandler&quot; 
-                                polling-interval=&quot;1000&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+          destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
+          timeout=&quot;10000&quot;/&gt;</programlisting>
         
-        <para>To build synchronous outbound communication we need both a synchronous message sender and a reply handler. Both are defined
-        in the Spring configuration. The sender component sends the message and waits synchronously for the response message to arrive. While the
-        sender component is waiting for the response the reply handler is polling for the response several times (depends on polling interval 
-        and reply timeout settings). When the reply message arrives the reply handler takes over and performs further processing steps such as 
-        message validation and so on. In cas no reply message arrives in time a message timeout error is raised respectively.</para>
+        <para>The synchronous component defines a target destination which again is either a queue or topic destination. If nothing else is defined the endpoint will create temporary reply destinations
+        on its own. When the endpoint has sent a message it waits synchronously for the response message to arrive on the reply destination. You can receive this reply message in your test case by referencing
+        this same endooint in a receive test action. In case no reply message arrives in time a message timeout error is raised respectively.</para>
         
-        <para>See the following figure which tries to explain the handshake between synchronous sender component and synchronous reply handler.
-        The synchronous sender receives the reply message and provides it to the reply handler. Once the reply handler has received the reply message 
-        it can be handed over to a validator component as usual for further message validation.</para>
+        <para>See the following example test case which references the synchronous message endpoint in its send and receive test action in order to send out a message and wait for the synchronous
+        response.</para>
         
-        <para>The respective test case makes use of both synchronous message sender and reply handler in order to complete the synchronous
-        communication steps.</para>
-        
-        <programlisting>&lt;testcase name=&quot;syncMessagingTest&quot;&gt;
+        <programlisting>&lt;testcase name=&quot;synchronousMessagingTest&quot;&gt;
     &lt;actions&gt;
-        &lt;send endpoint=&quot;mySyncMessageSender&quot;&gt;
+        &lt;send endpoint=&quot;helloServiceSyncEndpoint&quot;&gt;
             &lt;message&gt;
                 &lt;data&gt;
-                    [...]
+                  [...]
                 &lt;/data&gt;
             &lt;/message&gt;
         &lt;/send&gt;
         
-        &lt;receive endpoint=&quot;myReplyMessageHandler&quot;&gt;
+        &lt;receive endpoint=&quot;helloServiceSyncEndpoint&quot;&gt;
             &lt;message&gt;
                 &lt;data&gt;
-                    [...]
+                  [...]
                 &lt;/data&gt;
             &lt;/message&gt;
         &lt;/receive&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+        <para>We initiated the synchronous communication by sending a message on the synchronous endpoint. The second step then receives the synchronous message on the temporary reply destination that was automatically created
+        for us.</para>
         
-        <note>
-            <para>The message sender creates a temporary JMS reply destination by default in order to receive the reply. The temporary 
-            destination name is stored to the JMS replyTo message header. You can also define a static reply destination like follows.</para>
-            
-            <programlisting>&lt;citrus:jms-sync-message-sender id=&quot;getCustomerRequestSender&quot; 
-                destination-name=&quot;Citrus.JMS.Customer.Queue.Out&quot;
-                reply-destination-name=&quot;Citrus.JMS.Customer.Queue.Reply&quot;
-                reply-handler=&quot;getCustomerReplyHandler&quot;
-                reply-timeout=&quot;1000&quot;/&gt;</programlisting>
-            
-            <para>Instead of using the <emphasis>reply-destination-name</emphasis> feel free to use the destination reference
-            <emphasis>reply-destination</emphasis></para>
-        </note>
-        
+        <para>If you rather want to define a static reply destination you can do so, too. The static reply destination is not deleted after communication handshake. You may need to work with message selectors then in order to pick
+        the right response message that belongs to a specific communication handshake. You can define a static reply destination on the synchronous endpoint component as follows.</para>
+
+        <programlisting>&lt;citrus:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+          destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
+          reply-destination-name=&quot;Citrus.HelloService.Reply.Queue&quot;
+          timeout=&quot;10000&quot;/&gt;</programlisting>
+
+        <para>Instead of using the <emphasis>reply-destination-name</emphasis> feel free to use the destination reference with <emphasis>reply-destination</emphasis> attribute. Again you can use a JNDI lookup then to reference a destination object.</para>
+
         <important>
           <para>Be aware of permissions that are mandatory for creating temporary destinations. Citrus tries to create temporary queues
           on the JMS message broker. Following from that the Citrus JMS user has to have the permission to do so. 
           Be sure that the user has the sufficient rights when using temporary reply destinations.</para>
         </important>
-    </section>
-    
-    <section id="jms-sync-receiver">
-        <title>JMS synchronous message receiver</title>
-        
-        <para>What is missing is the situation that Citrus receives a JMS message where a temporary reply destination is set.
-        When dealing with synchronous JMS communication the message producer stores a dynamic JMS queue destination to the JMS 
-        header in order to receive the synchronous answer on this dynamic destination. So Citrus has to send the reply to the 
-        temporary destination, which is dynamic of course. You can handle this with the synchronous message receiver in combination 
-        with a reply sender.</para>
+
+        <para>Up to now we have sent a message and waited for a synchronous response in the next step. Now it is also possible to switch the directions of send and receive actions. Then we have the situation where Citrus receives a JMS message first and
+        then Citrus is in charge of providing a proper synchronous response message to the initial sender.</para>
 
         <mediaobject>
           <imageobject role="fo">
@@ -193,52 +179,61 @@
             <imagedata align="center" display="block" fileref="figure_007.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
+
+        <para>In this scenario the foreign message producer has stored a dynamic JMS reply queue destination to the JMS header. So Citrus has to send the reply message to this specific reply destination, which is dynamic of course. Fortunately the heavy lift is done
+        with the JMS message endpoint and we do not have to change anything in our configuration. Again we just define a synchronous message endpoint in the application context.</para>
         
-        <programlisting>&lt;citrus:jms-sync-message-receiver id=&quot;getOrderRequestReceiver&quot;
-                    destination-name=&quot;Citrus.JMS.Order.Queue.In&quot;
-                    receive-timeout=&quot;5000&quot;/&gt;
-                                     
-&lt;citrus:jms-reply-message-sender id=&quot;getOrderReplySender&quot;
-                    reply-destination-holder=&quot;getOrderRequestReceiver&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+      destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
+      timeout=&quot;10000&quot;/&gt;</programlisting>
         
-        <para>In first sight the synchronous message receiver has no difference to a normal receiver, but the difference comes in
-        combination with a synchronous reply sender. The reply sender need to know the dynamic reply destination, so it desires a
-        reference to a reply-destination-holder, which is our jms-sync-message-receiver.</para>
+        <para>Now the only thing that changes here is that we first receive a message in our test case on this endpoint. The second step is a send message action that references this same endpoint and we are done. Citrus automatically manages the reply destinations
+        for us.</para>
+
+      <programlisting>&lt;testcase name=&quot;synchronousMessagingTest&quot;&gt;
+  &lt;actions&gt;
+        &lt;receive endpoint=&quot;helloServiceSyncEndpoint&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                  [...]
+                &lt;/data&gt;
+            &lt;/message&gt;
+        &lt;/receive&gt;
+
+        &lt;send endpoint=&quot;helloServiceSyncEndpoint&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                  [...]
+                &lt;/data&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
     </section>
     
     <section id="jms-topics">
-        <title>JMS Topics</title>
+        <title>JMS topics</title>
         
-        <para>Up to now we dealt with JMS queue destinations in this chapter. Citrus is also able to connect to JMS topic destinations.
-        In contrary to JMS queues which uses a point-to-point communication JMS topics use publish-subscribe mechanism in order to 
-        spread messages over JMS. A JMS topic sender publishes messages to the topic, while the topic accepts multiple message subscriptions and 
-        delivers the message to all subscribers.</para>
+        <para>Up to now we have used JMS queue destinations on our endpoints. Citrus is also able to connect to JMS topic destinations.
+        In contrary to JMS queues which represents the <emphasis>point-to-point</emphasis> communication JMS topics use <emphasis>publish-subscribe</emphasis> mechanism in order to
+        spread messages over JMS. A JMS topic producer publishes messages to the topic, while the topic accepts multiple message subscriptions and delivers the message to all subscribers.</para>
         
-        <para>The Citrus JMS components (sender/receiver) offer the attribute <emphasis>'pub-sub-domain'</emphasis>. Once this attribute
-        is set to <emphasis>true</emphasis> Citrus will use JMS topics instead of queue destinations. See the following example where the
-        publish-subscribe attribute is set to true in JMS message sender and receiver components.</para>
+        <para>The Citrus JMS endpoints offer the attribute <emphasis>'pub-sub-domain'</emphasis>. Once this attribute is set to <emphasis>true</emphasis> Citrus will use JMS topics instead of
+        queue destinations. See the following example where the publish-subscribe attribute is set to true in JMS message endpoint components.</para>
         
-        <programlisting>&lt;citrus:jms-message-sender id=&quot;helloTopicRequestSender&quot; 
-                             destination-name=&quot;Citrus.JMS.Topic.Hello.Request&quot;
-                             pub-sub-domain=&quot;true&quot;/&gt;
-
-&lt;citrus:jms-message-receiver id=&quot;helloTopicRequestReceiver&quot;
-                             receive-timeout=&quot;5000&quot; 
-                             destination-name=&quot;Citrus.JMS.Topic.Hello.Request&quot;
-                             pub-sub-domain=&quot;true&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+            destination=&quot;helloServiceQueue&quot;
+            pub-sub-domain=&quot;true&quot;/&gt;</programlisting>
         
         <para>When using JMS topics you will be able to subscribe several test actions to the topic destination and receive a message
         multiple times as all subscribers will receive the message.</para>
         
         <important>
-            <para>It is very important to keep in mind that Citrus does not deal with durable subscribers, yet. This means that message that were
-            sent in advance to the message subscription are not delivered to the message receiver. So racing conditions may cause problems when using
-            JMS topic consumers in Citrus. Be sure to let Citrus subscribe to the topic before messages are sent. Otherwise you may loose some messages
+            <para>It is very important to keep in mind that Citrus does not deal with durable subscribers. This means that messages that were
+            sent in advance to the message subscription are not delivered to the message endpoint. So racing conditions may cause problems when using
+            JMS topic endpoints in Citrus. Be sure to let Citrus subscribe to the topic before messages are sent to it. Otherwise you may loose some messages
             that were sent in advance to the subscription.</para>
         </important>
-        
-        <para>The <emphasis>'pub-sub-domain'</emphasis> attribute is also available for synchronous communication sender and receiver 
-        components in Citrus. Just add this attribute in order to switch to JMS topics in a publish-subscribe domain.</para>
     </section>
     
     <section id="jms-headers">
@@ -258,7 +253,7 @@
         take care of setting those headers in the JMS message header properly.</para>
         
         <para>Typing of message header entries may also be of interest in order to meet the JMS standards of typed message headers. For instance the following message header 
-        is of type double and is therefore transfered via JMS as a double value.</para>
+        is of type double and is therefore transferred via JMS as a double value.</para>
         
         <programlisting>&lt;header&gt;
     &lt;element name=&quot;amount&quot; value=&quot;19.75&quot; type=&quot;double&quot;/&gt;
