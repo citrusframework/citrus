@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="endpoint-adapter">
+  <title>Server endpoint adapter</title>
+
+  <para>Server endpoint adapter help to customize the behavior of a Citrus server such as HTTP or SOAP web servers. As the servers get started with the Citrus context
+  they are ready to receive incoming client requests. Now there are different ways to process these incoming requests and to provide a proper response message. By default
+  the server will forward the incomiong request to a in memory message channel where a test can receive the message and provide a synchronous response. This message channel
+  handling is done automatically behind the scenes so the tester does not care about these things. The tester just uses the server directly as endpoint reference in the test case.
+  This is the default behaviour. In addition to that you can define custom endpoint adapters on the Citrus server in order to change this default behavior.</para>
+
+  <para>You set the custom endpoint adapter directly on the server configuration as follows:</para>
+
+  <programlisting>&lt;citrus-http:server id=&quot;helloHttpServer&quot;
+    port=&quot;8080&quot;
+    auto-start=&quot;true&quot;
+    endpoint-adapter=&quot;emptyResponseEndpointAdapter&quot;
+    resource-base=&quot;src/citrus/resources&quot;/&gt;
+
+    &lt;citrus:empty-response-adapter id=&quot;emptyResponseEndpointAdapter&quot;/&gt;</programlisting>
+
+  <para>Now let us have a closer look at the provided endpoint adapter implementations.</para>
+
+  <section id="http-endpoint-adapter-empty">
+    <title>Empty response producing adapter</title>
+
+    <para>This is the simplest endpoint adapter you can think of. It simply provides an empty success response using the HTTP
+      response code <emphasis>200</emphasis>. The adapter does not need any configurations or properties as it simply responds with an empty HTTP response.</para>
+
+    <programlisting>&lt;citrus:empty-response-adapter id=&quot;emptyResponseEndpointAdapter&quot;/&gt;</programlisting>
+  </section>
+
+  <section id="http-endpoint-adapter-static">
+    <title>Static response producing adapter</title>
+
+    <para>The next more complex endpoint adapter will always return a static response message.</para>
+
+    <programlisting>&lt;citrus:static-response-adapter id=&quot;endpointAdapter&quot;&gt;
+    &lt;citrus:payload&gt;
+        &lt;![CDATA[
+          &lt;HelloResponse
+            xmlns=&quot;http://www.consol.de/schemas/samples/sayHello.xsd&quot;&gt;
+              &lt;MessageId&gt;123456789&lt;/MessageId&gt;
+              &lt;CorrelationId&gt;Cx1x123456789&lt;/CorrelationId&gt;
+              &lt;Text&gt;Hello User&lt;/Text&gt;
+          &lt;/HelloResponse&gt;
+        ]]&gt;
+    &lt;/citrus:payload&gt;
+    &lt;citrus:header&gt;
+        &lt;citrus:element name=&quot;{http://www.consol.de/schemas/samples}h1:Operation&quot;
+                  value=&quot;sayHello&quot;/&gt;
+        &lt;citrus:element name=&quot;{http://www.consol.de/schemas/samples}h1:MessageId&quot;
+                  value=&quot;123456789&quot;/&gt;
+    &lt;/citrus:header&gt;
+ &lt;/citrus:static-response-adapter&gt;</programlisting>
+
+    <para>The endpoint adapter is configured with a static message payload and static response header values. The response to the client
+      is therefore always the same.</para>
+  </section>
+
+  <section id="http-endpoint-adapter-xpath">
+    <title>Xpath dispatching adapter</title>
+
+    <para>The idea behind the xpath-dispatching-endpoint-adapter is that the incoming requests are dispatched to several
+      message handlers depending on the existence of a specific node inside the message payload. The XPath expression will evaluate to
+      the parent of the deciding node and call the respective message handler. The message handler mapping is done by mapping the deciding node name to
+      a bean name in a message handler Spring configuration context. The separate context is loaded in advance. Let's see an example.</para>
+
+    <programlisting>&lt;bean id=&quot;xpathDispatchingHandler&quot;
+  class=&quot;com.consol.citrus.adapter.handler.XpathDispatchingMessageHandler&quot;&gt;
+    &lt;property name=&quot;xpathMappingExpression&quot; value=&quot;//MessageBody/Operation/*&quot;/&gt;
+    &lt;property name=&quot;messageHandlerContext&quot; value=&quot;endpoint-adapter-context.xml&quot;/&gt;
+&lt;/bean&gt;</programlisting>
+
+    <para>The handler receives a XPath mapping expression as well as a Spring ApplicationContext file resource. The message handlers in this
+      ApplicationContext are mapped to the different values via their names. For instance an incoming request with
+      <literal>//MessageBody/Operation/GetOrders</literal> would be handled by the message handler named "GetOrders". The available message handlers
+      are configured in the separate endpoint-adapter-context (e.g. EmptyResponseProducingMessageHandler, StaticResponseProducingMessageHandler, ...). Here is an example.</para>
+
+    <programlisting>&lt;bean name=&quot;GetOrders&quot;
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+      &lt;property name=&quot;messagePayload&quot; value=&quot;Your orders&quot;/&gt;
+&lt;/bean>
+
+&lt;bean name=&quot;SaveOrder&quot;
+  class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+      &lt;property name=&quot;messagePayload&quot; value=&quot;Order saved&quot;/&gt;
+&lt;/bean&gt;</programlisting>
+
+    <tip>It is possible to ommit the xpath expression in the xpath dispatching message handler bean definition. If no xpath is provided, Citrus will take the first element node in the request into account.</tip>
+  </section>
+
+  <section id="http-endpoint-adapter-jms">
+    <title>JMS connecting message handler</title>
+
+    <para>The most powerful message handler is the JMS connecting message handler. Indeed this handler also provides the most
+      flexibility. This handler will forward incoming request to a JMS destination and waiting for a proper response on a reply destination.
+      A configured JMS message receiver can read this forwarded request internally over JMS and provide a proper response on the
+      reply destination.</para>
+
+    <programlisting>&lt;bean id=&quot;jmsForwardingMessageHandler&quot;
+  class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
+      &lt;property name=&quot;destinationName&quot; value=&quot;JMS.Queue.Requests.In&quot;/&gt;
+      &lt;property name=&quot;replyDestinationName&quot; value=&quot;JMS.Queue.Response.Out&quot;/&gt;
+      &lt;property name=&quot;connectionFactory&quot;&gt;
+          &lt;bean class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;
+              &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
+          &lt;/bean&gt;
+      &lt;/property&gt;
+      &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
+&lt;/bean&gt;</programlisting>
+  </section>
+
+</chapter>

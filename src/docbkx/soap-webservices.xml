@@ -2,8 +2,9 @@
 <chapter id="soap-webservices">
     <title>SOAP WebServices</title>
 
-    <para>In case you need to connect to a SOAP WebService you can use the built-in WebServices support in Citrus. Similar
-    to the Http support Citrus is able to send and receive SOAP messages during a test.</para>
+    <para>SOAP Web Services over HTTP is a widely used communication scenario in modern enterprise applications. A SOAP Web Service client is posting a SOAP request via HTTP to a server.
+    SOAP via HTTP is a synchronous message protocol by default so the client is waiting synchronously for the response message. Citrus provides both SOAP client and server components in
+    order to meet both directions of this scenario. The components used are very similar to the HTTP components that were have discussed in the sections before.</para>
     
     <note>
         <para>In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus.
@@ -25,54 +26,47 @@
     
 &lt;/beans&gt;</programlisting>
         
-        <para>Now you are ready to use the customized WebService configuration elements - all using the citrus-ws prefix - 
+        <para>Now you are ready to use the customized soap configuration elements - all using the citrus-ws prefix -
         in your Spring configuration.</para>
     </note>
     
-    <section id="soap-sender">
-        <title>SOAP message sender</title>
+    <section id="soap-client">
+        <title>SOAP client</title>
         
-        <para>Citrus can call any SOAP WebService and validate its response message. Let us see how a message sender for SOAP 
-        WebServices looks like in the Spring configuration:</para>
+        <para>Citrus is able to form a proper SOAP request in order to pass it to the server via HTTP and validate the respective SOAP response message. Let us see how a message client for SOAP
+        looks like in the Spring configuration:</para>
         
-        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
-                               request-url=&quot;http://localhost:8090/test&quot; 
-                               reply-handler=&quot;soapResponseHandler&quot;/&gt;
+        <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
+                       request-url=&quot;http://localhost:8090/test&quot;
+                       timeout=&quot;60000&quot;/&gt;</programlisting>
+        
+        <para>The client component uses the <emphasis>request-url</emphasis> in order to access the server resource. The client will automatically build a proper SOAP request message including
+        the SOAP envelope, SOAP header and the message payload as SOAP body. This means that you as a tester do not care about SOAP envelope specific logic in the test case. The client endpoint
+        component saves the synchronous SOAP response so the test case can receive this message with a normal receive test action.</para>
 
-&lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;
-                                    polling-interval=&quot;1000&quot;/&gt;</programlisting>
-        
-        <para>SOAP WebServices usually use synchronous communication as we use the Http transport protocol. Following from that 
-        we need a reply message handler. The message sender component uses the <emphasis>request-url</emphasis> and calls the 
-        WebService as a client. The sender will automatically build a SOAP request message including a SOAP header and the message 
-        payload as SOAP body. This means that you as a tester do not care about SOAP envelope specific logic in the test case. The SOAP
-        message components do add SOAP elements automatically. As soon as the SOAP response arrives it is passed to the given reply handler.
-        In detail the reply handler polls several times for the reply message while the message sender is waiting. The poll interval is an 
-        optional setting so you can manage the frequency of message handshake attempts. In case no response message is available in time according
-        to the timeout settings we raise a timeout error and the test will fail.</para>
+        <para>In detail you as a tester just send and receive using the same client endpoint reference just as you would do with a synchronous JMS or channel communication. In case no response
+        message is available in time according to the timeout settings Citrus raises a timeout error and the test will fail.</para>
         
         <important>
-            <para>The SOAP WebService message sender uses a SoapMessageFactory implementation in order to create the SOAP messages. 
-            Just add a bean to the Citrus Spring application context. Spring offers several reference implementations, choose on of them.</para>
+            <para>The SOAP client component uses a SoapMessageFactory implementation in order to create the SOAP messages. This is a Spring bean added to the Citrus Spring application context.
+            Spring offers several reference implementations as message factories so you can choose one of them (e.g. for SOAP 1.1 or 1.2 implementations).</para>
             
             <programlisting>&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;/&gt;</programlisting>
             
-            <para>By default Citrus will search for a bean with id <emphasis>'messageFactory'</emphasis>. In case you intend to use different identifiers 
-            you need to tell the SOAP message sender which message factory to use:</para>
+            <para>By default Citrus will search for a bean with id <emphasis>'messageFactory'</emphasis>. In case you intend to use different identifiers you need to tell the SOAP client component
+            which message factory to use:</para>
             
-            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+            <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
              request-url=&quot;http://localhost:8090/test&quot; 
-             reply-handler=&quot;soapResponseHandler&quot;
              message-factory=&quot;mySepcialMessageFactory&quot;/&gt;</programlisting>
         </important>
         
         <tip>
-            <para>Up to now we have used a static endpoint request url for the SOAP message sender. Besides that we can use dynamic endpoint uri in
-            configuration. We just use an endpoint resolver bean instead of the static request url like this:</para>
+            <para>Up to now we have used a static endpoint request url for the SOAP message sender. Besides that we can use dynamic endpoint uri in configuration. We just use an endpoint uri resolver
+            instead of the static request url like this:</para>
             
-            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
+            <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
              endpoint-resolver=&quot;dynamicEndpointResolver&quot; 
-             reply-handler=&quot;soapResponseHandler&quot;
              message-factory=&quot;mySepcialMessageFactory&quot;/&gt;
              
 &lt;bean id=&quot;dynamicEndpointResolver&quot; 
@@ -80,247 +74,189 @@
              
              <para>The <emphasis>dynamicEndpointResolver</emphasis> bean must implement the EndpointUriResolver interface in order to resolve
              dynamic endpoint uri values. Citrus offers a default implementation, the <emphasis>DynamicEndpointUriResolver</emphasis>, which
-             uses a specific message header for setting dynamic endpoint uri. The message header needs to specify the header 
-             <emphasis>citrus_endpoint_uri</emphasis> with a valid request uri.</para>
+             uses a specific message header for setting the dynamic endpoint uri for each message. The message header needs to specify the header
+             <emphasis>citrus_endpoint_uri</emphasis> with a valid request uri. Just like this:</para>
              
              <programlisting>&lt;header&gt;
   &lt;element name=&quot;citrus_endpoint_uri&quot; 
            value=&quot;http://localhost:${port}/${context}&quot; /&gt;
 &lt;/header&gt;</programlisting>
+
+             <para>As you can see you can use dynamic test variables then in order to build the request uri to use. The SOAP client evaluates the endpoint uri header and sends the message to this
+             server resource. You can use a different uri value then in different test cases and send actions.</para>
         </tip>
     </section>
     
-    <section id="soap-receiver">
-        <title>SOAP message receiver</title>
+    <section id="soap-server">
+        <title>SOAP server</title>
         
-        <para>Receiving SOAP messages requires a web server instance listening on a port. Citrus is using an embedded Jetty 
-        server instance in combination with the Spring WebService project in order to accept SOAP request calls. See how the 
-        Jetty server is configured in the Spring configuration.</para>
+        <para>Every client need a server to talk to. When receiving SOAP messages we require a web server instance listening on a port. Citrus is using an embedded Jetty server instance in combination
+        with the Spring Web Service API in order to accept SOAP request calls asa server. See how the Citrus SOAP server is configured in the Spring configuration.</para>
         
-        <programlisting>&lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot; 
+        <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
              port=&quot;8091&quot; 
              auto-start=&quot;true&quot;
-             context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
              resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
         
-        <para>The Jetty server is able to start automatically during application startup. In the example above the server is
-        listening for requests on port <literal>8091</literal>. This is the standard connector configuration for the Jetty server.
-        For detailed customization the Citrus Jetty server configuration also supports explicit connector configurations 
-        (@connector and @connectors attributes). For more information please see the Jetty Connector implementations.</para>
-             
-        <para>Now let us have a closer look at the context-config-location attribute. This configuration defines the Spring
-        application context file for endpoints, request mappings and other SpringWS specific information. Please see the 
-        official SpringWS documentation for details on this Spring based configuration. You can also just copy the following 
-        example application context which should work for you in general.</para>
-        
-        <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; 
-       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-       xsi:schemaLocation=&quot;
-       http://www.springframework.org/schema/beans 
-       http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-    
-  &lt;bean id=&quot;loggingInterceptor&quot; 
-    class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
-      &lt;description&gt;
-          This interceptor logs the message payload.
-      &lt;/description&gt;
-  &lt;/bean&gt;
-    
-  &lt;bean id=&quot;helloServicePayloadMapping&quot; 
-    class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
-      &lt;property name=&quot;mappings&quot;&gt;
-          &lt;props&gt;
-              &lt;prop 
-                  key=&quot;{http://www.consol.de/schemas/sayHello}HelloStandaloneRequest&quot;&gt;
-                  helloServiceEndpoint
-              &lt;/prop&gt;
-          &lt;/props&gt;
-      &lt;/property&gt;
-      &lt;property name=&quot;interceptors&quot;&gt;
-          &lt;list&gt;
-              &lt;ref bean=&quot;loggingInterceptor&quot;/&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-    
-  &lt;bean id=&quot;helloServiceEndpoint&quot; 
-       class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
-      &lt;property name=&quot;messageHandler&quot;&gt;
-        &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
-            &lt;property name=&quot;messagePayload&quot;&gt;
-                &lt;value&gt;
-                &lt;![CDATA[
-                    &lt;ns0:HelloStandaloneResponse 
-                        xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
-                        &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
-                        &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
-                        &lt;ns0:User&gt;WebServer&lt;/ns0:User&gt;
-                        &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
-                    &lt;/ns0:HelloStandaloneResponse&gt;
-                ]]&gt;
-                &lt;/value&gt;
-            &lt;/property&gt;
-            &lt;property name=&quot;messageHeader&quot;&gt;
-                &lt;map&gt;
-                    &lt;entry key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Operation&quot; 
-                        value=&quot;sayHelloResponse&quot;/&gt;
-                    &lt;entry key=&quot;{http://www.consol.de/schemas/sayHello}ns0:Request&quot; 
-                        value=&quot;HelloRequest&quot;/&gt;
-                    &lt;entry key=&quot;citrus_soap_action&quot; 
-                        value=&quot;sayHello&quot;/&gt;
-                &lt;/map&gt;
-            &lt;/property&gt;
-        &lt;/bean&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;
-&lt;/beans&gt;</programlisting>
-        
-        <para>The program listing above describes a normal SpringWS request mapping with endpoint configurations. The mapping is responsible to forward 
-        incoming requests to the endpoint which will handle the request and provide a proper response message. First of all Spring's logging interceptor 
-        is added to the context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming <literal>'HelloStandaloneRequest'</literal> 
-        SOAP messages to the <literal>'helloServiceEndpoint'</literal>. Endpoints are of essential nature in Citrus SOAP WebServices implementation.
-        They are responsible for processing a request in order to provide a proper response message that is sent back to the calling client. 
-        Citrus uses the endpoint in combination with a message handler implementation.</para>
-        
-        <mediaobject>
-          <imageobject role="fo">
-            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
-          </imageobject>
-          
-          <imageobject role="html">
-            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
-          </imageobject>
-        </mediaobject>
-  
-        <para>The enpoint works together with a message handler that is responsible for providing a response message for the client. The various 
-        message handler implementations in Citrus were already discussed in <xref linkend="http"/>.</para>
-        
-        <para>In this example the <literal>'helloServiceEndpoint'</literal> uses the <literal>'StaticResponseProducingMessageHandler'</literal>
-        which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to
-        respond more dynamically. Following from that forwarding to a JMS message destination might fit your needs for more powerful response
-        generation out of a test case. The setup looks like this:</para>
-        
+        <para>The server component is able to start automatically when application starts up. In the example above the server is listening for requests on port <literal>8091</literal>. This setup uses the standard
+        connector configuration for the Jetty server. For detailed customization the Citrus Jetty server configuration also supports explicit connector configurations (@connector and @connectors attributes).
+        For more information please see the Jetty connector documentation.</para>
+
+        <para>Test cases interact with this server instance via message channels by default. The server component provides an inbound channel that holds incoming request messages. The test case can receive those
+        requests from the channel with a normal receive test action. In a second step the test case can provide a synchronous response message as reply which will be automatically sent back to the calling SOAP client as response.</para>
+
         <mediaobject>
           <imageobject role="fo">
             <imagedata align="center" display="block" fileref="figure_010.jpg" format="JPG" />
           </imageobject>
-          
+
           <imageobject role="html">
             <imagedata align="center" display="block" fileref="figure_010.jpg" format="JPG" />
           </imageobject>
         </mediaobject>
-        
-        <para>Regardless of which message handler setup you are using in your test case the endpoint transforms the response into a proper SOAP 
-        message. You can add as many request mappings and endpoints as you want to the server context configuration. So you are able to handle 
-        different request types with one single Jetty server instance.</para>
-        
-        <para>Have a look at the <xref linkend="http"/> in order to find out how the other available message handler work.</para>
-        
-        <para>That's it for connecting with SOAP WebServices! We saw how to send and receive SOAP messages with Jetty and 
-        Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handlers.</para>
+
+      <para>The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this to much. By default you as a tester just use the server as synchronous endpoint
+      in your test case. This means that you simply receive a message from the server and send a response back.</para>
+
+      <programlisting>&lt;testcase name=&quot;soapServerTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;receive endpoint=&quot;helloSoapServer&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                  [...]
+                &lt;/data&gt;
+            &lt;/message&gt;
+        &lt;/receive&gt;
+
+        &lt;send endpoint=&quot;helloSoapServer&quot;&gt;
+            &lt;message&gt;
+                &lt;data&gt;
+                  [...]
+                &lt;/data&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+      <para>As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling client. In most cases this is what you need to
+      simulate a SOAP server instance in Citrus. Of course we have some more customization possibilities that we will go over later on. This customizations are optional so you can also skip the next description on endpoint adapters if
+      you are happy with just what you have learned about the SOAP server component in Citrus.</para>
+
+      <para>Just like the HTTP server component the SOAP server component by default uses the channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes.
+      The Citrus configuration has become a lot easier here so you do not have to configure this by default. When nothing else is set the test case does not worry about that settings on the server and just uses the server id reference
+      as synchronous endpoint.</para>
+
+      <para>However we do not want to loose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus SOAP server. We
+      provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper SOAP response messages for the client in various ways. Before we have a closer
+      look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.</para>
+
+      <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
+        port=&quot;8080&quot;
+        auto-start=&quot;true&quot;
+        endpoint-adapter=&quot;emptyResponseEndpointAdapter&quot;
+        resource-base=&quot;src/citrus/resources&quot;/&gt;
+
+        &lt;citrus:empty-response-adapter id=&quot;emptyResponseEndpointAdapter&quot;/&gt;</programlisting>
+
+      <para>With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation
+      with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in <xref linkend="endpoint-adapter"/>.</para>
     </section>
 
     <section id="soap-header">
         <title>SOAP headers</title>
-        
-        <para>SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special 
-        <emphasis>SOAP action</emphasis> header. In case we need to set this SOAP action header we simply need to use 
-        the special header key called <literal>citrus_soap_action</literal> in our test. This is because in general the sending test action in Citrus 
-        is generic for all transport types, but the SOAP action header is specific for the SOAP transport. The special header key in combination with a 
-        underlying WebService message sender constructs the SOAP action in the SOAP message as intended.</para>
-        
+
+        <para>SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special <emphasis>SOAP action</emphasis> header. In case we need to set this SOAP action header we simply need to use
+        the special header key called <literal>citrus_soap_action</literal> in our test. The special header key in combination with a underlying SOAP client endpoint component constructs the SOAP action in the SOAP message as intended.</para>
+
         <programlisting>&lt;header&gt;
     &lt;element name=&quot;citrus_soap_action&quot; value=&quot;sayHello&quot;/&gt;
 &lt;/header&gt;</programlisting>
-        
-        <para>Secondly a SOAP message is able to contain customized SOAP headers. These are key-value pairs where the key is a 
-        qualified name (QName) and the value a normal String value.</para>
-        
+
+        <para>Secondly a SOAP message is able to contain customized SOAP headers. These are key-value pairs where the key is a qualified name (QName) and the value a normal String value.</para>
+
         <programlisting>&lt;header&gt;
-    &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Operation&quot; value=&quot;sayHello&quot;/&gt;
-    &lt;element name=&quot;{http://www.consol.de/sayHello}ns0:Request&quot; value=&quot;HelloRequest&quot;/&gt;
+    &lt;element name=&quot;{http://www.consol.de/sayHello}h1:Operation&quot; value=&quot;sayHello&quot;/&gt;
+    &lt;element name=&quot;{http://www.consol.de/sayHello}h1:Request&quot; value=&quot;HelloRequest&quot;/&gt;
 &lt;/header&gt;</programlisting>
-        
-        <para>Last not least a SOAP header can contain whole XML fragment values. The next example shows how to set these XML
-        framgents as SOAP header:</para>
-        
+
+        <para>The key is defined as qualified QName character sequence which has a mandatory XML namespace and a prefix along with a header name. Last not least a SOAP header can contain whole XML fragment values. The next example shows how to
+        set these XML fragments as SOAP header in Citrus:</para>
+
         <programlisting>&lt;header&gt;
-    &lt;data&gt; 
+    &lt;data&gt;
       &lt;![CDATA[
-          &lt;ns0:User 
-              xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
-              &lt;ns0:UserId&gt;123456789&lt;/ns0:UserId&gt;
-              &lt;ns0:Handshake&gt;S123456789&lt;/ns0:Handshake&gt;
-          &lt;/ns0:User&gt;
-      ]]&gt;          
+          &lt;User xmlns=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
+              &lt;UserId&gt;123456789&lt;/UserId&gt;
+              &lt;Handshake&gt;S123456789&lt;/Handshake&gt;
+          &lt;/User&gt;
+      ]]&gt;
     &lt;/data&gt;
 &lt;/header&gt;</programlisting>
-        
+
         <para>You can also use external file resources to set this SOAP header XML fragment as shown in this last example code:</para>
-        
+
         <programlisting>&lt;header&gt;
     &lt;resource file=&quot;classpath:request-soap-header.xml&quot;/&gt;
 &lt;/header&gt;</programlisting>
 
-        <para>This completes the SOAP header possibilities for sending SOAP messages with Citrus. Of course you can also use these variants in SOAP
-        message header validation. You define expected SOAP headers, SOAP action and XML fragments and Citrus will match incoming request to that. Just
-        use <emphasis>citrus_soap_action</emphasis> header key in your receiving message action and you validate this SOAP header accordingly.</para>
-        
+        <para>This completes the SOAP header possibilities for sending SOAP messages with Citrus. Of course you can also use these variants in SOAP message header validation. You define expected SOAP headers, SOAP action and XML fragments
+        and Citrus will match incoming request to that. Just use <emphasis>citrus_soap_action</emphasis> header key in your receiving message action and you validate this SOAP header accordingly.</para>
+
         <para>When validating SOAP header XML fragments you need to define the whole XML header fragment as expected header data like this:</para>
-        
-        <programlisting>&lt;receive endpoint=&quot;soapMessageHandler&quot;&gt;
+
+        <programlisting>&lt;receive endpoint=&quot;soapMessageEndpoint&quot;&gt;
     &lt;message&gt;
         &lt;data&gt;&lt;![CDATA[
-                &lt;c:ResponseMessage xmlns:c=&quot;http://citrusframework.org/schema&quot;&gt;
-                  &lt;c:resultCode&gt;OK&lt;/c:resultCode&gt;
-                &lt;/c:ResponseMessage&gt;
+                &lt;ResponseMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;
+                  &lt;resultCode&gt;OK&lt;/resultCode&gt;
+                &lt;/ResponseMessage&gt;
         ]]&gt;&lt;/data&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;data&gt;
             &lt;![CDATA[
-                &lt;SOAP-ENV:Header 
+                &lt;SOAP-ENV:Header
                     xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-                    &lt;c:customHeader xmlns:c=&quot;http://citrusframework.org/headerschema&quot;&gt;
-                        &lt;c:correlationId&gt;${correlationId}&lt;/c:correlationId&gt;
-                        &lt;c:applicationId&gt;${applicationId}&lt;/c:applicationId&gt;
-                        &lt;c:trackingId&gt;${trackingId}&lt;/c:trackingId&gt;
-                        &lt;c:serviceId&gt;${serviceId}&lt;/c:serviceId&gt;
-                        &lt;c:interfaceVersion&gt;1.0&lt;/c:interfaceVersion&gt;
-                        &lt;c:timestamp&gt;@ignore@&lt;/c:timestamp&gt;
-                    &lt;/c:customHeader&gt;
+                    &lt;customHeader xmlns=&quot;http://citrusframework.org/headerschema&quot;&gt;
+                        &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                        &lt;applicationId&gt;${applicationId}&lt;/applicationId&gt;
+                        &lt;trackingId&gt;${trackingId}&lt;/trackingId&gt;
+                        &lt;serviceId&gt;${serviceId}&lt;/serviceId&gt;
+                        &lt;interfaceVersion&gt;1.0&lt;/interfaceVersion&gt;
+                        &lt;timestamp&gt;@ignore@&lt;/timestamp&gt;
+                    &lt;/customHeader&gt;
                 &lt;/SOAP-ENV:Header&gt;
             ]]&gt;
         &lt;/data&gt;
         &lt;element name=&quot;citrus_soap_action&quot; value=&quot;doResponse&quot;/&gt;
     &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
-            
-        <para>As you see the SOAP XML header validation can combine header element and XML fragement validation. This is also likely
-        to be used when dealing with WS-Security message headers.</para>        
+
+        <para>As you can see the SOAP XML header validation can combine header element and XML fragment validation. This is also likely to be used when dealing with WS-Security message headers.</para>
     </section>
-    
+
     <section id="soap-mime-headers">
-      <title>Http mime headers</title>
-      
-      <para>Besides the SOAP specific header elements the Http mime headers (e.g. Content-Type, Content-Length, Authorization) might be candidates for validation, too. 
-      When using Http as transport layer the SOAP message may define those mime headers. The tester is able to send and validate these headers inside the test case, although these 
-      Http headers are located outside of the SOAP envelope. Let us first of all speak about validating the Http mime headers. This feature is not enabled by default. We 
-      have to set a special flag in our SOAP WebService endpoint.</para>
-      
-      <programlisting>&lt;bean id=&quot;webServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
-    &lt;property name=&quot;handleMimeHeaders&quot; value=&quot;true&quot;/&gt;
-    [...]
-&lt;/bean&gt;</programlisting>
+      <title>SOAP HTTP mime headers</title>
+
+      <para>Besides the SOAP specific header elements the HTTP mime headers (e.g. Content-Type, Content-Length, Authorization) might be candidates for validation, too.
+      When using HTTP as transport layer the SOAP message may define those mime headers. The tester is able to send and validate these headers inside the test case, although these
+      HTTP headers are located outside of the SOAP envelope. Let us first of all speak about validating the HTTP mime headers. This feature is not enabled by default. We
+      have enable this in our SOAP server configuration.</para>
+
+      <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
+        port=&quot;8091&quot;
+        auto-start=&quot;true&quot;
+        handleMimeHeaders=&quot;true&quot;
+        resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
 
       <para>With this configuration Citrus will handle all available mime headers passing those to the test case for normal header validation.</para>
-      
-      <programlisting>&lt;ws:receive endpoint=&quot;webServiceRequestReceiver&quot;&gt;
+
+      <programlisting>&lt;ws:receive endpoint=&quot;helloSoapServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;ns0:SoapMessageRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
-                &lt;ns0:Operation&gt;Validate mime headers&lt;/ns0:Operation&gt;
-            &lt;/ns0:SoapMessageRequest&gt;
+            &lt;SoapMessageRequest xmlns=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
+                &lt;Operation&gt;Validate mime headers&lt;/Operation&gt;
+            &lt;/SoapMessageRequest&gt;
         &lt;/data&gt;
     &lt;/message&gt;
     &lt;header&gt;
@@ -328,15 +264,15 @@
     &lt;/header&gt;
 &lt;/ws:receive&gt;
       </programlisting>
-      
-      <para>As you can see the validation is quite simple as soon as we have enabled the mime header handling in the WebService endpoint. The transport (http) headers go into the header
+
+      <para>As you can see the validation is quite simple as soon as we have enabled the mime header handling in the SOAP server. The transport (http) headers go into the header
       list just like the normal SOAP header elements do. So you can validate the headers as usual.</para>
 
-      <para>So much for receiving and validating Http messsage headers with SOAP communication. Now we want to send special mime headers on client side. We overwrite or add mime 
-      headers to our sending action. We mark some headers with following prefix <literal>&quot;citrus_http_&quot;</literal>. This tells the SOAP message sender to add these headers to the 
-      Http header section outside the SOAP envelope. Keep in mind that header elements without this prefix go right into the SOAP header section by default.</para>
-      
-      <programlisting>&lt;ws:send endpoint=&quot;webServiceRequestSender&quot;&gt;
+      <para>So much for receiving and validating HTTP mime message headers with SOAP communication. Now we want to send special mime headers on client side. We overwrite or add mime
+      headers to our sending action. We mark some headers with following prefix <literal>&quot;citrus_http_&quot;</literal>. This tells the SOAP client to add these headers to the
+      HTTP header section outside the SOAP envelope. Keep in mind that header elements without this prefix go right into the SOAP header section by default.</para>
+
+      <programlisting>&lt;ws:send endpoint=&quot;soapClient&quot;&gt;
   [...]
   &lt;header&gt;
     &lt;element name=&quot;citrus_http_operation&quot; value=&quot;foo&quot;/&gt;
@@ -344,26 +280,26 @@
   [...]
 &lt;/ws:send&gt;</programlisting>
 
-      <para>The listing above defines a Http mime header <emphasis>operation</emphasis>. The header prefix <literal>citrus_http_</literal> is cut off before the header goes into the Http 
+      <para>The listing above defines a HTTP mime header <emphasis>operation</emphasis>. The header prefix <literal>citrus_http_</literal> is cut off before the header goes into the HTTP
       header section. With this feature we can decide where exactly our header information is located in our resulting client message.</para>
     </section>
-    
+
     <section id="soap-faults">
         <title>SOAP faults</title>
-        
-        <para>SOAP faults describe a failed communication in SOAP WebServices world. Citrus is able to send and receive SOAP fault messages. On server side 
-        Citrus can simulate SOAP faults with fault-code, fault-reason, fault-actor and fault-detail. On client side Citrus is able to handle and validate SOAP faults 
+
+        <para>SOAP faults describe a failed communication in SOAP WebServices world. Citrus is able to send and receive SOAP fault messages. On server side
+        Citrus can simulate SOAP faults with fault-code, fault-reason, fault-actor and fault-detail. On client side Citrus is able to handle and validate SOAP faults
         in response messages. The next section describes how to deal with SOAP faults in Citrus.</para>
-        
+
         <section id="soap-fault-simulation">
             <title>SOAP fault simulation</title>
-            
-            <para>As Citrus simulates WebService endpoints you also need to think about simulating SOAP faults. In case Citrus receives a SOAP 
+
+            <para>As Citrus simulates WebService endpoints you also need to think about simulating SOAP faults. In case Citrus receives a SOAP
             request you can respond with a proper SOAP fault if necessary.</para>
-            
-            <para>Please keep in mind that we use the citrus-ws extension for sending SOAP faults in our test case, as shown in this very 
+
+            <para>Please keep in mind that we use the citrus-ws extension for sending SOAP faults in our test case, as shown in this very
             simple example:</para>
-            
+
             <programlisting>&lt;ws:send-fault endpoint=&quot;webServiceResponseSender&quot;&gt;
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
@@ -371,12 +307,12 @@
         &lt;ws:fault-actor&gt;SERVER&lt;/ws:fault-actor&gt;
         &lt;ws:fault-detail&gt;
             &lt;![CDATA[
-                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
-                    &lt;ns0:MessageId&gt;${messageId}&lt;/ns0:MessageId&gt;
-                    &lt;ns0:CorrelationId&gt;${correlationId}&lt;/ns0:CorrelationId&gt;
-                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-                    &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-                &lt;/ns0:FaultDetail&gt;
+                &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;MessageId&gt;${messageId}&lt;/MessageId&gt;
+                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                    &lt;Text&gt;Invalid request&lt;/Text&gt;
+                &lt;/FaultDetail&gt;
             ]]&gt;
         &lt;/ws:fault-detail&gt;
     &lt;/ws:fault&gt;
@@ -384,14 +320,14 @@
         &lt;ws:element name=&quot;citrus_soap_action&quot; value=&quot;sayHello&quot;/&gt;
     &lt;/ws:header&gt;
 &lt;/ws:send-fault&gt;</programlisting>
-            
-            <para>The example generates a simple SOAP fault that is sent back to the calling client. The fault-actor and the fault-detail elements are optional. 
+
+            <para>The example generates a simple SOAP fault that is sent back to the calling client. The fault-actor and the fault-detail elements are optional.
             Same with the soap action declared in the special Citrus header <literal>citrus_soap_action</literal>. In the sample above the fault-detail data is
             placed inline as XML data. As an alternative to that you can also set the fault-detail via external file resource. Just use
             <literal>&lt;ws:fault-detail file=&quot;classpath:myFaultDetail.xml&quot;/&gt;</literal> instead of the inline CDATA definition.</para>
-            
+
             <para>The generated SOAP fault results in a SOAP message like follows:</para>
-            
+
             <programlisting>HTTP/1.1 500 Internal Server Error
 Accept: text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
 SOAPAction: &quot;sayHello&quot;
@@ -406,193 +342,193 @@ Server: Jetty(7.0.0.pre5)
             &lt;faultcode xmlns:citrus=&quot;http://www.citrusframework.org/faults&quot;&gt;citrus:TEC-1000&lt;/faultcode&gt;
             &lt;faultstring xml:lang=&quot;en&quot;&gt;Invalid request&lt;/faultstring&gt;
             &lt;detail&gt;
-                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
-                    &lt;ns0:MessageId&gt;9277832563&lt;/ns0:MessageId&gt;
-                    &lt;ns0:CorrelationId&gt;4346806225&lt;/ns0:CorrelationId&gt;
-                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-                    &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-                &lt;/ns0:FaultDetail&gt;
+                &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;MessageId&gt;9277832563&lt;/MessageId&gt;
+                    &lt;CorrelationId&gt;4346806225&lt;/CorrelationId&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                    &lt;Text&gt;Invalid request&lt;/Text&gt;
+                &lt;/FaultDetail&gt;
             &lt;/detail&gt;
         &lt;/SOAP-ENV:Fault&gt;
     &lt;/SOAP-ENV:Body&gt;
 &lt;/SOAP-ENV:Envelope&gt;</programlisting>
-            
+
             <important>Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and
-            adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. 
+            adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case.
             This is usually done in the root <emphasis>&lt;spring:beans&gt;</emphasis> element where we simply declare the citrus-ws specific namespace like follows.
-            
-                <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot; 
+
+                <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
     xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
-    xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot; 
-    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
-    http://www.springframework.org/schema/beans/spring-beans.xsd 
-    http://www.citrusframework.org/schema/testcase 
+    xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot;
+    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
     http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-    http://www.citrusframework.org/schema/ws/testcase 
+    http://www.citrusframework.org/schema/ws/testcase
     http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd&quot;&gt;</programlisting>
             </important>
         </section>
-            
+
         <section id="soap-fault-validation">
             <title>SOAP fault validation</title>
-            
-            <para>In case you receive SOAP messages from a WebService endpoint you may also want to validate special SOAP faults 
+
+            <para>In case you receive SOAP messages from a WebService endpoint you may also want to validate special SOAP faults
             in error situations. Citrus can validate SOAP faults with SOAP fault code and fault string values.</para>
-            
+
             <para>By default the sending action in Citrus may throw a specific exception when the SOAP response contains a SOAP fault element
             (SoapFaultClientException). A tester can assert this kind of exception in a test case in order to expect the SOAP error.</para>
-            
+
             <programlisting>&lt;assert class=&quot;org.springframework.ws.soap.client.SoapFaultClientException&quot;&gt;
     &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
-                &lt;ns0:SoapFaultForcingRequest
-                  xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-                    &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
-                &lt;/ns0:SoapFaultForcingRequest&gt;
+                &lt;SoapFaultForcingRequest
+                  xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                    &lt;Message&gt;This is invalid&lt;/Message&gt;
+                &lt;/SoapFaultForcingRequest&gt;
             &lt;/payload&gt;
         &lt;/message&gt;
     &lt;/send&gt;
 &lt;/assert&gt;</programlisting>
-            
-            <para>The SOAP message sending action is surrounded by a simple assert action. The asserted exception class is the 
-            SoapFaultClientException. This means that the test expects the exception to be thrown during the communication. 
+
+            <para>The SOAP message sending action is surrounded by a simple assert action. The asserted exception class is the
+            SoapFaultClientException. This means that the test expects the exception to be thrown during the communication.
             Otherwise the test is failing.</para>
-            
+
             <para>This exception assertion can not offer direct SOAP fault code and fault string validation, because we do not have access
             to the SOAP fault elements. We can use a special assert implementation especially designed for SOAP faults in this case.</para>
-            
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
            fault-actor=&quot;SERVER&quot;&gt;
     &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
-                &lt;ns0:SoapFaultForcingRequest
-                  xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-                    &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
-                &lt;/ns0:SoapFaultForcingRequest&gt;
+                &lt;SoapFaultForcingRequest
+                  xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                    &lt;Message&gt;This is invalid&lt;/Message&gt;
+                &lt;/SoapFaultForcingRequest&gt;
             &lt;/payload&gt;
         &lt;/message&gt;
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
-            
-            <para>The special assert action offers several attributes to specify the expected SOAP fault. Namely these are <emphasis>"fault-code"</emphasis>, 
-            <emphasis>"fault-string"</emphasis> and <emphasis>"fault-actor"</emphasis>. The <emphasis>fault-code</emphasis> is defined as a QName string and 
+
+            <para>The special assert action offers several attributes to specify the expected SOAP fault. Namely these are <emphasis>"fault-code"</emphasis>,
+            <emphasis>"fault-string"</emphasis> and <emphasis>"fault-actor"</emphasis>. The <emphasis>fault-code</emphasis> is defined as a QName string and
             is mandatory for the validation. The fault assertion also supports test variable replacement as usual (e.g. fault-code=&quot;{http://www.citrusframework.org/faults}${myFaultCode}&quot;).</para>
-            
+
             <para>The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an
             instance of SoapFaultValitator that we need to place into the <emphasis>'citrus-context.xml'</emphasis> Spring application context. By default
             Citrus is searching for a bean with the id <emphasis>'soapFaultValidator'</emphasis>.</para>
-        
+
             <programlisting>&lt;bean id=&quot;soapFaultValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;</programlisting>
-            
+
             <para>Citrus offers reference implementations for SOAP fault validation such as</para>
-            
+
             <itemizedlist>
                 <listitem><emphasis>com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator</emphasis></listitem>
                 <listitem><emphasis>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</emphasis></listitem>
                 <listitem><emphasis>com.consol.citrus.ws.validation.XmlSoapFaultValidator</emphasis></listitem>
             </itemizedlist>
-            
-            <para>Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic 
+
+            <para>Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic
             (would be great if you could share your ideas!). In the test case you can explicitly choose the validator to use:</para>
-            
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
               fault-string=&quot;Invalid request&quot;
               fault-validator=&quot;mySpecialSoapFaultValidator&quot;&gt;
    [...]
 &lt;/ws:assert&gt;</programlisting>
-            
+
             <important>
                 <para>Another important thing to notice when asserting SOAP faults is the fact, that Citrus needs to have a SoapMessageFactory available in
                 the Spring application context. If you deal with SOAP messaging in general you will already have such a bean in the context.</para>
-                
+
                 <programlisting>&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;/&gt;</programlisting>
-                
-                <para>Choose one of Spring's reference implementations or some other implementation as SOAP message factory. Citrus will search for a bean 
+
+                <para>Choose one of Spring's reference implementations or some other implementation as SOAP message factory. Citrus will search for a bean
                 with id <emphasis>'messageFactory'</emphasis> by default. In case you have other beans with different identifiers please choose the
                 messageFactory in the test case assert action:</para>
-                
-                <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+
+                <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
               fault-string=&quot;Invalid request&quot;
               message-factory=&quot;mySpecialMessageFactory&quot;&gt;
    [...]
 &lt;/ws:assert&gt;</programlisting>
             </important>
-            
+
             <important>Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the ws:assert action uses SOAP specific features
-            we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case. 
-            
-                <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot; 
+            we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.
+
+                <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
     xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
-    xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot; 
-    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans 
-    http://www.springframework.org/schema/beans/spring-beans.xsd 
-    http://www.citrusframework.org/schema/testcase 
+    xmlns:ws=&quot;http://www.citrusframework.org/schema/ws/testcase&quot;
+    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
     http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
-    http://www.citrusframework.org/schema/ws/testcase 
+    http://www.citrusframework.org/schema/ws/testcase
     http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd&quot;&gt;</programlisting>
             </important>
-            
+
             <para>Citrus is also able to validate SOAP fault details. See the following example for understanding how to do it:</para>
-            
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
     &lt;ws:fault-detail&gt;
       &lt;![CDATA[
-          &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-              &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-          &lt;/ns0:FaultDetail&gt;
+          &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+              &lt;Text&gt;Invalid request&lt;/Text&gt;
+          &lt;/FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
     &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
-                &lt;ns0:SoapFaultForcingRequest
-                  xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-                    &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
-                &lt;/ns0:SoapFaultForcingRequest&gt;
+                &lt;SoapFaultForcingRequest
+                  xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                    &lt;Message&gt;This is invalid&lt;/Message&gt;
+                &lt;/SoapFaultForcingRequest&gt;
             &lt;/payload&gt;
         &lt;/message&gt;
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
-            
-            <para>The expected SOAP fault detail content is simply added to the ws:assert action. The SoapFaultValidator implementation defined in the <emphasis>citrus-context.xml</emphasis> 
-            is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. 
-            Citrus provides some default SoapFaultValidator implementations. Supported algorithms are pure String comparison (<emphasis>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</emphasis>) 
+
+            <para>The expected SOAP fault detail content is simply added to the ws:assert action. The SoapFaultValidator implementation defined in the <emphasis>citrus-context.xml</emphasis>
+            is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template.
+            Citrus provides some default SoapFaultValidator implementations. Supported algorithms are pure String comparison (<emphasis>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</emphasis>)
             as well as XML tree walk-through (com.consol.citrus.ws.validation.XmlSoapFaultValidator).</para>
-             
+
             <para>When using the XML validation algorithm you have the complete power as known from normal message validation in receive actions. This includes schema validation or ignoring elements
-            for instance. On the fault-detail element you are able to add some validation settings such as <emphasis>schema-validation=enabled/disabled</emphasis>, custom <emphasis>schema-repository</emphasis> 
+            for instance. On the fault-detail element you are able to add some validation settings such as <emphasis>schema-validation=enabled/disabled</emphasis>, custom <emphasis>schema-repository</emphasis>
             and so on.</para>
-            
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
     &lt;ws:fault-detail schema-validation=&quot;false&quot;&gt;
       &lt;![CDATA[
-          &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-              &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-          &lt;/ns0:FaultDetail&gt;
+          &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+              &lt;Text&gt;Invalid request&lt;/Text&gt;
+          &lt;/FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
     &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         [...]
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
-            
+
             <para>Please see also the Citrus API documentation for available validator implementations and validation algorithms.</para>
-            
+
             <para>So far we used assert action wrapper in order to catch SOAP fault exceptions and validate the SOAP fault content. Now we have an alternative way
             of handling SOAP faults in Citrus. With exceptions the send action aborts and we do not have a receive action for the SOAP fault. This might be inadequate if
             we need to validate the SOAP message content (SOAPHeader and SOAPBody) coming with the SOAP fault. Therefore the web service message sender component offers
             several fault strategy options. In the following we discuss the propagation of SOAP fault as messages to the reply message handler as we would do with
             normal SOAP messages.</para>
-            
-            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
-                               request-url=&quot;http://localhost:8090/test&quot; 
+
+            <programlisting>&lt;citrus-ws:message-sender id=&quot;soapClient&quot;
+                               request-url=&quot;http://localhost:8090/test&quot;
                                reply-handler=&quot;soapResponseHandler&quot;
                                fault-strategy=&quot;propagateError&quot;/&gt;
 
@@ -600,16 +536,16 @@ Server: Jetty(7.0.0.pre5)
 
             <para>We have configured a fault strategy <emphasis>propagateError</emphasis> so the message sender will not raise client exceptions but inform the reply message handler
             with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy=<emphasis>throwsException</emphasis>).</para>
-            
-            <para>So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault 
+
+            <para>So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault
             like this.</para>
 
-            <programlisting>&lt;send endpoint=&quot;soapMessageSender&quot;&gt;
+            <programlisting>&lt;send endpoint=&quot;soapClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;ns0:SoapFaultForcingRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
-                &lt;ns0:Message&gt;This is invalid&lt;/ns0:Message&gt;
-            &lt;/ns0:SoapFaultForcingRequest&gt;
+            &lt;SoapFaultForcingRequest xmlns=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
+                &lt;Message&gt;This is invalid&lt;/Message&gt;
+            &lt;/SoapFaultForcingRequest&gt;
         &lt;/payload&gt;
     &lt;/message&gt;
 &lt;/send&gt;
@@ -625,15 +561,15 @@ Server: Jetty(7.0.0.pre5)
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 
-            <para>So choose the prefered way of handling SOAP faults either by asserting client exceptions or propagating fault messages to reply message handler receive action.</para>            
+            <para>So choose the prefered way of handling SOAP faults either by asserting client exceptions or propagating fault messages to reply message handler receive action.</para>
         </section>
-        
+
         <section id="soap-fault-details">
             <title>Multiple SOAP fault details</title>
-            
-            <para>SOAP fault details can hold one or more SOAP fault detail elements. In the previous sections we have used SOAP fault details in sending and receiving actions as single element. In order 
+
+            <para>SOAP fault details can hold one or more SOAP fault detail elements. In the previous sections we have used SOAP fault details in sending and receiving actions as single element. In order
             to meet the SOAP specification Citrus is also able to handle multiple SOAP fault detail elements in a message. You just use many fault-detail elements in your test action like this:</para>
-            
+
             <programlisting>&lt;ws:send-fault endpoint=&quot;webServiceResponseSender&quot;&gt;
     &lt;ws:fault&gt;
         &lt;ws:fault-code&gt;{http://www.citrusframework.org/faults}citrus:TEC-1000&lt;/ws:fault-code&gt;
@@ -641,19 +577,19 @@ Server: Jetty(7.0.0.pre5)
         &lt;ws:fault-actor&gt;SERVER&lt;/ws:fault-actor&gt;
         &lt;ws:fault-detail&gt;
             &lt;![CDATA[
-                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
-                    &lt;ns0:MessageId&gt;${messageId}&lt;/ns0:MessageId&gt;
-                    &lt;ns0:CorrelationId&gt;${correlationId}&lt;/ns0:CorrelationId&gt;
-                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-                    &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-                &lt;/ns0:FaultDetail&gt;
+                &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;MessageId&gt;${messageId}&lt;/MessageId&gt;
+                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                    &lt;Text&gt;Invalid request&lt;/Text&gt;
+                &lt;/FaultDetail&gt;
             ]]&gt;
         &lt;/ws:fault-detail&gt;
         &lt;ws:fault-detail&gt;
             &lt;![CDATA[
-                &lt;ns0:ErrorDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
-                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-                &lt;/ns0:ErrorDetail&gt;
+                &lt;ErrorDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                &lt;/ErrorDetail&gt;
             ]]&gt;
         &lt;/ws:fault-detail&gt;
     &lt;/ws:fault&gt;
@@ -663,7 +599,7 @@ Server: Jetty(7.0.0.pre5)
 &lt;/ws:send-fault&gt;</programlisting>
 
             <para>This will result in following SOAP envelope message:</para>
-            
+
             <programlisting>HTTP/1.1 500 Internal Server Error
 Accept: text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
 SOAPAction: &quot;sayHello&quot;
@@ -678,64 +614,64 @@ Server: Jetty(7.0.0.pre5)
             &lt;faultcode xmlns:citrus=&quot;http://www.citrusframework.org/faults&quot;&gt;citrus:TEC-1000&lt;/faultcode&gt;
             &lt;faultstring xml:lang=&quot;en&quot;&gt;Invalid request&lt;/faultstring&gt;
             &lt;detail&gt;
-                &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
-                    &lt;ns0:MessageId&gt;9277832563&lt;/ns0:MessageId&gt;
-                    &lt;ns0:CorrelationId&gt;4346806225&lt;/ns0:CorrelationId&gt;
-                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-                    &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-                &lt;/ns0:FaultDetail&gt;
-                &lt;ns0:ErrorDetail xmlns:ns0=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
-                    &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-                &lt;/ns0:ErrorDetail&gt;
+                &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;MessageId&gt;9277832563&lt;/MessageId&gt;
+                    &lt;CorrelationId&gt;4346806225&lt;/CorrelationId&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                    &lt;Text&gt;Invalid request&lt;/Text&gt;
+                &lt;/FaultDetail&gt;
+                &lt;ErrorDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                &lt;/ErrorDetail&gt;
             &lt;/detail&gt;
         &lt;/SOAP-ENV:Fault&gt;
     &lt;/SOAP-ENV:Body&gt;
 &lt;/SOAP-ENV:Envelope&gt;</programlisting>
 
             <para>Of course we can also expect several fault detail elements when receiving a SOAP fault.</para>
-            
-            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot; 
+
+            <programlisting>&lt;ws:assert fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
            fault-string=&quot;Invalid request&quot;&gt;
     &lt;ws:fault-detail schema-validation=&quot;false&quot;&gt;
       &lt;![CDATA[
-          &lt;ns0:FaultDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-              &lt;ns0:Text&gt;Invalid request&lt;/ns0:Text&gt;
-          &lt;/ns0:FaultDetail&gt;
+          &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+              &lt;Text&gt;Invalid request&lt;/Text&gt;
+          &lt;/FaultDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
     &lt;ws:fault-detail&gt;
       &lt;![CDATA[
-          &lt;ns0:ErrorDetail xmlns:ns0=&quot;http://www.consol.de/schemas/soap&quot;&gt;
-              &lt;ns0:ErrorCode&gt;TEC-1000&lt;/ns0:ErrorCode&gt;
-          &lt;/ns0:ErrorDetail&gt;
+          &lt;ErrorDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+          &lt;/ErrorDetail&gt;
       ]]&gt;
     &lt;/ws:fault-detail&gt;
     &lt;send endpoint=&quot;webServiceHelloRequestSender&quot;&gt;
         [...]
     &lt;/send&gt;
 &lt;/ws:assert&gt;</programlisting>
-            
+
             <para>As you can see we can individually use validation settings for each fault detail. In the example above we disabled schema validation for the first fault detail element.</para>
         </section>
     </section>
-    
+
     <section id="soap-http-errors">
         <title>Simulate Http error codes with SOAP</title>
-        
-        <para>The SOAP server logic on Citrus is able to simulate pure Http error codes such as 404 &quot;Not found&quot; or 500 &quot;Internal server error&quot;. The good thing is that the Citrus server is 
+
+        <para>The SOAP server logic on Citrus is able to simulate pure Http error codes such as 404 &quot;Not found&quot; or 500 &quot;Internal server error&quot;. The good thing is that the Citrus server is
         able to receive a request for proper validation in a receive action and then simulate Http errors on demand.</para>
-        
+
         <para>The mechanism on Http error code simulation is not different to the usual SOAP reuest/response handling in Citrus. We receive the request as usual and we provide a response with
         a reply message sender. The Http error situation is simulated according to the special Http header <emphasis>citrus_http_status</emphasis> in the Citrus SOAP response definition. In case this header
         is set to a value other than 200 OK the Citrus SOAP server sends an empty SOAP response with Http error status code set accordingly.</para>
-        
+
         <programlisting>&lt;receive endpoint="soapMessageReceiver"&gt;
   &lt;message&gt;
       &lt;payload&gt;
-          &lt;ns0:Message xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
-              &lt;ns0:Text&gt;Hello SOAP server&lt;/ns0:Text&gt;
-          &lt;/ns0:Message&gt;
+          &lt;Message xmlns=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
+              &lt;Text&gt;Hello SOAP server&lt;/Text&gt;
+          &lt;/Message&gt;
       &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive>
@@ -751,88 +687,88 @@ Server: Jetty(7.0.0.pre5)
 
         <para>The SOAP response must be empty and the Http status code is set to a value other than 200, like 500. This results in a Http error sent to the calling client with error 500 &quot;Internal server error&quot;.</para>
     </section>
-    
+
     <section id="soap-attachments">
         <title>SOAP attachment support</title>
-        
-        <para>Citrus is able to add attachments to a SOAP request. In return you can also receive SOAP messages with attachments and validate their content. 
+
+        <para>Citrus is able to add attachments to a SOAP request. In return you can also receive SOAP messages with attachments and validate their content.
         The next chapters describe how to handle SOAP attachments in Citrus.</para>
-        
+
         <section id="soap-attachment-send">
             <title>Send SOAP attachments</title>
-            
+
             <para>As client Citrus is able to add attachments to SOAP messages. I think it is best to look at an example in order to understand how it works.</para>
-            
+
             <programlisting>&lt;ws:send endpoint=&quot;webServiceRequestSender&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;ns0:SoapMessageWithAttachment xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
-                &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
-            &lt;/ns0:SoapMessageWithAttachment&gt;
+            &lt;SoapMessageWithAttachment xmlns=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
+                &lt;Operation&gt;Read the attachment&lt;/Operation&gt;
+            &lt;/SoapMessageWithAttachment&gt;
         &lt;/payload&gt;
     &lt;/message&gt;
     &lt;ws:attachment content-id=&quot;MySoapAttachment&quot; content-type=&quot;text/plain&quot;&gt;
         &lt;ws:resource file=&quot;classpath:com/consol/citrus/ws/soapAttachment.txt&quot;/&gt;
     &lt;/ws:attachment&gt;
 &lt;/ws:send&gt;</programlisting>
-            
+
             <note>
                 <para>In the previous chapters you may have already noticed the citrus-ws namespace that stands for the WebService extensions in Citrus. Please
                 include the citrus-ws namespace in your testcase as described earlier in this chapter, in order to use the attachment support.</para>
             </note>
-            
+
             <para>We need to use the Citrus ws extension namespace in our test case which offers a special send action that is aware of SOAP attachments. The attachment
             content usually consists of a content-id a content-type and the actual content as plain text or binary content. Inside the test case you can use external file
             resources or inline CDATA to specify the attachment content. As you are familiar with Citrus you may know this already from other actions.</para>
-            
+
             <para>Citrus will construct a SOAP message with the SOAP attachment. Currently only one attachment per message is supported, which will fulfill the needs
             of almost every application.</para>
         </section>
-        
+
         <section id="soap-attachment-receiver">
             <title>Receive and validate SOAP attachments</title>
-            
+
             <para>When Citrus calls SOAP WebServices as a client we may receive SOAP responses with attachments. The tester can validate
             received SOAP messages with attachment content quite easy. As usual let us have a look at an example first.</para>
-            
+
             <programlisting>&lt;ws:receive endpoint=&quot;webServiceRequestReceiver&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
-                &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
-            &lt;/ns0:SoapMessageWithAttachmentRequest&gt;
+            &lt;SoapMessageWithAttachmentRequest xmlns=&quot;http://consol.de/schemas/sample.xsd&quot;&gt;
+                &lt;Operation&gt;Read the attachment&lt;/Operation&gt;
+            &lt;/SoapMessageWithAttachmentRequest&gt;
         &lt;/payload&gt;
     &lt;/message&gt;
-    &lt;ws:attachment content-id=&quot;MySoapAttachment&quot; 
+    &lt;ws:attachment content-id=&quot;MySoapAttachment&quot;
                       content-type=&quot;text/plain&quot;
                       validator=&quot;mySoapAttachmentValidator&quot;&gt;
         &lt;ws:resource file=&quot;classpath:com/consol/citrus/ws/soapAttachment.txt&quot;/&gt;
     &lt;/ws:attachment&gt;
 &lt;/ws:receive&gt;</programlisting>
-            
-            <para>Again we use the Citrus ws extension namespace for a specific receive action that is aware of SOAP attachment validation. The tester can validate 
-            the content-id, the content-type and the attachment content. Instead of using the external file resource you could also define an expected attachment template directly 
+
+            <para>Again we use the Citrus ws extension namespace for a specific receive action that is aware of SOAP attachment validation. The tester can validate
+            the content-id, the content-type and the attachment content. Instead of using the external file resource you could also define an expected attachment template directly
             in the test case as CDATA inline element.</para>
-            
+
             <note>
-                <para>The ws:attachment element specifies a validator instance. This validator determines how to validate the attachment content. SOAP attachments are not 
-                limited to XML content. Plain text content and binary content is possible, too. So each SOAP attachment validating action can use a different SoapAttachmentValidator 
+                <para>The ws:attachment element specifies a validator instance. This validator determines how to validate the attachment content. SOAP attachments are not
+                limited to XML content. Plain text content and binary content is possible, too. So each SOAP attachment validating action can use a different SoapAttachmentValidator
                 instance which is responsible for validating and comparing received attachments to expected template attachments. In the Citrus configuration the validator
                 is set as normal Spring bean with the respective identifier.</para>
-                
+
                 <programlisting>&lt;bean id=&quot;soapAttachmentValidator&quot; class=&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;/&gt;
 &lt;bean id=&quot;mySoapAttachmentValidator&quot; class=&quot;com.company.ws.validation.MySoapAttachmentValidator&quot;/&gt;</programlisting>
-                
-                <para>You can define several validator instances in the Citrus configuration. The validator with the general id="soapAttachmentValidator" is the default validator 
+
+                <para>You can define several validator instances in the Citrus configuration. The validator with the general id="soapAttachmentValidator" is the default validator
                 for all actions that do not explicitly set a validator instance. Citrus offers a set of validator implementations. The SimpleSoapAttachmentValidator will use a simple
                 plain text comparison. Of course you are able to add individual validator implementations, too.</para>
             </note>
-            
-            <para>As usual a special endpoint implementation receives the SOAP requests and delegates those requests to a MessageHandler implementation as described in chapter 
-            <xref linkend="soap-receiver"/>. The SOAP attachment validation in its current nature does require the JmsConnectingMessageHandler implementation where the Citrus 
+
+            <para>As usual a special endpoint implementation receives the SOAP requests and delegates those requests to a MessageHandler implementation as described in chapter
+            <xref linkend="soap-receiver"/>. The SOAP attachment validation in its current nature does require the JmsConnectingMessageHandler implementation where the Citrus
             endpoint will forward incoming requests to a JMS queue. The SOAP attachment is converted to special JMS message headers and are ready for validation when received by
             the test case. See the following example to clear the boundaries.</para>
-            
+
             <programlisting>&lt;bean id=&quot;webServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
     &lt;property name=&quot;messageHandler&quot;&gt;
         &lt;bean class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
@@ -849,32 +785,32 @@ Server: Jetty(7.0.0.pre5)
         &lt;/bean&gt;
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
-            
+
             <para>The endpoint in the example uses the JmsConnectingMessageHandler in combination with the SoapAttachmentAwareJmsMessageCallback, which takes care of SOAP
             attachments in incoming requests. This mechanism allows test cases to receive messages over JMS with SOAP attachments encoded in the JMS message header. Fortunately
             you do not need to worry about the JMS header encoding done in the SoapAttachmentAwareJmsMessageCallback, because the ws:attachment extension will do all magic for you.
             Just use a extended message receiving action as shown in the example at the beginning of this chapter and you are able to validate the SOAP attachment data.</para>
         </section>
     </section>
-    
+
     <section id="soap-basic-auth-client">
         <title>Basic authentication with SOAP</title>
-        
-        <para>As a SOAP client you often have to use basic authentication in order to access a service. Basic authentication via Http stands for username/password authentication 
+
+        <para>As a SOAP client you often have to use basic authentication in order to access a service. Basic authentication via Http stands for username/password authentication
         where the credentials are transmtted in the Http request header section as base64 encoded entry. As Citrus uses the WebService stack of the Spring framework we have to setup
         basic authentication there. We set the user credentials on the HttpClient message sender which is used inside Spring's WebServivceTemplate.</para>
-        
+
         <para>Citrus provides a comfortable way to set the Http message sender with basic authentication credentials on the WebServiceTemplate. Just see the following
         example and learn how to do that.</para>
-        
-        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot;
-                              request-url=&quot;http://localhost:8090/test&quot; 
+
+        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapClient&quot;
+                              request-url=&quot;http://localhost:8090/test&quot;
                               reply-handler=&quot;soapResponseHandler&quot;
-                              message-sender=&quot;basicAuthMessageSender&quot;/&gt;
-  
+                              message-sender=&quot;basicAuthClient&quot;/&gt;
+
 &lt;citrus-ws:reply-message-handler id=&quot;soapResponseHandler&quot;/&gt;
 
-&lt;bean id=&quot;basicAuthMessageSender&quot; class=&quot;org.springframework.ws.transport.http.HttpComponentsMessageSender&quot;&gt;
+&lt;bean id=&quot;basicAuthClient&quot; class=&quot;org.springframework.ws.transport.http.HttpComponentsMessageSender&quot;&gt;
   &lt;property name=&quot;authScope&quot;&gt;
       &lt;bean class=&quot;org.apache.http.auth.AuthScope&quot;&gt;
         &lt;constructor-arg value=&quot;localhost&quot;/&gt;
@@ -887,18 +823,18 @@ Server: Jetty(7.0.0.pre5)
     &lt;bean class=&quot;org.apache.http.auth.UsernamePasswordCredentials&quot;&gt;
         &lt;constructor-arg value=&quot;someUsername&quot;/&gt;
         &lt;constructor-arg value=&quot;somePassword&quot;/&gt;
-    &lt;/bean&gt;      
-  &lt;/property&gt;  
+    &lt;/bean&gt;
+  &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
 
         <para>The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper
         basic authentication header to each request that is sent with this Citrus message sender. By default preemtive authentication is used. The message sender only sends a single request to the server with
-        all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus 
+        all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus
         can setup an authentication cache within the Http context in order to have preemtive authentication.</para>
-        
-        <tip><para>You can also skip the message sender configuration and set the <emphasis>Authorization</emphasis> header on each request in your send action definition on your own. 
+
+        <tip><para>You can also skip the message sender configuration and set the <emphasis>Authorization</emphasis> header on each request in your send action definition on your own.
           Be aware of setting the header as Http mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the username:password phrase.</para>
-          
+
           <programlisting>&lt;header&gt;
     &lt;element name=&quot;citrus_http_Authorization&quot; value=&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;/&gt;
 &lt;/header&gt;</programlisting>
@@ -906,20 +842,20 @@ Server: Jetty(7.0.0.pre5)
           <para>For base64 encoding you can also use a Citrus function, see <xref linkend="functions-encode-base64"/></para>
         </tip>
     </section>
-    
+
     <section id="soap-basic-auth-server">
         <title>Basic authentication on the server</title>
-        
-        <para>When providing SOAP WebService server functionality Citrus can also set basic authentication so clients need to 
+
+        <para>When providing SOAP WebService server functionality Citrus can also set basic authentication so clients need to
         authenticate properly when accessing the server.</para>
-        
-        <programlisting>&lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot; 
-             port=&quot;8091&quot; 
+
+        <programlisting>&lt;citrus-ws:jetty-server id=&quot;simpleJettyServer&quot;
+             port=&quot;8091&quot;
              auto-start=&quot;true&quot;
              context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
              resource-base=&quot;src/citrus/resources&quot;
              security-handler=&quot;basicSecurityHandler&quot;/&gt;
-                
+
 &lt;bean id=&quot;securityHandler&quot; class=&quot;com.consol.citrus.ws.security.SecurityHandlerFactory&quot;&gt;
     &lt;property name=&quot;users&quot;&gt;
         &lt;list&gt;
@@ -940,37 +876,37 @@ Server: Jetty(7.0.0.pre5)
         &lt;/map&gt;
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
-        
+
         <para>We have set a security handler on the server web container with a constraint on all resources with <emphasis>/foo/*</emphasis>. Following from that
         the server requires basic authentication for these resources. The granted users and roles are specified within the security handler bean definition. Connecting clients
         have to set the basic auth Http header properly using the correct user and role for accessing the Citrus server now.</para>
-        
+
         <para>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and
         inspect the settings and properties offered by the security handler interface.</para>
-        
+
         <tip>
             <para>This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</para>
         </tip>
     </section>
-    
+
     <section id="soap-ws-adressing">
         <title>WS-Addressing support</title>
-        
-        <para>The web service stack offers a lot of different technologies and standards within the context of WebServices. Some people speak of WS-* specifications. One of these specifications deals 
+
+        <para>The web service stack offers a lot of different technologies and standards within the context of WebServices. Some people speak of WS-* specifications. One of these specifications deals
         with addressing WebServices. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.</para>
-        
-        <para>In Citrus WebServiceMessageSender you can add those header information using the common configuration like this:</para>
-        
-        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapMessageSender&quot; 
-                         request-url=&quot;http://localhost:8090/test&quot; 
+
+        <para>In Citrus WebService client you can add those header information using the common configuration like this:</para>
+
+        <programlisting>&lt;citrus-ws:message-sender id=&quot;soapClient&quot;
+                         request-url=&quot;http://localhost:8090/test&quot;
                          reply-handler=&quot;soapResponseHandler&quot;
                          addressing-headers=&quot;wsAddressing200408&quot;/&gt;
 
 &lt;bean id=&quot;wsAddressing200408&quot; class=&quot;com.consol.citrus.ws.addressing.WsAddressingHeaders&quot;&gt;
     &lt;property name=&quot;version&quot; value=&quot;VERSION200408&quot;/&gt;
-    &lt;property name=&quot;action&quot; 
+    &lt;property name=&quot;action&quot;
                  value=&quot;http://citrus.sample/sayHello&quot;/&gt;
-    &lt;property name=&quot;to&quot; 
+    &lt;property name=&quot;to&quot;
                  value=&quot;http://citrus.sample/server&quot;/&gt;
     &lt;property name=&quot;from&quot;&gt;
         &lt;bean class=&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;&gt;
@@ -988,15 +924,15 @@ Server: Jetty(7.0.0.pre5)
         &lt;/bean&gt;
     &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
-        
+
         <note>
-            <para>The WS-Addressing specification knows several versions. Supported version are VERSION10 (WS-Addressing 1.0 May 2006) and VERSION200408 
+            <para>The WS-Addressing specification knows several versions. Supported version are VERSION10 (WS-Addressing 1.0 May 2006) and VERSION200408
             (August 2004 edition of the WS-Addressing specification).</para>
         </note>
-        
+
         <para>The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request  with
         ws addressing headers looks like follows:</para>
-        
+
         <programlisting>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
     &lt;SOAP-ENV:Header xmlns:wsa=&quot;http://schemas.xmlsoap.org/ws/2004/08/addressing&quot;&gt;
         &lt;wsa:To SOAP-ENV:mustUnderstand=&quot;1&quot;&gt;http://citrus.sample/server&lt;/wsa:To&gt;
@@ -1019,55 +955,161 @@ Server: Jetty(7.0.0.pre5)
     &lt;/SOAP-ENV:Body&gt;
 &lt;/SOAP-ENV:Envelope&gt;
         </programlisting>
-        
+
         <important>
-            <para>The message id property is automatically generated for each request. If you need to set a static message 
+            <para>The message id property is automatically generated for each request. If you need to set a static message
             id you can do so in citrus-context message sender configuration.</para>
         </important>
     </section>
-    
+
     <section id="soap-fork-mode">
         <title>Synchronous SOAP fork mode</title>
-        
-        <para>SOAP over HTTP uses synchronous communictaion by nature. This means that sending a SOAP message in Citrus over HTTP will automatically 
+
+        <para>SOAP over HTTP uses synchronous communictaion by nature. This means that sending a SOAP message in Citrus over HTTP will automatically
         block further test actions until the synchronous HTTP response has been received. In test cases this synchronous blocking might cause problems
         for several reasons. A simple reason would be that you need to do further test actions in parallel to the synchronous HTTP SOAP communication (e.g. simulate another
         backend system in the test case).</para>
-        
+
         <para>You can separate the SOAP send action from the rest of the test case by using the <emphasis>&quot;fork&quot;</emphasis> mode. The SOAP
         message sender will automatically open a new Java Thread for the synchronous communication and the test is able to continue with execution although the
         synchronous HTTP SOAP response has not arrived yet.</para>
-        
+
         <programlisting>&lt;ws:send endpoint=&quot;webServiceRequestSender&quot; fork=&quot;true&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
-        &lt;ns0:SoapMessageWithAttachmentRequest xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
-          &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
-        &lt;/ns0:SoapMessageWithAttachmentRequest&gt;
+        &lt;SoapMessageWithAttachmentRequest xmlns=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
+          &lt;Operation&gt;Read the attachment&lt;/Operation&gt;
+        &lt;/SoapMessageWithAttachmentRequest&gt;
     &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/ws:send&gt;</programlisting>
-        
-        <para>With the <emphasis>&quot;fork&quot;</emphasis> mode enabled the test continues with execution while the sending action waits for the synchronous response in 
+
+        <para>With the <emphasis>&quot;fork&quot;</emphasis> mode enabled the test continues with execution while the sending action waits for the synchronous response in
         a separate Java Thread. You could reach the same behaviour with a complex &lt;parallel&gt;/&lt;sequential&gt; container construct, but forking the send action is much more
         straight forward.</para>
-         
-        <important>It is highly recommended to use a proper <emphasis>&quot;timeout&quot;</emphasis> setting on the SOAP receive action when using fork mode. The forked send operation might take 
-        some time and the corresponding receive action might run into failure as the response was has not been received yet. The result would be a broken test because of the missing response message. 
-        A proper <emphasis>&quot;timeout&quot;</emphasis> setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message. 
+
+        <important>It is highly recommended to use a proper <emphasis>&quot;timeout&quot;</emphasis> setting on the SOAP receive action when using fork mode. The forked send operation might take
+        some time and the corresponding receive action might run into failure as the response was has not been received yet. The result would be a broken test because of the missing response message.
+        A proper <emphasis>&quot;timeout&quot;</emphasis> setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message.
         The following listing sets the receive timeout to 10 seconds, so the action waits for the forked send action to deliver the SOAP response in time.
             <programlisting>
 &lt;ws:receive endpoint=&quot;webServiceReplyHandler&quot; timeout=&quot;10000&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
-        &lt;ns0:SoapMessageWithAttachmentResponse xmlns:ns0=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
-          &lt;ns0:Operation&gt;Read the attachment&lt;/ns0:Operation&gt;
-          &lt;ns0:Success&gt;true&lt;/ns0:Success&gt;
-        &lt;/ns0:SoapMessageWithAttachmentResponse&gt;
+        &lt;SoapMessageWithAttachmentResponse xmlns=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
+          &lt;Operation&gt;Read the attachment&lt;/Operation&gt;
+          &lt;Success&gt;true&lt;/Success&gt;
+        &lt;/SoapMessageWithAttachmentResponse&gt;
     &lt;/payload&gt;
   &lt;/message&gt;
 &lt;/ws:receive&gt;
             </programlisting>
         </important>
-    </section>     
+    </section>
+
+    <section id="soap-servlet-context">
+        <title>SOAP servlet context customization</title>
+        <para>For highly customized SOAP server components in Citrus you can define a full servlet context configuration file. Here you have the full power to add Spring endpoint mappings and custom endpoint implementations.
+        You can set the custom servlet context as external file resource on the server component:</para>
+
+        <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
+          context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
+          message-factory=&quot;mySepcialMessageFactory&quot;/&gt;</programlisting>
+
+        <para>Now let us have a closer look at the context-config-location attribute. This configuration defines the Spring application context file for endpoints, request mappings and other SpringWS specific information. Please see the
+        official SpringWS documentation for details on this Spring based configuration. You can also just copy the following example application context which should work for you in general.</para>
+
+        <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+  &lt;bean id=&quot;loggingInterceptor&quot;
+    class=&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;&gt;
+      &lt;description&gt;
+          This interceptor logs the message payload.
+      &lt;/description&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id=&quot;helloServicePayloadMapping&quot;
+    class=&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;&gt;
+      &lt;property name=&quot;mappings&quot;&gt;
+          &lt;props&gt;
+              &lt;prop
+                  key=&quot;{http://www.consol.de/schemas/sayHello}HelloRequest&quot;&gt;
+                  helloServiceEndpoint
+              &lt;/prop&gt;
+          &lt;/props&gt;
+      &lt;/property&gt;
+      &lt;property name=&quot;interceptors&quot;&gt;
+          &lt;list&gt;
+              &lt;ref bean=&quot;loggingInterceptor&quot;/&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id=&quot;helloServiceEndpoint&quot;
+       class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
+      &lt;property name=&quot;messageHandler&quot;&gt;
+        &lt;bean class=&quot;com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler&quot;&gt;
+            &lt;property name=&quot;messagePayload&quot;&gt;
+                &lt;value&gt;
+                &lt;![CDATA[
+                    &lt;HelloResponse
+                        xmlns=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
+                        &lt;MessageId&gt;123456789&lt;/MessageId&gt;
+                        &lt;CorrelationId&gt;CORR123456789&lt;/CorrelationId&gt;
+                        &lt;User&gt;WebServer&lt;/User&gt;
+                        &lt;Text&gt;Hello User&lt;/Text&gt;
+                    &lt;/HelloResponse&gt;
+                ]]&gt;
+                &lt;/value&gt;
+            &lt;/property&gt;
+            &lt;property name=&quot;messageHeader&quot;&gt;
+                &lt;map&gt;
+                    &lt;entry key=&quot;{http://www.consol.de/schemas/sayHello}h1:Operation&quot;
+                        value=&quot;sayHelloResponse&quot;/&gt;
+                    &lt;entry key=&quot;{http://www.consol.de/schemas/sayHello}h1:Request&quot;
+                        value=&quot;HelloRequest&quot;/&gt;
+                    &lt;entry key=&quot;citrus_soap_action&quot;
+                        value=&quot;sayHello&quot;/&gt;
+                &lt;/map&gt;
+            &lt;/property&gt;
+        &lt;/bean&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+&lt;/beans&gt;</programlisting>
+
+        <para>The program listing above describes a normal SpringWS request mapping with endpoint configurations. The mapping is responsible to forward
+        incoming requests to the endpoint which will handle the request and provide a proper response message. First of all we add a logging interceptor
+        to the context so all incoming requests get logged to the console first. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order
+        to map all incoming <literal>'HelloRequest'</literal> SOAP messages to the <literal>'helloServiceEndpoint'</literal>. Endpoints are of
+        essential nature in Citrus SOAP WebServices implementation. They are responsible for processing a request in order to provide a proper response
+        message that is sent back to the calling client. Citrus uses the endpoint in combination with a message endpoint adapter implementation.</para>
+
+        <mediaobject>
+          <imageobject role="fo">
+            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
+          </imageobject>
+
+          <imageobject role="html">
+            <imagedata align="center" display="block" fileref="figure_009.jpg" format="JPG" />
+          </imageobject>
+        </mediaobject>
+
+        <para>The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various
+        message endpoint adapter implementations in Citrus were already discussed in <xref linkend="endpoint-adapter"/>.</para>
+
+        <para>In this example the <literal>'helloServiceEndpoint'</literal> uses the <literal>'StaticResponseProducingMessageHandler'</literal>
+        which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to
+        respond more dynamically.</para>
+
+        <para>Regardless of which message endpoint adapter setup you are using in your test case the endpoint transforms the response into a proper SOAP
+        message. You can add as many request mappings and endpoints as you want to the server context configuration. So you are able to handle
+        different request types with one single Jetty server instance.</para>
+
+        <para>That's it for connecting with SOAP WebServices! We saw how to send and receive SOAP messages with Jetty and
+        Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handling.</para>
+    </section>
 </chapter>
