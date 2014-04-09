@@ -27,6 +27,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -34,6 +35,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -72,7 +74,7 @@ public class TestContext {
      * Default constructor
      */
     public TestContext() {
-        variables = new LinkedHashMap<String, Object>();
+        variables = new ConcurrentHashMap<String, Object>();
     }
     
     /**

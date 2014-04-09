@@ -162,9 +162,8 @@ public class SQLActionParser implements BeanDefinitionParser {
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {
             validationContext.setValidationScriptResourcePath(filePath);
-        } else {
-            validationContext.setValidationScript(DomUtils.getTextValue(scriptElement));
         }
+        validationContext.setValidationScript(DomUtils.getTextValue(scriptElement));
         
         return validationContext;
     }

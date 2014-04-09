@@ -125,8 +125,6 @@ public class RandomStringFunction implements Function {
             }
         }
         
-        System.out.println(builder.toString());
-        
         return builder.toString();
     }
 }

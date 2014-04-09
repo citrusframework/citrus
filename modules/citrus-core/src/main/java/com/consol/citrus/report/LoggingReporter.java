@@ -19,7 +19,9 @@ package com.consol.citrus.report;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestResult.RESULT;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -203,7 +205,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     /**
      * @see com.consol.citrus.report.TestActionListener#onTestActionStart(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
-    public void onTestActionStart(TestCase testCase, TestAction testAction) {
+    public void onTestActionStart(TestCase testCase, TestAction testAction, TestContext context) {
         newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
         log.info("Test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + ">");
@@ -222,7 +224,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     /**
      * @see com.consol.citrus.report.TestActionListener#onTestActionFinish(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
-    public void onTestActionFinish(TestCase testCase, TestAction testAction) {
+    public void onTestActionFinish(TestCase testCase, TestAction testAction, TestContext context) {
         log.info("Test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + "> done");
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " done");
     }
@@ -230,7 +232,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     /**
      * @see com.consol.citrus.report.TestActionListener#onTestActionSkipped(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
-    public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
+    public void onTestActionSkipped(TestCase testCase, TestAction testAction, TestContext context) {
         newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
         log.info("Skipping test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + ">");

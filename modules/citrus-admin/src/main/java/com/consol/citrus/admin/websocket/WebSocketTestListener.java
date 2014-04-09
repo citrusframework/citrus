@@ -18,7 +18,9 @@ package com.consol.citrus.admin.websocket;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.*;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,12 +38,12 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
     private String processId = "";  //TODO refactor message listener instead of storing processId of last executed test
 
     @Override
-    public void onTestActionStart(TestCase test, TestAction testAction) {
+    public void onTestActionStart(TestCase test, TestAction testAction, TestContext context) {
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_ACTION_START, testAction.getName()));
     }
 
     @Override
-    public void onTestActionFinish(TestCase test, TestAction testAction) {
+    public void onTestActionFinish(TestCase test, TestAction testAction, TestContext context) {
         long totalActions = test.getActionCount();
         int currentAction = test.getActionIndex(testAction) + 1;
 
@@ -54,7 +56,7 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
     }
 
     @Override
-    public void onTestActionSkipped(TestCase test, TestAction testAction) {
+    public void onTestActionSkipped(TestCase test, TestAction testAction, TestContext context) {
         loggingWebSocket.push(SocketEvent.createEvent(test.getName(), SocketEvent.TEST_ACTION_SKIP, testAction.getName()));
     }
 
