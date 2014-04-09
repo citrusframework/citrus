@@ -31,7 +31,7 @@ public class SoapActionMappingKeyExtractorTest {
         SoapActionMappingKeyExtractor extractor = new SoapActionMappingKeyExtractor();
 
         Assert.assertEquals(extractor.extractMappingKey(MessageBuilder.withPayload("Foo")
-                .setHeader("soap_action", "foo")
+                .setHeader("citrus_soap_action", "foo")
                 .setHeader("Bar", "bar").build()), "foo");
     }
 
@@ -45,7 +45,7 @@ public class SoapActionMappingKeyExtractorTest {
                 .setHeader("Bar", "bar").build());
             Assert.fail("Missing exception due to unknown header");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to find header 'soap_action'"));
+            Assert.assertTrue(e.getMessage().startsWith("Unable to find header 'citrus_soap_action'"));
         }
     }
 }

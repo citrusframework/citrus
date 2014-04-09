@@ -16,9 +16,6 @@
 
 package com.consol.citrus.adapter.handler.mapping;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.integration.Message;
-
 /**
  * Extractor searches for SOAP action header name in request headers for mapping name identification.
  *
@@ -31,6 +28,6 @@ public class SoapActionMappingKeyExtractor extends HeaderMappingKeyExtractor {
      * Default constructor using Citrus soap action header name.
      */
     public SoapActionMappingKeyExtractor() {
-        super("soap_action");
+        super("citrus_soap_action");
     }
 }
