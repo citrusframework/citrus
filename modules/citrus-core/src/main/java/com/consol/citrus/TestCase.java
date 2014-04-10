@@ -50,10 +50,13 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
     
     /** Test package name */
-    private String packageName;
+    private String packageName = this.getClass().getPackage().getName();
     
     /** In case test was called with parameters from outside */
     private String[] parameters = new String[] {};
+
+    /** This tests context holding variables */
+    private TestContext testContext;
 
     @Autowired
     private TestListeners testListeners = new TestListeners();
@@ -71,6 +74,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Method executes the test case and all its actions.
      */
     public void doExecute(TestContext context) {
+        this.testContext = context;
+
         if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
             testListeners.onTestStart(this);
 
@@ -130,6 +135,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 log.debug(entry.getKey() + " = " + entry.getValue());
             }
         }
+
+        // add default variables for test
+        context.setVariable(CitrusConstants.TEST_NAME_VARIABLE, getName());
+        context.setVariable(CitrusConstants.TEST_PACKAGE_VARIABLE, getPackageName());
 
         /* execute the test actions */
         for (TestAction action: actions) {
@@ -280,6 +289,14 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public String[] getParameters() {
         return Arrays.copyOf(parameters, parameters.length);
+    }
+
+    /**
+     * Provides this tests context to test case listeners for instance.
+     * @return
+     */
+    public TestContext getTestContext() {
+        return testContext;
     }
 
     /**

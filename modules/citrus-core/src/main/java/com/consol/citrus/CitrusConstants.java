@@ -16,9 +16,9 @@
 
 package com.consol.citrus;
 
-import java.io.File;
-
 import com.consol.citrus.message.MessageType;
+
+import java.io.File;
 
 /**
  * Constants used throughout Citrus.
@@ -28,14 +28,13 @@ import com.consol.citrus.message.MessageType;
  */
 public final class CitrusConstants {
 
+    /** Default variable names */
+    public static final String TEST_NAME_VARIABLE = "citrus.test.name";
+    public static final String TEST_PACKAGE_VARIABLE = "citrus.test.package";
+
+    /** File encoding system property */
     public static final String CITRUS_FILE_ENCODING = "citrus.file.encoding";
 
-    /**
-     * Prevent instantiation.
-     */
-    private CitrusConstants() {
-    }
-    
     /** Prefix/sufix used to identify variable expressions */
     public static final String VARIABLE_PREFIX = "${";
     public static final char VARIABLE_SUFFIX = '}';
@@ -49,17 +48,23 @@ public final class CitrusConstants {
     /** Default test directories */
     public static final String DEFAULT_JAVA_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "java" + File.separator;
     public static final String DEFAULT_TEST_DIRECTORY = "src" + File.separator + "citrus" + File.separator + "tests" + File.separator;
-    
+
     /** Default test name */
     public static final String DEFAULT_TEST_NAME = "citrus-test";
-    
+
     /** Placeholder used in messages to ignore elements */
     public static final String IGNORE_PLACEHOLDER = "@ignore@";
-    
+
     /** Prefix/suffix used to identify validation matchers */
     public static final String VALIDATION_MATCHER_PREFIX = "@";
     public static final String VALIDATION_MATCHER_SUFFIX = "@";
-    
+
     /** Default message type used in message validation mechanism */
     public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
+
+    /**
+     * Prevent instantiation.
+     */
+    private CitrusConstants() {
+    }
 }

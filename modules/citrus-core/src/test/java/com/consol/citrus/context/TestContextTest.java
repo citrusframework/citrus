@@ -16,18 +16,18 @@
 
 package com.consol.citrus.context;
 
-import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.variable.GlobalVariables;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -48,7 +48,9 @@ public class TestContextTest extends AbstractTestNGUnitTest {
 
         TestContext testContext = createTestContext();
         testcase.execute(testContext);
-        
+
+        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_NAME_VARIABLE), "MyTestCase");
+        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
@@ -56,12 +58,15 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         
         TestCase testcase2 = new TestCase();
         testcase2.setName("MyTestCase2");
+        testcase2.setPackageName("com.consol.citrus");
         
         testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
 
         testContext = createTestContext();
         testcase2.execute(testContext);
-        
+
+        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_NAME_VARIABLE), "MyTestCase2");
+        Assert.assertEquals(testContext.getVariables().get(CitrusConstants.TEST_PACKAGE_VARIABLE), "com.consol.citrus");
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));
