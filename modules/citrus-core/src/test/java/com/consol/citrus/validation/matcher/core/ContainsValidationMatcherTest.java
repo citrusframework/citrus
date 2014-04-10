@@ -38,6 +38,7 @@ public class ContainsValidationMatcherTest extends AbstractTestNGUnitTest {
     @Test
     public void testValidateError() {
     	assertException("field", "This is a test", "0815");
+    	assertException("field", null, "control");
     }
 
     private void assertException(String fieldName, String value, String control) {
@@ -46,8 +47,13 @@ public class ContainsValidationMatcherTest extends AbstractTestNGUnitTest {
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
-			Assert.assertTrue(e.getMessage().contains(value));
 			Assert.assertTrue(e.getMessage().contains(control));
+
+            if (value != null) {
+			    Assert.assertTrue(e.getMessage().contains(value));
+            } else {
+                Assert.assertTrue(e.getMessage().contains("null"));
+            }
 		}
     }
 }
