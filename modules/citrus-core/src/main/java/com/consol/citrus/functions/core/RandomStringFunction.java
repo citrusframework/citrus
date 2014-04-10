@@ -16,12 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-import java.util.Random;
-
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Function generating a random string containing alphabetic characters. Arguments specify
@@ -124,8 +124,6 @@ public class RandomStringFunction implements Function {
                 builder.append(alphabet[letterIndex]);
             }
         }
-        
-        System.out.println(builder.toString());
         
         return builder.toString();
     }
