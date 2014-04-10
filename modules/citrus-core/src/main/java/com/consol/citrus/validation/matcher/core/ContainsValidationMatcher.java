@@ -27,8 +27,7 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
 public class ContainsValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, String control) throws ValidationException {
-        
-        if (!value.contains(control)) {
+        if (value == null || !value.contains(control)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName
                     + "'. Received value '" + value
