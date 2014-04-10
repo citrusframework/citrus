@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class holding and managing test variables. The test context also provides utility methods
@@ -72,7 +73,7 @@ public class TestContext {
      * Default constructor
      */
     public TestContext() {
-        variables = new LinkedHashMap<String, Object>();
+        variables = new ConcurrentHashMap<String, Object>();
     }
     
     /**
