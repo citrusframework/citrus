@@ -325,7 +325,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     }
 
     /**
-     * Fixed Java mail strange behavior to include next line of text to content type.
+     * When content type has multiple lines this method just returns plain content type information in first line.
+     * This is the case when multipart mixed content type has boundary information in next line.
      * @param contentType
      * @return
      * @throws IOException
@@ -335,7 +336,12 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             BufferedReader reader = new BufferedReader(new StringReader(contentType));
 
             try {
-                return reader.readLine();
+                String plainContentType = reader.readLine().trim();
+                if (plainContentType.endsWith(";")) {
+                    plainContentType = plainContentType.substring(0, plainContentType.length() -1);
+                }
+
+                return plainContentType;
             } finally {
                 try {
                     reader.close();

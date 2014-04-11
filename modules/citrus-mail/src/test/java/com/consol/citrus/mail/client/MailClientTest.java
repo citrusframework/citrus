@@ -24,13 +24,13 @@ import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.mail.internet.*;
 import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
@@ -76,6 +76,54 @@ public class MailClientTest {
                 Assert.assertEquals(mimeMessage.getContentType(), "text/plain");
 
                 Assert.assertEquals(mimeMessage.getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
+
+                return null;
+            }
+        }).once();
+
+        replay(javaMailSender);
+
+        mailClient.send(MessageBuilder.withPayload(mailMessage).build());
+
+        verify(javaMailSender);
+    }
+
+    @Test
+    public void testSendMultipartMailMessageObject() throws Exception {
+        MailMessage mailMessage = (MailMessage) new MailMessageMapper().fromXML(
+                new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream());
+
+        reset(javaMailSender);
+
+        expect(javaMailSender.getHost()).andReturn("localhost").times(2);
+        expect(javaMailSender.getPort()).andReturn(25).times(2);
+        expect(javaMailSender.getProtocol()).andReturn("smtp").times(2);
+        expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
+        javaMailSender.send(anyObject(MimeMessage.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
+            public Object answer() throws Throwable {
+                MimeMessage mimeMessage = (MimeMessage) getCurrentArguments()[0];
+                Assert.assertEquals(getAddresses(mimeMessage.getFrom()), "foo@mail.com");
+                Assert.assertEquals(getAddresses(mimeMessage.getRecipients(Message.RecipientType.TO)), "bar@mail.com");
+                Assert.assertEquals(getAddresses(mimeMessage.getReplyTo()), "foo@mail.com");
+                Assert.assertNotNull(mimeMessage.getSentDate());
+                Assert.assertEquals(mimeMessage.getSubject(), "Multipart Testmail");
+                Assert.assertEquals(mimeMessage.getContentType(), "text/plain");
+
+                Assert.assertEquals(mimeMessage.getContent().getClass(), MimeMultipart.class);
+
+                MimeMultipart multipart = (MimeMultipart) mimeMessage.getContent();
+
+                Assert.assertEquals(multipart.getCount(), 2L);
+                Assert.assertTrue(multipart.getContentType().startsWith("multipart/mixed"));
+                Assert.assertTrue(((MimeMultipart) multipart.getBodyPart(0).getContent()).getContentType().startsWith("multipart/related"));
+                Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getCount(), 1L);
+                Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContent().toString(), "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.");
+                Assert.assertEquals(((MimeMultipart) multipart.getBodyPart(0).getContent()).getBodyPart(0).getContentType(), "text/plain");
+                Assert.assertEquals(StringUtils.trimAllWhitespace(multipart.getBodyPart(1).getContent().toString()), "<html><head></head><body><h1>HTMLAttachment</h1></body></html>");
+                Assert.assertEquals(multipart.getBodyPart(1).getFileName(), "index.html");
+                Assert.assertEquals(multipart.getBodyPart(1).getDisposition(), "attachment");
 
                 return null;
             }

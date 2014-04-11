@@ -16,7 +16,9 @@
 
 package com.consol.citrus.mail.model;
 
+import com.consol.citrus.CitrusConstants;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.List;
 public class BodyPart {
 
     private String contentType;
+
     private String content;
     private List<AttachmentPart> attachments;
 
@@ -52,6 +55,25 @@ public class BodyPart {
         }
 
         this.attachments.add(part);
+    }
+
+    /**
+     * Evaluates charset name from content type string. Or returns default charset name
+     * when no charset is defined in content type string.
+     * @return charset name
+     */
+    public String getCharsetName() {
+        if (StringUtils.hasText(contentType) && contentType.contains("charset=")) {
+            String charsetName = contentType.substring(contentType.indexOf("charset=") + "charset=".length());
+
+            if (charsetName.contains(";")) {
+                return charsetName.substring(0, charsetName.indexOf(";"));
+            } else {
+                return charsetName;
+            }
+        } else {
+            return System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING, "UTF-8");
+        }
     }
 
     /**

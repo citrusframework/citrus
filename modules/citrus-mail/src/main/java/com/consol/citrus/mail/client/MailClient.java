@@ -25,16 +25,16 @@ import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.integration.Message;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringSource;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Properties;
 
@@ -120,10 +120,10 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
             throw new CitrusRuntimeException("Unable to create proper mail message from paylaod: " + payload);
         }
 
-        MimeMessage mimeMessage = getEndpointConfiguration().getJavaMailSender().createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8"); //TODO use message charset encoding
-
         try {
+            MimeMessage mimeMessage = getEndpointConfiguration().getJavaMailSender().createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, mailMessage.getBody().hasAttachments(), mailMessage.getBody().getCharsetName());
+
             mimeMessageHelper.setFrom(mailMessage.getFrom());
             mimeMessageHelper.setTo(StringUtils.commaDelimitedListToStringArray(mailMessage.getTo()));
 
@@ -143,15 +143,15 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
             if (mailMessage.getBody().hasAttachments()) {
                 for (AttachmentPart attachmentPart : mailMessage.getBody().getAttachments()) {
                     mimeMessageHelper.addAttachment(attachmentPart.getFileName(),
-                            new InputStreamResource(new StringSource(attachmentPart.getContent()).getInputStream()),
+                            new ByteArrayResource(attachmentPart.getContent().getBytes(Charset.forName(attachmentPart.getCharsetName()))),
                             attachmentPart.getContentType());
                 }
             }
+
+            return mimeMessage;
         } catch (MessagingException e) {
             throw new CitrusRuntimeException("Failed to create mail mime message", e);
         }
-
-        return mimeMessage;
     }
 
     /**

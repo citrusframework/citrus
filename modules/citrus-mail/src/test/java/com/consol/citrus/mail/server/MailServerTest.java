@@ -109,7 +109,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed;");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -154,7 +154,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed;");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -427,7 +427,7 @@ public class MailServerTest {
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png;");
+                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
                 Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
 
                 try {
