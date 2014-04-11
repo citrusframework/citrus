@@ -16,18 +16,18 @@
 
 package com.consol.citrus.util;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.*;
-
+import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.util.FileCopyUtils;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 /**
  * Class to provide general file utilities, such as listing all XML files in a directory, 
@@ -159,7 +159,7 @@ public abstract class FileUtils {
      * @return
      */
     private static Charset getDefaultCharset() {
-        return Charset.forName(System.getProperty("citrus.file.encoding",
+        return Charset.forName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
                     Charset.defaultCharset().displayName()));
     }
 }
