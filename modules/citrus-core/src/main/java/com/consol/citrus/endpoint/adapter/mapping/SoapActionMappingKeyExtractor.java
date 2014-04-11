@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.adapter;
-
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+package com.consol.citrus.endpoint.adapter.mapping;
 
 /**
+ *
  * @author Christoph Deppisch
+ * @since 1.4
  */
-public class TimeoutProducingEndpointAdapterTest {
+public class SoapActionMappingKeyExtractor extends HeaderMappingKeyExtractor {
 
-    @Test
-    public void testHandleMessage() {
-        TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
-
-        Assert.assertNull(response);
+    /**
+     * Default constructor using Citrus soap action header name.
+     */
+    public SoapActionMappingKeyExtractor() {
+        super("citrus_soap_action");
     }
 }

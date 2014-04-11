@@ -16,22 +16,38 @@
 
 package com.consol.citrus.endpoint.adapter;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.adapter.mapping.*;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+
 /**
  * @author Christoph Deppisch
  */
-public class TimeoutProducingEndpointAdapterTest {
+public class RequestDispatchingEndpointAdapterTest {
 
     @Test
-    public void testHandleMessage() {
-        TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
+    public void testDispatchRequest() {
+        RequestDispatchingEndpointAdapter endpointAdapter = new RequestDispatchingEndpointAdapter();
+
+        endpointAdapter.setMappingKeyExtractor(new MappingKeyExtractor() {
+            @Override
+            public String extractMappingKey(Message<?> request) {
+                return "foo";
+            }
+        });
+
+        SimpleMappingStrategy mappingStrategy = new SimpleMappingStrategy();
+        mappingStrategy.setAdapterMappings(Collections.<String, EndpointAdapter>singletonMap("foo", new EmptyResponseEndpointAdapter()));
+        endpointAdapter.setMappingStrategy(mappingStrategy);
+
         Message<?> response = endpointAdapter.handleMessage(
                 MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
 
-        Assert.assertNull(response);
+        Assert.assertEquals(response.getPayload(), "");
     }
 }

@@ -28,8 +28,8 @@ public class EmptyResponseEndpointAdapterTest {
 
     @Test
     public void testHandleMessage() {
-        EmptyResponseEndpointAdapter messageHandler = new EmptyResponseEndpointAdapter();
-        Message<?> response = messageHandler.handleMessage(
+        EmptyResponseEndpointAdapter endpointAdapter = new EmptyResponseEndpointAdapter();
+        Message<?> response = endpointAdapter.handleMessage(
                 MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
 
         Assert.assertEquals(response.getPayload(), "");

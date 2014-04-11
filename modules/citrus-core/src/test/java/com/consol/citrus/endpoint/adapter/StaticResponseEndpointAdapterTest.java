@@ -31,14 +31,14 @@ public class StaticResponseEndpointAdapterTest {
 
     @Test
     public void testHandleMessage() {
-        StaticResponseEndpointAdapter messageHandler = new StaticResponseEndpointAdapter();
+        StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
         Map<String, Object> header = new HashMap<String, Object>();
         header.put("Operation", "UnitTest");
 
-        messageHandler.setMessageHeader(header);
-        messageHandler.setMessagePayload("<TestMessage>Hello User!</TestMessage>");
+        endpointAdapter.setMessageHeader(header);
+        endpointAdapter.setMessagePayload("<TestMessage>Hello User!</TestMessage>");
 
-        Message<?> response = messageHandler.handleMessage(
+        Message<?> response = endpointAdapter.handleMessage(
                 MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
 
         Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");

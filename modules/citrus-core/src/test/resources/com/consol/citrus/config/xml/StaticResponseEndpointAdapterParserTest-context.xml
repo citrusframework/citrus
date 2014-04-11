@@ -8,10 +8,10 @@
     <citrus:static-response-adapter id="endpointAdapter">
       <citrus:payload>
         <![CDATA[
-              <TestMessage>
-                <Text>Hello!</Text>
-              </TestMessage>
-            ]]>
+          <TestMessage>
+            <Text>Hello!</Text>
+          </TestMessage>
+        ]]>
       </citrus:payload>
       <citrus:header>
         <citrus:element name="Operation" value="sayHello"/>

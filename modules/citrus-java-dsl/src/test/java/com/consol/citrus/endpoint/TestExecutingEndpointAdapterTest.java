@@ -14,29 +14,33 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler;
+package com.consol.citrus.endpoint;
 
-import com.consol.citrus.adapter.handler.mapping.XPathPayloadMappingKeyExtractor;
-import com.consol.citrus.dsl.handler.TestExecutingMessageHandler;
+import com.consol.citrus.dsl.endpoint.TestExecutingEndpointAdapter;
+import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-@ContextConfiguration(locations = { "classpath:com/consol/citrus/adapter/handler/TestExecutingMessageHandlerTest-context.xml"})
-public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
+public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
+    private TestExecutingEndpointAdapter endpointAdapter;
 
-    @Autowired
-    private TestExecutingMessageHandler messageHandler;
+    @BeforeClass
+    public void loadContext() {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:com/consol/citrus/endpoint/TestExecutingEndpointAdapterTest-context.xml"}, applicationContext);
+        endpointAdapter = ctx.getBean(TestExecutingEndpointAdapter.class);
+    }
 
     /**
      * Test for handler routing by node content
@@ -45,14 +49,14 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
     public void testRouteMessageByElementTextContent() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         mappingNameExtractor.setXpathExpression("//Test/@name");
-        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+        endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        Message<?> response = messageHandler.handleMessage(
+        Message<?> response = endpointAdapter.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"FooTest\"></Test>").build());
 
         Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
 
-        response = messageHandler.handleMessage(
+        response = endpointAdapter.handleMessage(
                 MessageBuilder.withPayload("<Test name=\"BarTest\"></Test>").build());
 
         Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
@@ -64,9 +68,9 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
     @Test
     public void testRouteMessageWithDefaultXpath() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
-        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+        endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        Message<?> response = messageHandler.handleMessage(
+        Message<?> response = endpointAdapter.handleMessage(
                 MessageBuilder.withPayload(
                     "<FooBarTest></FooBarTest>").build());
 
@@ -80,10 +84,10 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
     public void testRouteMessageWithBadXpathExpression() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         mappingNameExtractor.setXpathExpression("//I_DO_NOT_EXIST");
-        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+        endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         try {
-            messageHandler.handleMessage(MessageBuilder.withPayload(
+            endpointAdapter.handleMessage(MessageBuilder.withPayload(
                     "<FooTest>foo test please</FooTest>").build());
             Assert.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
@@ -98,10 +102,10 @@ public class TestExecutingMessageHandlerTest extends AbstractTestNGUnitTest {
     public void testRouteMessageWithBadHandlerConfiguration() throws Exception {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         mappingNameExtractor.setXpathExpression("//Test/@name");
-        messageHandler.setMappingKeyExtractor(mappingNameExtractor);
+        endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         try {
-            messageHandler.handleMessage(MessageBuilder.withPayload(
+            endpointAdapter.handleMessage(MessageBuilder.withPayload(
                     "<Test name=\"UNKNOWN_TEST\"></Test>").build());
             Assert.fail("Missing exception due to unknown message handler");
         } catch (CitrusRuntimeException e) {

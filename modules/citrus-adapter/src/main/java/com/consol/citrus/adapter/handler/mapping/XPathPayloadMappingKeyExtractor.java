@@ -16,46 +16,13 @@
 
 package com.consol.citrus.adapter.handler.mapping;
 
-import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
-import com.consol.citrus.xml.xpath.XPathUtils;
-import org.springframework.integration.Message;
-
 /**
  * Extracts predicate from message payload via XPath expression evaluation.
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor}
  */
-public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor {
-    /** XPath expression evaluated on message payload */
-    private String xpathExpression = "local-name(/*)";
-
-    /** Namespace context builder for XPath expression evaluation */
-    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-
-    @Override
-    public String getMappingKey(Message<?> request) {
-        return XPathUtils.evaluateAsString(
-                            XMLUtils.parseMessagePayload(request.getPayload().toString()),
-                            xpathExpression,
-                            namespaceContextBuilder.buildContext(request, null));
-    }
-
-    /**
-     * Sets the xpath expression to evaluate.
-     * @param xpathExpression
-     */
-    public void setXpathExpression(String xpathExpression) {
-        this.xpathExpression = xpathExpression;
-    }
-
-    /**
-     * Sets the namespace context builder for this extractor.
-     * @param namespaceContextBuilder
-     */
-    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
-        this.namespaceContextBuilder = namespaceContextBuilder;
-    }
-
+@Deprecated
+public class XPathPayloadMappingKeyExtractor extends com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor implements MappingKeyExtractor {
 }

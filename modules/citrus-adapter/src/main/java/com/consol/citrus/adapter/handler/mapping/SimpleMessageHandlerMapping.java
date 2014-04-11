@@ -18,14 +18,8 @@ package com.consol.citrus.adapter.handler.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +28,9 @@ import java.util.Map;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.SimpleMappingStrategy}
  */
+@Deprecated
 public class SimpleMessageHandlerMapping implements MessageHandlerMapping {
 
     /** Simple map holds mapping names and message handlers */

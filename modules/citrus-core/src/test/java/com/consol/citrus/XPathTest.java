@@ -21,9 +21,9 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
@@ -43,7 +43,7 @@ import static org.easymock.EasyMock.*;
  */
 public class XPathTest extends AbstractTestNGUnitTest {
     @Autowired
-    private MessageValidator<ValidationContext> validator;
+    private DomXmlMessageValidator validator;
 
     private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
     private Consumer consumer = EasyMock.createMock(Consumer.class);

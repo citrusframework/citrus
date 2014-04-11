@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.adapter;
+package com.consol.citrus.endpoint.adapter.mapping;
 
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
+ * Interface describes mapping extraction along message dispatching message handler processing steps. Extractor
+ * is supposed to read mapping name predicate from request (e.g. via XPath, header value, etc.). Dispatching message handlers
+ * may then dispatch message processing according to this mapping name.
+ *
  * @author Christoph Deppisch
  */
-public class TimeoutProducingEndpointAdapterTest {
+public interface MappingKeyExtractor {
 
-    @Test
-    public void testHandleMessage() {
-        TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
-
-        Assert.assertNull(response);
-    }
+    /**
+     * Extracts the mapping key from incoming request message.
+     * @param request
+     * @return
+     */
+    String extractMappingKey(Message<?> request);
 }

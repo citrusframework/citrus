@@ -16,8 +16,6 @@
 
 package com.consol.citrus.adapter.handler.mapping;
 
-import org.springframework.integration.Message;
-
 /**
  * Interface describes mapping extraction along message dispatching message handler processing steps. Extractor
  * is supposed to read mapping name predicate from request (e.g. via XPath, header value, etc.). Dispatching message handlers
@@ -25,13 +23,8 @@ import org.springframework.integration.Message;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor}
  */
-public interface MappingKeyExtractor {
-
-    /**
-     * Extracts the mapping name from incoming request message.
-     * @param request
-     * @return
-     */
-    String extractMappingKey(Message<?> request);
+@Deprecated
+public interface MappingKeyExtractor extends com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor {
 }

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler;
+package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.adapter.handler.mapping.SpringBeanMessageHandlerMapping;
 import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.server.AbstractServer;
@@ -34,12 +34,13 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.integration.Message;
 
 /**
- * Special request dispatching message handler invokes Xml test case for each incoming message. Incoming message is
+ * Special request dispatching endpoint adapter invokes XML test case for each incoming message. Incoming message is
  * passed to test case via normal message channel connection as usual.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
-public class XmlTestExecutingMessageHandler extends RequestDispatchingMessageHandler implements InitializingBean, BeanNameAware, ApplicationContextAware {
+public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointAdapter implements InitializingBean, BeanNameAware, ApplicationContextAware {
     /** Executor start action sequence logic in separate thread task */
     private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 
@@ -136,10 +137,10 @@ public class XmlTestExecutingMessageHandler extends RequestDispatchingMessageHan
             responseMessageHandler = channelConnectingMessageHandler;
         }
 
-        if (getMessageHandlerMapping() == null) {
-            SpringBeanMessageHandlerMapping messageHandlerMapping = new SpringBeanMessageHandlerMapping();
-            messageHandlerMapping.setApplicationContext(applicationContext);
-            setMessageHandlerMapping(messageHandlerMapping);
+        if (getMappingStrategy() == null) {
+            BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy();
+            mappingStrategy.setApplicationContext(applicationContext);
+            setMappingStrategy(mappingStrategy);
         }
     }
 

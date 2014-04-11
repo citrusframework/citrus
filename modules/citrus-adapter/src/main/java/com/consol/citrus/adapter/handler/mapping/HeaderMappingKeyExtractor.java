@@ -16,49 +16,27 @@
 
 package com.consol.citrus.adapter.handler.mapping;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.integration.Message;
-
 /**
  * Extractor searches for header name in request headers for mapping name identification.
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.HeaderMappingKeyExtractor}
  */
-public class HeaderMappingKeyExtractor extends AbstractMappingKeyExtractor {
-
-    /** Header name to search for */
-    private String headerName = "";
-
+@Deprecated
+public class HeaderMappingKeyExtractor extends com.consol.citrus.endpoint.adapter.mapping.HeaderMappingKeyExtractor implements MappingKeyExtractor {
     /**
-     * Default constructor.
+     * Default constructor
      */
     public HeaderMappingKeyExtractor() {
         super();
     }
 
     /**
-     * Constructor using header name field.
+     * Constructor using header name.
      * @param headerName
      */
     public HeaderMappingKeyExtractor(String headerName) {
-        this.headerName = headerName;
-    }
-
-    @Override
-    public String getMappingKey(Message<?> request) {
-        if (request.getHeaders().containsKey(headerName)) {
-            return request.getHeaders().get(headerName).toString();
-        } else {
-            throw new CitrusRuntimeException(String.format("Unable to find header '%s' in request message", headerName));
-        }
-    }
-
-    /**
-     * Sets the header name.
-     * @param headerName
-     */
-    public void setHeaderName(String headerName) {
-        this.headerName = headerName;
+        super(headerName);
     }
 }

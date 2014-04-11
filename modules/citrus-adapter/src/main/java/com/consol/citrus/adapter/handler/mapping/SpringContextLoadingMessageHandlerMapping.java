@@ -29,7 +29,9 @@ import org.springframework.util.Assert;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.ContextLoadingMappingStrategy}
  */
+@Deprecated
 public class SpringContextLoadingMessageHandlerMapping implements MessageHandlerMapping {
     /** Application context configuration location holding available message handlers */
     protected String contextConfigLocation;

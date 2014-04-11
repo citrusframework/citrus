@@ -16,13 +16,6 @@
 
 package com.consol.citrus.adapter.handler;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.JMSException;
-
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.integration.Message;
@@ -32,9 +25,17 @@ import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.jms.JMSException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
+
 /**
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class MessageChannelConnectingMessageHandlerTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);

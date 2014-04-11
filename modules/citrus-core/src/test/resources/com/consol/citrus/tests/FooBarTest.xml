@@ -20,7 +20,7 @@
         <message>Validate test request</message>
       </echo>
 
-      <receive with="inboundRequestReceiver">
+      <receive endpoint="inboundChannelEndpoint">
         <message type="plaintext">
           <data>
             <![CDATA[
@@ -30,7 +30,7 @@
         </message>
       </receive>
 
-      <send with="outboundResponseSender">
+      <send endpoint="inboundChannelEndpoint">
         <message>
           <data>
             <![CDATA[

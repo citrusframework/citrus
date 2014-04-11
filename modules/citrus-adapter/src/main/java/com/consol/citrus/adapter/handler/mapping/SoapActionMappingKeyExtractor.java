@@ -21,13 +21,8 @@ package com.consol.citrus.adapter.handler.mapping;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.SoapActionMappingKeyExtractor}
  */
-public class SoapActionMappingKeyExtractor extends HeaderMappingKeyExtractor {
-
-    /**
-     * Default constructor using Citrus soap action header name.
-     */
-    public SoapActionMappingKeyExtractor() {
-        super("citrus_soap_action");
-    }
+@Deprecated
+public class SoapActionMappingKeyExtractor extends com.consol.citrus.endpoint.adapter.mapping.SoapActionMappingKeyExtractor implements MappingKeyExtractor {
 }

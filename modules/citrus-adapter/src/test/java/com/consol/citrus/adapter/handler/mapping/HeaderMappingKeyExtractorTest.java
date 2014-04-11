@@ -23,7 +23,9 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class HeaderMappingKeyExtractorTest {
 
     @Test

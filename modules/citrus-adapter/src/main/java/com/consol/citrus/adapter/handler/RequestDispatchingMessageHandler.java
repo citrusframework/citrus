@@ -28,7 +28,9 @@ import org.springframework.integration.Message;
  *
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.RequestDispatchingEndpointAdapter}
  */
+@Deprecated
 public class RequestDispatchingMessageHandler extends StaticEndpointAdapter {
 
     /** Extracts message value predicate for dispatching */

@@ -24,6 +24,7 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -43,7 +44,7 @@ import static org.easymock.EasyMock.*;
  */
 public class DTDValidationTest extends AbstractTestNGUnitTest {
     @Autowired
-    private MessageValidator<ValidationContext> validator;
+    private DomXmlMessageValidator validator;
     
     private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
     private Consumer consumer = EasyMock.createMock(Consumer.class);

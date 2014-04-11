@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,46 +14,36 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler.mapping;
+package com.consol.citrus.endpoint.adapter.mapping;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * Message handler mapping is Spring application context aware and tries to find appropriate Spring bean in
- * context for the mapping name.
+ * Endpoint adapter mapping strategy uses Spring application context and tries to find appropriate Spring bean in
+ * context for the mapping key. Bean id or name has to match the given mapping key and bean must be of type
+ * {@link com.consol.citrus.endpoint.EndpointAdapter}
  *
  * @author Christoph Deppisch
- * @since 1.3.1
- * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy}
+ * @since 1.4
  */
-@Deprecated
-public class SpringBeanMessageHandlerMapping implements MessageHandlerMapping, ApplicationContextAware {
+public class BeanNameMappingStrategy implements EndpointAdapterMappingStrategy, ApplicationContextAware {
+
     /** Application context holding available message handlers */
     protected ApplicationContext applicationContext;
 
-    /**
-     * Finds message handler by mapping name.
-     *
-     * @param mappingName
-     * @return
-     */
     @Override
-    public MessageHandler getMessageHandler(String mappingName) {
-        MessageHandler handler;
-
+    public EndpointAdapter getEndpointAdapter(String mappingKey) {
         try {
-            handler = applicationContext.getBean(mappingName, MessageHandler.class);
+            return applicationContext.getBean(mappingKey, EndpointAdapter.class);
         } catch (NoSuchBeanDefinitionException e) {
-            throw new CitrusRuntimeException("Unable to find matching message handler with bean name '" +
-                    mappingName + "' in Spring bean application context", e);
+            throw new CitrusRuntimeException("Unable to find matching endpoint adapter with bean name '" +
+                    mappingKey + "' in Spring bean application context", e);
         }
-
-        return handler;
     }
 
     @Override

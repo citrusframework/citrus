@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+  <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
+
+  <citrus:static-response-adapter id="staticResponseEndpointAdapter">
+    <citrus:payload>
+      <![CDATA[
+        <TestMessage>
+          <Text>Hello!</Text>
+        </TestMessage>
+      ]]>
+    </citrus:payload>
+    <citrus:header>
+      <citrus:element name="Operation" value="sayHello"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+</beans>

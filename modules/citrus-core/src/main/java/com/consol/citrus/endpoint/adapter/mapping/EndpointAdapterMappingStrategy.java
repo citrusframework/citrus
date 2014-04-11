@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.adapter;
+package com.consol.citrus.endpoint.adapter.mapping;
 
-import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import com.consol.citrus.endpoint.EndpointAdapter;
 
 /**
+ * Strategy finds proper endpoint adapter instance for given mapping key.
+ *
  * @author Christoph Deppisch
+ * @since 1.4
  */
-public class TimeoutProducingEndpointAdapterTest {
+public interface EndpointAdapterMappingStrategy {
 
-    @Test
-    public void testHandleMessage() {
-        TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
-
-        Assert.assertNull(response);
-    }
+    /**
+     * Finds endpoint adapter for the mapping key.
+     * @param mappingKey
+     * @return
+     */
+    EndpointAdapter getEndpointAdapter(String mappingKey);
 }

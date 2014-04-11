@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler.builder;
+package com.consol.citrus.endpoint.builder;
 
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.message.MessageType;
 import org.springframework.stereotype.Component;
 
-@Component("BarTest")
-public class BarTest extends CitrusTestBuilder {
+@Component("FooBarTest")
+public class FooBarTest extends CitrusTestBuilder {
 
     @Override
     public void configure() {
-        receive("inboundRequestReceiver")
+        receive("inboundChannelEndpoint")
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<Test name=\"BarTest\"></Test>");
+                .payload("<FooBarTest></FooBarTest>");
 
-        send("outboundResponseSender")
-                .payload("<Test name=\"BarTest\">OK</Test>");
+        send("inboundChannelEndpoint")
+                .payload("<FooBarTest>OK</FooBarTest>");
 
-        echo("Bar Test OK!");
+        echo("FooBar Test OK!");
     }
 }

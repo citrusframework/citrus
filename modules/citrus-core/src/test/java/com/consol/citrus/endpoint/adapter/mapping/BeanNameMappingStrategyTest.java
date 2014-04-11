@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler.mapping;
+package com.consol.citrus.endpoint.adapter.mapping;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -28,34 +28,32 @@ import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
- * @deprecated since Citrus 1.4
  */
-@Deprecated
-public class SpringBeanMessageHandlerMappingTest {
+public class BeanNameMappingStrategyTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
-    private MessageHandler fooMessageHandler = EasyMock.createMock(MessageHandler.class);
-    private MessageHandler barMessageHandler = EasyMock.createMock(MessageHandler.class);
+    private EndpointAdapter fooEndpointAdapter = EasyMock.createMock(EndpointAdapter.class);
+    private EndpointAdapter barEndpointAdapter = EasyMock.createMock(EndpointAdapter.class);
 
     @Test
-    public void testGetMessageHandler() throws Exception {
-        SpringBeanMessageHandlerMapping messageHandlerMapping = new SpringBeanMessageHandlerMapping();
+    public void testGetEndpointAdapter() throws Exception {
+        BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy();
 
-        messageHandlerMapping.setApplicationContext(applicationContext);
+        mappingStrategy.setApplicationContext(applicationContext);
 
         reset(applicationContext);
 
-        expect(applicationContext.getBean("foo", MessageHandler.class)).andReturn(fooMessageHandler).once();
-        expect(applicationContext.getBean("bar", MessageHandler.class)).andReturn(barMessageHandler).once();
-        expect(applicationContext.getBean("unknown", MessageHandler.class)).andThrow(new NoSuchBeanDefinitionException("unknown")).once();
+        expect(applicationContext.getBean("foo", EndpointAdapter.class)).andReturn(fooEndpointAdapter).once();
+        expect(applicationContext.getBean("bar", EndpointAdapter.class)).andReturn(barEndpointAdapter).once();
+        expect(applicationContext.getBean("unknown", EndpointAdapter.class)).andThrow(new NoSuchBeanDefinitionException("unknown")).once();
 
         replay(applicationContext);
 
-        Assert.assertEquals(messageHandlerMapping.getMessageHandler("foo"), fooMessageHandler);
-        Assert.assertEquals(messageHandlerMapping.getMessageHandler("bar"), barMessageHandler);
+        Assert.assertEquals(mappingStrategy.getEndpointAdapter("foo"), fooEndpointAdapter);
+        Assert.assertEquals(mappingStrategy.getEndpointAdapter("bar"), barEndpointAdapter);
 
         try {
-            messageHandlerMapping.getMessageHandler("unknown");
+            mappingStrategy.getEndpointAdapter("unknown");
             Assert.fail("Missing exception due to unknown mapping key");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);

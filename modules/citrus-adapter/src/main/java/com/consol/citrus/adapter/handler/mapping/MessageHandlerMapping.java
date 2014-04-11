@@ -22,7 +22,9 @@ import com.consol.citrus.message.MessageHandler;
  * Mapping finds message handler implementation instance for mapping name provided.
  * @author Christoph Deppisch
  * @since 1.3.1
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.mapping.EndpointAdapterMappingStrategy}
  */
+@Deprecated
 public interface MessageHandlerMapping {
 
     /**

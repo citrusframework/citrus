@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler.mapping;
+package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -23,21 +23,20 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @deprecated since Citrus 1.4
+ * @since 1.4
  */
-@Deprecated
-public class SpringContextLoadingMessageHandlerMappingTest {
+public class ContextLoadingMappingStrategyTest {
 
     @Test
-    public void testGetMessageHandler() throws Exception {
-        SpringContextLoadingMessageHandlerMapping messageHandlerMapping = new SpringContextLoadingMessageHandlerMapping();
-        messageHandlerMapping.setContextConfigLocation("com/consol/citrus/adapter/handler/test-context.xml");
+    public void testGetEndpointAdapter() throws Exception {
+        ContextLoadingMappingStrategy mappingStrategy = new ContextLoadingMappingStrategy();
+        mappingStrategy.setContextConfigLocation("classpath:com/consol/citrus/endpoint/adapter-mapping-context.xml");
 
-        Assert.assertNotNull(messageHandlerMapping.getMessageHandler("EmptyResponseRequest"));
-        Assert.assertNotNull(messageHandlerMapping.getMessageHandler("ContentResponseRequest"));
+        Assert.assertNotNull(mappingStrategy.getEndpointAdapter("emptyResponseEndpointAdapter"));
+        Assert.assertNotNull(mappingStrategy.getEndpointAdapter("staticResponseEndpointAdapter"));
 
         try {
-            messageHandlerMapping.getMessageHandler("Unknown");
+            mappingStrategy.getEndpointAdapter("Unknown");
             Assert.fail("Missing exception due to unknown mapping key");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);

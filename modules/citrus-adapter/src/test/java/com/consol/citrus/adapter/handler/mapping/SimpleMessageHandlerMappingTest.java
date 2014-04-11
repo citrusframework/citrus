@@ -27,7 +27,9 @@ import java.util.Map;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class SimpleMessageHandlerMappingTest {
 
     private MessageHandler fooMessageHandler = EasyMock.createMock(MessageHandler.class);

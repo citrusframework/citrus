@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler.mapping;
+package com.consol.citrus.endpoint.adapter.mapping;
 
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;

@@ -78,7 +78,8 @@
     
     <!-- Message validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-    
+    <bean id="plainTextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
+
     <bean id="mockListener" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.report.TestSuiteListener"/>
     </bean>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.adapter.handler.mapping;
+package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.integration.support.MessageBuilder;
@@ -23,9 +23,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @deprecated since Citrus 1.4
  */
-@Deprecated
 public class XPathPayloadMappingKeyExtractorTest {
 
     @Test
@@ -64,5 +62,4 @@ public class XPathPayloadMappingKeyExtractorTest {
             Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
         }
     }
-
 }

@@ -16,17 +16,19 @@
 
 package com.consol.citrus.adapter.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class StaticResponseProducingMessageHandlerTest {
 
     @Test

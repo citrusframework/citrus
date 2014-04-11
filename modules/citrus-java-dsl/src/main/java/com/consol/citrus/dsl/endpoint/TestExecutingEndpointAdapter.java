@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.handler;
+package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.adapter.handler.XmlTestExecutingMessageHandler;
+import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -30,7 +30,7 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class TestExecutingMessageHandler extends XmlTestExecutingMessageHandler {
+public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapter {
 
     @Override
     public Message<?> dispatchMessage(final Message<?> request, String mappingName) {

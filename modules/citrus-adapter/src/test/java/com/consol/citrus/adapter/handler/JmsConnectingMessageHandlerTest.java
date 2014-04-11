@@ -31,7 +31,9 @@ import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class JmsConnectingMessageHandlerTest {
 
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);

@@ -4,7 +4,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="BarTest">
+  <testcase name="FooTest">
     <meta-info>
       <author>Christoph Deppisch</author>
       <creationdate>2014-01-14</creationdate>
@@ -20,28 +20,28 @@
         <message>Validate test request</message>
       </echo>
 
-      <receive with="inboundRequestReceiver">
+      <receive endpoint="inboundChannelEndpoint">
         <message type="plaintext">
           <data>
             <![CDATA[
-              <Test name="BarTest"></Test>
+              <Test name="FooTest"></Test>
             ]]>
           </data>
         </message>
       </receive>
 
-      <send with="outboundResponseSender">
+      <send endpoint="inboundChannelEndpoint">
         <message>
           <data>
             <![CDATA[
-              <Test name="BarTest">OK</Test>
+              <Test name="FooTest">OK</Test>
             ]]>
           </data>
         </message>
       </send>
 
       <echo>
-        <message>BarTest OK!</message>
+        <message>FooTest OK!</message>
       </echo>
     </actions>
   </testcase>

@@ -25,7 +25,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class MessageHeaderEndpointUriResolverTest {
 
     @Test
