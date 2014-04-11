@@ -416,6 +416,17 @@
       </xs:complexType>
     </xs:element>
 
+    <xs:element name="dispatching-endpoint-adapter">
+      <xs:annotation>
+        <xs:documentation>Request dispatching endpoint adapter calls other endpoint adapters according to dynamic adapter mapping performed based on request payload or header.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="mapping-key-extractor" type="xs:string" use="required"/>
+        <xs:attribute name="mapping-strategy" type="xs:string" use="required"/>
+      </xs:complexType>
+    </xs:element>
+
     <xs:element name="empty-response-adapter">
       <xs:complexType>
         <xs:attribute name="id" type="xs:ID"/>

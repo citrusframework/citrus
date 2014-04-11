@@ -55,6 +55,7 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("message-channel-reply-sender", new ReplyMessageChannelSenderParser());
         registerBeanDefinitionParser("channel-endpoint-adapter", new ChannelEndpointAdapterParser());
         registerBeanDefinitionParser("jms-endpoint-adapter", new JmsEndpointAdapterParser());
+        registerBeanDefinitionParser("dispatching-endpoint-adapter", new RequestDispatchingEndpointAdapterParser());
         registerBeanDefinitionParser("static-response-adapter", new StaticResponseEndpointAdapterParser());
         registerBeanDefinitionParser("empty-response-adapter", new EmptyResponseEndpointAdapterParser());
         registerBeanDefinitionParser("timeout-producing-adapter", new TimeoutProducingEndpointAdapterParser());

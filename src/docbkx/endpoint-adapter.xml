@@ -69,16 +69,25 @@
     <para>So the request dispatching endpoint adapter is able to dynamically call several other endpoint adapters based on the incoming request
       message at runtime. This is very powerful. The next example uses the request dispatching endpoint adapter with a XPath mapping key extractor.</para>
 
-    <programlisting>&lt;bean id=&quot;dispatchingHandler&quot;
-  class=&quot;com.consol.citrus.adapter.handler.RequestDispatchingMessageHandler&quot;&gt;
-    &lt;property name=&quot;mappingKeyExtractor&quot; value=&quot;//TestMessage/Operation/*&quot;/&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:dispatching-endpoint-adapter id=&quot;dispatchingEndpointAdapter&quot;
+         mapping-key-extractor=&quot;mappingKeyExtractor&quot;
+         mapping-strategy=&quot;mappingStrategy&quot;/>
 
-    <para>The XPath mapping expression decides for each request which mapping key to use in order to find a proper endpoint adapter. The endpoint adapters available in the
-      ApplicationContext are mapped via their bean id values. For instance an incoming request with the element <literal>//TestMessage/Operation/sayHello</literal> would be handled by the endpoint
-      adapter bean named "sayHello". The available endpoint adapters are configured in the same Spring application context. Here is an example.</para>
+&lt;bean id=&quot;mappingStrategy&quot;
+  class=&quot;com.consol.citrus.endpoint.adapter.mapping.SimpleMappingStrategy&quot;&gt;
+    &lt;property name=&quot;adapterMappings&quot;&gt;
+      &lt;map&gt;
+          &lt;entry key=&quot;sayHello&quot; ref=&quot;helloEndpointAdapter&quot;/&gt;
+      &lt;/map&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
 
-    <programlisting>&lt;citrus:static-response-adapter id=&quot;sayHello&quot;&gt;
+&lt;bean id=&quot;mappingKeyExtractor&quot;
+  class=&quot;com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor&quot;&gt;
+    &lt;property name=&quot;xpathExpression&quot; value=&quot;//TestMessage/Operation/*&quot;/&gt;
+&lt;/bean&gt;
+
+&lt;citrus:static-response-adapter id=&quot;helloEndpointAdapter&quot;&gt;
     &lt;citrus:payload&gt;
         &lt;![CDATA[
             &lt;HelloResponse
@@ -90,7 +99,38 @@
     &lt;/citrus:payload&gt;
 &lt;/citrus:static-response-adapter&gt;</programlisting>
 
-    <tip>It is possible to omit the xpath expression in the xpath mapping key extractor bean definition. If no expression is provided Citrus will take the root element node in the request as mapping key.</tip>
+    <para>The XPath mapping key extractor expression decides for each request which mapping key to use in order to find a proper endpoint adapter through the mapping strategy. The endpoint adapters available in the
+      application context are mapped via their bean id. For instance an incoming request with a matching element <literal>//TestMessage/Operation/sayHello</literal> would be handled by the endpoint
+      adapter bean that is registered in the mapping strategy as "sayHello" key. The available endpoint adapters are configured in the same Spring application context.</para>
+
+    <para>Citrus provides several default mapping key extractor implementations.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis>HeaderMappingKeyExtractor</emphasis>: Reads a special header entry and uses its value as mapping key</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>SoapActionMappingKeyExtractor</emphasis>: Uses the soap action header entry as mapping key</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>XPathPayloadMappingKeyExtractor</emphasis>: Evaluates a XPath expression on the request payload and uses the result as mapping key</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>In addition to that we need a mapping strategy. Citrus provides following default implementations.</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis>SimpleMappingStrategy</emphasis>: Simple key value map with endpoint adapter references</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>BeanNameMappingStrategy</emphasis>: Loads the endpoint adapter Spring bean with the given id matching the mapping key</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>ContextLoadingMappingStrategy</emphasis>: Same as BeanNameMappingStrategy but loads a separate application context defined by external file resource</para>
+      </listitem>
+    </itemizedlist>
+
   </section>
 
   <section id="endpoint-adapter-channel">

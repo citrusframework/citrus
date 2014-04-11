@@ -153,7 +153,7 @@
         </xs:complexContent>
       </xs:complexType>
     </xs:element>
-    
+
     <xs:element name="message-channel">
         <xs:annotation>
           <xs:documentation>Message channel acting as queue channel with extended selector support.</xs:documentation>
@@ -266,7 +266,7 @@
         <xs:attribute name="actor" type="xs:string"/>
         <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
-  
+
     <xs:element name="channel-endpoint">
       <xs:annotation>
         <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
@@ -413,6 +413,17 @@
             <xs:attribute name="message-correlator" type="xs:string"/>
           </xs:extension>
         </xs:complexContent>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dispatching-endpoint-adapter">
+      <xs:annotation>
+        <xs:documentation>Request dispatching endpoint adapter calls other endpoint adapters according to dynamic adapter mapping performed based on request payload or header.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:attribute name="id" type="xs:ID"/>
+        <xs:attribute name="mapping-key-extractor" type="xs:string" use="required"/>
+        <xs:attribute name="mapping-strategy" type="xs:string" use="required"/>
       </xs:complexType>
     </xs:element>
 
