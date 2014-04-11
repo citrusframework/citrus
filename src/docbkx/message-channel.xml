@@ -2,12 +2,14 @@
 <chapter id="message-channel">
     <title>Message channel support</title>
 
-    <para>Spring Integration (http://www.springsource.org/spring-integration) provides support for messaging solutions in
-    Spring-based applications meeting the famous Enterprise Integration patterns and best practices. Citrus itself uses a lot 
-    of Spring APIs, especially those from Spring Integration.</para>
-    
-    <para>The conclusion is that Citrus supports the sending and receiving of messages to/from Spring Integration message 
-    channel components.</para>
+    <para>Message channels represent the in memory messaging solution in Citrus. Producer and consumer components are linked via channels exchanging messages
+    in memory. As this transport mechanism comes from Spring Integration API (http://www.springsource.org/spring-integration) and Citrus itself uses a lot
+    of Spring APIs, especially those from Spring Integration you are able to connect to all Spring messaging adapters via these in memory channels.</para>
+
+    <para>Citrus offers a channel components that can be used both by Citrus and Spring Integration. The conclusion is that Citrus supports the sending and
+    receiving of messages both to and from Spring Integration message channel components. This opens up a lot of great possibilities to interact with the
+    Spring Integration transport adapters for FTP, TCP/IP and so on. In addition to that the message channel support provides us a good way to exchange messages
+    in memory.</para>
     
     <note>
         <para>Citrus message channel connecting components use the same "citrus" configuration namespace and schema definitions
@@ -15,16 +17,20 @@
         namespace in order to use the Citrus configuration elements.</para>
     </note>
     
-    <section id="message-channel-sender">
-        <title>Message channel sender</title>
+    <section id="message-channel-endpoint">
+        <title>Channel endpoint</title>
         
-        <para>You can access message channels directly with a <emphasis>message-channel-sender</emphasis> component. The message 
-        channel sender configuration is quite simple and receives a target channel as reference:</para>
+        <para>Citrus offers a channel endpoint component that is able to create producer and consumer components. Producer and consumer send and receive messages both to
+        and from a channel endpoint. By default the endpoint is asynchronous when configured in the Citrus application context. With this component you are able to access
+        message channels directly:</para>
         
-        <programlisting>&lt;citrus:message-channel-sender id=&quot;orderRequestSender&quot; channel=&quot;orderChannel&quot;/&gt;
+        <programlisting>&lt;citrus:channel-endpoint id=&quot;helloEndpoint&quot; channel=&quot;helloChannel&quot;/&gt;
 
-&lt;si:channel id=&quot;orderChannel&quot;/&gt;</programlisting> 
-        
+&lt;si:channel id=&quot;helloChannel&quot;/&gt;</programlisting>
+
+        <para>The Citrus channel endpoint references a Spring Integration channel directly. Inside your test case you can reference the Citrus endpoint as usual to send and
+        receive messages. We will see this later in some example code listings.</para>
+
         <note>
             <para>The Spring Integration configuration components use a specific namespace that has to be included into your
             Spring application context. You can use the following template which holds all necessary namespaces and schema 
@@ -44,90 +50,124 @@
 &lt;/beans&gt;</programlisting>
         </note>
         
-        <para>The Citrus message-channel-sender also supports a customized message channel template that will actually send 
+        <para>The Citrus channel endpoint also supports a customized message channel template that will actually send
         the messages. The customized template might give you access to special configuration possibilities. However it is optional, 
         so if no message channel template is defined in the configuration Citrus will create a default template.</para>
         
-        <programlisting>&lt;citrus:message-channel-sender id=&quot;statusRequestSender&quot;
-                            channel=&quot;orderChannel&quot; 
+        <programlisting>&lt;citrus:channel-endpoint id=&quot;helloEndpoint&quot;
+                            channel=&quot;helloChannel&quot;
                             message-channel-template=&quot;myMessageChannelTemplate&quot;/&gt;</programlisting>
-    </section>
+
+        <para>The message sender is now ready to publish messages to the defined channel. The communication is supposed to be asynchronous,
+        so the producer is not able to process a reply message. We will deal with synchronous communication and reply messages later in this chapter.
+        The message producer just publishes messages to the channel and is done. Interacting with the endpoints in a test case is quite easy.
+        Just reference the id of the endpoint in your send and receive test actions</para>
+
+        <programlisting>&lt;send endpoint=&quot;helloEndpoint&quot;&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+                &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+            &lt;/v1:HelloRequest&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/send&gt;
+
+&lt;receive endpoint=&quot;helloEndpoint&quot;&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+                &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+            &lt;/v1:HelloResponse&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
     
-    <para>The message sender is now ready to publish messages to the defined channel. The communication is supposed to be asynchronous, 
-    so the sender is not able to process a reply message. We will deal with synchronous communication and reply messages later in this chapter.
-    The message sender just publishes messages to the channel.</para>
-    
-    <section id="message-channel-receiver">
-        <title>Message channel receiver</title>
-        
-        <para>Citrus is able to receive messages from Spring Integration message channel destinations. Again the message-channel-receiver needs 
-        nothing but a reference to a message channel in its simplest configuration.</para>
-        
-        <programlisting>&lt;citrus:message-channel-receiver id=&quot;ordersResponseReceiver&quot; 
-                                channel=&quot;orderChannel&quot;
-                                receive-timeout=&quot;5000&quot;/&gt;</programlisting>
+        <para>As you can see Citrus is also able to receive messages from the same Spring Integration message channel destination. We just references the same channel-endpoint
+        in the receive action.</para>
         
         <para>As usual the receiver connects to the message destination and waits for messages to arrive. The user can set a receive timeout which is 
         set to 5000 milliseconds by default. In case no message was received in this time frame the receiver raises timeout errors and the test 
         fails.</para>
         
-        <para>Similar to the previously described <emphasis>message-channel-sender</emphasis> the <emphasis>message-channel-receiver</emphasis> supports
-        a message-channel-template that is used for receiving messages.</para>
-        
-        <programlisting>&lt;citrus:message-channel-receiver id=&quot;ordersResponseReceiver&quot; 
-                                channel=&quot;orderChannel&quot;
-                                receive-timeout=&quot;5000&quot;
-                                message-channel-template=&quot;myMessageChannelTemplate&quot;/&gt;</programlisting>
     </section>
-    
-    <section id="sync-message-channel-sender">
-        <title>Synchronous message channel sender</title>
+
+    <section id="sync-message-channel-endpoint">
+        <title>Synchronous channel endpoints</title>
         
-        <para>The synchronous message sender publishes messages and waits synchronously for the response to arrive on some reply 
+        <para>The synchronous channel producer publishes messages and waits synchronously for the response to arrive on some reply
         channel destination. The reply channel name is set in the message's header attributes so the counterpart in this communication can send its reply 
-        to that channel. The basic configuration for a synchronous send-receive message channel sender looks like follows:</para>
+        to that channel. The basic configuration for a synchronous channel endpoint component looks like follows:</para>
         
-        <programlisting>&lt;citrus:sync-message-channel-sender id=&quot;customerRequestSender&quot; 
-                            channel=&quot;customerRequestChannel&quot;
-                            reply-handler=&quot;customerReplyMessageHandler&quot;
-                            reply-timeout=&quot;1000&quot;/&gt;
-                            
-&lt;citrus:message-channel-reply-handler id=&quot;customerReplyMessageHandler&quot;
-                                            polling-interval=&quot;1000&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus:channel-sync-endpoint id=&quot;helloSyncEndpoint&quot;
+                            channel=&quot;helloChannel&quot;
+                            reply-timeout=&quot;1000&quot;
+                            polling-interval=&quot;1000&quot;/&gt;</programlisting>
         
-        <para>Synchronous message channel senders usually go with a reply message handler which is responsible for processing the reply messages. While the synchronous message sender component 
-        is waiting for the reply message to arrive the reply handler polls for the reply message several times. The poll interval is an optional setting in order to manage the amount of
-        reply message handshake attempts. Once the sender was able to receive the reply message synchronously the reply handler takes over with further steps such as message validation. In case
+        <para>Synchronous message channel endpoints usually do poll for synchronous reply messages for processing the reply messages. The poll interval is an optional setting in order to manage the amount of
+        reply message handshake attempts. Once the endpoint was able to receive the reply message synchronously the test case can receive the reply. In case
         all message handshake attempts do fail because the reply message is not available in time we raise some timeout error and the test will fail.</para>
         
         <note>
-            <para>Reply channels are always of dynamic temporary nature. The temporary reply channels are only used once for a single communication handshake. 
-            After that the reply channel is deleted again. Static reply channels are not supported because they would receive multiple reply messages at the same
-            time and the reply message handlers need to filter (select) the message from that channel, which is not in scope yet.</para>
+            <para>By default the channel endpoint uses temporary reply channel destinations. The temporary reply channels are only used once for a single communication handshake.
+            After that the reply channel is deleted again. Static reply channels are not supported as it has not been in scope yet.</para>
         </note>
-    </section>
-    
-    <section id="sync-message-channel-receiver">
-        <title>Synchronous message channel receiver</title>
-        
+
+        <para>When sending a message to this endpoint in the first place the producer will wait synchronously for the response message
+        to arrive on the reply destination. You can receive the reply message in your test case using the same endpoint component.
+        So we have two actions on the same endpoint, first send then receive.</para>
+
+        <programlisting>&lt;send endpoint=&quot;helloSyncEndpoint&quot;&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+                &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+            &lt;/v1:HelloRequest&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/send&gt;
+
+&lt;receive endpoint=&quot;helloSyncEndpoint&quot;&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+                &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+            &lt;/v1:HelloResponse&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;</programlisting>
+
         <para>In the last section we saw that synchronous communication is based on reply messages on temporary reply channels. We saw that
         Citrus is able to publish messages to channels and wait for reply messages to arrive on temporary reply channels. This section deals with the same
-        synchronous communication over reply messages, but now Citrus has to send dynamic reply messages to temporary channels.</para> 
-        
-        <para>The scenario we are talking about is that Citrus receives a message and we need to reply to a temporary reply channel that is stored 
-        in the message header attributes.</para>
-        
-        <para>We handle this synchronous communication with the synchronous message receiver in combination with a reply sender. The configuration looks like follows:</para>
-        
-        <programlisting>&lt;citrus:sync-message-channel-receiver id=&quot;orderRequestReceiver&quot; channel=&quot;order&quot;/&gt;
-                                     
-&lt;citrus:message-channel-reply-sender id=&quot;orderReplySender&quot;
-                    reply-channel-holder=&quot;orderRequestReceiver&quot;/&gt;</programlisting>
-        
-        <para>The synchronous message channel receiver will store dynamic reply channel destinations and provide those
-        dynamic channel names to a reply message sender. Those two components <emphasis>sync-message-channel-receiver</emphasis> and 
-        <emphasis>message-channel-reply-sender</emphasis> are always working together in order to realize incoming synchronous
-        request with reply messages sent by Citrus.</para>
+        synchronous communication over reply messages, but now Citrus has to send dynamic reply messages to temporary channels.</para>
+
+        <para>The scenario we are talking about is that Citrus receives a message and we need to reply to a temporary reply channel that is stored
+        in the message header attributes. We handle this synchronous communication with the same synchronous channel endpoint component. When initiating
+        the communication by receiving a message from a synchronous channel endpoint you are able to send a synchronous response back. Again just use the
+        same endpoint reference in your test case. The handling of temporary reply destinations is done automatically behind the scenes. So we have again
+        two actions in our test case, but this time first receive then send.</para>
+
+      <programlisting>&lt;receive endpoint=&quot;helloSyncEndpoint&quot;&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;v1:HelloRequest xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+                &lt;v1:Text&gt;Hello World!&lt;/v1:Text&gt;
+            &lt;/v1:HelloRequest&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/receive&gt;
+
+&lt;send endpoint=&quot;helloSyncEndpoint&quot;&gt;
+    &lt;message&gt;
+        &lt;payload&gt;
+            &lt;v1:HelloResponse xmlns:v1="http://citrusframework.org/schemas/HelloService.xsd"&gt;
+                &lt;v1:Text&gt;Hello Citrus!&lt;/v1:Text&gt;
+            &lt;/v1:HelloResponse&gt;
+        &lt;/payload&gt;
+    &lt;/message&gt;
+&lt;/send&gt;</programlisting>
+
+        <para>The synchronous message channel endpoint will handle all reply channel destinations and provide those behind the scenes.</para>
     </section>
     
     <section id="message-channel-selector-support">
@@ -137,7 +177,7 @@
         we found a way to also add message selector support on message channels. We had to introduce a special queue message channel implementation. So first of all we use this new message channel
         implementation in our configuration.</para>
         
-        <programlisting>&lt;citrus:channel id=&quot;orders&quot; capacity=&quot;5&quot;/&gt;</programlisting>
+        <programlisting>&lt;citrus:channel id=&quot;orderChannel&quot; capacity=&quot;5&quot;/&gt;</programlisting>
         
         <para>The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That's it! 
         Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in <xref linkend="message-selector"/> and
@@ -157,7 +197,7 @@
             <para>We would like to pick up the <emphasis>GoodbyeMessage</emphasis> in our test case. The <emphasis>HelloMessage</emphasis> should be left on the message channel as we are not interested
             in it right now. We can define a root qname message selector in the receive action like this:</para>
             
-            <programlisting>&lt;receive endpoint=&quot;channelReceiver&quot;&gt;
+            <programlisting>&lt;receive endpoint=&quot;orderChannelEndpoint&quot;&gt;
     &lt;selector&gt;
         &lt;element name=&quot;root-qname&quot; value=&quot;GoodbyeMessage&quot;/&gt;
     &lt;/selector&gt;
@@ -222,81 +262,5 @@
             <para>This will match all incoming messages regardless the XML namespace prefix that is used.</para>
         </section>
     </section>
-    
-    <section id="connecting-to-adapters">
-        <title>Connecting with Spring Integration Adapters</title>
-        
-        <para>We have seen asynchronous and synchronous communication with Spring Integration message channels in this chapter. 
-        With this message channel connection Citrus is able to use the various Spring Integration Adapter implementations, which is a fantastic
-        way to extend Citrus for additional transports. The following chapter tries to give an example how to use Spring Integration with Citrus.</para>
-        
-        <para>We want to use the Spring Integration file adapter that is able to read/write files from/to a storage directory. 
-        Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to 
-        message channels that are connected to the Spring Integration file adapter.</para>
-        
-        <programlisting>&lt;citrus:message-channel-sender id=&quot;fileSender&quot; channel=&quot;fileOutboundChannel&quot;/&gt;
-                   
-&lt;file:outbound-channel-adapter id=&quot;filesOut&quot; 
-                  channel=&quot;fileOutboundChannel&quot; 
-                  directory=&quot;file:${some.directory.property}&quot;/>
 
-&lt;si:channel id=&quot;fileOutboundChannel&quot;/&gt;</programlisting>
-        
-        <para>The configuration above describes a Citrus message channel sender in combination with a Spring Integration outbound file adapter 
-        that writes messages to a storage directory. With this combination you are able to write files to a directory in your Citrus test case.</para>
-        
-        <note>
-            <para>The Spring Integration file adapter configuration components add a new namespace to our
-            Spring application context. See this template which holds all necessary namespaces and schema locations:</para>
-            
-            <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-    xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-    xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
-    xmlns:file=&quot;http://www.springframework.org/schema/integration/file&quot;
-    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.citrusframework.org/schema/config 
-            http://www.citrusframework.org/schema/config/citrus-config.xsd
-            http://www.springframework.org/schema/integration
-            http://www.springframework.org/schema/integration/spring-integration.xsd
-            http://www.springframework.org/schema/integration/file
-            http://www.springframework.org/schema/integration/file/spring-integration-file.xsd&quot;&gt;
-&lt;/beans&gt;</programlisting>
-        </note>
-        
-        <para>The next program listing shows a possible inbound file communication. So Spring's file inbound adapter will read files from a 
-        storage directory and publish the file contents to a message channel. Citrus can then receive those files as messages in a test case
-        and validate the file contents for instance.</para>
-        
-        <programlisting>&lt;file:inbound-channel-adapter  id=&quot;fileIn&quot; 
-                 channel=&quot;fileInputChannel&quot;
-                 directory=&quot;file:${some.directory.property}&quot;&gt;
-    &lt;si:poller fixed-rate=&quot;100&quot;/&gt;
-&lt;/file:inbound-channel-adapter&gt;
-
-&lt;si:channel id=&quot;fileInputChannel&quot;&gt;
-    &lt;si:queue capacity=&quot;25&quot;/&gt;
-    &lt;si:interceptors&gt;
-        &lt;bean class=&quot;org.springframework.integration.transformer.MessageTransformingChannelInterceptor&quot;&gt;
-            &lt;constructor-arg&gt;
-                &lt;bean class=&quot;org.springframework.integration.file.transformer.FileToStringTransformer&quot;/&gt;
-            &lt;/constructor-arg&gt;
-        &lt;/bean&gt;
-    &lt;/si:interceptors&gt;
-&lt;/si:channel&gt;
-
-&lt;citrus:message-channel-receiver id=&quot;fileReceiver&quot; channel=&quot;fileInputChannel&quot;/&gt;</programlisting>
-        
-        <important>
-            <para>The file inbound adapter constructs Java file objects as the message payload by default. Citrus can only work on String 
-            message payloads. So we need a file transformer that converts the file objects to String payloads representing the file's content.</para>
-        </important>
-        
-        <para>This file adapter example shows how easy Citrus can work hand in hand with Spring Integration adapter implementations. The message 
-        channel support is a fantastic way to extend the transport and protocol support in Citrus by connecting with the very good Spring Integration 
-        adapter implementations. Have a closer look at the Spring Integration project for more details and other adapter implementations that you 
-        can use with Citrus integration testing.</para>
-    </section>
 </chapter>

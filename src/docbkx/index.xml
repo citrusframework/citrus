@@ -39,11 +39,12 @@
     <xi:include href='finally-section.xml'/>
     <xi:include href='jms.xml'/>
     <xi:include href='http.xml'/>
-    <xi:include href='soap-webservices.xml'/>
-    <xi:include href='endpoint-adapter.xml'/>
+    <xi:include href='soap.xml'/>
+    <xi:include href='message-channel.xml'/>
+    <xi:include href='ftp.xml'/>
     <xi:include href='mail.xml'/>
     <xi:include href='ssh.xml'/>
-    <xi:include href='message-channel.xml'/>
+    <xi:include href='endpoint-adapter.xml'/>
     <xi:include href='functions.xml'/>
     <xi:include href='validation-matchers.xml'/>
     <xi:include href='data-dictionary.xml'/>
