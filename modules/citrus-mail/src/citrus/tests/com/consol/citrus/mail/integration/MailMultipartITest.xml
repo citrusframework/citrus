@@ -94,7 +94,7 @@
           <element name="citrus_mail_from" value="${from}"/>
           <element name="citrus_mail_to" value="${to}"/>
           <element name="citrus_mail_subject" value="${subject}"/>
-          <element name="citrus_mail_content_type" value="multipart/mixed"/>
+          <element name="citrus_mail_content_type" value="@startsWith('multipart/mixed')@"/>
         </header>
       </receive>
 
