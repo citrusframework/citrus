@@ -30,8 +30,9 @@ import org.springframework.integration.core.MessagingTemplate;
  * Send reply messages to channel destinations.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.channel.ChannelSyncEndpoint}
  */
+@Deprecated
 public class ReplyMessageChannelSender implements MessageSender, BeanNameAware {
     
     /** Holding dynamic reply channel  */

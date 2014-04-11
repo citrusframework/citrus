@@ -34,8 +34,9 @@ import org.springframework.ws.mime.Attachment;
  * SOAP attachments in contrary to the normal message senders.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.ws.client.WebServiceClient}
  */
+@Deprecated
 public class WebServiceMessageSender extends AbstractSyncMessageSender {
 
     /** New WebServiceClient */

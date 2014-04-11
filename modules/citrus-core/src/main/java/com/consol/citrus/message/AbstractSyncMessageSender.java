@@ -15,8 +15,9 @@ import org.springframework.beans.factory.BeanNameAware;
  *
  * @author Christoph Deppisch, roland
  * @since 06.09.12
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 abstract public class AbstractSyncMessageSender implements MessageSender, BeanNameAware {
 
     /** Logger */

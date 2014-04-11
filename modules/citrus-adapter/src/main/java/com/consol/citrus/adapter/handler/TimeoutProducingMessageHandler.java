@@ -22,7 +22,8 @@ import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
  * Message handler produces no response message forcing a request timeout on client side.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated as of Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter}
  */
+@Deprecated
 public class TimeoutProducingMessageHandler extends TimeoutProducingEndpointAdapter {
 }

@@ -469,7 +469,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      *
      * @param messageReceiver
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
@@ -532,7 +532,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      *
      * @param messageSender
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
         SendSoapMessageAction action = new SendSoapMessageAction();

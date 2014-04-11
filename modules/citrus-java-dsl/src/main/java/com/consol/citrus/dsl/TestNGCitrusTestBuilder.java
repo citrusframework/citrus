@@ -359,7 +359,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
      * Creates special SOAP receive message action definition with message receiver instance.
      * @param messageReceiver
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         return testBuilder.receive(messageReceiver);

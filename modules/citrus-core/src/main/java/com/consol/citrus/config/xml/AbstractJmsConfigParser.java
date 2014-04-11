@@ -31,8 +31,9 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * this base parser to configure attributes like connection factory or JMS template.
  *  
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public abstract class AbstractJmsConfigParser extends AbstractBeanDefinitionParser {
 
     @Override

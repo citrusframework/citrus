@@ -22,8 +22,9 @@ import com.consol.citrus.http.message.HttpReplyMessageReceiver;
 /**
  * @author Christoph Deppisch
  * @since 1.4
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class HttpReplyMessageReceiverParser extends ReplyMessageReceiverParser<HttpReplyMessageReceiver> {
 
     public HttpReplyMessageReceiverParser() {

@@ -26,8 +26,9 @@ import com.consol.citrus.TestActor;
  * specific message endpoint. Each message transport may have dedicated message sender implementations.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.Endpoint}
  */
+@Deprecated
 public interface MessageSender extends Endpoint {
     /**
      * Sends the message.

@@ -24,8 +24,9 @@ import org.w3c.dom.Element;
  * Bean definition parser for jms-message-sender configuration.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class JmsMessageSenderParser extends AbstractJmsTemplateAwareParser {
 
     /**

@@ -35,7 +35,7 @@ import java.util.Map;
  * will search for a appropriate bean instance in this context according to the mapping expression.
  *
  * @author Christoph Deppisch
- * @deprecated since 1.3.1 in favour of RequestDispatchingMessageHandler with use of XPathMappingKeyExtractor and SpringBeanMessageHandlerMapping
+ * @deprecated since Citrus 1.3.1, in favour of RequestDispatchingMessageHandler with use of XPathMappingKeyExtractor and SpringBeanMessageHandlerMapping
  */
 @Deprecated
 public class XpathDispatchingMessageHandler extends RequestDispatchingMessageHandler implements InitializingBean {

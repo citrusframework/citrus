@@ -23,8 +23,9 @@ import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
  * Parser for reply message receiver component in Citrus ws namespace.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class SoapReplyMessageReceiverParser extends ReplyMessageReceiverParser<SoapReplyMessageReceiver> {
 
     public SoapReplyMessageReceiverParser() {

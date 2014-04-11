@@ -21,8 +21,9 @@ import com.consol.citrus.channel.MessageChannelReplyMessageReceiver;
 /**
  * @author Christoph Deppisch
  * @since 1.4
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class ReplyMessageChannelReceiverParser extends ReplyMessageReceiverParser<MessageChannelReplyMessageReceiver> {
 
     public ReplyMessageChannelReceiverParser() {

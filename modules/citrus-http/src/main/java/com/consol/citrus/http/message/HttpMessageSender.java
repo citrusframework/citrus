@@ -39,8 +39,9 @@ import java.util.List;
  * messages to the service endpoint.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.http.client.HttpClient}
  */
+@Deprecated
 public class HttpMessageSender extends AbstractSyncMessageSender {
 
     /** New Http client */

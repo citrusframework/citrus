@@ -20,7 +20,8 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 
 /**
  * @author Christoph Deppisch
- * @deprecated in favour of {@link com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver}
+ * @deprecated as of Citrus 1.4, in favour of {@link com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver}
  */
+@Deprecated
 public class MessageHeaderEndpointUriResolver extends DynamicEndpointUriResolver {
 }

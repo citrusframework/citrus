@@ -314,7 +314,7 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
      * Creates special SOAP receive message action definition with message receiver instance.
      * @param messageReceiver
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
         return testBuilder.receive(messageReceiver);
@@ -351,7 +351,7 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
      * Create special SOAP send message action definition with message sender instance.
      * @param messageSender
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
         return testBuilder.send(messageSender);

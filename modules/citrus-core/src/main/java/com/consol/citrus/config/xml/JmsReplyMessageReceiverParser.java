@@ -21,8 +21,9 @@ import com.consol.citrus.jms.JmsReplyMessageReceiver;
 /**
  * @author Christoph Deppisch
  * @since 1.4
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class JmsReplyMessageReceiverParser extends ReplyMessageReceiverParser<JmsReplyMessageReceiver> {
 
     public JmsReplyMessageReceiverParser() {

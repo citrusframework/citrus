@@ -22,7 +22,8 @@ import com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter;
  * Message handler will always return a static response message.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated as of Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter}
  */
+@Deprecated
 public class StaticResponseProducingMessageHandler extends StaticResponseEndpointAdapter {
 }

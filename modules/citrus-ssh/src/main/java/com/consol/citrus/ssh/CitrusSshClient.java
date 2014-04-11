@@ -31,8 +31,9 @@ import org.springframework.integration.Message;
  *
  * @author Roland Huss
  * @since 1.3
- * @deprecated
+ * @deprecated since Citrus 1.4, infavor of {@link com.consol.citrus.ssh.client.SshClient}
  */
+@Deprecated
 public class CitrusSshClient extends AbstractSyncMessageSender {
 
     /** New Ssh client */

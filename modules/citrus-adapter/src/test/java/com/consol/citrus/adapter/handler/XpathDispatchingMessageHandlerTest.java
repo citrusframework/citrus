@@ -11,8 +11,9 @@ import org.testng.annotations.Test;
 /**
  * Unit Tests for XpathDispatchingMessageHandler
  * @author jza
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class XpathDispatchingMessageHandlerTest {
 
     /**

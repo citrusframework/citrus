@@ -30,8 +30,9 @@ import javax.jms.Destination;
  * Basic adapter class for JMS communication. The adapter uses Spring's {@link JmsTemplate}.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public abstract class AbstractJmsAdapter implements BeanNameAware {
 
     /** New JmsEndpoint implementation */

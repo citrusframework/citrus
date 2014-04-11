@@ -27,8 +27,9 @@ import org.springframework.integration.Message;
  * is given by injected instance or destination name.
  *  
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.jms.JmsEndpoint}
  */
+@Deprecated
 public class JmsMessageReceiver extends AbstractJmsAdapter implements MessageReceiver {
 
     /**

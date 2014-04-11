@@ -263,7 +263,7 @@ public interface TestBuilder extends ApplicationContextAware {
      *
      * @param messageReceiver
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver);
 
@@ -304,7 +304,7 @@ public interface TestBuilder extends ApplicationContextAware {
      *
      * @param messageSender
      * @return
-     * @deprecated
+     * @deprecated since Citrus 1.4
      */
     SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender);
 

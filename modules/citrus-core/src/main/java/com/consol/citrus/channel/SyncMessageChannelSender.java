@@ -25,8 +25,9 @@ import org.springframework.integration.Message;
  * {@link ReplyMessageHandler} may ask for this reply message and continue with message validation.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.channel.ChannelSyncEndpoint}
  */
+@Deprecated
 public class SyncMessageChannelSender extends MessageChannelSender {
 
     /** Reply message handler */

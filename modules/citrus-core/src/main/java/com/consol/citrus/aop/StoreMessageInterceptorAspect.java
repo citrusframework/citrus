@@ -16,11 +16,8 @@
 
 package com.consol.citrus.aop;
 
-import java.io.*;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.MessageTracingTestListener;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,15 +25,17 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.MessageTracingTestListener;
+import java.io.*;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Aspect can store received messages to the file system in order to track 
  * the message flow.
  * 
  * @author Christoph Deppisch
- * @deprecated since 1.2, in favor of using {@link MessageTracingTestListener}
+ * @deprecated since Citrus 1.2, in favor of using {@link MessageTracingTestListener}
  */
 @Aspect
 @Deprecated

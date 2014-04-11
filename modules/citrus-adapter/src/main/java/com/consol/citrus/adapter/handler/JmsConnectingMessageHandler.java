@@ -47,8 +47,9 @@ import javax.jms.*;
  * can provide a fallback response message.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class JmsConnectingMessageHandler implements MessageHandler, InitializingBean, DisposableBean {
 
     /** Forwarding destination */

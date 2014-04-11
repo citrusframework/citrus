@@ -24,8 +24,9 @@ import com.consol.citrus.TestActor;
 /**
  * Message receiver interface declares message receiving methods.
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.Endpoint}
  */
+@Deprecated
 public interface MessageReceiver extends Endpoint {
     /**
      * Receive message.

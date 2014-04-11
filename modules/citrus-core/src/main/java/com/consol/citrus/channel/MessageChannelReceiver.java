@@ -31,8 +31,9 @@ import org.springframework.integration.support.channel.ChannelResolver;
 /**
  * Receive messages from Spring message channel instance.
  * @author Christoph Christoph
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.channel.ChannelEndpoint}
  */
+@Deprecated
 public class MessageChannelReceiver extends AbstractMessageReceiver implements BeanFactoryAware {
 
     /** New message channel endpoint */

@@ -31,8 +31,9 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
  * Parser for ws message sender in Citrus ws namespace.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class WebServiceMessageSenderParser extends AbstractBeanDefinitionParser {
 
     @Override

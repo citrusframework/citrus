@@ -25,8 +25,9 @@ import org.springframework.integration.Message;
  * Intermediate class used for backward compatibility to old message sender and receiver patterns.
  * @author Christoph Deppisch
  * @since 1.4
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.jms.JmsSyncEndpoint}
  */
+@Deprecated
 public class JmsReplyMessageReceiver extends ReplyMessageReceiver {
 
     /**

@@ -27,8 +27,9 @@ import javax.jms.Destination;
  * provide proper reply message.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public interface JmsReplyDestinationHolder {
     /**
      * Get the reply destination with a correlation key. Usually used in multi threaded and parallel

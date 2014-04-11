@@ -26,8 +26,9 @@ import org.w3c.dom.Element;
  * Parser is aware of JMS template if present in element.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public abstract class AbstractJmsTemplateAwareParser extends AbstractJmsConfigParser {
 
     @Override

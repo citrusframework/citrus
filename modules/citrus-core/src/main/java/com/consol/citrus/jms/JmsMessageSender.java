@@ -26,8 +26,9 @@ import org.springframework.integration.Message;
  * {@link MessageSender} implementation publishes message to a JMS destination.
  *  
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.jms.JmsEndpoint}
  */
+@Deprecated
 public class JmsMessageSender extends AbstractJmsAdapter implements MessageSender {
 
     @Override

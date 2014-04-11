@@ -22,8 +22,9 @@ import org.springframework.integration.Message;
  * Message handler is invoked when a reply message is received.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public interface ReplyMessageHandler {
     /**
      * Handle reply message.

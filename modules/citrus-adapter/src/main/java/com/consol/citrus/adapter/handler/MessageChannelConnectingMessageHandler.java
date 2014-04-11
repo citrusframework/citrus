@@ -39,8 +39,9 @@ import com.consol.citrus.message.MessageHandler;
  * default response message.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated as of Citrus 1.4, in favor of {@link com.consol.citrus.channel.ChannelEndpointAdapter}
  */
+@Deprecated
 public class MessageChannelConnectingMessageHandler implements MessageHandler, BeanFactoryAware {
 
     /** Forwarding message channel */

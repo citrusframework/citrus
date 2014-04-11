@@ -26,8 +26,9 @@ import java.util.Map;
 
 /**
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class MessageChannelReceiverParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test

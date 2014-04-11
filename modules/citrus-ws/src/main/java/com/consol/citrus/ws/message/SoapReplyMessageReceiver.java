@@ -28,8 +28,9 @@ import org.springframework.integration.Message;
  * because we have special SOAP validation capabilities that can be used e.g. in Java DSL.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class SoapReplyMessageReceiver extends ReplyMessageReceiver {
 
     /**

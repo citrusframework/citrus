@@ -34,8 +34,9 @@ import org.springframework.integration.Message;
  *  When invoked by a receiving action inside a test the store reply message is returned.
  *  
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class ReplyMessageReceiver implements MessageReceiver, ReplyMessageHandler, BeanNameAware {
 
     /** Logger */

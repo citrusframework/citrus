@@ -25,8 +25,9 @@ import com.consol.citrus.server.AbstractServer;
  * Server implementation starting a ActiveMQ JMS broker instance.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class ActiveMQServer extends AbstractServer {
 
     /** Broker url */

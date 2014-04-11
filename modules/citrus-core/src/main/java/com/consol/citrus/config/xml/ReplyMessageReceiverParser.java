@@ -29,8 +29,9 @@ import org.w3c.dom.Element;
  * by several reply message receiver configuration components (e.g. jms, http, message-channel, ssh)
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class ReplyMessageReceiverParser<T extends ReplyMessageReceiver> extends AbstractBeanDefinitionParser {
 
     private Class<T> type;

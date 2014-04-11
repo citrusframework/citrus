@@ -31,8 +31,9 @@ import org.springframework.integration.support.channel.ChannelResolver;
  * Publish message to a {@link MessageChannel}.
  * 
  * @author Christoph Christoph
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.channel.ChannelEndpoint}
  */
+@Deprecated
 public class MessageChannelSender implements MessageSender, BeanFactoryAware, BeanNameAware {
 
     /** New message channel endpoint */

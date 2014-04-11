@@ -32,8 +32,9 @@ import org.springframework.integration.Message;
  * slight differences.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.jms.JmsSyncEndpoint}
  */
+@Deprecated
 public class JmsReplyMessageSender extends AbstractJmsAdapter implements MessageSender {
     /** Reply destination holder */
     private JmsReplyDestinationHolder replyDestinationHolder;

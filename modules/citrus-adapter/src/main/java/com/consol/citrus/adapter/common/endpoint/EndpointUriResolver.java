@@ -18,7 +18,8 @@ package com.consol.citrus.adapter.common.endpoint;
 
 /**
  * @author Christoph Deppisch
- * @deprecated in favour of {@link com.consol.citrus.endpoint.resolver.EndpointUriResolver}
+ * @deprecated as of Citrus 1.4, in favour of {@link com.consol.citrus.endpoint.resolver.EndpointUriResolver}
  */
+@Deprecated
 public interface EndpointUriResolver extends com.consol.citrus.endpoint.resolver.EndpointUriResolver {
 }

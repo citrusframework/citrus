@@ -36,8 +36,9 @@ import javax.jms.Destination;
  * Class can either define a static reply destination or a temporary reply destination.
  *
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.jms.JmsSyncEndpoint}
  */
+@Deprecated
 public class JmsSyncMessageSender implements MessageSender, BeanNameAware, DisposableBean {
 
     /** New synchronous JmsEndpoint implementation */

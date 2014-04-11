@@ -23,8 +23,9 @@ import org.springframework.integration.MessageChannel;
  * channels for synchronous communication.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public interface ReplyMessageChannelHolder {
     /**
      * Get reply message channel with given correlation key.

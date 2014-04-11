@@ -26,8 +26,9 @@ import org.springframework.integration.MessageChannel;
  * provide synchronous reply.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.channel.ChannelSyncEndpoint}
  */
+@Deprecated
 public class SyncMessageChannelReceiver extends MessageChannelReceiver implements ReplyMessageChannelHolder {
 
     /**

@@ -32,8 +32,9 @@ import javax.jms.Destination;
  * order to get the proper reply destination.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.jms.JmsSyncEndpoint}
  */
+@Deprecated
 public class JmsSyncMessageReceiver extends JmsMessageReceiver implements JmsReplyDestinationHolder {
 
     public JmsSyncMessageReceiver() {

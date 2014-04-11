@@ -28,7 +28,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
- * @deprecated since 1.2
+ * @deprecated since Citrus 1.2
  */
 @Deprecated
 public class StoreMessageInterceptorAspectTest extends AbstractTestNGUnitTest {

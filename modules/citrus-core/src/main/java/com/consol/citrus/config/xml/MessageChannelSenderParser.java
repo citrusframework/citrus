@@ -26,8 +26,9 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * Bean definition parser for message-channel-sender configuration.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class MessageChannelSenderParser extends AbstractMessageChannelTemplateAwareParser {
 
     /**

@@ -24,8 +24,9 @@ import org.springframework.integration.Message;
 /**
  * @author Christoph Deppisch
  * @since 1.4
- * @deprecated
+ * @deprecated since Citrus 1.4, in favor of {@link com.consol.citrus.ssh.client.SshClient}
  */
+@Deprecated
 public class SshReplyMessageReceiver extends ReplyMessageReceiver {
 
     /**

@@ -22,7 +22,8 @@ import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
  * Message handler implementation generating empty response messages.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated as of Citrus 1.4, in favor of {@link com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter}
  */
+@Deprecated
 public class EmptyResponseProducingMessageHandler extends EmptyResponseEndpointAdapter {
 }

@@ -30,8 +30,9 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
  * Bean definition parser for jms-reply-message-sender configuration.
  * 
  * @author Christoph Deppisch
- * @deprecated
+ * @deprecated since Citrus 1.4
  */
+@Deprecated
 public class JmsReplyMessageSenderParser extends AbstractBeanDefinitionParser {
 
     /** Connection factory attribute */
