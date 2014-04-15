@@ -105,6 +105,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
         }
 
         String requestUri = uri;
+        StringBuilder queryParamBuilder = new StringBuilder();
         String queryParams = headers.get(QUERY_PARAM_HEADER_NAME).toString();
 
         StringTokenizer tok = new StringTokenizer(queryParams, ",");
@@ -113,18 +114,14 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
                 requestUri = requestUri.substring(0, requestUri.length() - 1);
             }
 
-            requestUri += "?";
+            queryParamBuilder.append("?").append(tok.nextToken());
         }
 
         while (tok.hasMoreTokens()) {
-            if (requestUri.endsWith("?")) {
-                requestUri += tok.nextToken();
-            } else {
-                requestUri += "&" + tok.nextToken();
-            }
+            queryParamBuilder.append("&").append(tok.nextToken());
         }
 
-        return requestUri;
+        return requestUri + queryParamBuilder.toString();
     }
 
     /**

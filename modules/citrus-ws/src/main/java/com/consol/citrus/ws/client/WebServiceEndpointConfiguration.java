@@ -28,6 +28,8 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
+import java.util.Arrays;
+
 /**
  * @author Christoph Deppisch
  * @since 1.4
@@ -216,8 +218,8 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * @param interceptors
      */
     public void setInterceptors(ClientInterceptor[] interceptors) {
-        this.interceptors = interceptors;
-        getWebServiceTemplate().setInterceptors(interceptors);
+        this.interceptors = Arrays.copyOf(interceptors, interceptors.length);
+        getWebServiceTemplate().setInterceptors(this.interceptors);
     }
 
     /**

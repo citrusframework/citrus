@@ -337,7 +337,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
 
             try {
                 String plainContentType = reader.readLine().trim();
-                if (plainContentType.endsWith(";")) {
+                if (plainContentType != null && plainContentType.endsWith(";")) {
                     plainContentType = plainContentType.substring(0, plainContentType.length() -1);
                 }
 
