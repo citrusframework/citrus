@@ -16,18 +16,17 @@
 
 package com.consol.citrus.report;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test listener collects all messages sent and received by Citrus during test execution. Listener
@@ -122,6 +121,16 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     public void onOutboundMessage(String message) {
         synchronized (lockObject) {
             messages.add("OUTBOUND_MESSAGE:" + newLine() + newLine() + message);
+        }
+    }
+
+    /**
+     * Adds a message to the current message stack for this test execution.
+     * @param message the message content.
+     */
+    public void traceMessage(String message) {
+        synchronized (lockObject) {
+            messages.add(message);
         }
     }
 
