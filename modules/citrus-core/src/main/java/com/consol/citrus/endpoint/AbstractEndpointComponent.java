@@ -144,7 +144,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             }
 
             // try to resolve bean in application context
-            if (applicationContext.containsBean(value)) {
+            if (applicationContext != null && applicationContext.containsBean(value)) {
                 Object bean = applicationContext.getBean(value);
                 if (fieldType.isAssignableFrom(bean.getClass())) {
                     return bean;

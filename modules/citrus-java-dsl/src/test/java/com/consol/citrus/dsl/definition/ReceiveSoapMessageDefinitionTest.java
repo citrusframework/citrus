@@ -16,9 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.resolver.EndpointResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
@@ -54,7 +56,8 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     private WebServiceServer server = EasyMock.createMock(WebServiceServer.class);
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    
+    private EndpointResolver endpointResolver = EasyMock.createMock(EndpointResolver.class);
+
     private Resource resource = EasyMock.createMock(Resource.class);
     
     private SoapAttachment testAttachment = new SoapAttachment();
@@ -231,15 +234,16 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithReceiverName() {
         SoapReplyMessageReceiver replyMessageReceiver = EasyMock.createMock(SoapReplyMessageReceiver.class);
         
-        reset(applicationContextMock);
+        reset(applicationContextMock, endpointResolver);
 
-        expect(applicationContextMock.getBean("replyMessageReceiver", Endpoint.class)).andReturn(replyMessageReceiver).once();
-        expect(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).andReturn(messageEndpoint).once();
+        expect(applicationContextMock.getBean(CitrusConstants.ENDPOINT_RESOLVER_BEAN, EndpointResolver.class)).andReturn(endpointResolver).times(2);
+        expect(endpointResolver.resolve("replyMessageReceiver", applicationContextMock)).andReturn(replyMessageReceiver).once();
+        expect(endpointResolver.resolve("fooMessageEndpoint", applicationContextMock)).andReturn(messageEndpoint).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
 
-        replay(applicationContextMock);
+        replay(applicationContextMock, endpointResolver);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
@@ -268,7 +272,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
-        verify(applicationContextMock);
+        verify(applicationContextMock, endpointResolver);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,

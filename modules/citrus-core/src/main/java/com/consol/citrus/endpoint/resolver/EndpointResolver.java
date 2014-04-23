@@ -17,7 +17,7 @@
 package com.consol.citrus.endpoint.resolver;
 
 import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Endpoint resolver tries to get endpoint instance by parsing an endpoint uri. Uri can have parameters
@@ -29,12 +29,14 @@ import org.springframework.context.ApplicationContextAware;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface EndpointResolver extends ApplicationContextAware {
+public interface EndpointResolver {
 
     /**
-     * Finds endpoint by parsing the given endpoint uri.
+     * Finds endpoint by parsing the given endpoint uri. The Spring bean application context helps to resolve endpoints that
+     * are registered as beans and bean references while setting the configuration properties.
      * @param endpointUri
+     * @param applicationContext
      * @return
      */
-    Endpoint resolve(String endpointUri);
+    Endpoint resolve(String endpointUri, ApplicationContext applicationContext);
 }

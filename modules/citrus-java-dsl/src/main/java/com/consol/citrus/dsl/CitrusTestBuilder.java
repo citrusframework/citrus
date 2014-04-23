@@ -342,12 +342,16 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
-        Endpoint messageEndpoint = applicationContext.getBean("citrusEndpointResolver", EndpointResolver.class).resolve(messageEndpointUri);
+        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
 
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
         action.setEndpoint(messageEndpoint);
         testCase.addTestAction(action);
         return new ReceiveTimeoutActionDefinition(action);
+    }
+
+    private EndpointResolver getEndpointResolver() {
+        return applicationContext.getBean(CitrusConstants.ENDPOINT_RESOLVER_BEAN, EndpointResolver.class);
     }
 
     /**
@@ -515,7 +519,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public ReceiveMessageActionDefinition receive(String messageEndpointUri) {
-        Endpoint messageEndpoint = applicationContext.getBean("citrusEndpointResolver", EndpointResolver.class).resolve(messageEndpointUri);
+        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
 
         if (messageEndpoint instanceof SoapReplyMessageReceiver || messageEndpoint instanceof WebServiceServer) {
             ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
@@ -579,7 +583,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendMessageActionDefinition send(String messageEndpointUri) {
-        Endpoint messageEndpoint = applicationContext.getBean("citrusEndpointResolver", EndpointResolver.class).resolve(messageEndpointUri);
+        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
 
         if (messageEndpoint instanceof WebServiceMessageSender || messageEndpoint instanceof WebServiceClient) {
             SendSoapMessageAction action = new SendSoapMessageAction();
@@ -600,7 +604,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointUri) {
-        Endpoint messageEndpoint = applicationContext.getBean("citrusEndpointResolver", EndpointResolver.class).resolve(messageEndpointUri);
+        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
         return sendSoapFault(messageEndpoint);
     }
 

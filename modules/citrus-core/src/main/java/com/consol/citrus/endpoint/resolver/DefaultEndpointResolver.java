@@ -21,7 +21,6 @@ import com.consol.citrus.endpoint.EndpointComponent;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -45,14 +44,8 @@ public class DefaultEndpointResolver implements EndpointResolver {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DefaultEndpointResolver.class);
 
-    @Autowired(required = false)
-    private Map<String, EndpointComponent> endpointComponents = new HashMap<String, EndpointComponent>();
-
     /** Default Citrus endpoint components from classpath resource properties */
     private Properties endpointComponentProperties;
-
-    /** Spring application context */
-    private ApplicationContext applicationContext;
 
     /**
      * Default constructor.
@@ -61,18 +54,8 @@ public class DefaultEndpointResolver implements EndpointResolver {
         loadEndpointComponentProperties();
     }
 
-    /**
-     * Optional constructor using special application context instance.
-     * @param applicationContext
-     */
-    public DefaultEndpointResolver(ApplicationContext applicationContext) {
-        this();
-        this.applicationContext = applicationContext;
-        this.endpointComponents = applicationContext.getBeansOfType(EndpointComponent.class);
-    }
-
     @Override
-    public Endpoint resolve(String endpointUri) {
+    public Endpoint resolve(String endpointUri, ApplicationContext applicationContext) {
         if (endpointUri.indexOf(":") < 0) {
             return applicationContext.getBean(endpointUri, Endpoint.class);
         }
@@ -83,11 +66,11 @@ public class DefaultEndpointResolver implements EndpointResolver {
         }
 
         String componentName = tok.nextToken();
-        EndpointComponent component = endpointComponents.get(componentName);
+        EndpointComponent component = getEndpointComponents(applicationContext).get(componentName);
 
         if (component == null) {
             // try to get component from default Citrus modules
-            component = resolveDefaultComponent(componentName);
+            component = resolveDefaultComponent(componentName, applicationContext);
         }
 
         if (component == null) {
@@ -97,7 +80,11 @@ public class DefaultEndpointResolver implements EndpointResolver {
         return component.createEndpoint(endpointUri);
     }
 
-    private EndpointComponent resolveDefaultComponent(String componentName) {
+    private Map<String, EndpointComponent> getEndpointComponents(ApplicationContext applicationContext) {
+        return applicationContext.getBeansOfType(EndpointComponent.class);
+    }
+
+    private EndpointComponent resolveDefaultComponent(String componentName, ApplicationContext applicationContext) {
         String endpointComponentClassName = endpointComponentProperties.getProperty(componentName);
 
         try {
@@ -129,10 +116,5 @@ public class DefaultEndpointResolver implements EndpointResolver {
         } catch (IOException e) {
             log.warn("Unable to laod default endpoint components from resource '%s'", e);
         }
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 }

@@ -16,9 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.resolver.EndpointResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.report.TestActionListeners;
@@ -52,7 +53,8 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     private WebServiceClient soapClient = EasyMock.createMock(WebServiceClient.class);
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    
+    private EndpointResolver endpointResolver = EasyMock.createMock(EndpointResolver.class);
+
     private Resource resource = EasyMock.createMock(Resource.class);
     
     private SoapAttachment testAttachment = new SoapAttachment();
@@ -247,15 +249,16 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testSendBuilderWithSenderName() {
         MessageSender messageSender = EasyMock.createMock(MessageSender.class);
         
-        reset(applicationContextMock);
+        reset(applicationContextMock, endpointResolver);
 
-        expect(applicationContextMock.getBean("soapClient", Endpoint.class)).andReturn(soapClient).once();
-        expect(applicationContextMock.getBean("messageSender", Endpoint.class)).andReturn(messageSender).once();
+        expect(applicationContextMock.getBean(CitrusConstants.ENDPOINT_RESOLVER_BEAN, EndpointResolver.class)).andReturn(endpointResolver).times(2);
+        expect(endpointResolver.resolve("soapClient", applicationContextMock)).andReturn(soapClient).once();
+        expect(endpointResolver.resolve("messageSender", applicationContextMock)).andReturn(messageSender).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
 
-        replay(applicationContextMock);
+        replay(applicationContextMock, endpointResolver);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
@@ -290,20 +293,21 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpoint(), messageSender);
         
-        verify(applicationContextMock);
+        verify(applicationContextMock, endpointResolver);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
           expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
     public void testSendBuilderWithSoapAndHttpMixed() {
-        reset(applicationContextMock);
+        reset(applicationContextMock, endpointResolver);
 
-        expect(applicationContextMock.getBean("soapClient", Endpoint.class)).andReturn(soapClient).once();
+        expect(applicationContextMock.getBean(CitrusConstants.ENDPOINT_RESOLVER_BEAN, EndpointResolver.class)).andReturn(endpointResolver).once();
+        expect(endpointResolver.resolve("soapClient", applicationContextMock)).andReturn(soapClient).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
 
-        replay(applicationContextMock);
+        replay(applicationContextMock, endpointResolver);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
@@ -319,7 +323,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        verify(applicationContextMock);
+        verify(applicationContextMock, endpointResolver);
     }
     
 }

@@ -56,7 +56,7 @@ public class JmsEndpointComponent extends AbstractEndpointComponent {
         }
 
         // set default jms connection factory
-        if (getApplicationContext().containsBean("connectionFactory")) {
+        if (getApplicationContext() != null && getApplicationContext().containsBean("connectionFactory")) {
             endpoint.getEndpointConfiguration().setConnectionFactory(getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
         }
 

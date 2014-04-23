@@ -42,14 +42,11 @@ public class DefaultEndpointResolverTest {
     @Test
     public void testResolveDirectEndpoint() throws Exception {
         reset(applicationContext);
-
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
         expect(applicationContext.getBean("myEndpoint", Endpoint.class)).andReturn(EasyMock.createMock(Endpoint.class)).once();
-
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
-        Endpoint endpoint = resolver.resolve("myEndpoint");
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
+        Endpoint endpoint = resolver.resolve("myEndpoint", applicationContext);
 
         Assert.assertNotNull(endpoint);
 
@@ -66,8 +63,8 @@ public class DefaultEndpointResolverTest {
 
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
-        Endpoint endpoint = resolver.resolve("jms:Sample.Queue.Name");
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
+        Endpoint endpoint = resolver.resolve("jms:Sample.Queue.Name", applicationContext);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
         Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "Sample.Queue.Name");
@@ -81,8 +78,8 @@ public class DefaultEndpointResolverTest {
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
-        Endpoint endpoint = resolver.resolve("channel:channel.name");
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
+        Endpoint endpoint = resolver.resolve("channel:channel.name", applicationContext);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channel.name");
@@ -99,8 +96,8 @@ public class DefaultEndpointResolverTest {
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(components).once();
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
-        Endpoint endpoint = resolver.resolve("custom:custom.channel");
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
+        Endpoint endpoint = resolver.resolve("custom:custom.channel", applicationContext);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "custom.channel");
@@ -117,8 +114,8 @@ public class DefaultEndpointResolverTest {
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(components).once();
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
-        Endpoint endpoint = resolver.resolve("jms:custom.channel");
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
+        Endpoint endpoint = resolver.resolve("jms:custom.channel", applicationContext);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "custom.channel");
@@ -132,9 +129,9 @@ public class DefaultEndpointResolverTest {
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
         try {
-            resolver.resolve("unknown:unknown");
+            resolver.resolve("unknown:unknown", applicationContext);
             Assert.fail("Missing exception due to unknown endpoint component");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to resolve endpoint component"));
@@ -145,12 +142,11 @@ public class DefaultEndpointResolverTest {
     @Test
     public void testResolveInvalidEndpointUri() throws Exception {
         reset(applicationContext);
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
         replay(applicationContext);
 
-        DefaultEndpointResolver resolver = new DefaultEndpointResolver(applicationContext);
+        DefaultEndpointResolver resolver = new DefaultEndpointResolver();
         try {
-            resolver.resolve("jms:");
+            resolver.resolve("jms:", applicationContext);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Invalid endpoint uri"));

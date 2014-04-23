@@ -16,9 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.resolver.EndpointResolver;
 import com.consol.citrus.message.MessageReceiver;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
@@ -60,6 +62,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     private Resource resource = EasyMock.createMock(Resource.class);
     
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+    private EndpointResolver endpointResolver = EasyMock.createMock(EndpointResolver.class);
 
     @Test
     public void testLegacyReceiverBuilder() {
@@ -187,14 +190,13 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithReceiverName() {
-        reset(applicationContextMock);
-
-        expect(applicationContextMock.getBean("fooMessageReceiver", Endpoint.class)).andReturn(messageEndpoint).once();
+        reset(applicationContextMock, endpointResolver);
+        expect(applicationContextMock.getBean(CitrusConstants.ENDPOINT_RESOLVER_BEAN, EndpointResolver.class)).andReturn(endpointResolver).once();
+        expect(endpointResolver.resolve("fooMessageReceiver", applicationContextMock)).andReturn(messageEndpoint).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
-        replay(applicationContextMock);
+        replay(applicationContextMock, endpointResolver);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
@@ -214,7 +216,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
-        verify(applicationContextMock);
+        verify(applicationContextMock, endpointResolver);
     }
     
     @Test
