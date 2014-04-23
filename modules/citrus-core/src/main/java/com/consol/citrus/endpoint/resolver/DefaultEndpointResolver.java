@@ -31,9 +31,14 @@ import java.util.*;
 
 /**
  * Default endpoint resolver implementation uses registered endpoint components in Spring application context to resolve endpoint
- * from given endpoint uri.
+ * from given endpoint uri. If endpoint bean name is given resolver directly resolves from application context. If endpoint uri is given
+ * resolver tries to find proper endpoint component in application context and in default endpoint component configuration.
+ *
+ * Default endpoint components are listed in property file reference where key is the component name and value is the fully qualified class name
+ * of the implementing endpoint component class.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public class DefaultEndpointResolver implements EndpointResolver {
 

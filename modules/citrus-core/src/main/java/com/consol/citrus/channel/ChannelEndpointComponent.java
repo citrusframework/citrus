@@ -18,26 +18,33 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
+import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 
 import java.util.Map;
 
 /**
+ * Channel endpoint component creates synchronous or asynchronous channel endpoint and sets configuration properties
+ * accordingly.
+ *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public class ChannelEndpointComponent extends AbstractEndpointComponent {
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
         ChannelEndpoint endpoint;
-        if (resourcePath.startsWith("sync")) {
+        if (resourcePath.startsWith("sync:")) {
             ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
             endpoint = new ChannelSyncEndpoint(endpointConfiguration);
+            endpoint.getEndpointConfiguration().setChannelName(resourcePath.substring("sync:".length()));
         } else {
             endpoint = new ChannelEndpoint();
+            endpoint.getEndpointConfiguration().setChannelName(resourcePath);
         }
 
-        endpoint.getEndpointConfiguration().setChannelName(resourcePath);
         endpoint.getEndpointConfiguration().setBeanFactory(getApplicationContext());
+        endpoint.getEndpointConfiguration().setChannelResolver(new BeanFactoryChannelResolver(getApplicationContext()));
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters);
 

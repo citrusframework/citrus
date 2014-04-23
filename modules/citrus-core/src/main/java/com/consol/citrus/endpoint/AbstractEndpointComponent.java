@@ -27,8 +27,15 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 /**
- * Default endpoint component reads component name from endpoint uri and parses parameters from uri.
+ * Default endpoint component reads component name from endpoint uri and parses parameters from uri using
+ * the HTTP uri pattern.
+ *
+ * http://localhost:8080?param1=value1&param2=value2&param3=value3
+ * jms:queue.name?connectionFactory=specialConnectionFactory
+ * soap:localhost:8080?soapAction=sayHello
+ *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public abstract class AbstractEndpointComponent implements EndpointComponent {
 
@@ -50,9 +57,10 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
             Map<String, String> parameters = new LinkedHashMap<String, String>();
             if (path.contains("?")) {
-                String parameterString = endpointUri.substring(endpointUri.indexOf("?") + 1);
-                StringTokenizer tok = new StringTokenizer(parameterString, "&");
+                String parameterString = path.substring(path.indexOf("?") + 1);
+                path = path.substring(0, path.indexOf("?"));
 
+                StringTokenizer tok = new StringTokenizer(parameterString, "&");
                 while (tok.hasMoreElements()) {
                     String[] parameterValue = tok.nextToken().split("=");
                     if (parameterValue.length != 2) {
@@ -100,23 +108,47 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      * @return
      */
     private Object getTypedParameterValue(Class<?> fieldType, String value) {
-        if (fieldType.isAssignableFrom(String.class)) {
-            return value;
-        } else if (fieldType.isAssignableFrom(Integer.class)) {
-            return Integer.valueOf(value);
-        } else if (fieldType.isAssignableFrom(Long.class)) {
-            return Long.valueOf(value);
-        } else if (fieldType.isAssignableFrom(Boolean.class)) {
-            return Boolean.valueOf(value);
-        } else if (fieldType.isAssignableFrom(Double.class)) {
-            return Double.valueOf(value);
-        }
+        if (fieldType.isPrimitive()) {
+            if (fieldType.isAssignableFrom(int.class)) {
+                return Integer.valueOf(value).intValue();
+            } else if (fieldType.isAssignableFrom(short.class)) {
+                return Short.valueOf(value).shortValue();
+            }  else if (fieldType.isAssignableFrom(byte.class)) {
+                return Byte.valueOf(value).byteValue();
+            } else if (fieldType.isAssignableFrom(long.class)) {
+                return Long.valueOf(value).longValue();
+            } else if (fieldType.isAssignableFrom(boolean.class)) {
+                return Boolean.valueOf(value).booleanValue();
+            } else if (fieldType.isAssignableFrom(float.class)) {
+                return Float.valueOf(value).floatValue();
+            } else if (fieldType.isAssignableFrom(double.class)) {
+                return Double.valueOf(value).doubleValue();
+            }
+        } else {
+            if (fieldType.isAssignableFrom(String.class)) {
+                return value;
+            } else if (fieldType.isAssignableFrom(Integer.class)) {
+                return Integer.valueOf(value);
+            } else if (fieldType.isAssignableFrom(Short.class)) {
+                return Short.valueOf(value);
+            }  else if (fieldType.isAssignableFrom(Byte.class)) {
+                return Byte.valueOf(value);
+            }  else if (fieldType.isAssignableFrom(Long.class)) {
+                return Long.valueOf(value);
+            } else if (fieldType.isAssignableFrom(Boolean.class)) {
+                return Boolean.valueOf(value);
+            } else if (fieldType.isAssignableFrom(Float.class)) {
+                return Float.valueOf(value);
+            } else if (fieldType.isAssignableFrom(Double.class)) {
+                return Double.valueOf(value);
+            }
 
-        // try to resolve bean in application context
-        if (applicationContext.containsBean(value)) {
-            Object bean = applicationContext.getBean(value);
-            if (fieldType.isAssignableFrom(bean.getClass())) {
-                return bean;
+            // try to resolve bean in application context
+            if (applicationContext.containsBean(value)) {
+                Object bean = applicationContext.getBean(value);
+                if (fieldType.isAssignableFrom(bean.getClass())) {
+                    return bean;
+                }
             }
         }
 

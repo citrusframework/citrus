@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContextAware;
  * endpoint creation.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public interface EndpointResolver extends ApplicationContextAware {
 

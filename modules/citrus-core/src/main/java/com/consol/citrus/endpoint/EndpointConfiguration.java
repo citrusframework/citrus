@@ -23,7 +23,7 @@ package com.consol.citrus.endpoint;
 public interface EndpointConfiguration {
 
     /**
-     * Gets the timeout either for sending or receiving mesages.
+     * Gets the timeout either for sending or receiving messages.
      * @return
      */
     long getTimeout();

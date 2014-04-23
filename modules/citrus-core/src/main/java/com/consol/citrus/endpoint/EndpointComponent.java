@@ -20,10 +20,12 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * Endpoint component registers with name in Spring application context. Can create endpoint instance from
- * dynamic endpoint uri. Creates endpoint instance on the fly from endpoint uri.
+ * Endpoint component registers with bean name in Spring application context and is then responsible to create proper endpoints dynamically from
+ * endpoint uri values. Creates endpoint instance by parsing the dynamic endpoint uri with special properties and parameters. Creates proper endpoint
+ * configuration instance on the fly.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public interface EndpointComponent extends BeanNameAware, ApplicationContextAware {
 

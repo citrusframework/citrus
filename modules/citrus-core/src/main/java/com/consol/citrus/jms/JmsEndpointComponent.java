@@ -22,16 +22,21 @@ import javax.jms.ConnectionFactory;
 import java.util.Map;
 
 /**
- * Jms endpoint component able to create endpoint from endpoint uri with parameters.
+ * Jms endpoint component is able to create jms endpoint from endpoint uri with parameters. Depending on uri creates a
+ * synchronous or asynchronous endpoint on a queue or topic destination.
+ *
+ * Further endpoint parameters such as connectionFactory get passed to the endpoint configuration.
  *
  * @author Christoph Deppisch
+ * @since 1.4
  */
 public class JmsEndpointComponent extends AbstractEndpointComponent {
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
         JmsEndpoint endpoint;
 
-        if (resourcePath.startsWith("sync")) {
+        if (resourcePath.startsWith("sync:")) {
             JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
 
             endpoint = new JmsSyncEndpoint(endpointConfiguration);
