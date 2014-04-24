@@ -61,7 +61,8 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(messageSender)
-                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
+                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
+                        .messageType(MessageType.PLAINTEXT);
             }
         };
 
@@ -75,6 +76,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), messageSender);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.toString());
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
