@@ -56,10 +56,6 @@ public class MailClientTest {
                 new ClassPathResource("text_mail.xml", MailServer.class).getInputStream());
 
         reset(javaMailSender);
-
-        expect(javaMailSender.getHost()).andReturn("localhost").times(2);
-        expect(javaMailSender.getPort()).andReturn(25).times(2);
-        expect(javaMailSender.getProtocol()).andReturn("smtp").times(2);
         expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
         javaMailSender.send(anyObject(MimeMessage.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -94,10 +90,6 @@ public class MailClientTest {
                 new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream());
 
         reset(javaMailSender);
-
-        expect(javaMailSender.getHost()).andReturn("localhost").times(2);
-        expect(javaMailSender.getPort()).andReturn(25).times(2);
-        expect(javaMailSender.getProtocol()).andReturn("smtp").times(2);
         expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
         javaMailSender.send(anyObject(MimeMessage.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {

@@ -42,8 +42,6 @@ import java.util.Map;
  * @since 1.4
  */
 public class SshClient extends AbstractEndpoint implements Producer, ReplyConsumer {
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SshClient.class);
 
     public static final String CLASSPATH_PREFIX = "classpath:";
 

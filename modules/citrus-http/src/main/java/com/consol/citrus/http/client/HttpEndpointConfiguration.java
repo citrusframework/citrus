@@ -51,6 +51,7 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
     /** The rest template */
     private RestTemplate restTemplate;
 
+    /** Request factory */
     private ClientHttpRequestFactory requestFactory;
 
     /** Resolves dynamic endpoint uri */

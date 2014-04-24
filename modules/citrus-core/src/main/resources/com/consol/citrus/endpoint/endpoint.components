@@ -1,7 +1,8 @@
 channel=com.consol.citrus.channel.ChannelEndpointComponent
 jms=com.consol.citrus.jms.JmsEndpointComponent
-http=com.consol.citrus.http.endpoint.HttpEndpointComponent
-ws=com.consol.citrus.ws.endpoint.WebServiceEndpointComponent
-soap=com.consol.citrus.ws.endpoint.WebServiceEndpointComponent
-mail=com.consol.citrus.mail.endpoint.MailEndpointComponent
-ssh=com.consol.citrus.ssh.endpoint.SshEndpointComponent
+http=com.consol.citrus.http.client.HttpEndpointComponent
+ws=com.consol.citrus.ws.client.WebServiceEndpointComponent
+soap=com.consol.citrus.ws.client.WebServiceEndpointComponent
+mail=com.consol.citrus.mail.client.MailEndpointComponent
+smtp=com.consol.citrus.mail.client.MailEndpointComponent
+ssh=com.consol.citrus.ssh.client.SshEndpointComponent

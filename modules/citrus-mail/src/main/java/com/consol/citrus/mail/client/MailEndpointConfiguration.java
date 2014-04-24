@@ -28,6 +28,24 @@ import java.util.Properties;
  */
 public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
 
+    /** SMTP host */
+    private String host;
+
+    /** SMTP port*/
+    private int port = JavaMailSenderImpl.DEFAULT_PORT;
+
+    /** User name */
+    private String username;
+
+    /** Password */
+    private String password;
+
+    /** Protocol */
+    private String protocol = JavaMailSenderImpl.DEFAULT_PROTOCOL;
+
+    /** Java mail properties */
+    private Properties javaMailProperties;
+
     /** Mail sender implementation */
     private JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
@@ -39,7 +57,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the mail protocol.
      */
     public String getProtocol() {
-        return javaMailSender.getProtocol();
+        return protocol;
     }
 
     /**
@@ -47,6 +65,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @param protocol
      */
     public void setProtocol(String protocol) {
+        this.protocol = protocol;
         javaMailSender.setProtocol(protocol);
     }
 
@@ -55,7 +74,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the mail host.
      */
     public String getHost() {
-        return javaMailSender.getHost();
+        return host;
     }
 
     /**
@@ -63,6 +82,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @param host
      */
     public void setHost(String host) {
+        this.host = host;
         javaMailSender.setHost(host);
     }
 
@@ -71,7 +91,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the mail port.
      */
     public int getPort() {
-        return javaMailSender.getPort();
+        return port;
     }
 
     /**
@@ -80,6 +100,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @param port
      */
     public void setPort(int port) {
+        this.port = port;
         javaMailSender.setPort(port);
     }
 
@@ -88,7 +109,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the mail username.
      */
     public String getUsername() {
-        return javaMailSender.getUsername();
+        return username;
     }
 
     /**
@@ -98,6 +119,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @param username
      */
     public void setUsername(String username) {
+        this.username = username;
         javaMailSender.setUsername(username);
     }
 
@@ -106,7 +128,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the mail ppassword.
      */
     public String getPassword() {
-        return javaMailSender.getPassword();
+        return password;
     }
 
     /**
@@ -116,6 +138,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @param password
      */
     public void setPassword(String password) {
+        this.password = password;
         javaMailSender.setPassword(password);
     }
 
@@ -124,7 +147,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @return the mail properties.
      */
     public Properties getJavaMailProperties() {
-        return javaMailSender.getJavaMailProperties();
+        return javaMailProperties;
     }
 
     /**
@@ -133,6 +156,7 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
      * @param javaMailProperties
      */
     public void setJavaMailProperties(Properties javaMailProperties) {
+        this.javaMailProperties = javaMailProperties;
         javaMailSender.setJavaMailProperties(javaMailProperties);
     }
 
