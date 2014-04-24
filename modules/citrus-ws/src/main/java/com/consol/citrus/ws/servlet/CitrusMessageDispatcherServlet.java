@@ -17,13 +17,11 @@
 package com.consol.citrus.ws.servlet;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.ws.WebServiceEndpoint;
 import com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 import java.util.ArrayList;
@@ -42,7 +40,6 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
 
     /** Default bean names used in default configuration */
     private static final String ENDPOINT_INTERCEPTOR_BEAN_NAME = "citrusHandlerInterceptor";
-    private static final String ENDPOINT_MAPPING_BEAN_NAME = "citrusEndpointMapping";
     private static final String MESSAGE_ENDPOINT_BEAN_NAME = "citrusWsEndpoint";
 
     /**
@@ -60,14 +57,6 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
 
         configureHandlerInterceptor(context);
         configureMessageEndpoint(context);
-        configurePayloadMapping(context);
-    }
-
-    protected void configurePayloadMapping(ApplicationContext context) {
-        if (context.containsBean(ENDPOINT_MAPPING_BEAN_NAME)) {
-            AbstractEndpointMapping endpointMapping = context.getBean(ENDPOINT_MAPPING_BEAN_NAME, AbstractEndpointMapping.class);
-
-        }
     }
 
     /**
@@ -90,9 +79,7 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
             WebServiceEndpoint messageEndpoint = context.getBean(MESSAGE_ENDPOINT_BEAN_NAME, WebServiceEndpoint.class);
 
             EndpointAdapter endpointAdapter = webServiceServer.getEndpointAdapter();
-            if (endpointAdapter == null) {
-                messageEndpoint.setMessageHandler(new EmptyResponseEndpointAdapter());
-            } else {
+            if (endpointAdapter != null) {
                 messageEndpoint.setMessageHandler(endpointAdapter);
             }
 

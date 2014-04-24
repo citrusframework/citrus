@@ -17,7 +17,6 @@
 package com.consol.citrus.http.servlet;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
@@ -87,9 +86,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             HttpMessageController messageController = context.getBean(MESSAGE_CONTROLLER_BEAN_NAME, HttpMessageController.class);
             EndpointAdapter endpointAdapter = httpServer.getEndpointAdapter();
 
-            if (endpointAdapter == null) {
-                messageController.setMessageHandler(new EmptyResponseEndpointAdapter());
-            } else {
+            if (endpointAdapter != null) {
                 messageController.setMessageHandler(endpointAdapter);
             }
         }

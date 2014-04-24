@@ -16,8 +16,9 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.*;
-
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -28,9 +29,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.actions.ExecuteSQLQueryAction;
-import com.consol.citrus.validation.script.ScriptValidationContext;
+import java.util.*;
 
 /**
  * Bean definition parser for sql action in test case.
@@ -129,7 +128,7 @@ public class SQLActionParser implements BeanDefinitionParser {
                     valueList.add(DomUtils.getTextValue(valueElement));
                 }
                 controlResultSet.put(validateElement.getAttribute("column"), valueList);
-            } else if (validateElement.getAttribute("value") != null) {
+            } else if (validateElement.hasAttribute("value")) {
                 controlResultSet.put(validateElement.getAttribute("column"), Collections.singletonList(validateElement.getAttribute("value")));
             } else {
                 throw new BeanCreationException(element.getLocalName(), 

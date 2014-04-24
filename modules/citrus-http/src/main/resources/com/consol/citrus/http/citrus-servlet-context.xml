@@ -14,12 +14,13 @@
   <bean id="citrusHandlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
     <property name="interceptors">
       <list>
-        <bean class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
+        <ref bean="loggingInterceptor"/>
         <ref bean="citrusHandlerInterceptor"/>
       </list>
     </property>
   </bean>
 
+  <bean id="loggingInterceptor" class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
   <bean id="citrusHandlerInterceptor" class="com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor"/>
 
   <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
