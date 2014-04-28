@@ -23,7 +23,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.resolver.EndpointResolver;
+import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -96,7 +96,9 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             throw new CitrusRuntimeException("Unable to create test context for test builder execution without Spring bean application context set properly");
         }
 
-        execute(applicationContext.getBean(TestContext.class));
+        TestContext context = applicationContext.getBean(TestContext.class);
+        context.setApplicationContext(applicationContext);
+        execute(context);
     }
 
     /**
@@ -342,7 +344,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
+        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
 
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
         action.setEndpoint(messageEndpoint);
@@ -350,8 +352,12 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         return new ReceiveTimeoutActionDefinition(action);
     }
 
-    private EndpointResolver getEndpointResolver() {
-        return applicationContext.getBean(CitrusConstants.ENDPOINT_RESOLVER_BEAN, EndpointResolver.class);
+    /**
+     * Reads endpoint factory as bean from application context.
+     * @return
+     */
+    private EndpointFactory getEndpointFactory() {
+        return applicationContext.getBean(CitrusConstants.ENDPOINT_FACTORY_BEAN, EndpointFactory.class);
     }
 
     /**
@@ -519,7 +525,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public ReceiveMessageActionDefinition receive(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
+        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
 
         if (messageEndpoint instanceof SoapReplyMessageReceiver || messageEndpoint instanceof WebServiceServer) {
             ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
@@ -583,7 +589,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendMessageActionDefinition send(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
+        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
 
         if (messageEndpoint instanceof WebServiceMessageSender || messageEndpoint instanceof WebServiceClient) {
             SendSoapMessageAction action = new SendSoapMessageAction();
@@ -604,7 +610,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointResolver().resolve(messageEndpointUri, applicationContext);
+        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
         return sendSoapFault(messageEndpoint);
     }
 

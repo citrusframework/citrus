@@ -16,6 +16,7 @@
 
 package com.consol.citrus.context;
 
+import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.validation.MessageValidatorRegistry;
@@ -24,15 +25,18 @@ import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}.
  * 
  * @author Christoph Deppisch
  */
-public class TestContextFactoryBean implements FactoryBean<TestContext> {
+public class TestContextFactoryBean implements FactoryBean<TestContext>, ApplicationContextAware {
     
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -50,7 +54,13 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
     private TestListeners testListeners;
 
     @Autowired
+    private EndpointFactory endpointFactory;
+
+    @Autowired
     private MessageConstructionInterceptors messageConstructionInterceptors;
+
+    /** Spring bean application context */
+    private ApplicationContext applicationContext;
     
     /**
      * Logger
@@ -68,6 +78,8 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         context.setTestListeners(testListeners);
         context.setMessageConstructionInterceptors(messageConstructionInterceptors);
+        context.setEndpointFactory(endpointFactory);
+        context.setApplicationContext(applicationContext);
         
         if (log.isDebugEnabled()) {
             log.debug("Created new test context - using global variables: '"
@@ -135,4 +147,24 @@ public class TestContextFactoryBean implements FactoryBean<TestContext> {
         return globalVariables;
     }
 
+    /**
+     * Gets the endpoint factory.
+     * @return
+     */
+    public EndpointFactory getEndpointFactory() {
+        return endpointFactory;
+    }
+
+    /**
+     * Sets the endpoint factory.
+     * @param endpointFactory
+     */
+    public void setEndpointFactory(EndpointFactory endpointFactory) {
+        this.endpointFactory = endpointFactory;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

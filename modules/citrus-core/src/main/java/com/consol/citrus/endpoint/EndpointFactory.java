@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.resolver;
+package com.consol.citrus.endpoint;
 
-import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Endpoint resolver tries to get endpoint instance by parsing an endpoint uri. Uri can have parameters
+ * Endpoint factory tries to get endpoint instance by parsing an endpoint uri. Uri can have parameters
  * that get passed to the endpoint configuration.
  *
  * If Spring application context is given searches for matching endpoint component bean and delegates to component for
@@ -29,14 +28,15 @@ import org.springframework.context.ApplicationContext;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface EndpointResolver {
+public interface EndpointFactory {
 
     /**
-     * Finds endpoint by parsing the given endpoint uri. The Spring bean application context helps to resolve endpoints that
-     * are registered as beans and bean references while setting the configuration properties.
+     * Finds endpoint by parsing the given endpoint uri. The Spring application context helps to create endpoints
+     * so registered beans and bean references can be set as configuration properties.
+     *
      * @param endpointUri
      * @param applicationContext
      * @return
      */
-    Endpoint resolve(String endpointUri, ApplicationContext applicationContext);
+    Endpoint create(String endpointUri, ApplicationContext applicationContext);
 }

@@ -17,6 +17,7 @@
 package com.consol.citrus.context;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
@@ -29,6 +30,7 @@ import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -56,6 +58,9 @@ public class TestContext {
     
     /** Function registry holding all available functions */
     private FunctionRegistry functionRegistry = new FunctionRegistry();
+
+    /** Endpoint factory creates endpoint instances */
+    private EndpointFactory endpointFactory;
     
     /** Registered message validators */
     private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
@@ -68,6 +73,9 @@ public class TestContext {
 
     /** List of global message construction interceptors */
     private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
+
+    /** Spring bean application context */
+    private ApplicationContext applicationContext;
     
     /**
      * Default constructor
@@ -382,5 +390,37 @@ public class TestContext {
      */
     public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
         this.messageConstructionInterceptors = messageConstructionInterceptors;
+    }
+
+    /**
+     * Gets the endpoint factory.
+     * @return
+     */
+    public EndpointFactory getEndpointFactory() {
+        return endpointFactory;
+    }
+
+    /**
+     * Sets the endpoint factory.
+     * @param endpointFactory
+     */
+    public void setEndpointFactory(EndpointFactory endpointFactory) {
+        this.endpointFactory = endpointFactory;
+    }
+
+    /**
+     * Gets the Spring bean application context.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    /**
+     * Sets the Spring bean application context.
+     * @param applicationContext
+     */
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 }

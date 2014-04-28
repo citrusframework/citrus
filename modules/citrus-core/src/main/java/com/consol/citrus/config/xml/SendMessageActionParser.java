@@ -42,23 +42,19 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String messageEndpointReference = null;
+        String endpointUri;
         if (element.hasAttribute("with")) {
-            messageEndpointReference = element.getAttribute("with");
+            endpointUri = element.getAttribute("with");
         } else if (element.hasAttribute("endpoint")) {
-            messageEndpointReference = element.getAttribute("endpoint");
-        }
-
-        BeanDefinitionBuilder builder;
-        if (StringUtils.hasText(messageEndpointReference)) {
-            builder = parseComponent(element, parserContext);
-            builder.addPropertyValue("name", element.getLocalName());
-
-            builder.addPropertyReference("endpoint", messageEndpointReference);
+            endpointUri = element.getAttribute("endpoint");
         } else {
             throw new BeanCreationException("Missing proper message endpoint reference for sending action - 'endpoint' attribute is required and should not be empty");
         }
-        
+
+        BeanDefinitionBuilder builder = parseComponent(element, parserContext);
+        builder.addPropertyValue("name", element.getLocalName());
+        builder.addPropertyValue("endpointUri", endpointUri);
+
         DescriptionElementParser.doParse(element, builder);
         
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");

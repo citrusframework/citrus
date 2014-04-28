@@ -63,7 +63,7 @@ public final class CitrusConstants {
     public static final String DEFAULT_MESSAGE_TYPE = MessageType.XML.toString();
 
     /** Default bean names used in Spring bean application context */
-    public static final java.lang.String ENDPOINT_RESOLVER_BEAN = "citrusEndpointResolver";
+    public static final java.lang.String ENDPOINT_FACTORY_BEAN = "citrusEndpointFactory";
 
     /**
      * Prevent instantiation.

@@ -41,9 +41,12 @@ import java.util.List;
  * @since 2008
  */
 public class SendMessageAction extends AbstractTestAction {
-    /** The message endpoint */
-    protected Endpoint endpoint;
-    
+    /** Message endpoint instance */
+    private Endpoint endpoint;
+
+    /** Message endpoint uri - either bean name or dynamic uri */
+    private String endpointUri;
+
     /** List of variable extractors responsible for creating variables from received message content */
     private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
     
@@ -84,17 +87,18 @@ public class SendMessageAction extends AbstractTestAction {
             variableExtractor.extractVariables(message, context);
         }
         
+        final Endpoint messageEndpoint = createOrGetEndpoint(context);
         if (forkMode) {
             log.info("Forking send message action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(new Runnable() {
                 public void run() {
-                    endpoint.createProducer().send(message);
+                    messageEndpoint.createProducer().send(message);
                 }
             });
         } else {
-            endpoint.createProducer().send(message);
+            messageEndpoint.createProducer().send(message);
         }
     }
     
@@ -103,8 +107,9 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public boolean isDisabled(TestContext context) {
-        if (getActor() == null && endpoint.getActor() != null) {
-            return endpoint.getActor().isDisabled();
+        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        if (getActor() == null && messageEndpoint.getActor() != null) {
+            return messageEndpoint.getActor().isDisabled();
         }
         
         return super.isDisabled(context);
@@ -125,19 +130,31 @@ public class SendMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set message endpoint instance.
-     * @param endpoint the message endpoint
+     * Creates or gets the message endpoint instance.
+     * @return the message endpoint
      */
-    public void setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
+    public Endpoint createOrGetEndpoint(TestContext context) {
+        if (endpoint == null) {
+            endpoint = context.getEndpointFactory().create(context.replaceDynamicContentInString(endpointUri), context.getApplicationContext());
+        }
+
+        return endpoint;
     }
 
     /**
-     * Get the message endpoint.
-     * @return the message endpoint
+     * Gets the message endpoint.
+     * @return
      */
     public Endpoint getEndpoint() {
         return endpoint;
+    }
+
+    /**
+     * Sets the message endpoint.
+     * @param endpoint
+     */
+    public void setEndpoint(Endpoint endpoint) {
+        this.endpoint = endpoint;
     }
 
     /**
@@ -218,5 +235,21 @@ public class SendMessageAction extends AbstractTestAction {
      */
     public void setDataDictionary(DataDictionary dataDictionary) {
         this.dataDictionary = dataDictionary;
+    }
+
+    /**
+     * Gets the endpoint uri.
+     * @return
+     */
+    public String getEndpointUri() {
+        return endpointUri;
+    }
+
+    /**
+     * Sets the endpoint uri.
+     * @param endpointUri
+     */
+    public void setEndpointUri(String endpointUri) {
+        this.endpointUri = endpointUri;
     }
 }

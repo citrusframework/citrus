@@ -63,6 +63,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
 
         try {
             testContext = applicationContext.getBean(TestContext.class);
+            testContext.setApplicationContext(applicationContext);
             test = getTestCase(testContext, mappingName);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +

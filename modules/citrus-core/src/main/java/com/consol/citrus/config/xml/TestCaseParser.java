@@ -47,24 +47,24 @@ public class TestCaseParser implements BeanDefinitionParser {
     @Override
 	public final BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder testCaseFactory = BeanDefinitionBuilder.rootBeanDefinition(TestCaseFactory.class);
-        BeanDefinitionBuilder testcase = BeanDefinitionBuilder.rootBeanDefinition(TestCase.class);
+        BeanDefinitionBuilder testCase = BeanDefinitionBuilder.rootBeanDefinition(TestCase.class);
 
         String testName = element.getAttribute("name");
         if (!StringUtils.hasText(testName)) {
             throw new BeanCreationException("Please provide proper test case name");
         }
-        
-        testcase.addPropertyValue("name", testName);
 
-        parseMetaInfo(testcase, element);
-        parseVariableDefinitions(testcase, element);
+        testCase.addPropertyValue("name", testName);
 
-        DescriptionElementParser.doParse(element, testcase);
+        parseMetaInfo(testCase, element);
+        parseVariableDefinitions(testCase, element);
+
+        DescriptionElementParser.doParse(element, testCase);
         
         Element actionsElement = DomUtils.getChildElementByTagName(element, "actions");
         Element finallyBlockElement = DomUtils.getChildElementByTagName(element, "finally");
 
-        testCaseFactory.addPropertyValue("testCase", testcase.getBeanDefinition());
+        testCaseFactory.addPropertyValue("testCase", testCase.getBeanDefinition());
         testCaseFactory.addPropertyValue("testChain", parseActions(actionsElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
         testCaseFactory.addPropertyValue("finallyChain", parseActions(finallyBlockElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
 
@@ -102,10 +102,10 @@ public class TestCaseParser implements BeanDefinitionParser {
     /**
      * Parses all variable definitions and adds those to the bean definition 
      * builder for this test case.
-     * @param testcase the target bean definition builder for this test case.
+     * @param testCase the target bean definition builder for this test case.
      * @param element the source element.
      */
-    private void parseVariableDefinitions(BeanDefinitionBuilder testcase, Element element) {
+    private void parseVariableDefinitions(BeanDefinitionBuilder testCase, Element element) {
         Element variablesElement = DomUtils.getChildElementByTagName(element, "variables");
         if (variablesElement != null) {
             Map<String, String> testVariables = new LinkedHashMap<String, String>();
@@ -122,16 +122,16 @@ public class TestCaseParser implements BeanDefinitionParser {
                             variableScript.getTextContent()));
                 }
             }
-            testcase.addPropertyValue("variableDefinitions", testVariables);
+            testCase.addPropertyValue("variableDefinitions", testVariables);
         }
     }
 
     /**
      * Parses meta information and adds it to the test case bean definition builder.
-     * @param testcase the target bean definition builder for this test case.
+     * @param testCase the target bean definition builder for this test case.
      * @param element the source element.
      */
-    private void parseMetaInfo(BeanDefinitionBuilder testcase, Element element) {
+    private void parseMetaInfo(BeanDefinitionBuilder testCase, Element element) {
         Element metaInfoElement = DomUtils.getChildElementByTagName(element, "meta-info");
         if (metaInfoElement != null) {
             TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
@@ -172,7 +172,7 @@ public class TestCaseParser implements BeanDefinitionParser {
                 }
             }
 
-            testcase.addPropertyValue("metaInfo", metaInfo);
+            testCase.addPropertyValue("metaInfo", metaInfo);
         }
     }
 }

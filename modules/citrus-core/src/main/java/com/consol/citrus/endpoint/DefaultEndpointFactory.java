@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.endpoint.resolver;
+package com.consol.citrus.endpoint;
 
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointComponent;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +27,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Default endpoint resolver implementation uses registered endpoint components in Spring application context to resolve endpoint
- * from given endpoint uri. If endpoint bean name is given resolver directly resolves from application context. If endpoint uri is given
- * resolver tries to find proper endpoint component in application context and in default endpoint component configuration.
+ * Default endpoint factory implementation uses registered endpoint components in Spring application context to create endpoint
+ * from given endpoint uri. If endpoint bean name is given factory directly creates from application context. If endpoint uri is given
+ * factory tries to find proper endpoint component in application context and in default endpoint component configuration.
  *
  * Default endpoint components are listed in property file reference where key is the component name and value is the fully qualified class name
  * of the implementing endpoint component class.
@@ -39,10 +37,10 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class DefaultEndpointResolver implements EndpointResolver {
+public class DefaultEndpointFactory implements EndpointFactory {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultEndpointResolver.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultEndpointFactory.class);
 
     /** Default Citrus endpoint components from classpath resource properties */
     private Properties endpointComponentProperties;
@@ -50,12 +48,12 @@ public class DefaultEndpointResolver implements EndpointResolver {
     /**
      * Default constructor.
      */
-    public DefaultEndpointResolver() {
+    public DefaultEndpointFactory() {
         loadEndpointComponentProperties();
     }
 
     @Override
-    public Endpoint resolve(String endpointUri, ApplicationContext applicationContext) {
+    public Endpoint create(String endpointUri, ApplicationContext applicationContext) {
         if (endpointUri.indexOf(":") < 0) {
             return applicationContext.getBean(endpointUri, Endpoint.class);
         }
@@ -74,7 +72,7 @@ public class DefaultEndpointResolver implements EndpointResolver {
         }
 
         if (component == null) {
-            throw new CitrusRuntimeException(String.format("Unable to resolve endpoint component with name '%s'", componentName));
+            throw new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName));
         }
 
         return component.createEndpoint(endpointUri);

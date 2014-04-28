@@ -51,6 +51,6 @@
     
     <bean class="com.consol.citrus.validation.MessageValidatorRegistry"/>
 
-    <bean id="citrusEndpointResolver" class="com.consol.citrus.endpoint.resolver.DefaultEndpointResolver"/>
+    <bean id="citrusEndpointFactory" class="com.consol.citrus.endpoint.DefaultEndpointFactory"/>
     
 </beans>

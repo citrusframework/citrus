@@ -82,6 +82,8 @@ public class Template extends AbstractTestAction {
             innerContext.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
             innerContext.setTestListeners(context.getTestListeners());
             innerContext.setMessageConstructionInterceptors(context.getMessageConstructionInterceptors());
+            innerContext.setEndpointFactory(context.getEndpointFactory());
+            innerContext.setApplicationContext(context.getApplicationContext());
         }
         
         for (Entry<String, String> entry : parameter.entrySet()) {

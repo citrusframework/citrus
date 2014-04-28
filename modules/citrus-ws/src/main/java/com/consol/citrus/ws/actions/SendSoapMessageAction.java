@@ -70,9 +70,9 @@ public class SendSoapMessageAction extends SendMessageAction {
             variableExtractor.extractVariables(message, context);
         }
         
-        if (!(endpoint instanceof WebServiceClient) && !(endpoint instanceof WebServiceMessageSender) ) {
+        if (!(createOrGetEndpoint(context) instanceof WebServiceClient) && !(createOrGetEndpoint(context) instanceof WebServiceMessageSender) ) {
             throw new CitrusRuntimeException(String.format("Sending SOAP messages requires a " +
-            		"'%s' but was '%s'", WebServiceClient.class.getName(), endpoint.getClass().getName()));
+            		"'%s' but was '%s'", WebServiceClient.class.getName(), createOrGetEndpoint(context).getClass().getName()));
         }
         
         final String attachmentContent;
@@ -91,11 +91,11 @@ public class SendSoapMessageAction extends SendMessageAction {
                 SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
                 taskExecutor.execute(new Runnable() {
                     public void run() {
-                        sendSoapMessage(message, attachmentContent);
+                        sendSoapMessage(message, attachmentContent, context);
                     }
                 });
             } else {
-                sendSoapMessage(message, attachmentContent);
+                sendSoapMessage(message, attachmentContent, context);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
@@ -107,14 +107,15 @@ public class SendSoapMessageAction extends SendMessageAction {
      * 
      * @param message the message to send.
      * @param attachmentContent the optional attachmentContent.
+     * @param context the actual test context.
      */
-    private void sendSoapMessage(Message<?> message, String attachmentContent) {
+    private void sendSoapMessage(Message<?> message, String attachmentContent, TestContext context) {
         WebServiceClient webServiceClient;
 
-        if (endpoint instanceof WebServiceMessageSender) {
-            webServiceClient = ((WebServiceMessageSender) endpoint).getWebServiceClient();
+        if (createOrGetEndpoint(context) instanceof WebServiceMessageSender) {
+            webServiceClient = ((WebServiceMessageSender) createOrGetEndpoint(context)).getWebServiceClient();
         } else {
-            webServiceClient = (WebServiceClient) endpoint;
+            webServiceClient = (WebServiceClient) createOrGetEndpoint(context);
         }
 
         if (attachmentContent != null) {

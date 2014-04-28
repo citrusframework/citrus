@@ -58,6 +58,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
 
     /** Message endpoint */
     private Endpoint endpoint;
+
+    /** Message endpoint uri - either bean name or dynamic endpoint uri */
+    private String endpointUri;
     
     /** Receive timeout */
     private long receiveTimeout = 0L;
@@ -116,7 +119,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
             if (StringUtils.hasText(selectorString)) {
                 receivedMessage = receiveSelected(context, selectorString);
             } else {
-                receivedMessage = receive();
+                receivedMessage = receive(context);
             }
 
             if (receivedMessage == null) {
@@ -139,9 +142,10 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Receives the message with respective message receiver implementation.
      * @return
      */
-    private Message<?> receive() {
-        return receiveTimeout > 0 ? endpoint.createConsumer().receive(receiveTimeout) :
-                endpoint.createConsumer().receive(endpoint.getEndpointConfiguration().getTimeout());
+    private Message<?> receive(TestContext context) {
+        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        return receiveTimeout > 0 ? messageEndpoint.createConsumer().receive(receiveTimeout) :
+                messageEndpoint.createConsumer().receive(messageEndpoint.getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -156,20 +160,21 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
             log.debug("Setting message selector: '" + selectorString + "'");
         }
 
-        Consumer consumer = endpoint.createConsumer();
+        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        Consumer consumer = messageEndpoint.createConsumer();
         if (consumer instanceof SelectiveConsumer) {
             if (receiveTimeout > 0) {
-                return ((SelectiveConsumer)endpoint.createConsumer()).receive(
+                return ((SelectiveConsumer) messageEndpoint.createConsumer()).receive(
                         context.replaceDynamicContentInString(selectorString),
                         receiveTimeout);
             } else {
-                return ((SelectiveConsumer)endpoint.createConsumer()).receive(
+                return ((SelectiveConsumer) messageEndpoint.createConsumer()).receive(
                         context.replaceDynamicContentInString(selectorString),
-                        endpoint.getEndpointConfiguration().getTimeout());
+                        messageEndpoint.getEndpointConfiguration().getTimeout());
             }
         } else {
             log.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
-            return receive();
+            return receive(context);
         }
 
 
@@ -199,8 +204,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      */
     @Override
     public boolean isDisabled(TestContext context) {
-        if (getActor() == null && endpoint.getActor() != null) {
-            return endpoint.getActor().isDisabled();
+        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        if (getActor() == null && messageEndpoint.getActor() != null) {
+            return messageEndpoint.getActor().isDisabled();
         }
         
         return super.isDisabled(context);
@@ -229,6 +235,19 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
     public void setValidator(MessageValidator<? extends ValidationContext> validator) {
         this.validator = validator;
     }
+
+    /**
+     * Creates or gets the endpoint instance.
+     * @param context
+     * @return
+     */
+    public Endpoint createOrGetEndpoint(TestContext context) {
+        if (endpoint == null) {
+            endpoint = context.getEndpointFactory().create(context.replaceDynamicContentInString(endpointUri), context.getApplicationContext());
+        }
+
+        return endpoint;
+    }
     
     /**
      * Set message endpoint instance.
@@ -244,6 +263,22 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      */
     public Endpoint getEndpoint() {
         return endpoint;
+    }
+
+    /**
+     * Gets the endpoint uri.
+     * @return
+     */
+    public String getEndpointUri() {
+        return endpointUri;
+    }
+
+    /**
+     * Sets the endpoint uri.
+     * @param endpointUri
+     */
+    public void setEndpointUri(String endpointUri) {
+        this.endpointUri = endpointUri;
     }
 
     /**
