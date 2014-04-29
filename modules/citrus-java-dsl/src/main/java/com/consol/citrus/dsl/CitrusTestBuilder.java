@@ -23,7 +23,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -344,20 +343,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
-
         ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setEndpoint(messageEndpoint);
+        action.setEndpointUri(messageEndpointUri);
         testCase.addTestAction(action);
         return new ReceiveTimeoutActionDefinition(action);
-    }
-
-    /**
-     * Reads endpoint factory as bean from application context.
-     * @return
-     */
-    private EndpointFactory getEndpointFactory() {
-        return applicationContext.getBean(CitrusConstants.ENDPOINT_FACTORY_BEAN, EndpointFactory.class);
     }
 
     /**
@@ -525,17 +514,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public ReceiveMessageActionDefinition receive(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
+        ReceiveMessageAction action = new ReceiveMessageAction();
+        action.setEndpointUri(messageEndpointUri);
 
-        if (messageEndpoint instanceof SoapReplyMessageReceiver || messageEndpoint instanceof WebServiceServer) {
-            ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-            action.setEndpoint(messageEndpoint);
-            testCase.addTestAction(action);
-
-            return new ReceiveSoapMessageActionDefinition(action, applicationContext);
-        } else {
-            return receive(messageEndpoint);
-        }
+        testCase.addTestAction(action);
+        return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -589,17 +572,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendMessageActionDefinition send(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
+        SendMessageAction action = new SendMessageAction();
+        action.setEndpointUri(messageEndpointUri);
 
-        if (messageEndpoint instanceof WebServiceMessageSender || messageEndpoint instanceof WebServiceClient) {
-            SendSoapMessageAction action = new SendSoapMessageAction();
-            action.setEndpoint(messageEndpoint);
-
-            testCase.addTestAction(action);
-            return new SendSoapMessageActionDefinition(action);
-        } else {
-            return send(messageEndpoint);
-        }
+        testCase.addTestAction(action);
+        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -610,8 +587,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointUri) {
-        Endpoint messageEndpoint = getEndpointFactory().create(messageEndpointUri, applicationContext);
-        return sendSoapFault(messageEndpoint);
+        SendMessageAction action = new SendMessageAction();
+        action.setEndpointUri(messageEndpointUri);
+
+        testCase.addTestAction(action);
+        return new SendSoapFaultActionDefinition(action, new PositionHandle(testCase.getActions()));
     }
 
     /**

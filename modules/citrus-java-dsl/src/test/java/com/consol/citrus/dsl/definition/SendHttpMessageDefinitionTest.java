@@ -16,14 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
-import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -46,7 +45,6 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     private HttpClient httpClient = EasyMock.createMock(HttpClient.class);
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    private EndpointFactory endpointFactory = EasyMock.createMock(EndpointFactory.class);
 
     @Test
     public void testFork() {
@@ -185,15 +183,11 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
     public void testSendBuilderWithSoapAndHttpMixed() {
-        reset(applicationContextMock, endpointFactory);
-
-        expect(applicationContextMock.getBean(CitrusConstants.ENDPOINT_FACTORY_BEAN, EndpointFactory.class)).andReturn(endpointFactory).once();
-        expect(endpointFactory.create("httpClient", applicationContextMock)).andReturn(httpClient).once();
+        reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
-        replay(applicationContextMock, endpointFactory);
+        replay(applicationContextMock);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
@@ -208,7 +202,15 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        verify(applicationContextMock, endpointFactory);
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+        Assert.assertEquals(action.getEndpointUri(), "httpClient");
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+
+        verify(applicationContextMock);
     }
 
 }

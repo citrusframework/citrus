@@ -425,6 +425,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         receiveSoapMessageAction.setActor(action.getActor());
         receiveSoapMessageAction.setDescription(action.getDescription());
         receiveSoapMessageAction.setEndpoint(action.getEndpoint());
+        receiveSoapMessageAction.setEndpointUri(action.getEndpointUri());
         receiveSoapMessageAction.setMessageSelector(action.getMessageSelector());
         receiveSoapMessageAction.setMessageSelectorString(action.getMessageSelectorString());
         receiveSoapMessageAction.setMessageType(action.getMessageType());
@@ -452,7 +453,6 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public ReceiveHttpMessageActionDefinition http() {
         ReceiveHttpMessageActionDefinition httpMessageActionDefinition = new ReceiveHttpMessageActionDefinition(action, applicationContext, positionHandle);
-
         httpMessageActionDefinition.setMessageType(messageType);
         httpMessageActionDefinition.setValidationContext(validationContext);
         httpMessageActionDefinition.setScriptValidationContext(scriptValidationContext);

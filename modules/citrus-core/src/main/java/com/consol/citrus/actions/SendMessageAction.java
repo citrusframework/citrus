@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
@@ -27,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,11 +136,14 @@ public class SendMessageAction extends AbstractTestAction {
      * @return the message endpoint
      */
     public Endpoint createOrGetEndpoint(TestContext context) {
-        if (endpoint == null) {
-            endpoint = context.getEndpointFactory().create(context.replaceDynamicContentInString(endpointUri), context.getApplicationContext());
+        if (endpoint != null) {
+            return endpoint;
+        } else if (StringUtils.hasText(endpointUri)) {
+            endpoint = context.getEndpointFactory().create(endpointUri, context);
+            return endpoint;
+        } else {
+            throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
         }
-
-        return endpoint;
     }
 
     /**

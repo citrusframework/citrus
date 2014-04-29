@@ -242,11 +242,14 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @return
      */
     public Endpoint createOrGetEndpoint(TestContext context) {
-        if (endpoint == null) {
-            endpoint = context.getEndpointFactory().create(context.replaceDynamicContentInString(endpointUri), context.getApplicationContext());
+        if (endpoint != null) {
+            return endpoint;
+        } else if (StringUtils.hasText(endpointUri)) {
+            endpoint = context.getEndpointFactory().create(endpointUri, context);
+            return endpoint;
+        } else {
+            throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
         }
-
-        return endpoint;
     }
     
     /**

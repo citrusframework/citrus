@@ -41,6 +41,9 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     /** Message endpoint */
     private Endpoint endpoint;
 
+    /** Message endpoint uri */
+    private String endpointUri;
+
     /** Message selector string */
     private String messageSelector;
 
@@ -60,7 +63,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             Message<?> receivedMessage;
             
             if (StringUtils.hasText(messageSelector)) {
-                Consumer consumer = endpoint.createConsumer();
+                Consumer consumer = createOrGetEndpoint(context).createConsumer();
 
                 if (consumer instanceof SelectiveConsumer) {
                     receivedMessage = ((SelectiveConsumer)consumer).receive(messageSelector, timeout);
@@ -69,7 +72,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
                     receivedMessage = consumer.receive(timeout);
                 }
             } else {
-                receivedMessage = endpoint.createConsumer().receive(timeout);
+                receivedMessage = createOrGetEndpoint(context).createConsumer().receive(timeout);
             }
 
             if (receivedMessage != null) {
@@ -82,6 +85,22 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             }
         } catch (ActionTimeoutException e) {
             log.info("No messages received on destination. Message timeout validation OK!");
+        }
+    }
+
+    /**
+     * Creates or gets the endpoint instance.
+     * @param context
+     * @return
+     */
+    public Endpoint createOrGetEndpoint(TestContext context) {
+        if (endpoint != null) {
+            return endpoint;
+        } else if (StringUtils.hasText(endpointUri)) {
+            endpoint = context.getEndpointFactory().create(endpointUri, context);
+            return endpoint;
+        } else {
+            throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
         }
     }
 
@@ -131,5 +150,21 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
      */
     public String getMessageSelector() {
         return messageSelector;
+    }
+
+    /**
+     * Gets the endpoint uri.
+     * @return
+     */
+    public String getEndpointUri() {
+        return endpointUri;
+    }
+
+    /**
+     * Sets the endpoint uri.
+     * @param endpointUri
+     */
+    public void setEndpointUri(String endpointUri) {
+        this.endpointUri = endpointUri;
     }
 }

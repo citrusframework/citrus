@@ -16,6 +16,7 @@
 
 package com.consol.citrus.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,9 +54,10 @@ public class DefaultEndpointFactory implements EndpointFactory {
     }
 
     @Override
-    public Endpoint create(String endpointUri, ApplicationContext applicationContext) {
+    public Endpoint create(String uri, TestContext context) {
+        String endpointUri = context.replaceDynamicContentInString(uri);
         if (endpointUri.indexOf(":") < 0) {
-            return applicationContext.getBean(endpointUri, Endpoint.class);
+            return context.getApplicationContext().getBean(endpointUri, Endpoint.class);
         }
 
         StringTokenizer tok = new StringTokenizer(endpointUri, ":");
@@ -64,11 +66,11 @@ public class DefaultEndpointFactory implements EndpointFactory {
         }
 
         String componentName = tok.nextToken();
-        EndpointComponent component = getEndpointComponents(applicationContext).get(componentName);
+        EndpointComponent component = getEndpointComponents(context.getApplicationContext()).get(componentName);
 
         if (component == null) {
             // try to get component from default Citrus modules
-            component = resolveDefaultComponent(componentName, applicationContext);
+            component = resolveDefaultComponent(componentName, context.getApplicationContext());
         }
 
         if (component == null) {

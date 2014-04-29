@@ -16,11 +16,9 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -44,7 +42,6 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     private Endpoint soapEndpoint = EasyMock.createMock(Endpoint.class);
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
-    private EndpointFactory endpointFactory = EasyMock.createMock(EndpointFactory.class);
     private Resource resource = EasyMock.createMock(Resource.class);
 
     @Test
@@ -80,15 +77,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultByEndpointName() {
-        reset(applicationContextMock, endpointFactory);
-
-        expect(applicationContextMock.getBean(CitrusConstants.ENDPOINT_FACTORY_BEAN, EndpointFactory.class)).andReturn(endpointFactory).once();
-        expect(endpointFactory.create("soapEndpoint", applicationContextMock)).andReturn(soapEndpoint).once();
+        reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
-        replay(applicationContextMock, endpointFactory);
+        replay(applicationContextMock);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
@@ -107,7 +100,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
-        Assert.assertEquals(action.getEndpoint(), soapEndpoint);
+        Assert.assertEquals(action.getEndpointUri(), "soapEndpoint");
         Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
 
         SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder) action.getMessageBuilder();
@@ -117,7 +110,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getFaultCode(), "CITRUS-1000");
         Assert.assertEquals(messageBuilder.getFaultString(), "Something went wrong");
 
-        verify(applicationContextMock, endpointFactory);
+        verify(applicationContextMock);
     }
 
     @Test
