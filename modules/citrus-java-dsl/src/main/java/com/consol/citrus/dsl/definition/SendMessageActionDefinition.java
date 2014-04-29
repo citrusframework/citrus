@@ -16,9 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.*;
@@ -46,6 +48,9 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
     /** Self reference for generics support */
     private final T self;
+
+    /** Message type for this action definition */
+    private MessageType messageType = MessageType.valueOf(CitrusConstants.DEFAULT_MESSAGE_TYPE);
 
     /** Variable extractors filled within this definition */
     private MessageHeaderVariableExtractor headerExtractor;
@@ -193,6 +198,17 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     }
 
     /**
+     * Sets a explicit message type for this receive action.
+     * @param messageType
+     * @return
+     */
+    public T messageType(MessageType messageType) {
+        this.messageType = messageType;
+        action.setMessageType(messageType.toString());
+        return self;
+    }
+
+    /**
      * Get message builder, if already registered or create a new message builder and register it
      *
      * @return the message builder in use
@@ -288,6 +304,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     public SendSoapMessageActionDefinition soap() {
         SendSoapMessageAction sendSoapMessageAction = new SendSoapMessageAction();
         sendSoapMessageAction.setActor(action.getActor());
+        sendSoapMessageAction.setMessageType(messageType.toString());
         sendSoapMessageAction.setDescription(action.getDescription());
         sendSoapMessageAction.setMessageBuilder(action.getMessageBuilder());
         sendSoapMessageAction.setEndpoint(action.getEndpoint());
