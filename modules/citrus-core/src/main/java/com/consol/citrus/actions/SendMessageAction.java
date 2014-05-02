@@ -89,7 +89,7 @@ public class SendMessageAction extends AbstractTestAction {
             variableExtractor.extractVariables(message, context);
         }
         
-        final Endpoint messageEndpoint = createOrGetEndpoint(context);
+        final Endpoint messageEndpoint = getOrCreateEndpoint(context);
         if (forkMode) {
             log.info("Forking send message action ...");
 
@@ -109,7 +109,7 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public boolean isDisabled(TestContext context) {
-        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        Endpoint messageEndpoint = getOrCreateEndpoint(context);
         if (getActor() == null && messageEndpoint.getActor() != null) {
             return messageEndpoint.getActor().isDisabled();
         }
@@ -135,7 +135,7 @@ public class SendMessageAction extends AbstractTestAction {
      * Creates or gets the message endpoint instance.
      * @return the message endpoint
      */
-    public Endpoint createOrGetEndpoint(TestContext context) {
+    public Endpoint getOrCreateEndpoint(TestContext context) {
         if (endpoint != null) {
             return endpoint;
         } else if (StringUtils.hasText(endpointUri)) {

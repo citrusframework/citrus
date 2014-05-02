@@ -18,6 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.VariableExtractor;
@@ -69,10 +70,11 @@ public class SendSoapMessageAction extends SendMessageAction {
         for (VariableExtractor variableExtractor : getVariableExtractors()) {
             variableExtractor.extractVariables(message, context);
         }
-        
-        if (!(createOrGetEndpoint(context) instanceof WebServiceClient) && !(createOrGetEndpoint(context) instanceof WebServiceMessageSender) ) {
+
+        final Endpoint soapEndpoint = getOrCreateEndpoint(context);
+        if (!(soapEndpoint instanceof WebServiceClient) && !(soapEndpoint instanceof WebServiceMessageSender) ) {
             throw new CitrusRuntimeException(String.format("Sending SOAP messages requires a " +
-            		"'%s' but was '%s'", WebServiceClient.class.getName(), createOrGetEndpoint(context).getClass().getName()));
+            		"'%s' but was '%s'", WebServiceClient.class.getName(), soapEndpoint.getClass().getName()));
         }
         
         final String attachmentContent;
@@ -91,11 +93,11 @@ public class SendSoapMessageAction extends SendMessageAction {
                 SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
                 taskExecutor.execute(new Runnable() {
                     public void run() {
-                        sendSoapMessage(message, attachmentContent, context);
+                        sendSoapMessage(message, attachmentContent, soapEndpoint);
                     }
                 });
             } else {
-                sendSoapMessage(message, attachmentContent, context);
+                sendSoapMessage(message, attachmentContent, soapEndpoint);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
@@ -107,15 +109,15 @@ public class SendSoapMessageAction extends SendMessageAction {
      * 
      * @param message the message to send.
      * @param attachmentContent the optional attachmentContent.
-     * @param context the actual test context.
+     * @param soapEndpoint the actual message endpoint.
      */
-    private void sendSoapMessage(Message<?> message, String attachmentContent, TestContext context) {
+    private void sendSoapMessage(Message<?> message, String attachmentContent, Endpoint soapEndpoint) {
         WebServiceClient webServiceClient;
 
-        if (createOrGetEndpoint(context) instanceof WebServiceMessageSender) {
-            webServiceClient = ((WebServiceMessageSender) createOrGetEndpoint(context)).getWebServiceClient();
+        if (soapEndpoint instanceof WebServiceMessageSender) {
+            webServiceClient = ((WebServiceMessageSender) soapEndpoint).getWebServiceClient();
         } else {
-            webServiceClient = (WebServiceClient) createOrGetEndpoint(context);
+            webServiceClient = (WebServiceClient) soapEndpoint;
         }
 
         if (attachmentContent != null) {

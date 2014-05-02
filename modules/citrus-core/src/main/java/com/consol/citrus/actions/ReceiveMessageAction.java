@@ -143,7 +143,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @return
      */
     private Message<?> receive(TestContext context) {
-        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        Endpoint messageEndpoint = getOrCreateEndpoint(context);
         return receiveTimeout > 0 ? messageEndpoint.createConsumer().receive(receiveTimeout) :
                 messageEndpoint.createConsumer().receive(messageEndpoint.getEndpointConfiguration().getTimeout());
     }
@@ -160,7 +160,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
             log.debug("Setting message selector: '" + selectorString + "'");
         }
 
-        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        Endpoint messageEndpoint = getOrCreateEndpoint(context);
         Consumer consumer = messageEndpoint.createConsumer();
         if (consumer instanceof SelectiveConsumer) {
             if (receiveTimeout > 0) {
@@ -199,12 +199,9 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isDisabled(TestContext context) {
-        Endpoint messageEndpoint = createOrGetEndpoint(context);
+        Endpoint messageEndpoint = getOrCreateEndpoint(context);
         if (getActor() == null && messageEndpoint.getActor() != null) {
             return messageEndpoint.getActor().isDisabled();
         }
@@ -241,7 +238,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @param context
      * @return
      */
-    public Endpoint createOrGetEndpoint(TestContext context) {
+    public Endpoint getOrCreateEndpoint(TestContext context) {
         if (endpoint != null) {
             return endpoint;
         } else if (StringUtils.hasText(endpointUri)) {

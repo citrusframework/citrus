@@ -61,18 +61,12 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     public void doExecute(TestContext context) {
         try {
             Message<?> receivedMessage;
-            
-            if (StringUtils.hasText(messageSelector)) {
-                Consumer consumer = createOrGetEndpoint(context).createConsumer();
+            Consumer consumer = getOrCreateEndpoint(context).createConsumer();
 
-                if (consumer instanceof SelectiveConsumer) {
-                    receivedMessage = ((SelectiveConsumer)consumer).receive(messageSelector, timeout);
-                } else {
-                    log.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));
-                    receivedMessage = consumer.receive(timeout);
-                }
+            if (StringUtils.hasText(messageSelector) && consumer instanceof SelectiveConsumer) {
+                receivedMessage = ((SelectiveConsumer)consumer).receive(messageSelector, timeout);
             } else {
-                receivedMessage = createOrGetEndpoint(context).createConsumer().receive(timeout);
+                receivedMessage = consumer.receive(timeout);
             }
 
             if (receivedMessage != null) {
@@ -93,7 +87,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
      * @param context
      * @return
      */
-    public Endpoint createOrGetEndpoint(TestContext context) {
+    public Endpoint getOrCreateEndpoint(TestContext context) {
         if (endpoint != null) {
             return endpoint;
         } else if (StringUtils.hasText(endpointUri)) {
