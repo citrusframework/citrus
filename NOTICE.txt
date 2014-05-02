@@ -19,7 +19,7 @@
    promote products derived from this software without prior written permission. 
    For written permission, please contact user@citrusframework.org.
 
-   Copyright (C) 2006-2013 ConSol* Software GmbH.
+   Copyright (C) 2006-2014 ConSol* Software GmbH.
   
    Citrus is distributed in the hope that it will be useful, but WITHOUT ANY 
    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 

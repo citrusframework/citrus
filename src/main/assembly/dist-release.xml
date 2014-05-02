@@ -14,6 +14,7 @@
         <include>com.consol.citrus:citrus-ws</include>
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-ssh</include>
+        <include>com.consol.citrus:citrus-mail</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus:citrus-adapter</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
@@ -158,6 +159,13 @@
         <includes>
             <include>*sources.jar</include>
         </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-mail/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
         <directory>modules/citrus-java-dsl/target</directory>
