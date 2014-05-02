@@ -15,12 +15,15 @@
   </properties>
   
   <body>
-    <release version="1.4" date="11.04.2014" descripton="1.4 release">
+    <release version="1.4" date="02.05.2014" description="1.4 release">
         <action dev="christophd" type="add">
           CITRUS-200 Global variables component
         </action>
         <action dev="christophd" type="fix">
           CITRUS-199 Auto sleep &lt; 1 second
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-198 JSON text validator strict mode
         </action>
         <action dev="christophd" type="fix">
           CITRUS-197 Attachment spelling in Java DSL
@@ -30,6 +33,12 @@
         </action>
         <action dev="christophd" type="fix">
           CITRUS-194 Misleading create variables action in Java DSL
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-192 Nested anonymous test actions fail
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-190 Doku: FTP adapter description
         </action>
         <action dev="christophd" type="fix">
           CITRUS-187 Class cast exceptions when using object variable value
@@ -48,9 +57,6 @@
         </action>
         <action dev="christophd" type="add">
           CITRUS-166 XML data dictionary
-        </action>
-        <action dev="roland" type="update">
-          CITRUS-198 JSON text validator strict mode
         </action>
     </release>
 
