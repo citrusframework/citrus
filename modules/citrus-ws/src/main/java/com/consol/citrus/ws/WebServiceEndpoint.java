@@ -332,6 +332,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * Gets the message handler.
+     * @return
+     */
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
+    }
+
+    /**
      * Set the message handler.
      * @param messageHandler the messageHandler to set
      */
@@ -353,6 +361,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     public void setDefaultPrefix(String defaultPrefix) {
         this.defaultPrefix = defaultPrefix;
+    }
+
+    /**
+     * Gets the handle mime headers flag.
+     * @return
+     */
+    public boolean isHandleMimeHeaders() {
+        return handleMimeHeaders;
     }
 
     /**

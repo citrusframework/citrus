@@ -26,7 +26,6 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -54,8 +53,6 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
     @BeforeClass
     public void setUp() {
         servlet = new CitrusDispatcherServlet(httpServer);
-        handlerInterceptor.setInterceptors(new ArrayList<HandlerInterceptor>());
-        httpMessageController.setMessageHandler(new EmptyResponseEndpointAdapter());
     }
 
     @Test

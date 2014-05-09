@@ -39,7 +39,7 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
     private WebServiceServer webServiceServer;
 
     /** Default bean names used in default configuration */
-    private static final String ENDPOINT_INTERCEPTOR_BEAN_NAME = "citrusHandlerInterceptor";
+    private static final String ENDPOINT_INTERCEPTOR_BEAN_NAME = "citrusEndpointInterceptor";
     private static final String MESSAGE_ENDPOINT_BEAN_NAME = "citrusWsEndpoint";
 
     /**
