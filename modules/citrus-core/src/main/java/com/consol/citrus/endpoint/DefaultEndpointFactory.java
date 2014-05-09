@@ -46,6 +46,9 @@ public class DefaultEndpointFactory implements EndpointFactory {
     /** Default Citrus endpoint components from classpath resource properties */
     private Properties endpointComponentProperties;
 
+    /** Endpoint cache for endpoint reuse */
+    private Map<String, Endpoint> endpointCache = new HashMap<String, Endpoint>();
+
     /**
      * Default constructor.
      */
@@ -56,7 +59,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
     @Override
     public Endpoint create(String uri, TestContext context) {
         String endpointUri = context.replaceDynamicContentInString(uri);
-        if (endpointUri.indexOf(":") < 0) {
+        if (!endpointUri.contains(":")) {
             return context.getApplicationContext().getBean(endpointUri, Endpoint.class);
         }
 
@@ -77,7 +80,14 @@ public class DefaultEndpointFactory implements EndpointFactory {
             throw new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName));
         }
 
-        return component.createEndpoint(endpointUri);
+        if (endpointCache.containsKey(endpointUri)) {
+            log.info(String.format("Found cached endpoint for uri '%s'", endpointUri));
+            return endpointCache.get(endpointUri);
+        } else {
+            Endpoint endpoint = component.createEndpoint(endpointUri);
+            endpointCache.put(endpointUri, endpoint);
+            return endpoint;
+        }
     }
 
     private Map<String, EndpointComponent> getEndpointComponents(ApplicationContext applicationContext) {
