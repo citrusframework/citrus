@@ -1,0 +1,141 @@
+/*
+ * Copyright 2006-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.vertx.endpoint;
+
+import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.messaging.AbstractMessageConsumer;
+import com.consol.citrus.report.MessageListeners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
+import org.vertx.java.core.Handler;
+
+/**
+ * @author Christoph Deppisch
+ * @since 1.4.1
+ */
+public class VertxConsumer extends AbstractMessageConsumer {
+
+    /** Endpoint configuration */
+    private final VertxEndpointConfiguration endpointConfiguration;
+
+    /** Message listener  */
+    private final MessageListeners messageListener;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(VertxConsumer.class);
+
+    /** Retry logger */
+    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+
+    /**
+     * Default constructor using endpoint.
+     * @param endpointConfiguration
+     * @param messageListener
+     */
+    public VertxConsumer(VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(endpointConfiguration.getTimeout());
+        this.endpointConfiguration = endpointConfiguration;
+        this.messageListener = messageListener;
+    }
+
+    @Override
+    public Message<?> receive(long timeout) {
+        log.info("Waiting for message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+
+        VertxMessageHandler eventBusHandler = new VertxMessageHandler();
+        endpointConfiguration.getVertx().eventBus().registerHandler(endpointConfiguration.getAddress(), eventBusHandler);
+
+        long timeLeft = timeout;
+        Message<?> message = convertMessage(eventBusHandler.getMessage());
+
+        while (message == null && timeLeft > 0) {
+            timeLeft -= endpointConfiguration.getPollingInterval();
+
+            if (RETRY_LOG.isDebugEnabled()) {
+                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft) + "ms");
+            }
+
+            try {
+                Thread.sleep(timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft);
+            } catch (InterruptedException e) {
+                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
+            }
+
+            message = convertMessage(eventBusHandler.getMessage());
+        }
+
+        if (message == null) {
+            throw new ActionTimeoutException("Action timed out while receiving message on Vert.x event bus address '" + endpointConfiguration.getAddress() + "'");
+        }
+
+        log.info("Received message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+
+        onInboundMessage(message);
+
+        return message;
+    }
+
+    private Message<?> convertMessage(org.vertx.java.core.eventbus.Message vertxMessage) {
+        if (vertxMessage == null) {
+            return null;
+        }
+
+        MessageBuilder builder = MessageBuilder.withPayload(vertxMessage.body());
+        builder.setHeader("citrus_vertx_reply_address", vertxMessage.replyAddress());
+
+        return builder.build();
+    }
+
+    /**
+     * Informs message listeners if present.
+     * @param receivedMessage
+     */
+    protected void onInboundMessage(Message<?> receivedMessage) {
+        if (messageListener != null) {
+            messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+        } else {
+            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
+        }
+    }
+
+    private class VertxMessageHandler implements Handler<org.vertx.java.core.eventbus.Message> {
+        private org.vertx.java.core.eventbus.Message message;
+
+        @Override
+        public void handle(org.vertx.java.core.eventbus.Message event) {
+            this.message = event;
+        }
+
+        /**
+         * Gets the vert.x message received on event bus.
+         * @return
+         */
+        public org.vertx.java.core.eventbus.Message getMessage() {
+            return message;
+        }
+    }
+
+    /**
+     * Gets the message listener.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
+    }
+}
