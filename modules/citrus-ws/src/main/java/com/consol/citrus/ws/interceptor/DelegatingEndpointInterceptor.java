@@ -19,6 +19,8 @@ package com.consol.citrus.ws.interceptor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.SmartEndpointInterceptor;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,7 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor {
+public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor, SoapEndpointInterceptor {
 
     /** List of interceptors to delegate to when this interceptor is invoked */
     private List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
@@ -82,6 +84,18 @@ public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor {
         }
     }
 
+    @Override
+    public boolean understands(SoapHeaderElement header) {
+        for (EndpointInterceptor interceptor : interceptors) {
+            if (interceptor instanceof SoapEndpointInterceptor &&
+                    ((SoapEndpointInterceptor)interceptor).understands(header)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean shouldIntercept(EndpointInterceptor interceptor, MessageContext messageContext, Object endpoint) {
         if (interceptor instanceof SmartEndpointInterceptor) {
             return ((SmartEndpointInterceptor) interceptor).shouldIntercept(messageContext, endpoint);
@@ -105,4 +119,5 @@ public class DelegatingEndpointInterceptor implements SmartEndpointInterceptor {
     public void setInterceptors(List<EndpointInterceptor> interceptors) {
         this.interceptors = interceptors;
     }
+
 }
