@@ -91,6 +91,10 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
 
     /** Should handle Http mime headers */
     private boolean handleMimeHeaders = false;
+
+    /** Default SOAP header namespace and prefix */
+    private String soapHeaderNamespace;
+    private String soapHeaderPrefix = "";
     
     @Override
     protected void shutdown() {
@@ -511,4 +515,37 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
     public void setHandleMimeHeaders(boolean handleMimeHeaders) {
         this.handleMimeHeaders = handleMimeHeaders;
     }
+
+    /**
+     * Gets the default soap header namespace.
+     * @return
+     */
+    public String getSoapHeaderNamespace() {
+        return soapHeaderNamespace;
+    }
+
+    /**
+     * Sets the default soap header namespace.
+     * @param soapHeaderNamespace
+     */
+    public void setSoapHeaderNamespace(String soapHeaderNamespace) {
+        this.soapHeaderNamespace = soapHeaderNamespace;
+    }
+
+    /**
+     * Gets the default soap header prefix.
+     * @return
+     */
+    public String getSoapHeaderPrefix() {
+        return soapHeaderPrefix;
+    }
+
+    /**
+     * Sets the default soap header prefix.
+     * @param soapHeaderPrefix
+     */
+    public void setSoapHeaderPrefix(String soapHeaderPrefix) {
+        this.soapHeaderPrefix = soapHeaderPrefix;
+    }
+
 }

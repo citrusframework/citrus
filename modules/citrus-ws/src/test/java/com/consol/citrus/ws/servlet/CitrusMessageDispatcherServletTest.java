@@ -41,7 +41,6 @@ import static org.easymock.EasyMock.*;
 public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
 
     private WebServiceServer webServiceServer = EasyMock.createMock(WebServiceServer.class);
-
     private CitrusMessageDispatcherServlet servlet;
 
     @Autowired
@@ -76,6 +75,8 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         expect(webServiceServer.getInterceptors()).andReturn(interceptors).once();
         expect(webServiceServer.getEndpointAdapter()).andReturn(null).once();
         expect(webServiceServer.isHandleMimeHeaders()).andReturn(false).once();
+        expect(webServiceServer.getSoapHeaderNamespace()).andReturn(null).once();
+        expect(webServiceServer.getSoapHeaderPrefix()).andReturn("").once();
 
         replay(webServiceServer);
 
@@ -87,6 +88,8 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(webServiceEndpoint.getMessageHandler().getClass(), EmptyResponseEndpointAdapter.class);
         Assert.assertFalse(webServiceEndpoint.isHandleMimeHeaders());
+        Assert.assertNull(webServiceEndpoint.getDefaultNamespaceUri());
+        Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "");
 
         verify(webServiceServer);
     }
@@ -98,6 +101,8 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         expect(webServiceServer.getInterceptors()).andReturn(null).once();
         expect(webServiceServer.getEndpointAdapter()).andReturn(new TimeoutProducingEndpointAdapter()).once();
         expect(webServiceServer.isHandleMimeHeaders()).andReturn(true).once();
+        expect(webServiceServer.getSoapHeaderNamespace()).andReturn("http://citrusframework.org").times(2);
+        expect(webServiceServer.getSoapHeaderPrefix()).andReturn("CITRUS").times(2);
 
         replay(webServiceServer);
 
@@ -106,6 +111,8 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(endpointInterceptor.getInterceptors().size(), 0L);
         Assert.assertEquals(webServiceEndpoint.getMessageHandler().getClass(), TimeoutProducingEndpointAdapter.class);
         Assert.assertTrue(webServiceEndpoint.isHandleMimeHeaders());
+        Assert.assertEquals(webServiceEndpoint.getDefaultNamespaceUri(), "http://citrusframework.org");
+        Assert.assertEquals(webServiceEndpoint.getDefaultPrefix(), "CITRUS");
 
         verify(webServiceServer);
     }

@@ -10,14 +10,16 @@
     <citrus-ws:server id="soapServer1" />
     
     <citrus-ws:server id="soapServer2"
-                            port="8081"
-                            root-parent-context="true"
-                            context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
-                            resource-base="src/citrus/resources"
-                            context-path="/citrus"
-                            servlet-name="citrus-ws"
-                            servlet-mapping-path="/foo"
-                            handleMimeHeaders="true"/>
+                      port="8081"
+                      root-parent-context="true"
+                      context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
+                      resource-base="src/citrus/resources"
+                      context-path="/citrus"
+                      servlet-name="citrus-ws"
+                      servlet-mapping-path="/foo"
+                      handle-mime-headers="true"
+                      soap-header-namespace="http://citrusframework.org"
+                      soap-header-prefix="CITRUS"/>
                             
     <citrus-ws:server id="soapServer3"
                             connector="connector"/>

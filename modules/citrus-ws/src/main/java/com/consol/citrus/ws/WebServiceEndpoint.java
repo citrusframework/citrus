@@ -348,11 +348,27 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
+     * Gets the default header namespace uri.
+     * @return
+     */
+    public String getDefaultNamespaceUri() {
+        return defaultNamespaceUri;
+    }
+
+    /**
      * Set the default namespace used in SOAP response headers.
      * @param defaultNamespaceUri the defaultNamespaceUri to set
      */
     public void setDefaultNamespaceUri(String defaultNamespaceUri) {
         this.defaultNamespaceUri = defaultNamespaceUri;
+    }
+
+    /**
+     * Gets the default header prefix.
+     * @return
+     */
+    public String getDefaultPrefix() {
+        return defaultPrefix;
     }
 
     /**

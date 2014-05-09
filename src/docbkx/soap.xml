@@ -246,7 +246,7 @@
       <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
         port=&quot;8091&quot;
         auto-start=&quot;true&quot;
-        handleMimeHeaders=&quot;true&quot;
+        handle-mime-headers=&quot;true&quot;
         resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
 
       <para>With this configuration Citrus will handle all available mime headers and pass those to the test case for normal header validation.</para>

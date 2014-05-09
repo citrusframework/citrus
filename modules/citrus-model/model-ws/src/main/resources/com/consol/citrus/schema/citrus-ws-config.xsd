@@ -41,7 +41,9 @@
         <xs:attribute name="security-handler" type="xs:string"/>
         <xs:attribute name="endpoint-adapter" type="xs:string"/>
         <xs:attribute name="interceptors" type="xs:string"/>
-        <xs:attribute name="handleMimeHeaders" type="xs:boolean"/>
+        <xs:attribute name="handle-mime-headers" type="xs:boolean"/>
+        <xs:attribute name="soap-header-namespace" type="xs:string"/>
+        <xs:attribute name="soap-header-prefix" type="xs:string"/>
       </xs:complexType>
     </xs:element>
 
