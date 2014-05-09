@@ -27,7 +27,7 @@ import java.util.Map;
  * accordingly.
  *
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 1.4.1
  */
 public class ChannelEndpointComponent extends AbstractEndpointComponent {
 

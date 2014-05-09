@@ -26,7 +26,7 @@ import com.consol.citrus.context.TestContext;
  * endpoint creation.
  *
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 1.4.1
  */
 public interface EndpointFactory {
 

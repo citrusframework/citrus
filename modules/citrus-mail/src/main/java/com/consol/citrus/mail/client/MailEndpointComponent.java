@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
  * Component creates proper mail client from endpoint uri resource and parameters.
  *
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 1.4.1
  */
 public class MailEndpointComponent extends AbstractEndpointComponent {
 

@@ -25,7 +25,7 @@ import org.springframework.context.ApplicationContextAware;
  * configuration instance on the fly.
  *
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 1.4.1
  */
 public interface EndpointComponent extends BeanNameAware, ApplicationContextAware {
 

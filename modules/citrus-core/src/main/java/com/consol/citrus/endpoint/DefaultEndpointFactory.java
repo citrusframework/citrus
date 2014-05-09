@@ -36,7 +36,7 @@ import java.util.*;
  * of the implementing endpoint component class.
  *
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 1.4.1
  */
 public class DefaultEndpointFactory implements EndpointFactory {
 
