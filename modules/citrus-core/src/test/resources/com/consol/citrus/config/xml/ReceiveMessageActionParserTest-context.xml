@@ -88,7 +88,7 @@
                 </message>
             </receive>
             
-            <receive endpoint="myMessageEndpoint">
+            <receive endpoint="channel:myMessageEndpoint">
                 <message>
                     <validate path="/TestMessage/text" value="Hello Citrus"/>
                     <validate path="/TestMessage/foo" value="true" result-type="boolean"/>

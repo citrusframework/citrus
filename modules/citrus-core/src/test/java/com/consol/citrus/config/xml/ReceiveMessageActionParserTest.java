@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.endpoint.Endpoint;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -46,6 +47,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         ReceiveMessageAction action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof ControlMessageValidationContext);
@@ -68,6 +71,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getMessageSelector().size(), 1);
         Assert.assertEquals(action.getMessageSelector().get("operation"), "Test");
         Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof ControlMessageValidationContext);
@@ -86,11 +91,15 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertEquals(action.getMessageSelectorString(), "operation = 'Test'");
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         
         // 4th action
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof ControlMessageValidationContext);
@@ -110,6 +119,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         action = getNextTestActionFromTest();
         Assert.assertTrue(action.getMessageSelector().isEmpty());
         Assert.assertNull(action.getMessageSelectorString());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof ControlMessageValidationContext);
@@ -171,6 +182,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
         xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
+        Assert.assertNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
         
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
         

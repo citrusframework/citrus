@@ -56,9 +56,18 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             throw new BeanCreationException("Missing proper message endpoint reference for receiving action - 'endpoint' attribute is required and should not be empty");
         }
 
+        if (!StringUtils.hasText(endpointUri)) {
+            throw new BeanCreationException("Endpoint reference must not be empty");
+        }
+
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", element.getLocalName());
-        builder.addPropertyValue("endpointUri", endpointUri);
+
+        if (endpointUri.contains(":")) {
+            builder.addPropertyValue("endpointUri", endpointUri);
+        } else {
+            builder.addPropertyReference("endpoint", endpointUri);
+        }
 
         DescriptionElementParser.doParse(element, builder);
         

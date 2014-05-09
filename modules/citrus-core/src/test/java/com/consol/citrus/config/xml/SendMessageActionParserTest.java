@@ -16,16 +16,16 @@
 
 package com.consol.citrus.config.xml;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -50,6 +50,8 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
 
         Assert.assertNull(action.getDataDictionary());
 
@@ -62,7 +64,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
-        
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
         // 3rd action
         action = getNextTestActionFromTest();
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
@@ -73,7 +77,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().size(), 2);
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().get("header1"), "Test");
         Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().get("header2"), "Test");
-        
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
         // 4th action
         action = getNextTestActionFromTest();
         groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
@@ -81,7 +87,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertNotNull(groovyMessageBuilder.getScriptResourcePath());
         Assert.assertEquals(groovyMessageBuilder.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
         Assert.assertNull(groovyMessageBuilder.getScriptData());
-        
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
         // 5th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
@@ -90,7 +98,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
-        
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
 
         Assert.assertNull(messageBuilder.getPayloadResourcePath());
@@ -122,6 +132,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("shortValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.SHORT.getName() + MessageHeaderType.TYPE_SUFFIX + "10");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("boolValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.BOOLEAN.getName() + MessageHeaderType.TYPE_SUFFIX + "true");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("stringValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.STRING.getName() + MessageHeaderType.TYPE_SUFFIX + "Hello Citrus");
+
+        Assert.assertNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
         
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
     }

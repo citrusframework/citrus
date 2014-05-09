@@ -60,7 +60,7 @@
                 </extract>
             </send>
             
-            <send endpoint="myMessageEndpoint">
+            <send endpoint="channel:myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[

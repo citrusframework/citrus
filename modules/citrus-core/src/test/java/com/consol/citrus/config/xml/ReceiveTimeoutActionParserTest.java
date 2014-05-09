@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,17 +31,24 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
 
     @Test
     public void testReceiveTimeoutActionParser() {
-        assertActionCount(2);
+        assertActionCount(3);
         assertActionClassAndName(ReceiveTimeoutAction.class, "expect-timeout:myMessageEndpoint");
         
         ReceiveTimeoutAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimeout(), 1000L);
-        Assert.assertNotNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         Assert.assertNull(action.getMessageSelector());
+
         
         action = getNextTestActionFromTest();
+        Assert.assertNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
+
+        action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimeout(), 10000L);
-        Assert.assertNotNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
         Assert.assertEquals(action.getMessageSelector(), "operation='Test'");
     }
     
@@ -48,9 +56,9 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
     public void testCallTemplateParserUnknownTemplate() {
         try {
             createApplicationContext("failed");
-            Assert.fail("Missing bean creation exception due to missing message receiver");
+            Assert.fail("Missing bean creation exception due to missing endpoint reference");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertEquals(e.getCause().getMessage(), "Missing 'message-receiver' for expect timeout action");
+            Assert.assertEquals(e.getCause().getMessage(), "Endpoint reference must not be empty");
         }
     }
 }
