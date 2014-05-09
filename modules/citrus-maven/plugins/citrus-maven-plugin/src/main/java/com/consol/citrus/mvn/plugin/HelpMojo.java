@@ -79,10 +79,10 @@ public class HelpMojo
 
         StringBuffer sb = new StringBuffer();
 
-        append( sb, "com.consol.citrus.mvn:citrus-maven-plugin:1.4", 0 );
+        append( sb, "com.consol.citrus.mvn:citrus-maven-plugin:1.4.1", 0 );
         append( sb, "", 0 );
 
-        append( sb, "citrus-maven-plugin 1.4", 0 );
+        append( sb, "citrus-maven-plugin 1.4.1", 0 );
         append( sb, "Citrus Maven Plugin", 1 );
         append( sb, "", 0 );
 

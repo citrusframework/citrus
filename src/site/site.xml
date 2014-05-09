@@ -5,7 +5,7 @@
   <skin>
     <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-default-skin</artifactId>
-    <version>1.4</version>
+    <version>1.4.1</version>
   </skin>
   <body>
     <menu name="Home"/>

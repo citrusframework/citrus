@@ -6,7 +6,7 @@
   <parent>
     <artifactId>citrus-model</artifactId>
     <groupId>com.consol.citrus.model</groupId>
-    <version>1.4</version>
+    <version>1.4.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
