@@ -16,10 +16,12 @@
 
 package com.consol.citrus.ssh.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -28,13 +30,18 @@ import org.testng.annotations.Test;
 public class SshEndpointComponentTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
+    private TestContext context = new TestContext();
+
+    @BeforeClass
+    public void setup() {
+        context.setApplicationContext(applicationContext);
+    }
 
     @Test
     public void testCreateEndpoint() throws Exception {
         SshEndpointComponent component = new SshEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("ssh://localhost:2200");
+        Endpoint endpoint = component.createEndpoint("ssh://localhost:2200", context);
 
         Assert.assertEquals(endpoint.getClass(), SshClient.class);
 
@@ -46,9 +53,8 @@ public class SshEndpointComponentTest {
     @Test
     public void testCreateEndpointWithoutPort() throws Exception {
         SshEndpointComponent component = new SshEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("ssh:127.0.0.1");
+        Endpoint endpoint = component.createEndpoint("ssh:127.0.0.1", context);
 
         Assert.assertEquals(endpoint.getClass(), SshClient.class);
 
@@ -60,9 +66,8 @@ public class SshEndpointComponentTest {
     @Test
     public void testCreateEndpointWithParameters() throws Exception {
         SshEndpointComponent component = new SshEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("ssh://localhost:2200?timeout=10000&strictHostChecking=true&user=foo&password=12345678");
+        Endpoint endpoint = component.createEndpoint("ssh://localhost:2200?timeout=10000&strictHostChecking=true&user=foo&password=12345678", context);
 
         Assert.assertEquals(endpoint.getClass(), SshClient.class);
 

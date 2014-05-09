@@ -16,6 +16,7 @@
 
 package com.consol.citrus.mail.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 
@@ -31,7 +32,7 @@ import java.util.StringTokenizer;
 public class MailEndpointComponent extends AbstractEndpointComponent {
 
     @Override
-    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         MailClient client = new MailClient();
 
         if (resourcePath.contains(":")) {
@@ -46,7 +47,7 @@ public class MailEndpointComponent extends AbstractEndpointComponent {
             client.getEndpointConfiguration().setHost(resourcePath);
         }
 
-        enrichEndpointConfiguration(client.getEndpointConfiguration(), parameters);
+        enrichEndpointConfiguration(client.getEndpointConfiguration(), parameters, context);
         return client;
     }
 }

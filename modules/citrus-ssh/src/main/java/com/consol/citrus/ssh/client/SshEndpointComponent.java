@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ssh.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 
@@ -31,7 +32,7 @@ import java.util.StringTokenizer;
 public class SshEndpointComponent extends AbstractEndpointComponent {
 
     @Override
-    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         SshClient client = new SshClient();
 
         if (resourcePath.contains(":")) {
@@ -46,7 +47,7 @@ public class SshEndpointComponent extends AbstractEndpointComponent {
             client.getEndpointConfiguration().setHost(resourcePath);
         }
 
-        enrichEndpointConfiguration(client.getEndpointConfiguration(), parameters);
+        enrichEndpointConfiguration(client.getEndpointConfiguration(), parameters, context);
         return client;
     }
 }

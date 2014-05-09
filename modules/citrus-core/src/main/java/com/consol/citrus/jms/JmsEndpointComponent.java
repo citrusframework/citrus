@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.*;
 
 import javax.jms.ConnectionFactory;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class JmsEndpointComponent extends AbstractEndpointComponent {
 
     @Override
-    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         JmsEndpoint endpoint;
 
         if (resourcePath.startsWith("sync:")) {
@@ -56,11 +57,11 @@ public class JmsEndpointComponent extends AbstractEndpointComponent {
         }
 
         // set default jms connection factory
-        if (getApplicationContext() != null && getApplicationContext().containsBean("connectionFactory")) {
-            endpoint.getEndpointConfiguration().setConnectionFactory(getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
+        if (context.getApplicationContext() != null && context.getApplicationContext().containsBean("connectionFactory")) {
+            endpoint.getEndpointConfiguration().setConnectionFactory(context.getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
         }
 
-        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters);
+        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);
 
         return endpoint;
     }

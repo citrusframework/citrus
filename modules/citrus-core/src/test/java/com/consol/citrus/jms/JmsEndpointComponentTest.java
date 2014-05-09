@@ -16,11 +16,13 @@
 
 package com.consol.citrus.jms;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.jms.ConnectionFactory;
@@ -36,18 +38,23 @@ public class JmsEndpointComponentTest {
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
     private Destination replyDestination = EasyMock.createMock(Destination.class);
+    private TestContext context = new TestContext();
+
+    @BeforeClass
+    public void setup() {
+        context.setApplicationContext(applicationContext);
+    }
 
     @Test
     public void testCreateQueueEndpoint() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("connectionFactory")).andReturn(true).once();
         expect(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).andReturn(connectionFactory).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("jms:queuename");
+        Endpoint endpoint = component.createEndpoint("jms:queuename", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
@@ -63,14 +70,13 @@ public class JmsEndpointComponentTest {
     @Test
     public void testCreateTopicEndpoint() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("connectionFactory")).andReturn(true).once();
         expect(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).andReturn(connectionFactory).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("jms:topic:topicname");
+        Endpoint endpoint = component.createEndpoint("jms:topic:topicname", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
@@ -86,13 +92,12 @@ public class JmsEndpointComponentTest {
     @Test
     public void testCreateSyncQueueEndpoint() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("connectionFactory")).andReturn(false).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("jms:sync:queuename");
+        Endpoint endpoint = component.createEndpoint("jms:sync:queuename", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsSyncEndpoint.class);
 
@@ -107,7 +112,6 @@ public class JmsEndpointComponentTest {
     @Test
     public void testCreateEndpointWithParameters() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("connectionFactory")).andReturn(false).once();
@@ -115,7 +119,7 @@ public class JmsEndpointComponentTest {
         expect(applicationContext.getBean("specialConnectionFactory")).andReturn(connectionFactory).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("jms:queuename?connectionFactory=specialConnectionFactory&timeout=10000");
+        Endpoint endpoint = component.createEndpoint("jms:queuename?connectionFactory=specialConnectionFactory&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
@@ -131,7 +135,6 @@ public class JmsEndpointComponentTest {
     @Test
     public void testCreateSyncEndpointWithParameters() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("connectionFactory")).andReturn(false).once();
@@ -141,7 +144,7 @@ public class JmsEndpointComponentTest {
         expect(applicationContext.getBean("myReplyDestination")).andReturn(replyDestination).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("jms:sync:queuename?connectionFactory=specialConnectionFactory&pollingInterval=100&replyDestination=myReplyDestination");
+        Endpoint endpoint = component.createEndpoint("jms:sync:queuename?connectionFactory=specialConnectionFactory&pollingInterval=100&replyDestination=myReplyDestination", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsSyncEndpoint.class);
 
@@ -158,13 +161,12 @@ public class JmsEndpointComponentTest {
     @Test
     public void testInvalidEndpointUri() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         replay(applicationContext);
 
         try {
-            component.createEndpoint("jms:queuename?param1=&param2=value2");
+            component.createEndpoint("jms:queuename?param1=&param2=value2", context);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Invalid parameter"));

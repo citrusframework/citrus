@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.easymock.EasyMock;
@@ -23,6 +24,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
@@ -34,13 +36,18 @@ public class HttpEndpointComponentTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     private ClientHttpRequestFactory requestFactory = EasyMock.createMock(ClientHttpRequestFactory.class);
+    private TestContext context = new TestContext();
+
+    @BeforeClass
+    public void setup() {
+        context.setApplicationContext(applicationContext);
+    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
         HttpEndpointComponent component = new HttpEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("http://localhost:8088/test");
+        Endpoint endpoint = component.createEndpoint("http://localhost:8088/test", context);
 
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);
 
@@ -53,14 +60,13 @@ public class HttpEndpointComponentTest {
     @Test
     public void testCreateClientEndpointWithParameters() throws Exception {
         HttpEndpointComponent component = new HttpEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("myRequestFactory")).andReturn(true).once();
         expect(applicationContext.getBean("myRequestFactory")).andReturn(requestFactory).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("http:localhost:8088?requestMethod=GET&timeout=10000&errorHandlingStrategy=throwsException&requestFactory=myRequestFactory");
+        Endpoint endpoint = component.createEndpoint("http:localhost:8088?requestMethod=GET&timeout=10000&errorHandlingStrategy=throwsException&requestFactory=myRequestFactory", context);
 
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);
 
@@ -76,9 +82,8 @@ public class HttpEndpointComponentTest {
     @Test
     public void testCreateClientEndpointWithCustomParameters() throws Exception {
         HttpEndpointComponent component = new HttpEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("http://localhost:8088/test?requestMethod=DELETE&customParam=foo");
+        Endpoint endpoint = component.createEndpoint("http://localhost:8088/test?requestMethod=DELETE&customParam=foo", context);
 
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);
 

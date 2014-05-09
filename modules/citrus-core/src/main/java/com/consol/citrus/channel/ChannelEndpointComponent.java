@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
@@ -32,7 +33,7 @@ import java.util.Map;
 public class ChannelEndpointComponent extends AbstractEndpointComponent {
 
     @Override
-    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         ChannelEndpoint endpoint;
         if (resourcePath.startsWith("sync:")) {
             ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
@@ -43,12 +44,12 @@ public class ChannelEndpointComponent extends AbstractEndpointComponent {
             endpoint.getEndpointConfiguration().setChannelName(resourcePath);
         }
 
-        if (getApplicationContext() != null) {
-            endpoint.getEndpointConfiguration().setBeanFactory(getApplicationContext());
-            endpoint.getEndpointConfiguration().setChannelResolver(new BeanFactoryChannelResolver(getApplicationContext()));
+        if (context.getApplicationContext() != null) {
+            endpoint.getEndpointConfiguration().setBeanFactory(context.getApplicationContext());
+            endpoint.getEndpointConfiguration().setChannelResolver(new BeanFactoryChannelResolver(context.getApplicationContext()));
         }
 
-        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters);
+        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);
 
         return endpoint;
     }

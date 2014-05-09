@@ -16,12 +16,14 @@
 
 package com.consol.citrus.ws.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
@@ -33,16 +35,21 @@ public class WebServiceEndpointComponentTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     private WebServiceMessageFactory messageFactory = EasyMock.createMock(WebServiceMessageFactory.class);
+    private TestContext context = new TestContext();
+
+    @BeforeClass
+    public void setup() {
+        context.setApplicationContext(applicationContext);
+    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
         WebServiceEndpointComponent component = new WebServiceEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("http://localhost:8088/test");
+        Endpoint endpoint = component.createEndpoint("http://localhost:8088/test", context);
 
         Assert.assertEquals(endpoint.getClass(), WebServiceClient.class);
 
@@ -56,14 +63,13 @@ public class WebServiceEndpointComponentTest {
     @Test
     public void testCreateClientEndpointWithParameters() throws Exception {
         WebServiceEndpointComponent component = new WebServiceEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("myMessageFactory")).andReturn(true).once();
         expect(applicationContext.getBean("myMessageFactory")).andReturn(messageFactory).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("http:localhost:8088?timeout=10000&errorHandlingStrategy=propagateError&messageFactory=myMessageFactory");
+        Endpoint endpoint = component.createEndpoint("http:localhost:8088?timeout=10000&errorHandlingStrategy=propagateError&messageFactory=myMessageFactory", context);
 
         Assert.assertEquals(endpoint.getClass(), WebServiceClient.class);
 

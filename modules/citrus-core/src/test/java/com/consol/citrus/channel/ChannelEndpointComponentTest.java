@@ -16,12 +16,14 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
@@ -33,16 +35,21 @@ public class ChannelEndpointComponentTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
+    private TestContext context = new TestContext();
+
+    @BeforeClass
+    public void setup() {
+        context.setApplicationContext(applicationContext);
+    }
 
     @Test
     public void testCreateChannelEndpoint() throws Exception {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("channel:channelName");
+        Endpoint endpoint = component.createEndpoint("channel:channelName", context);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
 
@@ -57,12 +64,11 @@ public class ChannelEndpointComponentTest {
     @Test
     public void testCreateSyncChannelEndpoint() throws Exception {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("channel:sync:channelName");
+        Endpoint endpoint = component.createEndpoint("channel:sync:channelName", context);
 
         Assert.assertEquals(endpoint.getClass(), ChannelSyncEndpoint.class);
 
@@ -76,14 +82,13 @@ public class ChannelEndpointComponentTest {
     @Test
     public void testCreateChannelEndpointWithParameters() throws Exception {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("myChannelResolver")).andReturn(true).once();
         expect(applicationContext.getBean("myChannelResolver")).andReturn(channelResolver).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("channel:channelName?timeout=10000&channelResolver=myChannelResolver");
+        Endpoint endpoint = component.createEndpoint("channel:channelName?timeout=10000&channelResolver=myChannelResolver", context);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
 

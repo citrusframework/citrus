@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
@@ -35,7 +36,7 @@ import java.util.Map;
 public class HttpEndpointComponent extends AbstractEndpointComponent {
 
     @Override
-    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         HttpClient client = new HttpClient();
 
         client.getEndpointConfiguration().setRequestUrl("http://" + resourcePath + getParameterString(parameters));
@@ -50,7 +51,7 @@ public class HttpEndpointComponent extends AbstractEndpointComponent {
             client.getEndpointConfiguration().setErrorHandlingStrategy(ErrorHandlingStrategy.fromName(strategy));
         }
 
-        enrichEndpointConfiguration(client.getEndpointConfiguration(), getConfigParameters(parameters));
+        enrichEndpointConfiguration(client.getEndpointConfiguration(), getConfigParameters(parameters), context);
         return client;
     }
 

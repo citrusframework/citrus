@@ -84,7 +84,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
             log.info(String.format("Found cached endpoint for uri '%s'", endpointUri));
             return endpointCache.get(endpointUri);
         } else {
-            Endpoint endpoint = component.createEndpoint(endpointUri);
+            Endpoint endpoint = component.createEndpoint(endpointUri, context);
             endpointCache.put(endpointUri, endpoint);
             return endpoint;
         }
@@ -101,9 +101,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
             if (endpointComponentClassName != null) {
                 Class<EndpointComponent> endpointComponentClass = (Class<EndpointComponent>) Class.forName(endpointComponentClassName);
                 EndpointComponent endpointComponent = endpointComponentClass.newInstance();
-
                 endpointComponent.setName(componentName);
-                endpointComponent.setApplicationContext(applicationContext);
                 return endpointComponent;
             }
         } catch (ClassNotFoundException e) {

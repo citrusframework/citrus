@@ -16,11 +16,13 @@
 
 package com.consol.citrus.mail.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.mail.model.MailMessageMapper;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.easymock.EasyMock.*;
@@ -32,13 +34,18 @@ public class MailEndpointComponentTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
     private MailMessageMapper mapper = EasyMock.createMock(MailMessageMapper.class);
+    private TestContext context = new TestContext();
+
+    @BeforeClass
+    public void setup() {
+        context.setApplicationContext(applicationContext);
+    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
         MailEndpointComponent component = new MailEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("smtp://localhost:22000");
+        Endpoint endpoint = component.createEndpoint("smtp://localhost:22000", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
 
@@ -46,7 +53,7 @@ public class MailEndpointComponentTest {
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), 22000);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
-        endpoint = component.createEndpoint("mail:localhost:25000");
+        endpoint = component.createEndpoint("mail:localhost:25000", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
 
@@ -54,7 +61,7 @@ public class MailEndpointComponentTest {
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), 25000);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
-        endpoint = component.createEndpoint("mail:localhost");
+        endpoint = component.createEndpoint("mail:localhost", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
 
@@ -66,14 +73,13 @@ public class MailEndpointComponentTest {
     @Test
     public void testCreateClientEndpointWithParameters() throws Exception {
         MailEndpointComponent component = new MailEndpointComponent();
-        component.setApplicationContext(applicationContext);
 
         reset(applicationContext);
         expect(applicationContext.containsBean("myMapper")).andReturn(true).once();
         expect(applicationContext.getBean("myMapper")).andReturn(mapper).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&mailMessageMapper=myMapper");
+        Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&mailMessageMapper=myMapper", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
 

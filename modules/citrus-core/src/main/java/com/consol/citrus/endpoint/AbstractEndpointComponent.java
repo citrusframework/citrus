@@ -16,8 +16,8 @@
 
 package com.consol.citrus.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -42,11 +42,8 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
     /** Component name usually the Spring bean id */
     private String name;
 
-    /** Spring application context */
-    private ApplicationContext applicationContext;
-
     @Override
-    public Endpoint createEndpoint(String endpointUri) {
+    public Endpoint createEndpoint(String endpointUri, TestContext context) {
         try {
             URI uri = new URI(endpointUri);
             String path = uri.getSchemeSpecificPart();
@@ -55,34 +52,44 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
                 path = path.substring(2);
             }
 
-            Map<String, String> parameters = new LinkedHashMap<String, String>();
+            Map<String, String> parameters;
             if (path.contains("?")) {
                 String parameterString = path.substring(path.indexOf("?") + 1);
                 path = path.substring(0, path.indexOf("?"));
-
-                StringTokenizer tok = new StringTokenizer(parameterString, "&");
-                while (tok.hasMoreElements()) {
-                    String[] parameterValue = tok.nextToken().split("=");
-                    if (parameterValue.length != 2) {
-                        throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
-                    }
-
-                    parameters.put(parameterValue[0], parameterValue[1]);
-                }
+                parameters = getParameters(parameterString);
+            } else {
+                parameters = new HashMap<String, String>();
             }
 
-            return createEndpoint(path, parameters);
+            return createEndpoint(path, parameters, context);
         } catch (URISyntaxException e) {
             throw new CitrusRuntimeException(String.format("Unable to parse endpoint uri '%s'", endpointUri));
         }
+    }
+
+    protected Map<String, String> getParameters(String parameterString) {
+        Map<String, String> parameters = new LinkedHashMap<String, String>();
+
+        StringTokenizer tok = new StringTokenizer(parameterString, "&");
+        while (tok.hasMoreElements()) {
+            String[] parameterValue = tok.nextToken().split("=");
+            if (parameterValue.length != 2) {
+                throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
+            }
+
+            parameters.put(parameterValue[0], parameterValue[1]);
+        }
+
+        return parameters;
     }
 
     /**
      * Sets properties on endpoint configuration using method reflection.
      * @param endpointConfiguration
      * @param parameters
+     * @param context
      */
-    protected void enrichEndpointConfiguration(EndpointConfiguration endpointConfiguration, Map<String, String> parameters) {
+    protected void enrichEndpointConfiguration(EndpointConfiguration endpointConfiguration, Map<String, String> parameters, TestContext context) {
         for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
             Field field = ReflectionUtils.findField(endpointConfiguration.getClass(), parameterEntry.getKey());
 
@@ -97,7 +104,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
                         "set" + parameterEntry.getKey().substring(0, 1).toUpperCase() + parameterEntry.getKey().substring(1)));
             }
 
-            ReflectionUtils.invokeMethod(setter, endpointConfiguration, getTypedParameterValue(field.getType(), parameterEntry.getValue()));
+            ReflectionUtils.invokeMethod(setter, endpointConfiguration, getTypedParameterValue(field.getType(), parameterEntry.getValue(), context));
         }
     }
 
@@ -105,9 +112,10 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      * Convert parameter value string to required type from setter method argument.
      * @param fieldType
      * @param value
+     * @param context
      * @return
      */
-    private Object getTypedParameterValue(Class<?> fieldType, String value) {
+    private Object getTypedParameterValue(Class<?> fieldType, String value, TestContext context) {
         if (fieldType.isPrimitive()) {
             if (fieldType.isAssignableFrom(int.class)) {
                 return Integer.valueOf(value).intValue();
@@ -144,8 +152,8 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             }
 
             // try to resolve bean in application context
-            if (applicationContext != null && applicationContext.containsBean(value)) {
-                Object bean = applicationContext.getBean(value);
+            if (context.getApplicationContext() != null && context.getApplicationContext().containsBean(value)) {
+                Object bean = context.getApplicationContext().getBean(value);
                 if (fieldType.isAssignableFrom(bean.getClass())) {
                     return bean;
                 }
@@ -159,9 +167,10 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      * Create endpoint instance from uri resource and parameters.
      * @param resourcePath
      * @param parameters
+     * @param context
      * @return
      */
-    protected abstract Endpoint createEndpoint(String resourcePath, Map<String, String> parameters);
+    protected abstract Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context);
 
     @Override
     public String getName() {
@@ -178,16 +187,4 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
         this.name = name;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
-    /**
-     * Gets the Spring application context.
-     * @return
-     */
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
 }

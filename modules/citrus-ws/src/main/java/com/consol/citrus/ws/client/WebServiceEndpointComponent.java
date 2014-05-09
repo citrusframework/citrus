@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class WebServiceEndpointComponent extends AbstractEndpointComponent {
 
     @Override
-    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters) {
+    protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         WebServiceClient client = new WebServiceClient();
 
         client.getEndpointConfiguration().setDefaultUri("http://" + resourcePath);
@@ -41,7 +42,7 @@ public class WebServiceEndpointComponent extends AbstractEndpointComponent {
             client.getEndpointConfiguration().setErrorHandlingStrategy(ErrorHandlingStrategy.fromName(strategy));
         }
 
-        enrichEndpointConfiguration(client.getEndpointConfiguration(), parameters);
+        enrichEndpointConfiguration(client.getEndpointConfiguration(), parameters, context);
         return client;
     }
 }
