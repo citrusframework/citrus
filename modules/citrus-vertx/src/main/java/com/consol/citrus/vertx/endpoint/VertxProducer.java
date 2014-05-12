@@ -17,7 +17,11 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.report.MessageListeners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
+import org.vertx.java.core.Vertx;
 
 /**
  * @author Christoph Deppisch
@@ -25,8 +29,57 @@ import org.springframework.integration.Message;
  */
 public class VertxProducer implements Producer {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(VertxProducer.class);
+
+    /** Vert.x instance */
+    private final Vertx vertx;
+
+    /** Endpoint configuration */
+    private final VertxEndpointConfiguration endpointConfiguration;
+
+    /** Message listener */
+    private final MessageListeners messageListener;
+
+    /**
+     * Default constructor using endpoint configuration.
+     * @param endpointConfiguration
+     * @param messageListener
+     */
+    public VertxProducer(Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        this.vertx = vertx;
+        this.endpointConfiguration = endpointConfiguration;
+        this.messageListener = messageListener;
+    }
+
     @Override
     public void send(Message<?> message) {
+        log.info("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
 
+        vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
+
+        onOutboundMessage(message);
+
+        log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+    }
+
+    /**
+     * Informs message listeners if present.
+     * @param message
+     */
+    protected void onOutboundMessage(Message<?> message) {
+        if (messageListener != null) {
+            messageListener.onOutboundMessage(message.toString());
+        } else {
+            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
+        }
+    }
+
+    /**
+     * Gets the message listener.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
     }
 }

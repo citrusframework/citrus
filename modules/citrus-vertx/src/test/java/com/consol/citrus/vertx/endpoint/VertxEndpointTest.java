@@ -18,6 +18,7 @@ package com.consol.citrus.vertx.endpoint;
 
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.Message;
+import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.Test;
 
 /**
@@ -42,8 +43,7 @@ public class VertxEndpointTest {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    vertxEndpoint.getVertxInstanceManager().newInstance(endpointConfiguration).eventBus()
-                            .publish("news-feed", "Hello from Citrus!");
+                    vertxEndpoint.createProducer().send(MessageBuilder.withPayload("Hello from Citrus!").build());
                 }
             }
         });
