@@ -19,12 +19,17 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.vertx.factory.CachingVertxInstanceManager;
+import com.consol.citrus.vertx.factory.VertxInstanceManager;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxEndpoint extends AbstractEndpoint {
+
+    /** Vert.x instance */
+    private VertxInstanceManager vertxInstanceManager = new CachingVertxInstanceManager();
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -49,11 +54,27 @@ public class VertxEndpoint extends AbstractEndpoint {
 
     @Override
     public Consumer createConsumer() {
-        return new VertxConsumer(getEndpointConfiguration(), getMessageListener());
+        return new VertxConsumer(vertxInstanceManager.newInstance(getEndpointConfiguration()), getEndpointConfiguration(), getMessageListener());
     }
 
     @Override
     public VertxEndpointConfiguration getEndpointConfiguration() {
         return (VertxEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    /**
+     * Gets the vert.x instance factory.
+     * @return
+     */
+    public VertxInstanceManager getVertxInstanceManager() {
+        return vertxInstanceManager;
+    }
+
+    /**
+     * Sets the vert.x instance factory.
+     * @param vertxInstanceManager
+     */
+    public void setVertxInstanceManager(VertxInstanceManager vertxInstanceManager) {
+        this.vertxInstanceManager = vertxInstanceManager;
     }
 }

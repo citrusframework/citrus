@@ -17,8 +17,6 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.VertxFactory;
 
 /**
  * @author Christoph Deppisch
@@ -26,8 +24,11 @@ import org.vertx.java.core.VertxFactory;
  */
 public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
 
-    /** Vert.x instance */
-    private Vertx vertx = VertxFactory.newVertx();
+    /** Vert.x cluster hostname */
+    private String clusterHost = "localhost";
+
+    /** Vert.x cluster port */
+    private int clusterPort = -1;
 
     /** Address on the event bus */
     private String address;
@@ -52,22 +53,6 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
     }
 
     /**
-     * Gets the vert.x instance.
-     * @return
-     */
-    public Vertx getVertx() {
-        return vertx;
-    }
-
-    /**
-     * Sets the vert.x instance.
-     * @param vertx
-     */
-    public void setVertx(Vertx vertx) {
-        this.vertx = vertx;
-    }
-
-    /**
      * Gets the pollingInterval.
      * @return the pollingInterval the pollingInterval to get.
      */
@@ -81,5 +66,37 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    /**
+     * Gets the cluster hostname.
+     * @return
+     */
+    public String getClusterHost() {
+        return clusterHost;
+    }
+
+    /**
+     * Sets the cluster hostname.
+     * @param clusterHost
+     */
+    public void setClusterHost(String clusterHost) {
+        this.clusterHost = clusterHost;
+    }
+
+    /**
+     * Gets the cluster port.
+     * @return
+     */
+    public int getClusterPort() {
+        return clusterPort;
+    }
+
+    /**
+     * Sets the cluster port.
+     * @param clusterPort
+     */
+    public void setClusterPort(int clusterPort) {
+        this.clusterPort = clusterPort;
     }
 }

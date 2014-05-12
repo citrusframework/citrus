@@ -38,7 +38,7 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-platform</artifactId>
+      <artifactId>vertx-hazelcast</artifactId>
     </dependency>
   </dependencies>
 

@@ -29,24 +29,29 @@ public class VertxEndpointTest {
     @Test
     public void testVertxEndpoint() {
         final VertxEndpointConfiguration endpointConfiguration = new VertxEndpointConfiguration();
-        endpointConfiguration.setAddress("ping");
+        endpointConfiguration.setAddress("news-feed");
+
+        final VertxEndpoint vertxEndpoint = new VertxEndpoint(endpointConfiguration);
 
         new SimpleAsyncTaskExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                for (int i = 0; i < 5; i++) {
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    vertxEndpoint.getVertxInstanceManager().newInstance(endpointConfiguration).eventBus()
+                            .publish("news-feed", "Hello from Citrus!");
                 }
-                endpointConfiguration.getVertx().eventBus().publish("ping", "Hello");
             }
         });
 
-        Message result = new VertxEndpoint(endpointConfiguration).createConsumer().receive(5000);
-
-
-        System.out.println(result.getPayload());
+        for (int i = 0; i < 5; i++) {
+            Message result = vertxEndpoint.createConsumer().receive(5000);
+            System.out.println(result.getPayload());
+        }
 
     }
 }

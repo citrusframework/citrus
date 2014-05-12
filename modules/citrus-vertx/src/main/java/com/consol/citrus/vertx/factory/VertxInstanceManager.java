@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.vertx.endpoint;
+package com.consol.citrus.vertx.factory;
 
-import com.consol.citrus.messaging.Producer;
-import org.springframework.integration.Message;
+import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
+import org.vertx.java.core.Vertx;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class VertxProducer implements Producer {
+public interface VertxInstanceManager {
 
-    @Override
-    public void send(Message<?> message) {
-
-    }
+    /**
+     * Creates Vert.x instance from endpoint configuration.
+     * @param endpointConfiguration
+     * @return
+     */
+    Vertx newInstance(VertxEndpointConfiguration endpointConfiguration);
 }

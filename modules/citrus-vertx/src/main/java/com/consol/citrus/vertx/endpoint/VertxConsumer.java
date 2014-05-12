@@ -24,12 +24,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.vertx.java.core.Handler;
+import org.vertx.java.core.Vertx;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
 public class VertxConsumer extends AbstractMessageConsumer {
+
+    /** Vert.x instance */
+    private final Vertx vertx;
 
     /** Endpoint configuration */
     private final VertxEndpointConfiguration endpointConfiguration;
@@ -45,11 +49,13 @@ public class VertxConsumer extends AbstractMessageConsumer {
 
     /**
      * Default constructor using endpoint.
+     * @param vertx
      * @param endpointConfiguration
      * @param messageListener
      */
-    public VertxConsumer(VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public VertxConsumer(Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
         super(endpointConfiguration.getTimeout());
+        this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
     }
@@ -58,26 +64,28 @@ public class VertxConsumer extends AbstractMessageConsumer {
     public Message<?> receive(long timeout) {
         log.info("Waiting for message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
-        VertxMessageHandler eventBusHandler = new VertxMessageHandler();
-        endpointConfiguration.getVertx().eventBus().registerHandler(endpointConfiguration.getAddress(), eventBusHandler);
+        VertxMessageHandler vertxMessageHandler = new VertxMessageHandler();
+        vertx.eventBus().registerHandler(endpointConfiguration.getAddress(), vertxMessageHandler);
 
         long timeLeft = timeout;
-        Message<?> message = convertMessage(eventBusHandler.getMessage());
+        Message<?> message = convertMessage(vertxMessageHandler.getMessage());
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
 
             if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft) + "ms");
+                RETRY_LOG.debug(String.format("Waiting for message on Vert.x event bus address '%s' - retrying in %s ms",
+                        endpointConfiguration.getAddress(),
+                        (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft)));
             }
 
             try {
                 Thread.sleep(timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft);
             } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
+                RETRY_LOG.warn("Thread interrupted while waiting for message on Vert.x event bus", e);
             }
 
-            message = convertMessage(eventBusHandler.getMessage());
+            message = convertMessage(vertxMessageHandler.getMessage());
         }
 
         if (message == null) {
