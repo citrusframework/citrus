@@ -19,6 +19,9 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.vertx.factory.VertxInstanceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -28,8 +31,43 @@ import java.util.Map;
  */
 public class VertxEndpointComponent extends AbstractEndpointComponent {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(VertxEndpointComponent.class);
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
-        return new VertxEndpoint(new VertxEndpointConfiguration());
+        VertxEndpoint endpoint;
+
+        if (resourcePath.startsWith("sync:")) {
+            endpoint = new VertxEndpoint(); //TODO use sync endpoint
+        } else {
+            endpoint = new VertxEndpoint();
+        }
+
+        if (resourcePath.contains("pubSub:")) {
+            endpoint.getEndpointConfiguration().setPubSubDomain(true);
+        }
+
+        // set event bus address
+        if (resourcePath.indexOf(":") > 0) {
+            endpoint.getEndpointConfiguration().setAddress(resourcePath.substring(resourcePath.lastIndexOf(":") + 1));
+        } else {
+            endpoint.getEndpointConfiguration().setAddress(resourcePath);
+        }
+
+        // set vert.x factory if set
+        if (parameters.containsKey("vertxInstanceFactory")) {
+            parameters.remove("vertxInstanceFactory");
+
+            if (context.getApplicationContext() != null) {
+                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean("vertxInstanceFactory", VertxInstanceFactory.class));
+            } else {
+                log.warn("Unable to set custom Vert.x instance factory as Spring application context is not accessible!");
+            }
+        }
+
+        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);
+
+        return endpoint;
     }
 }

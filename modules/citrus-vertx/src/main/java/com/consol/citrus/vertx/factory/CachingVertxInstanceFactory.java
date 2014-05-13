@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CachingVertxInstanceManager implements VertxInstanceManager {
+public class CachingVertxInstanceFactory implements VertxInstanceFactory {
 
     /** Cache holds Vert.x instances identified by cluster hostname port combination */
     private Map<String, Vertx> instanceCache = new HashMap<String, Vertx>();

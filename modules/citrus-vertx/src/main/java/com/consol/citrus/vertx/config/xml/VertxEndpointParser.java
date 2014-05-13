@@ -16,10 +16,13 @@
 
 package com.consol.citrus.vertx.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractEndpointParser;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.vertx.endpoint.VertxEndpoint;
-import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -27,10 +30,34 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class VertxEndpointParser extends AbstractBeanDefinitionParser {
+public class VertxEndpointParser extends AbstractEndpointParser {
 
     @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(VertxEndpoint.class).getBeanDefinition();
+    protected void parseEndpoint(BeanDefinitionBuilder endpointBuilder, Element element, ParserContext parserContext) {
+        super.parseEndpoint(endpointBuilder, element, parserContext);
+        BeanDefinitionParserUtils.setPropertyReference(endpointBuilder, element.getAttribute("vertx-factory"), "vertxInstanceFactory");
+    }
+
+    @Override
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "clusterHost");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "clusterPort");
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("address"), "address");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("pub-sub-domain"), "pubSubDomain");
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("polling-interval"), "pollingInterval");
+    }
+
+    @Override
+    protected Class<? extends Endpoint> getEndpointClass() {
+        return VertxEndpoint.class;
+    }
+
+    @Override
+    protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
+        return VertxEndpointConfiguration.class;
     }
 }

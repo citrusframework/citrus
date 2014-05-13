@@ -33,6 +33,9 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Address on the event bus */
     private String address;
 
+    /** Should use publish subscribe */
+    private boolean pubSubDomain = false;
+
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
 
@@ -98,5 +101,21 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setClusterPort(int clusterPort) {
         this.clusterPort = clusterPort;
+    }
+
+    /**
+     * Does domain use publish subscribe communication.
+     * @return the pubSubDomain
+     */
+    public boolean isPubSubDomain() {
+        return pubSubDomain;
+    }
+
+    /**
+     * Sets if domain uses publish subscribe communication.
+     * @param pubSubDomain the pubSubDomain to set
+     */
+    public void setPubSubDomain(boolean pubSubDomain) {
+        this.pubSubDomain = pubSubDomain;
     }
 }

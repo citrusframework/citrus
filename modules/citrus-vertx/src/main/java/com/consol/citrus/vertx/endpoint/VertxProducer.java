@@ -54,9 +54,13 @@ public class VertxProducer implements Producer {
 
     @Override
     public void send(Message<?> message) {
-        log.info("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
-
-        vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
+        if (endpointConfiguration.isPubSubDomain()) {
+            log.info("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
+        } else {
+            log.info("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
+            vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload());
+        }
 
         onOutboundMessage(message);
 

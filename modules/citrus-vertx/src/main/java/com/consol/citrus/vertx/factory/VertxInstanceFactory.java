@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.vertx.config.handler;
+package com.consol.citrus.vertx.factory;
 
-import com.consol.citrus.vertx.config.xml.VertxEndpointParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
+import org.vertx.java.core.Vertx;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CitrusVertxConfigNamespaceHandler extends NamespaceHandlerSupport {
+public interface VertxInstanceFactory {
 
-    public void init() {
-        registerBeanDefinitionParser("endpoint", new VertxEndpointParser());
-        registerBeanDefinitionParser("sync-endpoint", new VertxEndpointParser());
-    }
-
+    /**
+     * Creates Vert.x instance from endpoint configuration.
+     * @param endpointConfiguration
+     * @return
+     */
+    Vertx newInstance(VertxEndpointConfiguration endpointConfiguration);
 }

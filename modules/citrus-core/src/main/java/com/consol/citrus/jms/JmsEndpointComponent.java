@@ -38,9 +38,7 @@ public class JmsEndpointComponent extends AbstractEndpointComponent {
         JmsEndpoint endpoint;
 
         if (resourcePath.startsWith("sync:")) {
-            JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
-
-            endpoint = new JmsSyncEndpoint(endpointConfiguration);
+            endpoint = new JmsSyncEndpoint();
         } else {
             endpoint = new JmsEndpoint();
         }

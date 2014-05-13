@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.vertx.factory;
+package com.consol.citrus.vertx.message;
 
-import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
-import org.vertx.java.core.Vertx;
+import com.consol.citrus.message.CitrusMessageHeaders;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public interface VertxInstanceManager {
+public abstract class CitrusVertxMessageHeaders {
 
     /**
-     * Creates Vert.x instance from endpoint configuration.
-     * @param endpointConfiguration
-     * @return
+     * Prevent instantiation.
      */
-    Vertx newInstance(VertxEndpointConfiguration endpointConfiguration);
+    private CitrusVertxMessageHeaders() {
+    }
+
+    /** Special header prefix for http transport headers in SOAP message sender */
+    public static final String VERTX_PREFIX = CitrusMessageHeaders.PREFIX + "vertx_";
+
+    public static final String VERTX_ADDRESS = VERTX_PREFIX + "address";
+
+    public static final String VERTX_REPLY_ADDRESS = VERTX_PREFIX + "reply_address";
 }

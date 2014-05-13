@@ -19,6 +19,7 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractMessageConsumer;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
@@ -64,7 +65,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
     public Message<?> receive(long timeout) {
         log.info("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
-        VertxMessageHandler vertxMessageHandler = new VertxMessageHandler();
+        VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();
         vertx.eventBus().registerHandler(endpointConfiguration.getAddress(), vertxMessageHandler);
 
         long timeLeft = timeout;
@@ -99,13 +100,20 @@ public class VertxConsumer extends AbstractMessageConsumer {
         return message;
     }
 
-    private Message<?> convertMessage(org.vertx.java.core.eventbus.Message vertxMessage) {
-        if (vertxMessage == null) {
+    /**
+     * Converts Vert.x message to Citrus internal message representation. Adds default headers
+     * for Vert.x event bus address.
+     * @param source
+     * @return
+     */
+    private Message<?> convertMessage(org.vertx.java.core.eventbus.Message source) {
+        if (source == null) {
             return null;
         }
 
-        MessageBuilder builder = MessageBuilder.withPayload(vertxMessage.body());
-        builder.setHeader("citrus_vertx_reply_address", vertxMessage.replyAddress());
+        MessageBuilder builder = MessageBuilder.withPayload(source.body());
+        builder.setHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS, source.address());
+        builder.setHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS, source.replyAddress());
 
         return builder.build();
     }
@@ -122,12 +130,22 @@ public class VertxConsumer extends AbstractMessageConsumer {
         }
     }
 
-    private class VertxMessageHandler implements Handler<org.vertx.java.core.eventbus.Message> {
+    /**
+     * Simple Vert.x message handler stores first message received on event bus and ignores all further messages
+     * until subscription is unregistered automatically.
+     */
+    private class VertxSingleMessageHandler implements Handler<org.vertx.java.core.eventbus.Message> {
         private org.vertx.java.core.eventbus.Message message;
 
         @Override
         public void handle(org.vertx.java.core.eventbus.Message event) {
-            this.message = event;
+            if (message == null) {
+                this.message = event;
+                vertx.eventBus().unregisterHandler(endpointConfiguration.getAddress(), this);
+            } else {
+                log.warn("Vert.x message handler ignored message on event bus address '" + endpointConfiguration.getAddress() + "'");
+                log.debug("Vert.x message ignored is " + event);
+            }
         }
 
         /**

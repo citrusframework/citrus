@@ -19,8 +19,8 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
-import com.consol.citrus.vertx.factory.CachingVertxInstanceManager;
-import com.consol.citrus.vertx.factory.VertxInstanceManager;
+import com.consol.citrus.vertx.factory.CachingVertxInstanceFactory;
+import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 
 /**
  * @author Christoph Deppisch
@@ -29,7 +29,7 @@ import com.consol.citrus.vertx.factory.VertxInstanceManager;
 public class VertxEndpoint extends AbstractEndpoint {
 
     /** Vert.x instance */
-    private VertxInstanceManager vertxInstanceManager = new CachingVertxInstanceManager();
+    private VertxInstanceFactory vertxInstanceFactory = new CachingVertxInstanceFactory();
 
     /**
      * Default constructor initializing endpoint configuration.
@@ -49,14 +49,14 @@ public class VertxEndpoint extends AbstractEndpoint {
 
     @Override
     public Producer createProducer() {
-        return new VertxProducer(vertxInstanceManager.newInstance(getEndpointConfiguration()),
+        return new VertxProducer(vertxInstanceFactory.newInstance(getEndpointConfiguration()),
                 getEndpointConfiguration(),
                 getMessageListener());
     }
 
     @Override
     public Consumer createConsumer() {
-        return new VertxConsumer(vertxInstanceManager.newInstance(getEndpointConfiguration()),
+        return new VertxConsumer(vertxInstanceFactory.newInstance(getEndpointConfiguration()),
                 getEndpointConfiguration(),
                 getMessageListener());
     }
@@ -67,18 +67,18 @@ public class VertxEndpoint extends AbstractEndpoint {
     }
 
     /**
-     * Gets the vert.x instance factory.
+     * Gets the Vert.x instance manager.
      * @return
      */
-    public VertxInstanceManager getVertxInstanceManager() {
-        return vertxInstanceManager;
+    public VertxInstanceFactory getVertxInstanceFactory() {
+        return vertxInstanceFactory;
     }
 
     /**
-     * Sets the vert.x instance factory.
-     * @param vertxInstanceManager
+     * Sets the Vert.x instance manager.
+     * @param vertxInstanceFactory
      */
-    public void setVertxInstanceManager(VertxInstanceManager vertxInstanceManager) {
-        this.vertxInstanceManager = vertxInstanceManager;
+    public void setVertxInstanceFactory(VertxInstanceFactory vertxInstanceFactory) {
+        this.vertxInstanceFactory = vertxInstanceFactory;
     }
 }

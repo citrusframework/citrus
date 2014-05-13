@@ -24,8 +24,9 @@ import org.vertx.java.core.VertxFactory;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class SingleVertxInstanceManager implements VertxInstanceManager {
+public class SingleVertxInstanceFactory implements VertxInstanceFactory {
 
+    /** Vert.x instance */
     private Vertx vertx;
 
     @Override
