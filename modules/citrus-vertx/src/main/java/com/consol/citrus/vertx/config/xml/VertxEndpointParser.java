@@ -42,8 +42,8 @@ public class VertxEndpointParser extends AbstractEndpointParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "clusterHost");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "clusterPort");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "host");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "port");
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("address"), "address");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("pub-sub-domain"), "pubSubDomain");

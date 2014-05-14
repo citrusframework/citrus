@@ -44,10 +44,10 @@ public class SingleVertxInstanceFactory implements VertxInstanceFactory {
      * @return
      */
     protected Vertx createVertx(VertxEndpointConfiguration endpointConfiguration) {
-        if (endpointConfiguration.getClusterPort() > 0) {
-            return VertxFactory.newVertx(endpointConfiguration.getClusterPort(), endpointConfiguration.getClusterHost());
+        if (endpointConfiguration.getPort() > 0) {
+            return VertxFactory.newVertx(endpointConfiguration.getPort(), endpointConfiguration.getHost());
         } else {
-            return VertxFactory.newVertx(endpointConfiguration.getClusterHost());
+            return VertxFactory.newVertx(endpointConfiguration.getHost());
         }
     }
 

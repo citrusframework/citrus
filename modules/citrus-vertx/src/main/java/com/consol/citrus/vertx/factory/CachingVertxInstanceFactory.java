@@ -37,22 +37,22 @@ public class CachingVertxInstanceFactory implements VertxInstanceFactory {
 
     @Override
     public synchronized Vertx newInstance(VertxEndpointConfiguration endpointConfiguration) {
-        if (endpointConfiguration.getClusterPort() > 0) {
-            String instanceKey = endpointConfiguration.getClusterHost() + ":" + endpointConfiguration.getClusterPort();
+        if (endpointConfiguration.getPort() > 0) {
+            String instanceKey = endpointConfiguration.getHost() + ":" + endpointConfiguration.getPort();
             if (instanceCache.containsKey(instanceKey)) {
                 return instanceCache.get(instanceKey);
             } else {
-                Vertx vertx = VertxFactory.newVertx(endpointConfiguration.getClusterPort(), endpointConfiguration.getClusterHost());
+                Vertx vertx = VertxFactory.newVertx(endpointConfiguration.getPort(), endpointConfiguration.getHost());
                 instanceCache.put(instanceKey, vertx);
                 return vertx;
             }
         }
 
-        if (instanceCache.containsKey(endpointConfiguration.getClusterHost())) {
-            return instanceCache.get(endpointConfiguration.getClusterHost());
+        if (instanceCache.containsKey(endpointConfiguration.getHost())) {
+            return instanceCache.get(endpointConfiguration.getHost());
         } else {
-            Vertx vertx = VertxFactory.newVertx(endpointConfiguration.getClusterHost());
-            instanceCache.put(endpointConfiguration.getClusterHost(), vertx);
+            Vertx vertx = VertxFactory.newVertx(endpointConfiguration.getHost());
+            instanceCache.put(endpointConfiguration.getHost(), vertx);
             return vertx;
         }
     }

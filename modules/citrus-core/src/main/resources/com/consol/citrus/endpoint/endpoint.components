@@ -6,3 +6,5 @@ soap=com.consol.citrus.ws.client.WebServiceEndpointComponent
 mail=com.consol.citrus.mail.client.MailEndpointComponent
 smtp=com.consol.citrus.mail.client.MailEndpointComponent
 ssh=com.consol.citrus.ssh.client.SshEndpointComponent
+vertx=com.consol.citrus.vertx.endpoint.VertxEndpointComponent
+eventbus=com.consol.citrus.vertx.endpoint.VertxEndpointComponent

@@ -57,10 +57,10 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
 
         // set vert.x factory if set
         if (parameters.containsKey("vertxInstanceFactory")) {
-            parameters.remove("vertxInstanceFactory");
+            String vertFactoryBean = parameters.remove("vertxInstanceFactory");
 
             if (context.getApplicationContext() != null) {
-                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean("vertxInstanceFactory", VertxInstanceFactory.class));
+                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean(vertFactoryBean, VertxInstanceFactory.class));
             } else {
                 log.warn("Unable to set custom Vert.x instance factory as Spring application context is not accessible!");
             }

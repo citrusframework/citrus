@@ -25,10 +25,10 @@ import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Vert.x cluster hostname */
-    private String clusterHost = "localhost";
+    private String host = "localhost";
 
     /** Vert.x cluster port */
-    private int clusterPort = -1;
+    private int port = -1;
 
     /** Address on the event bus */
     private String address;
@@ -75,32 +75,32 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
      * Gets the cluster hostname.
      * @return
      */
-    public String getClusterHost() {
-        return clusterHost;
+    public String getHost() {
+        return host;
     }
 
     /**
      * Sets the cluster hostname.
-     * @param clusterHost
+     * @param host
      */
-    public void setClusterHost(String clusterHost) {
-        this.clusterHost = clusterHost;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     /**
      * Gets the cluster port.
      * @return
      */
-    public int getClusterPort() {
-        return clusterPort;
+    public int getPort() {
+        return port;
     }
 
     /**
      * Sets the cluster port.
-     * @param clusterPort
+     * @param port
      */
-    public void setClusterPort(int clusterPort) {
-        this.clusterPort = clusterPort;
+    public void setPort(int port) {
+        this.port = port;
     }
 
     /**

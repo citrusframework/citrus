@@ -15,8 +15,8 @@
   ~ limitations under the License.
   -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.citrusframework.org/schema/mail/config"
-           targetNamespace="http://www.citrusframework.org/schema/mail/config"
+           xmlns="http://www.citrusframework.org/schema/vertx/config"
+           targetNamespace="http://www.citrusframework.org/schema/vertx/config"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
