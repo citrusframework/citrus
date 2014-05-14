@@ -14,21 +14,33 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.vertx.config.handler;
+package com.consol.citrus.vertx.endpoint;
 
-import com.consol.citrus.vertx.config.xml.VertxEndpointParser;
-import com.consol.citrus.vertx.config.xml.VertxSyncEndpointParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CitrusVertxConfigNamespaceHandler extends NamespaceHandlerSupport {
+public class VertxSyncEndpointConfiguration extends VertxEndpointConfiguration {
 
-    public void init() {
-        registerBeanDefinitionParser("endpoint", new VertxEndpointParser());
-        registerBeanDefinitionParser("sync-endpoint", new VertxSyncEndpointParser());
+    /** Reply message correlator */
+    private ReplyMessageCorrelator correlator;
+
+    /**
+     * Set the reply message correlator.
+     * @param correlator the correlator to set
+     */
+    public void setCorrelator(ReplyMessageCorrelator correlator) {
+        this.correlator = correlator;
+    }
+
+    /**
+     * Gets the correlator.
+     * @return the correlator
+     */
+    public ReplyMessageCorrelator getCorrelator() {
+        return correlator;
     }
 
 }

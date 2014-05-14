@@ -17,6 +17,7 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.vertx.message.VertxMessageConverter;
 
 /**
  * @author Christoph Deppisch
@@ -38,6 +39,9 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
+
+    /** Message converter */
+    private VertxMessageConverter messageConverter = new VertxMessageConverter();
 
     /**
      * Gets the address on the vert.x event bus.
@@ -117,5 +121,21 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setPubSubDomain(boolean pubSubDomain) {
         this.pubSubDomain = pubSubDomain;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public VertxMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(VertxMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

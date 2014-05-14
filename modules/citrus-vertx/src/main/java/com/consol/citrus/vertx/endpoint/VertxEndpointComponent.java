@@ -39,7 +39,7 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
         VertxEndpoint endpoint;
 
         if (resourcePath.startsWith("sync:")) {
-            endpoint = new VertxEndpoint(); //TODO use sync endpoint
+            endpoint = new VertxSyncEndpoint();
         } else {
             endpoint = new VertxEndpoint();
         }

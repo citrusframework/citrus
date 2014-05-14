@@ -19,11 +19,9 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractMessageConsumer;
 import com.consol.citrus.report.MessageListeners;
-import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 
@@ -69,7 +67,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
         vertx.eventBus().registerHandler(endpointConfiguration.getAddress(), vertxMessageHandler);
 
         long timeLeft = timeout;
-        Message<?> message = convertMessage(vertxMessageHandler.getMessage());
+        Message<?> message = endpointConfiguration.getMessageConverter().convertMessage(vertxMessageHandler.getMessage());
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -86,7 +84,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
                 RETRY_LOG.warn("Thread interrupted while waiting for message on Vert.x event bus", e);
             }
 
-            message = convertMessage(vertxMessageHandler.getMessage());
+            message = endpointConfiguration.getMessageConverter().convertMessage(vertxMessageHandler.getMessage());
         }
 
         if (message == null) {
@@ -98,24 +96,6 @@ public class VertxConsumer extends AbstractMessageConsumer {
         onInboundMessage(message);
 
         return message;
-    }
-
-    /**
-     * Converts Vert.x message to Citrus internal message representation. Adds default headers
-     * for Vert.x event bus address.
-     * @param source
-     * @return
-     */
-    private Message<?> convertMessage(org.vertx.java.core.eventbus.Message source) {
-        if (source == null) {
-            return null;
-        }
-
-        MessageBuilder builder = MessageBuilder.withPayload(source.body());
-        builder.setHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS, source.address());
-        builder.setHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS, source.replyAddress());
-
-        return builder.build();
     }
 
     /**

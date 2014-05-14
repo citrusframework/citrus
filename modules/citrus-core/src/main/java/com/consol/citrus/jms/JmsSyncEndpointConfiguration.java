@@ -28,6 +28,7 @@ import javax.jms.*;
  * @since 1.4
  */
 public class JmsSyncEndpointConfiguration extends JmsEndpointConfiguration {
+
     /** Reply message correlator */
     private ReplyMessageCorrelator correlator = null;
 
