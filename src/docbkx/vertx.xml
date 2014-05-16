@@ -42,7 +42,9 @@
       host=&quot;localhost&quot;
       port=&quot;5001&quot;
       pubSubDomain=&quot;false&quot;
-      address=&quot;news-feed&quot;/&gt;</programlisting>
+      address=&quot;news-feed&quot;/&gt;
+
+&lt;bean id=&quot;vertxInstanceFactory&quot; class=&quot;com.consol.citrus.vertx.factory.CachingVertxInstanceFactory&quot;/&gt;</programlisting>
 
     <para>The endpoint holds some general information how to access the Vert.x event bus. Host and port values define the Vert.x Hazelcast cluster hostname and port.
       Citrus starts a new Vert.x instance using this cluster. So all other Vert.x instances connected to this cluster host will receive the event bus messages from Citrus
@@ -51,9 +53,12 @@
       and a new random port on the cluster host if nothing is specified.</para>
 
     <para>The Vert.x event bus supports publish-subscribe and point-to-point message communication patterns. By default the <emphasis>pubSubDomain</emphasis> in Citrus is false so the event bus sender
-    will initiate a point-to-point communication on the event bus address. This means that only one single consumer on the event bus address will receive the message. If there are more consumers on the address
-    the first to come wins and receives the message. In contrary to that the publish-subscribe scenario would deliver the message to all available consumers on the event bus address simultaneously. You can enable the
+      will initiate a point-to-point communication on the event bus address. This means that only one single consumer on the event bus address will receive the message. If there are more consumers on the address
+      the first to come wins and receives the message. In contrary to that the publish-subscribe scenario would deliver the message to all available consumers on the event bus address simultaneously. You can enable the
     <emphasis>pubSubDomain</emphasis> on the Vert.x endpoint component for this communication pattern.</para>
+
+    <para>The Vert.x endpoint needs a instance factory implementation in order to create the embedded Vert.x instance. By default the bean name <emphasis>vertxInstanceFactory</emphasis> is recognized by all
+      Vert.x endpoint components. We will talk about Vert.x instance factories in more detail later on in this chapter.</para>
 
     <para>As message content you can send and receive JSON objects or simple character sequences to the event bus. Let us have a look at a simple sample sending action that uses the new Vert.x endpoint component:</para>
 
@@ -145,8 +150,9 @@
     <para>Citrus starts an embedded Vert.x instance at runtime in order to participate in the Vert.x cluster. Within this cluster multiple Vert.x instances are connected via the event bus. For
     starting the Vert.x event bus Citrus uses a cluster hostname and port definition. You can customize this cluster host in order to connect to a very special cluster in your network.</para>
 
-    <para>Now Citrus need to manage the Vert.x instances created during the test run. By default Citrus will cache the Vert.x instances so we do not connect more than one Vert.x instance to the same
-    cluster host. The Citrus Vert.x instance factory implementation does manage the instance caching. Citrus offers following instance factory implementations:</para>
+    <para>Now Citrus needs to manage the Vert.x instances created during the test run. By default Citrus will look for a instance factory bean named <emphasis>vertxInstanceFactory</emphasis>.
+    You can choose the factory implementation to use in your project. By default you can use the caching factory implementation that caches the Vert.x instances so we do not connect more than
+    one Vert.x instance to the same cluster host. Citrus offers following instance factory implementations:</para>
 
     <itemizedlist>
       <listitem><literal>com.consol.citrus.vertx.factory.CachingVertxInstanceFactory</literal> - default implementation that reuses the Vert.x instance based on given cluster host and port. With this implementation we ensure to
@@ -155,8 +161,8 @@
       for custom Vert.x instantiation.</listitem>
     </itemizedlist>
 
-    <para>The instance factory implementations do implement the <literal>com.consol.citrus.vertx.factory.VertxInstanceFactory</literal> interface. So you can also provide your very special implementation. The Vert.x instance factory is set
-    on the Vert.x endpoint as follows:</para>
+    <para>The instance factory implementations do implement the <literal>com.consol.citrus.vertx.factory.VertxInstanceFactory</literal> interface. So you can also provide your very special implementation. By default Citrus looks
+      for a bean named <emphasis>vertxInstanceFactory</emphasis> but you can also define your very special factory implementation onm an endpoint component. The Vert.x instance factory is set on the Vert.x endpoint as follows:</para>
 
     <programlisting>&lt;citrus-vertx:endpoint id=&quot;vertxHelloEndpoint&quot;
       address=&quot;hello&quot;

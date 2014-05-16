@@ -19,7 +19,6 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
-import com.consol.citrus.vertx.factory.CachingVertxInstanceFactory;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 
 /**
@@ -29,7 +28,7 @@ import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 public class VertxEndpoint extends AbstractEndpoint {
 
     /** Vert.x instance */
-    private VertxInstanceFactory vertxInstanceFactory = new CachingVertxInstanceFactory();
+    private VertxInstanceFactory vertxInstanceFactory;
 
     /**
      * Default constructor initializing endpoint configuration.

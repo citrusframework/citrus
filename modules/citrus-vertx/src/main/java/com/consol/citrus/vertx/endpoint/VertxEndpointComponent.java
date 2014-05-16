@@ -64,6 +64,13 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
             } else {
                 log.warn("Unable to set custom Vert.x instance factory as Spring application context is not accessible!");
             }
+        } else {
+            // set default jms connection factory
+            if (context.getApplicationContext() != null && context.getApplicationContext().containsBean("vertxInstanceFactory")) {
+                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean("vertxInstanceFactory", VertxInstanceFactory.class));
+            } else {
+                log.warn("Unable to set default Vert.x instance factory as Spring application context is not accessible or default factory bean is not available!");
+            }
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);

@@ -13,7 +13,7 @@
   <citrus-vertx:sync-endpoint id="vertxEndpoint2"
                          host="127.0.0.1"
                          port="10105"
-                         vertx-factory="vertxInstanceFactory"
+                         vertx-factory="specialVertxInstanceFactory"
                          message-correlator="replyMessageCorrelator"
                          timeout="10000"
                          address="news-feed2"/>
@@ -30,6 +30,10 @@
 
   <!-- Vert.x instance factory -->
   <bean id="vertxInstanceFactory" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
+  </bean>
+
+  <bean id="specialVertxInstanceFactory" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="com.consol.citrus.vertx.factory.VertxInstanceFactory"/>
   </bean>
 

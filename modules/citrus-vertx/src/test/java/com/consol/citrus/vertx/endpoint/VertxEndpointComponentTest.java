@@ -19,7 +19,6 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.vertx.factory.CachingVertxInstanceFactory;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -48,13 +47,18 @@ public class VertxEndpointComponentTest {
     public void testCreateEndpoint() throws Exception {
         VertxEndpointComponent component = new VertxEndpointComponent();
 
+        reset(applicationContext);
+        expect(applicationContext.containsBean("vertxInstanceFactory")).andReturn(true).times(2);
+        expect(applicationContext.getBean("vertxInstanceFactory", VertxInstanceFactory.class)).andReturn(instanceFactory).times(2);
+        replay(applicationContext);
+
         Endpoint endpoint = component.createEndpoint("vertx:news", context);
 
         Assert.assertEquals(endpoint.getClass(), VertxEndpoint.class);
 
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news");
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory().getClass(), CachingVertxInstanceFactory.class);
+        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
         Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
         endpoint = component.createEndpoint("eventbus:news-feed", context);
@@ -63,13 +67,20 @@ public class VertxEndpointComponentTest {
 
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news-feed");
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory().getClass(), CachingVertxInstanceFactory.class);
+        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
         Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+
+        verify(applicationContext);
     }
 
     @Test
     public void testCreateEndpointWithParameters() throws Exception {
         VertxEndpointComponent component = new VertxEndpointComponent();
+
+        reset(applicationContext);
+        expect(applicationContext.containsBean("vertxInstanceFactory")).andReturn(true).once();
+        expect(applicationContext.getBean("vertxInstanceFactory", VertxInstanceFactory.class)).andReturn(instanceFactory).once();
+        replay(applicationContext);
 
         Endpoint endpoint = component.createEndpoint("vertx:news-feed?port=10105&timeout=10000&pubSubDomain=true", context);
 
@@ -78,8 +89,10 @@ public class VertxEndpointComponentTest {
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getAddress(), "news-feed");
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().getPort(), 10105);
         Assert.assertEquals(((VertxEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), true);
-        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory().getClass(), CachingVertxInstanceFactory.class);
+        Assert.assertEquals(((VertxEndpoint) endpoint).getVertxInstanceFactory(), instanceFactory);
         Assert.assertEquals(((VertxEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+
+        verify(applicationContext);
     }
 
     @Test

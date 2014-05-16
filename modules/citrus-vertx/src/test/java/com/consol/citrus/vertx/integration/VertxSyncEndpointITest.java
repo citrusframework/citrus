@@ -25,8 +25,8 @@ import org.testng.annotations.Test;
  * @since 1.4.1
  */
 @Test
-public class VertxEndpointITest extends AbstractTestNGCitrusTest {
+public class VertxSyncEndpointITest extends AbstractTestNGCitrusTest {
 
-    @CitrusXmlTest(name = "VertxEndpointITest")
-    public void testVertxEndpoint() {}
+    @CitrusXmlTest(name = "VertxSyncEndpointITest")
+    public void testVertxSyncEndpoint() {}
 }

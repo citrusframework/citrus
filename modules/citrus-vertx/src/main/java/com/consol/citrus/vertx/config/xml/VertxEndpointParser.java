@@ -35,7 +35,7 @@ public class VertxEndpointParser extends AbstractEndpointParser {
     @Override
     protected void parseEndpoint(BeanDefinitionBuilder endpointBuilder, Element element, ParserContext parserContext) {
         super.parseEndpoint(endpointBuilder, element, parserContext);
-        BeanDefinitionParserUtils.setPropertyReference(endpointBuilder, element.getAttribute("vertx-factory"), "vertxInstanceFactory");
+        BeanDefinitionParserUtils.setPropertyReference(endpointBuilder, element.getAttribute("vertx-factory"), "vertxInstanceFactory", "vertxInstanceFactory");
     }
 
     @Override

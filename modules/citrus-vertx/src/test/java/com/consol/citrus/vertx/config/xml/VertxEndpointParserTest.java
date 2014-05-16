@@ -19,7 +19,6 @@ package com.consol.citrus.vertx.config.xml;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.vertx.endpoint.VertxEndpoint;
-import com.consol.citrus.vertx.factory.CachingVertxInstanceFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -39,14 +38,14 @@ public class VertxEndpointParserTest extends AbstractBeanDefinitionParserTest {
         // 1st message receiver
         VertxEndpoint vertxEndpoint = endpoints.get("vertxEndpoint1");
         Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
-        Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory().getClass(), CachingVertxInstanceFactory.class);
+        Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("vertxInstanceFactory"));
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed1");
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
 
         // 2nd message receiver
         vertxEndpoint = endpoints.get("vertxEndpoint2");
         Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
-        Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("vertxInstanceFactory"));
+        Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("specialVertxInstanceFactory"));
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getHost(), "127.0.0.1");
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getPort(), 10105);
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed2");
