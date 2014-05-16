@@ -15,6 +15,7 @@
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-ssh</include>
         <include>com.consol.citrus:citrus-mail</include>
+        <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus:citrus-adapter</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
@@ -22,6 +23,7 @@
         <include>com.consol.citrus.model:citrus-model-ws</include>
         <include>com.consol.citrus.model:citrus-model-ssh</include>
         <include>com.consol.citrus.model:citrus-model-mail</include>
+        <include>com.consol.citrus.model:citrus-model-vertx</include>
         <include>com.consol.citrus.ant:citrus-ant-tasks</include>
         <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
       </includes>
@@ -126,6 +128,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-model/model-vertx/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
         <directory>modules/citrus-core/target</directory>
         <outputDirectory>src</outputDirectory>
         <includes>
@@ -162,6 +171,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-mail/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-vertx/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>
