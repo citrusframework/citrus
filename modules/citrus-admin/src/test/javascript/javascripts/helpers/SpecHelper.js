@@ -23,7 +23,7 @@ define(["TemplateManager", "AppRouter", "WebSocketHolder"], function (TemplateMa
                 "FooterView",
                 "HeaderView",
                 "LoggerView",
-                "ProjectOpenView",
+                "OpenProjectView",
                 "TestDetailsView",
                 "TestListView",
                 "TestTableView",

@@ -17,11 +17,9 @@
 package com.consol.citrus.admin.executor;
 
 import com.consol.citrus.admin.configuration.MavenRunConfiguration;
-import com.consol.citrus.admin.launcher.ProcessLauncher;
-import com.consol.citrus.admin.launcher.ProcessLauncherImpl;
-import com.consol.citrus.admin.launcher.ProcessMonitor;
+import com.consol.citrus.admin.launcher.*;
 import com.consol.citrus.admin.launcher.process.maven.MavenRunSingleTestCommand;
-import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.websocket.WebSocketProcessListener;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
@@ -42,13 +40,13 @@ public class FileSystemTestExecutor implements TestExecutor<MavenRunConfiguratio
     @Autowired
     private ProcessMonitor processMonitor;
     @Autowired
-    private ConfigurationService configService;
+    private ProjectService projectService;
     @Autowired
     private WebSocketProcessListener webSocketProcessListener;
 
     @Override
     public void execute(String packageName, String testName, MavenRunConfiguration configuration) throws ParseException {
-        File file = new File(configService.getProjectHome());
+        File file = new File(projectService.getActiveProject().getProjectHome());
         ProcessBuilder processBuilder = new MavenRunSingleTestCommand(file, testName, configuration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
 

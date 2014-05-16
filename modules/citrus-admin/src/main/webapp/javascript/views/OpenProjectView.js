@@ -1,29 +1,29 @@
 (function() {
     define(["TemplateManager"], function(TemplateManager) {
-        var ProjectOpenView = Backbone.View.extend({
+        var OpenProjectView = Backbone.View.extend({
           
-          projectHome: "",
+          project: {},
           
           events: {
-              "click #button-browse" : "showFileTree",
-              "click #button-close" : "hideFileTree",
-              "click #button-select" : "selectProject"
+              "click #button-browse" : "browse",
+              "click #button-close" : "close",
+              "click #button-select" : "select"
           },
 
           initialize: function() {
               $.ajax({
-                  url: "config/projecthome",
+                  url: "project/active",
                   type: 'GET',
                   dataType: "text",
                   success: _.bind(function(response) {
-                      this.projectHome = response;
+                      this.project = response;
                   }, this),
                   async: false
               });
           },
           
           render: function() {
-              $(this.el).html(TemplateManager.template('ProjectOpenView', {projectHome: this.projectHome}));
+              $(this.el).html(TemplateManager.template('OpenProjectView', this.project));
               
               $('#file-tree').fileTree({ 
                   root: '/',
@@ -39,15 +39,15 @@
               return this;
           },
           
-          showFileTree: function() {
+          browse: function() {
               $('#dialog-file-tree').modal();
           },
           
-          hideFileTree: function() {
+          close: function() {
               $('#dialog-file-tree').modal('hide');
           },
           
-          selectProject: function() {
+          select: function() {
               var selected = $('ul.jqueryFileTree li.expanded').last().children('a:first').attr('rel');
               $('input[name="projecthome"]').val(selected);
               $('#dialog-file-tree').modal('hide');
@@ -55,6 +55,6 @@
         
         });
         
-        return ProjectOpenView;
+        return OpenProjectView;
     });
 }).call(this);

@@ -42,6 +42,9 @@ public class ConfigurationController {
     private ConfigurationService configService;
 
     @Autowired
+    private ProjectService projectService;
+
+    @Autowired
     private SpringBeanService springBeanService;
 
     @Autowired
@@ -56,15 +59,9 @@ public class ConfigurationController {
     @RequestMapping(value = "/run", method = RequestMethod.GET)
     @ResponseBody
     public List<RunConfiguration> getRunConfigurations() {
-        return configService.getRunConfigurations();
+        return projectService.getActiveProject().getRunConfigurations();
     }
 
-    @RequestMapping(value = "/projecthome", method = RequestMethod.GET)
-    @ResponseBody
-    public String getProjectHome() {
-        return configService.getProjectHome();
-    }
-    
     @RequestMapping(value = "/root", method = RequestMethod.GET)
     @ResponseBody
     public String getRootDirectory() {
@@ -74,120 +71,120 @@ public class ConfigurationController {
     @RequestMapping(value = "/xsd-schema-repository", method = {RequestMethod.GET})
     @ResponseBody
     public List<SchemaRepository> listSchemaRepositories() {
-        return schemaRepositoryService.listSchemaRepositories(configService.getProjectConfigFile());
+        return schemaRepositoryService.listSchemaRepositories(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(value = "/xsd-schema-repository/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public SchemaRepository getSchemaRepository(@PathVariable("id") String id) {
-        return schemaRepositoryService.getSchemaRepository(configService.getProjectConfigFile(), id);
+        return schemaRepositoryService.getSchemaRepository(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value="/xsd-schema-repository", method = {RequestMethod.POST})
     @ResponseBody
     public void createSchemaRepository(@RequestBody SchemaRepository xsdSchemaRepository) {
-        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), xsdSchemaRepository);
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchemaRepository);
     }
 
     @RequestMapping(value = "/xsd-schema-repository/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepository xsdSchemaRepository) {
-        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, xsdSchemaRepository);
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchemaRepository);
     }
 
     @RequestMapping(value = "/xsd-schema-repository/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteSchemaRepository(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
+        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value = "/xsd-schema", method = {RequestMethod.GET})
     @ResponseBody
     public List<Schema> listXsdSchemas() {
-        return schemaRepositoryService.listSchemas(configService.getProjectConfigFile());
+        return schemaRepositoryService.listSchemas(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public Schema getXsdSchema(@PathVariable("id") String id) {
-        return schemaRepositoryService.getSchema(configService.getProjectConfigFile(), id);
+        return schemaRepositoryService.getSchema(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value="/xsd-schema", method = {RequestMethod.POST})
     @ResponseBody
     public void createXsdSchema(@RequestBody Schema xsdSchema) {
-        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), xsdSchema);
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchema);
     }
 
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateXsdSchema(@PathVariable("id") String id, @RequestBody Schema xsdSchema) {
-        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, xsdSchema);
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchema);
     }
 
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteXsdSchema(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
+        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value = "/msg-sender", method = {RequestMethod.GET})
     @ResponseBody
     public List<MessageSenderItem> listMsgSender() {
-        return messageSenderService.listMessageSender(configService.getProjectConfigFile());
+        return messageSenderService.listMessageSender(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public MessageSenderItem getMsgSender(@PathVariable("id") String id) {
-        return messageSenderService.getMessageSender(configService.getProjectConfigFile(), id);
+        return messageSenderService.getMessageSender(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value="/msg-sender", method = {RequestMethod.POST})
     @ResponseBody
     public void createMsgSender(@RequestBody MessageSenderItem msgSender) {
-        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), msgSender);
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), msgSender);
     }
 
     @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateMsgSender(@PathVariable("id") String id, @RequestBody MessageSenderItem msgSender) {
-        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, msgSender);
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, msgSender);
     }
 
     @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteMsgSender(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
+        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value = "/msg-receiver", method = {RequestMethod.GET})
     @ResponseBody
     public List<MessageReceiverItem> listMsgReceiver() {
-        return messageReceiverService.listMessageReceiver(configService.getProjectConfigFile());
+        return messageReceiverService.listMessageReceiver(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public MessageReceiverItem getMsgReceiver(@PathVariable("id") String id) {
-        return messageReceiverService.getMessageReceiver(configService.getProjectConfigFile(), id);
+        return messageReceiverService.getMessageReceiver(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value="/msg-receiver", method = {RequestMethod.POST})
     @ResponseBody
     public void createMsgReceiver(@RequestBody MessageReceiverItem msgReceiver) {
-        springBeanService.addBeanDefinition(configService.getProjectConfigFile(), msgReceiver);
+        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), msgReceiver);
     }
 
     @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateMsgReceiver(@PathVariable("id") String id, @RequestBody MessageReceiverItem msgReceiver) {
-        springBeanService.updateBeanDefinition(configService.getProjectConfigFile(), id, msgReceiver);
+        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, msgReceiver);
     }
 
     @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteMsgReceiver(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(configService.getProjectConfigFile(), id);
+        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 }

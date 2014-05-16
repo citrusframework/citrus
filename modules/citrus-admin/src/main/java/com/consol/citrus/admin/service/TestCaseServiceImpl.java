@@ -56,6 +56,9 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    private ProjectService projectService;
+
     /** Test executor works on filesystem */
     @Autowired
     private FileSystemTestExecutor fileSystemTestExecutor;
@@ -146,7 +149,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         result.setTestCase(testCase);
 
         try {
-            RunConfiguration configuration = configurationService.getRunConfiguration(runConfigurationId);
+            RunConfiguration configuration = projectService.getActiveProject().getRunConfiguration(runConfigurationId);
             TestExecutor<RunConfiguration> testExecutor = getTestExecutorForConfiguration(configuration);
             testExecutor.execute(packageName, testName, configuration);
 
@@ -304,7 +307,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * @return
      */
     private String getTestDirectory() {
-        return new File(configurationService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+        return new File(projectService.getActiveProject().getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
     }
 
     /**
@@ -312,6 +315,6 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * @return
      */
     private String getJavaDirectory() {
-        return new File(configurationService.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
+        return new File(projectService.getActiveProject().getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
     }
 }

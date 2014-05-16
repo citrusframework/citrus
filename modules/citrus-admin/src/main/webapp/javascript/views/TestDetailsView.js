@@ -16,7 +16,7 @@
                 "click button.close" : "hideResultsTab"
             },
 
-            initialize: function() {
+            initialize: function(options) {
                 CitrusWebSocket.on('change:onmessage', this.onSocketMessage, this);
 
                 $.ajax({
@@ -32,15 +32,18 @@
                 });
 
                 $.ajax({
-                    url: "testcase/details/"+ this.options.test.type + "/" + this.options.test.packageName + "/" + this.getTestNameUrl(this.options.test.name),
+                    url: "testcase/details/"+ options.test.type + "/" + options.test.packageName + "/" + this.getTestNameUrl(options.test.name),
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function(test) {
                        this.test = test;
-                       _.extend(this.test, {id: this.options.test.id});
                     }, this),
                     async: false
                 });
+
+                if (this.test) {
+                    _.extend(this.test, {id: options.test.id});
+                }
             },
 
             render: function() {

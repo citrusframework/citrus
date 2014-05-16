@@ -16,7 +16,9 @@
 
 package com.consol.citrus.admin.controller;
 
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.service.ConfigurationService;
+import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.util.FileHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +36,18 @@ import java.io.File;
 public class ProjectController {
     
     @Autowired
-    private ConfigurationService configService;
-    
+    private ProjectService projectService;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
     @Autowired
     private FileHelper fileHelper;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView searchProjectHome(@RequestParam("dir") String dir) {
-        String directory = FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, configService.getRootDirectory()));
+    public ModelAndView browseProjectHome(@RequestParam("dir") String dir) {
+        String directory = FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, configurationService.getRootDirectory()));
         String[] folders = fileHelper.getFolders(new File(directory));
 
         ModelAndView view = new ModelAndView("FileTree");
@@ -51,14 +56,16 @@ public class ProjectController {
 
         return view;
     }
+
+    @RequestMapping(value = "/active", method = RequestMethod.GET)
+    @ResponseBody
+    public Project getActiveProject() {
+        return projectService.getActiveProject();
+    }
     
-    @RequestMapping(params = {"projecthome"}, method = RequestMethod.GET)
-    public String setProjectHome(@RequestParam("projecthome") String projecthome) {
-        if (!configService.isProjectHome(projecthome)) {
-            throw new IllegalArgumentException("Invalid project home - not a proper Citrus project");
-        }
-        
-        configService.setProjectHome(projecthome);
+    @RequestMapping(value = "/open", method = RequestMethod.POST)
+    public String openProject(@RequestParam("projecthome") String projecthome) {
+        projectService.load(projecthome);
         return "redirect:/";
     }
 }

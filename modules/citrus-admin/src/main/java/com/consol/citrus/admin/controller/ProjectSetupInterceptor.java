@@ -16,17 +16,15 @@
 
 package com.consol.citrus.admin.controller;
 
-import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.consol.citrus.admin.service.ProjectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.consol.citrus.admin.service.ConfigurationService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 /**
  * Handler interceptor checks for project configuration in system. In case configuration is not set properly
@@ -39,22 +37,19 @@ import com.consol.citrus.admin.service.ConfigurationService;
 public class ProjectSetupInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private ConfigurationService configService;
+    private ProjectService projectService;
     
     /** Location to redirect to in case project configuration is not set */
     private String redirect;
     
-    /** Locations that get excluded form interceptor */
+    /** Locations that get excluded from interceptor */
     private String[] excludes;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ProjectSetupInterceptor.class);
     
-    /**
-     * {@inheritDoc}
-     */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (configService.getProjectHome() == null 
+        if (projectService.getActiveProject() == null
                 && !request.getRequestURI().startsWith(request.getContextPath() + redirect)
                 && !isExcluded(request.getRequestURI(), request.getContextPath())) {
             log.debug("Intercept " + request.getRequestURI() + " as project home is not set properly");

@@ -16,7 +16,9 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.model.TestCaseInfo;
+import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,18 +38,21 @@ import static org.easymock.EasyMock.*;
 public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private ConfigurationService configService;
+    private ProjectService projectService;
 
     @Autowired
     private TestCaseServiceImpl testCaseService;
 
+    private Project project = EasyMock.createMock(Project.class);
+
     @Test
     public void testGetTests() throws IOException {
-        reset(configService);
+        reset(projectService, project);
 
-        expect(configService.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).times(2);
+        expect(projectService.getActiveProject()).andReturn(project).times(2);
+        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).times(2);
 
-        replay(configService);
+        replay(projectService, project);
 
         List<TestCaseInfo> tests = testCaseService.getTests();
 
@@ -62,6 +67,6 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(test.getName(), "BarTest");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
 
-        verify(configService);
+        verify(projectService, project);
     }
 }
