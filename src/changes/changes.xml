@@ -16,6 +16,9 @@
   
   <body>
     <release version="1.4.1" date="01.06.20014" description="">
+        <action dev="christophd" type="add">
+          CITRUS-203 Vert.x support
+        </action>
         <action dev="christophd" type="fix">
           CITRUS-202 Missing soap must understand interceptor support
         </action>

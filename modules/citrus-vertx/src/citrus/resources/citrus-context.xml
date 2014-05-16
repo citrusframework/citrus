@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-vertx="http://www.citrusframework.org/schema/vertx/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                         http://www.citrusframework.org/schema/vertx/config http://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Vertx Integration Testing"/>
+  </citrus:global-variables>
+
+  <!-- Xsd schema resources and definitions -->
+  <citrus:schema-repository id="schemaRepository"/>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <!-- Message validators -->
+  <bean id="messageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
+
+  <bean id="vertxInstanceFactory" class="com.consol.citrus.vertx.factory.CachingVertxInstanceFactory"/>
+
+  <!-- Vert.x message endpoints -->
+  <citrus-vertx:endpoint id="vertxNewsEndpoint"
+                          address="news"
+                          timeout="1000"/>
+
+  <citrus-vertx:sync-endpoint id="vertxHelloEndpoint"
+                         address="hello"
+                         timeout="5000"/>
+
+  <citrus-vertx:sync-endpoint id="vertxReplyEndpoint"
+                              address="hello"
+                              timeout="5000"/>
+
+</beans>

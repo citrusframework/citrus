@@ -20,6 +20,7 @@
     <module>model-ssh</module>
     <module>model-ws</module>
     <module>model-mail</module>
+    <module>model-vertx</module>
   </modules>
 
   <build>

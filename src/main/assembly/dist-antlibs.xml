@@ -19,6 +19,7 @@
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-ssh</include>
         <include>com.consol.citrus:citrus-mail</include>
+        <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus:citrus-adapter</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
@@ -26,6 +27,7 @@
         <include>com.consol.citrus.model:citrus-model-ws</include>
         <include>com.consol.citrus.model:citrus-model-ssh</include>
         <include>com.consol.citrus.model:citrus-model-mail</include>
+        <include>com.consol.citrus.model:citrus-model-vertx</include>
       </includes>
       <binaries>
         <outputDirectory>lib</outputDirectory>

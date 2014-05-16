@@ -33,7 +33,7 @@
       &lt;/beans&gt;</programlisting>
 
     <para>Now you are ready to use the customized Http configuration elements with the
-      citrus-http namespace prefix.</para>
+      citrus-mail namespace prefix.</para>
   </note>
 
   <para>Read the next section in order to find out more about the mail message support in Citrus.</para>

@@ -45,6 +45,7 @@
     <module>modules/citrus-integration</module>
     <module>modules/citrus-samples</module>
     <module>modules/citrus-admin</module>
+    <module>modules/citrus-vertx</module>
   </modules>
 
   <developers>
@@ -432,6 +433,18 @@
         <groupId>org.subethamail</groupId>
         <artifactId>subethasmtp</artifactId>
         <version>3.1.7</version>
+      </dependency>
+
+      <!-- Citrus vert.x dependencies -->
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+        <version>2.1RC3</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-hazelcast</artifactId>
+        <version>2.1RC3</version>
       </dependency>
 
       <!-- Logging -->
