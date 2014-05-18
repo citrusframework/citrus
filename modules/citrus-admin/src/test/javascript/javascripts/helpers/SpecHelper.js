@@ -28,7 +28,7 @@ define(["TemplateManager", "AppRouter", "WebSocketHolder"], function (TemplateMa
                 "TestListView",
                 "TestTableView",
                 "WebSocketView",
-                "WelcomeView"], function () {
+                "ProjectView"], function () {
             });
 
             CitrusAdmin = new AppRouter();

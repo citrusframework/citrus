@@ -1,16 +1,16 @@
 (function() {
     define(["TemplateManager"], function(TemplateManager) {
-        var WelcomeView = Backbone.View.extend({
+        var ProjectView = Backbone.View.extend({
 
             status: false,
 
             render: function() {
-                $(this.el).html(TemplateManager.template('WelcomeView',{}));
+                $(this.el).html(TemplateManager.template('ProjectView',{}));
                 return this;
             }
 
         });
 
-        return WelcomeView;
+        return ProjectView;
     });
 }).call(this);

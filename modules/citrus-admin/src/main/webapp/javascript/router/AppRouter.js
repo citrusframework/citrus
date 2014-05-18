@@ -1,21 +1,21 @@
 (function() {
-    define(["views/HeaderView", "views/WelcomeView", "views/ConfigView", "views/TestListView", "views/FooterView"], function(HeaderView, WelcomeView, ConfigView, TestListView, FooterView) {
+    define(["views/HeaderView", "views/ProjectView", "views/ConfigView", "views/TestListView", "views/FooterView"], function(HeaderView, ProjectView, ConfigView, TestListView, FooterView) {
         var AppRouter = Backbone.Router.extend({
 
           headerView: undefined,
           footerView: undefined,
-          welcomeView: undefined,
+          projectView: undefined,
           configView: undefined,
           testListView: undefined,
           statsView: undefined,
           aboutView: undefined,
 
           routes: {
-            "": "welcome", // #welcome
-            "project": "welcome", // #welcome
+            "": "project", // #project
+            "project": "project", // #project
             "config": "config", //#config
-            "testcases": "testcases", // #testcases
-            "testcases/:testName": "testDetails", // #testcases/EchoActionITest
+            "tests": "tests", // #tests
+            "tests/:testName": "testDetails", // #tests/EchoActionITest
             "stats": "stats", // #stats
             "about": "about" // #about
           },
@@ -28,14 +28,14 @@
               this.footerView.render();
           },
           
-          welcome: function() {
-              if (!this.welcomeView) {
-                  this.welcomeView = new WelcomeView({el: $('#welcome-content')});
-                  this.welcomeView.render();
+          project: function() {
+              if (!this.projectView) {
+                  this.projectView = new ProjectView({el: $('#project-content')});
+                  this.projectView.render();
               }
 
               $('#content').children().hide();
-              $('#welcome-content').show();
+              $('#project-content').show();
           },
           
           config: function() {
@@ -49,18 +49,18 @@
               $('#config-content').show();
           },
         
-          testcases: function() {
+          tests: function() {
               if (!this.testListView) {
-                  this.testListView = new TestListView({el: $('#test-list-content')});
+                  this.testListView = new TestListView({el: $('#tests-content')});
                   this.testListView.render();
               }
 
               $('#content').children().hide();
-              $('#test-list-content').show();
+              $('#tests-content').show();
           },
 
           testDetails: function(testName) {
-              this.testcases();
+              this.tests();
               this.testListView.showDetails(testName);
           },
           

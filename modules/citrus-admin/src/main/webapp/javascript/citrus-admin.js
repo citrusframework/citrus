@@ -26,7 +26,7 @@ curl({
   }},
   ["TemplateManager", "AppRouter", "WebSocketHolder", "domReady!"], function(TemplateManager, AppRouter, WebSocketHolder) {
     
-  TemplateManager.load(['HeaderView', 'WelcomeView'], function() {
+  TemplateManager.load(['HeaderView', 'ProjectView'], function() {
       CitrusWebSocket = new WebSocketHolder();
       CitrusAdmin = new AppRouter();
       

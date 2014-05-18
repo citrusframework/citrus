@@ -31,7 +31,7 @@
                   expandSpeed: 1,
                   collapseSpeed: 1
               }, _.bind(function(file) {
-                  CitrusAdmin.navigate("testcases/" + _.find(this.tests, function(t) {return t.file == file}).name, true);
+                  CitrusAdmin.navigate("tests/" + _.find(this.tests, function(t) {return t.file == file}).name, true);
               }, this));
 
               var searchKeys = _.map(this.tests, function(test){ return test.name; });
@@ -61,7 +61,7 @@
               }, this));
 
               $('#test-name').val('');
-              CitrusAdmin.navigate("testcases/" + test.name, true);
+              CitrusAdmin.navigate("tests/" + test.name, true);
 
               // prevent default form submission
               return false;
@@ -93,10 +93,10 @@
 
                       if ($('ul#test-tabs').find('li').size() == 1) {
                           // last tab was closed so navigate to testcase base page
-                          CitrusAdmin.navigate('testcases', false);
+                          CitrusAdmin.navigate('tests', false);
                       } else {
                           // navigate to new active tab
-                          CitrusAdmin.navigate('testcases/' + $('ul#test-tabs').find('li.active').find('a').text(), false);
+                          CitrusAdmin.navigate('tests/' + $('ul#test-tabs').find('li.active').find('a').text(), false);
                       }
                   });
                 
