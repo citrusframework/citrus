@@ -54,6 +54,30 @@ public class VertxProducer implements Producer {
 
     @Override
     public void send(Message<?> message) {
+        try {
+            sendOrPublishMessage(message);
+        } catch (IllegalStateException e) {
+            if (e.getMessage().equals("Event Bus is not started")) {
+                log.warn("Event bus not started yet - retrying in 2000 ms");
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException ex) {
+                    log.warn("Interrupted while waiting fot event bus to start", ex);
+                }
+
+                sendOrPublishMessage(message);
+            } else {
+                throw e;
+            }
+        }
+
+        onOutboundMessage(message);
+
+        log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
+    }
+
+    private void sendOrPublishMessage(Message<?> message) {
         if (endpointConfiguration.isPubSubDomain()) {
             log.info("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
@@ -61,10 +85,6 @@ public class VertxProducer implements Producer {
             log.info("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload());
         }
-
-        onOutboundMessage(message);
-
-        log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
     }
 
     /**
