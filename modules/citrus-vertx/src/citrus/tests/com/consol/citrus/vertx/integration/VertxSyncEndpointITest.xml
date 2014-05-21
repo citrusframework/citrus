@@ -21,11 +21,13 @@
         <message>Test: Send Vert.x message on event bus and receive synchronous reply</message>
       </echo>
 
-      <send endpoint="vertxHelloEndpoint">
+      <send endpoint="vertxHelloEndpoint" fork="true">
         <message type="plaintext">
           <data>Hello from Citrus!</data>
         </message>
       </send>
+
+      <sleep time="2"/>
 
       <receive endpoint="vertxReplyEndpoint">
         <message type="plaintext">
