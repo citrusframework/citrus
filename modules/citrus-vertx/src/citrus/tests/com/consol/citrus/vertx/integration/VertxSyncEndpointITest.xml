@@ -21,22 +21,26 @@
         <message>Test: Send Vert.x message on event bus and receive synchronous reply</message>
       </echo>
 
-      <send endpoint="vertxHelloEndpoint" fork="true">
-        <message type="plaintext">
-          <data>Hello from Citrus!</data>
-        </message>
-      </send>
+      <parallel>
+        <sequential>
+          <sleep time="2"/>
 
-      <sleep time="2"/>
+          <send endpoint="vertxHelloEndpoint">
+            <message type="plaintext">
+              <data>Hello from Citrus!</data>
+            </message>
+          </send>
+        </sequential>
 
-      <receive endpoint="vertxReplyEndpoint">
-        <message type="plaintext">
-          <data>Hello from Citrus!</data>
-        </message>
-        <header>
-          <element name="citrus_vertx_address" value="hello"/>
-        </header>
-      </receive>
+        <receive endpoint="vertxReplyEndpoint">
+          <message type="plaintext">
+            <data>Hello from Citrus!</data>
+          </message>
+          <header>
+            <element name="citrus_vertx_address" value="hello"/>
+          </header>
+        </receive>
+      </parallel>
 
       <send endpoint="vertxReplyEndpoint">
         <message type="plaintext">
