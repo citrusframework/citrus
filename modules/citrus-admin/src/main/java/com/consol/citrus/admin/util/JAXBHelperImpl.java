@@ -16,20 +16,18 @@
 
 package com.consol.citrus.admin.util;
 
-import java.io.*;
-
-import javax.xml.bind.*;
-import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamSource;
-
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.xml.transform.StringResult;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import javax.xml.bind.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
 
 /**
  * {@inheritDoc}
@@ -58,7 +56,6 @@ public class JAXBHelperImpl implements JAXBHelper {
 
     public <T> String marshal(JAXBContext context, T element) {
         StringResult result = new StringResult();
-
         marshal(context, element, result);
 
         return result.toString();

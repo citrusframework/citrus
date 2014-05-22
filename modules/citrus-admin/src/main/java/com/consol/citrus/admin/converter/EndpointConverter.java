@@ -16,11 +16,14 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageSenderItem;
+import com.consol.citrus.admin.model.EndpointData;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageSenderConverter<K> extends ObjectConverter<MessageSenderItem, K> {
+public interface EndpointConverter<K> extends ObjectConverter<EndpointData, K> {
+
+    @Override
+    EndpointData convert(K definition);
 }

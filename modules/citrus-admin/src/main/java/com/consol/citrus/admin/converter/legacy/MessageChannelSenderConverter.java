@@ -14,32 +14,40 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.model.MessageSenderItem;
+import com.consol.citrus.admin.converter.EndpointConverter;
+import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.core.MessageChannelSender;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class MessageChannelSenderConverter implements MessageSenderConverter<MessageChannelSender> {
+@Component
+public class MessageChannelSenderConverter implements EndpointConverter<MessageChannelSender> {
 
     @Override
-    public MessageSenderItem convert(MessageChannelSender messageChannelSender) {
-        MessageSenderItem messageSenderType = new MessageSenderItem();
+    public EndpointData convert(MessageChannelSender messageChannelSender) {
+        EndpointData endpointData = new EndpointData();
 
-        messageSenderType.setName(messageChannelSender.getId());
+        endpointData.setName(messageChannelSender.getId());
 
         if (StringUtils.hasText(messageChannelSender.getChannelName())) {
-            messageSenderType.setDestination(messageChannelSender.getChannelName());
+            endpointData.setDestination(messageChannelSender.getChannelName());
         } else {
-            messageSenderType.setDestination("ref:" + messageChannelSender.getChannel());
+            endpointData.setDestination("ref:" + messageChannelSender.getChannel());
         }
 
-        messageSenderType.setType("SPRING");
+        endpointData.setType("channel-sender");
 
-        return messageSenderType;
+        return endpointData;
+    }
+
+    @Override
+    public Class<MessageChannelSender> getModelClass() {
+        return MessageChannelSender.class;
     }
 }

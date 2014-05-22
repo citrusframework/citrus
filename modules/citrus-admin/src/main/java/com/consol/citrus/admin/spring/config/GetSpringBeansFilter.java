@@ -16,19 +16,15 @@
 
 package com.consol.citrus.admin.spring.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchema;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchema;
+import java.util.*;
 
 /**
  * Filter searches for all Spring bean definitions of specific type in a Spring XML application context. Bean definition type is 
@@ -57,8 +53,7 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
      * Constructor using bean definition type as field.
      */
     public GetSpringBeansFilter(Class<?> type) {
-        XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
-        this.elementName = beanTypeAnnotation.name();
+        this.elementName = type.getAnnotation(XmlRootElement.class).name();
         this.elementNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
     }
 

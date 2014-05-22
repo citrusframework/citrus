@@ -16,30 +16,37 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageReceiverItem;
-import com.consol.citrus.model.config.core.MessageChannelReceiver;
+import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.model.config.core.ChannelEndpoint;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class MessageChannelReceiverConverter implements MessageReceiverConverter<MessageChannelReceiver> {
+@Component
+public class ChannelEndpointConverter implements EndpointConverter<ChannelEndpoint> {
 
     @Override
-    public MessageReceiverItem convert(MessageChannelReceiver definition) {
-        MessageReceiverItem messageReceiverType = new MessageReceiverItem();
+    public EndpointData convert(ChannelEndpoint definition) {
+        EndpointData endpointData = new EndpointData();
 
-        messageReceiverType.setName(definition.getId());
+        endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getChannelName())) {
-            messageReceiverType.setDestination(definition.getChannelName());
+            endpointData.setDestination(definition.getChannelName());
         } else {
-            messageReceiverType.setDestination("ref:" + definition.getChannel());
+            endpointData.setDestination("ref:" + definition.getChannel());
         }
 
-        messageReceiverType.setType("SPRING");
+        endpointData.setType("channel-endpoint");
 
-        return messageReceiverType;
+        return endpointData;
+    }
+
+    @Override
+    public Class<ChannelEndpoint> getModelClass() {
+        return ChannelEndpoint.class;
     }
 }

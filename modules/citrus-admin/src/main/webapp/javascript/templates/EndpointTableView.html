@@ -1,0 +1,26 @@
+<table class="table table-hover table-condensed config-table">
+  <thead>
+  <tr>
+    <th width="80px">Type</th>
+    <th>Id</th>
+    <th>Destination</th>
+    <th width="20px;"></th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#unless matches.length}}
+  <tr><td colspan="4">&nbsp;<i class="icon-remove"></i> No endpoints defined</td></tr>
+  {{/unless}}
+
+  {{#each matches}}
+  <tr class="endpoint" id="{{id}}">
+    <td>{{type}}</td>
+    <td>{{name}}</td>
+    <td style="word-break: break-all;">{{destination}}</td>
+    <td>
+      <a class="btn-endpoint-remove" href="#config" title="Remove endpoint"><i class="icon-remove" style="color: #A50000;"></i></a>&nbsp;
+    </td>
+  </tr>
+  {{/each}}
+  </tbody>
+</table>

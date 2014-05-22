@@ -28,4 +28,10 @@ public interface ObjectConverter<T, S> {
      * @return
      */
     T convert(S definition);
+
+    /**
+     * Gets the model class usually the jaxb model class.
+     * @return
+     */
+    Class<S> getModelClass();
 }

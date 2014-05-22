@@ -14,32 +14,40 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.model.MessageSenderItem;
+import com.consol.citrus.admin.converter.EndpointConverter;
+import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.core.JmsMessageSender;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class JmsMessageSenderConverter implements MessageSenderConverter<JmsMessageSender> {
+@Component
+public class JmsMessageSenderConverter implements EndpointConverter<JmsMessageSender> {
 
     @Override
-    public MessageSenderItem convert(JmsMessageSender jmsMessageSender) {
-        MessageSenderItem messageSenderType = new MessageSenderItem();
+    public EndpointData convert(JmsMessageSender jmsMessageSender) {
+        EndpointData endpointData = new EndpointData();
 
-        messageSenderType.setName(jmsMessageSender.getId());
+        endpointData.setName(jmsMessageSender.getId());
 
         if (StringUtils.hasText(jmsMessageSender.getDestinationName())) {
-            messageSenderType.setDestination(jmsMessageSender.getDestinationName());
+            endpointData.setDestination(jmsMessageSender.getDestinationName());
         } else {
-            messageSenderType.setDestination("ref:" + jmsMessageSender.getDestination());
+            endpointData.setDestination("ref:" + jmsMessageSender.getDestination());
         }
 
-        messageSenderType.setType("JMS");
+        endpointData.setType("jms-sender");
 
-        return messageSenderType;
+        return endpointData;
+    }
+
+    @Override
+    public Class<JmsMessageSender> getModelClass() {
+        return JmsMessageSender.class;
     }
 }

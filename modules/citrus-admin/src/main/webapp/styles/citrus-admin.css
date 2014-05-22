@@ -2,25 +2,29 @@ html, body {
   height: 100%;	
 }
 
-body {
-    background: url('../images/feature-logo-full.png') no-repeat top right;
-}
-
 h1 {
-    font-size: 40.5px;
+    font-size: 40px;
 }
 
 a {
     color: #333333;
+    font-weight: bold;
 }
 
 a:hover {
-    color: #F89406;
+    color: #FBD06E;
     text-decoration: none;
 }
 
 .container-fluid {
     min-width: 1040px;
+}
+
+.content-header {
+    background: url('../images/feature-logo-full.png') no-repeat top right #efefef;
+    border-bottom: 2px solid #aaaaaa;
+    margin-bottom: 20px;
+    padding-top: 15px;
 }
 
 .row-fluid .navigation {
@@ -255,6 +259,11 @@ h2 i, h3 i, h4 i {
 
 .test-progress {
     min-width: 650px;
+}
+
+.test-report-bar {
+    height: 8px;
+    margin-bottom: 8px;
 }
 
 code.template {
@@ -552,6 +561,10 @@ input[readonly], select[readonly], textarea[readonly] {
     background-color: #ffffff;
 }
 
+tr.endpoint {
+    cursor: pointer;
+}
+
 .config-box {
     font-size: 12px;
     width: 295px;
@@ -620,7 +633,7 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .test-variables-panel thead {
-    font-size: 17.5px;
+    font-size: 17px;
 }
 
 .test-variables-panel tbody {

@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchema;
 
 /**
  * Filter searches for a Spring bean definition in a Spring XML application context. Bean definition is identified by its 
@@ -34,7 +35,10 @@ public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
     private String id;
 
     /** Element type name */
-    private String elementName;
+    private final String elementName;
+
+    /** Element namespace to look for */
+    private String elementNamespace;
     
     /** Found bean definition element node */
     private Element beanDefinition;
@@ -43,8 +47,8 @@ public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
      * Constructor using bean definition id as field.
      */
     public GetSpringBeanFilter(String id, Class<?> type) {
-        XmlRootElement beanTypeAnnotation = type.getAnnotation(XmlRootElement.class);
-        this.elementName = beanTypeAnnotation.name();
+        this.elementName = type.getAnnotation(XmlRootElement.class).name();
+        this.elementNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
         this.id = id;
     }
     
@@ -53,7 +57,8 @@ public class GetSpringBeanFilter extends AbstractSpringBeanFilter {
      */
     public short accept(Element element) {
         if (DomUtils.nodeNameEquals(element, elementName) &&
-                (isEqualById(element, id) || isEqualByBeanName(element, id))) {
+            isEqualByNamespace(element, elementNamespace) &&
+            (isEqualById(element, id) || isEqualByBeanName(element, id))) {
             beanDefinition = element;
         }
         

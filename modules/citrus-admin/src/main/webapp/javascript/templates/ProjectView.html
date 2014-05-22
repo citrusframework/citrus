@@ -1,10 +1,86 @@
-<div class="container">
-  <div class="hero-unit">
-    <h1>Citrus Administration</h1>
-    <p>Welcome to the administration user interface for Citrus. What can you do here? You can manage your project configuration, run test cases
-    and verify test results and statistics.</p>
+<div class="container-fluid content-header" style="background-color: #ffffef">
+  <div>
+    <h1><i class="icon-lemon" style="color: #FBD06E;"/> {{name}} <small>Project overview</small></h1>
     <p>
-      <a href="setup" class="btn btn-citrus btn-large">Change project</a>
+      <span>Name:</span> <span><b>{{name}}</b></span>
+      <span>Citrus version:</span> <span><b>{{version}}</b></span>
+      <span>Package:</span> <span><b>{{basePackage}}</b></span>
+      <span>Projecthome:</span> <span><b>{{projectHome}}</b></span>
     </p>
+    <br/>
+
+    {{#if description}}
+    <p>{{description}}</p>
+    {{/if}}
+    {{#unless description}}
+    <p>Welcome to your Citrus project! What can be done here? You can manage the project configuration,
+      run test cases and verify test results and statistics.</p>
+    {{/unless}}
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <h2 style="color: #999999; border-bottom: 1px solid #999999;"><i class="icon-wrench"/> Configuration</h2>
+      <p>Citrus Spring application context configuration:</p>
+      <ul id="config-overview" style="list-style: none; margin: 0 0 10px 5px">
+        <li><i class="icon-book"/> Endpoints</li>
+        <li><i class="icon-book"/> Schema Repository</li>
+        <li><i class="icon-book"/> Global Variables</li>
+        <li><i class="icon-book"/> Functions</li>
+      </ul>
+      <a href="#config" alt="Show configuration page">Show configuration</a>
+    </div>
+    <div class="span4">
+      <h2 style="color: #999999;; border-bottom: 1px solid #999999;"><i class="icon-check-sign"/> Tests</h2>
+      <p>Your project has <b>102</b> test cases! Lately added:</p>
+      <ul id="test-overview" style="list-style: none; margin: 0 0 10px 5px">
+        <li><i class="icon-file-text-alt"/> 01_Sample_Test</li>
+        <li><i class="icon-file-text-alt"/> 02_Foo_Test</li>
+        <li><i class="icon-file-text-alt"/> 03_Bar_Test</li>
+        <li><i class="icon-file-text-alt"/> 04_Citrus_Test</li>
+        <li><i class="icon-file-text-alt"/> 05_Citrus_Test</li>
+      </ul>
+      <a href="#tests" alt="View all tests">View all tests</a>
+    </div>
+    <div class="span3">
+      <h2 style="color: #999999;; border-bottom: 1px solid #999999;"><i class="icon-tasks"/> Latest results</h2>
+      <p>Latest test results from <b>01-01-2014 00:15</b></p>
+      <span>Tests executed: 102</span>
+      <div class="progress progress-info test-report-bar">
+        <div class="bar" style="width: 100%"></div>
+      </div>
+      <span>Success: 75 (75.0%)</span>
+      <div class="progress progress-success test-report-bar">
+        <div class="bar" style="width: 75%"></div>
+      </div>
+      <span>Failed: 25 (25.0%)</span>
+      <div class="progress progress-danger test-report-bar">
+        <div class="bar" style="width: 25%"></div>
+      </div>
+      <span>Skipped: 0 (0.0%)</span>
+      <div class="progress progress-warning test-report-bar">
+        <div class="bar" style="width: 1%"></div>
+      </div>
+      <a href="#stats" alt="Show test reports">Complete results</a>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <h2 style="color: #999999;; border-bottom: 1px solid #999999;"><i class="icon-star-empty"/> Settings</h2>
+      <p>Change basic project settings:</p>
+      <ul id="settings-overview" style="list-style: none; margin: 0 0 10px 5px">
+        <li><b>Name:</b> {{name}}</li>
+        <li><b>Version:</b> {{version}}</li>
+        <li><b>Package:</b> {{basePackage}}</li>
+      </ul>
+      <a href="#project" alt="Edit project settings"><i class="icon-edit"/> Edit settings</a>
+    </div>
+    <div class="span9">
+    </div>
   </div>
 </div>

@@ -16,23 +16,30 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageSenderItem;
-import com.consol.citrus.model.config.http.MessageSender;
+import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.model.config.ws.Client;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class HttpMessageSenderConverter implements MessageSenderConverter<MessageSender> {
+@Component
+public class WebServiceClientConverter implements EndpointConverter<Client> {
 
     @Override
-    public MessageSenderItem convert(MessageSender httpMessageSender) {
-        MessageSenderItem messageSenderType = new MessageSenderItem();
+    public EndpointData convert(Client client) {
+        EndpointData endpointData = new EndpointData();
 
-        messageSenderType.setName(httpMessageSender.getId());
-        messageSenderType.setDestination(httpMessageSender.getRequestUrl());
-        messageSenderType.setType("HTTP");
+        endpointData.setName(client.getId());
+        endpointData.setDestination(client.getRequestUrl());
+        endpointData.setType("soap-client");
 
-        return messageSenderType;
+        return endpointData;
+    }
+
+    @Override
+    public Class<Client> getModelClass() {
+        return Client.class;
     }
 }

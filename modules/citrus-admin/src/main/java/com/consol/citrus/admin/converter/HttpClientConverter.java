@@ -16,11 +16,30 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.model.MessageReceiverItem;
+import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.model.config.http.Client;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface MessageReceiverConverter<K> extends ObjectConverter<MessageReceiverItem, K> {
+@Component
+public class HttpClientConverter implements EndpointConverter<Client> {
+
+    @Override
+    public EndpointData convert(Client client) {
+        EndpointData endpointData = new EndpointData();
+
+        endpointData.setName(client.getId());
+        endpointData.setDestination(client.getRequestUrl());
+        endpointData.setType("http-client");
+
+        return endpointData;
+    }
+
+    @Override
+    public Class<Client> getModelClass() {
+        return Client.class;
+    }
 }

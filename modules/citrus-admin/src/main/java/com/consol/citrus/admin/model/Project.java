@@ -47,11 +47,14 @@ public class Project {
     public Project(String projectHome) {
         try {
             this.projectHome = new File(projectHome).getCanonicalPath();
-            this.version = "1.4";
-            this.name = "citrus-project";
         } catch (IOException e) {
             throw new CitrusAdminRuntimeException("Unable to access project home directory", e);
         }
+
+        this.version = "1.4";
+        this.name = "citrus-project";
+        this.description = "Citrus base integration project holding all internal " +
+                "integration tests for modules citrus-core, citrus-http, citrus-ws, citrus-ssh, citrus-vertx and citrus-mail.";
 
         MavenRunConfiguration mavenRunConfiguration = new MavenRunConfiguration();
         mavenRunConfiguration.setId("Maven");

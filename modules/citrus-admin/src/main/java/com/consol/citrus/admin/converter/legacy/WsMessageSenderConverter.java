@@ -14,25 +14,33 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.model.MessageSenderItem;
+import com.consol.citrus.admin.converter.EndpointConverter;
+import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.ws.MessageSender;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class WsMessageSenderConverter implements MessageSenderConverter<MessageSender> {
+@Component
+public class WsMessageSenderConverter implements EndpointConverter<MessageSender> {
 
     @Override
-    public MessageSenderItem convert(MessageSender wsMessageSender) {
-        MessageSenderItem messageSenderType = new MessageSenderItem();
+    public EndpointData convert(MessageSender wsMessageSender) {
+        EndpointData endpointData = new EndpointData();
 
-        messageSenderType.setName(wsMessageSender.getId());
-        messageSenderType.setDestination(wsMessageSender.getRequestUrl());
-        messageSenderType.setType("SOAP");
+        endpointData.setName(wsMessageSender.getId());
+        endpointData.setDestination(wsMessageSender.getRequestUrl());
+        endpointData.setType("ws-sender");
 
-        return messageSenderType;
+        return endpointData;
+    }
+
+    @Override
+    public Class<MessageSender> getModelClass() {
+        return MessageSender.class;
     }
 }

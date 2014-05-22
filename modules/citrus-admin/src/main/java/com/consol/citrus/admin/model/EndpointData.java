@@ -20,7 +20,7 @@ package com.consol.citrus.admin.model;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class MessageReceiverItem {
+public class EndpointData {
 
     private String type;
     private String name;

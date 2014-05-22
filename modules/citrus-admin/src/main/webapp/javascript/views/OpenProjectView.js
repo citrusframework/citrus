@@ -14,7 +14,7 @@
               $.ajax({
                   url: "project/active",
                   type: 'GET',
-                  dataType: "text",
+                  dataType: "json",
                   success: _.bind(function(response) {
                       this.project = response;
                   }, this),

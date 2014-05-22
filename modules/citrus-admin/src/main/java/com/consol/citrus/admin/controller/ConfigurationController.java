@@ -17,10 +17,9 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.configuration.RunConfiguration;
-import com.consol.citrus.admin.model.MessageReceiverItem;
-import com.consol.citrus.admin.model.MessageSenderItem;
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.*;
+import com.consol.citrus.model.config.core.Schema;
+import com.consol.citrus.model.config.core.SchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -49,12 +48,6 @@ public class ConfigurationController {
 
     @Autowired
     private SchemaRepositoryService schemaRepositoryService;
-
-    @Autowired
-    private MessageSenderService messageSenderService;
-
-    @Autowired
-    private MessageReceiverService messageReceiverService;
 
     @RequestMapping(value = "/run", method = RequestMethod.GET)
     @ResponseBody
@@ -125,66 +118,6 @@ public class ConfigurationController {
     @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteXsdSchema(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value = "/msg-sender", method = {RequestMethod.GET})
-    @ResponseBody
-    public List<MessageSenderItem> listMsgSender() {
-        return messageSenderService.listMessageSender(projectService.getProjectContextConfigFile());
-    }
-
-    @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.GET})
-    @ResponseBody
-    public MessageSenderItem getMsgSender(@PathVariable("id") String id) {
-        return messageSenderService.getMessageSender(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value="/msg-sender", method = {RequestMethod.POST})
-    @ResponseBody
-    public void createMsgSender(@RequestBody MessageSenderItem msgSender) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), msgSender);
-    }
-
-    @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.PUT})
-    @ResponseBody
-    public void updateMsgSender(@PathVariable("id") String id, @RequestBody MessageSenderItem msgSender) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, msgSender);
-    }
-
-    @RequestMapping(value = "/msg-sender/{id}", method = {RequestMethod.DELETE})
-    @ResponseBody
-    public void deleteMsgSender(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value = "/msg-receiver", method = {RequestMethod.GET})
-    @ResponseBody
-    public List<MessageReceiverItem> listMsgReceiver() {
-        return messageReceiverService.listMessageReceiver(projectService.getProjectContextConfigFile());
-    }
-
-    @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.GET})
-    @ResponseBody
-    public MessageReceiverItem getMsgReceiver(@PathVariable("id") String id) {
-        return messageReceiverService.getMessageReceiver(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value="/msg-receiver", method = {RequestMethod.POST})
-    @ResponseBody
-    public void createMsgReceiver(@RequestBody MessageReceiverItem msgReceiver) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), msgReceiver);
-    }
-
-    @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.PUT})
-    @ResponseBody
-    public void updateMsgReceiver(@PathVariable("id") String id, @RequestBody MessageReceiverItem msgReceiver) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, msgReceiver);
-    }
-
-    @RequestMapping(value = "/msg-receiver/{id}", method = {RequestMethod.DELETE})
-    @ResponseBody
-    public void deleteMsgReceiver(@PathVariable("id") String id) {
         springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 }

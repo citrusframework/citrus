@@ -1,21 +1,37 @@
 (function () {
-    define(["TemplateManager", "views/SchemaDefinitionView", "views/MsgSenderAndReceiverView"], function (TemplateManager, SchemaDefinitionView, MsgSenderAndReceiverView) {
+    define(["TemplateManager", "views/SchemaDefinitionView", "views/EndpointListView"], function (TemplateManager, SchemaDefinitionView, EndpointListView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
+                {
+                    active: true,
+                    idSuffix: "endpoints",
+                    displayName: "Endpoints",
+                    view: EndpointListView
+                },
                 {
                     idSuffix: "schema-definitions",
                     displayName: "Schema Definitions",
                     view: SchemaDefinitionView
                 },
                 {
-                    active: true,
-                    idSuffix: "sender-receiver",
-                    displayName: "Message Sender/Receiver",
-                    view: MsgSenderAndReceiverView
+                    idSuffix: "functions",
+                    displayName: "Functions"
                 },
                 {
-                    idSuffix: "servers",
-                    displayName: "Servers"
+                    idSuffix: "validation-matcher",
+                    displayName: "Validation Matcher"
+                },
+                {
+                    idSuffix: "data-dictionaries",
+                    displayName: "Data Dictionaries"
+                },
+                {
+                    idSuffix: "namespace-context",
+                    displayName: "Namespace Context"
+                },
+                {
+                    idSuffix: "message-validators",
+                    displayName: "Message Validators"
                 },
                 {
                     idSuffix: "global-variables",
