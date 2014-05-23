@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  * @since 1.3.1
  */
 @Component
-public class ChannelEndpointConverter implements EndpointConverter<ChannelEndpoint> {
+public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelEndpoint> {
 
     @Override
     public EndpointData convert(ChannelEndpoint definition) {
@@ -39,6 +39,12 @@ public class ChannelEndpointConverter implements EndpointConverter<ChannelEndpoi
         } else {
             endpointData.add("channel", definition.getChannel());
         }
+
+        add("messageChannelTemplate", endpointData, definition);
+        add("messagingTemplate", endpointData, definition);
+        add("channelResolver", endpointData, definition);
+
+        addEndpointProperties(endpointData, definition);
 
         return endpointData;
     }

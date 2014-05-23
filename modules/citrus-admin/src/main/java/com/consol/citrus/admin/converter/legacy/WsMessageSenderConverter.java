@@ -16,8 +16,9 @@
 
 package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.converter.EndpointConverter;
+import com.consol.citrus.admin.converter.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.ws.MessageSender;
 import org.springframework.stereotype.Component;
 
@@ -26,14 +27,24 @@ import org.springframework.stereotype.Component;
  * @since 1.3.1
  */
 @Component
-public class WsMessageSenderConverter implements EndpointConverter<MessageSender> {
+public class WsMessageSenderConverter extends AbstractEndpointConverter<MessageSender> {
 
     @Override
-    public EndpointData convert(MessageSender wsMessageSender) {
+    public EndpointData convert(MessageSender definition) {
         EndpointData endpointData = new EndpointData("ws-sender");
 
-        endpointData.setName(wsMessageSender.getId());
-        endpointData.add("request-url", wsMessageSender.getRequestUrl());
+        endpointData.setName(definition.getId());
+        add("requestUrl", endpointData, definition);
+        add("webServiceTemplate", endpointData, definition);
+        add("messageFactory", endpointData, definition);
+        add("messageSender", endpointData, definition);
+        add("messageSenders", endpointData, definition);
+        add("interceptors", endpointData, definition);
+        add("endpointResolver", endpointData, definition);
+        add("addressingHeaders", endpointData, definition);
+        add("faultStrategy", endpointData, definition, ErrorHandlingStrategy.THROWS_EXCEPTION.name());
+
+        addEndpointProperties(endpointData, definition);
 
         return endpointData;
     }

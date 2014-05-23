@@ -25,15 +25,25 @@ import org.springframework.stereotype.Component;
  * @since 1.4.1
  */
 @Component
-public class SshClientConverter implements EndpointConverter<Client> {
+public class SshClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
         EndpointData endpointData = new EndpointData("ssh-client");
 
         endpointData.setName(client.getId());
-        endpointData.add("host", client.getHost());
-        endpointData.add("port", client.getPort());
+        add("host", endpointData, client, "localhost");
+        add("port", endpointData, client, "2222");
+        add("user", endpointData, client);
+        add("password", endpointData, client);
+        add("strictHostChecking", endpointData, client, "false");
+        add("knownHostsPath", endpointData, client);
+        add("commandTimeout", endpointData, client);
+        add("connectionTimeout", endpointData, client);
+        add("messageCorrelator", endpointData, client);
+        add("pollingInterval", endpointData, client, "500");
+
+        addEndpointProperties(endpointData, client);
 
         return endpointData;
     }

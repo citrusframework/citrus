@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.ws.Client;
 import org.springframework.stereotype.Component;
 
@@ -25,14 +26,26 @@ import org.springframework.stereotype.Component;
  * @since 1.3.1
  */
 @Component
-public class WebServiceClientConverter implements EndpointConverter<Client> {
+public class WebServiceClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
         EndpointData endpointData = new EndpointData("soap-client");
 
         endpointData.setName(client.getId());
-        endpointData.add("request-url", client.getRequestUrl());
+        add("requestUrl", endpointData, client);
+        add("webServiceTemplate", endpointData, client);
+        add("messageFactory", endpointData, client);
+        add("messageSender", endpointData, client);
+        add("messageSenders", endpointData, client);
+        add("messageCorrelator", endpointData, client);
+        add("interceptors", endpointData, client);
+        add("endpointResolver", endpointData, client);
+        add("addressingHeaders", endpointData, client);
+        add("faultStrategy", endpointData, client, ErrorHandlingStrategy.THROWS_EXCEPTION.name());
+        add("pollingInterval", endpointData, client);
+
+        addEndpointProperties(endpointData, client);
 
         return endpointData;
     }

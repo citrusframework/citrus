@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.converter.EndpointConverter;
+import com.consol.citrus.admin.converter.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.core.MessageChannelSender;
 import org.springframework.stereotype.Component;
@@ -27,20 +27,25 @@ import org.springframework.util.StringUtils;
  * @since 1.3.1
  */
 @Component
-public class MessageChannelSenderConverter implements EndpointConverter<MessageChannelSender> {
+public class MessageChannelSenderConverter extends AbstractEndpointConverter<MessageChannelSender> {
 
     @Override
-    public EndpointData convert(MessageChannelSender messageChannelSender) {
+    public EndpointData convert(MessageChannelSender definition) {
         EndpointData endpointData = new EndpointData("channel-sender");
 
-        endpointData.setName(messageChannelSender.getId());
+        endpointData.setName(definition.getId());
 
-        if (StringUtils.hasText(messageChannelSender.getChannelName())) {
-            endpointData.add("channel-name", messageChannelSender.getChannelName());
+        if (StringUtils.hasText(definition.getChannelName())) {
+            endpointData.add("channel-name", definition.getChannelName());
         } else {
-            endpointData.add("channel", messageChannelSender.getChannel());
+            endpointData.add("channel", definition.getChannel());
         }
 
+        add("messageChannelTemplate", endpointData, definition);
+        add("messagingTemplate", endpointData, definition);
+        add("channelResolver", endpointData, definition);
+
+        addEndpointProperties(endpointData, definition);
 
         return endpointData;
     }

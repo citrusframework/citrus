@@ -17,7 +17,9 @@
 package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.http.Client;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,14 +27,25 @@ import org.springframework.stereotype.Component;
  * @since 1.3.1
  */
 @Component
-public class HttpClientConverter implements EndpointConverter<Client> {
+public class HttpClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
         EndpointData endpointData = new EndpointData("http-client");
 
         endpointData.setName(client.getId());
-        endpointData.add("request-url", client.getRequestUrl());
+        add("requestUrl", endpointData, client);
+        add("requestMethod", endpointData, client, HttpMethod.POST.name());
+        add("errorStrategy", endpointData, client, ErrorHandlingStrategy.PROPAGATE.getName());
+        add("pollingInterval", endpointData, client, "500");
+        add("messageCorrelator", endpointData, client);
+        add("requestFactory", endpointData, client);
+        add("restTemplate", endpointData, client);
+        add("charset", endpointData, client);
+        add("contentType", endpointData, client);
+        add("interceptors", endpointData, client);
+
+        addEndpointProperties(endpointData, client);
 
         return endpointData;
     }

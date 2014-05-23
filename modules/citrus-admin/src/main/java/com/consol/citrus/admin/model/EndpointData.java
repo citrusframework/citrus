@@ -16,18 +16,19 @@
 
 package com.consol.citrus.admin.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
+ * Basic endpoint value object holds name, type and all endpoint configuration properties.
+ *
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4.1
  */
 public class EndpointData {
 
     private final String type;
     private String name;
-    private Map<String, Object> configuration = new HashMap<String, Object>();
+    private Map<String, Object> configuration = new LinkedHashMap<String, Object>();
 
     /**
      * Constructor using endpoint type field.

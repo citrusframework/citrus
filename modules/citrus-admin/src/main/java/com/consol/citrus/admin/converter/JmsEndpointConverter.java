@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
  * @since 1.3.1
  */
 @Component
-public class JmsEndpointConverter implements EndpointConverter<JmsEndpoint> {
+public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint> {
 
     @Override
     public EndpointData convert(JmsEndpoint definition) {
@@ -19,10 +19,16 @@ public class JmsEndpointConverter implements EndpointConverter<JmsEndpoint> {
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add("destination-name", definition.getDestinationName());
+            endpointData.add("destination", definition.getDestinationName());
         } else {
             endpointData.add("destination", definition.getDestination());
         }
+
+        add("connectionFactory", endpointData, definition);
+        add("jmsTemplate", endpointData, definition);
+        add("pubSubDomain", endpointData, definition, "false");
+
+        addEndpointProperties(endpointData, definition);
 
         return endpointData;
     }

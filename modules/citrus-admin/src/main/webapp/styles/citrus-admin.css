@@ -916,3 +916,22 @@ ul.xsd-schema-list {
   border: none;
 }
 
+ul.properties {
+  margin: 0 0 10px 0px;
+}
+
+ul.properties li {
+  display: none;
+  list-style: none;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+ul.properties li:first-child {
+  display: block;
+}
+
+tr.endpoint:hover ul.properties li {
+  display: block;
+}
+

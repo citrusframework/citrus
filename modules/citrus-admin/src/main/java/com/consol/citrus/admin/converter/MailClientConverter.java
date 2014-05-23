@@ -18,6 +18,7 @@ package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.mail.Client;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,15 +26,21 @@ import org.springframework.stereotype.Component;
  * @since 1.4.1
  */
 @Component
-public class MailClientConverter implements EndpointConverter<Client> {
+public class MailClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
         EndpointData endpointData = new EndpointData("mail-client");
 
         endpointData.setName(client.getId());
-        endpointData.add("host", client.getHost());
-        endpointData.add("port", client.getPort());
+        add("host", endpointData, client);
+        add("port", endpointData, client, "25");
+        add("protocol", endpointData, client, JavaMailSenderImpl.DEFAULT_PROTOCOL);
+        add("username", endpointData, client);
+        add("password", endpointData, client);
+        add("properties", endpointData, client);
+
+        addEndpointProperties(endpointData, client);
 
         return endpointData;
     }
