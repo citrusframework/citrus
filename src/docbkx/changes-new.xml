@@ -99,6 +99,22 @@
       validation when using SOAP over HTTP. Read more about it in <xref linkend="soap-webservices"/></para>
   </section>
 
+  <section id="new-1-4-vertx">
+    <title>Vert.x integration</title>
+
+    <para>Vert.x is a very powerful application platform that provides scalable messaging for several message transports such as HTTP, WebSockets, TCP and more. Vert.x also has a
+      distributed event bus that connects multiple Vert.x instances across the network. With Citrus 1.4 the Vert.x platform is integrated with Citrus event bus endpoints. So you can participate
+      in communicating to the Vert.x event bus from Citrus test case. This enables you to add automated integration tests to the Vert.x platform. Read about that in <xref linkend="vertx"/>.</para>
+  </section>
+
+  <section id="new-1-4-dynamic-endpoints">
+    <title>Dynamic endpoint components</title>
+
+    <para>Endpoints represent the base component in Citrus for sending and receiving messages. The endpoint usually is defined inside the Citrus Spring application context as Spring bean component. Now
+      it is also possible to create dynamic endpoint definitions at test runtime. This comes in very handy when you just want to send or receive a message with Citrus as is. You do not need
+      to add the complete endpoint configuration but only use a special endpoint uri pattern. Citrus will create the endpoint at runtime automatically. Learn how to use the dynamic endpoint pattern in <xref linkend="endpoint-components"/>.</para>
+  </section>
+
   <section id="new-1-4-bugfixes">
     <title>Bugfixes</title>
 

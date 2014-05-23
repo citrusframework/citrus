@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="mail">
+<chapter id="vertx">
   <title>Vert.x event bus support</title>
 
   <para>Vert.x is an application platform for the JVM that provides a network event bus for lightweight scalable messaging solutions. The Citrus Vert.x components
@@ -145,7 +145,7 @@
   </section>
 
   <section id="vertx-instance-factory">
-    <title>Vertx instance factory</title>
+    <title>Vert.x instance factory</title>
 
     <para>Citrus starts an embedded Vert.x instance at runtime in order to participate in the Vert.x cluster. Within this cluster multiple Vert.x instances are connected via the event bus. For
     starting the Vert.x event bus Citrus uses a cluster hostname and port definition. You can customize this cluster host in order to connect to a very special cluster in your network.</para>
