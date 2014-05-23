@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     {{#unless matches.length}}
-    <tr><td colspan="3">&nbsp;<i class="icon-remove"></i> No schema repository found</td></tr>
+    <tr><td colspan="3">&nbsp;<i class="fa fa-remove"></i> No schema repository found</td></tr>
     {{/unless}}
 
     {{#each matches}}
@@ -17,13 +17,13 @@
       <td>
       <ul class="xsd-schema-list">
       {{#each schemas.revesAndSchemas}}
-        <li><i class="icon-file-text-alt"></i>&nbsp;{{schema}}{{id}}</li>
+        <li><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>
       {{/each}}
       </ul>
       </td>
       <td>
-        <a class="edit-config-schema-repository" href="#config" title="Edit XSD Schema"><i class="icon-pencil"></i></a>&nbsp;
-        <a class="del-config-schema-repository" href="#config" title="Remove XSD Schema"><i class="icon-trash"></i></a>&nbsp;
+        <a class="edit-config-schema-repository" href="#config" title="Edit XSD Schema"><i class="fa fa-pencil"></i></a>&nbsp;
+        <a class="del-config-schema-repository" href="#config" title="Remove XSD Schema"><i class="fa fa-trash"></i></a>&nbsp;
       </td>
     </tr>
     {{/each}}

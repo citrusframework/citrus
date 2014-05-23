@@ -512,7 +512,7 @@ span.message-outbound {
     border: 1px solid #cccccc;
 }
 
-.footer-task-bar i.icon-stop {
+.footer-task-bar i.fa-stop {
     color: #F4645C;
 }
 
@@ -761,11 +761,11 @@ td.test-variable {
     font-size: 20px;
 }
 
-.start-action i.icon-play {
+.start-action i.fa-play {
     color: #5ab15a;
 }
 
-.stop-action i.icon-stop {
+.stop-action i.fa-stop {
     color: #F4645C;
 }
 

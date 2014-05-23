@@ -47,7 +47,7 @@
                     if ("PROCESS_START" == jsMessage.event) {
                         this.createOrShowTab(processId, idHash);
 
-                        $('div#footer-tab-content-' + idHash).find('div.footer-task-bar').children('i.icon-stop').removeClass('disabled');
+                        $('div#footer-tab-content-' + idHash).find('div.footer-task-bar').children('i.fa-stop').removeClass('disabled');
 
                         if ($('#footer').hasClass('minimized')) {
                             this.minimize(); // auto open footer task bar
@@ -55,7 +55,7 @@
 
                         $(logId).append(msg);
                     } else if ("PROCESS_SUCCESS" == jsMessage.event || "PROCESS_FAILED" == jsMessage.event) {
-                        $('div#footer-tab-content-' + idHash).find('div.footer-task-bar').children('i.icon-stop').addClass('disabled');
+                        $('div#footer-tab-content-' + idHash).find('div.footer-task-bar').children('i.fa-stop').addClass('disabled');
                         $(logId).append(msg);
                     } else if ("LOG_MESSAGE" == jsMessage.event) {
                         $(logId).append(msg);
@@ -137,8 +137,8 @@
                         $('.footer-task-bar').removeClass('minimized');
                         $('pre.logger').removeClass('minimized');
 
-                        $('i#footer-minimize').addClass('icon-chevron-down');
-                        $('i#footer-minimize').removeClass('icon-chevron-up');
+                        $('i#footer-minimize').addClass('fa-chevron-down');
+                        $('i#footer-minimize').removeClass('fa-chevron-up');
 
                         $('#footer').show('slide', {direction: 'down'}, 300);
                     });
@@ -149,8 +149,8 @@
                         $('.footer-task-bar').removeClass('maximized');
                         $('pre.logger').removeClass('maximized');
 
-                        $('i#footer-minimize').removeClass('icon-chevron-down');
-                        $('i#footer-minimize').addClass('icon-chevron-up');
+                        $('i#footer-minimize').removeClass('fa-chevron-down');
+                        $('i#footer-minimize').addClass('fa-chevron-up');
 
                         $('#footer').addClass('minimized');
                         $('.footer-tab').addClass('minimized');

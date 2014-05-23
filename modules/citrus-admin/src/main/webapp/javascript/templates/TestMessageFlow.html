@@ -8,15 +8,15 @@
     </thead>
     <tbody>
     {{#unless messages.length}}
-    <tr class="no-results"><td colspan="3">&nbsp;<i class="icon-remove"></i> No message activity yet</td></tr>
+    <tr class="no-results"><td colspan="3">&nbsp;<i class="fa fa-remove"></i> No message activity yet</td></tr>
     {{/unless}}
 
     {{#each messages}}
     <tr id="{{id}}" class="show-message-data">
         <td><span>{{dateFormat timestamp format="MMM DD HH:mm:ss.SSS"}}</span></td>
         <td>
-            {{#if_eq type compare='INBOUND_MESSAGE'}}<span class="label message-inbound"><i class="icon-envelope"></i><i class="icon-signin"></i></span>{{/if_eq}}
-            {{#if_eq type compare='OUTBOUND_MESSAGE'}}<span class="label message-outbound"><i class="icon-signout"></i><i class="icon-envelope"></i></span>{{/if_eq}}
+            {{#if_eq type compare='INBOUND_MESSAGE'}}<span class="label message-inbound"><i class="fa fa-envelope"></i><i class="fa fa-arrow-left"></i></span>{{/if_eq}}
+            {{#if_eq type compare='OUTBOUND_MESSAGE'}}<span class="label message-outbound"><i class="fa fa-arrow-right"></i><i class="fa fa-envelope"></i></span>{{/if_eq}}
         </td>
         <td><span class="message-data">{{truncate data length=150}}</span></td>
     </tr>
