@@ -24,11 +24,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
@@ -66,6 +70,23 @@ public class ProjectService implements InitializingBean {
      */
     public File getProjectContextConfigFile() {
         return fileHelper.findFileInPath(new File(project.getProjectHome()), CitrusConstants.DEFAULT_APPLICATION_CONTEXT, true);
+    }
+
+    /**
+     * Reads default Citrus project property file for active project.
+     * @return properties loaded or empty properties if nothing is found
+     */
+    public Properties getProjectProperties() {
+        String defaultPropertyFilePath = getActiveProject().getProjectHome() + "/src/citrus/resources/citrus.properties";
+        FileSystemResource defaultPropertyFile = new FileSystemResource(defaultPropertyFilePath);
+
+        try {
+            return PropertiesLoaderUtils.loadProperties(defaultPropertyFile);
+        } catch (IOException e) {
+            log.warn(String. format("Unable to read default Citrus project properties from file resource '%s'", defaultPropertyFilePath));
+        }
+
+        return new Properties();
     }
 
     /**

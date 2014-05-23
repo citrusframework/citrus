@@ -35,7 +35,7 @@ public class JmsMessageReceiverConverter extends AbstractEndpointConverter<JmsMe
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add("destination", definition.getDestinationName());
+            endpointData.add("destination", resolvePropertyExpression(definition.getDestinationName()));
         } else {
             endpointData.add("destination", definition.getDestination());
         }

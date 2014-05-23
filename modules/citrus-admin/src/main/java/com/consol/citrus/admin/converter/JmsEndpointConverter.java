@@ -19,7 +19,7 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint>
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add("destination", definition.getDestinationName());
+            endpointData.add("destination", resolvePropertyExpression(definition.getDestinationName()));
         } else {
             endpointData.add("destination", definition.getDestination());
         }

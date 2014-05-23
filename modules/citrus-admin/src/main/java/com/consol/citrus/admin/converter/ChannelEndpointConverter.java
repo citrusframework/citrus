@@ -35,7 +35,7 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getChannelName())) {
-            endpointData.add("channel-name", definition.getChannelName());
+            endpointData.add("channel-name", resolvePropertyExpression(definition.getChannelName()));
         } else {
             endpointData.add("channel", definition.getChannel());
         }

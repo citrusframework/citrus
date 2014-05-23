@@ -16,12 +16,12 @@
 
 package com.consol.citrus.variable;
 
-import javax.script.*;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchVariableException;
+
+import javax.script.*;
 
 /**
  * Utility class manipulating test variables.
@@ -59,7 +59,7 @@ public final class VariableUtils {
     
     /**
      * Cut off variables prefix
-     * @param key
+     * @param variable
      * @return
      */
     public static String cutOffVariablesPrefix(String variable) {

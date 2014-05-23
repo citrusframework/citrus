@@ -17,6 +17,9 @@
 package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.admin.service.ProjectService;
+import com.consol.citrus.variable.VariableUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -24,10 +27,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
+ * Abstract endpoint converter provides basic endpoint property handling by Java reflection on JAXb objects.
+ *
  * @author Christoph Deppisch
  * @since 1.4.1
  */
 public abstract class AbstractEndpointConverter<T> implements EndpointConverter<T> {
+
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * Adds basic endpoint properties using reflection on definition objects.
@@ -59,11 +67,24 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
 
             if (value != null) {
                 if (field.isAnnotationPresent(XmlAttribute.class)) {
-                    endpointData.add(field.getAnnotation(XmlAttribute.class).name(), value);
+                    endpointData.add(field.getAnnotation(XmlAttribute.class).name(), resolvePropertyExpression(value));
                 } else {
-                    endpointData.add(fieldName, value);
+                    endpointData.add(fieldName, resolvePropertyExpression(value));
                 }
             }
+        }
+    }
+
+    /**
+     * Resolves property value with project properties in case value is a property expression.
+     * @param value
+     * @return
+     */
+    protected String resolvePropertyExpression(String value) {
+        if (VariableUtils.isVariableName(value)) {
+            return projectService.getProjectProperties().getProperty(VariableUtils.cutOffVariablesPrefix(value));
+        } else {
+            return value;
         }
     }
 
