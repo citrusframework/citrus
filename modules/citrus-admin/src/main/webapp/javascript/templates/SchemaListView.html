@@ -1,0 +1,79 @@
+<div>
+    <h3>
+      <span class="header-badge"><i class="fa fa-file-code-o"></i> Schema-Repositories</span>
+      <div class="pull-right">
+        <a id="btn-repository-new" class="btn" type="button" title="Add repository"><i class="fa fa-plus"></i> Add</a>
+      </div>
+    </h3>
+
+    <table class="table table-hover table-condensed config-table">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Schemas</th>
+        <th width="20px;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#unless repositories.length}}
+      <tr><td colspan="3">&nbsp;<i class="fa fa-times"></i> No schema repository found</td></tr>
+      {{/unless}}
+
+      {{#each repositories}}
+      <tr class="schema clickable" id="{{id}}">
+        <td>{{id}}</td>
+        <td>
+          <ul class="xsd-schema-list">
+            {{#each schemas.revesAndSchemas}}
+            <li><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>
+            {{/each}}
+          </ul>
+        </td>
+        <td>
+          <a class="btn-repository-remove" href="#config" title="Remove repository"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+    </table>
+
+    <h3>
+      <span class="header-badge"><i class="fa fa-file-code-o"></i> Schemas</span>
+      <div class="pull-right">
+        <a id="btn-schema-new" class="btn" type="button" title="Add schema"><i class="fa fa-plus"></i> Add</a>
+      </div>
+    </h3>
+
+    <table class="table table-hover table-condensed config-table">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Location</th>
+        <th width="20px;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#unless schemas.length}}
+      <tr><td colspan="3">&nbsp;<i class="fa fa-times"></i> No xsd schemas found</td></tr>
+      {{/unless}}
+
+      {{#each schemas}}
+      <tr class="repository clickable" id="{{id}}">
+        <td>{{id}}</td>
+        <td>{{location}}</td>
+        <td>
+          <a class="btn-schema-remove" href="#config" title="Remove xsd schema"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+      <tfoot>
+      <tr><td colspan="3">&nbsp;</td></tr>
+      </tfoot>
+    </table>
+
+</div>
+
+<div id="schema-edit-dialog"></div>
+<div id="repository-edit-dialog"></div>
+

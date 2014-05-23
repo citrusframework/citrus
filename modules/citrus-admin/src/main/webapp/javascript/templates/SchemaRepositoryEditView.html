@@ -8,7 +8,7 @@
         {{/if}}
     </div>
 
-    <div id="form-edit-config-schema-repository" class="modal-body">
+    <div id="repository-edit-form" class="modal-body">
         <form class="form-horizontal">
             {{#if schemaRepository.id}}
             <input name="id" type="hidden" value="{{schemaRepository.id}}"/>
@@ -42,7 +42,7 @@
                         </ul>
                       </div>
                       <input name="schema-ref" placeholder="Select schema" class="span10" readonly="readonly" type="text"/>
-                      <a href="#config" id="btn-add-config-xsd-schema-ref" class="btn"><i class="fa fa-plus"></i></a>
+                      <a href="#config" id="btn-schema-reference-add" class="btn"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
             </div>
@@ -59,10 +59,10 @@
 
     <div class="modal-footer">
         {{#if schemaRepository.id}}
-        <a href="#config" id="btn-update-config-schema-repository" class="btn btn-citrus">Save</a>
+        <a href="#config" id="btn-repository-update" class="btn btn-citrus">Save</a>
         {{else}}
-        <a href="#config" id="btn-save-config-schema-repository" class="btn btn-citrus">Save</a>
+        <a href="#config" id="btn-repository-save" class="btn btn-citrus">Save</a>
         {{/if}}
-        <a href="#config" id="btn-cancel-config-schema-repository" class="btn">Close</a>
+        <a href="#config" id="btn-repository-cancel" class="btn">Close</a>
     </div>
 </div>

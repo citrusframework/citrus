@@ -13,19 +13,15 @@
             },
 
             initialize: function () {
+                this.getEndpoints();
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('EndpointListView'));
+                $(this.el).html(TemplateManager.template('EndpointListView', {endpoints: this.endpoints}));
                 return this;
             },
 
             afterRender: function () {
-                this.reload();
-            },
-
-            reload: function() {
-                this.getEndpoints();
             },
 
             getEndpoints: function () {
@@ -35,9 +31,8 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         this.endpoints = response;
-                        $("#endpoints").html(TemplateManager.template('EndpointTableView', {matches: this.endpoints}));
                     }, this),
-                    async: true
+                    async: false
                 });
             },
 
@@ -50,7 +45,7 @@
                     url: url,
                     type: 'DELETE',
                     success: _.bind(function (response) {
-                        this.reload();
+                        this.render();
                     }, this),
                     async: true
                 });
@@ -92,7 +87,7 @@
                     contentType: "application/json",
                     data: JSON.stringify(serializedForm),
                     success: _.bind(function (response) {
-                        this.reload();
+                        this.render();
                     }, this),
                     async: true
                 });
@@ -120,7 +115,7 @@
                     contentType: "application/json",
                     data: JSON.stringify(serializedForm),
                     success: _.bind(function (response) {
-                        this.reload();
+                        this.render();
                     }, this),
                     async: true
                 });

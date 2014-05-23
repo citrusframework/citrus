@@ -1,11 +1,43 @@
 <div>
     <h3>
-      <span>Endpoints</span>
+      <span class="header-badge"><i class="fa fa-share-alt-square"></i> Endpoints</span>
       <div class="pull-right">
         <a id="btn-endpoint-new" class="btn" type="button" title="Add endpoint"><i class="fa fa-plus"></i> Add</a>
       </div>
     </h3>
-    <div id="endpoints"></div>
+
+    <table class="table table-hover table-condensed config-table">
+      <thead>
+      <tr>
+        <th width="80px">Type</th>
+        <th>Id</th>
+        <th>Configuration</th>
+        <th width="20px;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#unless endpoints.length}}
+      <tr><td colspan="4">&nbsp;<i class="fa fa-times"></i> No endpoints defined</td></tr>
+      {{/unless}}
+
+      {{#each endpoints}}
+      <tr class="endpoint clickable" id="{{id}}">
+        <td>{{type}}</td>
+        <td>{{name}}</td>
+        <td>
+          <ul class="properties">
+            {{#each configuration}}
+            <li><b>{{@key}}</b>:{{this}}</li>
+            {{/each}}
+          </ul>
+        </td>
+        <td>
+          <a class="btn-endpoint-remove" href="#config" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+    </table>
 </div>
 
 <div id="endpoint-edit-dialog"></div>

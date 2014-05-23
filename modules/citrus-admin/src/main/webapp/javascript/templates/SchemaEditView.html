@@ -8,7 +8,7 @@
         {{/if}}
     </div>
 
-    <div id="form-edit-config-xsd-schema" class="modal-body">
+    <div id="schema-edit-form" class="modal-body">
         <form class="form-horizontal">
             {{#if schema.id}}
             <input name="id" type="hidden" value="{{schema.id}}"/>
@@ -38,10 +38,10 @@
 
     <div class="modal-footer">
         {{#if schema.id}}
-        <a href="#config" id="btn-update-config-xsd-schema" class="btn btn-citrus">Save</a>
+        <a href="#config" id="btn-schema-update" class="btn btn-citrus">Save</a>
         {{else}}
-        <a href="#config" id="btn-save-config-xsd-schema" class="btn btn-citrus">Save</a>
+        <a href="#config" id="btn-schema-save" class="btn btn-citrus">Save</a>
         {{/if}}
-        <a href="#config" id="btn-cancel-config-xsd-schema" class="btn">Close</a>
+        <a href="#config" id="btn-schema-cancel" class="btn">Close</a>
     </div>
 </div>

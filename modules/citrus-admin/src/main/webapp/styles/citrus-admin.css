@@ -6,9 +6,25 @@ h1 {
     font-size: 40px;
 }
 
+h2.header-badge, span.header-badge {
+    color: #333333;
+    border: 1px solid #333333;
+    background-color: #efefef;
+    border-radius: 10px;
+    padding-left: 15px;
+}
+
+h2.header-badge i, span.header-badge i {
+    color: #333333;
+}
+
+span.header-badge {
+    display: inline-block;
+    min-width: 500px;
+}
+
 a {
     color: #333333;
-    font-weight: bold;
 }
 
 a:hover {
@@ -559,10 +575,6 @@ span.message-outbound {
 input[readonly], select[readonly], textarea[readonly] {
     cursor: default;
     background-color: #ffffff;
-}
-
-tr.endpoint {
-    cursor: pointer;
 }
 
 .config-box {

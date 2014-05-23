@@ -19,7 +19,7 @@ define(["TemplateManager", "AppRouter", "WebSocketHolder"], function (TemplateMa
                 "ConfigView",
                 "SchemaEditView",
                 "SchemaTableView",
-                "SchemaDefinitionView",
+                "SchemaListView",
                 "FooterView",
                 "HeaderView",
                 "LoggerView",

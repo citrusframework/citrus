@@ -1,5 +1,5 @@
 (function () {
-    define(["TemplateManager", "views/SchemaDefinitionView", "views/EndpointListView"], function (TemplateManager, SchemaDefinitionView, EndpointListView) {
+    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView"], function (TemplateManager, SchemaListView, EndpointListView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
@@ -9,9 +9,9 @@
                     view: EndpointListView
                 },
                 {
-                    idSuffix: "schema-definitions",
-                    displayName: "Schema Definitions",
-                    view: SchemaDefinitionView
+                    idSuffix: "xsd-schemas",
+                    displayName: "XSD Schemas",
+                    view: SchemaListView
                 },
                 {
                     idSuffix: "functions",

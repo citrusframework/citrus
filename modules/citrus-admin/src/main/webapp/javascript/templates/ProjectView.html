@@ -1,11 +1,11 @@
-<div class="container-fluid content-header" style="background-color: #ffffef">
+<div class="container-fluid content-header">
   <div>
     <h1><i class="fa fa-lemon-o" style="color: #FBD06E;"/> {{name}} <small>Project overview</small></h1>
     <p>
+      <span>Projecthome:</span> <span><b>{{projectHome}}</b></span>
       <span>Name:</span> <span><b>{{name}}</b></span>
       <span>Citrus version:</span> <span><b>{{version}}</b></span>
       <span>Package:</span> <span><b>{{basePackage}}</b></span>
-      <span>Projecthome:</span> <span><b>{{projectHome}}</b></span>
     </p>
     <br/>
 
@@ -22,7 +22,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3">
-      <h2 style="color: #999999; border-bottom: 1px solid #999999;"><i class="fa fa-wrench"/> Configuration</h2>
+      <h2 class="header-badge"><i class="fa fa-wrench"/> Configuration</h2>
       <p>Citrus Spring application context configuration:</p>
       <ul id="config-overview" style="list-style: none; margin: 0 0 10px 5px">
         <li><i class="fa fa-book"/> Endpoints</li>
@@ -33,7 +33,7 @@
       <a href="#config" alt="Show configuration page">Show configuration</a>
     </div>
     <div class="span4">
-      <h2 style="color: #999999;; border-bottom: 1px solid #999999;"><i class="fa fa-cubes"/> Tests</h2>
+      <h2 class="header-badge"><i class="fa fa-cubes"/> Tests</h2>
       <p>Your project has <b>102</b> test cases! Lately added:</p>
       <ul id="test-overview" style="list-style: none; margin: 0 0 10px 5px">
         <li><i class="fa fa-file-text-o"/> 01_Sample_Test</li>
@@ -45,7 +45,7 @@
       <a href="#tests" alt="View all tests">View all tests</a>
     </div>
     <div class="span3">
-      <h2 style="color: #999999;; border-bottom: 1px solid #999999;"><i class="fa fa-tasks"/> Latest results</h2>
+      <h2 class="header-badge"><i class="fa fa-tasks"/> Latest results</h2>
       <p>Latest test results from <b>01-01-2014 00:15</b></p>
       <span>Tests executed: 102</span>
       <div class="progress progress-info test-report-bar">
@@ -71,12 +71,13 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3">
-      <h2 style="color: #999999;; border-bottom: 1px solid #999999;"><i class="fa fa-cogs"/> Settings</h2>
-      <p>Change basic project settings:</p>
+      <h2 class="header-badge"><i class="fa fa-cogs"/> Settings</h2>
       <ul id="settings-overview" style="list-style: none; margin: 0 0 10px 5px">
         <li><b>Name:</b> {{name}}</li>
         <li><b>Version:</b> {{version}}</li>
         <li><b>Package:</b> {{basePackage}}</li>
+        <li>&nbsp;</li>
+        <li><b>ProjectHome:</b> {{projectHome}}</li>
       </ul>
       <a href="#project" alt="Edit project settings"><i class="fa fa-edit"/> Edit settings</a>
     </div>
