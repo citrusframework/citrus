@@ -41,4 +41,9 @@ public class SendMessageActionConverter implements ObjectConverter<Send, SendMes
 
         return action;
     }
+
+    @Override
+    public Class<SendMessageAction> getModelClass() {
+        return SendMessageAction.class;
+    }
 }

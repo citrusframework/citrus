@@ -31,17 +31,15 @@ public class JmsMessageSenderConverter implements EndpointConverter<JmsMessageSe
 
     @Override
     public EndpointData convert(JmsMessageSender jmsMessageSender) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("jms-sender");
 
         endpointData.setName(jmsMessageSender.getId());
 
         if (StringUtils.hasText(jmsMessageSender.getDestinationName())) {
-            endpointData.setDestination(jmsMessageSender.getDestinationName());
+            endpointData.add("destination-name", jmsMessageSender.getDestinationName());
         } else {
-            endpointData.setDestination("ref:" + jmsMessageSender.getDestination());
+            endpointData.add("destination", jmsMessageSender.getDestination());
         }
-
-        endpointData.setType("jms-sender");
 
         return endpointData;
     }

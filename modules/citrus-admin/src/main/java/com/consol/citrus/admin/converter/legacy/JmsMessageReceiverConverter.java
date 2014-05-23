@@ -30,16 +30,15 @@ import org.springframework.util.StringUtils;
 public class JmsMessageReceiverConverter implements EndpointConverter<JmsMessageReceiver> {
     @Override
     public EndpointData convert(JmsMessageReceiver definition) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("jms-receiver");
 
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.setDestination(definition.getDestinationName());
+            endpointData.add("destination-name", definition.getDestinationName());
         } else {
-            endpointData.setDestination("ref:" + definition.getDestination());
+            endpointData.add("destination", definition.getDestination());
         }
-        endpointData.setType("jms-receiver");
 
         return endpointData;
     }

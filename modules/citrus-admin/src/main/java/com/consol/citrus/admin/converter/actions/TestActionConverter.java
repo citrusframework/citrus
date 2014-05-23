@@ -35,4 +35,9 @@ public class TestActionConverter implements ObjectConverter<Action, TestAction> 
 
         return action;
     }
+
+    @Override
+    public Class<TestAction> getModelClass() {
+        return TestAction.class;
+    }
 }

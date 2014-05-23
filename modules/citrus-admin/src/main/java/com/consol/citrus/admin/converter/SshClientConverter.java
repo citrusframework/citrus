@@ -29,11 +29,11 @@ public class SshClientConverter implements EndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("ssh-client");
 
         endpointData.setName(client.getId());
-        endpointData.setDestination(client.getHost() + ":" + client.getPort());
-        endpointData.setType("ssh-client");
+        endpointData.add("host", client.getHost());
+        endpointData.add("port", client.getPort());
 
         return endpointData;
     }

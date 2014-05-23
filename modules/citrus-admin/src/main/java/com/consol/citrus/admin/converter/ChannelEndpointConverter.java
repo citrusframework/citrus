@@ -30,17 +30,15 @@ public class ChannelEndpointConverter implements EndpointConverter<ChannelEndpoi
 
     @Override
     public EndpointData convert(ChannelEndpoint definition) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("channel-endpoint");
 
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getChannelName())) {
-            endpointData.setDestination(definition.getChannelName());
+            endpointData.add("channel-name", definition.getChannelName());
         } else {
-            endpointData.setDestination("ref:" + definition.getChannel());
+            endpointData.add("channel", definition.getChannel());
         }
-
-        endpointData.setType("channel-endpoint");
 
         return endpointData;
     }

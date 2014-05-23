@@ -81,4 +81,9 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
 
         return repository;
     }
+
+    @Override
+    public Class<SpringBean> getModelClass() {
+        return SpringBean.class;
+    }
 }

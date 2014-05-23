@@ -41,4 +41,14 @@ public class ReceiveMessageActionConverter implements ObjectConverter<Receive, R
 
         return action;
     }
+
+    /**
+     * Gets the model class usually the jaxb model class.
+     *
+     * @return
+     */
+    @Override
+    public Class<ReceiveMessageAction> getModelClass() {
+        return ReceiveMessageAction.class;
+    }
 }

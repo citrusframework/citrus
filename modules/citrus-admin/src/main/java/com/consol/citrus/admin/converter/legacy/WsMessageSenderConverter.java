@@ -30,11 +30,10 @@ public class WsMessageSenderConverter implements EndpointConverter<MessageSender
 
     @Override
     public EndpointData convert(MessageSender wsMessageSender) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("ws-sender");
 
         endpointData.setName(wsMessageSender.getId());
-        endpointData.setDestination(wsMessageSender.getRequestUrl());
-        endpointData.setType("ws-sender");
+        endpointData.add("request-url", wsMessageSender.getRequestUrl());
 
         return endpointData;
     }

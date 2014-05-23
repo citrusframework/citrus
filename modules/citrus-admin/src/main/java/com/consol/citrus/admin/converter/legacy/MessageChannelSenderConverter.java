@@ -31,17 +31,16 @@ public class MessageChannelSenderConverter implements EndpointConverter<MessageC
 
     @Override
     public EndpointData convert(MessageChannelSender messageChannelSender) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("channel-sender");
 
         endpointData.setName(messageChannelSender.getId());
 
         if (StringUtils.hasText(messageChannelSender.getChannelName())) {
-            endpointData.setDestination(messageChannelSender.getChannelName());
+            endpointData.add("channel-name", messageChannelSender.getChannelName());
         } else {
-            endpointData.setDestination("ref:" + messageChannelSender.getChannel());
+            endpointData.add("channel", messageChannelSender.getChannel());
         }
 
-        endpointData.setType("channel-sender");
 
         return endpointData;
     }

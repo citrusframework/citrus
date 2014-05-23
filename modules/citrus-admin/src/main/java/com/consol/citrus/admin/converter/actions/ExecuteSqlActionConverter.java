@@ -35,4 +35,9 @@ public class ExecuteSqlActionConverter implements ObjectConverter<Sql, ExecuteSQ
 
         return action;
     }
+
+    @Override
+    public Class<ExecuteSQLAction> getModelClass() {
+        return ExecuteSQLAction.class;
+    }
 }

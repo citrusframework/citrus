@@ -14,16 +14,15 @@ public class JmsEndpointConverter implements EndpointConverter<JmsEndpoint> {
 
     @Override
     public EndpointData convert(JmsEndpoint definition) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("jms-endpoint");
 
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.setDestination(definition.getDestinationName());
+            endpointData.add("destination-name", definition.getDestinationName());
         } else {
-            endpointData.setDestination("ref:" + definition.getDestination());
+            endpointData.add("destination", definition.getDestination());
         }
-        endpointData.setType("jms-endpoint");
 
         return endpointData;
     }

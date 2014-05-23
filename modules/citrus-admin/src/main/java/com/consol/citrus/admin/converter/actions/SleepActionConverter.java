@@ -35,4 +35,9 @@ public class SleepActionConverter implements ObjectConverter<Sleep, SleepAction>
 
         return action;
     }
+
+    @Override
+    public Class<SleepAction> getModelClass() {
+        return SleepAction.class;
+    }
 }

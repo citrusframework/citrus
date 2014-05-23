@@ -29,11 +29,10 @@ public class WebServiceClientConverter implements EndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData();
+        EndpointData endpointData = new EndpointData("soap-client");
 
         endpointData.setName(client.getId());
-        endpointData.setDestination(client.getRequestUrl());
-        endpointData.setType("soap-client");
+        endpointData.add("request-url", client.getRequestUrl());
 
         return endpointData;
     }

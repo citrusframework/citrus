@@ -18,17 +18,11 @@ package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.admin.converter.actions.*;
 import com.consol.citrus.admin.converter.container.RepeatOnErrorContainerConverter;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
-import com.consol.citrus.model.testcase.core.ActionListType;
-import com.consol.citrus.model.testcase.core.MetaInfoType;
-import com.consol.citrus.model.testcase.core.Testcase;
-import com.consol.citrus.model.testcase.core.Variables;
+import com.consol.citrus.model.testcase.core.*;
 
 import java.util.Map;
 
@@ -82,5 +76,10 @@ public class TestcaseModelConverter implements ObjectConverter<Testcase, TestCas
         testModel.setActions(actions);
 
         return testModel;
+    }
+
+    @Override
+    public Class<TestCase> getModelClass() {
+        return TestCase.class;
     }
 }

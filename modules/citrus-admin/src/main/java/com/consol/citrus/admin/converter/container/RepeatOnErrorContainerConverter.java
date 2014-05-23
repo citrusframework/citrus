@@ -35,4 +35,9 @@ public class RepeatOnErrorContainerConverter implements ObjectConverter<RepeatOn
 
         return action;
     }
+
+    @Override
+    public Class<RepeatOnErrorUntilTrue> getModelClass() {
+        return RepeatOnErrorUntilTrue.class;
+    }
 }

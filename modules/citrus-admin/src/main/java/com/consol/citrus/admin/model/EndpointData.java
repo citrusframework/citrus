@@ -16,28 +16,43 @@
 
 package com.consol.citrus.admin.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
 public class EndpointData {
 
-    private String type;
+    private final String type;
     private String name;
-    private String destination;
+    private Map<String, Object> configuration = new HashMap<String, Object>();
+
+    /**
+     * Constructor using endpoint type field.
+     * @param type
+     */
+    public EndpointData(String type) {
+        this.type = type;
+    }
+
+    /**
+     * Adds a new configuration property as key value pair.
+     * @param property
+     * @param value
+     * @return
+     */
+    public EndpointData add(String property, Object value) {
+        configuration.put(property, value);
+        return this;
+    }
 
     /**
      * @return
      */
     public String getType() {
         return type;
-    }
-
-    /**
-     * @param value
-     */
-    public void setType(String value) {
-        this.type = value;
     }
 
     /**
@@ -55,17 +70,18 @@ public class EndpointData {
     }
 
     /**
+     * Gets the key value configuration properties.
      * @return
      */
-    public String getDestination() {
-        return destination;
+    public Map<String, Object> getConfiguration() {
+        return configuration;
     }
 
     /**
-     * @param value
+     * Sets the endpoint configuration as key value properties.
+     * @param configuration
      */
-    public void setDestination(String value) {
-        this.destination = value;
+    public void setConfiguration(Map<String, Object> configuration) {
+        this.configuration = configuration;
     }
-
 }

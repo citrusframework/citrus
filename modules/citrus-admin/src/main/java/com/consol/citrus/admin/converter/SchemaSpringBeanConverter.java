@@ -44,4 +44,9 @@ public class SchemaSpringBeanConverter implements SpringBeanConverter<Schema> {
 
         return schema;
     }
+
+    @Override
+    public Class<SpringBean> getModelClass() {
+        return SpringBean.class;
+    }
 }
