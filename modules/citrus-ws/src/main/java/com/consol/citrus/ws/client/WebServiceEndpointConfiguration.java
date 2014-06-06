@@ -25,7 +25,6 @@ import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 import java.util.ArrayList;
@@ -74,29 +73,8 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * Creates default web service template with settings in this configuration.
      * @return
      */
-    private WebServiceTemplate createWebServiceTemplate() {
+    protected WebServiceTemplate createWebServiceTemplate() {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-
-        if (messageSender != null) {
-            webServiceTemplate.setMessageSender(messageSender);
-        }
-
-        if (messageFactory != null) {
-            webServiceTemplate.setMessageFactory(messageFactory);
-        }
-
-        if (defaultUri != null) {
-            webServiceTemplate.setDefaultUri(defaultUri);
-        }
-
-        if (interceptor != null) {
-            interceptors.add(interceptor);
-        }
-
-        if (interceptors.size() > 0) {
-            webServiceTemplate.setInterceptors(interceptors.toArray(new ClientInterceptor[interceptors.size()]));
-        }
-
         return webServiceTemplate;
     }
 
@@ -189,10 +167,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * @return
      */
     public WebServiceMessageFactory getMessageFactory() {
-        if (messageFactory == null) {
-            messageFactory = new SaajSoapMessageFactory();
-        }
-
         return messageFactory;
     }
 
@@ -202,6 +176,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
+        getWebServiceTemplate().setMessageFactory(messageFactory);
     }
 
     /**
@@ -218,6 +193,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setMessageSender(WebServiceMessageSender messageSender) {
         this.messageSender = messageSender;
+        getWebServiceTemplate().setMessageSender(messageSender);
     }
 
     /**
@@ -234,6 +210,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setDefaultUri(String defaultUri) {
         this.defaultUri = defaultUri;
+        getWebServiceTemplate().setDefaultUri(defaultUri);
     }
 
     /**
@@ -250,6 +227,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setInterceptors(List<ClientInterceptor> interceptors) {
         this.interceptors = interceptors;
+        getWebServiceTemplate().setInterceptors(interceptors.toArray(new ClientInterceptor[interceptors.size()]));
     }
 
     /**
@@ -282,5 +260,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setInterceptor(ClientInterceptor interceptor) {
         this.interceptor = interceptor;
+        getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { interceptor });
     }
 }
