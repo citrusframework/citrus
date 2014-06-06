@@ -84,23 +84,21 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      * Creates default JmsTemplate instance from connection factory and destination.
      */
     private void createJmsTemplate() {
-        if (jmsTemplate == null) {
-            Assert.isTrue(this.connectionFactory != null,
-                    "Neither 'jmsTemplate' nor 'connectionFactory' is set correctly.");
+        Assert.isTrue(this.connectionFactory != null,
+                "Neither 'jmsTemplate' nor 'connectionFactory' is set correctly.");
 
-            jmsTemplate = new JmsTemplate();
+        jmsTemplate = new JmsTemplate();
 
-            jmsTemplate.setConnectionFactory(this.connectionFactory);
+        jmsTemplate.setConnectionFactory(this.connectionFactory);
 
-            if (this.destination != null) {
-                jmsTemplate.setDefaultDestination(this.destination);
-            } else if (this.destinationName != null) {
-                jmsTemplate.setDefaultDestinationName(this.destinationName);
-            }
+        if (this.destination != null) {
+            jmsTemplate.setDefaultDestination(this.destination);
+        } else if (this.destinationName != null) {
+            jmsTemplate.setDefaultDestinationName(this.destinationName);
+        }
 
-            if (this.destinationResolver != null) {
-                jmsTemplate.setDestinationResolver(this.destinationResolver);
-            }
+        if (this.destinationResolver != null) {
+            jmsTemplate.setDestinationResolver(this.destinationResolver);
         }
 
         jmsTemplate.setMessageConverter(messageConverter);

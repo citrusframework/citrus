@@ -26,6 +26,7 @@
   <citrus-ws:client id="soapClient4"
                       request-url="http://localhost:8080/test"
                       message-sender="wsMessageSender"
+                      interceptor="singleInterceptor"
                       addressing-headers="wsAddressingHeaders"/>
 
   <citrus-ws:client id="soapClient5"
@@ -62,6 +63,10 @@
 
   <bean id="wsMessageSender" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="org.springframework.ws.transport.WebServiceMessageSender"/>
+  </bean>
+
+  <bean id="singleInterceptor" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
   </bean>
 
   <util:list id="interceptors">

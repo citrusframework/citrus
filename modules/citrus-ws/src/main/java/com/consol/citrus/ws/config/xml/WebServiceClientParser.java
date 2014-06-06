@@ -67,6 +67,7 @@ public class WebServiceClientParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE), WSParserConstants.MESSAGE_SENDERS_PROPERTY);
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.INTERCEPTORS_ATTRIBUTE), WSParserConstants.INTERCEPTORS_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("interceptor"), "interceptor");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), WSParserConstants.REPLY_CORRELATOR_PROPERTY);
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE), WSParserConstants.ENDPOINT_RESOLVER_PROPERTY);
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.ADRESSING_HEADERS_ATTRIBUTE), WSParserConstants.ADRESSING_HEADERS_PROPERTY);

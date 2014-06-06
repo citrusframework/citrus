@@ -28,7 +28,8 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -45,8 +46,11 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     /** Web service message sender */
     private WebServiceMessageSender messageSender;
 
-    /** Client interceptors */
-    private ClientInterceptor[] interceptors;
+    /** List of client interceptors */
+    private List<ClientInterceptor> interceptors = new ArrayList<ClientInterceptor>();
+
+    /* Single client interceptor */
+    private ClientInterceptor interceptor;
 
     /** Default uri */
     private String defaultUri;
@@ -65,6 +69,36 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
+
+    /**
+     * Creates default web service template with settings in this configuration.
+     * @return
+     */
+    private WebServiceTemplate createWebServiceTemplate() {
+        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+
+        if (messageSender != null) {
+            webServiceTemplate.setMessageSender(messageSender);
+        }
+
+        if (messageFactory != null) {
+            webServiceTemplate.setMessageFactory(messageFactory);
+        }
+
+        if (defaultUri != null) {
+            webServiceTemplate.setDefaultUri(defaultUri);
+        }
+
+        if (interceptor != null) {
+            interceptors.add(interceptor);
+        }
+
+        if (interceptors.size() > 0) {
+            webServiceTemplate.setInterceptors(interceptors.toArray(new ClientInterceptor[interceptors.size()]));
+        }
+
+        return webServiceTemplate;
+    }
 
     /**
      * Set reply message correlator.
@@ -136,7 +170,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public WebServiceTemplate getWebServiceTemplate() {
         if (webServiceTemplate == null) {
-            webServiceTemplate = new WebServiceTemplate();
+            webServiceTemplate = createWebServiceTemplate();
         }
 
         return webServiceTemplate;
@@ -168,7 +202,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
-        getWebServiceTemplate().setMessageFactory(messageFactory);
     }
 
     /**
@@ -185,7 +218,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setMessageSender(WebServiceMessageSender messageSender) {
         this.messageSender = messageSender;
-        getWebServiceTemplate().setMessageSender(messageSender);
     }
 
     /**
@@ -202,14 +234,13 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setDefaultUri(String defaultUri) {
         this.defaultUri = defaultUri;
-        getWebServiceTemplate().setDefaultUri(defaultUri);
     }
 
     /**
      * Gets the client interceptors.
      * @return
      */
-    public ClientInterceptor[] getInterceptors() {
+    public List<ClientInterceptor> getInterceptors() {
         return interceptors;
     }
 
@@ -217,9 +248,8 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * Sets the client interceptors.
      * @param interceptors
      */
-    public void setInterceptors(ClientInterceptor[] interceptors) {
-        this.interceptors = Arrays.copyOf(interceptors, interceptors.length);
-        getWebServiceTemplate().setInterceptors(this.interceptors);
+    public void setInterceptors(List<ClientInterceptor> interceptors) {
+        this.interceptors = interceptors;
     }
 
     /**
@@ -236,5 +266,21 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setPollingInterval(long pollingInterval) {
         this.pollingInterval = pollingInterval;
+    }
+
+    /**
+     * Gets the single client interceptor.
+     * @return
+     */
+    public ClientInterceptor getInterceptor() {
+        return interceptor;
+    }
+
+    /**
+     * Sets the single client interceptor.
+     * @param interceptor
+     */
+    public void setInterceptor(ClientInterceptor interceptor) {
+        this.interceptor = interceptor;
     }
 }

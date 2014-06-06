@@ -40,53 +40,58 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
 
         // 1st message sender
         WebServiceClient client = messageSenders.get("soapClient1");
-        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
-        Assert.assertTrue(client.getEndpointConfiguration().getWebServiceTemplate().getMessageFactory() instanceof SoapMessageFactory);
+        Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
         Assert.assertNull(client.getEndpointConfiguration().getAddressingHeaders());
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
 
         // 2nd message sender
         client = messageSenders.get("soapClient2");
-        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
-        Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getMessageFactory(), beanDefinitionContext.getBean("soapMessageFactory"));
+        Assert.assertEquals(client.getEndpointConfiguration().getMessageFactory(), beanDefinitionContext.getBean("soapMessageFactory"));
         Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
         Assert.assertNull(client.getEndpointConfiguration().getAddressingHeaders());
         Assert.assertEquals(client.getEndpointConfiguration().getEndpointResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
+        Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getMessageFactory(), beanDefinitionContext.getBean("soapMessageFactory"));
 
         // 3rd message sender
         client = messageSenders.get("soapClient3");
-        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
-        Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate(), beanDefinitionContext.getBean("wsTemplate"));
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertNotNull(client.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(client.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
         Assert.assertNull(client.getEndpointConfiguration().getAddressingHeaders());
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
+        Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate(), beanDefinitionContext.getBean("wsTemplate"));
 
         // 4th message sender
         client = messageSenders.get("soapClient4");
-        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
-        Assert.assertTrue(client.getEndpointConfiguration().getWebServiceTemplate().getMessageFactory() instanceof SoapMessageFactory);
+        Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertEquals(client.getEndpointConfiguration().getAddressingHeaders(), beanDefinitionContext.getBean("wsAddressingHeaders"));
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertNotNull(client.getEndpointConfiguration().getMessageSender());
         Assert.assertEquals(client.getEndpointConfiguration().getMessageSender(), beanDefinitionContext.getBean("wsMessageSender"));
+        Assert.assertNotNull(client.getEndpointConfiguration().getInterceptor());
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptor(), beanDefinitionContext.getBean("singleInterceptor"));
+        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
+        Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 1L);
 
         // 5th message sender
         client = messageSenders.get("soapClient5");
-        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertNotNull(client.getEndpointConfiguration().getInterceptors());
-        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().length, 2L);
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().size(), 2L);
         Assert.assertEquals(client.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
+        Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 2L);
 
         // 5th message sender
         client = messageSenders.get("soapClient6");

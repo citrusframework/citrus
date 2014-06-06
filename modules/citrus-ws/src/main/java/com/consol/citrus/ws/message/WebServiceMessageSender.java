@@ -29,6 +29,8 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.mime.Attachment;
 
+import java.util.Arrays;
+
 /**
  * Message sender connection as client to a WebService endpoint. The sender supports
  * SOAP attachments in contrary to the normal message senders.
@@ -185,7 +187,11 @@ public class WebServiceMessageSender extends AbstractSyncMessageSender {
      * @return
      */
     public ClientInterceptor[] getInterceptors() {
-        return webServiceClient.getEndpointConfiguration().getInterceptors();
+        if (webServiceClient.getEndpointConfiguration().getInterceptors().size() > 0) {
+            return webServiceClient.getEndpointConfiguration().getInterceptors().toArray(new ClientInterceptor[webServiceClient.getEndpointConfiguration().getInterceptors().size()]);
+        }
+
+        return null;
     }
 
     /**
@@ -193,7 +199,7 @@ public class WebServiceMessageSender extends AbstractSyncMessageSender {
      * @param interceptors
      */
     public void setInterceptors(ClientInterceptor[] interceptors) {
-        webServiceClient.getEndpointConfiguration().setInterceptors(interceptors);
+        webServiceClient.getEndpointConfiguration().setInterceptors(Arrays.asList(interceptors));
     }
 
     /**
