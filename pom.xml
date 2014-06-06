@@ -46,6 +46,7 @@
     <module>modules/citrus-samples</module>
     <module>modules/citrus-admin</module>
     <module>modules/citrus-vertx</module>
+    <module>modules/citrus-camel</module>
   </modules>
 
   <developers>
@@ -445,6 +446,18 @@
         <groupId>io.vertx</groupId>
         <artifactId>vertx-hazelcast</artifactId>
         <version>2.1RC3</version>
+      </dependency>
+
+      <!-- Citrus camel dependencies -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-core</artifactId>
+        <version>2.11.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring</artifactId>
+        <version>2.11.4</version>
       </dependency>
 
       <!-- Logging -->

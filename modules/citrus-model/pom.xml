@@ -21,6 +21,7 @@
     <module>model-ws</module>
     <module>model-mail</module>
     <module>model-vertx</module>
+    <module>model-camel</module>
   </modules>
 
   <build>
