@@ -18,6 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.JmsEndpoint;
+import com.consol.citrus.jms.JmsMessageConverter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,6 +40,7 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         JmsEndpoint jmsEndpoint = endpoints.get("jmsEndpoint1");
         Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory"));
+        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getMessageConverter().getClass(), JmsMessageConverter.class);
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
@@ -47,6 +49,7 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         jmsEndpoint = endpoints.get("jmsEndpoint2");
         Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getConnectionFactory());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getConnectionFactory(), beanDefinitionContext.getBean("jmsConnectionFactory"));
+        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNotNull(jmsEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 10000L);

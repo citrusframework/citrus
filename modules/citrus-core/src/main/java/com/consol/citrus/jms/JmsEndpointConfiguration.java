@@ -19,11 +19,8 @@ package com.consol.citrus.jms;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.jms.DefaultJmsHeaderMapper;
-import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 
@@ -54,10 +51,7 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     private JmsTemplate jmsTemplate;
 
     /** The message converter */
-    private MessageConverter messageConverter = new SimpleMessageConverter();
-
-    /** The JMS header mapper */
-    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
+    private MessageConverter messageConverter = new JmsMessageConverter();
 
     /** Use topics instead of queues */
     private boolean pubSubDomain = false;
@@ -109,7 +103,7 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
             }
         }
 
-        jmsTemplate.setMessageConverter(new JmsMessageConverter(messageConverter, headerMapper));
+        jmsTemplate.setMessageConverter(messageConverter);
         jmsTemplate.setPubSubDomain(pubSubDomain);
     }
 
@@ -194,38 +188,6 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     }
 
     /**
-     * Gets the JMS message converter.
-     * @return the messageConverter
-     */
-    public MessageConverter getMessageConverter() {
-        return messageConverter;
-    }
-
-    /**
-     * Sets the JMS message converter.
-     * @param messageConverter the messageConverter to set
-     */
-    public void setMessageConverter(MessageConverter messageConverter) {
-        this.messageConverter = messageConverter;
-    }
-
-    /**
-     * Gets the JMS header mapper.
-     * @return the headerMapper
-     */
-    public JmsHeaderMapper getHeaderMapper() {
-        return headerMapper;
-    }
-
-    /**
-     * Sets the JMS header mapper.
-     * @param headerMapper the headerMapper to set
-     */
-    public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        this.headerMapper = headerMapper;
-    }
-
-    /**
      * Sets the JMS template.
      * @param jmsTemplate the jmsTemplate to set
      */
@@ -243,5 +205,21 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
         }
 
         return jmsTemplate;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public MessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(MessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

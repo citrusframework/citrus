@@ -75,6 +75,7 @@ public abstract class AbstractJmsEndpointParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("pub-sub-domain"), "pubSubDomain");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
     }
 
 }

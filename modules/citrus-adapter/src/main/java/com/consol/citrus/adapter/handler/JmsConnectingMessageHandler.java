@@ -23,12 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.*;
 import org.springframework.integration.Message;
-import org.springframework.integration.jms.DefaultJmsHeaderMapper;
-import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
-import org.springframework.jms.support.converter.MessageConverter;
-import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.StringUtils;
 
@@ -82,12 +78,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     /** Fallback message handler in case no reply message was received */
     private MessageHandler fallbackMessageHandlerDelegate = new TimeoutProducingMessageHandler();
     
-    /** Jms header mapper */
-    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
-    
-    /** Jms message converter */
-    private MessageConverter messageConverter = new SimpleMessageConverter();
-    
     /**
      * Logger
      */
@@ -121,7 +111,7 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
             createConnection();
             createSession(connection);
             
-            JmsMessageConverter jmsMessageConverter = new JmsMessageConverter(messageConverter, headerMapper);
+            JmsMessageConverter jmsMessageConverter = new JmsMessageConverter();
             javax.jms.Message jmsRequest = jmsMessageConverter.toMessage(request, session);
             
             messageProducer = session.createProducer(getDestination(session));

@@ -18,6 +18,7 @@ package com.consol.citrus.jms;
 
 import com.consol.citrus.TestActor;
 import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
@@ -178,7 +179,12 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @return the headerMapper
      */
     public JmsHeaderMapper getHeaderMapper() {
-        return jmsEndpoint.getEndpointConfiguration().getHeaderMapper();
+        MessageConverter messageConverter = jmsEndpoint.getEndpointConfiguration().getMessageConverter();
+        if (messageConverter instanceof JmsMessageConverter) {
+            return ((JmsMessageConverter)messageConverter).getHeaderMapper();
+        }
+
+        return new DefaultJmsHeaderMapper();
     }
 
     /**
@@ -186,7 +192,10 @@ public abstract class AbstractJmsAdapter implements BeanNameAware {
      * @param headerMapper the headerMapper to set
      */
     public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        jmsEndpoint.getEndpointConfiguration().setHeaderMapper(headerMapper);
+        MessageConverter messageConverter = jmsEndpoint.getEndpointConfiguration().getMessageConverter();
+        if (messageConverter instanceof JmsMessageConverter) {
+            ((JmsMessageConverter)messageConverter).setHeaderMapper(headerMapper);
+        }
     }
 
     /**
