@@ -30,7 +30,7 @@ public abstract class CitrusVertxMessageHeaders {
     private CitrusVertxMessageHeaders() {
     }
 
-    /** Special header prefix for http transport headers in SOAP message sender */
+    /** Special header prefix for vertx transport headers */
     public static final String VERTX_PREFIX = CitrusMessageHeaders.PREFIX + "vertx_";
 
     public static final String VERTX_ADDRESS = VERTX_PREFIX + "address";
