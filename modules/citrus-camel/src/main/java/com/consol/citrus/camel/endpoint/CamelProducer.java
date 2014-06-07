@@ -50,7 +50,9 @@ public class CamelProducer implements Producer {
     public void send(Message<?> message) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        endpointConfiguration.getCamelContext().createProducerTemplate().sendBody(endpointConfiguration.getEndpointUri(), message.getPayload());
+        endpointConfiguration.getCamelContext().createProducerTemplate()
+                .sendBodyAndHeaders(endpointConfiguration.getEndpointUri(), message.getPayload(), message.getHeaders());
+
         onOutboundMessage(message);
 
         log.info("Message was successfully sent to camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");

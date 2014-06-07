@@ -16,14 +16,16 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import org.apache.camel.*;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultMessage;
+import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -51,7 +53,7 @@ public class CamelEndpointTest {
         reset(camelContext, producerTemplate);
 
         expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        producerTemplate.sendBody(endpointUri, requestMessage.getPayload());
+        producerTemplate.sendBodyAndHeaders(eq(endpointUri), eq(requestMessage.getPayload()), anyObject(Map.class));
         expectLastCall().once();
 
         replay(camelContext, producerTemplate);
@@ -78,6 +80,7 @@ public class CamelEndpointTest {
         reset(camelContext, consumerTemplate);
 
         expect(camelContext.createConsumerTemplate()).andReturn(consumerTemplate).once();
+        expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
         expect(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).andReturn(exchange).once();
 
         replay(camelContext, consumerTemplate);
@@ -85,6 +88,9 @@ public class CamelEndpointTest {
         Message receivedMessage = camelEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
         Assert.assertEquals(receivedMessage.getHeaders().get("operation"), "newsFeed");
+        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_ID));
+        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
 
         verify(camelContext, consumerTemplate);
     }

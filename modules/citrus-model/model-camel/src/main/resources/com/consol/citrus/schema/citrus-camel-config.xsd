@@ -22,12 +22,13 @@
 
   <xs:element name="endpoint">
     <xs:annotation>
-      <xs:documentation>Vert.x endpoint for asynchronous communication</xs:documentation>
+      <xs:documentation>Camel endpoint for asynchronous communication</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="camel-context" type="xs:string" use="required"/>
+      <xs:attribute name="camel-context" type="xs:string"/>
       <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
@@ -35,12 +36,13 @@
 
   <xs:element name="sync-endpoint">
     <xs:annotation>
-      <xs:documentation>Vert.x endpoint for synchronous communication</xs:documentation>
+      <xs:documentation>Camel endpoint for synchronous communication</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="camel-context" type="xs:string" use="required"/>
+      <xs:attribute name="camel-context" type="xs:string"/>
       <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>

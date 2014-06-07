@@ -16,6 +16,7 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import com.consol.citrus.camel.message.CamelMessageConverter;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.apache.camel.*;
 
@@ -27,6 +28,9 @@ public class CamelEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Camel context this endpoint is working with */
     private CamelContext camelContext;
+
+    /** Message converter */
+    private CamelMessageConverter messageConverter = new CamelMessageConverter();
 
     /** Camel endpoint uri */
     private String endpointUri;
@@ -61,5 +65,21 @@ public class CamelEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setEndpointUri(String endpointUri) {
         this.endpointUri = endpointUri;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public CamelMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(CamelMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

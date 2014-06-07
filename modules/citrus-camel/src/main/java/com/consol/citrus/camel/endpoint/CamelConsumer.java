@@ -23,7 +23,6 @@ import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
 
 /**
  * @author Christoph Deppisch
@@ -59,12 +58,9 @@ public class CamelConsumer implements Consumer {
             throw new ActionTimeoutException("Action timed out while receiving message from camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
         }
 
-        Message message = MessageBuilder.withPayload(exchange.getIn().getBody())
-                                        .copyHeaders(exchange.getIn().getHeaders())
-                                        .build();
-
         log.info("Received message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
+        Message message = endpointConfiguration.getMessageConverter().convertMessage(exchange);
         onInboundMessage(message);
 
         return message;
