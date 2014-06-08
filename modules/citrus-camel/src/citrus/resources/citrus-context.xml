@@ -48,4 +48,9 @@
                          endpoint-uri="seda:result"
                          timeout="1000"/>
 
+  <citrus-camel:sync-endpoint id="camelNewsStatusEndpoint"
+                         camel-context="camelNewsContext"
+                         endpoint-uri="controlbus:route?routeId=newsRoute&amp;action=status"
+                         timeout="1000"/>
+
 </beans>

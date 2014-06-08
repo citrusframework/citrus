@@ -33,11 +33,11 @@ public abstract class CitrusCamelMessageHeaders {
     /** Special header prefix for camel transport headers */
     public static final String CAMEL_PREFIX = CitrusMessageHeaders.PREFIX + "camel_";
 
-    public static final String EXCHANGE_ID = CAMEL_PREFIX + "_exchange_id";
-    public static final String EXCHANGE_PATTERN = CAMEL_PREFIX + "_exchange_pattern";
-    public static final String EXCHANGE_FAILED = CAMEL_PREFIX + "_exchange_failed";
-    public static final String EXCHANGE_EXCEPTION = CAMEL_PREFIX + "_exchange_exception";
-    public static final String EXCHANGE_EXCEPTION_MESSAGE = CAMEL_PREFIX + "_exchange_exception_message";
-    public static final String ROUTE_ID = CAMEL_PREFIX + "_route_id";
+    public static final String EXCHANGE_ID = CAMEL_PREFIX + "exchange_id";
+    public static final String EXCHANGE_PATTERN = CAMEL_PREFIX + "exchange_pattern";
+    public static final String EXCHANGE_FAILED = CAMEL_PREFIX + "exchange_failed";
+    public static final String EXCHANGE_EXCEPTION = CAMEL_PREFIX + "exchange_exception";
+    public static final String EXCHANGE_EXCEPTION_MESSAGE = CAMEL_PREFIX + "exchange_exception_message";
+    public static final String ROUTE_ID = CAMEL_PREFIX + "route_id";
 
 }

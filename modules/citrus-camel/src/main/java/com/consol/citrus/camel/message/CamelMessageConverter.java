@@ -34,8 +34,15 @@ public class CamelMessageConverter {
             return null;
         }
 
-        MessageBuilder messageBuilder = MessageBuilder.withPayload(source.getIn().getBody())
-                .copyHeaders(source.getIn().getHeaders())
+        org.apache.camel.Message sourceMessage;
+        if (source.hasOut()) {
+            sourceMessage = source.getOut();
+        } else {
+            sourceMessage = source.getIn();
+        }
+
+        MessageBuilder messageBuilder = MessageBuilder.withPayload(sourceMessage.getBody())
+                .copyHeaders(sourceMessage.getHeaders())
                 .setHeader(CitrusCamelMessageHeaders.EXCHANGE_ID, source.getExchangeId())
                 .setHeader(CitrusCamelMessageHeaders.ROUTE_ID, source.getFromRouteId())
                 .setHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN, source.getPattern().name())

@@ -77,4 +77,12 @@ public class CamelConsumer implements Consumer {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
     }
+
+    /**
+     * Gets the message listeners.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
+    }
 }

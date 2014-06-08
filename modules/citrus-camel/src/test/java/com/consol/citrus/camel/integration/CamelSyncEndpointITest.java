@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.camel.config.handler;
+package com.consol.citrus.camel.integration;
 
-import com.consol.citrus.camel.config.xml.CamelEndpointParser;
-import com.consol.citrus.camel.config.xml.CamelSyncEndpointParser;
-import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CitrusCamelConfigNamespaceHandler extends NamespaceHandlerSupport {
+@Test
+public class CamelSyncEndpointITest extends AbstractTestNGCitrusTest {
 
-    public void init() {
-        registerBeanDefinitionParser("endpoint", new CamelEndpointParser());
-        registerBeanDefinitionParser("sync-endpoint", new CamelSyncEndpointParser());
-    }
+    @CitrusXmlTest(name = "CamelSyncEndpointITest")
+    public void testCamelSyncEndpoint() {}
 }
