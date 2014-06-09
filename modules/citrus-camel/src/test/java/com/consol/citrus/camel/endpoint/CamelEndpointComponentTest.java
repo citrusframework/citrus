@@ -85,6 +85,7 @@ public class CamelEndpointComponentTest {
 
         reset(applicationContext);
         expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(camelContextMap).once();
+        expect(applicationContext.containsBean("camelContext")).andReturn(false).once();
         expect(applicationContext.containsBean("myCamelContext")).andReturn(true).once();
         expect(applicationContext.getBean("myCamelContext")).andReturn(camelContext).once();
         replay(applicationContext);
