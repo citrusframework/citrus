@@ -29,28 +29,37 @@
   <!-- Message validators -->
   <bean id="messageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
 
-  <camelContext id="camelNewsContext" xmlns="http://camel.apache.org/schema/spring">
+  <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
     <route id="newsRoute">
       <from uri="direct:news"/>
-      <to uri="log:com.consol.citrus?level=DEBUG"/>
-      <to uri="seda:result"/>
+      <to uri="log:com.consol.citrus.camel?level=INFO"/>
+      <to uri="seda:newsFeed"/>
+    </route>
+
+    <route id="helloRoute">
+      <from uri="direct:hello"/>
+      <to uri="seda:sayHello" pattern="InOut"/>
     </route>
   </camelContext>
 
   <!-- Camel message endpoints -->
   <citrus-camel:endpoint id="camelNewsEndpoint"
-                         camel-context="camelNewsContext"
+                         camel-context="camelContext"
                          endpoint-uri="direct:news"
                          timeout="1000"/>
 
-  <citrus-camel:endpoint id="camelSedaEndpoint"
-                         camel-context="camelNewsContext"
-                         endpoint-uri="seda:result"
+  <citrus-camel:endpoint id="camelNewsFeedEndpoint"
+                         camel-context="camelContext"
+                         endpoint-uri="seda:newsFeed"
                          timeout="1000"/>
 
   <citrus-camel:sync-endpoint id="camelNewsStatusEndpoint"
-                         camel-context="camelNewsContext"
+                         camel-context="camelContext"
                          endpoint-uri="controlbus:route?routeId=newsRoute&amp;action=status"
                          timeout="1000"/>
+
+  <citrus-camel:sync-endpoint id="camelHelloEndpoint"
+                         camel-context="camelContext"
+                         endpoint-uri="seda:sayHello"/>
 
 </beans>

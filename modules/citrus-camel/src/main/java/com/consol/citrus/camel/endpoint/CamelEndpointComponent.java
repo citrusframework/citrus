@@ -30,14 +30,21 @@ import java.util.Map;
 public class CamelEndpointComponent extends AbstractEndpointComponent {
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
-        CamelEndpoint endpoint = new CamelEndpoint();
-        endpoint.getEndpointConfiguration().setEndpointUri(resourcePath);
+        CamelEndpoint endpoint;
+        if (resourcePath.startsWith("sync:")) {
+            endpoint = new CamelSyncEndpoint();
+            endpoint.getEndpointConfiguration().setEndpointUri(resourcePath.substring("sync:".length()) + getParameterString(parameters, CamelSyncEndpointConfiguration.class));
+        } else {
+            endpoint = new CamelEndpoint();
+            endpoint.getEndpointConfiguration().setEndpointUri(resourcePath + getParameterString(parameters, CamelEndpointConfiguration.class));
+        }
 
         if (context.getApplicationContext() != null && context.getApplicationContext().getBeansOfType(CamelContext.class).size() == 1) {
             endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean(CamelContext.class));
         }
 
-        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);
+        enrichEndpointConfiguration(endpoint.getEndpointConfiguration(),
+                getEndpointConfigurationParameters(parameters, endpoint.getEndpointConfiguration().getClass()), context);
 
         return endpoint;
     }

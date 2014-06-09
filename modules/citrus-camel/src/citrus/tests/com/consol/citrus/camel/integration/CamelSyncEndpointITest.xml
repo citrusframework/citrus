@@ -21,6 +21,32 @@
         <message>Test: Send message to Camel endpoint and receive synchronous response</message>
       </echo>
 
+      <send endpoint="camel:sync:direct:hello" fork="true">
+        <message type="plaintext">
+          <data></data>
+        </message>
+      </send>
+
+      <receive endpoint="camelHelloEndpoint">
+        <message type="plaintext">
+          <data></data>
+        </message>
+      </receive>
+
+      <sleep time="5"/>
+
+      <send endpoint="camelHelloEndpoint">
+        <message type="plaintext">
+          <data>Hello from Citrus!</data>
+        </message>
+      </send>
+
+      <receive endpoint="camel:sync:direct:hello">
+        <message type="plaintext">
+          <data>Hello from Citrus!</data>
+        </message>
+      </receive>
+
       <send endpoint="camelNewsStatusEndpoint">
         <message type="plaintext">
           <data></data>

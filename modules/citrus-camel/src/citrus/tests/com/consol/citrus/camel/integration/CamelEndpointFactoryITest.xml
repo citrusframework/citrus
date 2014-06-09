@@ -27,9 +27,21 @@
         </message>
       </send>
 
-      <receive endpoint="camel:seda:result">
+      <receive endpoint="camel:seda:newsFeed">
         <message type="plaintext">
           <data>News from Citrus! Today is citrus:currentDate()</data>
+        </message>
+      </receive>
+
+      <send endpoint="camel:sync:controlbus:route?routeId=helloRoute&amp;action=status">
+        <message type="plaintext">
+          <data></data>
+        </message>
+      </send>
+
+      <receive endpoint="camel:sync:controlbus:route?routeId=helloRoute&amp;action=status">
+        <message type="plaintext">
+          <data>Started</data>
         </message>
       </receive>
 

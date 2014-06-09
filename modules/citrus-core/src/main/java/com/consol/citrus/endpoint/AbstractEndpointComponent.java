@@ -109,6 +109,58 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
     }
 
     /**
+     * Removes non config parameters from list of endpoint parameters according to given endpoint configuration type. All
+     * parameters that do not reside to a endpoint configuration setting are removed so the result is a qualified list
+     * of endpoint configuration parameters.
+     *
+     * @param parameters
+     * @param endpointConfigurationType
+     * @return
+     */
+    protected Map<String, String> getEndpointConfigurationParameters(Map<String, String> parameters,
+                                                                     Class<? extends EndpointConfiguration> endpointConfigurationType) {
+        Map<String, String> params = new HashMap<String, String>();
+
+        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
+            Field field = ReflectionUtils.findField(endpointConfigurationType, parameterEntry.getKey());
+
+            if (field != null) {
+                params.put(parameterEntry.getKey(), parameterEntry.getValue());
+            }
+        }
+
+        return params;
+    }
+
+    /**
+     * Filters non endpoint configuration parameters from parameter list and puts them
+     * together as parameters string. According to given endpoint configuration type only non
+     * endpoint configuration settings are added to parameter string.
+     *
+     * @param parameters
+     * @param endpointConfigurationType
+     * @return
+     */
+    protected String getParameterString(Map<String, String> parameters,
+                                        Class<? extends EndpointConfiguration> endpointConfigurationType) {
+        StringBuilder paramString = new StringBuilder();
+
+        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
+            Field field = ReflectionUtils.findField(endpointConfigurationType, parameterEntry.getKey());
+
+            if (field == null) {
+                if (paramString.toString().length() == 0) {
+                    paramString.append("?").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
+                } else {
+                    paramString.append("&").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
+                }
+            }
+        }
+
+        return paramString.toString();
+    }
+
+    /**
      * Convert parameter value string to required type from setter method argument.
      * @param fieldType
      * @param value

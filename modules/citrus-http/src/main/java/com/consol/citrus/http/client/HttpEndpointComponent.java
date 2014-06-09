@@ -21,10 +21,7 @@ import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,7 +36,7 @@ public class HttpEndpointComponent extends AbstractEndpointComponent {
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         HttpClient client = new HttpClient();
 
-        client.getEndpointConfiguration().setRequestUrl("http://" + resourcePath + getParameterString(parameters));
+        client.getEndpointConfiguration().setRequestUrl("http://" + resourcePath + getParameterString(parameters, HttpEndpointConfiguration.class));
 
         if (parameters.containsKey("requestMethod")) {
             String method = parameters.remove("requestMethod");
@@ -51,51 +48,8 @@ public class HttpEndpointComponent extends AbstractEndpointComponent {
             client.getEndpointConfiguration().setErrorHandlingStrategy(ErrorHandlingStrategy.fromName(strategy));
         }
 
-        enrichEndpointConfiguration(client.getEndpointConfiguration(), getConfigParameters(parameters), context);
+        enrichEndpointConfiguration(client.getEndpointConfiguration(),
+                getEndpointConfigurationParameters(parameters, HttpEndpointConfiguration.class), context);
         return client;
-    }
-
-    /**
-     * Removes non config parameters from list of endpoint parameters so the result is a qualified list
-     * of endpoint configuration parameters.
-     *
-     * @param parameters
-     * @return
-     */
-    private Map<String, String> getConfigParameters(Map<String, String> parameters) {
-        Map<String, String> params = new HashMap<String, String>();
-
-        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            Field field = ReflectionUtils.findField(HttpEndpointConfiguration.class, parameterEntry.getKey());
-
-            if (field != null) {
-              params.put(parameterEntry.getKey(), parameterEntry.getValue());
-            }
-        }
-
-        return params;
-    }
-
-    /**
-     * Just reads non config parameters from endpoint parameters and put them together as HTTP parameters string.
-     * @param parameters
-     * @return
-     */
-    private String getParameterString(Map<String, String> parameters) {
-        StringBuilder paramString = new StringBuilder();
-
-        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            Field field = ReflectionUtils.findField(HttpEndpointConfiguration.class, parameterEntry.getKey());
-
-            if (field == null) {
-                if (paramString.toString().length() == 0) {
-                    paramString.append("?").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
-                } else {
-                    paramString.append("&").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
-                }
-            }
-        }
-
-        return paramString.toString();
     }
 }

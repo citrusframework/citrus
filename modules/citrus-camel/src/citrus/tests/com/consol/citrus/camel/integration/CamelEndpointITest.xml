@@ -27,7 +27,7 @@
         </message>
       </send>
 
-      <receive endpoint="camelSedaEndpoint">
+      <receive endpoint="camelNewsFeedEndpoint">
         <message type="plaintext">
           <data>News from Citrus! Today is citrus:currentDate()</data>
         </message>
