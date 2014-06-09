@@ -39,8 +39,12 @@ public class CamelEndpointComponent extends AbstractEndpointComponent {
             endpoint.getEndpointConfiguration().setEndpointUri(resourcePath + getParameterString(parameters, CamelEndpointConfiguration.class));
         }
 
-        if (context.getApplicationContext() != null && context.getApplicationContext().getBeansOfType(CamelContext.class).size() == 1) {
-            endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean(CamelContext.class));
+        if (context.getApplicationContext() != null) {
+            if (context.getApplicationContext().getBeansOfType(CamelContext.class).size() == 1) {
+                endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean(CamelContext.class));
+            } else if (context.getApplicationContext().containsBean("camelContext")) {
+                endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean("camelContext", CamelContext.class));
+            }
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(),

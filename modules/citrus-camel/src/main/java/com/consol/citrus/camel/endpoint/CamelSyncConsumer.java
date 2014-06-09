@@ -16,6 +16,7 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.messaging.ReplyProducer;
@@ -96,13 +97,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
             Assert.notNull(exchange, "Unable to locate camel exchange");
         }
 
-        org.apache.camel.Message reply = exchange.getOut();
-        for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
-            if (!header.getKey().equals(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR)) {
-                reply.setHeader(header.getKey(), header.getValue());
-            }
-        }
-        reply.setBody(message.getPayload());
+        buildOutMessage(exchange, message);
 
         log.info("Sending reply message to camel endpoint: '" + exchange.getFromEndpoint() + "'");
 
@@ -111,6 +106,45 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         onOutboundMessage(message);
 
         log.info("Message was successfully sent to camel endpoint: '" + exchange.getFromEndpoint() + "'");
+    }
+
+    /**
+     * Builds response and sets it as out message on given Camel exchange.
+     * @param message
+     * @param exchange
+     * @return
+     */
+    private void buildOutMessage(Exchange exchange, Message message) {
+        org.apache.camel.Message reply = exchange.getOut();
+        for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
+            if (!header.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
+                reply.setHeader(header.getKey(), header.getValue());
+            }
+        }
+
+        if (message.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION)) {
+            String exceptionClass = message.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION).toString();
+            String exceptionMsg = null;
+
+            if (message.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE)) {
+                exceptionMsg = message.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE).toString();
+            }
+
+            try {
+                Class<?> exception = Class.forName(exceptionClass);
+                if (exceptionMsg != null) {
+                    exchange.setException((Throwable) exception.getConstructor(String.class).newInstance(exceptionMsg));
+                } else {
+                    exchange.setException((Throwable) exception.newInstance());
+                }
+            } catch (RuntimeException e) {
+                log.warn("Unable to create proper exception instance for exchange!", e);
+            } catch (Exception e) {
+                log.warn("Unable to create proper exception instance for exchange!", e);
+            }
+        }
+
+        reply.setBody(message.getPayload());
     }
 
     /**

@@ -36,7 +36,7 @@ public class CamelEndpointParser extends AbstractEndpointParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("camel-context"), "camelContext");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("camel-context"), "camelContext", "camelContext");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("endpoint-uri"), "endpointUri");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
     }

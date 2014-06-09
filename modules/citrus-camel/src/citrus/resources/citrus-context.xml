@@ -39,17 +39,19 @@
     <route id="helloRoute">
       <from uri="direct:hello"/>
       <to uri="seda:sayHello" pattern="InOut"/>
+      <onException>
+        <exception>com.consol.citrus.exceptions.CitrusRuntimeException</exception>
+        <to uri="seda:exceptions"/>
+      </onException>
     </route>
   </camelContext>
 
   <!-- Camel message endpoints -->
   <citrus-camel:endpoint id="camelNewsEndpoint"
-                         camel-context="camelContext"
                          endpoint-uri="direct:news"
                          timeout="1000"/>
 
   <citrus-camel:endpoint id="camelNewsFeedEndpoint"
-                         camel-context="camelContext"
                          endpoint-uri="seda:newsFeed"
                          timeout="1000"/>
 

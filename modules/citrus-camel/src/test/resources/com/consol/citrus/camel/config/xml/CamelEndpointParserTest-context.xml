@@ -8,7 +8,6 @@
                             http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd">
 
   <citrus-camel:endpoint id="camelEndpoint1"
-                         camel-context="camelContext"
                          endpoint-uri="direct:news-feed1"/>
 
   <citrus-camel:endpoint id="camelEndpoint2"
@@ -17,7 +16,6 @@
                          endpoint-uri="direct:news-feed2"/>
 
   <citrus-camel:endpoint id="camelEndpoint3"
-                         camel-context="camelContext"
                          message-converter="messageConverter"
                          endpoint-uri="direct:news-feed3"
                          actor="testActor"/>

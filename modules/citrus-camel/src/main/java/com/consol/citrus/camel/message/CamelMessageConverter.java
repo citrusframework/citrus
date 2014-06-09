@@ -20,6 +20,8 @@ import org.apache.camel.Exchange;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 
+import java.util.Map;
+
 /**
  * Message converter able to read Camel exchange and create proper Spring Integration message
  * for internal use.
@@ -29,6 +31,11 @@ import org.springframework.integration.support.MessageBuilder;
  */
 public class CamelMessageConverter {
 
+    /**
+     * Converts Camel exchange to Spring integration message.
+     * @param source
+     * @return
+     */
     public Message<?> convertMessage(Exchange source) {
         if (source == null) {
             return null;
@@ -48,6 +55,10 @@ public class CamelMessageConverter {
                 .setHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN, source.getPattern().name())
                 .setHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED, source.isFailed());
 
+        //add all exchange properties
+        for (Map.Entry<String, Object> property : source.getProperties().entrySet()) {
+            messageBuilder.setHeader(property.getKey(), property.getValue());
+        }
 
         if (source.getException() != null) {
             messageBuilder.setHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION, source.getException().getClass().getName());
@@ -55,6 +66,5 @@ public class CamelMessageConverter {
         }
 
         return messageBuilder.build();
-
     }
 }
