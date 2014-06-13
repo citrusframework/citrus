@@ -78,7 +78,7 @@
     camel:direct:address
     camel:seda:address
     camel:jms:queue:someQueue?connectionFactory=myConnectionFactory
-    camel:activemq:queue:someQueue?concurrentConsumers=5&amp;async=true
+    camel:activemq:queue:someQueue?concurrentConsumers=5&amp;destination.consumer.prefetchSize=50
     camel:controlbus:route?routeId=myRoute&amp;action=status
 
     vertx:addressName

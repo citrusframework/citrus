@@ -97,7 +97,7 @@
       for a synchronous Apache Camel endpoint component looks like follows:</para>
 
     <programlisting>&lt;citrus-camel:sync-endpoint id=&quot;camelSyncEndpoint&quot;
-      address=&quot;direct:hello&quot;
+      endpoint-uri=&quot;direct:hello&quot;
       timeout=&quot;1000&quot;
       polling-interval=&quot;300&quot;/&gt;</programlisting>
 
