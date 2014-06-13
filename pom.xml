@@ -1251,6 +1251,17 @@
                 </configuration>
               </execution>
               <execution>
+                <id>prepare-integration-tests</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+                <phase>pre-integration-test</phase>
+                <configuration>
+                  <propertyName>itCoverageAgent</propertyName>
+                  <destFile>${basedir}/target/coverage-reports/jacoco-it.exec</destFile>
+                </configuration>
+              </execution>
+              <execution>
                 <id>jacoco-report</id>
                 <phase>verify</phase>
                 <goals>
