@@ -16,10 +16,12 @@
 
 package com.consol.citrus.report;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.TestResult.RESULT;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.PropertyUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +31,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestResult.RESULT;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.PropertyUtils;
+import java.io.*;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  * Basic logging reporter generating a HTML report with detailed test results.
@@ -244,7 +243,8 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
         StringBuilder stackTraceBuilder = new StringBuilder();
         stackTraceBuilder.append(cause.getClass().getName() + ": " + cause.getMessage() + "\n ");
         for (int i = 0; i < cause.getStackTrace().length; i++) {
-            stackTraceBuilder.append("\n\t at " + cause.getStackTrace()[i]);
+            stackTraceBuilder.append("\n\t at ");
+            stackTraceBuilder.append(cause.getStackTrace()[i]);
         }
         
         return "<tr><td colspan=\"2\">" +

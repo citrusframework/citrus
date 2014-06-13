@@ -16,11 +16,11 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * Function returning the absolute value of a decimal number.
@@ -41,9 +41,9 @@ public class AbsoluteFunction implements Function {
         String param = parameterList.get(0);
         
         if (param.contains(".")) {
-            return Double.valueOf(Math.abs(Double.valueOf(param))).toString();
+            return String.valueOf(Math.abs(Double.valueOf(param)));
         } else {
-            return Integer.valueOf(Math.abs(Integer.valueOf(param))).toString();
+            return String.valueOf(Math.abs(Integer.valueOf(param)));
         }
     }
 

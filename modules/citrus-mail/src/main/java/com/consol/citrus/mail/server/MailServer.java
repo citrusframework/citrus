@@ -373,7 +373,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
                     break;
                 }
 
-                body.append(line + System.getProperty("line.separator"));
+                body.append(line);
+                body.append(System.getProperty("line.separator"));
                 line = reader.readLine();
             }
         } finally {

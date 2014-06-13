@@ -16,13 +16,9 @@
 
 package com.consol.citrus.http.interceptor;
 
-import java.io.IOException;
-import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +26,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.consol.citrus.http.controller.HttpMessageController;
-import com.consol.citrus.util.FileUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * Logging interceptor called by Spring MVC for each controller handling a RESTful Http request 
@@ -133,7 +131,8 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
             }
             
             while (headerValues.hasMoreElements()) {
-                builder.append("," + headerValues.nextElement());
+                builder.append(",");
+                builder.append(headerValues.nextElement());
             }
             
             builder.append(NEWLINE);

@@ -31,6 +31,8 @@ import java.util.Map;
  */
 public class VertxEndpointComponent extends AbstractEndpointComponent {
 
+    public static final String VERTX_INSTANCE_FACTORY = "vertxInstanceFactory";
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(VertxEndpointComponent.class);
 
@@ -56,8 +58,8 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
         }
 
         // set vert.x factory if set
-        if (parameters.containsKey("vertxInstanceFactory")) {
-            String vertFactoryBean = parameters.remove("vertxInstanceFactory");
+        if (parameters.containsKey(VERTX_INSTANCE_FACTORY)) {
+            String vertFactoryBean = parameters.remove(VERTX_INSTANCE_FACTORY);
 
             if (context.getApplicationContext() != null) {
                 endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean(vertFactoryBean, VertxInstanceFactory.class));
@@ -66,8 +68,8 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
             }
         } else {
             // set default jms connection factory
-            if (context.getApplicationContext() != null && context.getApplicationContext().containsBean("vertxInstanceFactory")) {
-                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean("vertxInstanceFactory", VertxInstanceFactory.class));
+            if (context.getApplicationContext() != null && context.getApplicationContext().containsBean(VERTX_INSTANCE_FACTORY)) {
+                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean(VERTX_INSTANCE_FACTORY, VertxInstanceFactory.class));
             } else {
                 log.warn("Unable to set default Vert.x instance factory as Spring application context is not accessible or default factory bean is not available!");
             }

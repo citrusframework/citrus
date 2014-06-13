@@ -74,8 +74,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * @return
      */
     protected WebServiceTemplate createWebServiceTemplate() {
-        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        return webServiceTemplate;
+        return new WebServiceTemplate();
     }
 
     /**

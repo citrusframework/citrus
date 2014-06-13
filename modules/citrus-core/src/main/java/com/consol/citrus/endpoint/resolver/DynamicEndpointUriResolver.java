@@ -48,9 +48,9 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
         MessageHeaders headers = message.getHeaders();
 
         String requestUri;
-        if (headers.containsKey(ENDPOINT_URI_HEADER_NAME))
+        if (headers.containsKey(ENDPOINT_URI_HEADER_NAME)) {
             requestUri = headers.get(ENDPOINT_URI_HEADER_NAME).toString();
-        else if (StringUtils.hasText(defaultUri)) {
+        } else if (StringUtils.hasText(defaultUri)) {
             requestUri = defaultUri;
         } else {
             requestUri = defaultEndpointUri;

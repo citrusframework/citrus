@@ -73,7 +73,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
 
         if (component == null) {
             // try to get component from default Citrus modules
-            component = resolveDefaultComponent(componentName, context.getApplicationContext());
+            component = resolveDefaultComponent(componentName);
         }
 
         if (component == null) {
@@ -94,7 +94,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
         return applicationContext.getBeansOfType(EndpointComponent.class);
     }
 
-    private EndpointComponent resolveDefaultComponent(String componentName, ApplicationContext applicationContext) {
+    private EndpointComponent resolveDefaultComponent(String componentName) {
         String endpointComponentClassName = endpointComponentProperties.getProperty(componentName);
 
         try {

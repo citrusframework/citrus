@@ -51,7 +51,7 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
      * @param context
      */
     protected void executeActions(TestContext context) {
-        context.setVariable(indexName, Integer.valueOf(index).toString());
+        context.setVariable(indexName, String.valueOf(index));
 
         for (TestAction action: actions) {
             setLastExecutedAction(action);
@@ -67,7 +67,7 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
         String conditionString = condition;
 
         if (conditionString.indexOf(indexName) != -1) {
-            conditionString = conditionString.replaceAll(indexName, Integer.valueOf(index).toString());
+            conditionString = conditionString.replaceAll(indexName, String.valueOf(index));
         }
 
         return BooleanExpressionParser.evaluate(conditionString);

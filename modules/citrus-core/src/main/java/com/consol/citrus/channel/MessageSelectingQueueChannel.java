@@ -15,15 +15,15 @@
  */
 package com.consol.citrus.channel;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.util.Assert;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Added selective consumption of messages according to a message selector implementation.
@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  */
 public class MessageSelectingQueueChannel extends QueueChannel {
     /** Logger */
-    private static Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
     
     /** Blocking in memory message store */
     private final BlockingQueue<Message<?>> queue;

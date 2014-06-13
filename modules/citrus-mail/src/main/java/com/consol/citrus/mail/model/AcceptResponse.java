@@ -26,7 +26,7 @@ package com.consol.citrus.mail.model;
 public class AcceptResponse {
 
     /** Accept request outcome yes/no */
-    boolean accept;
+    private boolean accept;
 
     /**
      * Gets the accept outcome.

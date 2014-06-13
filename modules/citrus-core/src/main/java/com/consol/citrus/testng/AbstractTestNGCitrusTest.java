@@ -171,8 +171,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected TestRunner createTestRunner(String beanName, String packageName, TestContext testContext) {
-        CitrusXmlTestRunner testRunner = new CitrusXmlTestRunner(beanName, packageName, applicationContext, testContext);
-        return testRunner;
+        return new CitrusXmlTestRunner(beanName, packageName, applicationContext, testContext);
     }
 
     /**
