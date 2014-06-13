@@ -631,7 +631,6 @@
             </systemProperties>
             <forkMode>once</forkMode>
             <failIfNoTests>true</failIfNoTests>
-            <argLine>-Xmx256m</argLine>
             <excludes>
               <exclude>**/integration/**/*.java</exclude>
             </excludes>
@@ -1247,18 +1246,25 @@
                 <goals>
                   <goal>prepare-agent</goal>
                 </goals>
+                <configuration>
+                  <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+                </configuration>
               </execution>
               <execution>
-                <id>jacoco-site</id>
-                <phase>package</phase>
+                <id>jacoco-report</id>
+                <phase>verify</phase>
                 <goals>
                   <goal>report</goal>
                 </goals>
+                <configuration>
+                  <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                </configuration>
               </execution>
             </executions>
           </plugin>
         </plugins>
       </build>
     </profile>
+
   </profiles>
 </project>
