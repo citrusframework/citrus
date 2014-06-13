@@ -16,11 +16,6 @@
 
 package com.consol.citrus.http.interceptor;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map.Entry;
-
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +24,11 @@ import org.springframework.http.*;
 import org.springframework.http.client.*;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Simple logging interceptor writes Http request and response messages to the console.
@@ -154,7 +154,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
      * Response wrapper implementation of {@link ClientHttpResponse} that reads the message body 
      * into memory for caching, thus allowing for multiple invocations of {@link #getBody()}.
      */
-    private final static class CachingClientHttpResponseWrapper implements ClientHttpResponse {
+    private static final class CachingClientHttpResponseWrapper implements ClientHttpResponse {
 
         private final ClientHttpResponse response;
 
