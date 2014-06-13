@@ -16,7 +16,6 @@
 
 package com.consol.citrus.adapter.handler;
 
-import com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;

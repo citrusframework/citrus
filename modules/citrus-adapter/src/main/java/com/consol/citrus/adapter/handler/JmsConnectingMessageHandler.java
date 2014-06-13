@@ -84,14 +84,6 @@ public class JmsConnectingMessageHandler implements MessageHandler, Initializing
     private static Logger log = LoggerFactory.getLogger(JmsConnectingMessageHandler.class);
 
     /**
-     * Message callback interface for manipulating JMS request messages before sending. 
-     */
-    static interface JmsMessageCallback {
-        /** Opportunity to decorate generated jms message before forwarding */
-        void doWithMessage(javax.jms.Message message, Message<?> request) throws JMSException;
-    }
-
-    /**
      * @see com.consol.citrus.message.MessageHandler#handleMessage(org.springframework.integration.Message)
      * @throws CitrusRuntimeException
      */

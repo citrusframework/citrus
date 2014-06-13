@@ -16,17 +16,15 @@
 
 package com.consol.citrus.ws.message;
 
-import java.io.IOException;
-import java.util.Map.Entry;
-
-import javax.jms.JMSException;
-
+import com.consol.citrus.adapter.handler.JmsMessageCallback;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
 
-import com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
+import javax.jms.JMSException;
+import java.io.IOException;
+import java.util.Map.Entry;
 
 /**
  * Message callback able to decorate the generated JMS message before sending.
@@ -37,7 +35,7 @@ import com.consol.citrus.util.FileUtils;
 public class SoapAttachmentAwareJmsMessageCallback implements JmsMessageCallback {
 
     /**
-     * @see com.consol.citrus.adapter.handler.JmsConnectingMessageHandler.JmsMessageCallback#doWithMessage(javax.jms.Message, org.springframework.integration.Message)
+     * @see com.consol.citrus.adapter.handler.JmsMessageCallback#doWithMessage(javax.jms.Message, org.springframework.integration.Message)
      */
     public void doWithMessage(javax.jms.Message jmsMessage, Message<?> request) throws JMSException {
         try {
