@@ -664,9 +664,9 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                 + "</element>"
                 + "</root>").build();
 
-        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:cit='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message<?> controlMessage = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:cit='http://citrus/ns1' xmlns:cit2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
-                + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
+                + "<sub-element xsi:type='cit2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>").build();
 

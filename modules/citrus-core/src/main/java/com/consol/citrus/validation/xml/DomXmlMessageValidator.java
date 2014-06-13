@@ -573,8 +573,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 ValidationUtils.buildValueMismatchErrorMessage("Number of attributes not equal for element '"
                         + received.getLocalName() + "'", countAttributes(sourceAttr), countAttributes(receivedAttr)));
 
-        for (int i = 0; i<receivedAttr.getLength(); i++) {
-            doAttribute(received, receivedAttr.item(i), sourceAttr, validationContext, namespaceContext, context);
+        for (int i = 0; i < receivedAttr.getLength(); i++) {
+            doAttribute(received, receivedAttr.item(i), source, validationContext, namespaceContext, context);
         }
 
         //check if validation matcher on element is specified
@@ -639,71 +639,72 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     /**
      * Handle attribute node during validation.
      *
-     * @param element
-     * @param received
-     * @param sourceAttributes
+     * @param receivedElement
+     * @param receivedAttribute
+     * @param sourceElement
      * @param validationContext
      */
-    private void doAttribute(Node element, Node received, NamedNodeMap sourceAttributes,
+    private void doAttribute(Node receivedElement, Node receivedAttribute, Node sourceElement,
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext, TestContext context) {
-        if (received.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) { return; }
+        if (receivedAttribute.getNodeName().startsWith(XMLConstants.XMLNS_ATTRIBUTE)) { return; }
 
-        String receivedName = received.getLocalName();
+        String receivedAttributeName = receivedAttribute.getLocalName();
 
         if (log.isDebugEnabled()) {
-            log.debug("Validating attribute: " + receivedName + " (" + received.getNamespaceURI() + ")");
+            log.debug("Validating attribute: " + receivedAttributeName + " (" + receivedAttribute.getNamespaceURI() + ")");
         }
 
-        Node source = sourceAttributes.getNamedItemNS(received.getNamespaceURI(), receivedName);
+        NamedNodeMap sourceAttributes = sourceElement.getAttributes();
+        Node sourceAttribute = sourceAttributes.getNamedItemNS(receivedAttribute.getNamespaceURI(), receivedAttributeName);
 
-        Assert.isTrue(source != null,
+        Assert.isTrue(sourceAttribute != null,
                 "Attribute validation failed for element '"
-                    + element.getLocalName() + "', unknown attribute "
-                    + receivedName + " (" + received.getNamespaceURI() + ")");
+                        + receivedElement.getLocalName() + "', unknown attribute "
+                        + receivedAttributeName + " (" + receivedAttribute.getNamespaceURI() + ")");
 
-        if ((StringUtils.hasText(source.getNodeValue()) && source.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER))
-                || isAttributeIgnored(element, received, validationContext, namespaceContext)) {
+        if ((StringUtils.hasText(sourceAttribute.getNodeValue()) && sourceAttribute.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER))
+                || isAttributeIgnored(receivedElement, receivedAttribute, validationContext, namespaceContext)) {
             if (log.isDebugEnabled()) {
-                log.debug("Attribute '" + receivedName + "' is on ignore list - skipped value validation");
+                log.debug("Attribute '" + receivedAttributeName + "' is on ignore list - skipped value validation");
             }
             return;
-        } else if (isValidationMatcherExpression(source)) {
-            ValidationMatcherUtils.resolveValidationMatcher(source.getNodeName(),
-                    received.getNodeValue().trim(),
-                    source.getNodeValue().trim(),
+        } else if (isValidationMatcherExpression(sourceAttribute)) {
+            ValidationMatcherUtils.resolveValidationMatcher(sourceAttribute.getNodeName(),
+                    receivedAttribute.getNodeValue().trim(),
+                    sourceAttribute.getNodeValue().trim(),
                     context);
 
             if (log.isDebugEnabled()) {
-                log.debug("Attribute '" + receivedName + "'='" + source.getNodeValue() + "': OK");
+                log.debug("Attribute '" + receivedAttributeName + "'='" + sourceAttribute.getNodeValue() + "': OK");
             }
             return;
         }
 
-        String receivedValue = received.getNodeValue();
-        String sourceValue = source.getNodeValue();
+        String receivedValue = receivedAttribute.getNodeValue();
+        String sourceValue = sourceAttribute.getNodeValue();
 
         if (receivedValue.contains(":") && sourceValue.contains(":")) {
             // value has namespace prefix set, do special QName validation
             String receivedPrefix = receivedValue.substring(0, receivedValue.indexOf(':'));
             String sourcePrefix = sourceValue.substring(0, sourceValue.indexOf(':'));
 
-            Map<String, String> receivedNamespaces = XMLUtils.lookupNamespaces(received.getOwnerDocument());
-            receivedNamespaces.putAll(XMLUtils.lookupNamespaces(element));
+            Map<String, String> receivedNamespaces = XMLUtils.lookupNamespaces(receivedAttribute.getOwnerDocument());
+            receivedNamespaces.putAll(XMLUtils.lookupNamespaces(receivedElement));
 
             if (receivedNamespaces.containsKey(receivedPrefix)) {
-                Map<String, String> sourceNamespaces = XMLUtils.lookupNamespaces(source.getOwnerDocument());
-                sourceNamespaces.putAll(XMLUtils.lookupNamespaces(((Attr)source).getOwnerElement()));
+                Map<String, String> sourceNamespaces = XMLUtils.lookupNamespaces(sourceAttribute.getOwnerDocument());
+                sourceNamespaces.putAll(XMLUtils.lookupNamespaces(sourceElement));
 
                 if (sourceNamespaces.containsKey(sourcePrefix)) {
                     Assert.isTrue(sourceNamespaces.get(sourcePrefix).equals(receivedNamespaces.get(receivedPrefix)),
                             ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute value namespace '"
                                     + receivedValue + "'", sourceNamespaces.get(sourcePrefix), receivedNamespaces.get(receivedPrefix)));
 
-                    // remove namespace prefixes as they mut not form equality
+                    // remove namespace prefixes as they must not form equality
                     receivedValue = receivedValue.substring((receivedPrefix + ":").length());
                     sourceValue = sourceValue.substring((sourcePrefix + ":").length());
                 } else {
-                    throw new ValidationException("Received attribute value '" + receivedName + "' describes namespace qualified attribute value," +
+                    throw new ValidationException("Received attribute value '" + receivedAttributeName + "' describes namespace qualified attribute value," +
                             " control value '" + sourceValue + "' does not");
                 }
             }
@@ -711,10 +712,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         Assert.isTrue(receivedValue.equals(sourceValue),
                 ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
-                    + receivedName + "'", sourceValue, receivedValue));
+                    + receivedAttributeName + "'", sourceValue, receivedValue));
 
         if (log.isDebugEnabled()) {
-            log.debug("Attribute '" + receivedName + "'='" + receivedValue + "': OK");
+            log.debug("Attribute '" + receivedAttributeName + "'='" + receivedValue + "': OK");
         }
     }
 
