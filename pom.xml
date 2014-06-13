@@ -42,11 +42,11 @@
     <module>modules/citrus-ssh</module>
     <module>modules/citrus-ws</module>
     <module>modules/citrus-mail</module>
+    <module>modules/citrus-camel</module>
+    <module>modules/citrus-vertx</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-samples</module>
     <module>modules/citrus-admin</module>
-    <module>modules/citrus-vertx</module>
-    <module>modules/citrus-camel</module>
   </modules>
 
   <developers>
