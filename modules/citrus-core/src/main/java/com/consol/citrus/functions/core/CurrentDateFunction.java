@@ -16,15 +16,14 @@
 
 package com.consol.citrus.functions.core;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Function returning the actual date as formatted string value. User specifies format string

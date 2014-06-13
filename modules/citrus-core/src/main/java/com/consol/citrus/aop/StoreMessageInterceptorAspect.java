@@ -17,7 +17,6 @@
 package com.consol.citrus.aop;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.MessageTracingTestListener;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * the message flow.
  * 
  * @author Christoph Deppisch
- * @deprecated since Citrus 1.2, in favor of using {@link MessageTracingTestListener}
+ * @deprecated since Citrus 1.2, in favor of using {@link com.consol.citrus.report.MessageTracingTestListener}
  */
 @Aspect
 @Deprecated

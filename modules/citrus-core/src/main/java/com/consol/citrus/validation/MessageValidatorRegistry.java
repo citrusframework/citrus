@@ -16,20 +16,18 @@
 
 package com.consol.citrus.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.validation.context.ValidationContext;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Simple registry holding all available message validator implementations. Test context can ask this registry for

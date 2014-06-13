@@ -35,8 +35,8 @@ import java.util.List;
 
 /**
  * Action purges all messages from a message channel instance. Message channel must be
- * of type {@link QueueChannel}. Action receives a list of channel objects or a list of channel names
- * that are resolved dynamically at runtime.
+ * of type {@link org.springframework.integration.channel.QueueChannel}. Action receives
+ * a list of channel objects or a list of channel names that are resolved dynamically at runtime.
  * 
  * @author Christoph Deppisch
  */
