@@ -77,12 +77,12 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-jaxrs</artifactId>
-            <version>1.5.6</version>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-xc</artifactId>
-            <version>1.5.6</version>
+            <version>1.6.1</version>
         </dependency>
 
         <!-- JaxB Bindings (API and implementation) -->

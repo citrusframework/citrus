@@ -89,7 +89,7 @@
     </bean>
 
     <bean id="jacksonObjectMapper" class="org.codehaus.jackson.map.ObjectMapper">
-      <property name="defaltTyping">
+      <property name="defaultTyping">
         <bean class="com.consol.citrus.admin.jackson.CitrusTypeResolverBuilder"/>
       </property>
     </bean>
