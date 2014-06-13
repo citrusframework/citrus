@@ -76,6 +76,34 @@ public class CamelEndpointComponentTest {
     }
 
     @Test
+    public void testCreateSyncEndpoint() throws Exception {
+        CamelEndpointComponent component = new CamelEndpointComponent();
+
+        reset(applicationContext);
+        expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(Collections.singletonMap("myCamelContext", camelContext)).times(2);
+        expect(applicationContext.getBean(CamelContext.class)).andReturn(camelContext).times(2);
+        replay(applicationContext);
+
+        Endpoint endpoint = component.createEndpoint("camel:sync:direct:news", context);
+
+        Assert.assertEquals(endpoint.getClass(), CamelSyncEndpoint.class);
+
+        Assert.assertEquals(((CamelSyncEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news");
+        Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
+        Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+
+        endpoint = component.createEndpoint("camel:sync:seda:news-feed", context);
+
+        Assert.assertEquals(endpoint.getClass(), CamelSyncEndpoint.class);
+
+        Assert.assertEquals(((CamelSyncEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "seda:news-feed");
+        Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
+        Assert.assertEquals(((CamelSyncEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+
+        verify(applicationContext);
+    }
+
+    @Test
     public void testCreateEndpointWithParameters() throws Exception {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
@@ -95,6 +123,32 @@ public class CamelEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
 
         Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "direct:news-feed");
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
+        Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+
+        verify(applicationContext);
+    }
+
+    @Test
+    public void testCreateEndpointWithCamelParameters() throws Exception {
+        CamelEndpointComponent component = new CamelEndpointComponent();
+
+        Map<String, CamelContext> camelContextMap = new HashMap<String, CamelContext>();
+        camelContextMap.put("someCamelContext", EasyMock.createMock(CamelContext.class));
+        camelContextMap.put("myCamelContext", camelContext);
+
+        reset(applicationContext);
+        expect(applicationContext.getBeansOfType(CamelContext.class)).andReturn(camelContextMap).once();
+        expect(applicationContext.containsBean("camelContext")).andReturn(false).once();
+        expect(applicationContext.containsBean("myCamelContext")).andReturn(true).once();
+        expect(applicationContext.getBean("myCamelContext")).andReturn(camelContext).once();
+        replay(applicationContext);
+
+        Endpoint endpoint = component.createEndpoint("camel:controlbus:route?routeId=news&timeout=10000&camelContext=myCamelContext&action=stats", context);
+
+        Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
+
+        Assert.assertEquals(((CamelEndpoint)endpoint).getEndpointConfiguration().getEndpointUri(), "controlbus:route?routeId=news&action=stats");
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getCamelContext(), camelContext);
         Assert.assertEquals(((CamelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 

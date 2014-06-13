@@ -54,6 +54,29 @@ public class CamelMessageConverterTest {
     }
 
     @Test
+    public void testConvertMessageWithProperties() {
+        Exchange exchange = new DefaultExchange(camelContext);
+        exchange.setExchangeId(UUID.randomUUID().toString());
+        exchange.setFromRouteId("helloRoute");
+        exchange.getIn().setBody("Hello from Citrus!");
+        exchange.getIn().setHeader("operation", "sayHello");
+
+        exchange.setProperty("SpecialProperty", "foo");
+        exchange.setProperty("VerySpecialProperty", "bar");
+
+        Message result = messageConverter.convertMessage(exchange);
+
+        Assert.assertEquals(result.getPayload(), "Hello from Citrus!");
+        Assert.assertEquals(result.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
+        Assert.assertEquals(result.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_PATTERN), ExchangePattern.InOnly.name());
+        Assert.assertEquals(result.getHeaders().get(CitrusCamelMessageHeaders.ROUTE_ID), "helloRoute");
+        Assert.assertEquals(result.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_FAILED), false);
+        Assert.assertEquals(result.getHeaders().get("operation"), "sayHello");
+        Assert.assertEquals(result.getHeaders().get("SpecialProperty"), "foo");
+        Assert.assertEquals(result.getHeaders().get("VerySpecialProperty"), "bar");
+    }
+
+    @Test
     public void testConvertMessageWithException() {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());

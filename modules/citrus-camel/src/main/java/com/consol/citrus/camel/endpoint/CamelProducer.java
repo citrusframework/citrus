@@ -70,4 +70,11 @@ public class CamelProducer implements Producer {
         }
     }
 
+    /**
+     * Gets the message listeners on this producer.
+     * @return
+     */
+    public MessageListeners getMessageListener() {
+        return messageListener;
+    }
 }

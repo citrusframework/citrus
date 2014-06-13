@@ -43,6 +43,8 @@
       <xs:attribute name="camel-context" type="xs:string"/>
       <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
       <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="message-correlator" type="xs:string"/>
+      <xs:attribute name="polling-interval" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>

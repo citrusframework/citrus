@@ -78,7 +78,9 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
 
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
-        onReplyMessage(message, endpointConfiguration.getMessageConverter().convertMessage(response));
+        Message<?> replyMessage = endpointConfiguration.getMessageConverter().convertMessage(response);
+        onInboundMessage(replyMessage);
+        onReplyMessage(message, replyMessage);
     }
 
     @Override
@@ -129,6 +131,18 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
             onReplyMessage(endpointConfiguration.getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
             onReplyMessage("", replyMessage);
+        }
+    }
+
+    /**
+     * Informs message listeners if present.
+     * @param receivedMessage
+     */
+    protected void onInboundMessage(Message<?> receivedMessage) {
+        if (getMessageListener() != null) {
+            getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+        } else {
+            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
     }
 
