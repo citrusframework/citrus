@@ -212,7 +212,8 @@ public final class XMLUtils {
 
         if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
             buildNodeName(((Attr) node).getOwnerElement(), buffer);
-            buffer.append("." + node.getLocalName());
+            buffer.append(".");
+            buffer.append(node.getLocalName());
         } else {
             buildNodeName(node, buffer);
         }

@@ -16,11 +16,10 @@
 
 package com.consol.citrus.script;
 
+import com.consol.citrus.TestCase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-
-import java.io.*;
-
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +28,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
 
 /**
  * Class parsing a groovy script to create a test case instance.
@@ -72,11 +70,13 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
             String line;
             while ((line = templateReader.readLine()) != null) {
                 if (!line.trim().equalsIgnoreCase("\"+++++ BODY +++++\"")) {
-                    script.append(line + "\n");
+                    script.append(line);
+                    script.append("\n");
                 } else {
                     String bodyLine;                
                     while ((bodyLine = bodyReader.readLine()) != null) {
-                        script.append(bodyLine + "\n");
+                        script.append(bodyLine);
+                        script.append("\n");
                     }
                 }
             }

@@ -16,13 +16,12 @@
 
 package com.consol.citrus.samples.flightbooking.entity.converter;
 
-import java.text.*;
-import java.util.Calendar;
-
-import org.springframework.util.StringUtils;
-
 import com.consol.citrus.samples.flightbooking.entity.FlightEntity;
 import com.consol.citrus.samples.flightbooking.model.Flight;
+import org.springframework.util.StringUtils;
+
+import java.text.*;
+import java.util.Calendar;
 
 /**
  * Converter takes care on model to entity conversion and vice versa.
@@ -30,8 +29,6 @@ import com.consol.citrus.samples.flightbooking.model.Flight;
  */
 public class FlightConverter {
 
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ss");
-    
     /**
      * Prevent instantiation.
      */
@@ -45,6 +42,8 @@ public class FlightConverter {
      * @throws ParseException 
      */
     public static Flight from(FlightEntity entity) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ss");
+
         if (entity ==  null) {
             return null;
         }
@@ -79,10 +78,12 @@ public class FlightConverter {
     
     /**
      * Get entity form model.
-     * @param entity
+     * @param model
      * @return
      */
     public static FlightEntity from(Flight model) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-dd-MM'T'HH:mm:ss");
+
         FlightEntity entity = new FlightEntity();
         
         entity.setAirline(model.getAirline());

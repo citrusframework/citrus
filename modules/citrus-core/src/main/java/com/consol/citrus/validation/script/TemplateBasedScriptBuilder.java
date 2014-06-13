@@ -16,12 +16,11 @@
 
 package com.consol.citrus.validation.script;
 
-import java.io.*;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import org.springframework.core.io.Resource;
+
+import java.io.*;
 
 /**
  * Script builder builds a script with custom code body. Script header and tail come from static
@@ -69,9 +68,11 @@ public final class TemplateBasedScriptBuilder {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     if (line.trim().startsWith(importStmt)) {
-                        scriptBuilder.append(line + "\n");
+                        scriptBuilder.append(line);
+                        scriptBuilder.append("\n");
                     } else {
-                        scriptBody.append((scriptBody.length() == 0 ? "" : "\n") + line);
+                        scriptBody.append((scriptBody.length() == 0 ? "" : "\n"));
+                        scriptBody.append(line);
                     }
                 }
             } else {

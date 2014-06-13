@@ -16,9 +16,9 @@
 
 package com.consol.citrus.exceptions;
 
-import java.util.*;
-
 import com.consol.citrus.report.FailureStackElement;
+
+import java.util.*;
 
 /**
  * Basic custom runtime exception for all errors in Citrus
@@ -75,7 +75,8 @@ public class CitrusRuntimeException extends RuntimeException {
         StringBuilder builder = new StringBuilder();
         
         for (FailureStackElement failureStackElement : getFailureStack()) {
-            builder.append("\n\t" + failureStackElement.getStackMessage());
+            builder.append("\n\t");
+            builder.append(failureStackElement.getStackMessage());
         }
         
         return builder.toString();

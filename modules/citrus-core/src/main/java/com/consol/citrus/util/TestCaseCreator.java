@@ -196,7 +196,8 @@ public class TestCaseCreator {
             
             String line;
             while ((line = reader.readLine()) != null) {
-                contentBuilder.append(PropertyUtils.replacePropertiesInString(line, properties) + "\n");
+                contentBuilder.append(PropertyUtils.replacePropertiesInString(line, properties));
+                contentBuilder.append("\n");
             }
         } catch (FileNotFoundException e) {
             throw new CitrusRuntimeException("Failed to create test case, unable to find test case template", e);

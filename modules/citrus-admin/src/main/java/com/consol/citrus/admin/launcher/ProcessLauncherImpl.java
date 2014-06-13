@@ -16,11 +16,11 @@
 
 package com.consol.citrus.admin.launcher;
 
-import java.io.*;
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * @author Martin.Maher@consol.de
@@ -157,7 +157,8 @@ public class ProcessLauncherImpl implements ProcessLauncher {
                 while ((line = br.readLine()) != null) {
                     notifyActivity(processId, line);
 
-                    lineCache.append(line + System.getProperty("line.separator"));
+                    lineCache.append(line);
+                    lineCache.append(System.getProperty("line.separator"));
 
                     if (lineCacheSize > 0) {
                         lineCacheSize--;
