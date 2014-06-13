@@ -32,5 +32,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface CitrusTest {
     /** Test name optional -  by default method name is used as test name */
-    public String name() default "";
+    String name() default "";
 }

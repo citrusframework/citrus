@@ -32,5 +32,5 @@ public @interface CitrusParameters {
      * The list of parameter names corresponding with TestNG data provider parameter values.
      * Each parameter name and value is injected to the test case as test variable before execution.
      */
-    public String[] value();
+    String[] value();
 }
