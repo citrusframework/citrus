@@ -42,6 +42,7 @@
     <xi:include href='soap.xml'/>
     <xi:include href='message-channel.xml'/>
     <xi:include href='ftp.xml'/>
+    <xi:include href='camel.xml'/>
     <xi:include href='vertx.xml'/>
     <xi:include href='mail.xml'/>
     <xi:include href='ssh.xml'/>

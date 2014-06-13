@@ -31,6 +31,11 @@
         <message type="plaintext">
           <data>News from Citrus! Today is citrus:currentDate()</data>
         </message>
+        <header>
+          <element name="citrus_camel_route_id" value="newsRoute"/>
+          <element name="citrus_camel_exchange_failed" value="false"/>
+          <element name="citrus_camel_exchange_pattern" value="InOnly"/>
+        </header>
       </receive>
 
     </actions>
