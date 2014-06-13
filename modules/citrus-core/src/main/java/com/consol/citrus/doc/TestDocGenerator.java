@@ -24,5 +24,5 @@ public interface TestDocGenerator {
     /**
      * Generates the test documentation.
      */
-    public void generateDoc();
+    void generateDoc();
 }
