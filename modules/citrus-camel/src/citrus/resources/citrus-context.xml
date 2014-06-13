@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                         http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Camel Integration Testing"/>
+  </citrus:global-variables>
+
+  <!-- Xsd schema resources and definitions -->
+  <citrus:schema-repository id="schemaRepository"/>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <!-- Message validators -->
+  <bean id="messageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
+
+  <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+    <route id="newsRoute">
+      <from uri="direct:news"/>
+      <to uri="log:com.consol.citrus.camel?level=INFO"/>
+      <to uri="seda:newsFeed"/>
+    </route>
+
+    <route id="helloRoute">
+      <from uri="direct:hello"/>
+      <to uri="seda:sayHello" pattern="InOut"/>
+      <onException>
+        <exception>com.consol.citrus.exceptions.CitrusRuntimeException</exception>
+        <to uri="seda:exceptions"/>
+      </onException>
+    </route>
+  </camelContext>
+
+  <!-- Camel message endpoints -->
+  <citrus-camel:endpoint id="camelNewsEndpoint"
+                         endpoint-uri="direct:news"
+                         timeout="1000"/>
+
+  <citrus-camel:endpoint id="camelNewsFeedEndpoint"
+                         endpoint-uri="seda:newsFeed"
+                         timeout="1000"/>
+
+  <citrus-camel:sync-endpoint id="camelNewsStatusEndpoint"
+                         camel-context="camelContext"
+                         endpoint-uri="controlbus:route?routeId=newsRoute&amp;action=status"
+                         timeout="1000"/>
+
+  <citrus-camel:sync-endpoint id="camelHelloEndpoint"
+                         camel-context="camelContext"
+                         endpoint-uri="seda:sayHello"/>
+
+</beans>

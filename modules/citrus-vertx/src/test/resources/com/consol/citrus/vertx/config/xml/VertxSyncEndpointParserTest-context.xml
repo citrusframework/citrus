@@ -20,6 +20,7 @@
 
   <citrus-vertx:sync-endpoint id="vertxEndpoint3"
                          pub-sub-domain="true"
+                         polling-interval="1000"
                          address="news-feed3"/>
 
   <citrus-vertx:sync-endpoint id="vertxEndpoint4"

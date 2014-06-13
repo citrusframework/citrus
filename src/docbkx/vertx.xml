@@ -13,7 +13,7 @@
     <programlisting>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
       xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
-      xmlns:citrus-mail=&quot;http://www.citrusframework.org/schema/vertx/config&quot;
+      xmlns:citrus-vertx=&quot;http://www.citrusframework.org/schema/vertx/config&quot;
       xsi:schemaLocation=&quot;
       http://www.springframework.org/schema/beans
       http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -75,7 +75,7 @@
     &lt;payload&gt;Hello from Vert.x!&lt;/payload&gt;
   &lt;/message&gt;
   &lt;header&gt;
-    &lt;element name=&quot;citrus_vertx_address&quot; value="news-feed"/&gt;
+    &lt;element name=&quot;citrus_vertx_address&quot; value=&quot;news-feed&quot;/&gt;
   &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
 

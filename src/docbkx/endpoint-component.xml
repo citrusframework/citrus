@@ -44,6 +44,7 @@
     <listitem><emphasis>soap:</emphasis> Creates a SOAP WebService client that send a proper SOAP message to the server URL and waits for the synchronous response to arrive</listitem>
     <listitem><emphasis>ssh:</emphasis> Creates a new ssh client for publishing a command to the server</listitem>
     <listitem><emphasis>mail: or smtp:</emphasis> Creates a new mail client for sending a mail mime message to a SMTP server</listitem>
+    <listitem><emphasis>camel:</emphasis> Creates a new Apache Camel endpoint for sending and receiving Camel exchanges both to and from Camel routes.</listitem>
     <listitem><emphasis>vertx: or eventbus:</emphasis> Creates a new Vert.x instance sending and receiving messages with the network event bus</listitem>
   </itemizedlist>
 
@@ -73,6 +74,12 @@
 
     ssh:localhost:2200
     ssh://localhost:2200?timeout=10000&amp;strictHostChecking=true&amp;user=foo&amp;password=12345678
+
+    camel:direct:address
+    camel:seda:address
+    camel:jms:queue:someQueue?connectionFactory=myConnectionFactory
+    camel:activemq:queue:someQueue?concurrentConsumers=5&amp;async=true
+    camel:controlbus:route?routeId=myRoute&amp;action=status
 
     vertx:addressName
     vertx:addressName?port=10105&amp;timeout=10000&amp;pubSubDomain=true

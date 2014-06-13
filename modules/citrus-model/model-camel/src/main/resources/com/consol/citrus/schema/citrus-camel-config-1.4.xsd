@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2006-2014 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.citrusframework.org/schema/camel/config"
+           targetNamespace="http://www.citrusframework.org/schema/camel/config"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <xs:element name="endpoint">
+    <xs:annotation>
+      <xs:documentation>Camel endpoint for asynchronous communication</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="camel-context" type="xs:string"/>
+      <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="actor" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="sync-endpoint">
+    <xs:annotation>
+      <xs:documentation>Camel endpoint for synchronous communication</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="camel-context" type="xs:string"/>
+      <xs:attribute name="endpoint-uri" type="xs:string" use="required"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
+      <xs:attribute name="message-correlator" type="xs:string"/>
+      <xs:attribute name="polling-interval" type="xs:string"/>
+      <xs:attribute name="actor" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

@@ -99,6 +99,16 @@
       validation when using SOAP over HTTP. Read more about it in <xref linkend="soap-webservices"/></para>
   </section>
 
+  <section id="new-1-4-camel">
+    <title>Apache Camel integration</title>
+
+    <para>Apache Camel is a great enterprise integration platform that implements the enterprise integration patterns for building powerful mediation and routing rules for
+      message based integration applications. With the new support for camel endpoints in Citrus you can interact with Apache Camel components for sending and receiving messages.
+      Apache Camel offers a fine support for different message transports that now can be used in Citrus also. In addition to that you can put your Camel application to the test with
+      loading of the Apache Camel context with all your route definitions. Citrus is able to interact with these routes in asynchronous and synchronous communication scenarios.
+      Read about it in <xref linkend="camel"/>.</para>
+  </section>
+
   <section id="new-1-4-vertx">
     <title>Vert.x integration</title>
 
