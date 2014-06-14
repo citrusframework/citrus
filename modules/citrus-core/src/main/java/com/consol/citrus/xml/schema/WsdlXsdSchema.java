@@ -90,11 +90,10 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
      * Loads nested schema type definitions from wsdl.
      * @throws IOException 
      * @throws WSDLException 
-     * @throws TransformerFactoryConfigurationError 
-     * @throws TransformerException 
-     * @throws TransformerConfigurationException 
+     * @throws TransformerFactoryConfigurationError
+     * @throws TransformerException
      */
-    private void loadSchemas() throws WSDLException, IOException, TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
+    private void loadSchemas() throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
         Definition definition = WSDLFactory.newInstance().newWSDLReader().readWSDL(wsdl.getURI().getPath(), new InputSource(wsdl.getInputStream()));
         
         Types types = definition.getTypes();

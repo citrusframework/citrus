@@ -149,7 +149,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
             Field field = ReflectionUtils.findField(endpointConfigurationType, parameterEntry.getKey());
 
             if (field == null) {
-                if (paramString.toString().length() == 0) {
+                if (paramString.length() == 0) {
                     paramString.append("?").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());
                 } else {
                     paramString.append("&").append(parameterEntry.getKey()).append("=").append(parameterEntry.getValue());

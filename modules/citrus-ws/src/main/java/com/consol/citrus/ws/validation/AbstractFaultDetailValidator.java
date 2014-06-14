@@ -16,21 +16,20 @@
 
 package com.consol.citrus.ws.validation;
 
-import java.util.Iterator;
-
-import javax.xml.transform.*;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.xml.transform.StringResult;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.context.ValidationContext;
+import javax.xml.transform.*;
+import java.util.*;
 
 /**
  * Abstract implementation of {@link SoapFaultValidator} converting soap fault detail objects to simple String content for
@@ -40,14 +39,9 @@ import com.consol.citrus.validation.context.ValidationContext;
  */
 public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultValidator {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractFaultDetailValidator.class);
     
-    /**
-     * @see com.consol.citrus.ws.validation.AbstractSoapFaultValidator#validateFaultDetail(org.springframework.ws.soap.SoapFaultDetail, org.springframework.ws.soap.SoapFaultDetail, com.consol.citrus.context.TestContext)
-     */
     @Override
     protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, 
             TestContext context, final ValidationContext validationContext) {
@@ -56,51 +50,42 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
         if (log.isDebugEnabled()) {
             log.debug("Validating SOAP fault detail content ...");
         }
-        
-        Iterator<ValidationContext> contexts;
-        if (validationContext instanceof SoapFaultDetailValidationContext) {
-            contexts = ((SoapFaultDetailValidationContext)validationContext).getValidationContexts().iterator();
-        } else {
-            contexts = new Iterator<ValidationContext>() {
-                public boolean hasNext() {
-                    return true;
-                }
-                public ValidationContext next() {
-                    return validationContext;
-                }
-                public void remove() {
-                }
-            };
-        }
-        
-        if (receivedDetail != null) {
-            Iterator<SoapFaultDetailElement> receivedDetailElements = receivedDetail.getDetailEntries();
-            Iterator<SoapFaultDetailElement> controlDetailElements = controlDetail.getDetailEntries();
-            
-            while (receivedDetailElements.hasNext()) {
-                if (!controlDetailElements.hasNext()) {
-                    throw new ValidationException("Unexpected SOAP fault detail entry in received message");
-                }
-                
-                SoapFaultDetailElement receivedDetailElement = receivedDetailElements.next();
-                SoapFaultDetailElement controlDetailElement = controlDetailElements.next();
-                
-                String receivedDetailString = extractFaultDetail(receivedDetailElement);
-                String controlDetailString = extractFaultDetail(controlDetailElement);
-                
-                if (log.isDebugEnabled()) {
-                    log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
-                    log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
-                }
-                
-                validateFaultDetailString(receivedDetailString, controlDetailString, context, contexts.next());
-            }
-            
-            if (controlDetailElements.hasNext()) {
-                throw new ValidationException("Missing at least one SOAP fault detail entry in received message");
-            }
-        } else {
+
+        if (receivedDetail == null) {
             throw new ValidationException("Missing SOAP fault detail in received message");
+        }
+
+        List<ValidationContext> contexts = new ArrayList<ValidationContext>();
+        if (validationContext instanceof SoapFaultDetailValidationContext) {
+            contexts.addAll(((SoapFaultDetailValidationContext) validationContext).getValidationContexts());
+        }
+
+        Iterator<SoapFaultDetailElement> receivedDetailElements = receivedDetail.getDetailEntries();
+        Iterator<SoapFaultDetailElement> controlDetailElements = controlDetail.getDetailEntries();
+
+        int i = 0;
+        while (receivedDetailElements.hasNext()) {
+            if (!controlDetailElements.hasNext()) {
+                throw new ValidationException("Unexpected SOAP fault detail entry in received message");
+            }
+
+            SoapFaultDetailElement receivedDetailElement = receivedDetailElements.next();
+            SoapFaultDetailElement controlDetailElement = controlDetailElements.next();
+
+            String receivedDetailString = extractFaultDetail(receivedDetailElement);
+            String controlDetailString = extractFaultDetail(controlDetailElement);
+
+            if (log.isDebugEnabled()) {
+                log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
+                log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
+            }
+
+            validateFaultDetailString(receivedDetailString, controlDetailString, context,
+                    CollectionUtils.isEmpty(contexts) ? validationContext : contexts.get(i++));
+        }
+
+        if (controlDetailElements.hasNext()) {
+            throw new ValidationException("Missing at least one SOAP fault detail entry in received message");
         }
     }
 

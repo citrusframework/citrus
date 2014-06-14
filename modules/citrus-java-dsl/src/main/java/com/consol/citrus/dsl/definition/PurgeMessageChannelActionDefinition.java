@@ -16,22 +16,20 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.consol.citrus.actions.PurgeMessageChannelAction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.MessageChannel;
-import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.integration.support.channel.ChannelResolver;
 
-import com.consol.citrus.actions.PurgeMessageChannelAction;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Action purges all messages from a message channel instance. Message channel must be
- * of type {@link QueueChannel}. Action receives a list of channel objects or a list of channel names
- * that are resolved dynamically at runtime.
+ * of type {@link org.springframework.integration.channel.QueueChannel}. Action receives a
+ * list of channel objects or a list of channel names that are resolved dynamically at runtime.
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3

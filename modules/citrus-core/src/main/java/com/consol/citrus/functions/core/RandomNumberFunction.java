@@ -16,12 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-import java.util.Random;
-
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Function returning a random numeric value. Argument specifies the number of digits and
@@ -132,7 +132,7 @@ public class RandomNumberFunction implements Function {
                 replacement = generator.nextInt(10);
             }
             
-            return String.valueOf(replacement) + generated.substring(1);
+            return replacement + generated.substring(1);
         } else {
             return generated;
         }

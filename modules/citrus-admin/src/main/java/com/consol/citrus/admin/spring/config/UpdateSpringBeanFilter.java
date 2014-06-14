@@ -59,7 +59,7 @@ public class UpdateSpringBeanFilter extends RemoveSpringBeanFilter {
             updatedBeans++;
         }
         
-        if (element == added) {
+        if (element.equals(added)) {
             return NodeFilter.FILTER_ACCEPT; 
         }
         

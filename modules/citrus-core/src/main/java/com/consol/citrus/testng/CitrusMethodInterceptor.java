@@ -49,8 +49,6 @@ public class CitrusMethodInterceptor implements IMethodInterceptor {
             interceptedMethods.add(method);
 
             if (method.getInstance() instanceof AbstractTestNGCitrusTest) {
-                AbstractTestNGCitrusTest declaringTest = (AbstractTestNGCitrusTest) method.getInstance();
-
                 CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getConstructorOrMethod().getMethod().getAnnotation(CitrusXmlTest.class);
                 if (citrusXmlTestAnnotation != null) {
                     if (citrusXmlTestAnnotation.name().length > 1) {

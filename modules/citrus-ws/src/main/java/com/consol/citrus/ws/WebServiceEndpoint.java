@@ -132,7 +132,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         }
         
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
-            if (headerEntry.getKey().toLowerCase().equals(CitrusSoapMessageHeaders.HTTP_STATUS_CODE)) {
+            if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.HTTP_STATUS_CODE)) {
                 WebServiceConnection connection = TransportContextHolder.getTransportContext().getConnection();
                 
                 int statusCode = Integer.valueOf(headerEntry.getValue().toString());
@@ -290,7 +290,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             
-            SoapFaultDetail faultDetail = soapFault.addFaultDetail();;
+            SoapFaultDetail faultDetail = soapFault.addFaultDetail();
             for (int i = 0; i < soapFaultDetails.size(); i++) {
                 transformer.transform(new StringSource(soapFaultDetails.get(i)), faultDetail.getResult());
             }
