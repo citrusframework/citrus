@@ -16,8 +16,6 @@
 
 package com.consol.citrus.admin.spring.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeFilter;
@@ -46,9 +44,6 @@ public class GetSpringBeansFilter extends AbstractSpringBeanFilter {
     /** Found bean definition element nodes */
     private List<Element> beanDefinitions = new ArrayList<Element>();
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(GetSpringBeansFilter.class);
-    
     /**
      * Constructor using bean definition type as field.
      */

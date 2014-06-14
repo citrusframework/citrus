@@ -54,8 +54,8 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
             Map<String, String> parameters;
             if (path.contains("?")) {
-                String parameterString = path.substring(path.indexOf("?") + 1);
-                path = path.substring(0, path.indexOf("?"));
+                String parameterString = path.substring(path.indexOf('?') + 1);
+                path = path.substring(0, path.indexOf('?'));
                 parameters = getParameters(parameterString);
             } else {
                 parameters = new HashMap<String, String>();
@@ -63,7 +63,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
             return createEndpoint(path, parameters, context);
         } catch (URISyntaxException e) {
-            throw new CitrusRuntimeException(String.format("Unable to parse endpoint uri '%s'", endpointUri));
+            throw new CitrusRuntimeException(String.format("Unable to parse endpoint uri '%s'", endpointUri), e);
         }
     }
 

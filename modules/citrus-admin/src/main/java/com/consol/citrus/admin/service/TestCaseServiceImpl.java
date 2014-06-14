@@ -54,9 +54,6 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     private static Logger log = LoggerFactory.getLogger(TestCaseServiceImpl.class);
 
     @Autowired
-    private ConfigurationService configurationService;
-
-    @Autowired
     private ProjectService projectService;
 
     /** Test executor works on filesystem */
@@ -199,7 +196,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                 return "";
             }
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Failed to load test case source code: " + e.getMessage());
+            throw new CitrusAdminRuntimeException("Failed to load test case source code", e);
         }
     }
 

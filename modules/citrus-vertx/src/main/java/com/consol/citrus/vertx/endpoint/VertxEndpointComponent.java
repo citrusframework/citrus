@@ -51,8 +51,8 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
         }
 
         // set event bus address
-        if (resourcePath.indexOf(":") > 0) {
-            endpoint.getEndpointConfiguration().setAddress(resourcePath.substring(resourcePath.lastIndexOf(":") + 1));
+        if (resourcePath.indexOf(':') > 0) {
+            endpoint.getEndpointConfiguration().setAddress(resourcePath.substring(resourcePath.lastIndexOf(':') + 1));
         } else {
             endpoint.getEndpointConfiguration().setAddress(resourcePath);
         }

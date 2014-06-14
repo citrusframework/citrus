@@ -20,8 +20,6 @@ import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import com.consol.citrus.admin.spring.config.*;
 import com.consol.citrus.admin.util.JAXBHelper;
 import com.consol.citrus.util.XMLUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -43,9 +41,6 @@ import java.util.*;
  */
 @Component
 public class SpringBeanService {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SpringBeanService.class);
 
     @Autowired
     protected JAXBHelper jaxbHelper;

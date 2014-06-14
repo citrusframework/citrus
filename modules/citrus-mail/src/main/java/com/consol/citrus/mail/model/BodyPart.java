@@ -67,7 +67,7 @@ public class BodyPart {
             String charsetName = contentType.substring(contentType.indexOf("charset=") + "charset=".length());
 
             if (charsetName.contains(";")) {
-                return charsetName.substring(0, charsetName.indexOf(";"));
+                return charsetName.substring(0, charsetName.indexOf(';'));
             } else {
                 return charsetName;
             }

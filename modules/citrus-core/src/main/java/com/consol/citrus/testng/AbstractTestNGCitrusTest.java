@@ -154,7 +154,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                             methodTestRunners.add(createTestRunner(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath, testContext));
                         }
                     } catch (IOException e) {
-                        throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'");
+                        throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
                     }
                 }
             }

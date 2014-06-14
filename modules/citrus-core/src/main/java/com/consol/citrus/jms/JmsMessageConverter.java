@@ -16,8 +16,6 @@
 
 package com.consol.citrus.jms;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
@@ -44,9 +42,6 @@ public class JmsMessageConverter implements MessageConverter {
     /** The header mapper */
     private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
     
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JmsMessageConverter.class);
-
     /**
      * Convert Spring integration message to JMS message.
      */

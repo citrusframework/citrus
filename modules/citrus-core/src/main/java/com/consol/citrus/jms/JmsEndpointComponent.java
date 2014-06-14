@@ -48,8 +48,8 @@ public class JmsEndpointComponent extends AbstractEndpointComponent {
         }
 
         // set destination name
-        if (resourcePath.indexOf(":") > 0) {
-            endpoint.getEndpointConfiguration().setDestinationName(resourcePath.substring(resourcePath.lastIndexOf(":") + 1));
+        if (resourcePath.indexOf(':') > 0) {
+            endpoint.getEndpointConfiguration().setDestinationName(resourcePath.substring(resourcePath.lastIndexOf(':') + 1));
         } else {
             endpoint.getEndpointConfiguration().setDestinationName(resourcePath);
         }

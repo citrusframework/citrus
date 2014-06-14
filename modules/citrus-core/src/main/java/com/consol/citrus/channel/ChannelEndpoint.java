@@ -19,8 +19,6 @@ package com.consol.citrus.channel;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -34,9 +32,6 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * @since 1.4
  */
 public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAware {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ChannelEndpoint.class);
 
     /** Cached producer or consumer */
     private ChannelConsumer channelConsumer;

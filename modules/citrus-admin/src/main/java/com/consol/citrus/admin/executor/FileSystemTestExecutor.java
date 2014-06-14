@@ -22,8 +22,6 @@ import com.consol.citrus.admin.launcher.process.maven.MavenRunSingleTestCommand;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.websocket.WebSocketProcessListener;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
@@ -33,9 +31,6 @@ import java.io.File;
  * @author Christoph Deppisch
  */
 public class FileSystemTestExecutor implements TestExecutor<MavenRunConfiguration> {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FileSystemTestExecutor.class);
 
     @Autowired
     private ProcessMonitor processMonitor;
