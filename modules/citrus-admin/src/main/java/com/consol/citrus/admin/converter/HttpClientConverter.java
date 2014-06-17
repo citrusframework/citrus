@@ -31,7 +31,7 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData("http-client");
+        EndpointData endpointData = new EndpointData("http");
 
         endpointData.setName(client.getId());
         add("requestUrl", endpointData, client);

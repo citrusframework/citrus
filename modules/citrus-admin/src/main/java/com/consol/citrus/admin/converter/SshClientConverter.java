@@ -29,7 +29,7 @@ public class SshClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData("ssh-client");
+        EndpointData endpointData = new EndpointData("ssh");
 
         endpointData.setName(client.getId());
         add("host", endpointData, client, "localhost");

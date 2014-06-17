@@ -31,7 +31,7 @@ public class JmsMessageSenderConverter extends AbstractEndpointConverter<JmsMess
 
     @Override
     public EndpointData convert(JmsMessageSender definition) {
-        EndpointData endpointData = new EndpointData("jms-sender");
+        EndpointData endpointData = new EndpointData("jms");
 
         endpointData.setName(definition.getId());
 

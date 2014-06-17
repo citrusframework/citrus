@@ -6,30 +6,31 @@ h1 {
     font-size: 40px;
 }
 
-h2.header-badge, span.header-badge {
-    color: #333333;
-    border: 1px solid #333333;
-    background-color: #efefef;
-    border-radius: 10px;
-    padding-left: 15px;
-}
-
-h2.header-badge i, span.header-badge i {
+h1 small,
+h2 small,
+h3 small,
+h4 small,
+h5 small,
+h6 small {
     color: #333333;
 }
 
-span.header-badge {
-    display: inline-block;
-    min-width: 500px;
+.page-header {
+    margin: 0;
 }
 
 a {
-    color: #333333;
+    color: #3b73af;
 }
 
 a:hover {
-    color: #FBD06E;
+    color: #fac300;
     text-decoration: none;
+}
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+    background-color: #ebf2f9;
 }
 
 .container-fluid {
@@ -37,8 +38,8 @@ a:hover {
 }
 
 .content-header {
-    background: url('../images/feature-logo-full.png') no-repeat top right #efefef;
-    border-bottom: 2px solid #aaaaaa;
+    background: url('../images/feature-logo-full.png') no-repeat top right #ebf2f9;
+    border-bottom: 1px solid #d4d4d4;
     margin-bottom: 20px;
     padding-top: 15px;
 }
@@ -48,60 +49,47 @@ a:hover {
     min-width: 235px;
 }
 
-.navbar-inverse .navbar-inner {
-  background-color: #585858;
-  background-image: -moz-linear-gradient(top , #585858, #3d3d3d);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#585858), to(#3d3d3d));
-  background-image: -webkit-linear-gradient(top, #585858, #3d3d3d);
-  background-image: -o-linear-gradient(top, #585858, #3d3d3d);
-  background-image: linear-gradient(to bottom, #585858, #3d3d3d);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff585858', endColorstr='#ff3d3d3d', GradientType=0);
+.navbar .brand {
+    padding: 6px 10px 5px;
 }
 
-.navbar-inverse .brand, .navbar-inverse .nav > li > a {
-  color: #ffffff;
+.navbar .brand span {
+    vertical-align: middle;
 }
 
-.navbar-inverse .brand {
-  padding: 6px 10px 5px;
+.navbar .nav > li > a {
+    font-size: 13px;
+    border-right: 1px solid #d4d4d4;
+    text-shadow: none;
 }
 
-.navbar-inverse .brand span {
-  vertical-align: middle;
+.navbar .nav .active > a, .navbar .nav .active > a:hover, .navbar .nav .active > a:focus {
+    color: #ffffff;
+    background-color: #0480be;
+    background-image: -moz-linear-gradient(top , #4bb1cf, #0480be);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0480be));
+    background-image: -webkit-linear-gradient(top, #4bb1cf, #0480be);
+    background-image: -o-linear-gradient(top, #4bb1cf, #0480be);
+    background-image: linear-gradient(to bottom, #4bb1cf, #0480be);
 }
 
-.navbar-inverse .nav > li > a {
-  font-size: 13px;
-  border-left: 1px solid #4a4a4a;
-}
-
-.navbar-inverse .nav .active > a, .navbar-inverse .nav .active > a:hover, .navbar-inverse .nav .active > a:focus {
-  color: #FFFFFF;
-  background-color: #808080;
-  background-image: -moz-linear-gradient(top , #808080, #434343);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#808080), to(#434343));
-  background-image: -webkit-linear-gradient(top, #808080, #434343);
-  background-image: -o-linear-gradient(top, #808080, #434343);
-  background-image: linear-gradient(to bottom, #808080, #434343);
-}
-
-.navbar-inverse .nav > li > a:hover {
-  color: #FFFFFF;
-  background-color: #808080;
-  background-image: -moz-linear-gradient(top , #808080, #434343);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#808080), to(#434343));
-  background-image: -webkit-linear-gradient(top, #808080, #434343);
-  background-image: -o-linear-gradient(top, #808080, #434343);
-  background-image: linear-gradient(to bottom, #808080, #434343);
+.navbar .nav > li > a:hover {
+    color: #ffffff;
+    background-color: #0480be;
+    background-image: -moz-linear-gradient(top , #4bb1cf, #0480be);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0480be));
+    background-image: -webkit-linear-gradient(top, #4bb1cf, #0480be);
+    background-image: -o-linear-gradient(top, #4bb1cf, #0480be);
+    background-image: linear-gradient(to bottom, #4bb1cf, #0480be);
 }
 
 .box {
-  background-color: #FFFFFF;
-  border: 1px solid #DDDDDD;
-  border-radius: 4px 4px 4px 4px;
-  margin: 15px 0;
-  padding: 5px 20px 20px 25px;
-  position: relative;
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px 4px 4px 4px;
+    margin: 15px 0;
+    padding: 5px 20px 20px 25px;
+    position: relative;
 }
 
 .box-dark {
@@ -109,30 +97,30 @@ a:hover {
 }
 
 .side-nav {
-  background-color: #FFFFFF;
-  border-radius: 6px 6px 6px 6px;
-  margin: 110px 0 0;
-  padding: 0;
+    background-color: #FFFFFF;
+    border-radius: 6px 6px 6px 6px;
+    margin: 110px 0 0;
+    padding: 0;
 }
 
 .side-nav > li > a {
-  border: 1px solid #DDDDDD;
-  display: block;
-  margin: 0 0 -1px;
-  padding: 8px 14px;
+    border: 1px solid #DDDDDD;
+    display: block;
+    margin: 0 0 -1px;
+    padding: 8px 14px;
 }
 
 .side-nav > li:first-child > a {
-  border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
 }
 
 .side-nav > li:last-child > a {
-  border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
 }
 
 .nav-tabs > li > a, .nav-tabs > li > a:hover {
-    color: #000000;
-    background-color: #efefef;
+    color: #333333;
+    background-color: #ebf2f9;
 }
 
 .nav-tabs > .active > a, .nav-tabs > .active > a:hover {
@@ -147,17 +135,27 @@ a:hover {
 
 .nav-tabs.nav-stacked > .active > a, .nav-tabs.nav-stacked > li > a:hover {
     color: #333333;
-    background-color: #efefef;
+    background-color: #ebf2f9;
 }
 
 .nav-tabs.nav-stacked > li > a > i {
-    color: #555555;
+    color: #ffffff;
+    margin-top: 3px;
+}
+
+.nav-tabs.nav-stacked > .active > a > i, .nav-tabs.nav-stacked > li > a:hover > i {
+    color: #fac300;
     margin-top: 3px;
 }
 
 h4.page-header {
     padding: 0 0 5px;
     margin: 5px 0 15px;
+}
+
+.label, .badge {
+    text-shadow: none;
+    font-weight: normal;
 }
 
 .ajax-loader {
@@ -185,14 +183,6 @@ div.test-details-open {
    padding-top: 200px;
    min-height: 595px;
    text-align: center;
-}
-
-h3.page-header {
-    margin: 0;
-}
-
-h2 i, h3 i, h4 i {
-    color: #555555;
 }
 
 .test-details {
@@ -283,16 +273,16 @@ h2 i, h3 i, h4 i {
 }
 
 code.template {
-  display: none;
+    display: none;
 }
 
 pre.logger {
-  height: 175px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  font-size: 10px;
-  background-color: #ffffff;
-  border: none;
+    height: 175px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 10px;
+    background-color: #ffffff;
+    border: none;
 }
 
 ul.jqueryFileTree {
@@ -404,22 +394,22 @@ span.message-outbound {
 .dropdown-menu li > a:hover,
 .dropdown-menu li > a:focus,
 .dropdown-submenu:hover > a {
-    background-color: #FAA732;
-    background-image: -moz-linear-gradient(top , #FBD577, #F89406);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FBD577), to(#F89406));
-    background-image: -webkit-linear-gradient(top, #FBD577, #F89406);
-    background-image: -o-linear-gradient(top, #FBD577, #F89406);
-    background-image: linear-gradient(to bottom, #FBD577, #F89406);
+    background-color: #fac300;
+    background-image: -moz-linear-gradient(top , #FAdd55, #fac300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FAdd55), to(fac300));
+    background-image: -webkit-linear-gradient(top, #FAdd55, #fac300);
+    background-image: -o-linear-gradient(top, #FAdd55, #fac300);
+    background-image: linear-gradient(to bottom, #FAdd55, #fac300);
 }
 
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-    background-color: #FAA732;
-    background-image: -moz-linear-gradient(top , #FBD577, #F89406);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FBD577), to(#F89406));
-    background-image: -webkit-linear-gradient(top, #FBD577, #F89406);
-    background-image: -o-linear-gradient(top, #FBD577, #F89406);
-    background-image: linear-gradient(to bottom, #FBD577, #F89406);
+    background-color: #fac300;
+    background-image: -moz-linear-gradient(top , #FAdd55, #fac300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FAdd55), to(fac300));
+    background-image: -webkit-linear-gradient(top, #FAdd55, #fac300);
+    background-image: -o-linear-gradient(top, #FAdd55, #fac300);
+    background-image: linear-gradient(to bottom, #FAdd55, #fac300);
 }
 
 .dropdown-menu li > a {
@@ -539,15 +529,14 @@ span.message-outbound {
 .btn-citrus {
     color: #ffffff;
     text-shadow: none;
-    background-color: #FAA732;
-    *background-color: #F89406;
-    background-image: -moz-linear-gradient(top, #FBD06E, #F89406);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FBD06E), to(#F89406));
-    background-image: -webkit-linear-gradient(top, #FBD06E, #F89406);
-    background-image: -o-linear-gradient(top, #FBD06E, #F89406);
-    background-image: linear-gradient(to bottom, #FBD06E, #F89406);
+    background-color: #fac300;
+    background-image: -moz-linear-gradient(top , #FAdd55, #fac300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FAdd55), to(fac300));
+    background-image: -webkit-linear-gradient(top, #FAdd55, #fac300);
+    background-image: -o-linear-gradient(top, #FAdd55, #fac300);
+    background-image: linear-gradient(to bottom, #FAdd55, #fac300);
     background-repeat: repeat-x;
-    border-color: #F89406 #F89406 #FAA732;
+    border-color: #fac300 #fac300 #FAdd55;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffFBD06E', endColorstr='#ffF89406', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -559,8 +548,8 @@ span.message-outbound {
 .btn-citrus.disabled,
 .btn-citrus[disabled] {
     color: #ffffff;
-    background-color: #F89406;
-    *background-color: #FAA732;
+    background-color: #fac300;
+    *background-color: #FAdd55;
 }
 
 .btn-citrus.active {
@@ -587,7 +576,7 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .config-box:hover h5.page-header {
-    background-color: #FBE37E;
+    background-color: #fac300;
 }
 
 .config-box h5.page-header {
@@ -945,5 +934,33 @@ ul.properties li:first-child {
 
 tr.endpoint:hover ul.properties li {
   display: block;
+}
+
+.badge-citrus {
+    background-color: #fac300;
+}
+
+.badge-jms {
+    background-color: #faac00;
+}
+
+.badge-http {
+    background-color: #92bed2;
+}
+
+.badge-ssh {
+    background-color: #F4645C;
+}
+
+.badge-mail {
+    background-color: #768dc1;
+}
+
+.badge-ws {
+    background-color: #0480be;
+}
+
+.badge-channel {
+    background-color: #92bed2;
 }
 

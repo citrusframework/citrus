@@ -31,7 +31,7 @@ public class MessageChannelSenderConverter extends AbstractEndpointConverter<Mes
 
     @Override
     public EndpointData convert(MessageChannelSender definition) {
-        EndpointData endpointData = new EndpointData("channel-sender");
+        EndpointData endpointData = new EndpointData("channel");
 
         endpointData.setName(definition.getId());
 

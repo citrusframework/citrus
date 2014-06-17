@@ -30,7 +30,7 @@ public class MailClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData("mail-client");
+        EndpointData endpointData = new EndpointData("mail");
 
         endpointData.setName(client.getId());
         add("host", endpointData, client);

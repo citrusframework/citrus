@@ -1,6 +1,6 @@
 <div>
-    <h2>
-      <span class="header-badge"><i class="fa fa-share-alt-square"></i> Endpoints</span>
+    <h2 class="page-header">
+      <span><i class="fa fa-share-alt-square"></i> Endpoints</span>
       <div class="pull-right">
         <a id="btn-endpoint-new" class="btn" type="button" title="Add endpoint"><i class="fa fa-plus"></i> Add</a>
       </div>
@@ -9,10 +9,10 @@
     <table class="table table-hover table-condensed config-table">
       <thead>
       <tr>
-        <th width="80px">Type</th>
-        <th>Id</th>
+        <th style="width: 80px;">Type</th>
+        <th>Name</th>
         <th>Configuration</th>
-        <th width="20px;"></th>
+        <th style="width: 20px;"></th>
       </tr>
       </thead>
       <tbody>
@@ -22,7 +22,7 @@
 
       {{#each endpoints}}
       <tr class="endpoint clickable" id="{{id}}">
-        <td>{{type}}</td>
+        <td><span class="badge badge-{{type}}"><i class="fa fa-share-alt-square"></i> &nbsp;{{type}}</span></td>
         <td>{{name}}</td>
         <td>
           <ul class="properties">

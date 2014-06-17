@@ -1,40 +1,33 @@
 <div class="container-fluid content-header">
   <div>
-    <h1><i class="fa fa-lemon-o" style="color: #FBD06E;"/> {{name}} <small>Project overview</small></h1>
-    <p>
-      <span>Projecthome:</span> <span><b>{{projectHome}}</b></span>
-      <span>Name:</span> <span><b>{{name}}</b></span>
-      <span>Citrus version:</span> <span><b>{{version}}</b></span>
-      <span>Package:</span> <span><b>{{basePackage}}</b></span>
-    </p>
+    <h1><i class="fa fa-cube"/> Project: {{name}}</h1>
     <br/>
-
-    {{#if description}}
-    <p>{{description}}</p>
-    {{/if}}
-    {{#unless description}}
-    <p>Welcome to your Citrus project! What can be done here? You can manage the project configuration,
-      run test cases and verify test results and statistics.</p>
-    {{/unless}}
+    <p>
+      <span><b>Projecthome:</b></span> <span>{{projectHome}}</span>
+      <span><b>Name:</b></span> <span>{{name}}</span>
+      <span><b>Citrus version:</b></span> <span>{{version}}</span>
+      <span><b>Package:</b></span> <span>{{basePackage}}</span>
+    </p>
   </div>
 </div>
 
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3">
-      <h2 class="header-badge"><i class="fa fa-wrench"/> Configuration</h2>
+      <h2 class="page-header"><i class="fa fa-wrench"/> Configuration</h2>
       <p>Citrus Spring application context configuration:</p>
       <ul id="config-overview" style="list-style: none; margin: 0 0 10px 5px">
-        <li><i class="fa fa-book"/> Endpoints</li>
-        <li><i class="fa fa-book"/> Schema Repository</li>
-        <li><i class="fa fa-book"/> Global Variables</li>
-        <li><i class="fa fa-book"/> Functions</li>
+        <li><i class="fa fa-wrench"/> Endpoints</li>
+        <li><i class="fa fa-wrench"/> Schema Repository</li>
+        <li><i class="fa fa-wrench"/> Global Variables</li>
+        <li><i class="fa fa-wrench"/> Functions</li>
       </ul>
       <a href="#config" alt="Show configuration page">Show configuration</a>
     </div>
     <div class="span4">
-      <h2 class="header-badge"><i class="fa fa-cubes"/> Tests</h2>
-      <p>Your project has <b>102</b> test cases! Lately added:</p>
+      <h2 class="page-header"><i class="fa fa-cubes"/> Tests</h2>
+      <p>Your project has <b>102</b> test cases!</p>
+      <span>Latest tests:</span>
       <ul id="test-overview" style="list-style: none; margin: 0 0 10px 5px">
         <li><i class="fa fa-file-text-o"/> 01_Sample_Test</li>
         <li><i class="fa fa-file-text-o"/> 02_Foo_Test</li>
@@ -45,8 +38,8 @@
       <a href="#tests" alt="View all tests">View all tests</a>
     </div>
     <div class="span3">
-      <h2 class="header-badge"><i class="fa fa-tasks"/> Latest results</h2>
-      <p>Latest test results from <b>01-01-2014 00:15</b></p>
+      <h2 class="page-header"><i class="fa fa-tasks"/> Latest results</h2>
+      <p>Latest test results: <b>01-01-2014 00:15</b></p>
       <span>Tests executed: 102</span>
       <div class="progress progress-info test-report-bar">
         <div class="bar" style="width: 100%"></div>
@@ -71,7 +64,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3">
-      <h2 class="header-badge"><i class="fa fa-cogs"/> Settings</h2>
+      <h2 class="page-header"><i class="fa fa-cogs"/> Settings</h2>
       <ul id="settings-overview" style="list-style: none; margin: 0 0 10px 5px">
         <li><b>Name:</b> {{name}}</li>
         <li><b>Version:</b> {{version}}</li>

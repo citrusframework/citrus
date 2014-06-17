@@ -30,7 +30,7 @@ import org.springframework.util.StringUtils;
 public class JmsMessageReceiverConverter extends AbstractEndpointConverter<JmsMessageReceiver> {
     @Override
     public EndpointData convert(JmsMessageReceiver definition) {
-        EndpointData endpointData = new EndpointData("jms-receiver");
+        EndpointData endpointData = new EndpointData("jms");
 
         endpointData.setName(definition.getId());
 
