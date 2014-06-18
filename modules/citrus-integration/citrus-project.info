@@ -1,0 +1,6 @@
+{
+  "name": "citrus-integration",
+  "version": "1.4.1",
+  "description": "",
+  "basePackage": "com.consol.citrus"
+}
