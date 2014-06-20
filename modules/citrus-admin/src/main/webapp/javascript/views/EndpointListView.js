@@ -4,12 +4,12 @@
             endpoints: undefined,
 
             events: {
-                "click tr.endpoint": "showEditDialog",
-                "click .btn-endpoint-remove": "removeEndpoint",
-                "click #btn-endpoint-new": "showNewDialog",
-                "click #btn-endpoint-save": "createEndpoint",
-                "click #btn-endpoint-update": "updateEndpoint",
-                "click #btn-endpoint-cancel": "closeDialog"
+                "click tr.endpoint": "showEditForm",
+                "click .btn-remove": "remove",
+                "click .btn-new": "showNewForm",
+                "click #btn-add": "create",
+                "click #btn-save": "save",
+                "click #btn-cancel": "closeForm"
             },
 
             initialize: function () {
@@ -17,7 +17,10 @@
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('EndpointListView', {endpoints: this.endpoints}));
+                var groupedEndpoints = _.groupBy(this.endpoints, function(endpoint) { return endpoint.type; });
+                groupedEndpoints = _.map(groupedEndpoints, function(value, key) { return { type: key, endpoints: value }; });
+
+                $(this.el).html(TemplateManager.template('EndpointListView', {endpointTypes: groupedEndpoints}));
                 return this;
             },
 
@@ -36,7 +39,7 @@
                 });
             },
 
-            removeEndpoint: function (event) {
+            remove: function (event) {
                 var encodedId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedId);
                 var url = "endpoint/" + id;
@@ -51,15 +54,17 @@
                 });
             },
 
-            showNewDialog: function() {
-                $('#endpoint-edit-dialog').html(TemplateManager.template('EndpointEditView', {}));
-                $('#endpoint-edit-dialog .modal').modal();
+            showNewForm: function() {
+                $('#endpoint-edit').html(TemplateManager.template('EndpointEditView', {}));
+                $('#endpoint-list').hide('slide', function() {
+                    $('#endpoint-edit').show('slide');
+                });
 
             },
 
-            showEditDialog: function() {
-                var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
-                var id = this.extractId(encodedSchemaId);
+            showEditForm: function() {
+                var encodedId = $(event.target).closest($("[id]")).attr('id');
+                var id = this.extractId(encodedId);
                 var url = "endpoint/" + id;
 
                 $.ajax({
@@ -67,16 +72,18 @@
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        $('#endpoint-edit-dialog').html(TemplateManager.template('EndpointEditView', {}));
-                        $('#endpoint-edit-dialog .modal').modal();
+                        $('#endpoint-edit').html(TemplateManager.template('EndpointEditView', response));
+                        $('#endpoint-list').hide('slide', function() {
+                            $('#endpoint-edit').show('slide');
+                        });
                     }, this),
                     async: true
                 });
             },
 
-            createEndpoint: function() {
-                var form = $('#form-endpoint-edit form');
-                this.closeDialog();
+            create: function() {
+                var form = $('#endpoint-edit-form');
+                this.closeForm();
 
                 var serializedForm = form.serializeObject();
                 var url = "endpoint";
@@ -94,9 +101,9 @@
                 return false;
             },
 
-            updateEndpoint: function() {
-                var form = $('#form-endpoint-edit form');
-                this.closeDialog();
+            save: function() {
+                var form = $('#endpoint-edit-form');
+                this.closeForm();
 
                 var serializedForm = form.serializeObject();
                 var elementId = serializedForm.id;
@@ -122,8 +129,10 @@
                 return false;
             },
 
-            closeDialog: function() {
-                $('#endpoint-edit-dialog .modal').modal('hide');
+            closeForm: function() {
+                $('#endpoint-edit').hide('slide', function() {
+                    $('#endpoint-list').show('slide');
+                });
             },
 
             extractId: function(encodedId) {

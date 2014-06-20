@@ -1,0 +1,67 @@
+{{#if name}}
+<h3>Edit Endpoint</h3>
+{{else}}
+<h3>New Endpoint</h3>
+{{/if}}
+
+<form id="endpoint-edit-form" class="form-horizontal">
+  {{#if name}}
+  <input name="name" type="hidden" value="{{name}}"/>
+  <div class="control-group">
+    <label class="control-label">Type <em>*</em></label>
+    <div class="controls">
+      <select name="type" value="{{type}}" disabled="true" class="span8">
+        <option>{{type}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="newId" value="{{name}}" placeholder="Name" type="text" class="span8"/>
+    </div>
+  </div>
+  {{else}}
+  <div class="control-group">
+    <label class="control-label">Type <em>*</em></label>
+    <div class="controls">
+      <select name="type" class="span8">
+        <option>jms</option>
+        <option>channel</option>
+        <option>http</option>
+        <option>ws</option>
+        <option>ssh</option>
+        <option>camel</option>
+        <option>vertx</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="name" value="{{name}}" placeholder="Name" type="text" class="span8"/>
+    </div>
+  </div>
+  {{/if}}
+
+  {{#each configuration}}
+  <div class="control-group">
+    <label class="control-label">{{@key}}</label>
+    <div class="controls">
+      <input name="{{@key}}" value="{{this}}" placeholder="{{@key}}" type="text" class="span8"/>
+    </div>
+  </div>
+  {{/each}}
+
+  <div class="control-group">
+    <div class="controls">
+      {{#if name}}
+      <a href="#config" id="btn-save" class="btn btn-citrus">Save</a>
+      {{else}}
+      <a href="#config" id="btn-add" class="btn btn-citrus">Add</a>
+      {{/if}}
+      <a href="#config" id="btn-cancel" class="btn">Close</a>
+    </div>
+  </div>
+</form>
+

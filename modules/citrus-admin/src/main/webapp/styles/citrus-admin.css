@@ -332,12 +332,12 @@ div.file-tree {
 }
 
 .form-horizontal .control-label {
-    width: 110px;
+    width: 175px;
     font-weight: bold;
 }
 
 .form-horizontal .controls {
-    margin-left: 120px;
+    margin-left: 200px;
 }
 
 #content {
@@ -604,6 +604,7 @@ input[readonly], select[readonly], textarea[readonly] {
 
 .config-table {
     margin-top: 20px;
+    margin-bottom: 50px;
 }
 
 .test-design {
@@ -944,27 +945,54 @@ tr.endpoint:hover ul.properties li {
     background-color: #fac300;
 }
 
-.badge-jms {
+.label-jms, .badge-jms {
     background-color: #faac00;
 }
 
-.badge-http {
+.label-http, .badge-http {
     background-color: #92bed2;
 }
 
-.badge-ssh {
+.label-ssh, .badge-ssh {
     background-color: #F4645C;
 }
 
-.badge-mail {
+.label-mail, .badge-mail {
     background-color: #768dc1;
 }
 
-.badge-ws {
+.label-ws, .badge-ws {
     background-color: #0480be;
 }
 
-.badge-channel {
+.label-channel, .badge-channel {
     background-color: #92bed2;
 }
 
+i.citrus {
+    color: #fac300;
+}
+
+i.jms {
+    color: #faac00;
+}
+
+i.http {
+    color: #92bed2;
+}
+
+i.ssh {
+    color: #F4645C;
+}
+
+i.mail {
+    color: #768dc1;
+}
+
+i.ws {
+    color: #0480be;
+}
+
+i.channel {
+    color: #92bed2;
+}

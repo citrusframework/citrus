@@ -1,9 +1,6 @@
 <div>
     <h2 class="page-header">
-      <span><i class="fa fa-copy"></i> Schema-Repositories</span>
-      <div class="pull-right">
-        <a id="btn-repository-new" class="btn" type="button" title="Add repository"><i class="fa fa-plus"></i> Add</a>
-      </div>
+      <span><i class="fa fa-copy"></i> Schema Repositories</span>
     </h2>
 
     <table class="table table-hover table-condensed config-table">
@@ -29,13 +26,15 @@
       </tr>
       {{/each}}
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">&nbsp;<a class="btn-repository-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></td>
+        </tr>
+      </tfoot>
     </table>
 
     <h2 class="page-header">
       <span><i class="fa fa-file-code-o"></i> Schemas</span>
-      <div class="pull-right">
-        <a id="btn-schema-new" class="btn" type="button" title="Add schema"><i class="fa fa-plus"></i> Add</a>
-      </div>
     </h2>
 
     <table class="table table-hover table-condensed config-table">
@@ -64,10 +63,11 @@
       {{/each}}
       </tbody>
       <tfoot>
-      <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+          <td colspan="3">&nbsp;<a class="btn-schema-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></td>
+        </tr>
       </tfoot>
     </table>
-
 </div>
 
 <div id="schema-edit-dialog"></div>

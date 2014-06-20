@@ -1,9 +1,7 @@
-<div>
+<div id="endpoint-list">
+  {{#each endpointTypes}}
     <h2 class="page-header">
-      <span><i class="fa fa-share-alt-square"></i> Endpoints</span>
-      <div class="pull-right">
-        <a id="btn-endpoint-new" class="btn" type="button" title="Add endpoint"><i class="fa fa-plus"></i> Add</a>
-      </div>
+      <span><i class="fa fa-share-alt-square {{type}}"></i> {{type}} Endpoints</span>
     </h2>
 
     <table class="table table-hover table-condensed config-table">
@@ -21,7 +19,7 @@
       {{/unless}}
 
       {{#each endpoints}}
-      <tr class="endpoint clickable" id="{{id}}">
+      <tr class="endpoint clickable" id="{{name}}">
         <td><span class="badge badge-{{type}}"><i class="fa fa-share-alt-square"></i> &nbsp;{{type}}</span></td>
         <td>{{name}}</td>
         <td>
@@ -32,13 +30,18 @@
           </ul>
         </td>
         <td>
-          <a class="btn-endpoint-remove" href="#config" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
+          <a class="btn-remove" href="#config" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
         </td>
       </tr>
       {{/each}}
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">&nbsp;<a class="btn-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></td>
+        </tr>
+      </tfoot>
     </table>
+  {{/each}}
 </div>
 
-<div id="endpoint-edit-dialog"></div>
-
+<div id="endpoint-edit"></div>
