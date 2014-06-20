@@ -1,12 +1,12 @@
 <div class="container-fluid content-header">
   <div>
-    <h1><i class="fa fa-cube"/> Project: {{name}}</h1>
+    <h1><i class="fa fa-cube"/> Project: {{project.name}}</h1>
     <br/>
     <p>
-      <span><b>Projecthome:</b></span> <span>{{projectHome}}</span>
-      <span><b>Name:</b></span> <span>{{name}}</span>
-      <span><b>Citrus version:</b></span> <span>{{version}}</span>
-      <span><b>Package:</b></span> <span>{{basePackage}}</span>
+      <span><b>Projecthome:</b></span> <span>{{project.projectHome}}</span>
+      <span><b>Name:</b></span> <span>{{project.name}}</span>
+      <span><b>Citrus version:</b></span> <span>{{project.version}}</span>
+      <span><b>Package:</b></span> <span>{{project.basePackage}}</span>
     </p>
   </div>
 </div>
@@ -26,21 +26,19 @@
     </div>
     <div class="span4">
       <h2 class="page-header"><i class="fa fa-cubes"/> Tests</h2>
-      <p>Your project has <b>102</b> test cases!</p>
+      <p>Your project has <b>{{project.testCount}}</b> test cases!</p>
       <span>Latest tests:</span>
       <ul id="test-overview" style="list-style: none; margin: 0 0 10px 5px">
-        <li><i class="fa fa-file-text-o"/> 01_Sample_Test</li>
-        <li><i class="fa fa-file-text-o"/> 02_Foo_Test</li>
-        <li><i class="fa fa-file-text-o"/> 03_Bar_Test</li>
-        <li><i class="fa fa-file-text-o"/> 04_Citrus_Test</li>
-        <li><i class="fa fa-file-text-o"/> 05_Citrus_Test</li>
+        {{#each latestTests}}
+        <li><i class="fa fa-file-text-o"/> <a href="#tests/{{name}}" title="{{packageName}}.{{name}}">{{name}}</a></li>
+        {{/each}}
       </ul>
       <a href="#tests" alt="View all tests">View all tests</a>
     </div>
     <div class="span3">
       <h2 class="page-header"><i class="fa fa-tasks"/> Latest results</h2>
       <p>Latest test results: <b>01-01-2014 00:15</b></p>
-      <span>Tests executed: 102</span>
+      <span>Tests executed: {{project.testCount}}</span>
       <div class="progress progress-info test-report-bar">
         <div class="bar" style="width: 100%"></div>
       </div>
@@ -66,11 +64,11 @@
     <div class="span3">
       <h2 class="page-header"><i class="fa fa-cogs"/> Settings</h2>
       <ul id="settings-overview" style="list-style: none; margin: 0 0 10px 5px">
-        <li><b>Name:</b> {{name}}</li>
-        <li><b>Version:</b> {{version}}</li>
-        <li><b>Package:</b> {{basePackage}}</li>
+        <li><b>Name:</b> {{project.name}}</li>
+        <li><b>Version:</b> {{project.version}}</li>
+        <li><b>Package:</b> {{project.basePackage}}</li>
         <li>&nbsp;</li>
-        <li><b>ProjectHome:</b> {{projectHome}}</li>
+        <li><b>ProjectHome:</b> {{project.projectHome}}</li>
       </ul>
       <a href="#project" alt="Edit project settings"><i class="fa fa-edit"/> Edit settings</a>
     </div>

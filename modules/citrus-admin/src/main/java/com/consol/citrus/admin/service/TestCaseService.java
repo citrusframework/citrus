@@ -36,6 +36,13 @@ public interface TestCaseService {
     List<TestCaseInfo> getTests();
 
     /**
+     * Gets number of test cases for the active project. This includes XML test cases as well as
+     * Java Citrus test methods.
+     * @return
+     */
+    Long getTestCount();
+
+    /**
      * Gets test case details such as status, description, author.
      * @param packageName
      * @param testName

@@ -27,6 +27,7 @@ public class TestCaseInfo {
     private String groups;
     private String file;
     private TestCaseType type;
+    private Long lastModified;
 
     /**
      * @return
@@ -98,5 +99,21 @@ public class TestCaseInfo {
      */
     public void setType(TestCaseType type) {
         this.type = type;
+    }
+
+    /**
+     * Gets last modified timestamp of test case file.
+     * @return
+     */
+    public Long getLastModified() {
+        return lastModified;
+    }
+
+    /**
+     * Sets last modified timestamp of test case file.
+     * @param lastModified
+     */
+    public void setLastModified(Long lastModified) {
+        this.lastModified = lastModified;
     }
 }

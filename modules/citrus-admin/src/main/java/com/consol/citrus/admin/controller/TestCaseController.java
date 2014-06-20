@@ -82,6 +82,12 @@ public class TestCaseController {
         return view;
     }
 
+    @RequestMapping(value = "/count", method = { RequestMethod.POST })
+    @ResponseBody
+    public Long testCount() {
+        return testCaseService.getTestCount();
+    }
+
     @RequestMapping(value="/details/{type}/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
     public TestCaseDetail getTestDetail(@PathVariable("package") String testPackage, @PathVariable("name") String testName,

@@ -48,6 +48,9 @@ public class ProjectService implements InitializingBean {
     @Autowired
     private FileHelper fileHelper;
 
+    @Autowired
+    private TestCaseService testCaseService;
+
     /** Current project actively opened in Citrus admin */
     private Project project;
 
@@ -64,6 +67,8 @@ public class ProjectService implements InitializingBean {
         System.setProperty(PropertyConstants.PROJECT_HOME, projectHomeDir);
         project = new Project(projectHomeDir);
         project.setup();
+
+        project.setTestCount(testCaseService.getTestCount());
     }
 
     /**

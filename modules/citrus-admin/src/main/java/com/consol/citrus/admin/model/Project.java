@@ -48,6 +48,7 @@ public class Project {
     private String version;
     private final String projectHome;
     private String basePackage = System.getProperty(PropertyConstants.BASE_PACKAGE, "com.consol.citrus");
+    private Long testCount;
 
     /** Citrus project information as Json file */
     private final String PROJECT_INFO_FILENAME = "citrus-project.info";
@@ -301,5 +302,21 @@ public class Project {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Gets the test count for this project.
+     * @return
+     */
+    public Long getTestCount() {
+        return testCount;
+    }
+
+    /**
+     * Sets the test count for this project.
+     * @param testCount
+     */
+    public void setTestCount(Long testCount) {
+        this.testCount = testCount;
     }
 }

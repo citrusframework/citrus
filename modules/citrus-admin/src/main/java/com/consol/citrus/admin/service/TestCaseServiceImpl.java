@@ -69,13 +69,11 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     @Override
     public List<TestCaseInfo> getTests() {
         List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
-        String testDirectory = getTestDirectory();
 
-        List<File> testFiles = FileUtils.getTestFiles(testDirectory);
-
+        List<File> testFiles = FileUtils.getTestFiles(getTestDirectory());
         for (File file : testFiles) {
             String testName = FilenameUtils.getBaseName(file.getName());
-            String testPackageName = file.getPath().substring(testDirectory.length(), file.getPath().length() - file.getName().length())
+            String testPackageName = file.getPath().substring(getTestDirectory().length(), file.getPath().length() - file.getName().length())
                     .replace(File.separatorChar, '.');
 
             if (testPackageName.endsWith(".")) {
@@ -87,19 +85,18 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
             testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator + FilenameUtils.getBaseName(file.getName()));
+            testCase.setLastModified(file.lastModified());
 
             tests.add(testCase);
         }
 
-        testDirectory = getJavaDirectory();
-
         try {
-            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(testDirectory) + "**/*.java");
+            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory()) + "**/*.java");
 
             for (Resource resource : javaSources) {
                 File file = resource.getFile();
                 String testName = FilenameUtils.getBaseName(file.getName());
-                String testPackage = file.getParentFile().getAbsolutePath().substring(testDirectory.length()).replace(File.separatorChar, '.');
+                String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory().length()).replace(File.separatorChar, '.');
 
                 if (knownToClasspath(testPackage, testName)) {
                     tests.addAll(getTestCaseInfoFromClass(testPackage, testName, file));
@@ -112,6 +109,30 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         }
 
         return tests;
+    }
+
+    @Override
+    public Long getTestCount() {
+        Long testCount = Long.valueOf(FileUtils.getTestFiles(getTestDirectory()).size());
+
+        try {
+            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory()) + "**/*.java");
+            for (Resource resource : javaSources) {
+                File file = resource.getFile();
+                String testName = FilenameUtils.getBaseName(file.getName());
+                String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory().length()).replace(File.separatorChar, '.');
+
+                if (knownToClasspath(testPackage, testName)) {
+                    testCount += getTestCaseInfoFromClass(testPackage, testName, file).size();
+                } else {
+                    testCount += getTestCaseInfoFromFile(testPackage, testName, file).size();
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Failed to read Java source files - list of test cases for this project is incomplete", e);
+        }
+
+        return testCount;
     }
 
     @Override
@@ -341,20 +362,21 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                     testCase.setType(TestCaseType.JAVA);
                     testCase.setPackageName(testPackage);
                     testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
+                    testCase.setLastModified(file.lastModified());
 
                     if (methodContent.startsWith(citrusAnnotation + "(")) {
                         String annotationProps = methodContent.substring(methodContent.indexOf('('), methodContent.indexOf(')'));
                         if (StringUtils.hasText(annotationProps) && annotationProps.contains("name=\"")) {
                             String methodName = annotationProps.substring(annotationProps.indexOf("name=\"") + "name=\"".length());
                             methodName = methodName.substring(0, methodName.indexOf('"'));
-                            testCase.setName(testName + "." + methodName);
+                            testCase.setName(methodName);
                         }
                     }
 
                     if (!StringUtils.hasText(testCase.getName())) {
                         String methodName = methodContent.substring(methodContent.indexOf("publicvoid") + "publicvoid".length());
                         methodName = methodName.substring(0, methodName.indexOf("("));
-                        testCase.setName(testName + "." + methodName);
+                        testCase.setName(methodName);
                     }
 
                     tests.add(testCase);
@@ -367,6 +389,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                 testCase.setName(testName);
                 testCase.setPackageName(testPackage);
                 testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
+                testCase.setLastModified(file.lastModified());
 
                 tests.add(testCase);
             } else {
@@ -393,21 +416,26 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
             Class<?> testBuilderClass = Class.forName(testPackage + "." + testName);
 
             if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
-                TestCaseInfo testCase = new TestCaseInfo();
-                testCase.setType(TestCaseType.JAVA);
-                testCase.setName(testName);
-                testCase.setPackageName(testPackage);
-                testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
-
-                tests.add(testCase);
-
                 List<String> methods = getTestMethods(testBuilderClass);
                 for (String method : methods) {
-                    testCase = new TestCaseInfo();
+                    TestCaseInfo testCase = new TestCaseInfo();
                     testCase.setType(TestCaseType.JAVA);
-                    testCase.setName(testName + "." + method);
+                    testCase.setName(method);
                     testCase.setPackageName(testPackage);
                     testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()) + "." + method);
+                    testCase.setLastModified(file.lastModified());
+
+                    tests.add(testCase);
+                }
+
+                if (tests.isEmpty()) {
+                    // there were no Citrus annotated methods found so lets add the class itself as test case info
+                    TestCaseInfo testCase = new TestCaseInfo();
+                    testCase.setType(TestCaseType.JAVA);
+                    testCase.setName(testName);
+                    testCase.setPackageName(testPackage);
+                    testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
+                    testCase.setLastModified(file.lastModified());
 
                     tests.add(testCase);
                 }

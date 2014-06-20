@@ -18,8 +18,27 @@
             },
 
             render: function() {
-                $(this.el).html(TemplateManager.template('ProjectView', this.project));
+                $(this.el).html(TemplateManager.template('ProjectView', { project: this.project, latestTests: this.getLatestTests() }));
                 return this;
+            },
+
+            getLatestTests: function() {
+                var latestTests = {};
+                $.ajax({
+                    url: "testcase/",
+                    type: 'GET',
+                    dataType: "json",
+                    success: _.bind(function(response) {
+                        latestTests = response;
+                    }, this),
+                    async: false
+                });
+
+                latestTests = _.sortBy(latestTests, function(test) {
+                    return test.lastModified;
+                });
+
+                return _.last(latestTests, 6).reverse();
             }
 
         });
