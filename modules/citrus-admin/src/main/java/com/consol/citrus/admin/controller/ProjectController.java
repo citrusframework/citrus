@@ -68,4 +68,13 @@ public class ProjectController {
         projectService.load(projecthome);
         return "redirect:/";
     }
+
+    @RequestMapping(value = "/reset", method = RequestMethod.GET)
+    public String openProject() {
+        if (projectService.getActiveProject() != null) {
+            return "redirect:/";
+        } else {
+            return "redirect:/setup";
+        }
+    }
 }

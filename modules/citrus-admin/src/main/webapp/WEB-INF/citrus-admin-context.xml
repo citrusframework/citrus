@@ -80,7 +80,7 @@
     <mvc:interceptors>
         <bean class="com.consol.citrus.admin.controller.ProjectSetupInterceptor">
             <property name="redirect" value="/setup"/>
-            <property name="excludes" value="/images/*, /styles/*, /javascript/*, /project"/>
+            <property name="excludes" value="/images/*, /styles/*, /javascript/*, /project, /project/open, /project/reset"/>
         </bean> 
     </mvc:interceptors>
     

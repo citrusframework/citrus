@@ -97,6 +97,10 @@ public class Project {
             description = projectInfo.get("description").toString();
         }
 
+        if (projectInfo.containsKey("basePackage")) {
+            basePackage = projectInfo.get("basePackage").toString();
+        }
+
         MavenRunConfiguration mavenRunConfiguration = new MavenRunConfiguration();
         mavenRunConfiguration.setId("Maven");
         mavenRunConfiguration.setStandard(true);
