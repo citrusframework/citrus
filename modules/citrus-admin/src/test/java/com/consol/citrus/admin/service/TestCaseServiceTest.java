@@ -16,8 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.model.Project;
-import com.consol.citrus.admin.model.TestCaseInfo;
+import com.consol.citrus.admin.model.*;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -57,7 +56,7 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         List<TestCaseInfo> tests = testCaseService.getTests();
 
         Assert.assertNotNull(tests);
-        Assert.assertEquals(tests.size(), 2L);
+        Assert.assertEquals(tests.size(), 4L);
 
         TestCaseInfo test = tests.get(0);
         Assert.assertEquals(test.getName(), "FooTest");
@@ -66,6 +65,43 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         test = tests.get(1);
         Assert.assertEquals(test.getName(), "BarTest");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
+
+        test = tests.get(2);
+        Assert.assertEquals(test.getName(), "JavaTest.FooJavaTest");
+        Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
+
+        test = tests.get(3);
+        Assert.assertEquals(test.getName(), "JavaTest.FooTest");
+        Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
+
+        verify(projectService, project);
+    }
+
+    @Test
+    public void testGetTestFileTree() throws IOException {
+        reset(projectService, project);
+
+        expect(projectService.getActiveProject()).andReturn(project).times(3);
+        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).times(3);
+
+        replay(projectService, project);
+
+        FileTreeModel tests = testCaseService.getTestFileTree("com/consol/citrus");
+
+        Assert.assertNotNull(tests);
+        Assert.assertEquals(tests.getXmlFiles().size(), 1L);
+
+        FileTreeModel.TestFileModel test = tests.getXmlFiles().get(0);
+        Assert.assertEquals(test.getFilename(), "BarTest");
+        Assert.assertNull(test.getTestMethods());
+
+        Assert.assertEquals(tests.getJavaFiles().size(), 1L);
+
+        test = tests.getJavaFiles().get(0);
+        Assert.assertEquals(test.getFilename(), "JavaTest");
+        Assert.assertEquals(test.getTestMethods().size(), 2L);
+        Assert.assertEquals(test.getTestMethods().get(0), "FooJavaTest");
+        Assert.assertEquals(test.getTestMethods().get(1), "FooTest");
 
         verify(projectService, project);
     }

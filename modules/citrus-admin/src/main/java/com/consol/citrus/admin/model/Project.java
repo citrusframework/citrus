@@ -23,12 +23,15 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Document;
 
+import javax.xml.xpath.XPathConstants;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +73,28 @@ public class Project {
     /**
      * Setup project information from given Json info object. Json object is usually loaded from file system
      * project home.
-     * @param projectInfo
      */
-    public void setup(JSONObject projectInfo) {
-        name = readProperty(projectInfo, "name", "citrus-project");
-        version = readProperty(projectInfo, "version", "unknown");
-        description = readProperty(projectInfo, "description", "");
+    public void setup() {
+        JSONParser parser = new JSONParser();
+        JSONObject projectInfo;
+        try {
+            if (getProjectInfoFile().exists()) {
+                projectInfo = (JSONObject) parser.parse(new FileReader(getProjectInfoFile()));
+            } else {
+                projectInfo = createProjectInfo();
+            }
+        } catch (IOException e) {
+            throw new CitrusAdminRuntimeException("Could not read Citrus project information file", e);
+        } catch (ParseException e) {
+            throw new CitrusAdminRuntimeException("Could not parse Citrus project information file", e);
+        }
+
+        name = projectInfo.get("name").toString();
+        version = projectInfo.get("version").toString();
+
+        if (projectInfo.containsKey("description")) {
+            description = projectInfo.get("description").toString();
+        }
 
         MavenRunConfiguration mavenRunConfiguration = new MavenRunConfiguration();
         mavenRunConfiguration.setId("Maven");
@@ -101,10 +120,10 @@ public class Project {
                 nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
 
                 Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
-                projectInfo.put("basePackage", XPathUtils.evaluateAsString(pomDoc, "/mvn:project/mvn:groupId", nsContext));
-                projectInfo.put("name", XPathUtils.evaluateAsString(pomDoc, "/mvn:project/mvn:artifactId", nsContext));
-                projectInfo.put("version", XPathUtils.evaluateAsString(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext));
-                projectInfo.put("description", XPathUtils.evaluateAsString(pomDoc, "/mvn:project/mvn:description", nsContext));
+                projectInfo.put("basePackage", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:groupId", nsContext, XPathConstants.STRING));
+                projectInfo.put("name", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:artifactId", nsContext, XPathConstants.STRING));
+                projectInfo.put("version", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext, XPathConstants.STRING));
+                projectInfo.put("description", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:description", nsContext, XPathConstants.STRING));
             } catch (IOException e) {
                 throw new CitrusAdminRuntimeException("Unable to open Maven pom.xml file", e);
             }
@@ -114,9 +133,9 @@ public class Project {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
 
                 Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
-                projectInfo.put("name", XPathUtils.evaluateAsString(buildDoc, "/project/@name", nsContext));
-                projectInfo.put("version", XPathUtils.evaluateAsString(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext));
-                projectInfo.put("description", XPathUtils.evaluateAsString(buildDoc, "/project/@description", nsContext));
+                projectInfo.put("name", XPathUtils.evaluateExpression(buildDoc, "/project/@name", nsContext, XPathConstants.STRING));
+                projectInfo.put("version", XPathUtils.evaluateExpression(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext, XPathConstants.STRING));
+                projectInfo.put("description", XPathUtils.evaluateExpression(buildDoc, "/project/@description", nsContext, XPathConstants.STRING));
             } catch (IOException e) {
                 throw new CitrusAdminRuntimeException("Unable to open ANT build.xml file", e);
             }
@@ -202,21 +221,6 @@ public class Project {
      */
     private String getMavenPomFilePath() {
         return projectHome + System.getProperty("file.separator") + "pom.xml";
-    }
-
-    /**
-     * Reads property if present in given Json info object. Otherwise uses default value.
-     * @param projectInfo
-     * @param propertyName
-     * @param defaultValue
-     * @return
-     */
-    private String readProperty(JSONObject projectInfo, String propertyName, String defaultValue) {
-        if (projectInfo.containsKey(propertyName)) {
-            return projectInfo.get(propertyName).toString();
-        } else {
-            return defaultValue;
-        }
     }
 
     /**

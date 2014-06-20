@@ -57,36 +57,76 @@ public class FileTreeModel {
         public void setTestMethods(List<String> methods) {
             put(TEST_METHODS, methods);
         }
+
+        public String getFilename() {
+            return get(FILENAME).toString();
+        }
+
+        public List<String> getTestMethods() {
+            return (List<String>) get(TEST_METHODS);
+        }
     }
 
+    /**
+     * Gets the compact folder.
+     * @return
+     */
     public String getCompactFolder() {
         return compactFolder;
     }
 
+    /**
+     * Sets the compact folder.
+     * @param compactFolder
+     */
     public void setCompactFolder(String compactFolder) {
         this.compactFolder = compactFolder;
     }
 
+    /**
+     * Gets the folders.
+     * @return
+     */
     public String[] getFolders() {
         return folders;
     }
 
+    /**
+     * Sets the folders.
+     * @param folders
+     */
     public void setFolders(String[] folders) {
         this.folders = Arrays.copyOf(folders, folders.length);
     }
 
+    /**
+     * Gets the xml files.
+     * @return
+     */
     public List<TestFileModel> getXmlFiles() {
         return xmlFiles;
     }
 
+    /**
+     * Sets the xml files.
+     * @param xmlFiles
+     */
     public void setXmlFiles(List<TestFileModel> xmlFiles) {
         this.xmlFiles = xmlFiles;
     }
 
+    /**
+     * Gets the Java files.
+     * @return
+     */
     public List<TestFileModel> getJavaFiles() {
         return javaFiles;
     }
 
+    /**
+     * Sets the Java files.
+     * @param javaFiles
+     */
     public void setJavaFiles(List<TestFileModel> javaFiles) {
         this.javaFiles = javaFiles;
     }

@@ -21,9 +21,6 @@ import com.consol.citrus.admin.configuration.PropertyConstants;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.Project;
 import com.consol.citrus.admin.util.FileHelper;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,7 +32,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -67,20 +63,7 @@ public class ProjectService implements InitializingBean {
 
         System.setProperty(PropertyConstants.PROJECT_HOME, projectHomeDir);
         project = new Project(projectHomeDir);
-
-        JSONParser parser = new JSONParser();
-        try {
-            if (project.getProjectInfoFile().exists()) {
-                JSONObject projectInfo = (JSONObject) parser.parse(new FileReader(project.getProjectInfoFile()));
-                project.setup(projectInfo);
-            } else {
-                project.setup(project.createProjectInfo());
-            }
-        } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Could not read Citrus project information file", e);
-        } catch (ParseException e) {
-            throw new CitrusAdminRuntimeException("Could not parse Citrus project information file", e);
-        }
+        project.setup();
     }
 
     /**

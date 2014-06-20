@@ -16,17 +16,16 @@
 
 package com.consol.citrus.xml.xpath;
 
-import java.util.*;
-import java.util.Map.Entry;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.Node;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.*;
-
-import org.springframework.util.StringUtils;
-import org.w3c.dom.Node;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * XPath utility class providing static utility methods
@@ -258,7 +257,7 @@ public abstract class XPathUtils {
      * @param returnType
      * @return the result.
      */
-    private static Object evaluateExpression(Node node, String xPathExpression, NamespaceContext nsContext, QName returnType) {
+    public static Object evaluateExpression(Node node, String xPathExpression, NamespaceContext nsContext, QName returnType) {
         try {
             return buildExpression(xPathExpression, nsContext).evaluate(node, returnType);
         } catch (XPathExpressionException e) {
