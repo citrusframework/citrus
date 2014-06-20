@@ -250,8 +250,12 @@ div.test-details-open {
     border-bottom: 1px solid #dddddd;
 }
 
-.test-description {
-    min-height: 80px;
+blockquote {
+    min-height: 50px;
+}
+
+blockquote p {
+    font-size: 14px;
 }
 
 .progress {

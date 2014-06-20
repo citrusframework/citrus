@@ -52,7 +52,7 @@
             },
 
             createConfigTabs: function () {
-                _.each(this.tabs, this.createConfigTab);
+                _.each(this.tabs, _.bind(this.createConfigTab, this));
             },
 
             createConfigTab: function (tab) {
@@ -69,8 +69,12 @@
                 }
 
                 if (tab.active) {
-                    $('#config-tabs a[href="#config-tab-' + tab.idSuffix + '"]').tab('show');
+                    this.show(tab.idSuffix);
                 }
+            },
+
+            show: function(tabId) {
+                $('#config-tabs a[href="#config-tab-' + tabId + '"]').tab('show');
             }
 
         });

@@ -14,6 +14,7 @@
             "": "project", // #project
             "project": "project", // #project
             "config": "config", //#config
+            "config/:page": "config", //#config/endpoints
             "tests": "tests", // #tests
             "tests/:testName": "testDetails", // #tests/EchoActionITest
             "stats": "stats", // #stats
@@ -38,11 +39,15 @@
               $('#project-content').show();
           },
           
-          config: function() {
+          config: function(page) {
               if (!this.configView) {
                   this.configView = new ConfigView({el: $('#config-content')});
                   this.configView.render();
                   this.configView.afterRender();
+              }
+
+              if (page) {
+                  this.configView.show(page);
               }
 
               $('#content').children().hide();
