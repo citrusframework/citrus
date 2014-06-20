@@ -31,48 +31,54 @@ public interface TestCaseService {
     
     /**
      * Lists all available Citrus test cases.
+     * @param project
      * @return
      */
-    List<TestCaseInfo> getTests();
+    List<TestCaseInfo> getTests(Project project);
 
     /**
      * Gets number of test cases for the active project. This includes XML test cases as well as
      * Java Citrus test methods.
+     * @param project
      * @return
      */
-    Long getTestCount();
+    Long getTestCount(Project project);
 
     /**
      * Gets test case details such as status, description, author.
+     * @param project
      * @param packageName
      * @param testName
      * @param type
      * @return
      */
-    TestCaseDetail getTestDetail(String packageName, String testName, TestCaseType type);
+    TestCaseDetail getTestDetail(Project project, String packageName, String testName, TestCaseType type);
     
     /**
      * Runs a test case and returns result outcome (success or failure).
+     * @param project
      * @param packageName
      * @param testName
      * @param runConfigurationId
      * @return
      */
-    TestResult executeTest(String packageName, String testName, String runConfigurationId);
+    TestResult executeTest(Project project, String packageName, String testName, String runConfigurationId);
     
     /**
      * Gets the source code for the given test.
+     * @param project
      * @param packageName
      * @param testName
      * @param type
      * @return
      */
-    String getSourceCode(String packageName, String testName, TestCaseType type);
+    String getSourceCode(Project project, String packageName, String testName, TestCaseType type);
 
     /**
      * Searches directory for Citrus test cases and constructs proper file tree model.
+     * @param project
      * @param dir
      * @return
      */
-    FileTreeModel getTestFileTree(String dir);
+    FileTreeModel getTestFileTree(Project project, String dir);
 }

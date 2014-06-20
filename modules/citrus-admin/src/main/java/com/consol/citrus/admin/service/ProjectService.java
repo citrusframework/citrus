@@ -68,7 +68,7 @@ public class ProjectService implements InitializingBean {
         project = new Project(projectHomeDir);
         project.setup();
 
-        project.setTestCount(testCaseService.getTestCount());
+        project.setTestCount(testCaseService.getTestCount(project));
     }
 
     /**

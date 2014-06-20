@@ -20,8 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.admin.converter.TestcaseModelConverter;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.ApplicationContextHolder;
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseType;
+import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.spring.model.SpringBeans;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
@@ -55,7 +54,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
      * Gets test case details such as status, description, author.
      * @return
      */
-    public TestCaseDetail getTestDetail(String packageName, String testName, TestCaseType type) {
+    public TestCaseDetail getTestDetail(Project project, String packageName, String testName, TestCaseType type) {
         TestCaseDetail testCase = new TestCaseDetail();
         testCase.setName(testName);
         testCase.setPackageName(packageName);
@@ -63,7 +62,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
 
         Testcase testModel;
         if (type.equals(TestCaseType.XML)) {
-            testModel = getXmlTestModel(packageName, testName);
+            testModel = getXmlTestModel(project, packageName, testName);
         } else if (type.equals(TestCaseType.JAVA)) {
             testModel = getJavaTestModel(packageName, testName);
         } else {
@@ -148,8 +147,8 @@ public abstract class AbstractTestCaseService implements TestCaseService {
      * @param testName
      * @return
      */
-    private Testcase getXmlTestModel(String packageName, String testName) {
-        String xmlSource = getSourceCode(packageName, testName, TestCaseType.XML);
+    private Testcase getXmlTestModel(Project project, String packageName, String testName) {
+        String xmlSource = getSourceCode(project, packageName, testName, TestCaseType.XML);
 
         if (!StringUtils.hasText(xmlSource)) {
             throw new CitrusAdminRuntimeException("Failed to get XML source code for test: " + packageName + "." + testName);

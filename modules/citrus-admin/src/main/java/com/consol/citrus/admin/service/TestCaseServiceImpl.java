@@ -52,9 +52,6 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCaseServiceImpl.class);
 
-    @Autowired
-    private ProjectService projectService;
-
     /** Test executor works on filesystem */
     @Autowired
     private FileSystemTestExecutor fileSystemTestExecutor;
@@ -67,13 +64,13 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     private FileHelper fileHelper;
 
     @Override
-    public List<TestCaseInfo> getTests() {
+    public List<TestCaseInfo> getTests(Project project) {
         List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
 
-        List<File> testFiles = FileUtils.getTestFiles(getTestDirectory());
+        List<File> testFiles = FileUtils.getTestFiles(getTestDirectory(project));
         for (File file : testFiles) {
             String testName = FilenameUtils.getBaseName(file.getName());
-            String testPackageName = file.getPath().substring(getTestDirectory().length(), file.getPath().length() - file.getName().length())
+            String testPackageName = file.getPath().substring(getTestDirectory(project).length(), file.getPath().length() - file.getName().length())
                     .replace(File.separatorChar, '.');
 
             if (testPackageName.endsWith(".")) {
@@ -91,12 +88,12 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         }
 
         try {
-            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory()) + "**/*.java");
+            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory(project)) + "**/*.java");
 
             for (Resource resource : javaSources) {
                 File file = resource.getFile();
                 String testName = FilenameUtils.getBaseName(file.getName());
-                String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory().length()).replace(File.separatorChar, '.');
+                String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory(project).length()).replace(File.separatorChar, '.');
 
                 if (knownToClasspath(testPackage, testName)) {
                     tests.addAll(getTestCaseInfoFromClass(testPackage, testName, file));
@@ -112,15 +109,15 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     }
 
     @Override
-    public Long getTestCount() {
-        Long testCount = Long.valueOf(FileUtils.getTestFiles(getTestDirectory()).size());
+    public Long getTestCount(Project project) {
+        Long testCount = Long.valueOf(FileUtils.getTestFiles(getTestDirectory(project)).size());
 
         try {
-            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory()) + "**/*.java");
+            Resource[] javaSources = new PathMatchingResourcePatternResolver().getResources("file:" + FilenameUtils.separatorsToUnix(getJavaDirectory(project)) + "**/*.java");
             for (Resource resource : javaSources) {
                 File file = resource.getFile();
                 String testName = FilenameUtils.getBaseName(file.getName());
-                String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory().length()).replace(File.separatorChar, '.');
+                String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory(project).length()).replace(File.separatorChar, '.');
 
                 if (knownToClasspath(testPackage, testName)) {
                     testCount += getTestCaseInfoFromClass(testPackage, testName, file).size();
@@ -136,14 +133,14 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     }
 
     @Override
-    public TestResult executeTest(String packageName, String testName, String runConfigurationId) {
+    public TestResult executeTest(Project project, String packageName, String testName, String runConfigurationId) {
         TestResult result = new TestResult();
         TestCaseInfo testCase = new TestCaseInfo();
         testCase.setName(testName);
         result.setTestCase(testCase);
 
         try {
-            RunConfiguration configuration = projectService.getActiveProject().getRunConfiguration(runConfigurationId);
+            RunConfiguration configuration = project.getRunConfiguration(runConfigurationId);
             TestExecutor<RunConfiguration> testExecutor = getTestExecutor(configuration);
             testExecutor.execute(packageName, testName, configuration);
 
@@ -166,8 +163,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     }
 
     @Override
-    public String getSourceCode(String packageName, String name, TestCaseType type) {
-        String dir = type.equals(TestCaseType.JAVA) ? getJavaDirectory() : getTestDirectory();
+    public String getSourceCode(Project project, String packageName, String name, TestCaseType type) {
+        String dir = type.equals(TestCaseType.JAVA) ? getJavaDirectory(project) : getTestDirectory(project);
 
         try {
             String sourceFilePath = dir + File.separator + packageName.replace('.', File.separatorChar) + File.separator + name + "." + type.name().toLowerCase();
@@ -183,11 +180,11 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     }
 
     @Override
-    public FileTreeModel getTestFileTree(String dir) {
+    public FileTreeModel getTestFileTree(Project project, String dir) {
         FileTreeModel model = new FileTreeModel();
 
-        String testDirectory = getTestDirectory() + dir;
-        String javaDirectory = getJavaDirectory() + dir;
+        String testDirectory = getTestDirectory(project) + dir;
+        String javaDirectory = getJavaDirectory(project) + dir;
 
         String[] folders = null;
         List<FileTreeModel.TestFileModel> xmlTestFiles = new ArrayList<FileTreeModel.TestFileModel>();
@@ -219,7 +216,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                 for (Resource resource : javaSources) {
                     File file = resource.getFile();
                     String testName = FilenameUtils.getBaseName(file.getName());
-                    String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory().length()).replace(File.separatorChar, '.');
+                    String testPackage = file.getParentFile().getAbsolutePath().substring(getJavaDirectory(project).length()).replace(File.separatorChar, '.');
 
                     if (knownToClasspath(testPackage, testName)) {
                         javaTestFiles.addAll(getTestFileTreeFromClass(javaDirectory, compactFolder, testPackage, testName));
@@ -508,15 +505,15 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * Gets the current test directory based on project home and default test directory.
      * @return
      */
-    private String getTestDirectory() {
-        return new File(projectService.getActiveProject().getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
+    private String getTestDirectory(Project project) {
+        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_TEST_DIRECTORY;
     }
 
     /**
      * Gets the current test directory based on project home and default test directory.
      * @return
      */
-    private String getJavaDirectory() {
-        return new File(projectService.getActiveProject().getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
+    private String getJavaDirectory(Project project) {
+        return new File(project.getProjectHome()).getAbsolutePath() + File.separator + CitrusConstants.DEFAULT_JAVA_DIRECTORY;
     }
 }

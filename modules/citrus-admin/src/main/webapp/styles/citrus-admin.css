@@ -85,7 +85,7 @@ a:hover {
 
 .box {
     background-color: #FFFFFF;
-    border: 1px solid #DDDDDD;
+    border: 1px solid #d4d4d4;
     border-radius: 4px 4px 4px 4px;
     margin: 15px 0;
     padding: 5px 20px 20px 25px;
@@ -93,7 +93,7 @@ a:hover {
 }
 
 .box-dark {
-    background-color: #eeeeee;
+    background-color: #ebf2f9;
 }
 
 .side-nav {
@@ -399,21 +399,21 @@ span.message-outbound {
 .dropdown-menu li > a:focus,
 .dropdown-submenu:hover > a {
     background-color: #fac300;
-    background-image: -moz-linear-gradient(top , #FAdd55, #fac300);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FAdd55), to(fac300));
-    background-image: -webkit-linear-gradient(top, #FAdd55, #fac300);
-    background-image: -o-linear-gradient(top, #FAdd55, #fac300);
-    background-image: linear-gradient(to bottom, #FAdd55, #fac300);
+    background-image: -moz-linear-gradient(top , #fad011, #fac300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(fac300));
+    background-image: -webkit-linear-gradient(top, #fad011, #fac300);
+    background-image: -o-linear-gradient(top, #fad011, #fac300);
+    background-image: linear-gradient(to bottom, #fad011, #fac300);
 }
 
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
     background-color: #fac300;
-    background-image: -moz-linear-gradient(top , #FAdd55, #fac300);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FAdd55), to(fac300));
-    background-image: -webkit-linear-gradient(top, #FAdd55, #fac300);
-    background-image: -o-linear-gradient(top, #FAdd55, #fac300);
-    background-image: linear-gradient(to bottom, #FAdd55, #fac300);
+    background-image: -moz-linear-gradient(top , #fad011, #fac300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(fac300));
+    background-image: -webkit-linear-gradient(top, #fad011, #fac300);
+    background-image: -o-linear-gradient(top, #fad011, #fac300);
+    background-image: linear-gradient(to bottom, #fad011, #fac300);
 }
 
 .dropdown-menu li > a {
@@ -534,13 +534,13 @@ span.message-outbound {
     color: #ffffff;
     text-shadow: none;
     background-color: #fac300;
-    background-image: -moz-linear-gradient(top , #FAdd55, #fac300);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FAdd55), to(fac300));
-    background-image: -webkit-linear-gradient(top, #FAdd55, #fac300);
-    background-image: -o-linear-gradient(top, #FAdd55, #fac300);
-    background-image: linear-gradient(to bottom, #FAdd55, #fac300);
+    background-image: -moz-linear-gradient(top , #fad011, #fac300);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(fac300));
+    background-image: -webkit-linear-gradient(top, #fad011, #fac300);
+    background-image: -o-linear-gradient(top, #fad011, #fac300);
+    background-image: linear-gradient(to bottom, #fad011, #fac300);
     background-repeat: repeat-x;
-    border-color: #fac300 #fac300 #FAdd55;
+    border-color: #fac300 #fac300 #fad011;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffFBD06E', endColorstr='#ffF89406', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -553,7 +553,7 @@ span.message-outbound {
 .btn-citrus[disabled] {
     color: #ffffff;
     background-color: #fac300;
-    *background-color: #FAdd55;
+    *background-color: #fad011;
 }
 
 .btn-citrus.active {
@@ -940,7 +940,7 @@ tr.endpoint:hover ul.properties li {
   display: block;
 }
 
-.badge-citrus {
+.label-citrus, .badge-citrus {
     background-color: #fac300;
 }
 

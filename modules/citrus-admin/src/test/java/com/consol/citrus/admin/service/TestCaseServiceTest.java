@@ -37,23 +37,17 @@ import static org.easymock.EasyMock.*;
 public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private ProjectService projectService;
-
-    @Autowired
     private TestCaseServiceImpl testCaseService;
 
     private Project project = EasyMock.createMock(Project.class);
 
     @Test
     public void testGetTests() throws IOException {
-        reset(projectService, project);
+        reset(project);
+        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).atLeastOnce();
+        replay(project);
 
-        expect(projectService.getActiveProject()).andReturn(project).times(2);
-        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).times(2);
-
-        replay(projectService, project);
-
-        List<TestCaseInfo> tests = testCaseService.getTests();
+        List<TestCaseInfo> tests = testCaseService.getTests(project);
 
         Assert.assertNotNull(tests);
         Assert.assertEquals(tests.size(), 4L);
@@ -67,26 +61,23 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
 
         test = tests.get(2);
-        Assert.assertEquals(test.getName(), "JavaTest.FooJavaTest");
+        Assert.assertEquals(test.getName(), "FooJavaTest");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
 
         test = tests.get(3);
-        Assert.assertEquals(test.getName(), "JavaTest.FooTest");
+        Assert.assertEquals(test.getName(), "FooTest");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus");
 
-        verify(projectService, project);
+        verify(project);
     }
 
     @Test
     public void testGetTestFileTree() throws IOException {
-        reset(projectService, project);
+        reset(project);
+        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).atLeastOnce();
+        replay(project);
 
-        expect(projectService.getActiveProject()).andReturn(project).times(3);
-        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).times(3);
-
-        replay(projectService, project);
-
-        FileTreeModel tests = testCaseService.getTestFileTree("com/consol/citrus");
+        FileTreeModel tests = testCaseService.getTestFileTree(project, "com/consol/citrus");
 
         Assert.assertNotNull(tests);
         Assert.assertEquals(tests.getXmlFiles().size(), 1L);
@@ -103,6 +94,6 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         Assert.assertEquals(test.getTestMethods().get(0), "FooJavaTest");
         Assert.assertEquals(test.getTestMethods().get(1), "FooTest");
 
-        verify(projectService, project);
+        verify(project);
     }
 }

@@ -21,6 +21,7 @@ import com.consol.citrus.admin.model.FileTreeModel;
 import com.consol.citrus.admin.model.TestCaseDetail;
 import com.consol.citrus.admin.model.TestCaseInfo;
 import com.consol.citrus.admin.model.TestCaseType;
+import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
 import org.apache.commons.io.FilenameUtils;
@@ -52,12 +53,15 @@ public class TestCaseController {
     private TestCaseService testCaseService;
 
     @Autowired
+    private ProjectService projectService;
+
+    @Autowired
     private FileHelper fileHelper;
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public List<TestCaseInfo> list() {
-        return testCaseService.getTests();
+        return testCaseService.getTests(projectService.getActiveProject());
     }
 
     @RequestMapping(method = { RequestMethod.POST })
@@ -65,7 +69,7 @@ public class TestCaseController {
     public ModelAndView list(@RequestParam("dir") String dir) {
         ModelAndView view = new ModelAndView("TestFileTree");
 
-        FileTreeModel model = testCaseService.getTestFileTree(FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
+        FileTreeModel model = testCaseService.getTestFileTree(projectService.getActiveProject(), FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
 
         if (StringUtils.hasText(model.getCompactFolder())) {
             view.addObject("compactFolder", FilenameUtils.separatorsToUnix(model.getCompactFolder()));
@@ -85,7 +89,7 @@ public class TestCaseController {
     @RequestMapping(value = "/count", method = { RequestMethod.POST })
     @ResponseBody
     public Long testCount() {
-        return testCaseService.getTestCount();
+        return testCaseService.getTestCount(projectService.getActiveProject());
     }
 
     @RequestMapping(value="/details/{type}/{package}/{name}", method = { RequestMethod.GET })
@@ -93,9 +97,9 @@ public class TestCaseController {
     public TestCaseDetail getTestDetail(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
                                         @PathVariable("type") String type, @RequestParam(value = "method", required = false) String method) {
         if (StringUtils.hasText(method)) {
-            return testCaseService.getTestDetail(testPackage, testName + "." + method, TestCaseType.valueOf(type.toUpperCase()));
+            return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, testName + "." + method, TestCaseType.valueOf(type.toUpperCase()));
         } else {
-            return testCaseService.getTestDetail(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
+            return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
         }
     }
     
@@ -103,7 +107,7 @@ public class TestCaseController {
     @ResponseBody
     public String getSourceCode(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
                                 @PathVariable("type") String type) {
-        return testCaseService.getSourceCode(testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
+        return testCaseService.getSourceCode(projectService.getActiveProject(), testPackage, testName, TestCaseType.valueOf(type.toUpperCase()));
     }
     
     @RequestMapping(value="/execute/{package}/{name}", method = { RequestMethod.GET })
@@ -111,9 +115,9 @@ public class TestCaseController {
     public ResponseEntity<String> executeTest(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
                                               @RequestParam(value = "runConfiguration", required = true) String runConfigurationId, @RequestParam(value = "method", required = false) String method) {
         if (StringUtils.hasText(method)) {
-            testCaseService.executeTest(testPackage, testName + "." + method, runConfigurationId);
+            testCaseService.executeTest(projectService.getActiveProject(), testPackage, testName + "." + method, runConfigurationId);
         } else {
-            testCaseService.executeTest(testPackage, testName, runConfigurationId);
+            testCaseService.executeTest(projectService.getActiveProject(), testPackage, testName, runConfigurationId);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);

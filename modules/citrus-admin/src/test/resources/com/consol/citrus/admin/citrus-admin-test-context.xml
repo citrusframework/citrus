@@ -14,10 +14,6 @@
         <constructor-arg value="com.consol.citrus.admin.service.ConfigurationService"/>
     </bean>
 
-    <bean id="projectService" class="org.easymock.EasyMock" factory-method="createMock">
-      <constructor-arg value="com.consol.citrus.admin.service.ProjectService"/>
-    </bean>
-
     <bean id="processMonitor" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.admin.launcher.ProcessMonitor"/>
     </bean>
@@ -43,6 +39,7 @@
     </bean>
 
     <bean class="com.consol.citrus.admin.service.TestCaseServiceImpl"/>
+    <bean class="com.consol.citrus.admin.service.ProjectService"/>
 
     <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
     <bean class="com.consol.citrus.admin.util.FileHelperImpl"/>
