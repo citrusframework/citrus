@@ -1,6 +1,7 @@
 package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.admin.model.EndpointProperty;
 import com.consol.citrus.model.config.core.JmsEndpoint;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -19,9 +20,9 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint>
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add("destination", resolvePropertyExpression(definition.getDestinationName()));
+            endpointData.add(new EndpointProperty("destination", resolvePropertyExpression(definition.getDestinationName())));
         } else {
-            endpointData.add("destination", definition.getDestination());
+            endpointData.add(new EndpointProperty("destination", definition.getDestination()));
         }
 
         add("connectionFactory", endpointData, definition);

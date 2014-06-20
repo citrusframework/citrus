@@ -44,11 +44,11 @@
   </div>
   {{/if}}
 
-  {{#each configuration}}
+  {{#each properties}}
   <div class="control-group">
-    <label class="control-label">{{@key}}</label>
+    <label class="control-label">{{displayName}}</label>
     <div class="controls">
-      <input name="{{@key}}" value="{{this}}" placeholder="{{@key}}" type="text" class="span8"/>
+      <input name="{{id}}" value="{{value}}" placeholder="{{id}}" type="text" class="span8"/>
     </div>
   </div>
   {{/each}}

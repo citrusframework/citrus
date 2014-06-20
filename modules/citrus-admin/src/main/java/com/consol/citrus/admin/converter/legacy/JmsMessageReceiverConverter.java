@@ -18,6 +18,7 @@ package com.consol.citrus.admin.converter.legacy;
 
 import com.consol.citrus.admin.converter.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.admin.model.EndpointProperty;
 import com.consol.citrus.model.config.core.JmsMessageReceiver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -35,9 +36,9 @@ public class JmsMessageReceiverConverter extends AbstractEndpointConverter<JmsMe
         endpointData.setName(definition.getId());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add("destination", resolvePropertyExpression(definition.getDestinationName()));
+            endpointData.add(new EndpointProperty("destination", resolvePropertyExpression(definition.getDestinationName())));
         } else {
-            endpointData.add("destination", definition.getDestination());
+            endpointData.add(new EndpointProperty("destination", definition.getDestination()));
         }
 
         add("connectionFactory", endpointData, definition);

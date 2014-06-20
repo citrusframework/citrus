@@ -28,7 +28,7 @@ public class EndpointData {
 
     private final String type;
     private String name;
-    private Map<String, Object> configuration = new LinkedHashMap<String, Object>();
+    private List<EndpointProperty> properties = new ArrayList<EndpointProperty>();
 
     /**
      * Constructor using endpoint type field.
@@ -40,16 +40,16 @@ public class EndpointData {
 
     /**
      * Adds a new configuration property as key value pair.
-     * @param property
-     * @param value
+     * @param endpointProperty
      * @return
      */
-    public EndpointData add(String property, Object value) {
-        configuration.put(property, value);
+    public EndpointData add(EndpointProperty endpointProperty) {
+        properties.add(endpointProperty);
         return this;
     }
 
     /**
+     * Gets the endpoint type such as http, jms, camel, etc.
      * @return
      */
     public String getType() {
@@ -57,6 +57,7 @@ public class EndpointData {
     }
 
     /**
+     * Gets the endpoint name. Usually the Spring bean id.
      * @return
      */
     public String getName() {
@@ -64,6 +65,7 @@ public class EndpointData {
     }
 
     /**
+     * Sets the endpoint name.
      * @param value
      */
     public void setName(String value) {
@@ -71,18 +73,18 @@ public class EndpointData {
     }
 
     /**
-     * Gets the key value configuration properties.
+     * Gets the key value endpoint properties.
      * @return
      */
-    public Map<String, Object> getConfiguration() {
-        return configuration;
+    public List<EndpointProperty> getProperties() {
+        return properties;
     }
 
     /**
-     * Sets the endpoint configuration as key value properties.
-     * @param configuration
+     * Sets the endpoint properties as key value properties.
+     * @param properties
      */
-    public void setConfiguration(Map<String, Object> configuration) {
-        this.configuration = configuration;
+    public void setProperties(List<EndpointProperty> properties) {
+        this.properties = properties;
     }
 }

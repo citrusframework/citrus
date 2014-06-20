@@ -17,10 +17,12 @@
 package com.consol.citrus.admin.converter;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.admin.model.EndpointProperty;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.variable.VariableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import java.lang.reflect.Field;
@@ -44,14 +46,50 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
      */
     protected void addEndpointProperties(EndpointData endpointData, Object definition) {
         add("timeout", endpointData, definition, "5000");
-        add("actor", endpointData, definition);
+        add("actor", "TestActor", endpointData, definition);
     }
 
+    /**
+     * Adds new endpoint property.
+     * @param fieldName
+     * @param endpointData
+     * @param definition
+     */
     protected void add(String fieldName, EndpointData endpointData, Object definition) {
-        add(fieldName, endpointData, definition, null);
+        add(fieldName, StringUtils.capitalize(fieldName), endpointData, definition, null);
     }
 
+    /**
+     * Adds new endpoint property.
+     * @param fieldName
+     * @param endpointData
+     * @param definition
+     * @param defaultValue
+     */
     protected void add(String fieldName, EndpointData endpointData, Object definition, String defaultValue) {
+        add(fieldName, StringUtils.capitalize(fieldName), endpointData, definition, defaultValue);
+    }
+
+    /**
+     * Adds new endpoint property.
+     * @param fieldName
+     * @param displayName
+     * @param endpointData
+     * @param definition
+     */
+    protected void add(String fieldName, String displayName, EndpointData endpointData, Object definition) {
+        add(fieldName, displayName, endpointData, definition, null);
+    }
+
+    /**
+     * Adds new endpoint property.
+     * @param fieldName
+     * @param displayName
+     * @param endpointData
+     * @param definition
+     * @param defaultValue
+     */
+    protected void add(String fieldName, String displayName, EndpointData endpointData, Object definition, String defaultValue) {
         Field field = ReflectionUtils.findField(definition.getClass(), fieldName);
 
         if (field != null) {
@@ -67,9 +105,9 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
 
             if (value != null) {
                 if (field.isAnnotationPresent(XmlAttribute.class)) {
-                    endpointData.add(field.getAnnotation(XmlAttribute.class).name(), resolvePropertyExpression(value));
+                    endpointData.add(new EndpointProperty(field.getAnnotation(XmlAttribute.class).name(), displayName, resolvePropertyExpression(value)));
                 } else {
-                    endpointData.add(fieldName, resolvePropertyExpression(value));
+                    endpointData.add(new EndpointProperty(fieldName, displayName, resolvePropertyExpression(value)));
                 }
             }
         }
