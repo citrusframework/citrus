@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.endpoint;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.admin.model.EndpointProperty;
 import com.consol.citrus.admin.service.ProjectService;
@@ -44,52 +45,48 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
      * @param endpointData
      * @param definition
      */
-    protected void addEndpointProperties(EndpointData endpointData, Object definition) {
-        add("timeout", endpointData, definition, "5000");
-        add("actor", "TestActor", endpointData, definition);
+    protected void addEndpointProperties(EndpointData endpointData, T definition) {
+        endpointData.add(property("timeout", definition, "5000"));
+        endpointData.add(property("actor", "TestActor", definition));
     }
 
     /**
      * Adds new endpoint property.
      * @param fieldName
-     * @param endpointData
      * @param definition
      */
-    protected void add(String fieldName, EndpointData endpointData, Object definition) {
-        add(fieldName, StringUtils.capitalize(fieldName), endpointData, definition, null);
+    protected EndpointProperty property(String fieldName, T definition) {
+        return property(fieldName, definition, null);
     }
 
     /**
      * Adds new endpoint property.
      * @param fieldName
-     * @param endpointData
      * @param definition
      * @param defaultValue
      */
-    protected void add(String fieldName, EndpointData endpointData, Object definition, String defaultValue) {
-        add(fieldName, StringUtils.capitalize(fieldName), endpointData, definition, defaultValue);
+    protected EndpointProperty property(String fieldName, T definition, String defaultValue) {
+        return property(fieldName, StringUtils.capitalize(fieldName), definition, defaultValue);
     }
 
     /**
      * Adds new endpoint property.
      * @param fieldName
      * @param displayName
-     * @param endpointData
      * @param definition
      */
-    protected void add(String fieldName, String displayName, EndpointData endpointData, Object definition) {
-        add(fieldName, displayName, endpointData, definition, null);
+    protected EndpointProperty property(String fieldName, String displayName, T definition) {
+        return property(fieldName, displayName, definition, null);
     }
 
     /**
      * Adds new endpoint property.
      * @param fieldName
      * @param displayName
-     * @param endpointData
      * @param definition
      * @param defaultValue
      */
-    protected void add(String fieldName, String displayName, EndpointData endpointData, Object definition, String defaultValue) {
+    protected EndpointProperty property(String fieldName, String displayName, T definition, String defaultValue) {
         Field field = ReflectionUtils.findField(definition.getClass(), fieldName);
 
         if (field != null) {
@@ -105,11 +102,15 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
 
             if (value != null) {
                 if (field.isAnnotationPresent(XmlAttribute.class)) {
-                    endpointData.add(new EndpointProperty(field.getAnnotation(XmlAttribute.class).name(), displayName, resolvePropertyExpression(value)));
+                    return new EndpointProperty(field.getAnnotation(XmlAttribute.class).name(), displayName, resolvePropertyExpression(value));
                 } else {
-                    endpointData.add(new EndpointProperty(fieldName, displayName, resolvePropertyExpression(value)));
+                    return new EndpointProperty(fieldName, displayName, resolvePropertyExpression(value));
                 }
+            } else {
+                return new EndpointProperty(fieldName, displayName, null);
             }
+        } else {
+            throw new CitrusAdminRuntimeException(String.format("Unknown field %s on endpoint type %s", fieldName, definition.getClass()));
         }
     }
 
@@ -126,8 +127,13 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
         }
     }
 
+    /**
+     * Construct default Java bean property getter for field name.
+     * @param fieldName
+     * @return
+     */
     private String getMethodName(String fieldName) {
-        return "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+        return "get" + StringUtils.capitalize(fieldName);
     }
 
 }

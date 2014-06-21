@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.ErrorHandlingStrategy;
@@ -34,16 +34,16 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
         EndpointData endpointData = new EndpointData("http");
 
         endpointData.setName(client.getId());
-        add("requestUrl", endpointData, client);
-        add("requestMethod", endpointData, client, HttpMethod.POST.name());
-        add("errorStrategy", endpointData, client, ErrorHandlingStrategy.PROPAGATE.getName());
-        add("pollingInterval", endpointData, client, "500");
-        add("messageCorrelator", endpointData, client);
-        add("requestFactory", endpointData, client);
-        add("restTemplate", endpointData, client);
-        add("charset", endpointData, client);
-        add("contentType", endpointData, client);
-        add("interceptors", endpointData, client);
+        endpointData.add(property("requestUrl", client));
+        endpointData.add(property("requestMethod", client, HttpMethod.POST.name()));
+        endpointData.add(property("errorStrategy", client, ErrorHandlingStrategy.PROPAGATE.getName()));
+        endpointData.add(property("pollingInterval", client, "500"));
+        endpointData.add(property("messageCorrelator", client));
+        endpointData.add(property("requestFactory", client));
+        endpointData.add(property("restTemplate", client));
+        endpointData.add(property("charset", client));
+        endpointData.add(property("contentType", client));
+        endpointData.add(property("interceptors", client));
 
         addEndpointProperties(endpointData, client);
 

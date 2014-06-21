@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.mail.Client;
@@ -33,14 +33,14 @@ public class MailClientConverter extends AbstractEndpointConverter<Client> {
         EndpointData endpointData = new EndpointData("mail");
 
         endpointData.setName(client.getId());
-        add("host", endpointData, client);
-        add("port", endpointData, client, "25");
-        add("protocol", endpointData, client, JavaMailSenderImpl.DEFAULT_PROTOCOL);
-        add("username", endpointData, client);
-        add("password", endpointData, client);
-        add("properties", endpointData, client);
+        endpointData.add(property("host", client));
+        endpointData.add(property("port", client, "25"));
+        endpointData.add(property("protocol", client, JavaMailSenderImpl.DEFAULT_PROTOCOL));
+        endpointData.add(property("username", client));
+        endpointData.add(property("password", client));
+        endpointData.add(property("properties", client));
 
-        addEndpointProperties(endpointData, client);
+        endpointData.add(property("actor", "TestActor", client));
 
         return endpointData;
     }

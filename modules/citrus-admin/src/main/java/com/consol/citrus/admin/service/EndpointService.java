@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.converter.EndpointConverter;
+import com.consol.citrus.admin.converter.endpoint.EndpointConverter;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.EndpointData;
 import org.springframework.beans.factory.annotation.Autowired;

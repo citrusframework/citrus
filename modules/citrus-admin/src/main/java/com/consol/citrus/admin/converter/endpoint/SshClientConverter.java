@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.ssh.Client;
@@ -32,16 +32,16 @@ public class SshClientConverter extends AbstractEndpointConverter<Client> {
         EndpointData endpointData = new EndpointData("ssh");
 
         endpointData.setName(client.getId());
-        add("host", endpointData, client, "localhost");
-        add("port", endpointData, client, "2222");
-        add("user", endpointData, client);
-        add("password", endpointData, client);
-        add("strictHostChecking", endpointData, client, "false");
-        add("knownHostsPath", endpointData, client);
-        add("commandTimeout", endpointData, client);
-        add("connectionTimeout", endpointData, client);
-        add("messageCorrelator", endpointData, client);
-        add("pollingInterval", endpointData, client, "500");
+        endpointData.add(property("host", client, "localhost"));
+        endpointData.add(property("port", client, "2222"));
+        endpointData.add(property("user", client));
+        endpointData.add(property("password", client));
+        endpointData.add(property("strictHostChecking", client, "false"));
+        endpointData.add(property("knownHostsPath", client));
+        endpointData.add(property("commandTimeout", client));
+        endpointData.add(property("connectionTimeout", client));
+        endpointData.add(property("messageCorrelator", client));
+        endpointData.add(property("pollingInterval", client, "500"));
 
         addEndpointProperties(endpointData, client);
 

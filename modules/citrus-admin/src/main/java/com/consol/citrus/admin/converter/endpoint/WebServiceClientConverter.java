@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.ErrorHandlingStrategy;
@@ -33,17 +33,17 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
         EndpointData endpointData = new EndpointData("soap");
 
         endpointData.setName(client.getId());
-        add("requestUrl", endpointData, client);
-        add("webServiceTemplate", endpointData, client);
-        add("messageFactory", endpointData, client);
-        add("messageSender", endpointData, client);
-        add("messageSenders", endpointData, client);
-        add("messageCorrelator", endpointData, client);
-        add("interceptors", endpointData, client);
-        add("endpointResolver", endpointData, client);
-        add("addressingHeaders", endpointData, client);
-        add("faultStrategy", endpointData, client, ErrorHandlingStrategy.THROWS_EXCEPTION.name());
-        add("pollingInterval", endpointData, client);
+        endpointData.add(property("requestUrl", client));
+        endpointData.add(property("webServiceTemplate", client));
+        endpointData.add(property("messageFactory", client));
+        endpointData.add(property("messageSender", client));
+        endpointData.add(property("messageSenders", client));
+        endpointData.add(property("messageCorrelator", client));
+        endpointData.add(property("interceptors", client));
+        endpointData.add(property("endpointResolver", client));
+        endpointData.add(property("addressingHeaders", client));
+        endpointData.add(property("faultStrategy", client, ErrorHandlingStrategy.THROWS_EXCEPTION.name()));
+        endpointData.add(property("pollingInterval", client));
 
         addEndpointProperties(endpointData, client);
 

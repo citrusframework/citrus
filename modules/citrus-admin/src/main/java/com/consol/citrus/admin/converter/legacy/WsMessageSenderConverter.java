@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.converter.AbstractEndpointConverter;
+import com.consol.citrus.admin.converter.endpoint.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.model.config.ws.MessageSender;
@@ -34,17 +34,17 @@ public class WsMessageSenderConverter extends AbstractEndpointConverter<MessageS
         EndpointData endpointData = new EndpointData("ws");
 
         endpointData.setName(definition.getId());
-        add("requestUrl", endpointData, definition);
-        add("webServiceTemplate", endpointData, definition);
-        add("messageFactory", endpointData, definition);
-        add("messageSender", endpointData, definition);
-        add("messageSenders", endpointData, definition);
-        add("interceptors", endpointData, definition);
-        add("endpointResolver", endpointData, definition);
-        add("addressingHeaders", endpointData, definition);
-        add("faultStrategy", endpointData, definition, ErrorHandlingStrategy.THROWS_EXCEPTION.name());
+        endpointData.add(property("requestUrl", definition));
+        endpointData.add(property("webServiceTemplate", definition));
+        endpointData.add(property("messageFactory", definition));
+        endpointData.add(property("messageSender", definition));
+        endpointData.add(property("messageSenders", definition));
+        endpointData.add(property("interceptors", definition));
+        endpointData.add(property("endpointResolver", definition));
+        endpointData.add(property("addressingHeaders", definition));
+        endpointData.add(property("faultStrategy", definition, ErrorHandlingStrategy.THROWS_EXCEPTION.name()));
 
-        addEndpointProperties(endpointData, definition);
+        endpointData.add(property("actor", "TestActor", definition));
 
         return endpointData;
     }
