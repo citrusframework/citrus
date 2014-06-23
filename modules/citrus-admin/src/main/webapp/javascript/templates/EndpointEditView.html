@@ -49,14 +49,13 @@
     <label class="control-label">{{displayName}}</label>
     <div class="controls">
       {{#if optionKey}}
-      <div class="input-append span12">
-        <input name="{{id}}" value="{{value}}" placeholder="{{id}}" type="text"/>
+      <div class="input-append">
+        <input name="{{id}}" class="input-xlarge" value="{{value}}" placeholder="{{id}}" type="text"/>
         <div id="option-dropdown" class="btn-group">
           <button id="{{id}}" name="{{optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-search"></i>
           </button>
           <ul id="dropdown-menu-{{id}}" class="dropdown-menu">
-            <li>&nbsp;</li>
           </ul>
         </div>
       </div>

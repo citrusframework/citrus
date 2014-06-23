@@ -157,11 +157,16 @@
 
                         if (response.length) {
                             _.each(response, function(item) {
-                                $('#dropdown-menu-' + event.currentTarget.id).append('<li><a class="option-select">' + item + '</a></li>');
+                                $('#dropdown-menu-' + event.currentTarget.id)
+                                    .append('<li><a name="' + item + '" class="clickable option-select"><i class="fa fa-crosshairs"></i>&nbsp;' + item + '</a></li>');
                             });
                         } else {
-                            $('#dropdown-menu-' + event.currentTarget.id).append('<li><a class="option-select">no suggestions</a></li>');
+                            $('#dropdown-menu-' + event.currentTarget.id).append('<li><a name="none">no suggestions</a></li>');
                         }
+
+                        $('#dropdown-menu-' + event.currentTarget.id).find('a.option-select').click(function(e) {
+                            $('input[name="' + event.currentTarget.id + '"]').val(e.currentTarget.name);
+                        })
                     }, this),
                     async: true
                 });

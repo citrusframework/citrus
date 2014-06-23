@@ -25,7 +25,9 @@
         <td>
           <ul class="properties">
             {{#each properties}}
-            <li><b>{{id}}</b>:{{value}}</li>
+              {{#if value}}
+              <li><b>{{id}}</b>:{{value}}</li>
+              {{/if}}
             {{/each}}
           </ul>
         </td>
