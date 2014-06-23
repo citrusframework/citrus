@@ -18,6 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import com.consol.citrus.admin.spring.config.*;
+import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.admin.util.JAXBHelper;
 import com.consol.citrus.util.XMLUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +143,23 @@ public class SpringBeanService {
         }
 
         return beanDefinitions;
+    }
+
+    /**
+     * Find all Spring bean definitions in application context for given bean type.
+     * @param configFile
+     * @param beanType
+     * @return
+     */
+    public List<String> getBeanNames(File configFile, String beanType) {
+        List<SpringBean> beanDefinitions = getBeanDefinitions(configFile, SpringBean.class, Collections.singletonMap("class", beanType));
+
+        List<String> beanNames = new ArrayList<String>();
+        for (SpringBean beanDefinition : beanDefinitions) {
+            beanNames.add(beanDefinition.getId());
+        }
+
+        return beanNames;
     }
     
     /**

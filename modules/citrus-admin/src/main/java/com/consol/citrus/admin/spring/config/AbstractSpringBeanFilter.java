@@ -16,6 +16,8 @@
 
 package com.consol.citrus.admin.spring.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSParserFilter;
 import org.w3c.dom.ls.LSSerializerFilter;
@@ -30,6 +32,9 @@ import java.util.Map;
  * @author Christoph Deppisch
  */
 public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LSParserFilter {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(AbstractSpringBeanFilter.class);
 
     /**
      * Checks for element equality by bean id attribute.
@@ -58,7 +63,25 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
      * @return
      */
     protected boolean isEqualByBeanClass(Element element, String elementClass) {
-        return element.hasAttribute("class") && element.getAttribute("class").equals(elementClass);
+        if (!element.hasAttribute("class")) {
+            return false;
+        }
+
+        String beanClassName = element.getAttribute("class");
+
+        if (beanClassName.equals(elementClass)) {
+            return true;
+        }
+
+        try {
+            Class targetClass = Class.forName(elementClass);
+            Class sourceClass = Class.forName(beanClassName);
+            return targetClass.isAssignableFrom(sourceClass);
+        } catch (ClassNotFoundException e) {
+            log.warn(String.format("Unable to check class inheritance for Spring bean types: %s + %s", beanClassName, elementClass));
+        }
+
+        return false;
     }
 
     /**
@@ -69,8 +92,16 @@ public abstract class AbstractSpringBeanFilter implements LSSerializerFilter, LS
      */
     protected boolean isEqualByBeanAttributes(Element element, Map<String, String> attributes) {
         for (Map.Entry<String,String> attributeEntry : attributes.entrySet()) {
-            if (!element.hasAttribute(attributeEntry.getKey()) ||
-                    !element.getAttribute(attributeEntry.getKey()).equals(attributeEntry.getValue())) {
+            if (!element.hasAttribute(attributeEntry.getKey())) {
+                return false;
+            }
+
+            if (attributeEntry.getKey().equals("class") &&
+                    isEqualByBeanClass(element, attributeEntry.getValue())) {
+                continue;
+            }
+
+            if (!element.getAttribute(attributeEntry.getKey()).equals(attributeEntry.getValue())) {
                 return false;
             }
         }

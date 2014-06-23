@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,16 +29,8 @@ public class EndpointProperty {
     private final String displayName;
     private final String value;
 
+    private String optionKey;
     private List<String> options;
-
-    /**
-     * Constructor using form field id and value.
-     * @param id
-     * @param value
-     */
-    public EndpointProperty(String id, String value) {
-        this(id, id, value);
-    }
 
     /**
      * Constructor using form field id, displayName and value.
@@ -52,15 +45,33 @@ public class EndpointProperty {
     }
 
     /**
-     * Constructor using additional field options.
-     * @param id
-     * @param displayName
-     * @param value
-     * @param options
+     * Adds option key to search for when collecting options at runtime.
+     * @param key
+     * @return
      */
-    public EndpointProperty(String id, String displayName, String value, List<String> options) {
-        this(id, displayName, value);
+    public EndpointProperty optionKey(String key) {
+        this.optionKey = key;
+        return this;
+    }
+
+    /**
+     * Adds options as variable arguments.
+     * @param options
+     * @return
+     */
+    public EndpointProperty options(String ... options) {
+        this.options = Arrays.asList(options);
+        return this;
+    }
+
+    /**
+     * Adds options.
+     * @param options
+     * @return
+     */
+    public EndpointProperty options(List<String> options) {
         this.options = options;
+        return this;
     }
 
     /**
@@ -95,4 +106,11 @@ public class EndpointProperty {
         return options;
     }
 
+    /**
+     * Returns the option key used when searching for options.
+     * @return
+     */
+    public String getOptionKey() {
+        return optionKey;
+    }
 }

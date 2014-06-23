@@ -19,6 +19,8 @@ package com.consol.citrus.admin.converter.legacy;
 import com.consol.citrus.admin.converter.endpoint.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.core.MessageChannelSender;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -41,9 +43,12 @@ public class MessageChannelSenderConverter extends AbstractEndpointConverter<Mes
             endpointData.add(property("channel", definition));
         }
 
-        endpointData.add(property("messageChannelTemplate", definition));
-        endpointData.add(property("messagingTemplate", definition));
-        endpointData.add(property("channelResolver", definition));
+        endpointData.add(property("messageChannelTemplate", definition)
+                .optionKey(MessagingTemplate.class.getName()));
+        endpointData.add(property("messagingTemplate", definition)
+                .optionKey(MessagingTemplate.class.getName()));
+        endpointData.add(property("channelResolver", definition)
+                .optionKey(ChannelResolver.class.getName()));
 
         addEndpointProperties(endpointData, definition);
 

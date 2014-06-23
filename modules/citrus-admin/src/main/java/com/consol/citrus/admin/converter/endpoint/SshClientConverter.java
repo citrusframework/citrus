@@ -17,6 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import com.consol.citrus.model.config.ssh.Client;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +41,8 @@ public class SshClientConverter extends AbstractEndpointConverter<Client> {
         endpointData.add(property("knownHostsPath", client));
         endpointData.add(property("commandTimeout", client));
         endpointData.add(property("connectionTimeout", client));
-        endpointData.add(property("messageCorrelator", client));
+        endpointData.add(property("messageCorrelator", client)
+                .optionKey(ReplyMessageCorrelator.class.getName()));
         endpointData.add(property("pollingInterval", client, "500"));
 
         addEndpointProperties(endpointData, client);

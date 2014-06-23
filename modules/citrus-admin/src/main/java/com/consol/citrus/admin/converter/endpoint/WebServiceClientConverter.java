@@ -17,9 +17,16 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.ReplyMessageCorrelator;
 import com.consol.citrus.model.config.ws.Client;
 import org.springframework.stereotype.Component;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.soap.SoapMessageFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -34,20 +41,37 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
 
         endpointData.setName(client.getId());
         endpointData.add(property("requestUrl", client));
-        endpointData.add(property("webServiceTemplate", client));
-        endpointData.add(property("messageFactory", client));
+        endpointData.add(property("webServiceTemplate", client)
+                .optionKey(WebServiceTemplate.class.getName()));
+        endpointData.add(property("messageFactory", client)
+                .optionKey(SoapMessageFactory.class.getName()));
         endpointData.add(property("messageSender", client));
         endpointData.add(property("messageSenders", client));
-        endpointData.add(property("messageCorrelator", client));
+        endpointData.add(property("messageCorrelator", client)
+                .optionKey(ReplyMessageCorrelator.class.getName()));
         endpointData.add(property("interceptors", client));
-        endpointData.add(property("endpointResolver", client));
+        endpointData.add(property("endpointResolver", client)
+                .optionKey(EndpointUriResolver.class.getName()));
         endpointData.add(property("addressingHeaders", client));
-        endpointData.add(property("faultStrategy", client, ErrorHandlingStrategy.THROWS_EXCEPTION.name()));
+        endpointData.add(property("faultStrategy", client, ErrorHandlingStrategy.THROWS_EXCEPTION.name())
+                .options(getErrorHandlingStrategyOptions()));
         endpointData.add(property("pollingInterval", client));
 
         addEndpointProperties(endpointData, client);
 
         return endpointData;
+    }
+
+    /**
+     * Gets the error handling strategy names as list.
+     * @return
+     */
+    private List<String> getErrorHandlingStrategyOptions() {
+        List<String> strategyNames = new ArrayList<String>();
+        for (ErrorHandlingStrategy errorHandlingStrategy : ErrorHandlingStrategy.values()) {
+            strategyNames.add(errorHandlingStrategy.getName());
+        }
+        return strategyNames;
     }
 
     @Override

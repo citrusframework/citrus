@@ -73,6 +73,11 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         $('#endpoint-edit').html(TemplateManager.template('EndpointEditView', response));
+
+                        $('button.btn-option-search').click(_.bind(function(event) {
+                            this.searchOptions(event);
+                        }, this));
+
                         $('#endpoint-list').hide('slide', function() {
                             $('#endpoint-edit').show('slide');
                         });
@@ -138,6 +143,31 @@
             extractId: function(encodedId) {
                 var splitString = encodedId.split('-');
                 return splitString[splitString.length-1];
+            },
+
+            searchOptions: function(event) {
+                $.ajax({
+                    url: "config/search",
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: "text/plain",
+                    data: event.currentTarget.name,
+                    success: _.bind(function (response) {
+                        $('#dropdown-menu-' + event.currentTarget.id).children().remove();
+
+                        if (response.length) {
+                            _.each(response, function(item) {
+                                $('#dropdown-menu-' + event.currentTarget.id).append('<li><a class="option-select">' + item + '</a></li>');
+                            });
+                        } else {
+                            $('#dropdown-menu-' + event.currentTarget.id).append('<li><a class="option-select">no suggestions</a></li>');
+                        }
+                    }, this),
+                    async: true
+                });
+
+                // prevent default form submission
+                return false;
             }
 
         });

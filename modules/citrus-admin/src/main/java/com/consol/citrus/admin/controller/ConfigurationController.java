@@ -49,6 +49,12 @@ public class ConfigurationController {
     @Autowired
     private SchemaRepositoryService schemaRepositoryService;
 
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @ResponseBody
+    public List<String> search(@RequestBody String key) {
+        return springBeanService.getBeanNames(projectService.getProjectContextConfigFile(), key);
+    }
+
     @RequestMapping(value = "/run", method = RequestMethod.GET)
     @ResponseBody
     public List<RunConfiguration> getRunConfigurations() {

@@ -48,7 +48,31 @@
   <div class="control-group">
     <label class="control-label">{{displayName}}</label>
     <div class="controls">
-      <input name="{{id}}" value="{{value}}" placeholder="{{id}}" type="text" class="span8"/>
+      {{#if optionKey}}
+      <div class="input-append span12">
+        <input name="{{id}}" value="{{value}}" placeholder="{{id}}" type="text"/>
+        <div id="option-dropdown" class="btn-group">
+          <button id="{{id}}" name="{{optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-search"></i>
+          </button>
+          <ul id="dropdown-menu-{{id}}" class="dropdown-menu">
+            <li>&nbsp;</li>
+          </ul>
+        </div>
+      </div>
+      {{/if}}
+      {{#unless optionKey}}
+        {{#if options}}
+        <select id="{{id}}" class="span8" name="{{id}}">
+          {{#each options}}
+          <option value="{{this}}">{{this}}</option>
+          {{/each}}
+        </select>
+        {{/if}}
+        {{#unless options}}
+        <input name="{{id}}" value="{{value}}" placeholder="{{id}}" type="text" class="span8"/>
+        {{/unless}}
+      {{/unless}}
     </div>
   </div>
   {{/each}}
