@@ -75,6 +75,18 @@ Handlebars.registerHelper('trim', function(message, block) {
 });
 
 /*
+ * Helper to capitalize the first character of specified string value
+ */
+Handlebars.registerHelper('capitalize', function(message, block) {
+    if (message == null) {
+        return '';
+    }
+
+    message = String(message);
+    return message.charAt(0).toUpperCase() + message.slice(1);
+});
+
+/*
  * Helper to translate folder path to package representation.
  */
 Handlebars.registerHelper('folderToPackage', function(path, block) {

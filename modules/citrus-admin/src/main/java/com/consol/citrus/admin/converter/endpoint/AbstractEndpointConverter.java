@@ -26,6 +26,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlSchema;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -136,4 +137,9 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
         return "get" + StringUtils.capitalize(fieldName);
     }
 
+    @Override
+    public String getEndpointType() {
+        String endpointNamespace = getModelClass().getPackage().getAnnotation(XmlSchema.class).namespace();
+        return endpointNamespace.substring("http://www.citrusframework.org/schema/".length(), endpointNamespace.indexOf("/config"));
+    }
 }

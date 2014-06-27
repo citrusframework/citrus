@@ -16,8 +16,8 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.converter.SchemaRepositorySpringBeanConverter;
-import com.consol.citrus.admin.converter.SchemaSpringBeanConverter;
+import com.consol.citrus.admin.converter.spring.SchemaRepositorySpringBeanConverter;
+import com.consol.citrus.admin.converter.spring.SchemaSpringBeanConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.model.config.core.Schema;
 import com.consol.citrus.model.config.core.SchemaRepository;

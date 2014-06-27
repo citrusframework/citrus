@@ -927,18 +927,20 @@ ul.properties {
 }
 
 ul.properties li {
-  display: none;
   list-style: none;
   word-break: break-all;
   word-wrap: break-word;
 }
 
-ul.properties li:first-child {
-  display: block;
+.badge-header {
+  min-width: 350px;
+  font-size: 30.5px;
 }
 
-tr.endpoint:hover ul.properties li {
-  display: block;
+.badge-emphasis {
+  min-width: 20px;
+  font-size: 18px;
+  text-align: center;
 }
 
 .label-citrus, .badge-citrus {

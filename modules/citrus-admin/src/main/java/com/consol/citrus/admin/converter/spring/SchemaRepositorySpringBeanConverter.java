@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.spring;
 
-import com.consol.citrus.admin.spring.model.Property;
-import com.consol.citrus.admin.spring.model.Ref;
-import com.consol.citrus.admin.spring.model.SpringBean;
+import com.consol.citrus.admin.spring.model.*;
 import com.consol.citrus.model.config.core.ObjectFactory;
-import com.consol.citrus.model.config.core.Schema;
-import com.consol.citrus.model.config.core.SchemaRepository;
+import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;

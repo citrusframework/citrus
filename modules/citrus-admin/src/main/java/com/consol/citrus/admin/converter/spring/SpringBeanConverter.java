@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter;
+package com.consol.citrus.admin.converter.spring;
 
+import com.consol.citrus.admin.converter.ObjectConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
 
 /**

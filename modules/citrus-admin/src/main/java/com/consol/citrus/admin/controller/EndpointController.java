@@ -59,6 +59,12 @@ public class EndpointController {
         return endpointService.getEndpoint(id);
     }
 
+    @RequestMapping(value = "/type/{type}", method = {RequestMethod.GET})
+    @ResponseBody
+    public EndpointData getEndpointTypeData(@PathVariable("type") String type) {
+        return endpointService.getEndpointType(type);
+    }
+
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointData endpointData) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter.endpoint;
+package com.consol.citrus.admin.converter.legacy;
 
-import com.consol.citrus.admin.converter.ObjectConverter;
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.model.config.core.JmsMessageSender;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4.1
  */
-public interface EndpointConverter<K> extends ObjectConverter<EndpointData, K> {
+public class JmsMessageSenderConverterTest {
 
-    @Override
-    EndpointData convert(K definition);
+    private JmsMessageSenderConverter endpointConverter = new JmsMessageSenderConverter();
 
-    /**
-     * Gets the endpoint type name.
-     * @return
-     */
-    String getEndpointType();
+    @Test
+    public void testConvert() throws Exception {
+        EndpointData endpointData = endpointConverter.convert(new JmsMessageSender());
+        Assert.assertEquals(endpointData.getType(), "jms");
+    }
 }

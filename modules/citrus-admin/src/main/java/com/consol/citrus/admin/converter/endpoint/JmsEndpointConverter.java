@@ -17,7 +17,7 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint>
 
     @Override
     public EndpointData convert(JmsEndpoint definition) {
-        EndpointData endpointData = new EndpointData("jms");
+        EndpointData endpointData = new EndpointData(getEndpointType());
 
         endpointData.setName(definition.getId());
 
@@ -42,5 +42,10 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint>
     @Override
     public Class<JmsEndpoint> getModelClass() {
         return JmsEndpoint.class;
+    }
+
+    @Override
+    public String getEndpointType() {
+        return "jms";
     }
 }

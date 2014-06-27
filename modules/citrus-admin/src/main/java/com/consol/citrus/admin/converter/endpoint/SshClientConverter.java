@@ -30,14 +30,15 @@ public class SshClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData("ssh");
+        EndpointData endpointData = new EndpointData(getEndpointType());
 
         endpointData.setName(client.getId());
         endpointData.add(property("host", client, "localhost"));
         endpointData.add(property("port", client, "2222"));
         endpointData.add(property("user", client));
         endpointData.add(property("password", client));
-        endpointData.add(property("strictHostChecking", client, "false"));
+        endpointData.add(property("strictHostChecking", client, "false")
+                .options("true", "false"));
         endpointData.add(property("knownHostsPath", client));
         endpointData.add(property("commandTimeout", client));
         endpointData.add(property("connectionTimeout", client));

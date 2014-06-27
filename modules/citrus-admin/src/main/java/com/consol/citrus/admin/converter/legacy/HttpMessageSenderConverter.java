@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.converter.endpoint;
+package com.consol.citrus.admin.converter.legacy;
 
+import com.consol.citrus.admin.converter.endpoint.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.model.config.http.Client;
+import com.consol.citrus.model.config.http.MessageSender;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -30,33 +32,34 @@ import java.util.List;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 1.4.1
  */
 @Component
-public class HttpClientConverter extends AbstractEndpointConverter<Client> {
+public class HttpMessageSenderConverter extends AbstractEndpointConverter<MessageSender> {
 
     @Override
-    public EndpointData convert(Client client) {
+    public EndpointData convert(MessageSender definition) {
         EndpointData endpointData = new EndpointData(getEndpointType());
 
-        endpointData.setName(client.getId());
-        endpointData.add(property("requestUrl", client));
-        endpointData.add(property("requestMethod", client, HttpMethod.POST.name())
+        endpointData.setName(definition.getId());
+        endpointData.add(property("requestUrl", definition));
+        endpointData.add(property("requestMethod", definition, HttpMethod.POST.name())
                 .options(getHttpMethodOptions()));
-        endpointData.add(property("errorStrategy", client, ErrorHandlingStrategy.PROPAGATE.getName())
+        endpointData.add(property("errorStrategy", definition, ErrorHandlingStrategy.PROPAGATE.getName())
                 .options(getErrorHandlingStrategyOptions()));
-        endpointData.add(property("pollingInterval", client, "500"));
-        endpointData.add(property("messageCorrelator", client)
+        endpointData.add(property("replyMessageCorrelator", definition)
                 .optionKey(ReplyMessageCorrelator.class.getName()));
-        endpointData.add(property("requestFactory", client)
+        endpointData.add(property("endpointResolver", definition)
+                .optionKey(EndpointUriResolver.class.getName()));
+        endpointData.add(property("requestFactory", definition)
                 .optionKey(ClientHttpRequestFactory.class.getName()));
-        endpointData.add(property("restTemplate", client)
+        endpointData.add(property("restTemplate", definition)
                 .optionKey(RestTemplate.class.getName()));
-        endpointData.add(property("charset", client));
-        endpointData.add(property("contentType", client));
-        endpointData.add(property("interceptors", client));
+        endpointData.add(property("charset", definition));
+        endpointData.add(property("contentType", definition));
+        endpointData.add(property("interceptors", definition));
 
-        addEndpointProperties(endpointData, client);
+        endpointData.add(property("actor", "TestActor", definition));
 
         return endpointData;
     }
@@ -86,7 +89,7 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
     }
 
     @Override
-    public Class<Client> getModelClass() {
-        return Client.class;
+    public Class<MessageSender> getModelClass() {
+        return MessageSender.class;
     }
 }

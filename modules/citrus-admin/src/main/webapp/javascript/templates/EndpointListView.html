@@ -1,14 +1,24 @@
 <div id="endpoint-list">
+  <h1 class="page-header">
+    <span><i class="fa fa-share-alt-square"></i> Endpoints</span>
+  </h1>
+
+  <p>Endpoint components create producer and consumers for sending and receiving messages to/from various endpoint destinations. Endpoint components can be of synchronous and asynchronous nature and get referenced in test cases
+    when sending and receiving messages.</p>
+
+  <p>Your project defines <span class="badge badge-emphasis badge-citrus">{{endpointCount}}</span> different endpoints. See all available endpoints listed below:</p>
+
+  <br/>
+
   {{#each endpointTypes}}
-    <h2 class="page-header">
-      <span><i class="fa fa-share-alt-square {{type}}"></i> {{type}} Endpoints</span>
-    </h2>
+
+    <span class="badge badge-header badge-{{type}}"><i class="fa fa-share-alt-square"></i> {{capitalize type}} Endpoints</span> <div class="pull-right"><a name="{{type}}" class="btn btn-new" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></div>
 
     <table class="table table-hover table-condensed config-table">
       <thead>
       <tr>
         <th style="width: 80px;">Type</th>
-        <th>Name</th>
+        <th style="width: 400px;">Name</th>
         <th>Configuration</th>
         <th style="width: 20px;"></th>
       </tr>
@@ -37,11 +47,6 @@
       </tr>
       {{/each}}
       </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="4">&nbsp;<a class="btn-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></td>
-        </tr>
-      </tfoot>
     </table>
   {{/each}}
 </div>

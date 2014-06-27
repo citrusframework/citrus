@@ -58,6 +58,28 @@ public class EndpointService {
     }
 
     /**
+     * Gets the endpoint type data which is an empty endpoint data object containing all endpoint properties. The type is a name
+     * that is mapped to a endpoint implementation class.
+     * @param type
+     * @return
+     */
+    public EndpointData getEndpointType(String type) {
+        for (EndpointConverter converter : endpointConverter) {
+            if (converter.getEndpointType().equals(type)) {
+                try {
+                    return converter.convert(converter.getModelClass().newInstance());
+                } catch (InstantiationException e) {
+                    throw new CitrusAdminRuntimeException("Failed to create new endpoint model instance", e);
+                } catch (IllegalAccessException e) {
+                    throw new CitrusAdminRuntimeException("Failed to create new endpoint model instance", e);
+                }
+            }
+        }
+
+        throw new CitrusAdminRuntimeException("Unable to find endpoint definition for type '" + type + "'");
+    }
+
+    /**
      * List all message receiver types in application context.
      * @return
      */

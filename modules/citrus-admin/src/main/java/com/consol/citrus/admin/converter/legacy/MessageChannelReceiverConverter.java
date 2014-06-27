@@ -18,37 +18,38 @@ package com.consol.citrus.admin.converter.legacy;
 
 import com.consol.citrus.admin.converter.endpoint.AbstractEndpointConverter;
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.core.JmsMessageReceiver;
-import org.springframework.jms.core.JmsTemplate;
+import com.consol.citrus.model.config.core.MessageChannelReceiver;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.integration.support.channel.ChannelResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import javax.jms.ConnectionFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
 @Component
-public class JmsMessageReceiverConverter extends AbstractEndpointConverter<JmsMessageReceiver> {
+public class MessageChannelReceiverConverter extends AbstractEndpointConverter<MessageChannelReceiver> {
+
     @Override
-    public EndpointData convert(JmsMessageReceiver definition) {
+    public EndpointData convert(MessageChannelReceiver definition) {
         EndpointData endpointData = new EndpointData(getEndpointType());
 
         endpointData.setName(definition.getId());
 
-        if (StringUtils.hasText(definition.getDestinationName())) {
-            endpointData.add(property("destinationName", "Destination", definition));
+        if (StringUtils.hasText(definition.getChannelName())) {
+            endpointData.add(property("channelName", "Channel", definition));
         } else {
-            endpointData.add(property("destination", definition));
+            endpointData.add(property("channel", definition));
         }
 
-        endpointData.add(property("connectionFactory", definition)
-                .optionKey(ConnectionFactory.class.getName()));
-        endpointData.add(property("jmsTemplate", definition)
-                .optionKey(JmsTemplate.class.getName()));
-        endpointData.add(property("pubSubDomain", definition, "false")
-                .options("true", "false"));
+        endpointData.add(property("messageChannelTemplate", definition)
+                .optionKey(MessagingTemplate.class.getName()));
+        endpointData.add(property("messagingTemplate", definition)
+                .optionKey(MessagingTemplate.class.getName()));
+        endpointData.add(property("channelResolver", definition)
+                .optionKey(ChannelResolver.class.getName()));
+        endpointData.add(property("receiveTimeout", definition));
 
         addEndpointProperties(endpointData, definition);
 
@@ -56,12 +57,12 @@ public class JmsMessageReceiverConverter extends AbstractEndpointConverter<JmsMe
     }
 
     @Override
-    public Class<JmsMessageReceiver> getModelClass() {
-        return JmsMessageReceiver.class;
+    public Class<MessageChannelReceiver> getModelClass() {
+        return MessageChannelReceiver.class;
     }
 
     @Override
     public String getEndpointType() {
-        return "jms";
+        return "channel";
     }
 }

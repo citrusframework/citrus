@@ -37,7 +37,7 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData("soap");
+        EndpointData endpointData = new EndpointData(getEndpointType());
 
         endpointData.setName(client.getId());
         endpointData.add(property("requestUrl", client));

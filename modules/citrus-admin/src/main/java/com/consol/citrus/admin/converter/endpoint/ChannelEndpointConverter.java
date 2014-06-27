@@ -32,7 +32,7 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
 
     @Override
     public EndpointData convert(ChannelEndpoint definition) {
-        EndpointData endpointData = new EndpointData("channel");
+        EndpointData endpointData = new EndpointData(getEndpointType());
 
         endpointData.setName(definition.getId());
 
@@ -55,5 +55,10 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
     @Override
     public Class<ChannelEndpoint> getModelClass() {
         return ChannelEndpoint.class;
+    }
+
+    @Override
+    public String getEndpointType() {
+        return "channel";
     }
 }
