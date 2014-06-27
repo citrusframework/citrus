@@ -38,9 +38,8 @@ public class WsMessageSenderConverter extends AbstractEndpointConverter<MessageS
 
     @Override
     public EndpointData convert(MessageSender definition) {
-        EndpointData endpointData = new EndpointData(getEndpointType());
+        EndpointData endpointData = new EndpointData(getEndpointType(), definition.getId());
 
-        endpointData.setName(definition.getId());
         endpointData.add(property("requestUrl", definition));
         endpointData.add(property("webServiceTemplate", definition)
                 .optionKey(WebServiceTemplate.class.getName()));

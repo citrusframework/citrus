@@ -12,7 +12,9 @@
 
   {{#each endpointTypes}}
 
-    <span class="badge badge-header badge-{{type}}"><i class="fa fa-share-alt-square"></i> {{capitalize type}} Endpoints</span> <div class="pull-right"><a name="{{type}}" class="btn btn-new" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></div>
+    <h3>
+      <span><i class="fa fa-share-alt-square"></i> {{capitalize type}} Endpoints</span> <div class="pull-right"><a name="{{type}}" class="btn btn-new" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></div>
+    </h3>
 
     <table class="table table-hover table-condensed config-table">
       <thead>
@@ -29,9 +31,9 @@
       {{/unless}}
 
       {{#each endpoints}}
-      <tr class="endpoint clickable" id="{{name}}">
+      <tr class="endpoint clickable" id="{{id}}">
         <td><span class="badge badge-{{type}}"><i class="fa fa-share-alt-square"></i> &nbsp;{{type}}</span></td>
-        <td>{{name}}</td>
+        <td>{{id}}</td>
         <td>
           <ul class="properties">
             {{#each properties}}

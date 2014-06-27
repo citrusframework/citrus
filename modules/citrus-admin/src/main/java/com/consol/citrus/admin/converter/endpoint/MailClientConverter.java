@@ -30,9 +30,8 @@ public class MailClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData(getEndpointType());
+        EndpointData endpointData = new EndpointData(getEndpointType(), client.getId());
 
-        endpointData.setName(client.getId());
         endpointData.add(property("host", client));
         endpointData.add(property("port", client, "25"));
         endpointData.add(property("protocol", client, JavaMailSenderImpl.DEFAULT_PROTOCOL));

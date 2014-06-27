@@ -65,7 +65,7 @@ public class EndpointController {
         return endpointService.getEndpointType(type);
     }
 
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.POST})
     @ResponseBody
     public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointData endpointData) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, endpointData);

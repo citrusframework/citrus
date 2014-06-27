@@ -193,7 +193,7 @@
                 var url = "config/xsd-schema/" + schemaId;
                 $.ajax({
                     url: url,
-                    type: 'PUT',
+                    type: 'POST',
                     dataType: "json",
                     contentType: "application/json",
                     data: jsonForm,
@@ -221,7 +221,7 @@
                 var url = "config/xsd-schema-repository/" + schemaRepositoryId;
                 $.ajax({
                     url: url,
-                    type: 'PUT',
+                    type: 'POST',
                     dataType: "json",
                     contentType: "application/json",
                     data: this.getSchemaRepositoryJSON(serializedForm),

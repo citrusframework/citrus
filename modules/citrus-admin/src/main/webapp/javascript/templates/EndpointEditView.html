@@ -5,8 +5,8 @@
 {{/if}}
 
 <form id="endpoint-edit-form" class="form-horizontal">
-  {{#if name}}
-  <input name="name" type="hidden" value="{{name}}"/>
+  {{#if id}}
+  <input name="id" type="hidden" value="{{id}}"/>
   <div class="control-group">
     <label class="control-label">Type <em>*</em></label>
     <div class="controls">
@@ -18,7 +18,7 @@
   <div class="control-group">
     <label class="control-label">Name <em>*</em></label>
     <div class="controls">
-      <input name="newId" value="{{name}}" type="text" class="span8"/>
+      <input name="newId" value="{{id}}" type="text" class="span8"/>
     </div>
   </div>
   {{else}}
@@ -39,7 +39,7 @@
   <div class="control-group">
     <label class="control-label">Name <em>*</em></label>
     <div class="controls">
-      <input name="name" value="{{name}}" type="text" class="span8"/>
+      <input name="id" value="{{id}}" type="text" class="span8"/>
     </div>
   </div>
   {{/if}}
@@ -50,26 +50,26 @@
     <div class="controls">
       {{#if optionKey}}
       <div class="input-append">
-        <input name="{{id}}" class="input-xlarge" value="{{value}}" type="text"/>
+        <input name="{{fieldName}}" class="input-xlarge" value="{{value}}" type="text"/>
         <div id="option-dropdown" class="btn-group">
-          <button id="{{id}}" name="{{optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
+          <button id="{{fieldName}}" name="{{optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-search"></i>
           </button>
-          <ul id="dropdown-menu-{{id}}" class="dropdown-menu">
+          <ul id="dropdown-menu-{{fieldName}}" class="dropdown-menu">
           </ul>
         </div>
       </div>
       {{/if}}
       {{#unless optionKey}}
         {{#if options}}
-        <select id="{{id}}" class="span8" name="{{id}}" value="{{value}}">
+        <select id="{{fieldName}}" class="span8" name="{{fieldName}}" value="{{value}}">
           {{#each options}}
           <option value="{{this}}">{{this}}</option>
           {{/each}}
         </select>
         {{/if}}
         {{#unless options}}
-        <input name="{{id}}" value="{{value}}" type="text" class="span8"/>
+        <input name="{{fieldName}}" value="{{value}}" type="text" class="span8"/>
         {{/unless}}
       {{/unless}}
     </div>
@@ -78,7 +78,7 @@
 
   <div class="control-group">
     <div class="controls">
-      {{#if name}}
+      {{#if id}}
       <a href="#config" id="btn-save" class="btn btn-citrus">Save</a>
       {{else}}
       <a href="#config" id="btn-add" class="btn btn-citrus">Add</a>

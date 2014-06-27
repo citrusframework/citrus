@@ -39,9 +39,8 @@ public class HttpMessageSenderConverter extends AbstractEndpointConverter<Messag
 
     @Override
     public EndpointData convert(MessageSender definition) {
-        EndpointData endpointData = new EndpointData(getEndpointType());
+        EndpointData endpointData = new EndpointData(getEndpointType(), definition.getId());
 
-        endpointData.setName(definition.getId());
         endpointData.add(property("requestUrl", definition));
         endpointData.add(property("requestMethod", definition, HttpMethod.POST.name())
                 .options(getHttpMethodOptions()));

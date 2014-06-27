@@ -26,6 +26,7 @@ import java.util.List;
 public class EndpointProperty {
 
     private final String id;
+    private final String fieldName;
     private final String displayName;
     private final String value;
 
@@ -35,11 +36,13 @@ public class EndpointProperty {
     /**
      * Constructor using form field id, displayName and value.
      * @param id
+     * @param fieldName
      * @param displayName
      * @param value
      */
-    public EndpointProperty(String id, String displayName, String value) {
+    public EndpointProperty(String id, String fieldName, String displayName, String value) {
         this.id = id;
+        this.fieldName = fieldName;
         this.displayName = displayName;
         this.value = value;
     }
@@ -72,6 +75,14 @@ public class EndpointProperty {
     public EndpointProperty options(List<String> options) {
         this.options = options;
         return this;
+    }
+
+    /**
+     * Gets the field name on endpoint object model.
+     * @return
+     */
+    public String getFieldName() {
+        return fieldName;
     }
 
     /**

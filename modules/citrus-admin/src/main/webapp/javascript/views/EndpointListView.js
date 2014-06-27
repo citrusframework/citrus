@@ -158,7 +158,7 @@
                 var url = "endpoint/" + elementId;
                 $.ajax({
                     url: url,
-                    type: 'PUT',
+                    type: 'POST',
                     dataType: "json",
                     contentType: "application/json",
                     data: JSON.stringify(serializedForm),

@@ -103,12 +103,12 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
 
             if (value != null) {
                 if (field.isAnnotationPresent(XmlAttribute.class)) {
-                    return new EndpointProperty(field.getAnnotation(XmlAttribute.class).name(), displayName, resolvePropertyExpression(value));
+                    return new EndpointProperty(field.getAnnotation(XmlAttribute.class).name(), fieldName, displayName, resolvePropertyExpression(value));
                 } else {
-                    return new EndpointProperty(fieldName, displayName, resolvePropertyExpression(value));
+                    return new EndpointProperty(fieldName, fieldName, displayName, resolvePropertyExpression(value));
                 }
             } else {
-                return new EndpointProperty(fieldName, displayName, null);
+                return new EndpointProperty(fieldName, fieldName, displayName, null);
             }
         } else {
             throw new CitrusAdminRuntimeException(String.format("Unknown field %s on endpoint type %s", fieldName, definition.getClass()));
