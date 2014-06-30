@@ -21,6 +21,8 @@ import com.consol.citrus.admin.spring.config.*;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.admin.util.JAXBHelper;
 import com.consol.citrus.util.XMLUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -48,6 +50,9 @@ public class SpringBeanService {
     
     /** JaxBContext holds xml bean definition packages known to this context */
     private JAXBContext jaxbContext;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SpringBeanService.class);
     
     @PostConstruct
     protected void initJaxbContext() {
@@ -228,7 +233,10 @@ public class SpringBeanService {
      */
     private Element createElementFromJaxbObject(Object jaxbElement) {
         LSInput input = XMLUtils.createLSInput();
-        input.setStringData(jaxbHelper.marshal(jaxbContext, jaxbElement));
+        String beanData = jaxbHelper.marshal(jaxbContext, jaxbElement);
+        input.setStringData(beanData);
+
+        log.debug("Creating element from jaxb object: " + beanData);
 
         Element element = (Element)XMLUtils.createLSParser().parse(input).getDocumentElement().cloneNode(true);
 

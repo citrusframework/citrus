@@ -16,8 +16,11 @@
 
 package com.consol.citrus.admin.controller;
 
+import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.admin.service.*;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,9 @@ public class EndpointController {
 
     @Autowired
     private EndpointService endpointService;
+
+    @Autowired
+    private ObjectMapper jsonMapper;
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
@@ -67,8 +73,17 @@ public class EndpointController {
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.POST})
     @ResponseBody
-    public void updateEndpoint(@PathVariable("id") String id, @RequestBody EndpointData endpointData) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, endpointData);
+    public void updateEndpoint(@PathVariable("id") String id, @RequestBody JSONObject endpointData) {
+        String modelType = endpointData.remove("modelType").toString();
+
+        try {
+            Object endpointModel = jsonMapper.readValue(endpointData.toJSONString(), Class.forName(modelType));
+            springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, endpointModel);
+        } catch (ClassNotFoundException e) {
+            throw new CitrusAdminRuntimeException(String.format("Unknown model type '%s' for endpoint data", modelType), e);
+        } catch (Exception e) {
+            throw new CitrusAdminRuntimeException("Failed to read endpoint data", e);
+        }
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})

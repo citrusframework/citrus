@@ -37,7 +37,7 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
-        EndpointData endpointData = new EndpointData(getEndpointType(), client.getId());
+        EndpointData endpointData = new EndpointData(getEndpointType(), client.getId(), getModelClass());
 
         endpointData.add(property("requestUrl", client));
         endpointData.add(property("requestMethod", client, HttpMethod.POST.name())

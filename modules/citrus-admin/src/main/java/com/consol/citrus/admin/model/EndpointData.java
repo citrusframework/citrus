@@ -26,23 +26,19 @@ import java.util.*;
  */
 public class EndpointData {
 
-    private String id;
-    private String type;
+    private final String id;
+    private final String type;
+    private final Class<?> modelType;
     private List<EndpointProperty> properties = new ArrayList<EndpointProperty>();
-
-    /**
-     * Default constructor.
-     */
-    public EndpointData() {
-    }
 
     /**
      * Constructor using endpoint type field and identifier.
      * @param type
      * @param id
      */
-    public EndpointData(String type, String id) {
+    public EndpointData(String type, String id, Class<?> modelType) {
         this.id = id;
+        this.modelType = modelType;
         this.type = type;
     }
 
@@ -65,19 +61,19 @@ public class EndpointData {
     }
 
     /**
-     * Sets the identifier usually the Spring bean name.
-     * @param id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
      * Gets the endpoint type such as http, jms, camel, etc.
      * @return
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * Gets the model type that is logically linked to this endpoint data.
+     * @return
+     */
+    public Class<?> getModelType() {
+        return modelType;
     }
 
     /**

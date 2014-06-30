@@ -33,7 +33,7 @@ import javax.jms.ConnectionFactory;
 public class JmsMessageReceiverConverter extends AbstractEndpointConverter<JmsMessageReceiver> {
     @Override
     public EndpointData convert(JmsMessageReceiver definition) {
-        EndpointData endpointData = new EndpointData(getEndpointType(), definition.getId());
+        EndpointData endpointData = new EndpointData(getEndpointType(), definition.getId(), getModelClass());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
             endpointData.add(property("destinationName", "Destination", definition));

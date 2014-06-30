@@ -63,8 +63,13 @@ public class GetSpringImportsFilter implements LSSerializerFilter, LSParserFilte
         if (DomUtils.nodeNameEquals(element, "import")) {
             String resourceLocation = element.getAttribute("resource");
 
-            // TODO handle classpath resources
-            if (StringUtils.hasText(resourceLocation) && !resourceLocation.startsWith("classpath:")) {
+            if (StringUtils.hasText(resourceLocation)) {
+                if (resourceLocation.startsWith("classpath:")) {
+                    resourceLocation = resourceLocation.substring("classpath:".length());
+                } else if (resourceLocation.startsWith("file:")) {
+                    resourceLocation = resourceLocation.substring("file:".length());
+                }
+
                 try {
                     File importedFile = new FileSystemResource(parentConfigFile.getParentFile().getCanonicalPath() +
                             File.separator + resourceLocation).getFile();
