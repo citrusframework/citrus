@@ -16,7 +16,7 @@
             <variable name="customerId" value="citrus:concat('Mx1x', citrus:randomNumber(10))"/>
         </variables>
         <actions>
-            <send with="travelAgencyBookingRequestSender">
+            <send endpoint="travelAgencyBookingRequestEndpoint">
                 <message>
                     <data>
                         <![CDATA[
@@ -54,7 +54,7 @@
                 </header>
             </send>
             
-            <receive with="smartAirlineBookingRequestReceiver">
+            <receive endpoint="smartAirlineBookingRequestEndpoint">
                 <message>
                     <data>
                         <![CDATA[
@@ -89,7 +89,7 @@
                 </extract>
             </receive>
             
-            <send with="smartAirlineBookingResponseSender">
+            <send endpoint="smartAirlineBookingResponseEndpoint">
                 <message>
                     <data>
                         <![CDATA[
@@ -116,7 +116,7 @@
                 </header>
             </send>
             
-            <receive with="royalAirlineBookingRequestReceiver">
+            <receive endpoint="royalAirlineServer">
                 <message>
                     <data>
                         <![CDATA[
@@ -151,7 +151,7 @@
                 </extract>
             </receive>
             
-            <send with="royalAirlineBookingResponseSender">
+            <send endpoint="royalAirlineServer">
                 <message>
                     <data>
                         <![CDATA[
@@ -178,7 +178,7 @@
                 </header>
             </send>
             
-            <receive with="travelAgencyBookingResponseReceiver">
+            <receive endpoint="travelAgencyBookingResponseEndpoint">
                 <message>
                     <data>
                         <![CDATA[
