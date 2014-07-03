@@ -19,7 +19,6 @@ package com.consol.citrus.http.server;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
-import com.consol.citrus.report.MessageTracingTestListener;
 import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -136,11 +135,8 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 addDispatcherServlet();
             }
 
-            //Add request caching filter when message tracing is enabled
-            if (applicationContext.getBeansOfType(MessageTracingTestListener.class).size() > 0) {
-                addRequestCachingFilter();
-            }
-            
+            addRequestCachingFilter();
+
             contextHandler.setServletHandler(servletHandler);
             
             if (securityHandler != null) {
