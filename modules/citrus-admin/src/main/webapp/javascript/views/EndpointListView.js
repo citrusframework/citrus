@@ -5,8 +5,8 @@
 
             events: {
                 "click tr.endpoint": "showEditForm",
-                "click .btn-remove": "remove",
                 "click .btn-new": "showNewForm",
+                "click .btn-remove": "remove",
                 "click #btn-add": "create",
                 "click #btn-save": "save",
                 "click #btn-cancel": "closeForm"
@@ -48,9 +48,78 @@
                     url: url,
                     type: 'DELETE',
                     success: _.bind(function (response) {
+                        this.getEndpoints();
                         this.render();
                     }, this),
                     async: true
+                });
+
+                return false;
+            },
+
+            create: function() {
+                var form = $('#endpoint-edit-form');
+                var serializedForm = form.serializeObject();
+                var url = "endpoint";
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(serializedForm),
+                    success: _.bind(function (response) {
+                    }, this),
+                    async: false
+                });
+
+                this.closeForm(_.bind(function() {
+                    this.getEndpoints();
+                    this.render();
+                }, this));
+
+                return false;
+            },
+
+            save: function() {
+                var form = $('#endpoint-edit-form');
+
+                var serializedForm = form.serializeObject();
+                var elementId = serializedForm.id;
+
+                if (serializedForm.id != serializedForm.newId) {
+                    serializedForm.id = serializedForm.newId;
+                }
+
+                serializedForm = _.omit(serializedForm, "newId");
+
+                var url = "endpoint/" + elementId;
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(serializedForm),
+                    success: _.bind(function (response) {
+                    }, this),
+                    async: false
+                });
+
+                this.closeForm(_.bind(function() {
+                    this.getEndpoints();
+                    this.render();
+                }, this));
+
+                return false;
+            },
+
+            closeForm: function(callback) {
+                $('#endpoint-edit').hide('slide', function() {
+                    $('#endpoint-list').show('slide', function() {
+                        if (callback) {
+                            callback();
+                        }
+                    });
                 });
             },
 
@@ -119,60 +188,6 @@
                         });
                     }, this),
                     async: true
-                });
-            },
-
-            create: function() {
-                var form = $('#endpoint-edit-form');
-                this.closeForm();
-
-                var serializedForm = form.serializeObject();
-                var url = "endpoint";
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    dataType: "json",
-                    contentType: "application/json",
-                    data: JSON.stringify(serializedForm),
-                    success: _.bind(function (response) {
-                        this.render();
-                    }, this),
-                    async: true
-                });
-                return false;
-            },
-
-            save: function() {
-                var form = $('#endpoint-edit-form');
-                this.closeForm();
-
-                var serializedForm = form.serializeObject();
-                var elementId = serializedForm.id;
-
-                if (serializedForm.id != serializedForm.newId) {
-                    serializedForm.id = serializedForm.newId;
-                }
-
-                serializedForm = _.omit(serializedForm, "newId");
-
-                var url = "endpoint/" + elementId;
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    dataType: "json",
-                    contentType: "application/json",
-                    data: JSON.stringify(serializedForm),
-                    success: _.bind(function (response) {
-                        this.render();
-                    }, this),
-                    async: true
-                });
-                return false;
-            },
-
-            closeForm: function() {
-                $('#endpoint-edit').hide('slide', function() {
-                    $('#endpoint-list').show('slide');
                 });
             },
 
