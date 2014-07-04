@@ -39,7 +39,7 @@ public class SpringBeanServiceTest {
     @BeforeMethod
     public void beforeMethod() {
         springBeanConfigService.jaxbHelper = new JAXBHelperImpl();
-        springBeanConfigService.initJaxbContext();
+        springBeanConfigService.init();
     }
 
     @Test
@@ -54,10 +54,12 @@ public class SpringBeanServiceTest {
         springBeanConfigService.addBeanDefinition(tempFile, xsdSchema1);
         springBeanConfigService.addBeanDefinition(tempFile, xsdSchema2);
         springBeanConfigService.addBeanDefinition(tempFile, schemaRepository);
-        
+
         String result = FileUtils.readToString(new FileInputStream(tempFile));
 
-        Assert.assertTrue(result.contains("<citrus:schema-repository xmlns:citrus=\"http://www.citrusframework.org/schema/config\" id=\"x\">"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<citrus:schema id=\"1\" location=\"l1\"/>"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<citrus:schema id=\"2\" location=\"l2\"/>"), "Failed to validate " + result);
+        Assert.assertTrue(result.contains("<citrus:schema-repository id=\"x\">"), "Failed to validate " + result);
     }
     
     @Test

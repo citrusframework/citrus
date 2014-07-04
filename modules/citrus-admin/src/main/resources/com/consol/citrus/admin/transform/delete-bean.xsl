@@ -17,9 +17,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:include href="transform-bean.xsl"/>
 
-  <xsl:param name="bean_content" />
-
   <xsl:template name="add-bean"></xsl:template>
-  <xsl:template name="update-bean"><xsl:value-of select="$bean_content"/></xsl:template>
+  <xsl:template name="update-bean"></xsl:template>
 
 </xsl:stylesheet>

@@ -17,7 +17,6 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import com.consol.citrus.admin.spring.config.*;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.admin.util.JAXBHelper;
@@ -30,12 +29,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.ls.*;
+import org.w3c.dom.ls.LSParser;
+import org.w3c.dom.ls.LSSerializer;
 
 import javax.annotation.PostConstruct;
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamSource;
@@ -65,7 +63,7 @@ public class SpringBeanService {
     private static Logger log = LoggerFactory.getLogger(SpringBeanService.class);
     
     @PostConstruct
-    protected void initJaxbContext() {
+    protected void init() {
         jaxbContext = jaxbHelper.createJAXBContextByPath(
                 "com.consol.citrus.admin.spring.model",
                 "com.consol.citrus.model.config.core",
@@ -74,6 +72,17 @@ public class SpringBeanService {
                 "com.consol.citrus.model.config.ssh",
                 "com.consol.citrus.model.config.vertx",
                 "com.consol.citrus.model.config.http");
+
+        transformerFactory.setURIResolver(new URIResolver() {
+            @Override
+            public Source resolve(String href, String base) throws TransformerException {
+                try {
+                    return new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/" + href).getInputStream());
+                } catch (IOException e) {
+                    throw new TransformerException("Failed to resolve uri: " + href);
+                }
+            }
+        });
     }
 
     /**
@@ -183,12 +192,27 @@ public class SpringBeanService {
      * @param jaxbElement
      */
     public void addBeanDefinition(File configFile, Object jaxbElement) {
-        Document doc = XMLUtils.createLSParser().parseURI(configFile.toURI().toString());
+        Source xsltSource;
+        Source xmlSource;
+        try {
+            xsltSource = new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/add-bean.xsl").getInputStream());
+            xsltSource.setSystemId("add-bean");
+            xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
 
-        LSSerializer serializer = XMLUtils.createLSSerializer();
+            //create transformer
+            Transformer transformer = transformerFactory.newTransformer(xsltSource);
+            transformer.setParameter("bean_content", getXmlContent(jaxbElement));
 
-        serializer.setFilter(new AddSpringBeanFilter(createElementFromJaxbObject(jaxbElement)));
-        serializer.writeToURI(doc, configFile.toURI().toString());
+            //transform
+            StringResult result = new StringResult();
+            transformer.transform(xmlSource, result);
+            FileUtils.writeToFile(result.toString(), configFile);
+            return;
+        } catch (IOException e) {
+            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+        } catch (TransformerException e) {
+            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+        }
     }
     
     /**
@@ -198,12 +222,34 @@ public class SpringBeanService {
      * @param id
      */
     public void removeBeanDefinition(File configFile, String id) {
-        Document doc = XMLUtils.createLSParser().parseURI(configFile.toURI().toString());
-        
-        LSSerializer serializer = XMLUtils.createLSSerializer();
+        Source xsltSource;
+        Source xmlSource;
+        try {
+            xsltSource = new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/delete-bean.xsl").getInputStream());
+            xsltSource.setSystemId("delete-bean");
 
-        serializer.setFilter(new RemoveSpringBeanFilter(id));
-        serializer.writeToURI(doc, configFile.toURI().toString());
+            List<File> configFiles = new ArrayList<File>();
+            configFiles.add(configFile);
+            configFiles.addAll(getConfigImports(configFile));
+
+            for (File file : configFiles) {
+                xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
+
+                //create transformer
+                Transformer transformer = transformerFactory.newTransformer(xsltSource);
+                transformer.setParameter("bean_id", id);
+
+                //transform
+                StringResult result = new StringResult();
+                transformer.transform(xmlSource, result);
+                FileUtils.writeToFile(result.toString(), file);
+                return;
+            }
+        } catch (IOException e) {
+            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+        } catch (TransformerException e) {
+            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+        }
     }
     
     /**
@@ -217,6 +263,7 @@ public class SpringBeanService {
         Source xmlSource;
         try {
             xsltSource = new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/update-bean.xsl").getInputStream());
+            xsltSource.setSystemId("update-bean");
 
             List<File> configFiles = new ArrayList<File>();
             configFiles.add(configFile);
@@ -234,14 +281,12 @@ public class SpringBeanService {
                     //create transformer
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);
                     transformer.setParameter("bean_id", id);
+                    transformer.setParameter("bean_content", getXmlContent(jaxbElement));
 
                     //transform
                     StringResult result = new StringResult();
                     transformer.transform(xmlSource, result);
-
-                    String fileContent = result.toString();
-                    fileContent = fileContent.replaceFirst("BEAN", getXmlContent(jaxbElement));
-                    FileUtils.writeToFile(fileContent, file);
+                    FileUtils.writeToFile(result.toString(), file);
                     return;
                 }
             }
@@ -279,33 +324,6 @@ public class SpringBeanService {
         }
     }
 
-    /**
-     * Creates a DOM element node from JAXB element.
-     * @param jaxbElement
-     * @return
-     */
-    private Element createElementFromJaxbObject(Object jaxbElement) {
-        LSInput input = XMLUtils.createLSInput();
-        String beanData = jaxbHelper.marshal(jaxbContext, jaxbElement);
-        input.setStringData(beanData);
-
-        log.debug("Creating element from jaxb object: " + beanData);
-
-        Element element = (Element)XMLUtils.createLSParser().parse(input).getDocumentElement().cloneNode(true);
-
-        // remove all namespace declarations from element as we have set those already in root element
-        element.getAttributes().removeNamedItem(XMLConstants.XMLNS_ATTRIBUTE);
-
-        CitrusNamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
-        for (String prefix : namespacePrefixMapper.getNamespaceMappings().values()) {
-            if (element.hasAttribute(XMLConstants.XMLNS_ATTRIBUTE + ":" + prefix)) {
-                element.getAttributes().removeNamedItem(XMLConstants.XMLNS_ATTRIBUTE + ":" + prefix);
-            }
-        }
-
-        return element;
-    }
-    
     /**
      * Creates a DOM element node from JAXB element.
      * @param element
