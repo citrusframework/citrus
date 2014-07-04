@@ -241,17 +241,7 @@ public class SpringBeanService {
 
                     String fileContent = result.toString();
                     fileContent = fileContent.replaceFirst("BEAN", getXmlContent(jaxbElement));
-
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(file);
-                        fos.write(fileContent.getBytes());
-                        fos.flush();
-                    } finally {
-                        if (fos != null) {
-                            fos.close();
-                        }
-                    }
+                    FileUtils.writeToFile(fileContent, file);
                     return;
                 }
             }

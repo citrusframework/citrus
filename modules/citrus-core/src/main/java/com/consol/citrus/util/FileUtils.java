@@ -94,6 +94,45 @@ public abstract class FileUtils {
     }
 
     /**
+     * Writes String content to file. Uses default charset encoding.
+     * @param content
+     * @param file
+     */
+    public static void writeToFile(String content, File file) {
+        writeToFile(content, file, getDefaultCharset());
+    }
+
+    /**
+     * Writes String content to file with given charset encoding. Automatically closes file output streams when done.
+     * @param content
+     * @param file
+     */
+    public static void writeToFile(String content, File file, Charset charset) {
+        if (log.isDebugEnabled()) {
+            log.debug("Writing file resource (encoding is '" + charset.displayName() + "')");
+        }
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(content.getBytes(charset));
+            fos.flush();
+        } catch (FileNotFoundException e) {
+            throw new CitrusRuntimeException("Failed to write file", e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to write file", e);
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    log.warn("Unable to close file output stream", e);
+                }
+            }
+        }
+    }
+
+    /**
      * Method to retrieve all test defining XML files in given directory.
      * Hierarchy of folders is supported.
      *

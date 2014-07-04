@@ -14,37 +14,50 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:spring="http://www.springframework.org/schema/beans">
-  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes" cdata-section-elements="data"/>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="text"/>
 
   <xsl:param name="bean_id" />
   <xsl:preserve-space elements="*"/>
 
-  <xsl:template match="spring:beans">
-    <xsl:copy>
-      <xsl:copy-of select="/node()/@*[local-name()='schemaLocation']"/>
-      <xsl:apply-templates/>
-    </xsl:copy>
-  </xsl:template>
-
   <xsl:template match="node()">
     <xsl:choose>
-      <xsl:when test="local-name(.) = beans">
-        <xsl:apply-templates/>
-      </xsl:when>
-      <xsl:when test="@id = $bean_id">
-        <xsl:text>BEAN</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:copy-of select="."/>
-      </xsl:otherwise>
+      <xsl:when test="local-name(.) = 'beans'">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="namespaces"/><xsl:call-template name="attributes"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
+      <xsl:when test="@id = $bean_id"><xsl:text>BEAN</xsl:text></xsl:when>
+      <xsl:when test="child::*">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/>&gt;<xsl:apply-templates/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
+      <xsl:when test="text()">&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/>&gt;<xsl:value-of select="text()"/>&lt;/<xsl:value-of select="name(.)"/>&gt;</xsl:when>
+      <xsl:otherwise>&lt;<xsl:value-of select="name(.)"/><xsl:call-template name="attributes"/>/&gt;</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template match="text() | comment()">
-    <xsl:copy-of select="."/>
+  <xsl:template name="namespaces">
+    <xsl:for-each select="namespace::*">
+      <xsl:if test="not(name(.) = 'xml')">
+        <xsl:choose>
+          <xsl:when test="string-length(name(.))">
+            <xsl:text> </xsl:text>xmlns:<xsl:value-of select="name(.)"/>=&quot;<xsl:value-of select="."/>&quot;
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text> </xsl:text>xmlns=&quot;<xsl:value-of select="."/>&quot;
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </xsl:for-each>
   </xsl:template>
+
+  <xsl:template name="attributes">
+    <xsl:for-each select="@*">
+      <xsl:choose>
+        <xsl:when test="local-name(.) = 'schemaLocation'"><xsl:text> </xsl:text><xsl:value-of select="name(.)"/>=&quot;<xsl:value-of select="normalize-space(.)"/>&quot;</xsl:when>
+        <xsl:when test="count(parent::node()/@*) > 2 and position() != last() and contains(namespace-uri(parent::node()), 'citrus')"><xsl:text> </xsl:text><xsl:value-of select="name(.)"/>=&quot;<xsl:value-of select="."/>&quot;
+        </xsl:when>
+        <xsl:otherwise><xsl:text> </xsl:text><xsl:value-of select="name(.)"/>=&quot;<xsl:value-of select="."/>&quot;</xsl:otherwise>
+      </xsl:choose>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="comment()">&lt;!--<xsl:value-of select="."/>--&gt;</xsl:template>
+  <xsl:template match="text()"><xsl:value-of select="."/></xsl:template>
 
 </xsl:stylesheet>
