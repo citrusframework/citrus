@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.admin.util;
+package com.consol.citrus.admin.jaxb;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.model.config.core.Schema;
-import com.consol.citrus.model.config.core.SchemaBuilder;
-import com.consol.citrus.model.config.core.SchemaRepository;
-import com.consol.citrus.model.config.core.SchemaRepositoryBuilder;
+import com.consol.citrus.model.config.core.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,14 +25,14 @@ import javax.xml.bind.JAXBContext;
 import java.io.File;
 
 /**
- * Tests JAXBHelperImpl
+ * Tests JAXBHelper
  *
  * @author Martin.Maher@consol.de
  * @since 2013.04.19
  */
-public class JAXBHelperImplTest {
+public class JAXBHelperTest {
 
-    private JAXBHelperImpl jaxbHelper = new JAXBHelperImpl();
+    private JAXBHelper jaxbHelper = new JAXBHelper();
 
     private static final String[] CONTEXT_PATHS = {
             "com.consol.citrus.model.config.core"

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.consol.citrus.admin.util;
+package com.consol.citrus.admin.jaxb;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.jaxb.CitrusNamespacePrefixMapper;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,21 +28,26 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 
 /**
- * {@inheritDoc}
+ * Utility class for creating {@link JAXBContext} as well as for marshaling and un-marshaling xml.
  *
  * @author Martin.Maher@consol.de
  * @since 2013.04.20
  */
 @Component
-public class JAXBHelperImpl implements JAXBHelper {
+public class JAXBHelper {
 
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(JAXBHelperImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JAXBHelper.class);
 
     /** The namespace prefix mapper */
     private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
-    @Override
+    /**
+     * Creates a new JAXB context based on the supplied <code>paths</code>
+     *
+     * @param paths the paths or packages to use when (un-)marshaling
+     * @return the JAXB Context
+     */
     public JAXBContext createJAXBContextByPath(String... paths) {
         String contextPath = buildContextPath(paths);
         try {
@@ -54,7 +57,12 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
-    @Override
+    /**
+     * Marshal JAXB element
+     *
+     * @param element the element to marshal
+     * @return the string representation
+     */
     public <T> String marshal(JAXBContext context, T element) {
         StringResult result = new StringResult();
         marshal(context, element, result);
@@ -62,7 +70,13 @@ public class JAXBHelperImpl implements JAXBHelper {
         return result.toString();
     }
 
-    @Override
+    /**
+     * Marshal JAXB Element
+     *
+     * @param context the JAXBContext
+     * @param element the element to marshal
+     * @param result the result of the marshaling
+     */
     public <T> void marshal(JAXBContext context, T element, Result result) {
         try {
             Marshaller marshaller = getMarshaller(context);
@@ -72,7 +86,12 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
-    @Override
+    /**
+     * @param context
+     * @param element
+     * @param file
+     * @param <T>
+     */
     public <T> void marshal(JAXBContext context, T element, File file) {
         try {
             Marshaller marshaller = getMarshaller(context);
@@ -82,7 +101,13 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
-    @Override
+    /**
+     * Un-marshal XML to JAXB representation.
+     *
+     * @param clazz the JAXB element to unmarshal
+     * @param raw the raw xml
+     * @return the JAXB element
+     */
     public <T> T unmarshal(JAXBContext context, Class<T> clazz, String raw) {
         try {
             Unmarshaller u = context.createUnmarshaller();
@@ -93,7 +118,13 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
-    @Override
+    /**
+     * @param context
+     * @param clazz
+     * @param file
+     * @param <T>
+     * @return
+     */
     public <T> T unmarshal(JAXBContext context, Class<T> clazz, File file) {
         FileInputStream fis = null;
         try {

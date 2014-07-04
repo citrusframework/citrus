@@ -21,6 +21,8 @@
     <context:component-scan base-package="com.consol.citrus.admin.controller"/>
     <context:component-scan base-package="com.consol.citrus.admin.converter"/>
     <context:component-scan base-package="com.consol.citrus.admin.service"/>
+    <context:component-scan base-package="com.consol.citrus.admin.jaxb"/>
+    <context:component-scan base-package="com.consol.citrus.admin.jackson"/>
     <context:component-scan base-package="com.consol.citrus.admin.util"/>
 
     <mvc:interceptors>

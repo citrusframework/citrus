@@ -19,7 +19,7 @@ package com.consol.citrus.admin.service;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.spring.config.*;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.admin.util.JAXBHelper;
+import com.consol.citrus.admin.jaxb.JAXBHelper;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;

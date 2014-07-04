@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.service;
 
-import com.consol.citrus.admin.util.JAXBHelperImpl;
+import com.consol.citrus.admin.jaxb.JAXBHelper;
 import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
@@ -24,10 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -38,7 +35,7 @@ public class SpringBeanServiceTest {
 
     @BeforeMethod
     public void beforeMethod() {
-        springBeanConfigService.jaxbHelper = new JAXBHelperImpl();
+        springBeanConfigService.jaxbHelper = new JAXBHelper();
         springBeanConfigService.init();
     }
 
