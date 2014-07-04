@@ -44,6 +44,7 @@ public class JAXBHelperImpl implements JAXBHelper {
     /** The namespace prefix mapper */
     private NamespacePrefixMapper namespacePrefixMapper = new CitrusNamespacePrefixMapper();
 
+    @Override
     public JAXBContext createJAXBContextByPath(String... paths) {
         String contextPath = buildContextPath(paths);
         try {
@@ -53,7 +54,7 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
-
+    @Override
     public <T> String marshal(JAXBContext context, T element) {
         StringResult result = new StringResult();
         marshal(context, element, result);
@@ -61,6 +62,7 @@ public class JAXBHelperImpl implements JAXBHelper {
         return result.toString();
     }
 
+    @Override
     public <T> void marshal(JAXBContext context, T element, Result result) {
         try {
             Marshaller marshaller = getMarshaller(context);
@@ -70,6 +72,7 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
+    @Override
     public <T> void marshal(JAXBContext context, T element, File file) {
         try {
             Marshaller marshaller = getMarshaller(context);
@@ -79,16 +82,7 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
-    private Marshaller getMarshaller(JAXBContext context) throws JAXBException {
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-        
-        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
-        
-        return marshaller;
-    }
-
+    @Override
     public <T> T unmarshal(JAXBContext context, Class<T> clazz, String raw) {
         try {
             Unmarshaller u = context.createUnmarshaller();
@@ -99,6 +93,7 @@ public class JAXBHelperImpl implements JAXBHelper {
         }
     }
 
+    @Override
     public <T> T unmarshal(JAXBContext context, Class<T> clazz, File file) {
         FileInputStream fis = null;
         try {
@@ -122,6 +117,17 @@ public class JAXBHelperImpl implements JAXBHelper {
                 }
             }
         }
+    }
+
+    private Marshaller getMarshaller(JAXBContext context) throws JAXBException {
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", namespacePrefixMapper);
+
+        return marshaller;
     }
 
     protected String buildContextPath(String... contextPaths) {
