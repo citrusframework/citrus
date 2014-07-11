@@ -17,6 +17,9 @@
   <body>
     <release version="1.4.1" date="11.07.20014" description="1.4.1 release">
         <action dev="christophd" type="add">
+          CITRUS-207 Dynamic endpoint components
+        </action>
+        <action dev="christophd" type="add">
           CITRUS-205 Apache Camel support
         </action>
         <action dev="christophd" type="add">

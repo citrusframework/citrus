@@ -35,12 +35,16 @@
   <section id="camel-endpoint">
     <title>Camel endpoint</title>
 
-    <para>Camel and Citrus use the endpoint pattern in order to specify message destinations a user can interact with. The Citrus endpoint component for Camel interaction
+    <para>Camel and Citrus both use the endpoint pattern in order to define message destinations. Users can interact with these endpoints
+      when creating the mediation and routing logic. The Citrus endpoint component for Camel interaction
       is defined as follows in your Citrus Spring configuration.</para>
 
     <programlisting>&lt;citrus-camel:endpoint id=&quot;directCamelEndpoint&quot;
-      endpoint-uri=&quot;direct:news&quot;/&gt;
+      endpoint-uri=&quot;direct:news&quot;/&gt;</programlisting>
 
+    <para>Right next to that Citrus endpoint we need the Apache Camel route that is located inside a camel context component.</para>
+
+    <programlisting>
 &lt;camelContext id=&quot;camelContext&quot; xmlns=&quot;http://camel.apache.org/schema/spring&quot;&gt;
   &lt;route id=&quot;newsRoute&quot;&gt;
     &lt;from uri=&quot;direct:news&quot;/&gt;
@@ -49,16 +53,18 @@
   &lt;/route&gt;
 &lt;/camelContext&gt;</programlisting>
 
-    <para>As you can see the Citrus camel endpoint wants to interact with a Camel route the is defined in some Camel Context. In the example above the Camel context is placed as
-      Spring bean Camel context right next to the Citrus component. This would be the easiest setup. Of course you can also import your Camel context and routes from other Spring bean context files
+    <para>As you can see the Citrus camel endpoint is able to interact with the Camel route. In the example above the Camel context is placed as
+      Spring bean Camel context. This would be the easiest setup to use Camel with Citrus as you can add the Camel context straight to the Spring bean
+      application context. Of course you can also import your Camel context and routes from other Spring bean context files
       or you can start the Camel context routes with Java code.</para>
 
-    <para>In this simple example the Apache Camel route that we want to test now is listening on the route endpoint uri <emphasis>direct:news</emphasis>. Incoming messages will be logged to the console
-      using a <emphasis>log</emphasis> Camel component. After that the message is forwarded to a <emphasis>seda</emphasis> Camel component which is a simple queue in memory.</para>
+    <para>In the example the Apache Camel route is listening on the route endpoint uri <emphasis>direct:news</emphasis>. Incoming messages will be logged to the console
+      using a <emphasis>log</emphasis> Camel component. After that the message is forwarded to a <emphasis>seda</emphasis> Camel component which is a simple queue in memory.
+      So we have a small Camel routing logic with two different message transports.</para>
 
-    <para>The Citrus endpoint can interact with this sample route definition. The endpoint configuration holds an endpoint uri information that tells Citrus how to access the Apache Camel route destination instance.
-      This endpoint uri can be any Camel endpoint uri that is used in a Camel route. Here we just use the direct endpoint uri <emphasis>direct:news</emphasis> so the sample Camel route gets called. In your test case
-      you can use this endpoint component referenced by its id or name in order to send and receive messages on the route address <emphasis>direct:news</emphasis>. The Camel route listening on this route address will
+    <para>The Citrus endpoint can interact with this sample route definition. The endpoint configuration holds the endpoint uri information that tells Citrus how to access the Apache Camel route destination.
+      This endpoint uri can be any Camel endpoint uri that is used in a Camel route. Here we just use the direct endpoint uri <emphasis>direct:news</emphasis> so the sample Camel route gets called directly. In your test case
+      you can use this endpoint component referenced by its id or name in order to send and receive messages on the route address <emphasis>direct:news</emphasis>. The Camel route listening on this direct address will
       be invoked accordingly.</para>
 
     <para>The Apache Camel routes support asynchronous and synchronous message communication patterns. By default Citrus uses asynchronous communication with Camel routes. This means that the Citrus producer sends the exchange message
@@ -85,6 +91,11 @@
     &lt;payload&gt;Hello from Citrus!&lt;/payload&gt;
   &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
+
+    <tip>
+      <para>Instead of defining a static Citrus camel component you could also use the dynamic endpoint components in Citrus. This would enable you
+      to send your message directly using the endpoint uri <emphasis>direct:news</emphasis> in your test case. Read more about this in <xref linkend="endpoint-components"/>.</para>
+    </tip>
 
     <para>Citrus is able to send and receive messages with Camel route endpoint uri. This enables you to invoke a Camel route. The Camel components used is defined by the endpoint uri as usual. When interacting with Camel routes you might need
     to send back some response messages in order to simulate boundary applications. We will discuss the synchronous communication in the next section.</para>
@@ -189,7 +200,8 @@
     &lt;payload&gt;Something went wrong!&lt;/payload&gt;
   &lt;/message&gt;
   &lt;header&gt;
-    &lt;element name=&quot;citrus_camel_exchange_exception&quot; value=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;/&gt;
+    &lt;element name=&quot;citrus_camel_exchange_exception&quot;
+                value=&quot;com.consol.citrus.exceptions.CitrusRuntimeException&quot;/&gt;
     &lt;element name=&quot;citrus_camel_exchange_exception_message&quot; value=&quot;Something went wrong!&quot;/&gt;
     &lt;element name=&quot;citrus_camel_exchange_failed&quot; value=&quot;true&quot;/&gt;
   &lt;/header&gt;
@@ -208,7 +220,8 @@
   &lt;header&gt;
     &lt;element name=&quot;citrus_camel_route_id&quot; value=&quot;newsRoute&quot;/&gt;
     &lt;element name=&quot;citrus_camel_exchange_failed&quot; value=&quot;true&quot;/&gt;
-    &lt;element name=&quot;CamelExceptionCaught&quot; value=&quot;com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!&quot;/&gt;
+    &lt;element name=&quot;CamelExceptionCaught&quot;
+        value=&quot;com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!&quot;/&gt;
   &lt;/header&gt;
 &lt;/receive&gt;</programlisting>
 
