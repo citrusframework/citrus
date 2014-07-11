@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.4.1" date="01.06.20014" description="">
+    <release version="1.4.1" date="11.07.20014" description="1.4.1 release">
+        <action dev="christophd" type="add">
+          CITRUS-205 Apache Camel support
+        </action>
         <action dev="christophd" type="add">
           CITRUS-203 Vert.x support
         </action>
