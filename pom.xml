@@ -985,7 +985,7 @@
             <!-- TODO CD the artifact, rather than the path, should be used here -->
             <executions>
               <execution>
-                <id>copy-citrus-core-schemas</id>
+                <id>copy-citrus-core-config-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${project.build.directory}/site/schema/config</outputDirectory>
@@ -994,6 +994,23 @@
                       <directory>modules/citrus-model/model-core/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-core-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-core/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
                         <include>citrus-testcase*.xsd</include>
                       </includes>
                     </resource>
@@ -1022,7 +1039,7 @@
                 </goals>
               </execution>
               <execution>
-                <id>copy-citrus-ws-schemas</id>
+                <id>copy-citrus-ws-config-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${project.build.directory}/site/schema/ws/config</outputDirectory>
@@ -1031,6 +1048,23 @@
                       <directory>modules/citrus-model/model-ws/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-ws-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-ws-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/ws/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-ws/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
                         <include>citrus-ws-testcase*.xsd</include>
                       </includes>
                     </resource>
@@ -1068,6 +1102,42 @@
                       <directory>modules/citrus-model/model-mail/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-mail-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-vertx-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/vertx/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-vertx/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-vertx-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-camel-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/camel/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-camel/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-camel-config*.xsd</include>
                       </includes>
                     </resource>
                   </resources>
