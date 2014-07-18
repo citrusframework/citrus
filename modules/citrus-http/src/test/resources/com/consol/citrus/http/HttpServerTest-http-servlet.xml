@@ -28,9 +28,9 @@
   </bean>
    
   <bean class="com.consol.citrus.http.controller.HttpMessageController">
-    <property name="messageHandler">
-      <bean id="emptyResponseProducingMessageHandler" 
-         class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>        
-    </property>
-  </bean> 
+    <property name="messageHandler" ref="emptyResponseEndpointAdapter"/>
+  </bean>
+
+  <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
+
 </beans>

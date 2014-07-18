@@ -19,13 +19,7 @@
 
   <citrus-ssh:server id="sshServer3"
                      auto-start="false"
-                     message-handler-ref="sshMessageHandler"/>
-
-  <citrus-ssh:server id="sshServer4"
-                     auto-start="false"
                      endpoint-adapter="sshServerAdapter"/>
-
-  <bean id="sshMessageHandler" class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler" />
 
   <bean id="sshServerAdapter" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>

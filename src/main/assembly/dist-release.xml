@@ -18,7 +18,6 @@
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
-        <include>com.consol.citrus:citrus-adapter</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
         <include>com.consol.citrus.model:citrus-model-http</include>
         <include>com.consol.citrus.model:citrus-model-ws</include>
@@ -145,13 +144,6 @@
     </fileSet>
     <fileSet>
         <directory>modules/citrus-core/target</directory>
-        <outputDirectory>src</outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
-    </fileSet>
-    <fileSet>
-        <directory>modules/citrus-adapter/target</directory>
         <outputDirectory>src</outputDirectory>
         <includes>
             <include>*sources.jar</include>

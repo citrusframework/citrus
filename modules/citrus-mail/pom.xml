@@ -28,11 +28,6 @@
   		<version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-adapter</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.consol.citrus.model</groupId>
       <artifactId>citrus-model-mail</artifactId>
       <version>${project.version}</version>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	
     <bean id="loggingInterceptor" class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
         <description>
@@ -25,9 +26,9 @@
     </bean>
     
     <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
-        </property>
+        <property name="messageHandler" ref="emptyResponseEndpointAdapter"/>
     </bean>
-    
+
+  <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>
+
 </beans>

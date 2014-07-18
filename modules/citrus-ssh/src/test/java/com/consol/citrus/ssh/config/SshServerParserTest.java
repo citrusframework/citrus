@@ -17,7 +17,6 @@
 package com.consol.citrus.ssh.config;
 
 import com.consol.citrus.channel.ChannelEndpointAdapter;
-import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
@@ -34,7 +33,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
     public void testSshServerParser() {
         Map<String, SshServer> servers = beanDefinitionContext.getBeansOfType(SshServer.class);
 
-        Assert.assertEquals(servers.size(), 4);
+        Assert.assertEquals(servers.size(), 3);
 
         // 1st server
         SshServer server = servers.get("sshServer1");
@@ -63,18 +62,6 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         // 3rd server
         server = servers.get("sshServer3");
         Assert.assertEquals(server.getName(), "sshServer3");
-        Assert.assertEquals(server.getPort(), 22);
-        Assert.assertFalse(server.isAutoStart());
-        Assert.assertNull(server.getAllowedKeyPath());
-        Assert.assertNull(server.getHostKeyPath());
-        Assert.assertNull(server.getUser());
-        Assert.assertNull(server.getPassword());
-        Assert.assertTrue(server.getEndpointAdapter() instanceof EmptyResponseEndpointAdapter);
-        Assert.assertNull(server.getActor());
-
-        // 4th server
-        server = servers.get("sshServer4");
-        Assert.assertEquals(server.getName(), "sshServer4");
         Assert.assertEquals(server.getPort(), 22);
         Assert.assertFalse(server.isAutoStart());
         Assert.assertNull(server.getAllowedKeyPath());

@@ -159,15 +159,13 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         <programlisting>&lt;citrus-http:server id=&quot;royalAirlineHttpServer&quot; 
                        port=&quot;8091&quot; 
                        uri=&quot;/flightbooking&quot; 
-                       message-handler=&quot;jmsForwardingMessageHandler&quot;/&gt;
+                       endpoint-adapter=&quot;jmsEndpointAdapter&quot;/&gt;
         
-&lt;bean id=&quot;jmsForwardingMessageHandler&quot; 
-         class=&quot;com.consol.citrus.adapter.handler.JmsConnectingMessageHandler&quot;&gt;
-    &lt;property name=&quot;destinationName&quot; value=&quot;${royal.airline.request.queue}&quot;/&gt;
-    &lt;property name=&quot;connectionFactory&quot; ref=&quot;connectionFactory&quot; /&gt;
-    &lt;property name=&quot;replyTimeout&quot; value=&quot;2000&quot;/&gt;
-&lt;/bean&gt;        
-                    
+&lt;citrus:jms-endpoint-adapter id=&quot;jmsEndpointAdapter
+      destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;
+      connection-factory=&quot;connectionFactory&quot; /&gt;
+      timeout=&quot;2000&quot;/&gt;
+
 &lt;citrus:jms-sync-message-receiver id=&quot;royalAirlineBookingRequestReceiver&quot; 
                             destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;
 

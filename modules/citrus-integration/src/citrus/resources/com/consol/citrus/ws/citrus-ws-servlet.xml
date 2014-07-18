@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	
     <context:annotation-config/>
   
@@ -42,66 +44,54 @@
     <bean id="soapFaultGeneratingEndpoint" class="com.consol.citrus.ws.SoapFaultGeneratingEndpoint"/>
     
     <bean id="probingServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler">
-                <property name="messagePayload">
-                    <value></value>
-                </property>
-                <property name="messageHeader">
-                    <map>
-                        <entry key="citrus_http_status_code" value="200"/>
-                    </map>
-                </property>
-            </bean>
-        </property>
+        <property name="messageHandler" ref="emptyHelloResponseEndpointAdapter"/>
     </bean>
-    
+
+    <citrus:static-response-adapter id="emptyHelloResponseEndpointAdapter">
+      <citrus:payload></citrus:payload>
+      <citrus:header>
+        <citrus:element name="citrus_http_status_code" value="200"/>
+      </citrus:header>
+    </citrus:static-response-adapter>
+
     <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler">
-                <property name="messagePayload">
-                    <value>
-                    <![CDATA[
-                        <ns0:HelloStandaloneResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
-                            <ns0:MessageId>123456789</ns0:MessageId>
-                            <ns0:CorrelationId>CORR123456789</ns0:CorrelationId>
-                            <ns0:User>WebServer</ns0:User>
-                            <ns0:Text>Hello User</ns0:Text>
-                        </ns0:HelloStandaloneResponse>
-                    ]]>
-                    </value>
-                </property>
-                <property name="messageHeader">
-                    <map>
-                        <entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHelloResponse"/>
-                        <entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
-                        <entry key="citrus_soap_action" value="sayHello"/>
-                    </map>
-                </property>
-            </bean>
-        </property>
+        <property name="messageHandler" ref="staticHelloResponseAdapter"/>
     </bean>
+
+    <citrus:static-response-adapter id="staticHelloResponseAdapter">
+      <citrus:payload>
+        <![CDATA[
+            <ns0:HelloStandaloneResponse xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd">
+                <ns0:MessageId>123456789</ns0:MessageId>
+                <ns0:CorrelationId>CORR123456789</ns0:CorrelationId>
+                <ns0:User>WebServer</ns0:User>
+                <ns0:Text>Hello User</ns0:Text>
+            </ns0:HelloStandaloneResponse>
+        ]]>
+      </citrus:payload>
+      <citrus:header>
+        <citrus:element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHelloResponse"/>
+        <citrus:element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
+        <citrus:element name="citrus_soap_action" value="sayHello"/>
+      </citrus:header>
+    </citrus:static-response-adapter>
     
     <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint">
         <property name="defaultNamespaceUri" value="http://citrusframework.org/default"/>
         <property name="defaultPrefix" value="ns0"/>
-        <property name="messageHandler">
-            <bean class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
-                <property name="destinationName" value="Citrus.Ws.Stub.RequestQueue"/>
-                <property name="replyDestinationName" value="Citrus.Ws.Stub.ResponseQueue"/>
-                <property name="connectionFactory">
-                    <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-                        <property name="brokerURL" value="tcp://localhost:61616" />
-                        <property name="watchTopicAdvisories" value="false"/>
-                    </bean>
-                </property>
-                <property name="messageCallback">
-                    <bean class="com.consol.citrus.ws.message.SoapAttachmentAwareJmsMessageCallback"/>
-                </property>
-                <property name="replyTimeout" value="5000"/>
-            </bean>
-        </property>
+        <property name="messageHandler" ref="jmsEndpointAdapter"/>
         <property name="handleMimeHeaders" value="true"/>
+    </bean>
+
+    <citrus:jms-endpoint-adapter id="jmsEndpointAdapter"
+                                 destination-name="Citrus.Ws.Stub.RequestQueue"
+                                 reply-destination-name="Citrus.Ws.Stub.ResponseQueue"
+                                 connection-factory="jmsConnectionFactory"
+                                 timeout="5000"/>
+
+    <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+      <property name="brokerURL" value="tcp://localhost:61616" />
+      <property name="watchTopicAdvisories" value="false"/>
     </bean>
     
 </beans>

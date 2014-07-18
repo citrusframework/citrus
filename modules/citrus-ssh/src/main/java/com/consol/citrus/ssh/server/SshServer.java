@@ -16,14 +16,7 @@
 
 package com.consol.citrus.ssh.server;
 
-import com.consol.citrus.adapter.handler.*;
-import com.consol.citrus.channel.ChannelEndpointAdapter;
-import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
-import com.consol.citrus.endpoint.adapter.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.JmsEndpointAdapter;
-import com.consol.citrus.jms.JmsSyncEndpointConfiguration;
-import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ssh.SshCommand;
 import org.apache.sshd.common.KeyPairProvider;
@@ -210,60 +203,6 @@ public class SshServer extends AbstractServer {
      */
     public void setHostKeyPath(String hostKeyPath) {
         this.hostKeyPath = hostKeyPath;
-    }
-
-    /**
-     * Sets the messageHandler.
-     * @param messageHandler the messageHandler to set
-     */
-    public void setMessageHandler(MessageHandler messageHandler) {
-        if (messageHandler instanceof MessageChannelConnectingMessageHandler) {
-            MessageChannelConnectingMessageHandler channelConnectingMessageHandler = (MessageChannelConnectingMessageHandler) messageHandler;
-
-            ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
-            endpointConfiguration.setChannel(channelConnectingMessageHandler.getChannel());
-            endpointConfiguration.setTimeout(channelConnectingMessageHandler.getReplyTimeout());
-            endpointConfiguration.setMessagingTemplate(channelConnectingMessageHandler.getMessagingTemplate());
-
-            ChannelEndpointAdapter endpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
-            endpointAdapter.setFallbackMessageHandler(channelConnectingMessageHandler.getFallbackMessageHandlerDelegate());
-            setEndpointAdapter(endpointAdapter);
-        } else if (messageHandler instanceof JmsConnectingMessageHandler) {
-            JmsConnectingMessageHandler jmsConnectingMessageHandler = (JmsConnectingMessageHandler) messageHandler;
-
-            JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
-
-            if (jmsConnectingMessageHandler.getDestination() != null) {
-                endpointConfiguration.setDestination(jmsConnectingMessageHandler.getDestination());
-            } else {
-                endpointConfiguration.setDestinationName(jmsConnectingMessageHandler.getDestinationName());
-            }
-
-            endpointConfiguration.setTimeout(jmsConnectingMessageHandler.getReplyTimeout());
-            endpointConfiguration.setConnectionFactory(jmsConnectingMessageHandler.getConnectionFactory());
-
-            if (jmsConnectingMessageHandler.getReplyDestination() != null) {
-                endpointConfiguration.setReplyDestination(jmsConnectingMessageHandler.getReplyDestination());
-            } else {
-                endpointConfiguration.setReplyDestinationName(jmsConnectingMessageHandler.getReplyDestinationName());
-            }
-
-            JmsEndpointAdapter endpointAdapter = new JmsEndpointAdapter(endpointConfiguration);
-            endpointAdapter.setFallbackMessageHandler(jmsConnectingMessageHandler.getFallbackMessageHandlerDelegate());
-            setEndpointAdapter(endpointAdapter);
-        } else if (messageHandler instanceof EmptyResponseProducingMessageHandler) {
-            setEndpointAdapter(new EmptyResponseEndpointAdapter());
-        } else if (messageHandler instanceof StaticResponseProducingMessageHandler) {
-            StaticResponseProducingMessageHandler staticResponseProducingMessageHandler = (StaticResponseProducingMessageHandler) messageHandler;
-
-            StaticResponseEndpointAdapter endpointAdapter = new StaticResponseEndpointAdapter();
-            endpointAdapter.setMessagePayload(staticResponseProducingMessageHandler.getMessagePayload());
-            endpointAdapter.setMessageHeader(staticResponseProducingMessageHandler.getMessageHeader());
-            endpointAdapter.setFallbackMessageHandler(staticResponseProducingMessageHandler.getFallbackMessageHandler());
-            setEndpointAdapter(endpointAdapter);
-        } else if(messageHandler instanceof TimeoutProducingMessageHandler) {
-            setEndpointAdapter(new TimeoutProducingEndpointAdapter());
-        }
     }
 
 }

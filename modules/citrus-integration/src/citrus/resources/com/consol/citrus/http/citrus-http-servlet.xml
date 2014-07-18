@@ -2,10 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
-                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
   <description>Contains the root context. Gets loaded via ContextLoaderListener in web.xml</description>
 
   <context:annotation-config/>
@@ -34,22 +37,18 @@
 
   <!-- Controller for handling rest requests -->
   <bean class="com.consol.citrus.http.controller.HttpMessageController">
-    <property name="messageHandler">
-      <bean id="jmsForwardingMessageHandler" class="com.consol.citrus.adapter.handler.JmsConnectingMessageHandler">
-        <property name="destinationName" value="JMS.Citrus.Http.Request.Forward"/>
-        <property name="replyDestinationName" value="JMS.Citrus.Http.Request.Ack"/>
-        <property name="connectionFactory">
-          <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-            <property name="brokerURL" value="tcp://localhost:61616" />
-            <property name="watchTopicAdvisories" value="false"/>
-          </bean>
-        </property>
-        <property name="fallbackMessageHandlerDelegate">
-          <bean class="com.consol.citrus.adapter.handler.EmptyResponseProducingMessageHandler"/>
-        </property>
-        <property name="replyTimeout" value="2000"/>
-      </bean>
-    </property>
+    <property name="messageHandler" ref="jmsEndpointAdapter"/>
+  </bean>
+
+  <citrus:jms-endpoint-adapter id="jmsEndpointAdapter"
+                               destination-name="JMS.Citrus.Http.Request.Forward"
+                               reply-destination-name="JMS.Citrus.Http.Request.Ack"
+                               connection-factory="jmsConnectionFactory"
+                               timeout="2000"/>
+
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL" value="tcp://localhost:61616" />
+    <property name="watchTopicAdvisories" value="false"/>
   </bean>
 
 </beans>
