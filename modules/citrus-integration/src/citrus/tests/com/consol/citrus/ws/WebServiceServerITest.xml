@@ -17,7 +17,7 @@
 		
         <actions>
             <parallel>
-              <send with="webServiceRequestSender">
+              <send with="webServiceClient">
                   <message>
                       <data>
                           <![CDATA[
@@ -77,7 +77,7 @@
                   </sequential>
             </parallel>
             
-            <receive with="webServiceReplyHandler">
+            <receive with="webServiceClient">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[

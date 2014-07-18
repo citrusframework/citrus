@@ -16,14 +16,14 @@
 		
         <actions>
             <parallel>
-	            <send with="httpMessageSender">
+	            <send with="httpClient">
 	            	<message>
 	            		<data>Hello, World!</data>
 	            	</message>
 	            </send>
               
                 <sequential>
-                    <receive with="httpRequestReceiver">
+                    <receive with="httpServerRequestEndpoint">
                         <message type="plaintext">
                             <data>Hello, World!</data>
                         </message>
@@ -32,7 +32,7 @@
                         </extract>
                     </receive>
     	            
-    	            <send with="httpResponseSender">
+    	            <send with="httpServerResponseEndpoint">
     	            	<message>
     	            		<data>Hello, Citrus!</data>
     	            	</message>
@@ -46,7 +46,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpClient">
             	<message type="plaintext">
                     <data>Hello, Citrus!</data>
             	</message>
@@ -57,7 +57,7 @@
            		</header>
             </receive>
             
-            <send with="httpMessageSender">
+            <send with="httpClient">
             	<message>
             		<data>Hello, World!</data>
             	</message>
@@ -65,7 +65,7 @@
             
             <sleep time="2"/>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpClient">
             	<message type="plaintext">
                     <data></data>
                 </message>

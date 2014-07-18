@@ -31,8 +31,6 @@ public class CitrusWsConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("server", new WebServiceServerParser());
         registerBeanDefinitionParser("jetty-server", new WebServiceServerParser());
         registerBeanDefinitionParser("client", new WebServiceClientParser());
-        registerBeanDefinitionParser("message-sender", new WebServiceMessageSenderParser());
-        registerBeanDefinitionParser("reply-message-handler", new SoapReplyMessageReceiverParser());
     }
 
 }

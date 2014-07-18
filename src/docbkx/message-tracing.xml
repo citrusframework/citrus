@@ -66,9 +66,8 @@ Received SOAP response:
     
     <para>For this message tracing to work we need to add logging listeners to our sender and receiver components accordingly.</para>
     
-    <programlisting>&lt;citrus-ws:message-sender id=&quot;webServiceRequestSender&quot;
+    <programlisting>&lt;citrus-ws:client id=&quot;webServiceClient&quot;
     request-url=&quot;http://localhost:8071&quot;
-    reply-handler=&quot;webServiceReplyHandler&quot;
     message-factory=&quot;messageFactory&quot;
     interceptors=&quot;clientInterceptors&quot;/&gt;
     

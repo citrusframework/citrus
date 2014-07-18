@@ -34,7 +34,7 @@ public class SoapHttpErrorJavaITest extends TestNGCitrusTestBuilder {
         
         parallel(
             assertException(
-                send("webServiceRequestSender")
+                send("webServiceClient")
                     .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                   "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                   "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +

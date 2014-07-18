@@ -23,7 +23,7 @@
             </echo>
             
             <parallel>
-              <send with="httpMessageSender" actor="helloClient">
+              <send with="httpClient" actor="helloClient">
                 <message>
                   <data>
                     <![CDATA[
@@ -42,7 +42,7 @@
               </send>
 
               <sequential>
-                    <receive with="httpRequestReceiver" actor="helloClient">
+                    <receive with="httpServerRequestEndpoint" actor="helloClient">
                         <message>
                             <data>
                                 <![CDATA[
@@ -65,7 +65,7 @@
                         </extract>
                     </receive>
     	            
-    	            <send with="httpResponseSender" actor="helloServer">
+    	            <send with="httpServerResponseEndpoint" actor="helloServer">
     	            	<message>
     	            		<data>
     	            			<![CDATA[
@@ -87,7 +87,7 @@
                 </sequential>
             </parallel>
 
-          <receive with="httpResponseReceiver" actor="helloServer">
+          <receive with="httpClient" actor="helloServer">
             <message>
               <data>
                 <![CDATA[
@@ -110,7 +110,7 @@
             </echo>
             
             <parallel>
-                <send with="httpMessageSender" actor="helloClient">
+                <send with="httpClient" actor="helloClient">
                     <message>
                         <data>
                             <![CDATA[
@@ -129,7 +129,7 @@
                 </send>
               
                 <sequential>
-                    <receive with="httpRequestReceiver" actor="helloClient">
+                    <receive with="httpServerRequestEndpoint" actor="helloClient">
                         <message>
                             <data>
                                 <![CDATA[
@@ -151,7 +151,7 @@
                         </extract>
                     </receive>
                     
-                    <send with="httpResponseSender" actor="helloServer">
+                    <send with="httpServerResponseEndpoint" actor="helloServer">
                         <message>
                             <data></data>
                         </message>
@@ -166,7 +166,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpResponseReceiver" actor="helloServer">
+            <receive with="httpClient" actor="helloServer">
                 <message>
                     <data></data>
                 </message>
@@ -182,7 +182,7 @@
                 <message>Skip response and use fallback message handler</message>
             </echo>
             
-            <send with="httpMessageSender">
+            <send with="httpClient">
             	<message>
             		<data>
             			<![CDATA[
@@ -197,7 +197,7 @@
           		</header>
             </send>
             
-            <receive with="httpResponseReceiver" timeout="2000">
+            <receive with="httpClient" timeout="2000">
             	<message/>
             	<header>
            			<element name="citrus_http_status_code" value="200"/>

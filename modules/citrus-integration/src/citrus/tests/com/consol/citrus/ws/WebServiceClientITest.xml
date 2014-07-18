@@ -15,7 +15,7 @@
 		</variables>
 		
         <actions>
-            <send with="webServiceHelloRequestSender">
+            <send with="webServiceHelloClient">
             	<message>
             		<data>
             			<![CDATA[
@@ -34,7 +34,7 @@
                 </header>
             </send>
             
-            <receive with="webServiceHelloReplyHandler">
+            <receive with="webServiceHelloClient">
             	<message schema-validation="false">
             		<data>
             			<![CDATA[

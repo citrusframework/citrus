@@ -25,7 +25,7 @@
             <parallel>
               <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000" 
                          fault-string="Invalid request">
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -90,7 +90,7 @@
               <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000" 
                          fault-string="Invalid request"
                          fault-actor="SERVER">
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -166,7 +166,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -242,7 +242,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -319,7 +319,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -396,7 +396,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -478,7 +478,7 @@
                         </MessageDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -576,7 +576,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceRequestSender">
+                  <send with="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[

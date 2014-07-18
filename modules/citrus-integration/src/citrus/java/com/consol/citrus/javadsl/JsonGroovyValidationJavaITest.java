@@ -33,7 +33,7 @@ public class JsonGroovyValidationJavaITest extends TestNGCitrusTestBuilder {
     @CitrusTest
     public void JsonGroovyValidationJavaITest() {
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .payload("{" +
                     "\"type\" : \"read\"," +
                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -41,14 +41,14 @@ public class JsonGroovyValidationJavaITest extends TestNGCitrusTestBuilder {
                     "\"path\" : \"used\"" +
                   "}"),
             sequential(
-                receive("httpRequestReceiver")
+                receive("httpServerRequestEndpoint")
                    .messageType(MessageType.JSON)
                    .validator("groovyJsonMessageValidator")
                    .validateScript("assert json.type == 'read'" + NEWLINE +
                               "assert json.mbean == 'java.lang:type=Memory'" + NEWLINE +
                               "assert json.attribute == 'HeapMemoryUsage'")
                    .extractFromHeader("jms_messageId", "correlation_id"),
-                send("httpResponseSender")
+                send("httpServerResponseEndpoint")
                    .payload("{" + NEWLINE +
                         "\"timestamp\" : \"2011-01-01\"," + NEWLINE +
                         "\"status\" : 200," + NEWLINE +
@@ -68,7 +68,7 @@ public class JsonGroovyValidationJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .messageType(MessageType.JSON)
             .validator("groovyJsonMessageValidator")
             .validateScript("assert json.request.type == 'read'" + NEWLINE +

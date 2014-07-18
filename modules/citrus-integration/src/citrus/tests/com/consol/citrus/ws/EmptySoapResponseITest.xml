@@ -10,7 +10,7 @@
 		</meta-info>
 		
         <actions>
-            <send with="webServiceHelloRequestSender">
+            <send with="webServiceHelloClient">
             	<message>
             		<data>
             			<![CDATA[
@@ -22,7 +22,7 @@
             	</message>
             </send>
             
-            <expect-timeout message-receiver="webServiceHelloReplyHandler" wait="1000"/>
+            <expect-timeout message-receiver="webServiceHelloClient" wait="1000"/>
     	</actions>
     </testcase>
 </spring:beans>

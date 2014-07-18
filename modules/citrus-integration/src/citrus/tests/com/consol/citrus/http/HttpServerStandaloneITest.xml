@@ -18,7 +18,7 @@
 		</variables>
     
         <actions>
-            <send with="httpMessageSenderStandalone">
+            <send with="httpStandaloneClient">
             	<message>
             		<data>
             			<![CDATA[
@@ -33,7 +33,7 @@
           		</header>
             </send>
             
-            <receive with="httpResponseReceiverStandalone">
+            <receive with="httpStandaloneClient">
             	<message>
             		<data>
             			<![CDATA[
@@ -50,7 +50,7 @@
            		</header>
             </receive>
             
-            <send with="httpMessageSenderStandalone">
+            <send with="httpStandaloneClient">
             	<message>
             		<data>
             			<![CDATA[
@@ -65,7 +65,7 @@
           		</header>
             </send>
             
-            <receive with="httpResponseReceiverStandalone">
+            <receive with="httpStandaloneClient">
             	<message>
             		<data>
             			<![CDATA[

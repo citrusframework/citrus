@@ -67,8 +67,7 @@
            user=&quot;roland&quot;
            private-key-path=&quot;classpath:com/consol/citrus/ssh/test_user.priv&quot;
            strict-host-checking=&quot;false&quot;
-           host=&quot;localhost&quot;
-           reply-handler=&quot;sshResponseReceiver&quot;/&gt;</programlisting>
+           host=&quot;localhost&quot;/&gt;</programlisting>
     
       <para><emphasis>The SSH client receives several attributes, these are:</emphasis></para>
   
@@ -113,11 +112,6 @@
         <listitem><para><emphasis>connection-timeout:</emphasis>
         Timeout in milliseconds for how long to for a connectiuon to connect. Default is 1 minute
         (e.g. connection-timeout="60000")</para></listitem>
-      
-        <listitem><para><emphasis>reply-handler:</emphasis>
-        Reference to reply handler which receives the SSH answer as a message. This reply handler should be specified with
-        <emphasis>&lt;citrus-ssh:reply-handler&gt;</emphasis>. The reply handler follows the typical Citrus semantics.
-        (e.g. reply-handler="sshResponseReceiver")</para></listitem>
       
         <listitem><para><emphasis>actor</emphasis>:
         Actor used for switching groups of actions (e.g. actor="ssh-mock")</para></listitem>

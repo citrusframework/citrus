@@ -35,7 +35,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
         parallel(
             sequential(
                 sleep(1000L),
-                send("syncHelloTopicRequestSender")
+                send("syncJmsTopicEndpoint")
                     .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -47,7 +47,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
             ),
             sequential(
                 parallel(
-                    receive("syncHelloTopicRequestReceiver")
+                    receive("syncJmsTopicSubscriberEndpoint")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -57,7 +57,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
                         .header("Operation", "sayHello")
                         .header("CorrelationId", "${correlationId}")
                         .extractFromHeader("id", "syncMessageCorrelatorId"),
-                    receive("syncHelloTopicRequestReceiver")
+                    receive("syncJmsTopicSubscriberEndpoint")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -67,7 +67,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
                         .header("Operation", "sayHello")
                         .header("CorrelationId", "${correlationId}")
                 ),
-                send("syncHelloTopicReplySender")
+                send("syncJmsTopicSubscriberEndpoint")
                     .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -80,7 +80,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
             )
         );
         
-        receive("syncHelloTopicResponseHandler")
+        receive("syncJmsTopicEndpoint")
             .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<MessageId>${messageId}</MessageId>" +
                                     "<CorrelationId>${correlationId}</CorrelationId>" +

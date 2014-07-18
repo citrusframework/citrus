@@ -74,7 +74,7 @@
     </bean>
     
     <!-- SOAP WebService settings -->
-    <citrus-ws:jetty-server id="jettyServer"
+    <citrus-ws:server id="jettyServer"
          port="8071"
          auto-start="true"
          root-parent-context="true"
@@ -86,34 +86,28 @@
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
                                                  
-    <citrus-ws:message-sender id="webServiceRequestSender"
+    <citrus-ws:client id="webServiceClient"
          request-url="http://localhost:8071"
-         reply-handler="webServiceReplyHandler"
          message-factory="messageFactory"
          interceptors="clientInterceptors"/>
                               
-    <citrus-ws:reply-message-handler id="webServiceReplyHandler"/>
+    <citrus:jms-endpoint id="webServiceRequestReceiver" destination-name="${jms.ws.stub.request}"/>
     
-    <citrus:jms-message-receiver id="webServiceRequestReceiver" destination-name="${jms.ws.stub.request}"/>
+    <citrus:jms-endpoint id="webServiceResponseSender" destination-name="${jms.ws.stub.response}"/>
     
-    <citrus:jms-message-sender id="webServiceResponseSender" destination-name="${jms.ws.stub.response}"/>
-    
-    <citrus-ws:message-sender id="webServiceHelloRequestSender"
+    <citrus-ws:client id="webServiceHelloClient"
          request-url="http://localhost:8071/hello"
-         reply-handler="webServiceHelloReplyHandler"
          message-factory="messageFactory"
          interceptors="clientInterceptors"/>
                               
-    <citrus-ws:message-sender id="webServiceFaultPropagatingHelloRequestSender"
+    <citrus-ws:client id="webServiceFaultClient"
          request-url="http://localhost:8071/hello"
-         reply-handler="webServiceFaultReplyHandler"
          message-factory="messageFactory"
          interceptors="clientInterceptors"
          fault-strategy="propagateError"/>
                               
-    <citrus-ws:message-sender id="wsAddressingHelloRequestSender"
+    <citrus-ws:client id="wsAddressingHelloClient"
          request-url="http://localhost:8071/hello"
-         reply-handler="webServiceAdressingReplyHandler"
          message-factory="messageFactory"
          interceptors="clientInterceptors"
          addressing-headers="wsAddressing200408"/>
@@ -143,10 +137,6 @@
         <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
     </util:list>
     
-    <citrus-ws:reply-message-handler id="webServiceHelloReplyHandler"/>
-    <citrus-ws:reply-message-handler id="webServiceFaultReplyHandler"/>
-    <citrus-ws:reply-message-handler id="webServiceAdressingReplyHandler"/>
-
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer"
          port="8072"
@@ -161,16 +151,13 @@
          context-config-location="classpath:com/consol/citrus/http/citrus-http-standalone-servlet.xml"
          resource-base="src/citrus/resources"/>
                         
-    <citrus-http:message-sender id="httpMessageSender"
+    <citrus-http:client id="httpClient"
          request-url="http://localhost:8072/test"
          request-method="POST"
          content-type="text/xml"
-         reply-handler="httpResponseReceiver"
          request-factory="basicAuthClientRequestFactory"
          interceptors="httpClientInterceptors"
          actor="helloClient"/>
-
-    <citrus-http:reply-message-handler id="httpResponseReceiver"/>
 
     <util:list id="httpClientInterceptors">
         <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
@@ -200,18 +187,15 @@
       </property>  
     </bean>
 
-    <citrus-http:message-sender id="httpMessageSenderStandalone"
+    <citrus-http:client id="httpStandaloneClient"
          request-url="http://localhost:8073/test"
          request-method="POST"
          content-type="text/xml"
-         reply-handler="httpResponseReceiverStandalone"
          interceptors="httpClientInterceptors"/>
   
-    <citrus-http:reply-message-handler id="httpResponseReceiverStandalone"/>
-  
-    <citrus:jms-message-receiver id="httpRequestReceiver" destination-name="${jms.queue.http.request.forward}"/>
+    <citrus:jms-endpoint id="httpServerRequestEndpoint" destination-name="${jms.queue.http.request.forward}"/>
 
-    <citrus:jms-message-sender id="httpResponseSender"
+    <citrus:jms-endpoint id="httpServerResponseEndpoint"
          destination-name="${jms.queue.http.request.ack}"
          actor="helloServer"/>
 
@@ -234,8 +218,7 @@
          user="roland"
          private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
          strict-host-checking="false"
-         host="localhost"
-         reply-handler="sshResponseReceiver"/>
+         host="localhost"/>
   
     <citrus-ssh:client id="sshClientWithWrongPrivateKey"
          port="9072"
@@ -243,22 +226,17 @@
          private-key-path="classpath:com/consol/citrus/ssh/wrong_user.priv"
          private-key-password="consol"
          strict-host-checking="false"
-         host="localhost"
-         reply-handler="sshFaultReceiver"/>
+         host="localhost"/>
   
     <citrus-ssh:client id="sshClientWithWrongUser"
          port="9072"
          user="blubber"
          private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
          strict-host-checking="false"
-         host="localhost"
-         reply-handler="sshFaultReceiver"/>
+         host="localhost"/>
   
-    <citrus-ssh:reply-handler id="sshResponseReceiver"/>
-    <citrus-ssh:reply-handler id="sshFaultReceiver"/>
-
-    <citrus:jms-message-receiver id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
-    <citrus:jms-message-sender id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}"/>
+    <citrus:jms-endpoint id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
+    <citrus:jms-endpoint id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}"/>
   
     <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -286,88 +264,68 @@
     </bean>
     
     <!-- JMS MessageSender/MessageReceiver -->
-    <citrus:jms-message-sender id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>
+    <citrus:jms-endpoint id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>
   
-    <citrus:jms-message-receiver id="helloResponseJmsMessageReceiver"
-         receive-timeout="5000"
+    <citrus:jms-endpoint id="helloResponseJmsMessageReceiver"
+         timeout="5000"
          destination-name="Citrus.Hello.Response.Queue"/>
     
-    <citrus:jms-sync-message-sender id="helloRequestJmsSyncMessageSender"
+    <citrus:jms-sync-endpoint id="helloSyncJmsEndpoint"
          destination-name="Citrus.Hello.Sync.Request.Queue"
-         reply-handler="helloResponseReplyMessageHandler"
-         reply-timeout="5000"/>
+         timeout="5000"/>
     
-    <citrus:jms-reply-message-handler id="helloResponseReplyMessageHandler"/>
-                                      
     <!-- Message sender/receiver -->
-    <citrus:jms-message-sender id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
+    <citrus:jms-endpoint id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
   
-    <citrus:jms-message-receiver id="helloResponseReceiver"
-         receive-timeout="5000"
+    <citrus:jms-endpoint id="helloResponseReceiver"
+         timeout="5000"
          destination-name="${jms.queue.hello.response}"/>
                                  
-    <citrus:jms-message-sender id="helloTopicRequestSender"
+    <citrus:jms-endpoint id="helloTopicRequestSender"
          destination-name="${jms.topic.hello.request}"
          pub-sub-domain="true"/>
   
-    <citrus:jms-message-receiver id="helloTopicRequestReceiver"
-         receive-timeout="5000"
+    <citrus:jms-endpoint id="helloTopicRequestReceiver"
+         timeout="5000"
          destination-name="${jms.topic.hello.request}"
          pub-sub-domain="true"/>
     
-    <citrus:jms-sync-message-sender id="syncHelloTopicRequestSender"
+    <citrus:jms-sync-endpoint id="syncJmsTopicEndpoint"
          destination-name="${jms.topic.hello.sync.request}"
-         reply-handler="syncHelloTopicResponseHandler"
-         reply-timeout="5000"
+         timeout="5000"
          pub-sub-domain="true"/>
 
-    <citrus:jms-reply-message-handler id="syncHelloTopicResponseHandler"/>
-
-    <citrus:jms-sync-message-receiver id="syncHelloTopicRequestReceiver"
-         receive-timeout="5000"
+    <citrus:jms-sync-endpoint id="syncJmsTopicSubscriberEndpoint"
+         timeout="5000"
          destination-name="${jms.topic.hello.sync.request}"
-         reply-message-correlator="replyMessageCorrelator"
+         message-correlator="replyMessageCorrelator"
          pub-sub-domain="true"/>
   
-    <citrus:jms-reply-message-sender id="syncHelloTopicReplySender"
-         reply-destination-holder="syncHelloTopicRequestReceiver"
-         reply-message-correlator="replyMessageCorrelator"/>                                    
-                                    
-    <citrus:jms-sync-message-sender id="syncHelloRequestSender"
+    <citrus:jms-sync-endpoint id="syncJmsQueueEndpoint"
          destination-name="${jms.queue.hello.sync.request}"
-         reply-handler="syncHelloResponseHandler"
-         reply-timeout="5000"/>
+         timeout="5000"/>
     
-    <citrus:jms-reply-message-handler id="syncHelloResponseHandler"/>
-    
-    <citrus:jms-sync-message-sender id="syncGetDateRequestSender"
+    <citrus:jms-sync-endpoint id="syncGetDateRequestSender"
          destination-name="${jms.queue.date.sync.request}"
-         reply-handler="syncGetDateResponseHandler"
-         reply-message-correlator="replyMessageCorrelator"
-         reply-timeout="5000"/>
+         message-correlator="replyMessageCorrelator"
+         timeout="5000"/>
     
-    <citrus:jms-reply-message-handler id="syncGetDateResponseHandler"/>
-    
-    <citrus:jms-sync-message-receiver id="syncGetDateRequestReceiver"
-         receive-timeout="5000"
+    <citrus:jms-sync-endpoint id="syncGetDateRequestReceiver"
+         timeout="5000"
          destination-name="${jms.queue.date.sync.request}"
-         reply-message-correlator="replyMessageCorrelator"/>
+         message-correlator="replyMessageCorrelator"/>
   
-    <citrus:jms-reply-message-sender id="getDateRequestReplySender"
-         reply-destination-holder="syncGetDateRequestReceiver"
-         reply-message-correlator="replyMessageCorrelator"/>
-    
-    <citrus:jms-message-sender id="testMessageSender" destination-name="${jms.queue.test}"/>
+    <citrus:jms-endpoint id="testMessageSender" destination-name="${jms.queue.test}"/>
   
-    <citrus:jms-message-receiver id="testMessageReceiver" destination-name="${jms.queue.test}"/>
+    <citrus:jms-endpoint id="testMessageReceiver" destination-name="${jms.queue.test}"/>
     
-    <citrus:jms-message-receiver id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
+    <citrus:jms-endpoint id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
     
-    <citrus:message-channel-sender id="channelRequestSender" channel="greetings"/>
+    <citrus:channel-endpoint id="channelRequestSender" channel="greetings"/>
     
-    <citrus:message-channel-receiver id="channelResponseReceiver"
+    <citrus:channel-endpoint id="channelResponseReceiver"
          channel="greetings"
-         receive-timeout="5000"/>
+         timeout="5000"/>
                                      
     <citrus:channel id="greetings" capacity="5"/>
 

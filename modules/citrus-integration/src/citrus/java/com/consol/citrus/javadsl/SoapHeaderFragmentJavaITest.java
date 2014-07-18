@@ -32,7 +32,7 @@ public class SoapHeaderFragmentJavaITest extends TestNGCitrusTestBuilder {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send("webServiceRequestSender")
+        send("webServiceClient")
             .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                           "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                           "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -90,7 +90,7 @@ public class SoapHeaderFragmentJavaITest extends TestNGCitrusTestBuilder {
             .header("citrus_http_operation", "answerHello")
             .header("jms_correlationId", "${internal_correlation_id}");
         
-        receive("webServiceReplyHandler")
+        receive("webServiceClient")
             .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +

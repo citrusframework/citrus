@@ -65,10 +65,10 @@
     &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
 &lt;/bean&gt;
 
-&lt;citrus:jms-message-sender id=&quot;travelAgencyBookingRequestSender&quot; 
+&lt;citrus:jms-endpoint id=&quot;travelAgencyBookingRequestEndpoint&quot;
                       destination-name=&quot;${travel.agency.request.queue}&quot;/&gt;
 
-&lt;citrus:jms-message-receiver id=&quot;travelAgencyBookingResponseReceiver&quot; 
+&lt;citrus:jms-endpoint id=&quot;travelAgencyBookingResponseEndpoint&quot;
                       destination-name=&quot;${travel.agency.response.queue}&quot;/&gt;</programlisting>
         
         <para>This is all Citrus needs to send and receive messages over JMS in order to simulate the TravelAgency. By default all JMS message
@@ -78,7 +78,7 @@
         
         <para>The identifiers of the message senders and receivers are very important. We should think of suitable ids that give the
         reader a first hint what the sender/receiver is used for. As we want to simulate the TravelAgency in combination with sending
-        booking requests our id is "travelAgencyBookingRequestSender" for example.</para>
+        booking requests our id is "travelAgencyBookingRequestEndpoint" for example.</para>
         
         <para>The sender and receivers do also need a JMS destination. Here the destination names are provided by property expressions.
         The Spring IoC container resolves the properties for us. All we need to do is publish the property file to the Spring container
@@ -111,20 +111,20 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         <para>We continue with the first airline to be configured the SmartAirline. The SmartAirline is also using JMS to communicate
         with the FlightBookingService. So there is nothing new for us, we simply define additional JMS message senders and receivers.</para>
         
-        <programlisting>&lt;citrus:jms-message-receiver id=&quot;smartAirlineBookingRequestReceiver&quot; 
+        <programlisting>&lt;citrus:jms-endpoint id=&quot;smartAirlineBookingRequestEndpoint&quot;
                       destination-name=&quot;${smart.airline.request.queue}&quot;/&gt;
 
-&lt;citrus:jms-message-sender id=&quot;smartAirlineBookingResponseSender&quot; 
+&lt;citrus:jms-endpoint id=&quot;smartAirlineBookingResponseEndpoint&quot;
                       destination-name=&quot;${smart.airline.response.queue}&quot;/&gt;</programlisting>
         
         <para>We do not define a new JMS connection factory because TravelAgency and SmartAirline are using the same message broker instance.
         In case you need to handle multiple connection factories simply define the connection factory with the attribute "connection-factory".</para>
         
-        <programlisting>&lt;citrus:jms-message-receiver id=&quot;smartAirlineBookingRequestReceiver&quot; 
+        <programlisting>&lt;citrus:jms-endpoint id=&quot;smartAirlineBookingRequestEndpoint&quot;
                             destination-name=&quot;${smart.airline.request.queue}&quot;
                             connection-factory=&quot;smartAirlineConnectionFactory&quot;/&gt;
 
-&lt;citrus:jms-message-sender id=&quot;smartAirlineBookingResponseSender&quot; 
+&lt;citrus:jms-endpoint id=&quot;smartAirlineBookingResponseEndpoint&quot;
                           destination-name=&quot;${smart.airline.response.queue}&quot;
                           connection-factory=&quot;smartAirlineConnectionFactory&quot;/&gt;</programlisting>
     </section>
@@ -166,12 +166,9 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
       connection-factory=&quot;connectionFactory&quot; /&gt;
       timeout=&quot;2000&quot;/&gt;
 
-&lt;citrus:jms-sync-message-receiver id=&quot;royalAirlineBookingRequestReceiver&quot; 
-                            destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;
+&lt;citrus:jms-sync-endpoint id=&quot;royalAirlineBookingEndpoint&quot;
+                            destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;</programlisting>
 
-&lt;citrus:jms-reply-message-sender id=&quot;royalAirlineBookingResponseSender&quot; 
-                            reply-destination-holder=&quot;royalAirlineBookingRequestReceiver&quot;/&gt;</programlisting>
-        
         <para>We need to configure a Http server instance with a port, a request URI and a message handler. We define the
         JMS forwarding message handler to handle request as described. In Addition to the message handler we also need synchronous JMS
         message sender and receiver instances. That's it! We are able to receive Http request in order to simulate the RoyalAirline
@@ -212,7 +209,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 value=&quot;citrus:concat('Mx1x', citrus:randomNumber(10))&quot;/&gt;
         &lt;/variables&gt;
         &lt;actions&gt;
-            &lt;send endpoint=&quot;travelAgencyBookingRequestSender&quot;&gt;
+            &lt;send endpoint=&quot;travelAgencyBookingRequestEndpoint&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -253,7 +250,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/header&gt;
             &lt;/send&gt;
             
-            &lt;receive endpoint=&quot;smartAirlineBookingRequestReceiver&quot;&gt;
+            &lt;receive endpoint=&quot;smartAirlineBookingRequestEndpoint&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -289,7 +286,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/extract&gt;
             &lt;/receive&gt;
             
-            &lt;send endpoint=&quot;smartAirlineBookingResponseSender&quot;&gt;
+            &lt;send endpoint=&quot;smartAirlineBookingResponseEndpoint&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -316,7 +313,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/header&gt;
             &lt;/send&gt;
             
-            &lt;receive endpoint=&quot;royalAirlineBookingRequestReceiver&quot;&gt;
+            &lt;receive endpoint=&quot;royalAirlineBookingEndpoint&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -352,7 +349,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/extract&gt;
             &lt;/receive&gt;
             
-            &lt;send endpoint=&quot;royalAirlineBookingResponseSender&quot;&gt;
+            &lt;send endpoint=&quot;royalAirlineBookingEndpoint&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -379,7 +376,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                 &lt;/header&gt;
             &lt;/send&gt;
             
-            &lt;receive endpoint=&quot;travelAgencyBookingResponseReceiver&quot;&gt;
+            &lt;receive endpoint=&quot;travelAgencyBookingResponseEndpoint&quot;&gt;
                 &lt;message&gt;
                     &lt;data&gt;
                       &lt;![CDATA[
@@ -431,7 +428,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         <para>The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic 
         Spring configuration we have done before.</para>
         
-        <para><literal>&lt;send endpoint=&quot;travelAgencyBookingRequestSender&quot;&gt;</literal></para>
+        <para><literal>&lt;send endpoint=&quot;travelAgencyBookingRequestEndpoint&quot;&gt;</literal></para>
         
         <para>The sending action chooses a message sender to actually send the message using a message transport (JMS, Http, SOAP, etc.).
         After sending this first "TravelBookingRequestMessage" request the test case expects the first "FlightBookingRequestMessage" 

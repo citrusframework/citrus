@@ -33,7 +33,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
         echo("Send Http message and respond with 200 OK");
         
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
@@ -43,7 +43,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                 .header("citrus_http_method", "POST"),
             
             sequential(
-                receive("httpRequestReceiver")
+                receive("httpServerRequestEndpoint")
                     .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
@@ -55,7 +55,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                     .header("citrus_http_request_uri", "/test")
                     .extractFromHeader("jms_messageId", "correlation_id"),
                     
-               send("httpResponseSender")
+               send("httpServerResponseEndpoint")
                    .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
@@ -68,7 +68,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .payload("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
@@ -81,7 +81,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
         
         
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
@@ -91,7 +91,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                 .header("citrus_http_method", "POST"),
             
             sequential(
-                receive("httpRequestReceiver")
+                receive("httpServerRequestEndpoint")
                     .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
@@ -103,7 +103,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                     .header("citrus_http_request_uri", "/test")
                     .extractFromHeader("jms_messageId", "correlation_id"),
                     
-               send("httpResponseSender")
+               send("httpServerResponseEndpoint")
                    .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                             "</testResponseMessage>")
@@ -116,7 +116,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .payload("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")
@@ -127,7 +127,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
         
         echo("Skip response and use fallback message handler");
         
-        send("httpMessageSender")
+        send("httpClient")
             .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
@@ -137,7 +137,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
             .header("citrus_http_method", "POST");
         
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .timeout(2000L)
             .header("citrus_http_status_code", "200")
             .header("citrus_http_version", "HTTP/1.1")

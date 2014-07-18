@@ -21,7 +21,7 @@
         </variables>
 		
         <actions>
-            <send with="webServiceFaultPropagatingHelloRequestSender">
+            <send with="webServiceFaultClient">
                 <message>
                     <data>
                         <![CDATA[
@@ -33,7 +33,7 @@
                 </message>
             </send>
             
-            <receive with="webServiceFaultReplyHandler" timeout="5000">
+            <receive with="webServiceFaultClient" timeout="5000">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[

@@ -33,7 +33,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
         variable("soapFaultString", "Invalid request");
         
         parallel(
-            send("webServiceRequestSender")
+            send("webServiceClient")
                 .soap()
                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
@@ -58,7 +58,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
             )
         );
         
-        receive("webServiceReplyHandler")
+        receive("webServiceClient")
             .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                             "<ns0:Success>true</ns0:Success>" +
@@ -66,7 +66,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
             .schemaValidation(false);
         
         parallel(
-            send("webServiceRequestSender")
+            send("webServiceClient")
                 .soap()
                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
@@ -91,7 +91,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
             )
         );
         
-        receive("webServiceReplyHandler")
+        receive("webServiceClient")
             .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                             "<ns0:Success>true</ns0:Success>" +

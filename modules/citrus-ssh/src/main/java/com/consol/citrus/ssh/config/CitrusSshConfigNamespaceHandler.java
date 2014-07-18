@@ -31,6 +31,5 @@ public class CitrusSshConfigNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("server", new SshServerParser());
         registerBeanDefinitionParser("client", new SshClientParser());
-        registerBeanDefinitionParser("reply-handler", new SshReplyHandlerParser());
     }
 }

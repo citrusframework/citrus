@@ -25,7 +25,7 @@
         <actions>
             <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
                        fault-string="Invalid request">
-            	<send with="webServiceHelloRequestSender">
+            	<send with="webServiceHelloClient">
                     <message>
                         <data>
                             <![CDATA[
@@ -40,7 +40,7 @@
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1001" 
                        fault-string="@ignore@">
-                <send with="webServiceHelloRequestSender">
+                <send with="webServiceHelloClient">
                     <message>
                         <data>
                             <![CDATA[
@@ -55,7 +55,7 @@
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}${soapFaultCode}" 
                        fault-string="${soapFaultString}">
-                <send with="webServiceHelloRequestSender">
+                <send with="webServiceHelloClient">
                     <message>
                         <data>
                             <![CDATA[

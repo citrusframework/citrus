@@ -31,7 +31,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
         variable("greetingText", "Hello Citrus");      
         
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .payload("<testRequestMessage>" +
                             "<text>citrus:cdataSection('<data>" +
                               "<greeting>Hello Citrus</greeting>" +
@@ -42,7 +42,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
                 .header("Accept", "text/xml,*/*")
                 .header("citrus_http_method", "POST"),
             sequential(
-                receive("httpRequestReceiver")
+                receive("httpServerRequestEndpoint")
                     .payload("<testRequestMessage>" +
                                     "<text>citrus:cdataSection('@matchesXml('<data>" +
                                   "<greeting>${greetingText}</greeting>" +
@@ -55,7 +55,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
                     .header("citrus_http_method", "POST")
                     .header("citrus_http_request_uri", "/test")
                     .extractFromHeader("jms_messageId", "correlation_id"),
-                send("httpResponseSender")
+                send("httpServerResponseEndpoint")
                     .payload("<testResponseMessage>" +
                                     "<text>Hello Citrus</text>" +
                                 "</testResponseMessage>")
@@ -67,7 +67,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .payload("<testResponseMessage>" +
                         "<text>Hello Citrus</text>" +
                     "</testResponseMessage>")

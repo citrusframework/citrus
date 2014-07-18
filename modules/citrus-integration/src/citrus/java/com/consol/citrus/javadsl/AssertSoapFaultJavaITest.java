@@ -32,7 +32,7 @@ public class AssertSoapFaultJavaITest extends TestNGCitrusTestBuilder {
         variable("soapFaultString", "Invalid request");
         
         assertSoapFault(
-            send("webServiceHelloRequestSender")
+            send("webServiceHelloClient")
                 .soap()
                 .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:Message>This is invalid</ns0:Message>" +
@@ -41,7 +41,7 @@ public class AssertSoapFaultJavaITest extends TestNGCitrusTestBuilder {
         .faultCode("{http://www.citrusframework.org/faults}TEC-1001");
         
         assertSoapFault(
-            send("webServiceHelloRequestSender")
+            send("webServiceHelloClient")
                 .soap()
                 .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:Message>This is invalid</ns0:Message>" +
@@ -50,7 +50,7 @@ public class AssertSoapFaultJavaITest extends TestNGCitrusTestBuilder {
         .faultCode("{http://www.citrusframework.org/faults}TEC-1001");
         
         assertSoapFault(
-            send("webServiceHelloRequestSender")
+            send("webServiceHelloClient")
                 .soap()
                 .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:Message>This is invalid</ns0:Message>" +

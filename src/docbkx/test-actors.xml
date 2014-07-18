@@ -33,24 +33,20 @@
     <para>We need to link the test actors to message send and receive actions in our test cases. We can do this in two different ways. First we can set a test actor reference on a message sender and message
     receiver.</para>
     
-    <programlisting>&lt;citrus:jms-sync-message-receiver id=&quot;royalAirlineBookingRequestReceiver&quot; 
+    <programlisting>&lt;citrus:jms-sync-endpoint id=&quot;royalAirlineBookingEndpoint&quot;
         destination-name=&quot;${royal.airline.request.queue}&quot;
-        actor=&quot;royalairline&quot;/&gt;
-        
-&lt;citrus:jms-reply-message-sender id=&quot;royalAirlineBookingResponseSender&quot; 
-        reply-destination-holder=&quot;royalAirlineBookingRequestReceiver&quot;
         actor=&quot;royalairline&quot;/&gt;</programlisting>
     
     <para>Now all test actions that are using these message receiver and message sender instances are linked to the test actor. In addition to that you can also explicitly link test actions to 
     test actors in a test.</para>
     
-    <programlisting>&lt;receive endpoint=&quot;royalAirlineBookingRequestReceiver&quot; actor=&quot;royalairline&quot;&gt;
+    <programlisting>&lt;receive endpoint=&quot;royalAirlineBookingEndpoint&quot; actor=&quot;royalairline&quot;&gt;
     &lt;message&gt;
         [...]
     &lt;/message&gt;
 &lt;/receive&gt;
 
-&lt;send endpoint=&quot;royalAirlineBookingResponseSender&quot; actor=&quot;royalairline&quot;&gt;
+&lt;send endpoint=&quot;royalAirlineBookingEndpoint&quot; actor=&quot;royalairline&quot;&gt;
     &lt;message&gt;
         [...]
     &lt;/message&gt;

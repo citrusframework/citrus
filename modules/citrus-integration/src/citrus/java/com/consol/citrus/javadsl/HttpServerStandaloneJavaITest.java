@@ -30,13 +30,13 @@ public class HttpServerStandaloneJavaITest extends TestNGCitrusTestBuilder {
     public void HttpServerStandaloneJavaITest() {
         variable("custom_header_id", "123456789");
         
-        send("httpMessageSenderStandalone")
+        send("httpStandaloneClient")
             .payload("<testRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}");
         
-        receive("httpResponseReceiverStandalone")
+        receive("httpStandaloneClient")
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")
@@ -44,13 +44,13 @@ public class HttpServerStandaloneJavaITest extends TestNGCitrusTestBuilder {
             .header("citrus_http_version", "HTTP/1.1")
             .header("citrus_http_reason_phrase", "OK");
         
-        send("httpMessageSenderStandalone")
+        send("httpStandaloneClient")
             .payload("<moreRequestMessage>" +
                             "<text>Hello HttpServer</text>" +
                         "</moreRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}");
         
-        receive("httpResponseReceiverStandalone")
+        receive("httpStandaloneClient")
             .payload("<testResponseMessage>" +
                         "<text>Hello TestFramework</text>" +
                     "</testResponseMessage>")

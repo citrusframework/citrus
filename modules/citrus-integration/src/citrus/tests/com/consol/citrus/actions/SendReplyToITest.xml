@@ -95,7 +95,7 @@
                         <header name="id" variable="syncMessageCorrelatorId"></header>
                     </extract>
                 </receive>
-                <send with="getDateRequestReplySender">
+                <send with="syncGetDateRequestReceiver">
                     <message>
                         <data>
                         <![CDATA[
@@ -119,7 +119,7 @@
                     </header>
                 </send>
                 
-                <receive with="syncGetDateResponseHandler" timeout="5000">
+                <receive with="syncGetDateRequestSender" timeout="5000">
                     <selector>
                         <element name="id" value="${syncRequestCorrelatorId}"/>
                     </selector>

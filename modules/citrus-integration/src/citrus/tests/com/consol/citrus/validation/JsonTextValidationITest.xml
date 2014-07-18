@@ -16,7 +16,7 @@
 		
         <actions>
             <parallel>
-	            <send with="httpMessageSender">
+	            <send with="httpClient">
 	            	<message>
 	            		<data>
                           {
@@ -30,7 +30,7 @@
 	            </send>
               
                 <sequential>
-                    <receive with="httpRequestReceiver">
+                    <receive with="httpServerRequestEndpoint">
                         <message type="json">
                             <data>
                               {
@@ -46,7 +46,7 @@
                         </extract>
                     </receive>
     	            
-    	            <send with="httpResponseSender">
+    	            <send with="httpServerResponseEndpoint">
     	            	<message>
     	            		<data>
                               {
@@ -73,7 +73,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpClient">
             	<message type="json">
                     <data>
                       {
@@ -97,7 +97,7 @@
            		</header>
             </receive>
             
-            <send with="httpMessageSender">
+            <send with="httpClient">
                 <message>
                     <data>
                       {
@@ -112,7 +112,7 @@
             
             <sleep time="2"/>
             
-            <receive with="httpResponseReceiver">
+            <receive with="httpClient">
                 <message type="json">
                     <data></data>
                 </message>

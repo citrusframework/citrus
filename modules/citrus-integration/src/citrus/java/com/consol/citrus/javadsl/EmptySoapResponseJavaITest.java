@@ -28,11 +28,11 @@ public class EmptySoapResponseJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
     public void EmptySoapResponseJavaITest() {
-        send("webServiceHelloRequestSender")
+        send("webServiceHelloClient")
             .payload("<ns0:SoapProbingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Timestamp>citrus:currentDate(\"yyyy-MM-dd'T'hh:mm:ss\")</ns0:Timestamp>" +
                             "</ns0:SoapProbingRequest>");
         
-        expectTimeout("webServiceHelloReplyHandler").timeout(1000L);
+        expectTimeout("webServiceHelloClient").timeout(1000L);
     }
 }

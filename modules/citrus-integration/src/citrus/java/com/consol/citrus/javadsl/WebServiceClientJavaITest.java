@@ -31,7 +31,7 @@ public class WebServiceClientJavaITest extends TestNGCitrusTestBuilder {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         
-        send("webServiceHelloRequestSender")
+        send("webServiceHelloClient")
             .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -41,7 +41,7 @@ public class WebServiceClientJavaITest extends TestNGCitrusTestBuilder {
             .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request", "HelloRequest")
             .header("{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation", "sayHello");
         
-        receive("webServiceHelloReplyHandler")
+        receive("webServiceHelloClient")
             .payload("<ns0:HelloStandaloneResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +

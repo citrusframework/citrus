@@ -62,7 +62,7 @@ public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
                     .extractFromHeader("id", "syncMessageCorrelatorId")
                     .validator("xmlMessageValidator"),
                     
-                send("getDateRequestReplySender")
+                send("syncGetDateRequestReceiver")
                     .payload("<GetDateResponseMessage>" +
                                 "<MessageHeader>" +
                                 "<ConversationId>${conversationId}</ConversationId>" +
@@ -76,7 +76,7 @@ public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
                     .header("ConversationId", "${conversationId}")
                     .header("citrus_sync_message_correlator", "${syncMessageCorrelatorId}"),
                     
-                receive("syncGetDateResponseHandler")
+                receive("syncGetDateRequestSender")
                     .selector("id = '${syncRequestCorrelatorId}'")
                     .payload("<GetDateResponseMessage>" +
                                 "<MessageHeader>" +

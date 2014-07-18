@@ -29,8 +29,6 @@ public class CitrusHttpConfigNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("server", new HttpServerParser());
         registerBeanDefinitionParser("client", new HttpClientParser());
-        registerBeanDefinitionParser("message-sender", new HttpMessageSenderParser());
-        registerBeanDefinitionParser("reply-message-handler", new HttpReplyMessageReceiverParser());
     }
 
 }

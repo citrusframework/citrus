@@ -32,7 +32,7 @@ public class WsAddressingJavaITest extends TestNGCitrusTestBuilder {
         variable("correlationId", "CORR123456789");
         
         assertSoapFault(
-            send("wsAddressingHelloRequestSender")
+            send("wsAddressingHelloClient")
                 .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +

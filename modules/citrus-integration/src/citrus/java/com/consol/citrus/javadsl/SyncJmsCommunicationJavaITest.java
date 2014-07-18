@@ -32,7 +32,7 @@ public class SyncJmsCommunicationJavaITest extends TestNGCitrusTestBuilder {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send("syncHelloRequestSender")
+        send("syncJmsQueueEndpoint")
             .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -43,7 +43,7 @@ public class SyncJmsCommunicationJavaITest extends TestNGCitrusTestBuilder {
             .header("CorrelationId", "${correlationId}")
             .description("Send synchronous hello request: TestFramework -> HelloService");
         
-        receive("syncHelloResponseHandler")
+        receive("syncJmsQueueEndpoint")
             .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                             "<MessageId>${messageId}</MessageId>" +
                             "<CorrelationId>${correlationId}</CorrelationId>" +

@@ -35,7 +35,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
         echo("First request without query parameter and context path variables.");
         
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .http()
                 .uri("http://localhost:8072")
                 .method(HttpMethod.GET)
@@ -43,7 +43,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
             sequential(
-                    receive("httpRequestReceiver")
+                    receive("httpServerRequestEndpoint")
                             .header("Host", "localhost:8072")
                             .header("Content-Type", "text/html;charset=ISO-8859-1")
                             .header("Accept", "application/xml;charset=UTF-8")
@@ -55,7 +55,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .timeout(2000L)
             .http()
             .status(HttpStatus.OK)
@@ -65,7 +65,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
         echo("Use context path variables.");
         
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .http()
                 .uri("http://localhost:8072/test/user/${id}")
                 .method(HttpMethod.GET)
@@ -73,7 +73,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
             sequential(
-                    receive("httpRequestReceiver")
+                    receive("httpServerRequestEndpoint")
                             .http()
                             .header("Host", "localhost:8072")
                             .header("Content-Type", "text/html;charset=ISO-8859-1")
@@ -85,7 +85,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .timeout(2000L)
             .http()
             .status(HttpStatus.OK)
@@ -94,7 +94,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
         echo("Use query parameter and context path variables.");
         
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .http()
                 .uri("http://localhost:8072/test")
                 .method(HttpMethod.GET)
@@ -105,7 +105,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .header("Accept", "application/xml;charset=UTF-8"),
                 
             sequential(
-                receive("httpRequestReceiver")
+                receive("httpServerRequestEndpoint")
                     .http()
                     .header("Host", "localhost:8072")
                     .header("Content-Type", "text/html;charset=ISO-8859-1")
@@ -118,7 +118,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .timeout(2000L)
             .http()
             .status(HttpStatus.OK)

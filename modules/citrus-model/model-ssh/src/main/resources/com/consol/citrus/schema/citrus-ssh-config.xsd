@@ -68,13 +68,6 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="message-handler-ref" type="xs:string">
-            <xs:annotation>
-              <xs:documentation>
-                Bean reference to a message handler which processes the incoming SSH request
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
           <xs:attribute name="endpoint-adapter" type="xs:string"/>
           <xs:attribute name="interceptors" type="xs:string"/>
         </xs:complexType>
@@ -162,13 +155,6 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="reply-handler" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>
-            Reference to reply handler which receives the SSH answer as a message.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
       <xs:attribute name="actor" type="xs:string">
         <xs:annotation>
           <xs:documentation>
@@ -183,21 +169,4 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="reply-handler">
-    <xs:annotation>
-      <xs:documentation>Reply handler for SSH client requests which needs to be connected to a ssh:client</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="actor" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>
-            Actor used for switching groups of actions. See the reference documentation
-            for details.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="polling-interval" type="xs:string"/>
-    </xs:complexType>
-  </xs:element>
 </xs:schema>

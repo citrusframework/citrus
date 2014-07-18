@@ -75,7 +75,7 @@
         </sequential>
       </parallel>
 
-      <receive with="sshResponseReceiver">
+      <receive with="sshClient">
         <message>
           <data>
             <![CDATA[

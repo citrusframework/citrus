@@ -24,7 +24,7 @@
         <actions>
             <parallel>
               <assert exception="org.springframework.ws.client.WebServiceTransportException" message="Server Error [500]">
-                <ws:send with="webServiceRequestSender">
+                <ws:send with="webServiceClient">
                     <message>
                         <data>
                             <![CDATA[

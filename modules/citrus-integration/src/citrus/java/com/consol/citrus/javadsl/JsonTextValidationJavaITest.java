@@ -30,7 +30,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
     @CitrusTest
     public void JsonTextValidationJavaITest() {
         parallel(
-            send("httpMessageSender")
+            send("httpClient")
                 .payload("{" +
                     "\"type\" : \"read\"," +
                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -38,7 +38,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
                     "\"path\" : \"used\"" +
                   "}"),
             sequential(
-                receive("httpRequestReceiver")
+                receive("httpServerRequestEndpoint")
                    .messageType(MessageType.JSON)
                    .payload("{" +
                             "\"type\" : \"read\"," +
@@ -47,7 +47,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
                             "\"path\" : \"@equalsIgnoreCase('USED')@\"" +
                           "}")
                    .extractFromHeader("jms_messageId", "correlation_id"),
-                send("httpResponseSender")
+                send("httpServerResponseEndpoint")
                    .payload("{" +
                         "\"timestamp\" : \"2011-01-01\"," +
                         "\"status\" : 200," +
@@ -67,7 +67,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
             )
         );
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .messageType(MessageType.JSON)
             .payload("{" +
                         "\"timestamp\" : \"@matchesDatePattern('yyyy-MM-dd')@\"," +
@@ -85,7 +85,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
             .header("citrus_http_version", "HTTP/1.1")
             .header("citrus_http_reason_phrase", "OK");
         
-        send("httpMessageSender")
+        send("httpClient")
             .payload("{" +
                 "\"type\" : \"read\"," +
                 "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -95,7 +95,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
         
         sleep(2000);
         
-        receive("httpResponseReceiver")
+        receive("httpClient")
             .messageType(MessageType.JSON)
             .header("citrus_http_status_code", "200")
             .header("citrus_http_version", "HTTP/1.1")
