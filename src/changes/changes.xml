@@ -15,7 +15,10 @@
   </properties>
   
   <body>
-    <release version="1.4.1" date="11.07.20014" description="1.4.1 release">
+    <release version="2.0" date="01.09.2014" description="2.0 release">
+    </release>
+
+    <release version="1.4.1" date="11.07.2014" description="1.4.1 release">
         <action dev="christophd" type="add">
           CITRUS-207 Dynamic endpoint components
         </action>
