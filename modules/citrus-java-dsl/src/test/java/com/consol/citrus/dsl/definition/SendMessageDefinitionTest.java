@@ -20,7 +20,6 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -48,41 +47,11 @@ import static org.easymock.EasyMock.*;
  */
 public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
-    private MessageSender messageSender = EasyMock.createMock(MessageSender.class);
     private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     private Resource resource = EasyMock.createMock(Resource.class);
 
-    @Test
-    public void testLegacySenderBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
-            @Override
-            public void configure() {
-                send(messageSender)
-                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
-                        .messageType(MessageType.PLAINTEXT);
-            }
-        };
-
-        builder.execute();
-
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
-
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
-
-        Assert.assertEquals(action.getEndpoint(), messageSender);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
-        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.toString());
-
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
-    }
-    
     @Test
     public void testSendBuilderWithMessageInstance() {
         MockBuilder builder = new MockBuilder(applicationContext) {

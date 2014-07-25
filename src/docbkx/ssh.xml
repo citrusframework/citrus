@@ -62,7 +62,7 @@
       <para>The SSH client components receive its configuration in the Spring application context as usual. We can use the special SSH module namespace
       for easy configuration:</para>
       
-      <programlisting>&lt;citrus-ssh:client id=&quot;sshClientSender&quot;
+      <programlisting>&lt;citrus-ssh:client id=&quot;sshClient&quot;
            port=&quot;9072&quot;
            user=&quot;roland&quot;
            private-key-path=&quot;classpath:com/consol/citrus/ssh/test_user.priv&quot;
@@ -119,7 +119,7 @@
       
       <para>Once defines as client component in the Spring application context test cases can reference the client in every send test action.</para>
       
-      <programlisting>&lt;send endpoint=&quot;sshClientSender&quot;&gt;
+      <programlisting>&lt;send endpoint=&quot;sshClient&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ssh-request&gt;
@@ -130,7 +130,7 @@
   &lt;/message&gt;
 &lt;/send&gt;
   
-&lt;receive endpoint=&quot;sshClientSender&quot;&gt;
+&lt;receive endpoint=&quot;sshClient&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
         &lt;ssh-response&gt;

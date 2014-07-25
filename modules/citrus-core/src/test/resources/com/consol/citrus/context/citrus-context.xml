@@ -13,8 +13,6 @@
 
     <context:property-placeholder location="classpath:com/consol/citrus/context/citrus.properties"/>
 
-    <bean class="com.consol.citrus.aop.StoreMessageInterceptorAspect"/>
-	 
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
             <list>

@@ -263,7 +263,7 @@
         </property>
     </bean>
     
-    <!-- JMS MessageSender/MessageReceiver -->
+    <!-- Citrus JMS Endpoints -->
     <citrus:jms-endpoint id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>
   
     <citrus:jms-endpoint id="helloResponseJmsMessageReceiver"
@@ -274,7 +274,6 @@
          destination-name="Citrus.Hello.Sync.Request.Queue"
          timeout="5000"/>
     
-    <!-- Message sender/receiver -->
     <citrus:jms-endpoint id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
   
     <citrus:jms-endpoint id="helloResponseReceiver"

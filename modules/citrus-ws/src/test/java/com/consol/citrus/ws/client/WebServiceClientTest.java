@@ -39,8 +39,8 @@ public class WebServiceClientTest {
 
     @Test
     public void testDefaultUri() {
-        WebServiceClient messageSender = new WebServiceClient();
-        messageSender.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
+        WebServiceClient client = new WebServiceClient();
+        client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
 
         Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
 
@@ -57,20 +57,20 @@ public class WebServiceClientTest {
 
         replay(webServiceTemplate);
 
-        messageSender.getEndpointConfiguration().setDefaultUri("http://localhost:8081/request");
-        messageSender.send(requestMessage);
+        client.getEndpointConfiguration().setDefaultUri("http://localhost:8081/request");
+        client.send(requestMessage);
 
         verify(webServiceTemplate);
     }
 
     @Test
     public void testReplyMessageCorrelator() {
-        WebServiceClient messageSender = new WebServiceClient();
+        WebServiceClient client = new WebServiceClient();
 
-        messageSender.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
+        client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
 
         ReplyMessageCorrelator correlator = EasyMock.createMock(ReplyMessageCorrelator.class);
-        messageSender.getEndpointConfiguration().setCorrelator(correlator);
+        client.getEndpointConfiguration().setCorrelator(correlator);
 
         Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
 
@@ -89,19 +89,19 @@ public class WebServiceClientTest {
 
         replay(webServiceTemplate, correlator);
 
-        messageSender.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
-        messageSender.send(requestMessage);
+        client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
+        client.send(requestMessage);
 
         verify(webServiceTemplate, correlator);
     }
 
     @Test
     public void testEndpointUriResolver() {
-        WebServiceClient messageSender = new WebServiceClient();
+        WebServiceClient client = new WebServiceClient();
 
-        messageSender.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
+        client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
         EndpointUriResolver endpointUriResolver = EasyMock.createMock(EndpointUriResolver.class);
-        messageSender.getEndpointConfiguration().setEndpointResolver(endpointUriResolver);
+        client.getEndpointConfiguration().setEndpointResolver(endpointUriResolver);
 
         Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
 
@@ -120,18 +120,18 @@ public class WebServiceClientTest {
 
         replay(webServiceTemplate, endpointUriResolver);
 
-        messageSender.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
-        messageSender.send(requestMessage);
+        client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
+        client.send(requestMessage);
 
         verify(webServiceTemplate, endpointUriResolver);
     }
 
     @Test
     public void testErrorResponseExceptionStrategy() {
-        WebServiceClient messageSender = new WebServiceClient();
+        WebServiceClient client = new WebServiceClient();
 
-        messageSender.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
-        messageSender.getEndpointConfiguration().setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
+        client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
+        client.getEndpointConfiguration().setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
 
         Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
 
@@ -159,8 +159,8 @@ public class WebServiceClientTest {
         replay(webServiceTemplate);
 
         try {
-            messageSender.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
-            messageSender.send(requestMessage);
+            client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
+            client.send(requestMessage);
             Assert.fail("Missing exception due to soap fault");
         } catch (SoapFaultClientException e) {
             verify(webServiceTemplate, soapFaultMessage, soapBody, soapFault);

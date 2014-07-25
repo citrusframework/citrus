@@ -29,7 +29,7 @@
     &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
   &lt;/sql&gt;
   
-  &lt;send with=&quot;getCustomerRequestMessageSender&quot;&gt;
+  &lt;send endpoint=&quot;customerEndpoint&quot;&gt;
     &lt;message&gt;
       &lt;data&gt;
         &lt;![CDATA[

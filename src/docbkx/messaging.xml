@@ -24,8 +24,8 @@
   
   <para>A message consists of a message header (name-value pairs) and a message payload. Later in this document we will see how 
   a test constructs several messages with payload and header values. But first of all let's concentrate on sending and receiving 
-  messages to/from various transports. MesageSender and MessageReceiver components play a significant role in this respect. The next figure shows a 
-  typical MessageSender component in Citrus:</para>
+  messages to/from various transports. Endpoint components play a significant role in this respect. The next figure shows a
+  typical message sending endpoint component in Citrus:</para>
   
   <mediaobject>
     <imageobject role="fo">
@@ -37,13 +37,13 @@
     </imageobject>
   </mediaobject>
 
-  <para>The MessageSender publishes messages to a destination. This destination can be a JMS queue/topic, a SOAP WebService endpoint, a Http URL, a FTP folder destination 
-  and many more. The MessageSender component just takes a previously defined message definition (header and payload) and sends it to the message destination.</para>
+  <para>The endpoint producer publishes messages to a destination. This destination can be a JMS queue/topic, a SOAP WebService endpoint, a Http URL, a FTP folder destination
+  and many more. The producer just takes a previously defined message definition (header and payload) and sends it to the message destination.</para>
   
-  <para>Similar to that Citrus defines the several MessageReceiver components to consume messages from destinations. This can be a simple subscription
+  <para>Similar to that Citrus defines the several endpoint consumer components to consume messages from destinations. This can be a simple subscription
   on message channels and JMS queues/topics. In case of SOAP WebServices and Http GET/POST things are more complicated as we have to provide a 
   server component that clients can connect to. We will handle this Http server related communication later in this document. For now
-  a MessageReceiver component in its most simple way is defined like this:</para>
+  a endpoint consumer component in its most simple way is defined like this:</para>
   
   <mediaobject>
     <imageobject role="fo">
@@ -55,8 +55,7 @@
     </imageobject>
   </mediaobject>
   
-  <para>In the next sections you will learn how a test case uses those MessageSender and MessageReceiver components for publishing and consuming 
-  messages.</para>
+  <para>In the next sections you will learn how a test case uses those endpoint components for producing and consuming messages.</para>
   
   <section id="message-sending">
     <title>Sending messages</title>
@@ -613,7 +612,7 @@ public void receiveMessageTest() {
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void receiveMessageTest() {
-    receive(bookResponseMessageReceiver)
+    receive(bookResponseEndpoint)
       .validationCallback(new MarshallingValidationCallback&lt;AddBookResponseMessage&gt;() {
           @Override
           public void validate(AddBookResponseMessage response, MessageHeaders headers) {
@@ -631,7 +630,7 @@ private Unmarshaller unmarshaller;
 
 @CitrusTest
 public void receiveMessageTest() {
-    receive(bookResponseMessageReceiver)
+    receive(bookResponseEndpoint)
         .validationCallback(new MarshallingValidationCallback&lt;AddBookResponseMessage&gt;(unmarshaller) {
             @Override
             public void validate(AddBookResponseMessage response, MessageHeaders headers) {
@@ -649,7 +648,7 @@ private Marshaller marshaller;
 
 @CitrusTest
 public void sendMessageTest() {
-    send(bookRequestMessageSender)
+    send(bookRequestEndpoint)
             .payload(createAddBookRequestMessage("978-citrus:randomNumber(10)"), marshaller)
             .header("citrus_soap_action", "addBook");
 }

@@ -19,7 +19,6 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageSender;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -212,9 +211,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testSendBuilderWithSenderName() {
-        MessageSender messageSender = EasyMock.createMock(MessageSender.class);
-        
+    public void testSendBuilderWithEndpointName() {
         reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
@@ -230,7 +227,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .soap()
                     .attachment(testAttachment);
 
-                send("messageSender")
+                send("otherClient")
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
@@ -252,7 +249,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         action = ((SendMessageAction)builder.testCase().getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
-        Assert.assertEquals(action.getEndpointUri(), "messageSender");
+        Assert.assertEquals(action.getEndpointUri(), "otherClient");
         
         verify(applicationContextMock);
     }

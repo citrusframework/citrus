@@ -1677,7 +1677,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testDisabledReceiveMessageByMessageReceiver() {
+    public void testDisabledReceiveMessageByEndpointActor() {
         TestCase testCase = new TestCase();
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);

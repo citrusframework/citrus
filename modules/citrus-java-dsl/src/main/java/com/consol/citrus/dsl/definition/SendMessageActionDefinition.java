@@ -322,7 +322,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      *
      * Example:
      * <pre>
-     *     send("httpSender").method(HttpMethod.GET).uri("http://localhost:8080/jolokia");
+     *     send("httpClient").method(HttpMethod.GET).uri("http://localhost:8080/jolokia");
      * </pre>
      *
      *

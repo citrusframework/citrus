@@ -1057,7 +1057,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testDisabledSendMessageByMessageSender() {
+    public void testDisabledSendMessageByEndpointActor() {
         TestCase testCase = new TestCase();
         SendMessageAction sendAction = new SendMessageAction();
         sendAction.setEndpoint(endpoint);

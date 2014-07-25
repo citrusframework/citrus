@@ -35,7 +35,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * many cases this action clears all messages from a destination regardless of
  * JMS broker vendor implementations.
  *
- * Receiver will continue to receive messages until message receive timeout is reached, 
+ * Consumer will continue to receive messages until message receive timeout is reached,
  * so no messages are left.
  *  
  * @author Christoph Deppisch

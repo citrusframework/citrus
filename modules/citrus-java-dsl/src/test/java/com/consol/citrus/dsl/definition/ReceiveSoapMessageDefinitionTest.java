@@ -226,7 +226,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderWithReceiverName() {
+    public void testReceiveBuilderWithEndpointName() {
         reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
@@ -236,7 +236,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContextMock) {
             @Override
             public void configure() {
-                receive("replyMessageReceiver")
+                receive("replyMessageEndpoint")
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
                 receive("fooMessageEndpoint")
@@ -252,7 +252,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        Assert.assertEquals(action.getEndpointUri(), "replyMessageReceiver");
+        Assert.assertEquals(action.getEndpointUri(), "replyMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         
         action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));

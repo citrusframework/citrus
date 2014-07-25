@@ -16,13 +16,12 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.Arrays;
-import java.util.List;
+import com.consol.citrus.actions.PurgeJmsQueuesAction;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
-
-import com.consol.citrus.actions.PurgeJmsQueuesAction;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Action to purge JMS queue destinations by simply consuming 
@@ -30,7 +29,7 @@ import com.consol.citrus.actions.PurgeJmsQueuesAction;
  * many cases this action clears all messages from a destination regardless of
  * JMS broker vendor implementations.
  *
- * Receiver will continue to receive messages until message receive timeout is reached, 
+ * Consumer will continue to receive messages until message receive timeout is reached,
  * so no messages are left.
  * 
  * @author Max Argyo, Giulia DelBravo
@@ -44,7 +43,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
 
 	/**
      * Sets the Connection factory.
-     * @param queueConnectionFactory the queueConnectionFactory to set
+     * @param connectionFactory the queueConnectionFactory to set
      */
 	public PurgeJMSQueuesActionDefinition connectionFactory(ConnectionFactory connectionFactory) {
 		action.setConnectionFactory(connectionFactory);
@@ -81,7 +80,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
 	
 	/**
      * List of queue names to purge in this action. 
-     * @param queueNames the queueNames to set
+     * @param names the queueNames to set
      */
 	public PurgeJMSQueuesActionDefinition queueNames(List<String> names) {
 		action.getQueueNames().addAll(names);
@@ -118,7 +117,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
 	
 	/**
      * Sets the sleepTime.
-     * @param sleepTime the sleepTime to set
+     * @param millis the sleepTime to set
      */
 	public PurgeJMSQueuesActionDefinition sleep(long millis) {
 		action.setSleepTime(millis);
