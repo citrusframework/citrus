@@ -17,8 +17,8 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultReplyMessageCorrelator;
 import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.message.ReplyMessageHandler;
 import org.easymock.EasyMock;
 import org.springframework.integration.*;
 import org.springframework.integration.core.MessagingTemplate;
@@ -36,24 +36,19 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class SyncMessageChannelSenderTest {
+public class ChannelEndpointSyncProducerTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
-    
     private MessageChannel channel = org.easymock.EasyMock.createMock(MessageChannel.class);
-
-    private ReplyMessageHandler replyMessageHandler = org.easymock.EasyMock.createMock(ReplyMessageHandler.class);
-    
     private ReplyMessageCorrelator replyMessageCorrelator = org.easymock.EasyMock.createMock(ReplyMessageCorrelator.class);
-    
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessage() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessagingTemplate(messagingTemplate);
-        sender.setChannel(channel);
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -65,28 +60,28 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        reset(messagingTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        replay(messagingTemplate, channel, replyMessageHandler);
+        replay(messagingTemplate, channel);
+
+        endpoint.createProducer().send(message);
         
-        sender.send(message);
-        
-        verify(messagingTemplate, channel, replyMessageHandler);
+        verify(messagingTemplate, channel);
     }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageChannelNameResolver() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessagingTemplate(messagingTemplate);
-        sender.setChannelName("testChannel");
-        
-        sender.setChannelResolver(channelResolver);
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+        endpoint.getEndpointConfiguration().setChannelName("testChannel");
+
+        endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -98,7 +93,7 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        reset(messagingTemplate, channel, replyMessageHandler, channelResolver);
+        reset(messagingTemplate, channel, channelResolver);
         
         expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
         
@@ -107,19 +102,19 @@ public class SyncMessageChannelSenderTest {
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        replay(messagingTemplate, channel, replyMessageHandler, channelResolver);
+        replay(messagingTemplate, channel, channelResolver);
+
+        endpoint.createProducer().send(message);
         
-        sender.send(message);
-        
-        verify(messagingTemplate, channel, replyMessageHandler, channelResolver);
+        verify(messagingTemplate, channel, channelResolver);
     }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyHandler() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessagingTemplate(messagingTemplate);
-        sender.setChannel(channel);
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -131,34 +126,33 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        sender.setReplyMessageHandler(replyMessageHandler);
-        
-        reset(messagingTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
         
-        replay(messagingTemplate, channel, replyMessageHandler);
-        
-        sender.send(message);
+        replay(messagingTemplate, channel);
 
-        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getChannelEndpoint().createProducer()).findReplyMessage("");
+        ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
+        channelSyncProducer.send(message);
+
+        Message<String> replyMessage = (Message<String>) channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
-        verify(messagingTemplate, channel, replyMessageHandler);
+        verify(messagingTemplate, channel);
     }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithCustomReplyTimeout() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessagingTemplate(messagingTemplate);
-        sender.setChannel(channel);
-        
-        sender.setReplyTimeout(10000L);
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+        endpoint.getEndpointConfiguration().setChannel(channel);
+
+        endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -170,32 +164,31 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        sender.setReplyMessageHandler(replyMessageHandler);
-        
-        reset(messagingTemplate, channel, replyMessageHandler);
+        reset(messagingTemplate, channel);
         
         messagingTemplate.setReceiveTimeout(10000L);
         expectLastCall().once();
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
 
-        replay(messagingTemplate, channel, replyMessageHandler);
-        
-        sender.send(message);
+        replay(messagingTemplate, channel);
 
-        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getChannelEndpoint().createProducer()).findReplyMessage("");
+        ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
+        channelSyncProducer.send(message);
+
+        Message<String> replyMessage = (Message<String>) channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
-        verify(messagingTemplate, channel, replyMessageHandler);
+        verify(messagingTemplate, channel);
     }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessagingTemplate(messagingTemplate);
-        sender.setChannel(channel);
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -207,11 +200,9 @@ public class SyncMessageChannelSenderTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        sender.setReplyMessageHandler(replyMessageHandler);
-
-        sender.setCorrelator(replyMessageCorrelator);
+        endpoint.getEndpointConfiguration().setCorrelator(replyMessageCorrelator);
         
-        reset(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
+        reset(messagingTemplate, channel, replyMessageCorrelator);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
@@ -220,48 +211,77 @@ public class SyncMessageChannelSenderTest {
         
         expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
-        replay(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
-        
-        sender.send(message);
+        replay(messagingTemplate, channel, replyMessageCorrelator);
 
-        Message<String> replyMessage = (Message<String>) ((ChannelSyncProducer) sender.getChannelEndpoint().createProducer()).findReplyMessage(MessageHeaders.ID + " = '123456789'");
+        ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
+        channelSyncProducer.send(message);
+
+        Message<String> replyMessage = (Message<String>) channelSyncProducer.findReplyMessage(MessageHeaders.ID + " = '123456789'");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
         
-        verify(messagingTemplate, channel, replyMessageHandler, replyMessageCorrelator);
+        verify(messagingTemplate, channel, replyMessageCorrelator);
     }
     
     @Test
     public void testSendMessageNoResponse() throws JMSException {
-        SyncMessageChannelSender sender = new SyncMessageChannelSender();
-        sender.setMessagingTemplate(messagingTemplate);
-        sender.setChannel(channel);
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
-        
-        sender.setReplyMessageHandler(replyMessageHandler);
-        
-        reset(messagingTemplate, channel, replyMessageHandler);
+
+        reset(messagingTemplate, channel);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
         expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(null).once();
         
-        replay(messagingTemplate, channel, replyMessageHandler);
+        replay(messagingTemplate, channel);
 
         try {
-            sender.send(message);
+            endpoint.createProducer().send(message);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on reply channel");
-            verify(messagingTemplate, channel, replyMessageHandler);
+            verify(messagingTemplate, channel);
             return;
         }
         
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of reply timeout");
+    }
+
+    @Test
+    public void testOnReplyMessage() {
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .copyHeaders(headers)
+                .build();
+
+        ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
+        channelSyncProducer.onReplyMessage("", message);
+
+        Assert.assertEquals(channelSyncProducer.receive(), message);
+    }
+
+    @Test
+    public void testOnReplyMessageWithCorrelatorKey() {
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .copyHeaders(headers)
+                .build();
+
+        ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
+        channelSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);
+
+        Assert.assertEquals(channelSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message)), message);
     }
     
 }

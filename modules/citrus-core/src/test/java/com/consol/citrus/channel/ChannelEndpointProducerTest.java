@@ -16,11 +16,7 @@
 
 package com.consol.citrus.channel;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
 import org.springframework.integration.*;
 import org.springframework.integration.core.MessagingTemplate;
@@ -29,26 +25,27 @@ import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class MessageChannelSenderTest {
+public class ChannelEndpointProducerTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
-    
     private MessageChannel channel = EasyMock.createMock(MessageChannel.class);
-    
     private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessage() {
-        MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelSender.setChannel(channel);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -61,8 +58,8 @@ public class MessageChannelSenderTest {
         expectLastCall().once();
         
         replay(messagingTemplate, channel);
-        
-        messageChannelSender.send(message);
+
+        endpoint.createProducer().send(message);
         
         verify(messagingTemplate, channel);
     }
@@ -70,12 +67,12 @@ public class MessageChannelSenderTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageChannelNameResolver() {
-        MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelSender.setChannelName("testChannel");
-        
-        messageChannelSender.setChannelResolver(channelResolver);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannelName("testChannel");
+
+        endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -90,8 +87,8 @@ public class MessageChannelSenderTest {
         expectLastCall().once();
         
         replay(messagingTemplate, channel, channelResolver);
-        
-        messageChannelSender.send(message);
+
+        endpoint.createProducer().send(message);
         
         verify(messagingTemplate, channel, channelResolver);
     }
@@ -99,10 +96,10 @@ public class MessageChannelSenderTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageFailed() {
-        MessageChannelSender messageChannelSender = new MessageChannelSender();
-        messageChannelSender.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelSender.setChannel(channel);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -117,7 +114,7 @@ public class MessageChannelSenderTest {
         replay(messagingTemplate, channel);
 
         try {
-            messageChannelSender.send(message);
+            endpoint.createProducer().send(message);
         } catch(CitrusRuntimeException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to channel: "));
             Assert.assertNotNull(e.getCause());
