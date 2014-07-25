@@ -232,18 +232,22 @@
     <dependency>
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
+        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
+        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-core</artifactId>
+        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>org.apache.xbean</groupId>
         <artifactId>xbean-spring</artifactId>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

@@ -100,13 +100,6 @@
     </dependency>
   
     <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-core</artifactId>
-        <scope>compile</scope>
-        <optional>true</optional>
-    </dependency>
-    
-    <dependency>
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging-api</artifactId>
     </dependency>
@@ -179,6 +172,16 @@
     </dependency>
     
     <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.xbean</groupId>
+      <artifactId>xbean-spring</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
     	<groupId>hsqldb</groupId>
     	<artifactId>hsqldb</artifactId>

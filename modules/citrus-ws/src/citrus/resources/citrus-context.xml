@@ -5,11 +5,13 @@
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-                         http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
+                         http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+                         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>
@@ -46,11 +48,12 @@
     </property>
   </bean>
 
-  <bean id="activeMQBroker" class="com.consol.citrus.server.activemq.ActiveMQServer">
-    <property name="brokerURL" value="tcp://localhost:61616" />
-    <property name="persistent" value="false"/>
-    <property name="autoStart" value="true"/>
-  </bean>
+  <!-- Embedded ActiveMQ JMS broker -->
+  <amq:broker useJmx="false" persistent="false">
+    <amq:transportConnectors>
+      <amq:transportConnector uri="tcp://localhost:61616" />
+    </amq:transportConnectors>
+  </amq:broker>
 
   <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
     <property name="brokerURL" value="tcp://localhost:61616" />

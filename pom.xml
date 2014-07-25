@@ -372,22 +372,6 @@
       </dependency>
 
       <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-core</artifactId>
-        <version>5.7.0</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-core</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.fusesource.mqtt-client</groupId>
-            <artifactId>mqtt-client</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      
-      <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
         <version>${jetty.version}</version>
@@ -489,9 +473,32 @@
       
       <!-- Test scoped dependencies -->
       <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <version>5.7.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.fusesource.mqtt-client</groupId>
+            <artifactId>mqtt-client</artifactId>
+          </exclusion>
+        </exclusions>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xbean</groupId>
+        <artifactId>xbean-spring</artifactId>
+        <version>3.12</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>1.8.0.10</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.easymock</groupId>
@@ -506,14 +513,10 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.apache.xbean</groupId>
-        <artifactId>xbean-spring</artifactId>
-        <version>3.12</version>
-      </dependency>
-      <dependency>
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.4</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -526,7 +529,7 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
     
-    <!-- Test scope -->
+    <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
