@@ -105,6 +105,16 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     }
 
     @Override
+    public Message<?> receive() {
+        return receive("", getEndpointConfiguration().getTimeout());
+    }
+
+    @Override
+    public Message<?> receive(String selector) {
+        return receive(selector, getEndpointConfiguration().getTimeout());
+    }
+
+    @Override
     public Message<?> receive(long timeout) {
         return receive("", timeout);
     }

@@ -25,6 +25,12 @@ import org.springframework.integration.Message;
 public interface Consumer {
 
     /**
+     * Receive message with default timeout.
+     * @return
+     */
+    Message<?> receive();
+
+    /**
      * Receive message with a given timeout.
      * @param timeout
      * @return

@@ -46,17 +46,8 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
      * @param endpointConfiguration
      */
     public ChannelConsumer(ChannelEndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration.getTimeout());
+        super(endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
-    }
-
-    /**
-     * Default constructor using receive timeout setting.
-     *
-     * @param timeout
-     */
-    public ChannelConsumer(long timeout) {
-        super(timeout);
     }
 
     @Override

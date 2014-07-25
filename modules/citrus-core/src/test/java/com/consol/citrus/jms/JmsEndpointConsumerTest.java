@@ -16,13 +16,8 @@
 
 package com.consol.citrus.jms;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.*;
-
+import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -30,13 +25,16 @@ import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import javax.jms.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class JmsMessageReceiverTest {
+public class JmsEndpointConsumerTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -49,8 +47,8 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testReceiveMessageWithJmsTemplate() {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setJmsTemplate(jmsTemplate);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -68,7 +66,7 @@ public class JmsMessageReceiverTest {
 
         replay(jmsTemplate, connectionFactory, destination);
         
-        Message<?> receivedMessage = receiver.receive();
+        Message<?> receivedMessage = receiver.createConsumer().receive();
         Assert.assertTrue(receivedMessage.equals(controlMessage));
         
         verify(jmsTemplate, connectionFactory, destination);
@@ -76,10 +74,10 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testWithDestination() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
         
-        receiver.setDestination(destination);
+        receiver.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -104,7 +102,7 @@ public class JmsMessageReceiverTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.receive();
+        Message<?> receivedMessage = receiver.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -112,10 +110,10 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testReceiveMessageWithDestinationName() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
-        
-        receiver.setDestinationName("myDestination");
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        receiver.getEndpointConfiguration().setDestinationName("myDestination");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -142,7 +140,7 @@ public class JmsMessageReceiverTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.receive();
+        Message<?> receivedMessage = receiver.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -150,10 +148,10 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testReceiveMessageTimeout() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
-        
-        receiver.setDestination(destination);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        receiver.getEndpointConfiguration().setDestination(destination);
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -172,7 +170,7 @@ public class JmsMessageReceiverTest {
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
         try {
-            receiver.receive();
+            receiver.createConsumer().receive();
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving JMS message on"));
             return;
@@ -183,12 +181,12 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testWithCustomTimeout() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
-        
-        receiver.setDestination(destination);
-        
-        receiver.setReceiveTimeout(10000L);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        receiver.getEndpointConfiguration().setDestination(destination);
+
+        receiver.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -213,17 +211,17 @@ public class JmsMessageReceiverTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.receive();
+        Message<?> receivedMessage = receiver.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
     }
     
     public void testWithMessageHeaders() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
-        
-        receiver.setDestination(destination);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        receiver.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -250,7 +248,7 @@ public class JmsMessageReceiverTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.receive();
+        Message<?> receivedMessage = receiver.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         Assert.assertTrue(receivedMessage.getHeaders().containsKey("Operation"));
         Assert.assertTrue(receivedMessage.getHeaders().get("Operation").equals("sayHello"));
@@ -260,10 +258,10 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testWithMessageSelector() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
-        
-        receiver.setDestination(destination);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        receiver.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -288,7 +286,7 @@ public class JmsMessageReceiverTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.receiveSelected("Operation = 'sayHello'");
+        Message<?> receivedMessage = receiver.createConsumer().receive("Operation = 'sayHello'");
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -296,11 +294,11 @@ public class JmsMessageReceiverTest {
     
     @Test
     public void testWithMessageSelectorAndCustomTimeout() throws JMSException {
-        JmsMessageReceiver receiver = new JmsMessageReceiver();
-        receiver.setConnectionFactory(connectionFactory);
-        
-        receiver.setDestination(destination);
-        receiver.setReceiveTimeout(10000L);
+        JmsEndpoint receiver = new JmsEndpoint();
+        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        receiver.getEndpointConfiguration().setDestination(destination);
+        receiver.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -325,7 +323,7 @@ public class JmsMessageReceiverTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.receiveSelected("Operation = 'sayHello'");
+        Message<?> receivedMessage = receiver.createConsumer().receive("Operation = 'sayHello'");
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);

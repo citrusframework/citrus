@@ -49,6 +49,11 @@ public class CamelConsumer implements Consumer {
     }
 
     @Override
+    public Message<?> receive() {
+        return receive(endpointConfiguration.getTimeout());
+    }
+
+    @Override
     public Message<?> receive(long timeout) {
         log.info("Receiving message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 

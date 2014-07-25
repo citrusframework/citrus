@@ -25,6 +25,13 @@ import org.springframework.integration.Message;
 public interface SelectiveConsumer extends Consumer {
 
     /**
+     * Receive message with a message selector and default timeout.
+     * @param selector
+     * @return
+     */
+    Message<?> receive(String selector);
+
+    /**
      * Receive message with a message selector and a receive timeout.
      * @param selector
      * @param timeout

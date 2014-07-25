@@ -53,7 +53,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
      * @param messageListener
      */
     public VertxConsumer(Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(endpointConfiguration.getTimeout());
+        super(endpointConfiguration);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;

@@ -80,6 +80,16 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     }
 
     @Override
+    public Message<?> receive() {
+        return receive("", endpointConfiguration.getTimeout());
+    }
+
+    @Override
+    public Message<?> receive(String selector) {
+        return receive(selector, endpointConfiguration.getTimeout());
+    }
+
+    @Override
     public Message<?> receive(long timeout) {
         return receive("", timeout);
     }

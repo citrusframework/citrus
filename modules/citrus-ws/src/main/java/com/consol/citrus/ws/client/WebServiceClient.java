@@ -135,6 +135,16 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     @Override
+    public Message<?> receive() {
+        return receive("", getEndpointConfiguration().getTimeout());
+    }
+
+    @Override
+    public Message<?> receive(String selector) {
+        return receive(selector, getEndpointConfiguration().getTimeout());
+    }
+
+    @Override
     public Message<?> receive(long timeout) {
         return receive("", timeout);
     }

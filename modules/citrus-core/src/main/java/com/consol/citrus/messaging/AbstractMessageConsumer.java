@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import org.springframework.integration.Message;
 
 /**
@@ -24,18 +25,18 @@ import org.springframework.integration.Message;
  */
 public abstract class AbstractMessageConsumer implements Consumer {
 
-    /** Send/receive timeout setting */
-    private long timeout;
+    /** Endpoint configuration */
+    private final EndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using receive timeout setting.
-     * @param timeout
+     * @param endpointConfiguration
      */
-    public AbstractMessageConsumer(long timeout) {
-        this.timeout = timeout;
+    public AbstractMessageConsumer(EndpointConfiguration endpointConfiguration) {
+        this.endpointConfiguration = endpointConfiguration;
     }
 
     public Message<?> receive() {
-        return receive(timeout);
+        return receive(endpointConfiguration.getTimeout());
     }
 }

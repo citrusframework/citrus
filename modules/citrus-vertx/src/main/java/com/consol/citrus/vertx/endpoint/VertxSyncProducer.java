@@ -80,6 +80,16 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     }
 
     @Override
+    public Message<?> receive() {
+        return receive("", endpointConfiguration.getTimeout());
+    }
+
+    @Override
+    public Message<?> receive(String selector) {
+        return receive(selector, endpointConfiguration.getTimeout());
+    }
+
+    @Override
     public Message<?> receive(long timeout) {
         return receive("", timeout);
     }

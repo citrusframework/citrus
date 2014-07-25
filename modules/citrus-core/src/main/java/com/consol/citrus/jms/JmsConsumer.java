@@ -46,7 +46,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * @param messageListener
      */
     public JmsConsumer(JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(endpointConfiguration.getTimeout());
+        super(endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
     }

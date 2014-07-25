@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import org.springframework.integration.Message;
 
 /**
@@ -24,13 +25,22 @@ import org.springframework.integration.Message;
  */
 public abstract class AbstractSelectiveMessageConsumer extends AbstractMessageConsumer implements SelectiveConsumer {
 
+    /** Endpoint configuration */
+    private final EndpointConfiguration endpointConfiguration;
+
     /**
      * Default constructor using receive timeout setting.
      *
-     * @param timeout
+     * @param endpointConfiguration
      */
-    public AbstractSelectiveMessageConsumer(long timeout) {
-        super(timeout);
+    public AbstractSelectiveMessageConsumer(EndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
+        this.endpointConfiguration = endpointConfiguration;
+    }
+
+    @Override
+    public Message<?> receive(String selector) {
+        return receive(selector, endpointConfiguration.getTimeout());
     }
 
     @Override
