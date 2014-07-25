@@ -47,8 +47,8 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testReceiveMessageWithJmsTemplate() {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -66,7 +66,7 @@ public class JmsEndpointConsumerTest {
 
         replay(jmsTemplate, connectionFactory, destination);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive();
+        Message<?> receivedMessage = endpoint.createConsumer().receive();
         Assert.assertTrue(receivedMessage.equals(controlMessage));
         
         verify(jmsTemplate, connectionFactory, destination);
@@ -74,10 +74,10 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testWithDestination() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
-        
-        receiver.getEndpointConfiguration().setDestination(destination);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        endpoint.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -102,7 +102,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive();
+        Message<?> receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -110,10 +110,10 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testReceiveMessageWithDestinationName() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        receiver.getEndpointConfiguration().setDestinationName("myDestination");
+        endpoint.getEndpointConfiguration().setDestinationName("myDestination");
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -140,7 +140,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive();
+        Message<?> receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -148,10 +148,10 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testReceiveMessageTimeout() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        receiver.getEndpointConfiguration().setDestination(destination);
+        endpoint.getEndpointConfiguration().setDestination(destination);
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -170,7 +170,7 @@ public class JmsEndpointConsumerTest {
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
         try {
-            receiver.createConsumer().receive();
+            endpoint.createConsumer().receive();
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving JMS message on"));
             return;
@@ -181,12 +181,12 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testWithCustomTimeout() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        receiver.getEndpointConfiguration().setDestination(destination);
+        endpoint.getEndpointConfiguration().setDestination(destination);
 
-        receiver.getEndpointConfiguration().setTimeout(10000L);
+        endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -211,17 +211,17 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive();
+        Message<?> receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
     }
     
     public void testWithMessageHeaders() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        receiver.getEndpointConfiguration().setDestination(destination);
+        endpoint.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -248,7 +248,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive();
+        Message<?> receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         Assert.assertTrue(receivedMessage.getHeaders().containsKey("Operation"));
         Assert.assertTrue(receivedMessage.getHeaders().get("Operation").equals("sayHello"));
@@ -258,10 +258,10 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testWithMessageSelector() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        receiver.getEndpointConfiguration().setDestination(destination);
+        endpoint.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -286,7 +286,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive("Operation = 'sayHello'");
+        Message<?> receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -294,11 +294,11 @@ public class JmsEndpointConsumerTest {
     
     @Test
     public void testWithMessageSelectorAndCustomTimeout() throws JMSException {
-        JmsEndpoint receiver = new JmsEndpoint();
-        receiver.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        receiver.getEndpointConfiguration().setDestination(destination);
-        receiver.getEndpointConfiguration().setTimeout(10000L);
+        endpoint.getEndpointConfiguration().setDestination(destination);
+        endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -323,7 +323,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = receiver.createConsumer().receive("Operation = 'sayHello'");
+        Message<?> receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);

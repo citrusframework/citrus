@@ -16,13 +16,7 @@
 
 package com.consol.citrus.jms;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jms.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -30,12 +24,16 @@ import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import javax.jms.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
-public class JmsMessageSenderTest {
+public class JmsEndpointProducerTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -48,8 +46,8 @@ public class JmsMessageSenderTest {
     
     @Test
     public void testSendMessageWithJmsTemplate() {
-        JmsMessageSender sender = new JmsMessageSender();
-        sender.setJmsTemplate(jmsTemplate);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -64,18 +62,18 @@ public class JmsMessageSenderTest {
         expectLastCall().once();
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer);
-        
-        sender.send(message);
+
+        endpoint.createProducer().send(message);
         
         verify(jmsTemplate, connectionFactory, destination, messageProducer);
     }
     
     @Test
     public void testSendMessageWithDestination() throws JMSException {
-        JmsMessageSender sender = new JmsMessageSender();
-        sender.setConnectionFactory(connectionFactory);
-        
-        sender.setDestination(destination);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        endpoint.getEndpointConfiguration().setDestination(destination);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -97,18 +95,18 @@ public class JmsMessageSenderTest {
         expect(session.getTransacted()).andReturn(false).once();
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
-        
-        sender.send(message);
+
+        endpoint.createProducer().send(message);
         
         verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
     }
     
     @Test
     public void testSendMessageWithDestinationName() throws JMSException {
-        JmsMessageSender sender = new JmsMessageSender();
-        sender.setConnectionFactory(connectionFactory);
-        
-        sender.setDestinationName("myDestination");
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        endpoint.getEndpointConfiguration().setDestinationName("myDestination");
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -132,21 +130,21 @@ public class JmsMessageSenderTest {
         expect(session.createQueue("myDestination")).andReturn(destinationQueue).once();
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
-        
-        sender.send(message);
+
+        endpoint.createProducer().send(message);
         
         verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
     }
     
     @Test
     public void testSendEmptyMessage() throws JMSException {
-        JmsMessageSender sender = new JmsMessageSender();
-        sender.setConnectionFactory(connectionFactory);
-        
-        sender.setDestination(destination);
+        JmsEndpoint endpoint = new JmsEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        endpoint.getEndpointConfiguration().setDestination(destination);
         
         try {
-            sender.send(null);
+            endpoint.createProducer().send(null);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;
