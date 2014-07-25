@@ -22,7 +22,7 @@
             	</message>
             </send>
             
-            <expect-timeout message-receiver="webServiceHelloClient" wait="1000"/>
+            <expect-timeout endpoint="webServiceHelloClient" wait="1000"/>
     	</actions>
     </testcase>
 </spring:beans>

@@ -53,12 +53,12 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
     }
     
     @Test
-    public void testCallTemplateParserUnknownTemplate() {
+    public void testEmptyEndpointReferenceTemplate() {
         try {
             createApplicationContext("failed");
             Assert.fail("Missing bean creation exception due to missing endpoint reference");
         } catch (BeanDefinitionStoreException e) {
-            Assert.assertEquals(e.getCause().getMessage(), "Endpoint reference must not be empty");
+            Assert.assertTrue(e.getCause().getMessage().startsWith("Missing proper message endpoint reference"));
         }
     }
 }

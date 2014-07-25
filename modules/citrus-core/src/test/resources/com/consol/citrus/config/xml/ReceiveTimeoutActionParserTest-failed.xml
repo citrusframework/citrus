@@ -6,7 +6,7 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="ReceiveTimeoutActionParserTest">
         <actions>
-            <expect-timeout message-receiver=""/>
+            <expect-timeout endpoint=""/>
         </actions>
     </testcase>
     

@@ -44,7 +44,7 @@ public void expectTimeoutTest() {
     This is possible with defining a message selector on the test action as follows.</para>
 
     <para><emphasis>XML DSL</emphasis></para>
-    <programlisting>&lt;expect-timeout message-receiver=&quot;myEndpoint&quot; wait=&quot;500&quot;&gt;
+    <programlisting>&lt;expect-timeout endpoint=&quot;myEndpoint&quot; wait=&quot;500&quot;&gt;
   &lt;select&gt;MessageId='123456789'&lt;select/&gt;
 &lt;expect-timeout/&gt;</programlisting>
 

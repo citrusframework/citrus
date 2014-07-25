@@ -41,17 +41,9 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);
 
-        String endpointUri;
-        if (element.hasAttribute("message-receiver")) {
-            endpointUri = element.getAttribute("message-receiver");
-        } else if (element.hasAttribute("endpoint")) {
-            endpointUri = element.getAttribute("endpoint");
-        } else {
-            throw new BeanCreationException("Missing proper message endpoint reference for expect timeout action - 'endpoint' attribute is required and should not be empty");
-        }
-
+        String endpointUri = element.getAttribute("endpoint");
         if (!StringUtils.hasText(endpointUri)) {
-            throw new BeanCreationException("Endpoint reference must not be empty");
+            throw new BeanCreationException("Missing proper message endpoint reference for expect timeout action - 'endpoint' attribute is required and should not be empty");
         }
 
         if (endpointUri.contains(":")) {

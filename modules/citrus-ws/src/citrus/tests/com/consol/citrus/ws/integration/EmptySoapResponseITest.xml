@@ -27,7 +27,7 @@
         </message>
       </send>
 
-      <expect-timeout message-receiver="helloSoapClient" wait="1000"/>
+      <expect-timeout endpoint="helloSoapClient" wait="1000"/>
     </actions>
   </testcase>
 </spring:beans>

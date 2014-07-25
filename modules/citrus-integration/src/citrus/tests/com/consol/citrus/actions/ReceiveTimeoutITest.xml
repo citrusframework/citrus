@@ -29,7 +29,7 @@
 			but the tester does not have to worry about queue names and other properties as shown in the second example. 
 		</description>
 		<actions>
-			<expect-timeout message-receiver="dummyMessageReceiver" wait="500"/>
+			<expect-timeout endpoint="dummyMessageReceiver" wait="500"/>
 		</actions>
 	</testcase>
 	

@@ -573,7 +573,6 @@
                 <xs:element ref="description" minOccurs="0"/>
                 <xs:element name="select" type="xs:string" minOccurs="0"/>
             </xs:sequence>
-            <xs:attribute name="message-receiver" type="xs:string"/>
             <xs:attribute name="endpoint" type="xs:string"/>
             <xs:attribute name="wait" type="xs:int"/>
         </xs:complexType>
