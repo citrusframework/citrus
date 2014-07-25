@@ -28,7 +28,6 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -48,7 +47,6 @@ import static org.easymock.EasyMock.*;
  */
 public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
-    private WebServiceMessageSender soapMessageSender = EasyMock.createMock(WebServiceMessageSender.class);
     private WebServiceClient soapClient = EasyMock.createMock(WebServiceClient.class);
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
@@ -67,35 +65,6 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         testAttachment.setCharsetName("UTF-8");
     }
 
-    @Test
-    public void testLegacySender() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
-            @Override
-            public void configure() {
-                send(soapMessageSender)
-                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
-            }
-        };
-
-        builder.execute();
-
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapMessageAction.class);
-
-        SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
-        Assert.assertEquals(action.getName(), "send");
-
-        Assert.assertEquals(action.getEndpoint(), soapMessageSender);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
-
-        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
-
-        Assert.assertFalse(action.isForkMode());
-    }
-    
     @Test
     public void testFork() {
         MockBuilder builder = new MockBuilder(applicationContext) {

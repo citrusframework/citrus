@@ -31,8 +31,6 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -465,21 +463,6 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Creates special SOAP receive message action definition with message receiver instance.
-     *
-     * @param messageReceiver
-     * @return
-     * @deprecated since Citrus 1.4
-     */
-    public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
-        ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-        action.setEndpoint(messageReceiver);
-
-        testCase.addTestAction(action);
-        return new ReceiveSoapMessageActionDefinition(action, applicationContext);
-    }
-
-    /**
      * Creates special SOAP receive message action definition with web service server instance.
      *
      * @param server
@@ -519,21 +502,6 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
         testCase.addTestAction(action);
         return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
-    }
-
-    /**
-     * Create special SOAP send message action definition with message sender instance.
-     *
-     * @param messageSender
-     * @return
-     * @deprecated since Citrus 1.4
-     */
-    public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
-        SendSoapMessageAction action = new SendSoapMessageAction();
-        action.setEndpoint(messageSender);
-
-        testCase.addTestAction(action);
-        return new SendSoapMessageActionDefinition(action);
     }
 
     /**

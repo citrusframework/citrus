@@ -24,7 +24,6 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -72,11 +71,12 @@ public class SendSoapMessageAction extends SendMessageAction {
         }
 
         final Endpoint soapEndpoint = getOrCreateEndpoint(context);
-        if (!(soapEndpoint instanceof WebServiceClient) && !(soapEndpoint instanceof WebServiceMessageSender) ) {
+        if (!(soapEndpoint instanceof WebServiceClient)) {
             throw new CitrusRuntimeException(String.format("Sending SOAP messages requires a " +
             		"'%s' but was '%s'", WebServiceClient.class.getName(), soapEndpoint.getClass().getName()));
         }
-        
+
+        final WebServiceClient webServiceClient = (WebServiceClient) soapEndpoint;
         final String attachmentContent;
         try {
             if (StringUtils.hasText(attachmentData)) {
@@ -93,11 +93,11 @@ public class SendSoapMessageAction extends SendMessageAction {
                 SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
                 taskExecutor.execute(new Runnable() {
                     public void run() {
-                        sendSoapMessage(message, attachmentContent, soapEndpoint);
+                        sendSoapMessage(message, attachmentContent, webServiceClient);
                     }
                 });
             } else {
-                sendSoapMessage(message, attachmentContent, soapEndpoint);
+                sendSoapMessage(message, attachmentContent, webServiceClient);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
@@ -105,21 +105,13 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
     
     /**
-     * Sends the SOAP message with the {@link WebServiceMessageSender}.
+     * Sends the SOAP message with the {@link WebServiceClient}.
      * 
      * @param message the message to send.
      * @param attachmentContent the optional attachmentContent.
-     * @param soapEndpoint the actual message endpoint.
+     * @param webServiceClient the actual soap client.
      */
-    private void sendSoapMessage(Message<?> message, String attachmentContent, Endpoint soapEndpoint) {
-        WebServiceClient webServiceClient;
-
-        if (soapEndpoint instanceof WebServiceMessageSender) {
-            webServiceClient = ((WebServiceMessageSender) soapEndpoint).getWebServiceClient();
-        } else {
-            webServiceClient = (WebServiceClient) soapEndpoint;
-        }
-
+    private void sendSoapMessage(Message<?> message, String attachmentContent, WebServiceClient webServiceClient) {
         if (attachmentContent != null) {
             attachment.setContent(attachmentContent);
             webServiceClient.send(message, attachment);

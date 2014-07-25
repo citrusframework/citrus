@@ -26,8 +26,6 @@ import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.JUnitTestExecutor;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.core.io.Resource;
 
@@ -311,16 +309,6 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
     }
 
     /**
-     * Creates special SOAP receive message action definition with message receiver instance.
-     * @param messageReceiver
-     * @return
-     * @deprecated since Citrus 1.4
-     */
-    public ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver) {
-        return testBuilder.receive(messageReceiver);
-    }
-
-    /**
      * Creates special SOAP receive message action definition with web service server instance.
      * @param server
      * @return
@@ -345,16 +333,6 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
      */
     public ReceiveMessageActionDefinition receive(String messageEndpointName) {
         return testBuilder.receive(messageEndpointName);
-    }
-
-    /**
-     * Create special SOAP send message action definition with message sender instance.
-     * @param messageSender
-     * @return
-     * @deprecated since Citrus 1.4
-     */
-    public SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender) {
-        return testBuilder.send(messageSender);
     }
 
     /**

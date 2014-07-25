@@ -24,8 +24,6 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.SoapReplyMessageReceiver;
-import com.consol.citrus.ws.message.WebServiceMessageSender;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
@@ -259,15 +257,6 @@ public interface TestBuilder extends ApplicationContextAware {
     PurgeMessageChannelActionDefinition purgeChannels();
 
     /**
-     * Creates special SOAP receive message action definition with message receiver instance.
-     *
-     * @param messageReceiver
-     * @return
-     * @deprecated since Citrus 1.4
-     */
-    ReceiveSoapMessageActionDefinition receive(SoapReplyMessageReceiver messageReceiver);
-
-    /**
      * Creates special SOAP receive message action definition with web service server instance.
      *
      * @param server
@@ -298,15 +287,6 @@ public interface TestBuilder extends ApplicationContextAware {
      * @return
      */
     SendSoapMessageActionDefinition send(WebServiceClient client);
-
-    /**
-     * Create special SOAP send message action definition with message sender instance.
-     *
-     * @param messageSender
-     * @return
-     * @deprecated since Citrus 1.4
-     */
-    SendSoapMessageActionDefinition send(WebServiceMessageSender messageSender);
 
     /**
      * Create send message action definition with message endpoint instance.
