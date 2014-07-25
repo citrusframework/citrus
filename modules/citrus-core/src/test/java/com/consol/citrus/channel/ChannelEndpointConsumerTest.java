@@ -36,7 +36,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class MessageChannelReceiverTest {
+public class ChannelEndpointConsumerTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
@@ -47,10 +47,10 @@ public class MessageChannelReceiverTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessage() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannel(channel);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -66,7 +66,7 @@ public class MessageChannelReceiverTest {
         
         replay(messagingTemplate, channel);
         
-        Message receivedMessage = messageChannelReceiver.receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
@@ -76,12 +76,12 @@ public class MessageChannelReceiverTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageChannelNameResolver() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannelName("testChannel");
-        
-        messageChannelReceiver.setChannelResolver(channelResolver);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannelName("testChannel");
+
+        endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -99,7 +99,7 @@ public class MessageChannelReceiverTest {
         
         replay(messagingTemplate, channel, channelResolver);
         
-        Message receivedMessage = messageChannelReceiver.receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
@@ -109,11 +109,11 @@ public class MessageChannelReceiverTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithCustomTimeout() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannel(channel);
-        messageChannelReceiver.setReceiveTimeout(10000L);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
+        endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -129,7 +129,7 @@ public class MessageChannelReceiverTest {
         
         replay(messagingTemplate, channel);
         
-        Message receivedMessage = messageChannelReceiver.receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
@@ -139,11 +139,11 @@ public class MessageChannelReceiverTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageTimeoutOverride() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannel(channel);
-        messageChannelReceiver.setReceiveTimeout(10000L);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
+        endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
@@ -159,7 +159,7 @@ public class MessageChannelReceiverTest {
         
         replay(messagingTemplate, channel);
         
-        Message receivedMessage = messageChannelReceiver.receive(25000L);
+        Message receivedMessage = endpoint.createConsumer().receive(25000L);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
@@ -168,10 +168,10 @@ public class MessageChannelReceiverTest {
     
     @Test
     public void testReceiveTimeout() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannel(channel);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
         
         reset(messagingTemplate, channel);
         
@@ -183,7 +183,7 @@ public class MessageChannelReceiverTest {
         replay(messagingTemplate, channel);
         
         try {
-            messageChannelReceiver.receive();
+            endpoint.createConsumer().receive();
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
@@ -195,14 +195,14 @@ public class MessageChannelReceiverTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelected() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
-        
-        messageChannelReceiver.setChannel(channel);
-        messageChannelReceiver.setReceiveTimeout(0L);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setChannel(channel);
+        endpoint.getEndpointConfiguration().setTimeout(0L);
 
         try {
-            messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
+            endpoint.createConsumer().receive("Operation = 'sayHello'");
             Assert.fail("Missing exception due to unsupported operation");
         } catch (CitrusRuntimeException e) {
             Assert.assertNotNull(e.getMessage());
@@ -216,9 +216,9 @@ public class MessageChannelReceiverTest {
                             .andReturn(message).once();
         
         replay(queueChannel);
-        
-        messageChannelReceiver.setChannel(queueChannel);
-        Message receivedMessage = messageChannelReceiver.receiveSelected("Operation = 'sayHello'");
+
+        endpoint.getEndpointConfiguration().setChannel(queueChannel);
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
@@ -227,8 +227,8 @@ public class MessageChannelReceiverTest {
     
     @Test
     public void testReceiveSelectedNoMessageWithTimeout() {
-        MessageChannelReceiver messageChannelReceiver = new MessageChannelReceiver();
-        messageChannelReceiver.setMessagingTemplate(messagingTemplate);
+        ChannelEndpoint endpoint = new ChannelEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         
         MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
         
@@ -238,11 +238,11 @@ public class MessageChannelReceiverTest {
                             .andReturn(null).once(); // force retry
         
         replay(queueChannel);
-        
-        messageChannelReceiver.setChannel(queueChannel);
+
+        endpoint.getEndpointConfiguration().setChannel(queueChannel);
         
         try {
-            messageChannelReceiver.receiveSelected("Operation = 'sayHello'", 1500L);
+            endpoint.createConsumer().receive("Operation = 'sayHello'", 1500L);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
