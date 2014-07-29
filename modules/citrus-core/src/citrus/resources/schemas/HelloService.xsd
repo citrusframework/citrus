@@ -11,7 +11,13 @@
         <xs:element name="MessageId" type="xs:string"/>
         <xs:element name="CorrelationId" type="xs:string"/>
         <xs:element name="User" type="xs:string"/>
-        <xs:element name="Text" type="xs:string"/>
+        <xs:element name="Text">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="30"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -22,7 +28,13 @@
         <xs:element name="MessageId" type="xs:string"/>
         <xs:element name="CorrelationId" type="xs:string"/>
         <xs:element name="User" type="xs:string"/>
-        <xs:element name="Text" type="xs:string"/>
+        <xs:element name="Text">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="30"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
         <xs:element name="Fault" type="FaultType" minOccurs="0"/>
       </xs:sequence>
     </xs:complexType>
