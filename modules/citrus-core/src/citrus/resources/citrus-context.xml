@@ -30,9 +30,11 @@
 
   <!-- Xsd schema resources and definitions -->
   <citrus:schema id="helloSchema" location="classpath:schemas/HelloService.xsd" />
+  <citrus:schema id="soapSchema" location="classpath:schemas/soap-1.1.xsd"/>
 
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
+      <citrus:ref schema="soapSchema" />
       <citrus:ref schema="helloSchema" />
     </citrus:schemas>
   </citrus:schema-repository>
@@ -59,6 +61,14 @@
 
   <citrus:jms-endpoint id="helloServiceResponseJmsEndpoint"
                        destination-name="Citrus.HelloService.Response.Queue"
+                       timeout="${default.timeout}"/>
+
+  <citrus:jms-endpoint id="helloSoapServiceJmsEndpoint"
+                       destination-name="Citrus.HelloSoapService.Request.Queue"
+                       timeout="${default.timeout}"/>
+
+  <citrus:jms-endpoint id="helloSoapServiceResponseJmsEndpoint"
+                       destination-name="Citrus.HelloSoapService.Response.Queue"
                        timeout="${default.timeout}"/>
 
   <citrus:jms-sync-endpoint id="helloServiceJmsSyncEndpoint"
