@@ -286,6 +286,13 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             } else {
                 log.error("Schema validation failed for message:\n" +
                         XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
+                
+                // Report all parsing errors
+                String validationErrors = "Found " + results.length + " XML validation errors: ";
+                for(SAXParseException e : results)
+                    validationErrors = validationErrors + "\n" + e.toString();
+                log.debug(validationErrors);
+                
                 throw new ValidationException("Schema validation failed:", results[0]);
             }
         } catch (IOException e) {
