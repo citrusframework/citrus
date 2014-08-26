@@ -6,25 +6,48 @@
     messages to the same JMS destinations. A test case should only receive those messages that actually belong to it. Therefore it is a 
     good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some 
     reason are then removed so that the following test case is not offended.</para>
+
+    <note>
+      <para>Citrus provides special support for JMS related features. We have to activate those JMS features in our test case by adding a special
+        "citrus-jms" namespace and schema definition location to the test case XML.</para>
+
+      <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
+        xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xmlns:jms=&quot;http://www.citrusframework.org/schema/jms/testcase&quot;
+        xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/testcase
+        http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+        http://www.citrusframework.org/schema/jms/testcase
+        http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd&quot;&gt;
+
+    [...]
+
+&lt;/beans&gt;</programlisting>
+    </note>
     
-    <para>So we need to purge some JMS queues in our test case. This can be done with following action definition:</para>
+    <para>Now we are ready to use the JMS features in our test case in order to purge some JMS queues. This can be done with following action definition:</para>
     
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
   &lt;actions&gt;
-      &lt;purge-jms-queues&gt;
-          &lt;queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
-          &lt;queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
-          &lt;queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
-      &lt;/purge-jms-queues&gt;
+      &lt;jms:purge-jms-queues&gt;
+          &lt;jms:queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
+          &lt;jms:queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
+          &lt;jms:queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
+      &lt;/jms:purge-jms-queues&gt;
       
-      &lt;purge-jms-queues connection-factory=&quot;connectionFactory&quot;&gt;
-          &lt;queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
-          &lt;queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
-          &lt;queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
-      &lt;/purge-jms-queues&gt;
+      &lt;jms:purge-jms-queues connection-factory=&quot;connectionFactory&quot;&gt;
+          &lt;jms:queue name=&quot;Some.JMS.QUEUE.Name&quot;/&gt;
+          &lt;jms:queue name=&quot;Another.JMS.QUEUE.Name&quot;/&gt;
+          &lt;jms:queue name=&quot;My.JMS.QUEUE.Name&quot;/&gt;
+      &lt;/jms:purge-jms-queues&gt;
   &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
+
+    <para>Notice that we have referenced the <emphasis>jms</emphasis> namespace when using the <emphasis>purge-jms-queues</emphasis> test action.</para>
 
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@Autowired
@@ -91,10 +114,10 @@ public void purgeTest() {
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;purgeTest&quot;&gt;
   &lt;actions&gt;
-      &lt;purge-jms-queues&gt;
-          &lt;queue ref=&quot;jmsQueueHelloRequestIn&quot;/&gt;
-          &lt;queue ref=&quot;jmsQueueHelloResponseOut&quot;/&gt;
-      &lt;/purge-jms-queues&gt;
+      &lt;jms:purge-jms-queues&gt;
+          &lt;jms:queue ref=&quot;jmsQueueHelloRequestIn&quot;/&gt;
+          &lt;jms:queue ref=&quot;jmsQueueHelloResponseOut&quot;/&gt;
+      &lt;/jms:purge-jms-queues&gt;
   &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 

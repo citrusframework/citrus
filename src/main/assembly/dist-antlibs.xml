@@ -15,6 +15,7 @@
     <moduleSet>
       <includes>
         <include>com.consol.citrus:citrus-core</include>
+        <include>com.consol.citrus:citrus-jms</include>
         <include>com.consol.citrus:citrus-ws</include>
         <include>com.consol.citrus:citrus-http</include>
         <include>com.consol.citrus:citrus-ssh</include>
@@ -23,6 +24,7 @@
         <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
+        <include>com.consol.citrus.model:citrus-model-jms</include>
         <include>com.consol.citrus.model:citrus-model-http</include>
         <include>com.consol.citrus.model:citrus-model-ws</include>
         <include>com.consol.citrus.model:citrus-model-ssh</include>

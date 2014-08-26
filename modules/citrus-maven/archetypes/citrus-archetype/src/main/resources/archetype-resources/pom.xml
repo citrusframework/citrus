@@ -29,6 +29,11 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jms</artifactId>
+      <version>${citrus.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ws</artifactId>
       <version>${citrus.version}</version>
     </dependency>
