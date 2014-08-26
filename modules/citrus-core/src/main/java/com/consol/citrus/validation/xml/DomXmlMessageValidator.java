@@ -214,7 +214,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             expectedValue = context.replaceDynamicContentInString(expectedValue);
 
             //do the validation of actual and expected value for element
-            validateExpectedActualElements(actualValue, expectedValue, elementPathExpression);
+            validateExpectedActualElements(actualValue, expectedValue, elementPathExpression, context);
 
             if (log.isDebugEnabled()) {
                 log.debug("Validating element: " + elementPathExpression + "='" + expectedValue + "': OK.");
@@ -938,7 +938,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param elementPathExpression
      * @throws ValidationException if validation fails
      */
-    private void validateExpectedActualElements(String actualValue, String expectedValue, String elementPathExpression)
+    private void validateExpectedActualElements(String actualValue, String expectedValue, String elementPathExpression, TestContext context)
             throws ValidationException {
         try {
             if (actualValue != null) {
@@ -946,9 +946,18 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         ValidationUtils.buildValueMismatchErrorMessage(
                         "Values not equal for element '" + elementPathExpression + "'", null, actualValue));
 
-                Assert.isTrue(actualValue.equals(expectedValue),
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                        "Values not equal for element '" + elementPathExpression + "'", expectedValue, actualValue));
+                //check if validation matcher on element is specified
+                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                    ValidationMatcherUtils.resolveValidationMatcher(elementPathExpression,
+                            actualValue,
+                            expectedValue,
+                            context);
+                }
+                else {
+                    Assert.isTrue(actualValue.equals(expectedValue),
+                            ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not equal for element '" + elementPathExpression + "'", expectedValue, actualValue));
+                }
             } else {
                 Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
                         ValidationUtils.buildValueMismatchErrorMessage(
