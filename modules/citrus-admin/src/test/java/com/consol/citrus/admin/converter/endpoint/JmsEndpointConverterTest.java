@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.core.JmsEndpoint;
+import com.consol.citrus.model.config.jms.JmsEndpoint;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

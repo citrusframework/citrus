@@ -9,7 +9,6 @@
                          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
-  <import resource="classpath:citrus-activemq-context.xml"/>
   <import resource="classpath:com/consol/citrus/service/hello-service-context.xml"/>
 
   <context:property-placeholder location="classpath:citrus.properties"
@@ -53,32 +52,6 @@
 
   <!-- Message validators -->
   <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-
-  <!-- JMS message endpoints -->
-  <citrus:jms-endpoint id="helloServiceJmsEndpoint"
-                       destination-name="Citrus.HelloService.Request.Queue"
-                       timeout="${default.timeout}"/>
-
-  <citrus:jms-endpoint id="helloServiceResponseJmsEndpoint"
-                       destination-name="Citrus.HelloService.Response.Queue"
-                       timeout="${default.timeout}"/>
-
-  <citrus:jms-endpoint id="helloSoapServiceJmsEndpoint"
-                       destination-name="Citrus.HelloSoapService.Request.Queue"
-                       timeout="${default.timeout}"/>
-
-  <citrus:jms-endpoint id="helloSoapServiceResponseJmsEndpoint"
-                       destination-name="Citrus.HelloSoapService.Response.Queue"
-                       timeout="${default.timeout}"/>
-
-  <citrus:jms-sync-endpoint id="helloServiceJmsSyncEndpoint"
-                       destination-name="Citrus.HelloService.InOut.Queue"
-                       timeout="${default.timeout}"/>
-
-  <citrus:jms-endpoint id="helloServiceJmsTopicEndpoint"
-                       destination-name="Citrus.HelloService.Request.Topic"
-                       timeout="${default.timeout}"
-                       pub-sub-domain="true"/>
 
   <!-- Message channel endpoints -->
   <citrus:channel-endpoint id="helloServiceChannelEndpoint"

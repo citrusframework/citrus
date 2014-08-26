@@ -60,10 +60,6 @@
       <artifactId>commons-lang</artifactId>
     </dependency>
     <dependency>
-    	<groupId>javax.jms</groupId>
-    	<artifactId>com.springsource.javax.jms</artifactId>
-    </dependency>
-    <dependency>
     	<groupId>xalan</groupId>
     	<artifactId>xalan</artifactId>
     </dependency>
@@ -124,19 +120,11 @@
     </dependency>
     <dependency>
     	<groupId>org.springframework</groupId>
-    	<artifactId>spring-jms</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>org.springframework</groupId>
     	<artifactId>spring-jdbc</artifactId>
     </dependency>
     <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-core</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.integration</groupId>
-        <artifactId>spring-integration-jms</artifactId>
     </dependency>
     <dependency>
         <groupId>org.springframework.ws</groupId>
@@ -173,31 +161,10 @@
     
     <!-- Test scoped dependencies -->
     <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.xbean</groupId>
-      <artifactId>xbean-spring</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
     	<groupId>hsqldb</groupId>
     	<artifactId>hsqldb</artifactId>
     	<scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.sun.xml.messaging.saaj</groupId>
-      <artifactId>saaj-impl</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.ws</groupId>
-      <artifactId>spring-ws-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-oxm</artifactId>

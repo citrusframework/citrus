@@ -72,6 +72,12 @@
 
     <!-- Test scoped dependencies -->
     <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jms</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-core</artifactId>
         <scope>test</scope>
@@ -81,5 +87,6 @@
       <artifactId>xbean-spring</artifactId>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 </project>

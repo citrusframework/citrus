@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;

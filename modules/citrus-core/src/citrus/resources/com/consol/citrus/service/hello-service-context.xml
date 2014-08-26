@@ -11,29 +11,6 @@
             http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
-  <!-- Async JMS adapters -->
-  <jms:message-driven-channel-adapter id="helloReqeustIn"
-                                      destination-name="Citrus.HelloService.Request.Queue"
-                                      channel="helloJmsRequests"/>
-
-  <jms:outbound-channel-adapter id="helloResponseOut"
-                                destination-name="Citrus.HelloService.Response.Queue"
-                                channel="helloJmsResponses"/>
-
-  <!-- SOAP adapters -->
-  <jms:message-driven-channel-adapter id="helloSoapReqeustIn"
-                                      destination-name="Citrus.HelloSoapService.Request.Queue"
-                                      channel="helloJmsSoapRequests"/>
-
-  <jms:outbound-channel-adapter id="helloSoapResponseOut"
-                                destination-name="Citrus.HelloSoapService.Response.Queue"
-                                channel="helloJmsSoapResponses"/>
-
-  <!-- Sync JMS adapters -->
-  <jms:inbound-gateway id="helloSyncRequestsIn"
-                       request-destination-name="Citrus.HelloService.InOut.Queue"
-                       request-channel="helloSyncRequests"/>
-
   <int:poller id="poller"
               fixed-rate="100"
               max-messages-per-poll="1"
@@ -42,30 +19,16 @@
   <int:logging-channel-adapter id="logger" level="DEBUG"/>
 
   <bean id="helloService" class="com.consol.citrus.integration.service.HelloServiceImpl"/>
-  <bean id="helloSoapService" class="com.consol.citrus.integration.service.HelloSoapServiceImpl"/>
 
   <int:service-activator input-channel="helloRequests"
                          output-channel="helloResponses"
                          ref="helloService"/>
-
-  <int:service-activator input-channel="helloJmsRequests"
-                         output-channel="helloJmsResponses"
-                         ref="helloService"/>
-
-  <int:service-activator input-channel="helloJmsSoapRequests"
-                         output-channel="helloJmsSoapResponses"
-                         ref="helloSoapService"/>
 
   <int:service-activator input-channel="helloSyncRequests"
                          ref="helloService"/>
 
   <int:channel id="helloRequests"/>
   <citrus:channel id="helloResponses" capacity="5"/>
-
-  <int:channel id="helloJmsRequests"/>
-  <int:channel id="helloJmsResponses"/>
-  <int:channel id="helloJmsSoapRequests"/>
-  <int:channel id="helloJmsSoapResponses"/>
   <int:channel id="helloSyncRequests"/>
 
   <int:channel id="errorChannel">
@@ -77,7 +40,5 @@
   <bean id="loggingInterceptor" class="com.consol.citrus.integration.service.LoggingInterceptor"/>
 
   <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.integration.service.model"/>
-
-  <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
 </beans>

@@ -27,7 +27,6 @@ import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.JMSException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class ChannelEndpointSyncProducerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testSendMessage() throws JMSException {
+    public void testSendMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -76,7 +75,7 @@ public class ChannelEndpointSyncProducerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testSendMessageChannelNameResolver() throws JMSException {
+    public void testSendMessageChannelNameResolver() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannelName("testChannel");
@@ -111,7 +110,7 @@ public class ChannelEndpointSyncProducerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testSendMessageWithReplyHandler() throws JMSException {
+    public void testSendMessageWithReplyHandler() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -147,7 +146,7 @@ public class ChannelEndpointSyncProducerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testSendMessageWithCustomReplyTimeout() throws JMSException {
+    public void testSendMessageWithCustomReplyTimeout() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -185,7 +184,7 @@ public class ChannelEndpointSyncProducerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testSendMessageWithReplyMessageCorrelator() throws JMSException {
+    public void testSendMessageWithReplyMessageCorrelator() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -224,7 +223,7 @@ public class ChannelEndpointSyncProducerTest {
     }
     
     @Test
-    public void testSendMessageNoResponse() throws JMSException {
+    public void testSendMessageNoResponse() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);

@@ -1,5 +1,5 @@
 channel=com.consol.citrus.channel.ChannelEndpointComponent
-jms=com.consol.citrus.jms.JmsEndpointComponent
+jms=com.consol.citrus.jms.endpoint.JmsEndpointComponent
 http=com.consol.citrus.http.client.HttpEndpointComponent
 ws=com.consol.citrus.ws.client.WebServiceEndpointComponent
 soap=com.consol.citrus.ws.client.WebServiceEndpointComponent

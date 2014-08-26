@@ -20,13 +20,11 @@ import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.channel.ChannelEndpointComponent;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.JmsEndpoint;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.ConnectionFactory;
 import java.util.*;
 
 import static org.easymock.EasyMock.*;
@@ -51,28 +49,6 @@ public class DefaultEndpointFactoryTest {
         Endpoint endpoint = factory.create("myEndpoint", context);
 
         Assert.assertNotNull(endpoint);
-
-        verify(applicationContext);
-    }
-
-    @Test
-    public void testResolveJmsEndpoint() throws Exception {
-        reset(applicationContext);
-
-        expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
-        expect(applicationContext.containsBean("connectionFactory")).andReturn(true).once();
-        expect(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).andReturn(EasyMock.createMock(ConnectionFactory.class)).once();
-
-        replay(applicationContext);
-
-        TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
-
-        DefaultEndpointFactory factory = new DefaultEndpointFactory();
-        Endpoint endpoint = factory.create("jms:Sample.Queue.Name", context);
-
-        Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "Sample.Queue.Name");
 
         verify(applicationContext);
     }

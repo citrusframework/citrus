@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
@@ -11,6 +12,7 @@
                          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                          http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+                         http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
                          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
   <context:property-placeholder location="classpath:citrus.properties"
@@ -124,10 +126,10 @@
                     context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
                     resource-base="src/citrus/resources"/>
 
-  <citrus:jms-endpoint id="soapRequestEndpoint"
+  <citrus-jms:jms-endpoint id="soapRequestEndpoint"
                        destination-name="SoapServer.inbound"/>
 
-  <citrus:jms-endpoint id="soapResponseEndpoint"
+  <citrus-jms:jms-endpoint id="soapResponseEndpoint"
                        destination-name="SoapServer.outbound"/>
 
   <citrus-ws:client id="echoSoapClient"

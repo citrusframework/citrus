@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;

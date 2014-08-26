@@ -16,9 +16,9 @@
 
 package com.consol.citrus.ws.actions;
 
+import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.JmsEndpoint;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -412,8 +412,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testWrongEndpointImplementationTest() throws Exception {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        Endpoint jmsEndpoint = new JmsEndpoint();
-        soapMessageAction.setEndpoint(jmsEndpoint);
+        Endpoint channelEndpoint = new ChannelEndpoint();
+        soapMessageAction.setEndpoint(channelEndpoint);
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -424,7 +424,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             soapMessageAction.execute(context);
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Sending SOAP messages requires a " +
-                    "'com.consol.citrus.ws.client.WebServiceClient' but was 'com.consol.citrus.jms.JmsEndpoint'");
+                    "'com.consol.citrus.ws.client.WebServiceClient' but was 'com.consol.citrus.channel.ChannelEndpoint'");
             return;
         }
         

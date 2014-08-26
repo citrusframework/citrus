@@ -26,11 +26,11 @@
 
     <actions>
       <echo>
-        <message>Test 1: Send JMS request and receive sync response (inline CDATA payload)</message>
+        <message>Test 1: Send message channel request and receive sync response (inline CDATA payload)</message>
       </echo>
 
       <send endpoint="helloServiceChannelSyncEndpoint">
-        <description>Send synchronous JMS request: Citrus -> HelloService</description>
+        <description>Send synchronous message channel request: Citrus -> HelloService</description>
         <message>
           <data>
             <![CDATA[
@@ -50,7 +50,7 @@
       </send>
 
       <receive endpoint="helloServiceChannelSyncEndpoint">
-        <description>Receive synchronous JMS response: HelloService -> Citrus</description>
+        <description>Receive synchronous message channel response: HelloService -> Citrus</description>
         <message>
           <data>
             <![CDATA[
@@ -70,7 +70,7 @@
       </receive>
 
       <echo>
-        <message>Test 2: Send JMS request and receive sync response (file resource payload)</message>
+        <message>Test 2: Send message channel request and receive sync response (file resource payload)</message>
       </echo>
 
       <send endpoint="helloServiceChannelSyncEndpoint">

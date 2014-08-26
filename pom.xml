@@ -45,6 +45,7 @@
     <module>modules/citrus-vertx</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-admin</module>
+    <module>modules/citrus-jms</module>
   </modules>
 
   <developers>

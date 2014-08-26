@@ -16,12 +16,11 @@
 
 package com.consol.citrus.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.config.xml.*;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
-import com.consol.citrus.config.xml.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Registers bean definition parser for actions in test case.
@@ -47,7 +46,6 @@ public final class TestActionRegistry {
         registerActionParser("trace-time", new StopTimeActionParser());
         registerActionParser("echo", new EchoActionParser());
         registerActionParser("expect-timeout", new ReceiveTimeoutActionParser());
-        registerActionParser("purge-jms-queues", new PurgeJmsQueuesActionParser());
         registerActionParser("purge-channel", new PurgeMessageChannelActionParser());
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());

@@ -30,7 +30,6 @@ import org.springframework.integration.support.channel.ChannelResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.JMSException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +51,7 @@ public class ChannelEndpointSyncConsumerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithReplyChannel() throws JMSException {
+    public void testReceiveMessageWithReplyChannel() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -87,7 +86,7 @@ public class ChannelEndpointSyncConsumerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageChannelNameResolver() throws JMSException {
+    public void testReceiveMessageChannelNameResolver() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannelName("testChannel");
@@ -126,7 +125,7 @@ public class ChannelEndpointSyncConsumerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithReplyChannelName() throws JMSException {
+    public void testReceiveMessageWithReplyChannelName() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -166,7 +165,7 @@ public class ChannelEndpointSyncConsumerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithCustomTimeout() throws JMSException {
+    public void testReceiveMessageWithCustomTimeout() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -203,7 +202,7 @@ public class ChannelEndpointSyncConsumerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithReplyMessageCorrelator() throws JMSException {
+    public void testReceiveMessageWithReplyMessageCorrelator() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -244,7 +243,7 @@ public class ChannelEndpointSyncConsumerTest {
     }
     
     @Test
-    public void testReceiveNoMessage() throws JMSException {
+    public void testReceiveNoMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -272,7 +271,7 @@ public class ChannelEndpointSyncConsumerTest {
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageNoReplyChannel() throws JMSException {
+    public void testReceiveMessageNoReplyChannel() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
@@ -328,7 +327,7 @@ public class ChannelEndpointSyncConsumerTest {
     }
 
     @Test
-    public void testSendReplyMessageWithReplyMessageCorrelator() throws JMSException {
+    public void testSendReplyMessageWithReplyMessageCorrelator() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
@@ -367,7 +366,7 @@ public class ChannelEndpointSyncConsumerTest {
     }
 
     @Test
-    public void testSendReplyMessageWithMissingCorrelatorKey() throws JMSException {
+    public void testSendReplyMessageWithMissingCorrelatorKey() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
@@ -391,7 +390,7 @@ public class ChannelEndpointSyncConsumerTest {
     }
 
     @Test
-    public void testNoReplyDestinationFound() throws JMSException {
+    public void testNoReplyDestinationFound() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
@@ -416,7 +415,7 @@ public class ChannelEndpointSyncConsumerTest {
     }
 
     @Test
-    public void testSendEmptyMessage() throws JMSException {
+    public void testSendEmptyMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
