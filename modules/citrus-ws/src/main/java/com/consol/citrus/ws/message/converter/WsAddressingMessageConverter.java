@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,77 +14,71 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws.message.callback;
+package com.consol.citrus.ws.message.converter;
 
-import java.net.URI;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ws.addressing.WsAddressingHeaders;
+import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import org.springframework.integration.Message;
-import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
 import org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy;
 import org.springframework.ws.soap.addressing.version.*;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ws.addressing.WsAddressingHeaders;
-import com.consol.citrus.ws.addressing.WsAddressingVersion;
+import java.net.URI;
 
 /**
- * Sender callback invoked by framework with actual web service request before message is sent.
- * Web service message is filled with content from internal message representation.
- * 
  * @author Christoph Deppisch
+ * @since 2.0
  */
-public class WsAddressingRequestMessageCallback extends SoapRequestMessageCallback {
-    
+public class WsAddressingMessageConverter extends SoapMessageConverter {
+
     /** Ws addressing headers */
     private WsAddressingHeaders addressingHeaders;
-    
-    /**
-     * Default constructor using fields.
-     * @param message
-     * @param attachment
-     */
-    public WsAddressingRequestMessageCallback(Message<?> message, Attachment attachment, 
-            WsAddressingHeaders addressingHeaders) {
-        super(message, attachment);
-        this.addressingHeaders = addressingHeaders;
-    }
 
-    /**
-     * Update message with ws addressing header information.
-     */
-    public void doWithSoapRequest(SoapMessage soapMessage) {
+    @Override
+    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message) {
+        super.convertOutbound(webServiceMessage, message);
+
+        SoapMessage soapMessage = (SoapMessage) webServiceMessage;
         URI messageId;
-        
         if (addressingHeaders.getMessageId() != null) {
             messageId = addressingHeaders.getMessageId();
         } else {
             messageId = getMessageIdStrategy().newMessageId(soapMessage);
         }
-            
+
         MessageAddressingProperties map =
-                new MessageAddressingProperties(addressingHeaders.getTo(), 
-                        addressingHeaders.getFrom(), 
-                        addressingHeaders.getReplyTo(), 
-                        addressingHeaders.getFaultTo(), 
-                        addressingHeaders.getAction(), 
+                new MessageAddressingProperties(addressingHeaders.getTo(),
+                        addressingHeaders.getFrom(),
+                        addressingHeaders.getReplyTo(),
+                        addressingHeaders.getFaultTo(),
+                        addressingHeaders.getAction(),
                         messageId);
-        
+
         AddressingVersion version;
-        
         // avoid NPE
         if (WsAddressingVersion.VERSION10.equals(addressingHeaders.getVersion())) {
             version = new Addressing10();
         } else if (WsAddressingVersion.VERSION200408.equals(addressingHeaders.getVersion())) {
             version = new Addressing200408();
         } else {
-            throw new CitrusRuntimeException("Unsupported ws addressing version '" + 
+            throw new CitrusRuntimeException("Unsupported ws addressing version '" +
                     addressingHeaders.getVersion() + "'");
         }
-        
+
         version.addAddressingHeaders(soapMessage, map);
+    }
+
+    /**
+     * Sets the addressing headers with builder pattern style.
+     * @param addressingHeaders
+     */
+    public WsAddressingMessageConverter withAddressingHeaders(WsAddressingHeaders addressingHeaders) {
+        this.addressingHeaders = addressingHeaders;
+        return this;
     }
 
     /**

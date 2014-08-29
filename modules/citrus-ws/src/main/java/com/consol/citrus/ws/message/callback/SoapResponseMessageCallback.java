@@ -16,15 +16,13 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import java.io.IOException;
-
-import javax.xml.transform.TransformerException;
-
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import org.springframework.integration.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 
 /**
  * Receiver callback invoked by framework on response message. Callback fills an internal message representation with
@@ -38,15 +36,30 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
     private Message<?> response;
 
     /** Message converter */
-    private SoapMessageConverter messageConverter = new SoapMessageConverter();
-    
+    private SoapMessageConverter messageConverter;
+
+    /**
+     * Default constructor uses default message converter implementation.
+     */
+    public SoapResponseMessageCallback() {
+        this(new SoapMessageConverter());
+    }
+
+    /**
+     * Constructor using soap message converter implementation.
+     * @param soapMessageConverter
+     */
+    public SoapResponseMessageCallback(SoapMessageConverter soapMessageConverter) {
+        this.messageConverter = soapMessageConverter;
+    }
+
     /**
      * Callback method called with actual web service response message. Method constructs a Spring Integration
      * message from this web service message for further processing.
      */
     public void doWithMessage(WebServiceMessage responseMessage) throws IOException, TransformerException {
         // convert and set response for later access via getResponse():
-        response = messageConverter.convert(responseMessage);
+        response = messageConverter.convertInbound(responseMessage);
     }
     
     /**

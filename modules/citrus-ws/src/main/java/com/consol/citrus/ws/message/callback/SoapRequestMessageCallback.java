@@ -16,30 +16,15 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map.Entry;
-
-import javax.xml.soap.MimeHeaders;
-import javax.xml.transform.*;
-
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.InputStreamSource;
 import org.springframework.integration.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringSource;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.util.MessageUtils;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 
 /**
  * Sender callback invoked by framework with actual web service request before message is sent.
@@ -49,103 +34,39 @@ import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
  */
 public class SoapRequestMessageCallback implements WebServiceMessageCallback {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SoapRequestMessageCallback.class);
     
     /** The internal message content source */
     private Message<?> message;
     
-    /** Optional attachment */
-    private Attachment attachment = null;
-    
+    /** Soap message converter */
+    private SoapMessageConverter soapMessageConverter;
+
     /**
-     * Default constructor using fields.
+     * Constructor uses default message converter implementation.
+     *
      * @param message
-     * @param attachment
      */
-    public SoapRequestMessageCallback(Message<?> message, Attachment attachment) {
-        this.message = message;
-        this.attachment = attachment;
+    public SoapRequestMessageCallback(Message<?> message) {
+        this(message, new SoapMessageConverter());
     }
 
+    /**
+     * Constructor using message converter implementation.
+     *
+     * @param message
+     * @param soapMessageConverter
+     */
+    public SoapRequestMessageCallback(Message<?> message, SoapMessageConverter soapMessageConverter) {
+        this.message = message;
+        this.soapMessageConverter = soapMessageConverter;
+    }
+    
     /**
      * Callback method called before request message  is sent.
      */
     public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
-        SoapMessage soapRequest = ((SoapMessage)requestMessage);
-        
-        // Copy payload into soap-body: 
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.transform(new StringSource(message.getPayload().toString()), soapRequest.getSoapBody().getPayloadResult());
-        
-        // Copy headers into soap-header:
-        for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-            if (MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
-                continue;
-            }
-            
-            if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.SOAP_ACTION)) {
-                soapRequest.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().equalsIgnoreCase(CitrusMessageHeaders.HEADER_CONTENT)) {
-                transformer.transform(new StringSource(headerEntry.getValue().toString()), 
-                        soapRequest.getSoapHeader().getResult());
-            } else if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {
-                addMimeMessageHeader(soapRequest, 
-                        headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length()), 
-                        headerEntry.getValue());
-            } else if (!headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
-                SoapHeaderElement headerElement;
-                if (QNameUtils.validateQName(headerEntry.getKey())) {
-                    headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
-                } else {
-                    headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.createQName("", headerEntry.getKey(), ""));
-                }
-                
-                headerElement.setText(headerEntry.getValue().toString());
-            }
-        }
-        // Add attachment:
-        if (attachment != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Adding attachment to SOAP message: '" + attachment.getContentId() + "' ('" + attachment.getContentType() + "')");
-            }
-            
-            soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {
-                public InputStream getInputStream() throws IOException {
-                    return attachment.getInputStream();
-                }
-            }, attachment.getContentType());
-        }
-        
-        doWithSoapRequest(soapRequest);
-    }
-
-    /**
-     * Adds a HTTP message header to the SOAP message.
-     * 
-     * @param message the SOAP request message.
-     * @param name the header name.
-     * @param value the header value.
-     */
-    private void addMimeMessageHeader(SoapMessage message, String name, Object value) {
-        if (message instanceof SaajSoapMessage) {
-            SaajSoapMessage soapMsg = (SaajSoapMessage) message;
-            MimeHeaders headers = soapMsg.getSaajMessage().getMimeHeaders();
-            headers.setHeader(name, value.toString());
-        } else if (message instanceof AxiomSoapMessage) {
-            log.warn("Unable to set mime message header '" + name + "' on AxiomSoapMessage - unsupported");
-        } else {
-            log.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
-        }
-    }
-
-    /**
-     * Subclasses may use this method in order to manipulate the Soap request before sending.
-     * @param soapRequest the request message.
-     */
-    protected void doWithSoapRequest(SoapMessage soapRequest) {
+        soapMessageConverter.convertOutbound(requestMessage, message);
     }
 }

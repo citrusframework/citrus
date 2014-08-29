@@ -21,6 +21,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ws.message.callback.*;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
@@ -106,11 +108,15 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         }
 
         WebServiceMessageCallback requestCallback;
-        if (getEndpointConfiguration().getAddressingHeaders() == null) {
-            requestCallback = new SoapRequestMessageCallback(message, attachment);
+        if (getEndpointConfiguration().getAddressingHeaders() != null) {
+            requestCallback = new SoapRequestMessageCallback(message, new WsAddressingMessageConverter()
+                                                                            .withAddressingHeaders(getEndpointConfiguration().getAddressingHeaders())
+                                                                            .withWebServiceMessageFactory(getEndpointConfiguration().getMessageFactory())
+                                                                            .withAttachment(attachment));
         } else {
-            requestCallback = new WsAddressingRequestMessageCallback(message,
-                    attachment, getEndpointConfiguration().getAddressingHeaders());
+            requestCallback = new SoapRequestMessageCallback(message, new SoapMessageConverter()
+                                                                            .withWebServiceMessageFactory(getEndpointConfiguration().getMessageFactory())
+                                                                            .withAttachment(attachment));
         }
 
         SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback();

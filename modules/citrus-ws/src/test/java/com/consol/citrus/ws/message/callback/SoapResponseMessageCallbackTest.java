@@ -14,17 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws.callback;
+package com.consol.citrus.ws.message.callback;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.transform.TransformerException;
-
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.ws.mime.Attachment;
@@ -33,10 +27,13 @@ import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
+import javax.xml.namespace.QName;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch

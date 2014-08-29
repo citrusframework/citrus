@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws.callback;
+package com.consol.citrus.ws.message.callback;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.*;
-import java.util.Iterator;
-
-import javax.xml.soap.*;
-import javax.xml.transform.TransformerException;
-
+import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.InputStreamSource;
@@ -37,10 +33,12 @@ import org.springframework.xml.transform.StringResult;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
+import javax.xml.soap.*;
+import javax.xml.transform.TransformerException;
+import java.io.*;
+import java.util.Iterator;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -58,7 +56,7 @@ public class SoapRequestMessageCallbackTest {
         Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, null);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
         
         StringResult soapBodyResult = new StringResult();
         
@@ -82,7 +80,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "soapAction")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, null);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
         
         reset(soapRequest, soapBody);
         
@@ -110,7 +108,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader(CitrusMessageHeaders.HEADER_CONTENT, soapHeaderContent)
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, null);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
         
         StringResult soapHeaderResult = new StringResult();
         
@@ -138,7 +136,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader("messageId", "123456789")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, null);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
         
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
         
@@ -171,7 +169,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader("{http://www.citrus.com}citrus:messageId", "123456789")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, null);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
         
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
         
@@ -205,7 +203,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, null);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
         
         
         SaajSoapMessage saajSoapRequest = EasyMock.createMock(SaajSoapMessage.class);
@@ -247,7 +245,7 @@ public class SoapRequestMessageCallbackTest {
         attachment.setContent("This is a SOAP attachment\nwith multi-line");
         attachment.setContentType("plain/text");
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, attachment);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new SoapMessageConverter().withAttachment(attachment));
         
         reset(soapRequest, soapBody);
         

@@ -87,8 +87,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
         Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
         
         //build request message for message handler
-        SoapMessageConverter messageConverter = new SoapMessageConverter(handleMimeHeaders);
-        Message<?> requestMessage = messageConverter.convert(messageContext.getRequest(), messageContext);
+        SoapMessageConverter messageConverter = new SoapMessageConverter().withHandleMimeHeaders(handleMimeHeaders);
+        Message<?> requestMessage = messageConverter.convertInbound(messageContext.getRequest(), messageContext);
         
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
