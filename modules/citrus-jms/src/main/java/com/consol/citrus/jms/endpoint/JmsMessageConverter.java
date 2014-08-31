@@ -16,16 +16,17 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageConverter;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
 import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.jms.support.converter.*;
 
-import javax.jms.JMSException;
-import javax.jms.Session;
-import java.util.Map;
+import javax.jms.*;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Basic message converter for converting Spring Integration message implementations to JMS
@@ -34,65 +35,108 @@ import java.util.Map;
  * 
  * @author Christoph Deppisch
  */
-public class JmsMessageConverter implements MessageConverter {
-
-    /** The message converter delegate */
-    private MessageConverter jmsMessageConverter = new SimpleMessageConverter();
+public class JmsMessageConverter implements MessageConverter<javax.jms.Message> {
 
     /** The header mapper */
     private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
-    
-    /**
-     * Convert Spring integration message to JMS message.
-     */
-    public javax.jms.Message toMessage(Object object, Session session) throws JMSException, MessageConversionException {
-        javax.jms.Message jmsMessage;
 
-        MessageHeaders headers = null;
-        Object payload;
-        if (object instanceof Message) {
-            headers = ((Message) object).getHeaders();
-            payload = ((Message) object).getPayload();
-        } else {
-            payload = object;
-        }
-        
-        jmsMessage = jmsMessageConverter.toMessage(payload, session);
+    @Override
+    public javax.jms.Message convertOutbound(Message<?> message) {
+        throw new UnsupportedOperationException("Unable to create JMS message without JMS Session");
+    }
+
+    @Override
+    public void convertOutbound(javax.jms.Message jmsMessage, Message<?> message) {
+        MessageHeaders headers = message.getHeaders();
+
         if (headers != null) {
             headerMapper.fromHeaders(headers, jmsMessage);
         }
-
-        return jmsMessage;
     }
 
-    /**
-     * Convert JMS message to Spring integration message.
-     */
-    public Object fromMessage(javax.jms.Message jmsMessage) throws JMSException, MessageConversionException {
+    @Override
+    public Message<?> convertInbound(javax.jms.Message jmsMessage) {
         if (jmsMessage == null) {
             return null;
         }
 
-        Map<String, ?> headers = headerMapper.toHeaders(jmsMessage);
-        return MessageBuilder.withPayload(jmsMessageConverter.fromMessage(jmsMessage))
-                                        .copyHeaders(headers)
-                                        .build();
+        try {
+            Map<String, ?> headers = headerMapper.toHeaders(jmsMessage);
+            Object payload;
+
+            if (jmsMessage instanceof TextMessage) {
+                payload = ((TextMessage) jmsMessage).getText();
+            }
+            else if (jmsMessage instanceof BytesMessage) {
+                byte[] bytes = new byte[(int) ((BytesMessage) jmsMessage).getBodyLength()];
+                ((BytesMessage) jmsMessage).readBytes(bytes);
+                payload = bytes;
+            }
+            else if (jmsMessage instanceof MapMessage) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                Enumeration en = ((MapMessage) jmsMessage).getMapNames();
+                while (en.hasMoreElements()) {
+                    String key = (String) en.nextElement();
+                    map.put(key, ((MapMessage) jmsMessage).getObject(key));
+                }
+                payload = map;
+            }
+            else if (jmsMessage instanceof ObjectMessage) {
+                payload = ((ObjectMessage) jmsMessage).getObject();
+            }
+            else {
+                payload = jmsMessage;
+            }
+
+            return MessageBuilder.withPayload(payload)
+                                            .copyHeaders(headers)
+                                            .build();
+        } catch (JMSException e) {
+            throw new CitrusRuntimeException("Failed to convert jms message", e);
+        }
     }
 
     /**
-     * Gets the JMS message converter.
-     * @return the jmsMessageConverter
+     * Creates JMS message instance from internal message representation. According to message payload type the JMS session
+     * creates related JMS message type such as TextMessage, MapMessage, ObjectMessage or BytesMessage.
+     *
+     * @param message
+     * @param session
+     * @return
      */
-    public MessageConverter getJmsMessageConverter() {
-        return jmsMessageConverter;
-    }
+    public javax.jms.Message createJmsMessage(Message<?> message, Session session) {
+        try {
+            Object payload = message.getPayload();
 
-    /**
-     * Sets the JMS message converter.
-     * @param jmsMessageConverter the jmsMessageConverter to set
-     */
-    public void setJmsMessageConverter(MessageConverter jmsMessageConverter) {
-        this.jmsMessageConverter = jmsMessageConverter;
+            javax.jms.Message jmsMessage;
+            if (payload instanceof javax.jms.Message) {
+                jmsMessage = (javax.jms.Message) payload;
+            } else if (payload instanceof String) {
+                jmsMessage = session.createTextMessage((String) payload);
+            } else if (payload instanceof byte[]) {
+                jmsMessage = session.createBytesMessage();
+                ((BytesMessage)jmsMessage).writeBytes((byte[]) payload);
+            } else if (payload instanceof Map) {
+                jmsMessage = session.createMapMessage();
+                Map<?, ?> map = ((Map) payload);
+                for (Map.Entry entry : map.entrySet()) {
+                    if (!(entry.getKey() instanceof String)) {
+                        throw new CitrusRuntimeException("Cannot convert non-String key of type [" + entry.getKey() + "] to JMS MapMessage entry");
+                    }
+                    ((MapMessage)jmsMessage).setObject((String) entry.getKey(), entry.getValue());
+                }
+            } else if (payload instanceof Serializable) {
+                jmsMessage = session.createObjectMessage((Serializable) payload);
+            } else {
+                throw new CitrusRuntimeException("Cannot convert object of type [" + payload + "] to JMS message. Supported message " +
+                        "payloads are: String, byte array, Map<String,?>, Serializable object.");
+            }
+            convertOutbound(jmsMessage, message);
+
+            return jmsMessage;
+        } catch (JMSException e) {
+            throw new CitrusRuntimeException("Failed to convert jms message", e);
+        }
     }
 
     /**

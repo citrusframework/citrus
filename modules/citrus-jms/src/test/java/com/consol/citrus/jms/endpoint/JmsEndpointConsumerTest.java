@@ -44,7 +44,7 @@ public class JmsEndpointConsumerTest {
     private MessageConsumer messageConsumer = EasyMock.createMock(MessageConsumer.class);
     
     private JmsTemplate jmsTemplate = EasyMock.createMock(JmsTemplate.class);
-    
+
     @Test
     public void testReceiveMessageWithJmsTemplate() {
         JmsEndpoint endpoint = new JmsEndpoint();
@@ -62,13 +62,13 @@ public class JmsEndpointConsumerTest {
         
         expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
         
-        expect(jmsTemplate.receiveAndConvert()).andReturn(controlMessage);
+        expect(jmsTemplate.receive()).andReturn(new TextMessageImpl(controlMessage.getPayload(), controlHeaders));
 
         replay(jmsTemplate, connectionFactory, destination);
         
         Message<?> receivedMessage = endpoint.createConsumer().receive();
-        Assert.assertTrue(receivedMessage.equals(controlMessage));
-        
+        Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
+
         verify(jmsTemplate, connectionFactory, destination);
     }
     
@@ -84,7 +84,7 @@ public class JmsEndpointConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -120,7 +120,7 @@ public class JmsEndpointConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -193,7 +193,7 @@ public class JmsEndpointConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -216,7 +216,8 @@ public class JmsEndpointConsumerTest {
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
     }
-    
+
+    @Test
     public void testWithMessageHeaders() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
@@ -229,7 +230,7 @@ public class JmsEndpointConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -268,7 +269,7 @@ public class JmsEndpointConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
@@ -305,7 +306,7 @@ public class JmsEndpointConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 

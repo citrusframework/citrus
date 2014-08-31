@@ -22,6 +22,7 @@ import org.springframework.integration.Message;
 import org.springframework.integration.jms.JmsHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -58,7 +59,7 @@ public class JmsEndpointSyncConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(connectionFactory, destination, connection, session, messageConsumer);
 
@@ -104,7 +105,7 @@ public class JmsEndpointSyncConsumerTest {
                                 .copyHeaders(controlHeaders)
                                 .build();
         
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(connectionFactory, destination, connection, session, messageConsumer);
 
@@ -150,7 +151,7 @@ public class JmsEndpointSyncConsumerTest {
 
         reset(jmsTemplate, connectionFactory, messageProducer);
 
-        jmsTemplate.convertAndSend(replyDestination, message);
+        jmsTemplate.send(eq(replyDestination), anyObject(MessageCreator.class));
         expectLastCall().once();
 
         replay(jmsTemplate, connectionFactory, messageProducer);
@@ -182,7 +183,7 @@ public class JmsEndpointSyncConsumerTest {
         expectLastCall().once();
 
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
 
         expect(session.getTransacted()).andReturn(false).once();
 
@@ -223,7 +224,7 @@ public class JmsEndpointSyncConsumerTest {
         expectLastCall().once();
 
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
 
         expect(session.getTransacted()).andReturn(false).once();
 

@@ -61,7 +61,7 @@ public class JmsEndpointSyncProducerTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        Map<String, String> responseHeaders = new HashMap<String, String>();
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
@@ -79,7 +79,7 @@ public class JmsEndpointSyncProducerTest {
         expectLastCall().once();
         
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
@@ -101,7 +101,7 @@ public class JmsEndpointSyncProducerTest {
                                 .copyHeaders(headers)
                                 .build();
 
-        Map<String, String> responseHeaders = new HashMap<String, String>();
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
@@ -121,7 +121,7 @@ public class JmsEndpointSyncProducerTest {
         expectLastCall().once();
         
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         expect(session.createQueue("myDestination")).andReturn(destinationQueue).once();
         
@@ -144,7 +144,7 @@ public class JmsEndpointSyncProducerTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        Map<String, String> responseHeaders = new HashMap<String, String>();
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer, tempReplyQueue);
@@ -164,7 +164,7 @@ public class JmsEndpointSyncProducerTest {
         expectLastCall().once();
         
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         tempReplyQueue.delete();
         expectLastCall().once();
@@ -190,7 +190,7 @@ public class JmsEndpointSyncProducerTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        Map<String, String> responseHeaders = new HashMap<String, String>();
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
@@ -208,7 +208,7 @@ public class JmsEndpointSyncProducerTest {
         expectLastCall().once();
         
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
@@ -234,7 +234,7 @@ public class JmsEndpointSyncProducerTest {
                                 .copyHeaders(headers)
                                 .build();
         
-        Map<String, String> responseHeaders = new HashMap<String, String>();
+        Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
         reset(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
@@ -252,7 +252,7 @@ public class JmsEndpointSyncProducerTest {
         expectLastCall().once();
         
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 

@@ -21,6 +21,7 @@ import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -58,7 +59,7 @@ public class JmsEndpointProducerTest {
 
         expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
         
-        jmsTemplate.convertAndSend(message);
+        jmsTemplate.send(anyObject(MessageCreator.class));
         expectLastCall().once();
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer);
@@ -90,7 +91,7 @@ public class JmsEndpointProducerTest {
         expectLastCall().once();
         
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         expect(session.getTransacted()).andReturn(false).once();
         
@@ -123,7 +124,7 @@ public class JmsEndpointProducerTest {
         expectLastCall().once();
 
         expect(session.createTextMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")).andReturn(
-                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", new HashMap<String, Object>()));
         
         expect(session.getTransacted()).andReturn(false).once();
         

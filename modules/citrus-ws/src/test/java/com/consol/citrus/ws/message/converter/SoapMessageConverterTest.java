@@ -274,7 +274,7 @@ public class SoapMessageConverterTest {
                 .build();
 
         SoapMessageConverter soapMessageConverter = new SoapMessageConverter()
-                .withHandleMimeHeaders(false);
+                .handleMimeHeaders(false);
 
         SaajSoapMessage saajSoapRequest = EasyMock.createMock(SaajSoapMessage.class);
         SoapEnvelope soapEnvelope = EasyMock.createMock(SoapEnvelope.class);

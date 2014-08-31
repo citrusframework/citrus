@@ -47,8 +47,7 @@ import org.springframework.xml.transform.StringSource;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -67,6 +66,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     
     /** Should handle mime headers */
     private boolean handleMimeHeaders = true;
+
+    /** Should keep soap envelope when creating internal message */
+    private boolean keepSoapEnvelope = false;
 
     /** Optional SOAP attachment */
     private Attachment attachment;
@@ -151,7 +153,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         try {
             StringResult payloadResult = new StringResult();
 
-            if (message.getPayloadSource() != null) {
+            if (keepSoapEnvelope) {
+                message.writeTo(payloadResult.getOutputStream());
+            } else if (message.getPayloadSource() != null) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.transform(message.getPayloadSource(), payloadResult);
@@ -170,6 +174,8 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             return messageBuilder.build();
         } catch (TransformerException e) {
             throw new CitrusRuntimeException("Failed to read web service message payload source", e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read web service message");
         }
     }
 
@@ -416,9 +422,77 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * @param handleMimeHeaders
      * @return
      */
-    public SoapMessageConverter withHandleMimeHeaders(boolean handleMimeHeaders) {
+    public SoapMessageConverter handleMimeHeaders(boolean handleMimeHeaders) {
         this.handleMimeHeaders = handleMimeHeaders;
         return this;
     }
 
+    public SoapMessageConverter keepSoapEnvelope(boolean keepSoapEnvelope) {
+        this.keepSoapEnvelope = keepSoapEnvelope;
+        return this;
+    }
+
+    /**
+     * Gets the handle mime headers flag.
+     * @return
+     */
+    public boolean isHandleMimeHeaders() {
+        return handleMimeHeaders;
+    }
+
+    /**
+     * Sets the handle mime headers flag.
+     * @param handleMimeHeaders
+     */
+    public void setHandleMimeHeaders(boolean handleMimeHeaders) {
+        this.handleMimeHeaders = handleMimeHeaders;
+    }
+
+    /**
+     * Gets the keep soap envelope flag.
+     * @return
+     */
+    public boolean isKeepSoapEnvelope() {
+        return keepSoapEnvelope;
+    }
+
+    /**
+     * Sets the keep soap header flag.
+     * @param keepSoapEnvelope
+     */
+    public void setKeepSoapEnvelope(boolean keepSoapEnvelope) {
+        this.keepSoapEnvelope = keepSoapEnvelope;
+    }
+
+    /**
+     * Gets the soap attachment.
+     * @return
+     */
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    /**
+     * Sets the soap attachment.
+     * @param attachment
+     */
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    /**
+     * Gets the message factory.
+     * @return
+     */
+    public WebServiceMessageFactory getMessageFactory() {
+        return messageFactory;
+    }
+
+    /**
+     * Sets the message factory.
+     * @param messageFactory
+     */
+    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
+        this.messageFactory = messageFactory;
+    }
 }

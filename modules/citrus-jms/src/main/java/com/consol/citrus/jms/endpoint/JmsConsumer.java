@@ -22,7 +22,6 @@ import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
-import org.springframework.integration.message.GenericMessage;
 import org.springframework.util.StringUtils;
 
 /**
@@ -64,27 +63,21 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         log.info("Waiting for JMS message on destination: '" + destinationName + "'");
 
         endpointConfiguration.getJmsTemplate().setReceiveTimeout(timeout);
-        Object receivedObject = null;
+        javax.jms.Message receivedJmsMessage;
 
         if (StringUtils.hasText(selector)) {
-            receivedObject = endpointConfiguration.getJmsTemplate().receiveSelectedAndConvert(selector);
+            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receiveSelected(selector);
         } else {
-            receivedObject = endpointConfiguration.getJmsTemplate().receiveAndConvert();
+            receivedJmsMessage = endpointConfiguration.getJmsTemplate().receive();
         }
 
-        if (receivedObject == null) {
+        if (receivedJmsMessage == null) {
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName + "'");
         }
 
-        Message<?> receivedMessage;
-        if (receivedObject instanceof Message<?>) {
-            receivedMessage = (Message<?>)receivedObject;
-        } else {
-            receivedMessage = new GenericMessage<Object>(receivedObject);
-        }
+        Message<?> receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage);
 
         log.info("Received JMS message on destination: '" + destinationName + "'");
-
         onInboundMessage(receivedMessage);
 
         return receivedMessage;

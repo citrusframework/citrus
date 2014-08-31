@@ -20,7 +20,6 @@ import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
 
@@ -51,7 +50,7 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     private JmsTemplate jmsTemplate;
 
     /** The message converter */
-    private MessageConverter messageConverter = new JmsMessageConverter();
+    private JmsMessageConverter messageConverter = new JmsMessageConverter();
 
     /** Use topics instead of queues */
     private boolean pubSubDomain = false;
@@ -101,7 +100,6 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
             jmsTemplate.setDestinationResolver(this.destinationResolver);
         }
 
-        jmsTemplate.setMessageConverter(messageConverter);
         jmsTemplate.setPubSubDomain(pubSubDomain);
     }
 
@@ -209,7 +207,7 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      * Gets the message converter.
      * @return
      */
-    public MessageConverter getMessageConverter() {
+    public JmsMessageConverter getMessageConverter() {
         return messageConverter;
     }
 
@@ -217,7 +215,7 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      * Sets the message converter.
      * @param messageConverter
      */
-    public void setMessageConverter(MessageConverter messageConverter) {
+    public void setMessageConverter(JmsMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
     }
 }

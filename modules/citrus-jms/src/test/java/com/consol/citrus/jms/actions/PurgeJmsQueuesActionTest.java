@@ -48,7 +48,7 @@ public class PurgeJmsQueuesActionTest extends AbstractTestNGUnitTest {
         queueNames.add("myQueue");
         purgeQueuesAction.setQueueNames(queueNames);
         
-        Map<String, String> requestHeaders = new HashMap<String, String>();
+        Map<String, Object> requestHeaders = new HashMap<String, Object>();
         TextMessage jmsRequest = new TextMessageImpl("<TestRequest>Hello World!</TestRequest>", requestHeaders);
         
         reset(connectionFactory, connection, session, messageConsumer);

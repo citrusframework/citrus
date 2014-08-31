@@ -21,7 +21,11 @@ import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.util.Assert;
+
+import javax.jms.JMSException;
+import javax.jms.Session;
 
 /**
  * @author Christoph Deppisch
@@ -49,14 +53,21 @@ public class JmsProducer implements Producer {
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(final Message<?> message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
-        endpointConfiguration.getJmsTemplate().convertAndSend(message);
+        endpointConfiguration.getJmsTemplate().send(new MessageCreator() {
+            @Override
+            public javax.jms.Message createMessage(Session session) throws JMSException {
+                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session);
+                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message);
+                return jmsMessage;
+            }
+        });
 
         onOutboundMessage(message);
 

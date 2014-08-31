@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.jms.JmsHeaders;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.util.Assert;
 
 import javax.jms.*;
@@ -67,7 +68,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         Destination replyDestination;
-        Message<?> replyMessage;
+        final Message<?> replyMessage;
 
         if (endpointConfiguration.getCorrelator() != null) {
             Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
@@ -87,7 +88,14 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
         log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
 
-        endpointConfiguration.getJmsTemplate().convertAndSend(replyDestination, replyMessage);
+        endpointConfiguration.getJmsTemplate().send(replyDestination, new MessageCreator() {
+            @Override
+            public javax.jms.Message createMessage(Session session) throws JMSException {
+                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(replyMessage, session);
+                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, replyMessage);
+                return jmsMessage;
+            }
+        });
 
         onOutboundMessage(replyMessage);
 

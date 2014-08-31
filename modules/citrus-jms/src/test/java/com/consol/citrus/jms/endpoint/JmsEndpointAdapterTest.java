@@ -55,7 +55,7 @@ public class JmsEndpointAdapterTest {
 
     @Test
     public void testEndpointAdapter() throws JMSException {
-        TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", new HashMap<String, String>());
+        TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", new HashMap<String, Object>());
 
         reset(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
@@ -72,7 +72,7 @@ public class JmsEndpointAdapterTest {
         expectLastCall().once();
 
         expect(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).andReturn(
-                new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<String, Object>()));
 
         connection.start();
         expectLastCall().once();
@@ -106,7 +106,7 @@ public class JmsEndpointAdapterTest {
         expectLastCall().once();
 
         expect(session.createTextMessage("<TestMessage><text>Hi!</text></TestMessage>")).andReturn(
-                new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<String, String>()));
+                new TextMessageImpl("<TestMessage><text>Hi!</text></TestMessage>", new HashMap<String, Object>()));
 
         connection.start();
         expectLastCall().once();

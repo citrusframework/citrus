@@ -16,9 +16,8 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import java.util.*;
-
 import javax.jms.*;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -28,9 +27,9 @@ public class TextMessageImpl implements TextMessage {
     
     private Destination replyDestination = null;
     
-    private Map<String, String> headers = new HashMap<String, String>();
+    private Map<String, Object> headers = new HashMap<String, Object>();
     
-    public TextMessageImpl(String payload, Map<String, String> headers) {
+    public TextMessageImpl(String payload, Map<String, Object> headers) {
         this.payload = payload;
         this.headers = headers;
     }
@@ -56,11 +55,11 @@ public class TextMessageImpl implements TextMessage {
     public void setByteProperty(String name, byte value) throws JMSException {}
     public void setBooleanProperty(String name, boolean value) throws JMSException {}
     public boolean propertyExists(String name) throws JMSException {return false;}
-    public String getStringProperty(String name) throws JMSException {return headers.get(name);}
+    public String getStringProperty(String name) throws JMSException {return headers.get(name).toString();}
     public short getShortProperty(String name) throws JMSException {return 0;}
     @SuppressWarnings("rawtypes")
-    public Enumeration getPropertyNames() throws JMSException {return null;}
-    public Object getObjectProperty(String name) throws JMSException {return null;}
+    public Enumeration getPropertyNames() throws JMSException {return new Vector<String>(headers.keySet()).elements();}
+    public Object getObjectProperty(String name) throws JMSException {return headers.get(name);}
     public long getLongProperty(String name) throws JMSException {return 0;}
     public String getJMSType() throws JMSException {return null;}
     public long getJMSTimestamp() throws JMSException {return 0;}
