@@ -18,6 +18,7 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
@@ -57,8 +58,7 @@ public class WsAddressingMessageConverterTest {
         wsAddressingHeaders.setTo("Test");
         wsAddressingHeaders.setMessageId("urn:uuid:aae36050-2853-4ca8-b879-fe366f97c5a1");
 
-        WsAddressingMessageConverter messageConverter = new WsAddressingMessageConverter()
-                    .withAddressingHeaders(wsAddressingHeaders);
+        WsAddressingMessageConverter messageConverter = new WsAddressingMessageConverter(wsAddressingHeaders);
 
         StringResult soapBodyResult = new StringResult();
         StringResult soapHeaderResult = new StringResult();
@@ -96,7 +96,7 @@ public class WsAddressingMessageConverterTest {
 
         replay(soapRequest, soapBody, soapHeader, soapHeaderElement);
 
-        messageConverter.convertOutbound(soapRequest, testMessage);
+        messageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration());
 
         Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + requestPayload);
         Assert.assertEquals(soapHeaderResult.toString(), "");

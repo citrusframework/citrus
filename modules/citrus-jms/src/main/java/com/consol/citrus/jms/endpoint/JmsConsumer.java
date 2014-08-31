@@ -75,7 +75,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName + "'");
         }
 
-        Message<?> receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage);
+        Message<?> receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage, endpointConfiguration);
 
         log.info("Received JMS message on destination: '" + destinationName + "'");
         onInboundMessage(receivedMessage);

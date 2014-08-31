@@ -27,7 +27,7 @@
                       request-url="http://localhost:8080/test"
                       message-sender="wsMessageSender"
                       interceptor="singleInterceptor"
-                      addressing-headers="wsAddressingHeaders"/>
+                      message-converter="wsAddressingMessageConverter"/>
 
   <citrus-ws:client id="soapClient5"
                       request-url="http://localhost:8080/test"
@@ -57,8 +57,10 @@
     <constructor-arg value="org.springframework.ws.client.core.WebServiceTemplate"/>
   </bean>
 
-  <bean id="wsAddressingHeaders" class="org.easymock.EasyMock" factory-method="createMock">
-    <constructor-arg value="com.consol.citrus.ws.addressing.WsAddressingHeaders"/>
+  <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
+    <constructor-arg>
+      <bean class="com.consol.citrus.ws.addressing.WsAddressingHeaders"/>
+    </constructor-arg>
   </bean>
 
   <bean id="wsMessageSender" class="org.easymock.EasyMock" factory-method="createMock">

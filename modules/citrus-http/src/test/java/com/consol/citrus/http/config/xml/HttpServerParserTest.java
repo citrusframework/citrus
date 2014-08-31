@@ -59,10 +59,11 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "httpServer1-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
-        
+
         // 2nd message sender
         server = servers.get("httpServer2");
         Assert.assertNotNull(server.getConnector());
+        Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertEquals(server.getConnector(), beanDefinitionContext.getBean("connector"));
         Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertEquals(server.getName(), "httpServer2");

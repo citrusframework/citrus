@@ -91,8 +91,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         endpointConfiguration.getJmsTemplate().send(replyDestination, new MessageCreator() {
             @Override
             public javax.jms.Message createMessage(Session session) throws JMSException {
-                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(replyMessage, session);
-                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, replyMessage);
+                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(replyMessage, session, endpointConfiguration);
+                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, replyMessage, endpointConfiguration);
                 return jmsMessage;
             }
         });

@@ -37,6 +37,7 @@
         <xs:attribute name="servlet-name" type="xs:string"/>
         <xs:attribute name="servlet-mapping-path" type="xs:string"/>
         <xs:attribute name="context-path" type="xs:string"/>
+        <xs:attribute name="message-converter" type="xs:string"/>
         <xs:attribute name="servlet-handler" type="xs:string"/>
         <xs:attribute name="security-handler" type="xs:string"/>
         <xs:attribute name="endpoint-adapter" type="xs:string"/>
@@ -52,6 +53,7 @@
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="request-url" type="xs:string"/>
         <xs:attribute name="request-method" type="xs:string"/>
+        <xs:attribute name="message-converter" type="xs:string"/>
         <xs:attribute name="message-correlator" type="xs:string"/>
         <xs:attribute name="endpoint-resolver" type="xs:string"/>
         <xs:attribute name="request-factory" type="xs:string"/>

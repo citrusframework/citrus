@@ -19,6 +19,7 @@ package com.consol.citrus.ws.message.converter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.springframework.integration.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
@@ -30,24 +31,37 @@ import org.springframework.ws.soap.addressing.version.*;
 import java.net.URI;
 
 /**
+ * Ws addressing aware message converter implementation. Adds addressing header information to SOAP header.
+ *
  * @author Christoph Deppisch
  * @since 2.0
  */
 public class WsAddressingMessageConverter extends SoapMessageConverter {
 
     /** Ws addressing headers */
-    private WsAddressingHeaders addressingHeaders;
+    private final WsAddressingHeaders addressingHeaders;
+
+    /** Message id generation strategy */
+    private MessageIdStrategy messageIdStrategy = new UuidMessageIdStrategy();
+
+    /**
+     * Default constructor using addressing headers.
+     * @param addressingHeaders
+     */
+    public WsAddressingMessageConverter(WsAddressingHeaders addressingHeaders) {
+        this.addressingHeaders = addressingHeaders;
+    }
 
     @Override
-    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message) {
-        super.convertOutbound(webServiceMessage, message);
+    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message, WebServiceEndpointConfiguration endpointConfiguration) {
+        super.convertOutbound(webServiceMessage, message, endpointConfiguration);
 
         SoapMessage soapMessage = (SoapMessage) webServiceMessage;
         URI messageId;
         if (addressingHeaders.getMessageId() != null) {
             messageId = addressingHeaders.getMessageId();
         } else {
-            messageId = getMessageIdStrategy().newMessageId(soapMessage);
+            messageId = messageIdStrategy.newMessageId(soapMessage);
         }
 
         MessageAddressingProperties map =
@@ -73,19 +87,26 @@ public class WsAddressingMessageConverter extends SoapMessageConverter {
     }
 
     /**
-     * Sets the addressing headers with builder pattern style.
-     * @param addressingHeaders
-     */
-    public WsAddressingMessageConverter withAddressingHeaders(WsAddressingHeaders addressingHeaders) {
-        this.addressingHeaders = addressingHeaders;
-        return this;
-    }
-
-    /**
      * Get the message id generation strategy.
      * @return
      */
-    private MessageIdStrategy getMessageIdStrategy() {
-        return new UuidMessageIdStrategy();
+    public MessageIdStrategy getMessageIdStrategy() {
+        return messageIdStrategy;
+    }
+
+    /**
+     * Sets the message id generation strategy.
+     * @param messageIdStrategy
+     */
+    public void setMessageIdStrategy(MessageIdStrategy messageIdStrategy) {
+        this.messageIdStrategy = messageIdStrategy;
+    }
+
+    /**
+     * Gets the addressing headers.
+     * @return
+     */
+    public WsAddressingHeaders getAddressingHeaders() {
+        return addressingHeaders;
     }
 }

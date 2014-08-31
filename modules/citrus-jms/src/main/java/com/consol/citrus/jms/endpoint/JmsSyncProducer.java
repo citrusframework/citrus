@@ -91,8 +91,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             createConnection();
             createSession(connection);
 
-            javax.jms.Message jmsRequest = endpointConfiguration.getMessageConverter().createJmsMessage(message, session);
-            endpointConfiguration.getMessageConverter().convertOutbound(jmsRequest, message);
+            javax.jms.Message jmsRequest = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration);
+            endpointConfiguration.getMessageConverter().convertOutbound(jmsRequest, message, endpointConfiguration);
 
             messageProducer = session.createProducer(getDefaultDestination(session));
 
@@ -112,7 +112,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             log.info("Waiting for reply message on destination: '{}'", replyToDestination);
 
             javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
-            Message<?> responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage);
+            Message<?> responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration);
 
             log.info("Received reply message on destination: '{}'", replyToDestination);
 

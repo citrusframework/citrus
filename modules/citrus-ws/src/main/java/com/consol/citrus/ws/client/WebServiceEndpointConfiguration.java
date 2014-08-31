@@ -21,7 +21,8 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.ReplyMessageCorrelator;
-import com.consol.citrus.ws.addressing.WsAddressingHeaders;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -45,6 +46,9 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     /** Web service message sender */
     private WebServiceMessageSender messageSender;
 
+    /** Message converter */
+    private WebServiceMessageConverter messageConverter = new SoapMessageConverter();
+
     /** List of client interceptors */
     private List<ClientInterceptor> interceptors = new ArrayList<ClientInterceptor>();
 
@@ -60,14 +64,14 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     /** Resolves dynamic endpoint uri */
     private EndpointUriResolver endpointResolver = new DynamicEndpointUriResolver();
 
-    /** WS adressing specific headers */
-    private WsAddressingHeaders addressingHeaders;
-
     /** Should http errors be handled with reply message handler or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION;
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
+
+    /** Should handle mime headers */
+    private boolean handleMimeHeaders = true;
 
     /**
      * Creates default web service template with settings in this configuration.
@@ -91,14 +95,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public void setEndpointResolver(EndpointUriResolver endpointResolver) {
         this.endpointResolver = endpointResolver;
-    }
-
-    /**
-     * Sets the ws addressing headers for this message sender.
-     * @param addressingHeaders the addressingHeaders to set
-     */
-    public void setAddressingHeaders(WsAddressingHeaders addressingHeaders) {
-        this.addressingHeaders = addressingHeaders;
     }
 
     /**
@@ -131,14 +127,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      */
     public EndpointUriResolver getEndpointResolver() {
         return endpointResolver;
-    }
-
-    /**
-     * Gets the addressingHeaders.
-     * @return the addressingHeaders the addressingHeaders to get.
-     */
-    public WsAddressingHeaders getAddressingHeaders() {
-        return addressingHeaders;
     }
 
     /**
@@ -261,4 +249,37 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
         this.interceptor = interceptor;
         getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { interceptor });
     }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public WebServiceMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(WebServiceMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the handle mime headers flag.
+     * @return
+     */
+    public boolean isHandleMimeHeaders() {
+        return handleMimeHeaders;
+    }
+
+    /**
+     * Sets the handle mime headers flag.
+     * @param handleMimeHeaders
+     */
+    public void setHandleMimeHeaders(boolean handleMimeHeaders) {
+        this.handleMimeHeaders = handleMimeHeaders;
+    }
+
 }

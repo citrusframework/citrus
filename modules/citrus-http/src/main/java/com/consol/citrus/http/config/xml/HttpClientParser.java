@@ -27,6 +27,7 @@ import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.http.HttpMethod;
+import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
@@ -64,6 +65,8 @@ public class HttpClientParser extends AbstractEndpointParser {
             endpointConfiguration.addPropertyValue("requestMethod", new TypedStringValue(requestMethod, HttpMethod.class));
         }
 
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), "correlator");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("endpoint-resolver"), "endpointUriResolver");
@@ -80,6 +83,9 @@ public class HttpClientParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("interceptors"), "clientInterceptors");
+
+        // Set outbound header mapper
+        endpointConfiguration.addPropertyValue("headerMapper", DefaultHttpHeaderMapper.outboundMapper());
     }
 
     @Override

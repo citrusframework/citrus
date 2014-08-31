@@ -39,7 +39,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                             "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
                 .header("Content-Type", "text/xml")
-                .header("Accept", "text/xml,*/*")
+                .header("Accept", "text/xml, */*")
                 .header("citrus_http_method", "POST"),
             
             sequential(
@@ -49,7 +49,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
                     .header("Content-Type", "text/xml;charset=UTF-8")
-                    .header("Accept", "text/xml,*/*")
+                    .header("Accept", "text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .header("citrus_http_method", "POST")
                     .header("citrus_http_request_uri", "/test")
@@ -87,7 +87,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                             "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
                 .header("Content-Type", "text/xml")
-                .header("Accept", "text/xml,*/*")
+                .header("Accept", "text/xml, */*")
                 .header("citrus_http_method", "POST"),
             
             sequential(
@@ -97,7 +97,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
                     .header("Content-Type", "text/xml;charset=UTF-8")
-                    .header("Accept", "text/xml,*/*")
+                    .header("Accept", "text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .header("citrus_http_method", "POST")
                     .header("citrus_http_request_uri", "/test")
@@ -133,7 +133,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                         "</testRequestMessage>")
             .header("CustomHeaderId", "${custom_header_id}")
             .header("Content-Type", "text/xml")
-            .header("Accept", "text/xml,*/*")
+            .header("Accept", "text/xml, */*")
             .header("citrus_http_method", "POST");
         
         

@@ -35,42 +35,47 @@ import org.w3c.dom.Element;
  */
 public class WebServiceClientParser extends AbstractEndpointParser {
 
+    public static final String MESSAGE_SENDER_ATTRIBUTE = "message-sender";
+    public static final String MESSAGE_SENDERS_ATTRIBUTE = "message-senders";
+    public static final String REQUEST_URL_ATTRIBUTE = "request-url";
+
     @Override
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute(WSParserConstants.REQUEST_URL_ATTRIBUTE), WSParserConstants.REQUEST_URL_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute(REQUEST_URL_ATTRIBUTE), "defaultUri");
 
-        if (element.hasAttribute(WSParserConstants.WS_TEMPLATE_ATTRIBUTE) && (element.hasAttribute("message-factory") ||
-                element.hasAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE) ||
-                element.hasAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE))) {
-            parserContext.getReaderContext().error("When providing a '" + WSParserConstants.WS_TEMPLATE_ATTRIBUTE + "' reference, none of " +
-                    "'message-factory', '" + WSParserConstants.MESSAGE_SENDER_ATTRIBUTE +
-                    "', or '" + WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE + "' should be set.", element);
+        if (element.hasAttribute("web-service-template") && (element.hasAttribute("message-factory") ||
+                element.hasAttribute("message-sender") ||
+                element.hasAttribute("message-senders"))) {
+            parserContext.getReaderContext().error("When providing a 'web-service-template' reference, none of " +
+                    "'message-factory', '" + "message-sender" +
+                    "', or '" + "message-senders" + "' should be set.", element);
         }
 
-        if (!element.hasAttribute(WSParserConstants.REQUEST_URL_ATTRIBUTE) && !element.hasAttribute(WSParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE)) {
+        if (!element.hasAttribute("request-url") && !element.hasAttribute("endpoint-resolver")) {
             parserContext.getReaderContext().error(String.format("One of the properties '%s' or '%s' is required!",
-                    WSParserConstants.REQUEST_URL_ATTRIBUTE, WSParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE), element);
+                    "request-url", "endpoint-resolver"), element);
         }
 
-        if (element.hasAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE) && element.hasAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE)) {
+        if (element.hasAttribute("message-sender") && element.hasAttribute("message-senders")) {
             parserContext.getReaderContext().error(String.format("When '%s' is set, no '%s' attribute should be provided.",
-                    WSParserConstants.MESSAGE_SENDER_ATTRIBUTE, WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE), element);
+                    "message-sender", "message-senders"), element);
         }
 
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.WS_TEMPLATE_ATTRIBUTE), WSParserConstants.WS_TEMPLATE_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("web-service-template"), "webServiceTemplate");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-factory"), "messageFactory", "messageFactory");
 
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.MESSAGE_SENDER_ATTRIBUTE), WSParserConstants.MESSAGE_SENDER_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.MESSAGE_SENDERS_ATTRIBUTE), WSParserConstants.MESSAGE_SENDERS_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(MESSAGE_SENDER_ATTRIBUTE), "messageSender");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(MESSAGE_SENDERS_ATTRIBUTE), "messageSenders");
 
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.INTERCEPTORS_ATTRIBUTE), WSParserConstants.INTERCEPTORS_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
+
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("interceptors"), "interceptors");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("interceptor"), "interceptor");
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), WSParserConstants.REPLY_CORRELATOR_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.ENDPOINT_RESOLVER_ATTRIBUTE), WSParserConstants.ENDPOINT_RESOLVER_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute(WSParserConstants.ADRESSING_HEADERS_ATTRIBUTE), WSParserConstants.ADRESSING_HEADERS_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-correlator"), "correlator");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("endpoint-resolver"), "endpointResolver");
 
         if (element.hasAttribute("fault-strategy")) {
             endpointConfiguration.addPropertyValue("errorHandlingStrategy",

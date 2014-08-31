@@ -73,25 +73,29 @@
 
   <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
-  <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
-    <property name="version" value="VERSION200408"/>
-    <property name="action" value="sayHello"/>
-    <property name="to" value="urn:CitrusHelloServer"/>
-    <property name="from">
-      <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
-        <constructor-arg value="urn:CitrusClient"/>
+  <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
+    <constructor-arg>
+      <bean id="wsAddressing200408" class="com.consol.citrus.ws.addressing.WsAddressingHeaders">
+        <property name="version" value="VERSION200408"/>
+        <property name="action" value="sayHello"/>
+        <property name="to" value="urn:CitrusHelloServer"/>
+        <property name="from">
+          <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
+            <constructor-arg value="urn:CitrusClient"/>
+          </bean>
+        </property>
+        <property name="replyTo">
+          <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
+            <constructor-arg value="urn:CitrusClient"/>
+          </bean>
+        </property>
+        <property name="faultTo">
+          <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
+            <constructor-arg value="urn:ClientFaultResolver"/>
+          </bean>
+        </property>
       </bean>
-    </property>
-    <property name="replyTo">
-      <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
-        <constructor-arg value="urn:CitrusClient"/>
-      </bean>
-    </property>
-    <property name="faultTo">
-      <bean class="org.springframework.ws.soap.addressing.core.EndpointReference">
-        <constructor-arg value="urn:ClientFaultResolver"/>
-      </bean>
-    </property>
+    </constructor-arg>
   </bean>
 
   <util:list id="clientInterceptors">
@@ -117,7 +121,7 @@
   <citrus-ws:client id="helloWsAddressingSoapClient"
                     request-url="http://localhost:13080/hello"
                     interceptors="clientInterceptors"
-                    addressing-headers="wsAddressing200408"
+                    message-converter="wsAddressingMessageConverter"
                     timeout="1000"/>
 
   <citrus-ws:server id="helloSoapServer"

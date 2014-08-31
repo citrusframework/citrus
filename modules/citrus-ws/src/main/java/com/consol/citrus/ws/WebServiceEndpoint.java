@@ -21,8 +21,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +69,10 @@ public class WebServiceEndpoint implements MessageEndpoint {
     
     /** Default prefix for all SOAP header entries */
     private String defaultPrefix = "";
-    
-    /** Include mime headers (HTTP headers) into request which is passed to the message handler */
-    private boolean handleMimeHeaders = false;
-    
+
+    /** Endpoint configuration */
+    private WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
     
@@ -86,9 +86,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
     public void invoke(final MessageContext messageContext) throws Exception {
         Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
         
-        //build request message for message handler
-        SoapMessageConverter messageConverter = new SoapMessageConverter().handleMimeHeaders(handleMimeHeaders);
-        Message<?> requestMessage = messageConverter.convertInbound(messageContext.getRequest(), messageContext);
+        Message<?> requestMessage = endpointConfiguration.getMessageConverter().convertInbound(messageContext.getRequest(), messageContext, endpointConfiguration);
         
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
@@ -380,18 +378,18 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Gets the handle mime headers flag.
+     * Gets the endpoint configuration.
      * @return
      */
-    public boolean isHandleMimeHeaders() {
-        return handleMimeHeaders;
+    public WebServiceEndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
     }
 
     /**
-     * Enable mime headers in request message which is passed to message handler.
-     * @param handleMimeHeaders the handleMimeHeaders to set
+     * Sets the endpoint configuration.
+     * @param endpointConfiguration
      */
-    public void setHandleMimeHeaders(boolean handleMimeHeaders) {
-        this.handleMimeHeaders = handleMimeHeaders;
+    public void setEndpointConfiguration(WebServiceEndpointConfiguration endpointConfiguration) {
+        this.endpointConfiguration = endpointConfiguration;
     }
 }

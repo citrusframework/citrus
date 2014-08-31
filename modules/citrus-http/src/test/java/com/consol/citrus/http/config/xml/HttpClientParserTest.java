@@ -57,6 +57,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(httpClient.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getContentType(), "text/xml");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCharset(), "ISO-8859-1");
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getEndpointUriResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 10000L);
 

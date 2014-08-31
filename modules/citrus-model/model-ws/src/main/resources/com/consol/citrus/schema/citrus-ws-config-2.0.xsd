@@ -41,6 +41,7 @@
         <xs:attribute name="security-handler" type="xs:string"/>
         <xs:attribute name="endpoint-adapter" type="xs:string"/>
         <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="message-converter" type="xs:string"/>
         <xs:attribute name="handle-mime-headers" type="xs:boolean"/>
         <xs:attribute name="soap-header-namespace" type="xs:string"/>
         <xs:attribute name="soap-header-prefix" type="xs:string"/>
@@ -56,13 +57,13 @@
         <xs:attribute name="request-url" type="xs:string" use="required"/>
         <xs:attribute name="web-service-template" type="xs:string"/>
         <xs:attribute name="message-factory" type="xs:string"/>
+        <xs:attribute name="message-converter" type="xs:string"/>
         <xs:attribute name="message-sender" type="xs:string"/>
         <xs:attribute name="message-senders" type="xs:string"/>
         <xs:attribute name="message-correlator" type="xs:string"/>
         <xs:attribute name="interceptor" type="xs:string"/>
         <xs:attribute name="interceptors" type="xs:string"/>
         <xs:attribute name="endpoint-resolver" type="xs:string"/>
-        <xs:attribute name="addressing-headers" type="xs:string"/>
         <xs:attribute name="fault-strategy">
           <xs:simpleType>
             <xs:restriction base="xs:string">

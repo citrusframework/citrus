@@ -18,8 +18,8 @@ package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.InputStreamSource;
@@ -56,7 +56,7 @@ public class SoapRequestMessageCallbackTest {
         Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         StringResult soapBodyResult = new StringResult();
         
@@ -80,7 +80,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "soapAction")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         reset(soapRequest, soapBody);
         
@@ -108,7 +108,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader(CitrusMessageHeaders.HEADER_CONTENT, soapHeaderContent)
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         StringResult soapHeaderResult = new StringResult();
         
@@ -136,7 +136,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader("messageId", "123456789")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
         
@@ -169,7 +169,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader("{http://www.citrus.com}citrus:messageId", "123456789")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
         
@@ -203,7 +203,7 @@ public class SoapRequestMessageCallbackTest {
                                                     .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789")
                                                     .build();
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage);
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         
         SaajSoapMessage saajSoapRequest = EasyMock.createMock(SaajSoapMessage.class);
@@ -245,7 +245,7 @@ public class SoapRequestMessageCallbackTest {
         attachment.setContent("This is a SOAP attachment\nwith multi-line");
         attachment.setContentType("plain/text");
         
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new SoapMessageConverter().withAttachment(attachment));
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration()).withAttachment(attachment);
         
         reset(soapRequest, soapBody);
         

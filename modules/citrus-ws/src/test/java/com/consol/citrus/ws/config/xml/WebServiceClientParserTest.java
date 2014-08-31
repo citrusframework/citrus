@@ -20,6 +20,8 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.Assert;
@@ -43,7 +45,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
-        Assert.assertNull(client.getEndpointConfiguration().getAddressingHeaders());
+        Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
@@ -53,7 +55,6 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertEquals(client.getEndpointConfiguration().getMessageFactory(), beanDefinitionContext.getBean("soapMessageFactory"));
         Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
-        Assert.assertNull(client.getEndpointConfiguration().getAddressingHeaders());
         Assert.assertEquals(client.getEndpointConfiguration().getEndpointResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 10000L);
@@ -65,7 +66,6 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertNotNull(client.getEndpointConfiguration().getCorrelator());
         Assert.assertEquals(client.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
-        Assert.assertNull(client.getEndpointConfiguration().getAddressingHeaders());
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate(), beanDefinitionContext.getBean("wsTemplate"));
@@ -74,7 +74,6 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         client = messageSenders.get("soapClient4");
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
-        Assert.assertEquals(client.getEndpointConfiguration().getAddressingHeaders(), beanDefinitionContext.getBean("wsAddressingHeaders"));
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertNotNull(client.getEndpointConfiguration().getMessageSender());
         Assert.assertEquals(client.getEndpointConfiguration().getMessageSender(), beanDefinitionContext.getBean("wsMessageSender"));
@@ -82,6 +81,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getInterceptor(), beanDefinitionContext.getBean("singleInterceptor"));
         Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 1L);
+        Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof WsAddressingMessageConverter);
 
         // 5th message sender
         client = messageSenders.get("soapClient5");

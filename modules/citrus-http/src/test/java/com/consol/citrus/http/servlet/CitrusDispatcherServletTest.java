@@ -21,6 +21,7 @@ import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
+import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -74,6 +75,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         expect(httpServer.getInterceptors()).andReturn(interceptors).once();
         expect(httpServer.getEndpointAdapter()).andReturn(null).once();
+        expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
 
         replay(httpServer);
 
@@ -81,6 +83,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 1L);
         Assert.assertEquals(handlerInterceptor.getInterceptors().get(0), interceptors.get(0));
+        Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
         Assert.assertEquals(httpMessageController.getMessageHandler().getClass(), EmptyResponseEndpointAdapter.class);
 
@@ -93,6 +96,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         expect(httpServer.getInterceptors()).andReturn(null).once();
         expect(httpServer.getEndpointAdapter()).andReturn(new TimeoutProducingEndpointAdapter()).once();
+        expect(httpServer.getMessageConverter()).andReturn(new HttpMessageConverter()).once();
 
         replay(httpServer);
 
@@ -100,6 +104,8 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 0L);
         Assert.assertEquals(httpMessageController.getMessageHandler().getClass(), TimeoutProducingEndpointAdapter.class);
+        Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
+
 
         verify(httpServer);
     }

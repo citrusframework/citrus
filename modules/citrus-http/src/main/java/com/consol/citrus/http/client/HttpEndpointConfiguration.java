@@ -19,6 +19,7 @@ package com.consol.citrus.http.client;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.springframework.http.HttpHeaders;
@@ -59,6 +60,9 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Header mapper */
     private HeaderMapper<HttpHeaders> headerMapper = DefaultHttpHeaderMapper.outboundMapper();
+
+    /** The message converter */
+    private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
     /** Endpoint clientInterceptors */
     private List<ClientHttpRequestInterceptor> clientInterceptors;
@@ -272,6 +276,22 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
         this.requestFactory = requestFactory;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public HttpMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(HttpMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 
 }

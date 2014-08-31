@@ -17,6 +17,7 @@
 package com.consol.citrus.http.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 import com.consol.citrus.server.AbstractServer;
@@ -89,6 +90,9 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Optional servlet handler customization */
     private ServletHandler servletHandler;
+
+    /** Message converter */
+    private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
     @Override
     protected void shutdown() {
@@ -508,5 +512,21 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setUseRootContextAsParent(boolean useRootContextAsParent) {
         this.useRootContextAsParent = useRootContextAsParent;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public HttpMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(HttpMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

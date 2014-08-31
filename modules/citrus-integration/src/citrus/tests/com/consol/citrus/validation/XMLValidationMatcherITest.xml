@@ -30,7 +30,7 @@
                     </message>
                     <header>
                         <element name="Content-Type" value="text/xml"/>
-                        <element name="Accept" value="text/xml,*/*"/>
+                        <element name="Accept" value="text/xml, */*"/>
                         <element name="citrus_http_method" value="POST"/>
                     </header>
                 </send>
@@ -51,7 +51,7 @@
                         </message>
                         <header>
                             <element name="Content-Type" value="text/xml;charset=UTF-8"/>
-                            <element name="Accept" value="text/xml,*/*"/>
+                            <element name="Accept" value="text/xml, */*"/>
                             <element name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
                             <element name="citrus_http_method" value="POST"/>
                             <element name="citrus_http_request_uri" value="/test"/>

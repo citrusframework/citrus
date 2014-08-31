@@ -18,6 +18,7 @@ package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.springframework.integration.Message;
@@ -49,7 +50,7 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapBody() throws TransformerException, IOException {
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
         StringSource soapBodySource = new StringSource(responsePayload);
         
@@ -83,7 +84,7 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapAction() throws TransformerException, IOException {
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
         StringSource soapBodySource = new StringSource(responsePayload);
         
@@ -122,7 +123,7 @@ public class SoapResponseMessageCallbackTest {
                         		"<messageId>123456789</messageId>" + 
                     		"</header>";
         
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
         StringSource soapBodySource = new StringSource(responsePayload);
         
@@ -156,7 +157,7 @@ public class SoapResponseMessageCallbackTest {
     
     @Test
     public void testSoapHeader() throws TransformerException, IOException {
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
         StringSource soapBodySource = new StringSource(responsePayload);
         
@@ -203,7 +204,7 @@ public class SoapResponseMessageCallbackTest {
         attachment.setContent("This is a SOAP attachment" + System.getProperty("line.separator") + "with multi-line");
         attachment.setContentType("plain/text");
         
-        SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+        SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
         StringSource soapBodySource = new StringSource(responsePayload);
         

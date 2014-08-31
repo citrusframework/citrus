@@ -16,6 +16,7 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import org.springframework.integration.Message;
 
 /**
@@ -25,15 +26,16 @@ import org.springframework.integration.Message;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public interface MessageConverter<T> {
+public interface MessageConverter<T, C extends EndpointConfiguration> {
 
     /**
      * Converts internal message representation to external message for outbound communication.
      *
      * @param internalMessage
+     * @param endpointConfiguration
      * @return
      */
-    T convertOutbound(Message<?> internalMessage);
+    T convertOutbound(Message<?> internalMessage, C endpointConfiguration);
 
     /**
      * Converts internal message representation to external message for outbound communication.
@@ -42,15 +44,17 @@ public interface MessageConverter<T> {
      *
      * @param externalMessage
      * @param internalMessage
+     * @param endpointConfiguration
      * @return
      */
-    void convertOutbound(T externalMessage, Message<?> internalMessage);
+    void convertOutbound(T externalMessage, Message<?> internalMessage, C endpointConfiguration);
 
     /**
      * Converts external message to internal representation.
      *
      * @param externalMessage
+     * @param endpointConfiguration
      * @return
      */
-    Message<?> convertInbound(T externalMessage);
+    Message<?> convertInbound(T externalMessage, C endpointConfiguration);
 }

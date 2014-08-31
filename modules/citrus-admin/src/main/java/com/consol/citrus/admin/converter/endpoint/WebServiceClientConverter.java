@@ -51,7 +51,7 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
         endpointData.add(property("interceptors", client));
         endpointData.add(property("endpointResolver", client)
                 .optionKey(EndpointUriResolver.class.getName()));
-        endpointData.add(property("addressingHeaders", client));
+        endpointData.add(property("messageConverter", client));
         endpointData.add(property("faultStrategy", client, ErrorHandlingStrategy.THROWS_EXCEPTION.name())
                 .options(getErrorHandlingStrategyOptions()));
         endpointData.add(property("pollingInterval", client));

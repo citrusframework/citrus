@@ -18,6 +18,8 @@ package com.consol.citrus.ws.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import com.consol.citrus.ws.servlet.CitrusMessageDispatcherServlet;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -91,6 +93,9 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
 
     /** Should handle Http mime headers */
     private boolean handleMimeHeaders = false;
+
+    /** Message converter implementation */
+    private WebServiceMessageConverter messageConverter = new SoapMessageConverter();
 
     /** Default SOAP header namespace and prefix */
     private String soapHeaderNamespace;
@@ -546,6 +551,22 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
      */
     public void setSoapHeaderPrefix(String soapHeaderPrefix) {
         this.soapHeaderPrefix = soapHeaderPrefix;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public WebServiceMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(WebServiceMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 
 }

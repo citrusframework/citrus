@@ -82,6 +82,10 @@
     <property name="defaultNamespaceUri" value="http://citrusframework.org/default"/>
     <property name="defaultPrefix" value="ns0"/>
     <property name="messageHandler" ref="jmsEndpointAdapter"/>
+    <property name="endpointConfiguration" ref="endpointConfiguration"/>
+  </bean>
+
+  <bean id="endpointConfiguration" class="com.consol.citrus.ws.client.WebServiceEndpointConfiguration">
     <property name="handleMimeHeaders" value="true"/>
   </bean>
 

@@ -19,21 +19,19 @@ package com.consol.citrus.http.client;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.messaging.*;
-import com.consol.citrus.util.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.integration.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -92,16 +90,14 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
         }
 
-        HttpEntity<?> requestEntity = generateRequest(message, method);
+        HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
 
         getEndpointConfiguration().getRestTemplate().setErrorHandler(new InternalResponseErrorHandler(message));
         ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(endpointUri, method, requestEntity, String.class);
 
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
 
-        onReplyMessage(message, buildResponseMessage(response.getHeaders(),
-                response.getBody() != null ? response.getBody() : "",
-                response.getStatusCode()));
+        onReplyMessage(message, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
     }
 
     @Override
@@ -174,9 +170,9 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
          */
         public void handleError(ClientHttpResponse response) throws IOException {
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.PROPAGATE)) {
-                onReplyMessage(buildResponseMessage(response.getHeaders(),
-                        response.getBody() != null ? response.getBody() : "",
-                        response.getStatusCode()), requestMessage);
+                Message<?> responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
+                        new ResponseEntity(response.getBody(), response.getHeaders(), response.getStatusCode()), getEndpointConfiguration());
+                onReplyMessage(requestMessage, responseMessage);
             } else if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
                 new DefaultResponseErrorHandler().handleError(response);
             } else {
@@ -184,80 +180,6 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             }
         }
 
-    }
-
-    /**
-     * Builds the actual integration message from HTTP response entity.
-     * @param headers HTTP headers which will be transformed into Message headers
-     * @param responseBody the HTTP body of the response
-     * @param statusCode HTTP status code received
-     * @return the response message
-     */
-    private Message<?> buildResponseMessage(HttpHeaders headers, Object responseBody, HttpStatus statusCode) {
-        Map<String, ?> mappedHeaders = getEndpointConfiguration().getHeaderMapper().toHeaders(headers);
-
-        Message<?> responseMessage = MessageBuilder.withPayload(responseBody)
-                .copyHeaders(mappedHeaders)
-                .copyHeaders(getCustomHeaders(headers, mappedHeaders))
-                .setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, statusCode)
-                .setHeader(CitrusHttpMessageHeaders.HTTP_VERSION, "HTTP/1.1") //TODO check if we have access to version information
-                .setHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE, statusCode.name())
-                .build();
-
-        return responseMessage;
-    }
-
-    /**
-     * Message headers consist of standard HTTP message headers and custom headers.
-     * This method assumes that all header entries that were not initially mapped
-     * by header mapper implementations are custom headers.
-     *
-     * @param httpHeaders all message headers in their pre nature.
-     * @param mappedHeaders the previously mapped header entries (all standard headers).
-     * @return
-     */
-    private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, ?> mappedHeaders) {
-        Map<String, String> customHeaders = new HashMap<String, String>();
-
-        for (Map.Entry<String, List<String>> header : httpHeaders.entrySet()) {
-            if (!mappedHeaders.containsKey(header.getKey())) {
-                customHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(header.getValue()));
-            }
-        }
-
-        return customHeaders;
-    }
-
-    /**
-     * Generate http request entity from Spring Integration message.
-     * @param requestMessage
-     * @param method
-     * @return
-     */
-    private HttpEntity<?> generateRequest(Message<?> requestMessage, HttpMethod method) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        getEndpointConfiguration().getHeaderMapper().fromHeaders(requestMessage.getHeaders(), httpHeaders);
-
-        Map<String, ?> messageHeaders = requestMessage.getHeaders();
-        for (Map.Entry<String, ?> header : messageHeaders.entrySet()) {
-            if (!header.getKey().startsWith(CitrusMessageHeaders.PREFIX) &&
-                    !MessageUtils.isSpringInternalHeader(header.getKey()) &&
-                    !httpHeaders.containsKey(header.getKey())) {
-                httpHeaders.add(header.getKey(), header.getValue().toString());
-            }
-        }
-
-        Object payload = requestMessage.getPayload();
-        if (httpHeaders.getContentType() == null) {
-            httpHeaders.setContentType(MediaType.parseMediaType(getEndpointConfiguration().getContentType().contains("charset") ?
-                    getEndpointConfiguration().getContentType() : getEndpointConfiguration().getContentType() + ";charset=" + getEndpointConfiguration().getCharset()));
-        }
-
-        if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)) {
-            return new HttpEntity<Object>(payload, httpHeaders);
-        }
-
-        return new HttpEntity<Object>(httpHeaders);
     }
 
     /**

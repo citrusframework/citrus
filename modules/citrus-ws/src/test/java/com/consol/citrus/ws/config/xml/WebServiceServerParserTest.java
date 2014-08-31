@@ -69,6 +69,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertTrue(server.isHandleMimeHeaders());
         Assert.assertEquals(server.getSoapHeaderNamespace(), "http://citrusframework.org");
         Assert.assertEquals(server.getSoapHeaderPrefix(), "CITRUS");
+        Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
 
         // 3rd server
         server = servers.next();

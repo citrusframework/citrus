@@ -20,16 +20,16 @@ import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.messaging.*;
-import com.consol.citrus.ws.message.callback.*;
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
-import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
+import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
+import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.core.*;
+import org.springframework.ws.client.core.FaultMessageResolver;
+import org.springframework.ws.client.core.SimpleFaultMessageResolver;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
@@ -107,19 +107,9 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                     "' Currently only 'java.lang.String' is supported as payload type.");
         }
 
-        WebServiceMessageCallback requestCallback;
-        if (getEndpointConfiguration().getAddressingHeaders() != null) {
-            requestCallback = new SoapRequestMessageCallback(message, new WsAddressingMessageConverter()
-                                                                            .withAddressingHeaders(getEndpointConfiguration().getAddressingHeaders())
-                                                                            .withWebServiceMessageFactory(getEndpointConfiguration().getMessageFactory())
-                                                                            .withAttachment(attachment));
-        } else {
-            requestCallback = new SoapRequestMessageCallback(message, new SoapMessageConverter()
-                                                                            .withWebServiceMessageFactory(getEndpointConfiguration().getMessageFactory())
-                                                                            .withAttachment(attachment));
-        }
+        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(message, getEndpointConfiguration()).withAttachment(attachment);
 
-        SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback();
+        SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback(getEndpointConfiguration());
         getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(message, endpointUri));
 
         log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
@@ -257,7 +247,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
          */
         public void resolveFault(WebServiceMessage webServiceResponse) throws IOException {
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.PROPAGATE)) {
-                SoapResponseMessageCallback callback = new SoapResponseMessageCallback();
+                SoapResponseMessageCallback callback = new SoapResponseMessageCallback(getEndpointConfiguration());
                 try {
                     callback.doWithMessage(webServiceResponse);
 

@@ -19,6 +19,8 @@ package com.consol.citrus.jms.endpoint;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.jms.DefaultJmsHeaderMapper;
+import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.Assert;
@@ -48,6 +50,9 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** The JMS template */
     private JmsTemplate jmsTemplate;
+
+    /** The header mapper */
+    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
 
     /** The message converter */
     private JmsMessageConverter messageConverter = new JmsMessageConverter();
@@ -217,5 +222,21 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setMessageConverter(JmsMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the JMS header mapper.
+     * @return the headerMapper
+     */
+    public JmsHeaderMapper getHeaderMapper() {
+        return headerMapper;
+    }
+
+    /**
+     * Sets the JMS header mapper.
+     * @param headerMapper the headerMapper to set
+     */
+    public void setHeaderMapper(JmsHeaderMapper headerMapper) {
+        this.headerMapper = headerMapper;
     }
 }

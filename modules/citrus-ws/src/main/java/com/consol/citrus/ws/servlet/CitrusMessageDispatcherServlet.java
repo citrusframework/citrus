@@ -18,6 +18,7 @@ package com.consol.citrus.ws.servlet;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.ws.WebServiceEndpoint;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.context.ApplicationContext;
@@ -84,7 +85,10 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
                 messageEndpoint.setMessageHandler(endpointAdapter);
             }
 
-            messageEndpoint.setHandleMimeHeaders(webServiceServer.isHandleMimeHeaders());
+            WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
+            endpointConfiguration.setHandleMimeHeaders(webServiceServer.isHandleMimeHeaders());
+            endpointConfiguration.setMessageConverter(webServiceServer.getMessageConverter());
+            messageEndpoint.setEndpointConfiguration(endpointConfiguration);
 
             if (StringUtils.hasText(webServiceServer.getSoapHeaderNamespace())) {
                 messageEndpoint.setDefaultNamespaceUri(webServiceServer.getSoapHeaderNamespace());

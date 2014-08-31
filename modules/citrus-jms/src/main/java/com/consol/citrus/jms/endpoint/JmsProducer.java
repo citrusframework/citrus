@@ -63,8 +63,8 @@ public class JmsProducer implements Producer {
         endpointConfiguration.getJmsTemplate().send(new MessageCreator() {
             @Override
             public javax.jms.Message createMessage(Session session) throws JMSException {
-                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session);
-                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message);
+                javax.jms.Message jmsMessage = endpointConfiguration.getMessageConverter().createJmsMessage(message, session, endpointConfiguration);
+                endpointConfiguration.getMessageConverter().convertOutbound(jmsMessage, message, endpointConfiguration);
                 return jmsMessage;
             }
         });

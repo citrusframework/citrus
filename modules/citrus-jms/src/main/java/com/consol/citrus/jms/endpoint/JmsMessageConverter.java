@@ -20,8 +20,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageConverter;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
-import org.springframework.integration.jms.DefaultJmsHeaderMapper;
-import org.springframework.integration.jms.JmsHeaderMapper;
 import org.springframework.integration.support.MessageBuilder;
 
 import javax.jms.*;
@@ -35,33 +33,38 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class JmsMessageConverter implements MessageConverter<javax.jms.Message> {
-
-    /** The header mapper */
-    private JmsHeaderMapper headerMapper = new DefaultJmsHeaderMapper();
+public class JmsMessageConverter implements MessageConverter<javax.jms.Message, JmsEndpointConfiguration> {
 
     @Override
-    public javax.jms.Message convertOutbound(Message<?> message) {
-        throw new UnsupportedOperationException("Unable to create JMS message without JMS Session");
+    public javax.jms.Message convertOutbound(Message<?> message, JmsEndpointConfiguration endpointConfiguration) {
+        try {
+            Connection connection = endpointConfiguration.getConnectionFactory().createConnection();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            return createJmsMessage(message, session, endpointConfiguration);
+        } catch (JMSException e) {
+            throw new CitrusRuntimeException("Failed to create JMS message");
+        }
+
+        //TODO close connection and session
     }
 
     @Override
-    public void convertOutbound(javax.jms.Message jmsMessage, Message<?> message) {
+    public void convertOutbound(javax.jms.Message jmsMessage, Message<?> message, JmsEndpointConfiguration endpointConfiguration) {
         MessageHeaders headers = message.getHeaders();
 
         if (headers != null) {
-            headerMapper.fromHeaders(headers, jmsMessage);
+            endpointConfiguration.getHeaderMapper().fromHeaders(headers, jmsMessage);
         }
     }
 
     @Override
-    public Message<?> convertInbound(javax.jms.Message jmsMessage) {
+    public Message<?> convertInbound(javax.jms.Message jmsMessage, JmsEndpointConfiguration endpointConfiguration) {
         if (jmsMessage == null) {
             return null;
         }
 
         try {
-            Map<String, ?> headers = headerMapper.toHeaders(jmsMessage);
+            Map<String, ?> headers = endpointConfiguration.getHeaderMapper().toHeaders(jmsMessage);
             Object payload;
 
             if (jmsMessage instanceof TextMessage) {
@@ -102,9 +105,10 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message> 
      *
      * @param message
      * @param session
+     * @param endpointConfiguration
      * @return
      */
-    public javax.jms.Message createJmsMessage(Message<?> message, Session session) {
+    public javax.jms.Message createJmsMessage(Message<?> message, Session session, JmsEndpointConfiguration endpointConfiguration) {
         try {
             Object payload = message.getPayload();
 
@@ -131,7 +135,7 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message> 
                 throw new CitrusRuntimeException("Cannot convert object of type [" + payload + "] to JMS message. Supported message " +
                         "payloads are: String, byte array, Map<String,?>, Serializable object.");
             }
-            convertOutbound(jmsMessage, message);
+            convertOutbound(jmsMessage, message, endpointConfiguration);
 
             return jmsMessage;
         } catch (JMSException e) {
@@ -139,20 +143,4 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message> 
         }
     }
 
-    /**
-     * Gets the JMS header mapper.
-     * @return the headerMapper
-     */
-    public JmsHeaderMapper getHeaderMapper() {
-        return headerMapper;
-    }
-
-    /**
-     * Sets the JMS header mapper.
-     * @param headerMapper the headerMapper to set
-     */
-    public void setHeaderMapper(JmsHeaderMapper headerMapper) {
-        this.headerMapper = headerMapper;
-    }
-    
 }

@@ -15,6 +15,7 @@
                         auto-start="false"
                         port="8082"
                         context-config-location="classpath:com/consol/citrus/http/servlet-context.xml"
+                        message-converter="messageConverter"
                         connector="connector"
                         resource-base="src/citrus/resources"
                         root-parent-context="true"
@@ -56,6 +57,10 @@
         </bean>
     </util:list>
   
+    <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+        <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
+    </bean>
+
     <bean id="connector" class="org.easymock.EasyMock" factory-method="createMock">
         <constructor-arg value="org.eclipse.jetty.server.Connector"/>
     </bean>

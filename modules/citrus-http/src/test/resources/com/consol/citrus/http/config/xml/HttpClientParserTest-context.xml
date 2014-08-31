@@ -16,6 +16,7 @@
                           content-type="text/xml"
                           charset="ISO-8859-1"
                           timeout="10000"
+                          message-converter="messageConverter"
                           request-factory="soapRequestFactory"
                           endpoint-resolver="endpointResolver"/>
 
@@ -31,6 +32,10 @@
                           actor="testActor"/>
 
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.http.message.HttpMessageConverter"/>
+  </bean>
 
   <bean id="clientInterceptors" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="java.util.List"/>

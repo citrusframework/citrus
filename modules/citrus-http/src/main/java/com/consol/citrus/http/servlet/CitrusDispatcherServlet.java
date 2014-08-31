@@ -17,11 +17,13 @@
 package com.consol.citrus.http.servlet;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
 import com.consol.citrus.http.server.HttpServer;
 import org.springframework.context.ApplicationContext;
+import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -85,6 +87,11 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
         if (context.containsBean(MESSAGE_CONTROLLER_BEAN_NAME)) {
             HttpMessageController messageController = context.getBean(MESSAGE_CONTROLLER_BEAN_NAME, HttpMessageController.class);
             EndpointAdapter endpointAdapter = httpServer.getEndpointAdapter();
+
+            HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
+            endpointConfiguration.setMessageConverter(httpServer.getMessageConverter());
+            endpointConfiguration.setHeaderMapper(DefaultHttpHeaderMapper.inboundMapper());
+            messageController.setEndpointConfiguration(endpointConfiguration);
 
             if (endpointAdapter != null) {
                 messageController.setMessageHandler(endpointAdapter);

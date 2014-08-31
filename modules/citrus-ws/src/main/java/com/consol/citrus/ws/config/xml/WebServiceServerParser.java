@@ -34,16 +34,16 @@ public class WebServiceServerParser extends AbstractServerParser {
 
     @Override
     protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.PORT_ATTRIBUTE), WSParserConstants.PORT_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.AUTOSTART_ATTRIBUTE), WSParserConstants.AUTOSTART_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.RESOURCE_BASE_ATTRIBUTE), WSParserConstants.RESOURCE_BASE_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute(WSParserConstants.CONTEXT_CONFIC_LOCATION_ATTRIBUTE), WSParserConstants.CONTEXT_CONFIC_LOCATION_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute(WSParserConstants.CONNECTORS_ATTRIBUTE), WSParserConstants.CONNECTORS_PROPERTY);
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute(WSParserConstants.CONNECTOR_ATTRIBUTE), WSParserConstants.CONNECTOR_PROPERTY);
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-start"), "autoStart");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("resource-base"), "resourceBase");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("context-config-location"), "contextConfigLocation");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("connectors"), "connectors");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("connector"), "connector");
 
-        String useRootContext = element.getAttribute(WSParserConstants.USE_ROOT_CONTEXT_ATTRIBUTE);
+        String useRootContext = element.getAttribute("root-parent-context");
         if (StringUtils.hasText(useRootContext)) {
-            builder.addPropertyValue(WSParserConstants.USE_ROOT_CONTEXT_PROPERTY, Boolean.valueOf(useRootContext));
+            builder.addPropertyValue("useRootContextAsParent", Boolean.valueOf(useRootContext));
         }
         
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
@@ -55,6 +55,8 @@ public class WebServiceServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-mime-headers"), "handleMimeHeaders");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("soap-header-namespace"), "soapHeaderNamespace");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("soap-header-prefix"), "soapHeaderPrefix");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
     }
 
     @Override

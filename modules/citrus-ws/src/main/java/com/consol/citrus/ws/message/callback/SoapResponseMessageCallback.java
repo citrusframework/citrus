@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.springframework.integration.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
@@ -35,22 +35,15 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
     /** The response message built from WebService response message */
     private Message<?> response;
 
-    /** Message converter */
-    private SoapMessageConverter messageConverter;
+    /** Endpoint configuration */
+    private WebServiceEndpointConfiguration endpointConfiguration;
 
     /**
-     * Default constructor uses default message converter implementation.
+     * Constructor using endpoint configuration.
+     * @param endpointConfiguration
      */
-    public SoapResponseMessageCallback() {
-        this(new SoapMessageConverter());
-    }
-
-    /**
-     * Constructor using soap message converter implementation.
-     * @param soapMessageConverter
-     */
-    public SoapResponseMessageCallback(SoapMessageConverter soapMessageConverter) {
-        this.messageConverter = soapMessageConverter;
+    public SoapResponseMessageCallback(WebServiceEndpointConfiguration endpointConfiguration) {
+        this.endpointConfiguration = endpointConfiguration;
     }
 
     /**
@@ -59,7 +52,7 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
      */
     public void doWithMessage(WebServiceMessage responseMessage) throws IOException, TransformerException {
         // convert and set response for later access via getResponse():
-        response = messageConverter.convertInbound(responseMessage);
+        response = endpointConfiguration.getMessageConverter().convertInbound(responseMessage, endpointConfiguration);
     }
     
     /**

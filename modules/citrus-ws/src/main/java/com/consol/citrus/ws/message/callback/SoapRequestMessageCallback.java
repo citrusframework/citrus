@@ -16,12 +16,13 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
+import org.springframework.ws.mime.Attachment;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -39,34 +40,39 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
     
     /** The internal message content source */
     private Message<?> message;
+
+    /** Optional SOAP attachment */
+    private Attachment attachment;
+
+    /** Endpoint configuration */
+    private WebServiceEndpointConfiguration endpointConfiguration;
     
-    /** Soap message converter */
-    private SoapMessageConverter soapMessageConverter;
-
     /**
-     * Constructor uses default message converter implementation.
+     * Constructor using internal message and endpoint configuration as fields.
      *
      * @param message
+     * @param endpointConfiguration
      */
-    public SoapRequestMessageCallback(Message<?> message) {
-        this(message, new SoapMessageConverter());
-    }
-
-    /**
-     * Constructor using message converter implementation.
-     *
-     * @param message
-     * @param soapMessageConverter
-     */
-    public SoapRequestMessageCallback(Message<?> message, SoapMessageConverter soapMessageConverter) {
+    public SoapRequestMessageCallback(Message<?> message, WebServiceEndpointConfiguration endpointConfiguration) {
         this.message = message;
-        this.soapMessageConverter = soapMessageConverter;
+        this.endpointConfiguration = endpointConfiguration;
     }
     
     /**
      * Callback method called before request message  is sent.
      */
     public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
-        soapMessageConverter.convertOutbound(requestMessage, message);
+        endpointConfiguration.getMessageConverter().setAttachment(attachment);
+        endpointConfiguration.getMessageConverter().convertOutbound(requestMessage, message, endpointConfiguration);
+    }
+
+    /**
+     * Sets optional SOAP attachment with builder pattern style.
+     * @param attachment
+     * @return
+     */
+    public SoapRequestMessageCallback withAttachment(Attachment attachment) {
+        this.attachment = attachment;
+        return this;
     }
 }

@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
@@ -30,7 +31,6 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
@@ -47,7 +47,8 @@ import org.springframework.xml.transform.StringSource;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -64,27 +65,21 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SoapResponseMessageCallback.class);
     
-    /** Should handle mime headers */
-    private boolean handleMimeHeaders = true;
+    /** Optional SOAP attachment */
+    private Attachment attachment;
 
     /** Should keep soap envelope when creating internal message */
     private boolean keepSoapEnvelope = false;
 
-    /** Optional SOAP attachment */
-    private Attachment attachment;
-
-    /** Web service message factory */
-    private WebServiceMessageFactory messageFactory;
-
     @Override
-    public WebServiceMessage convertOutbound(Message<?> internalMessage) {
-        WebServiceMessage message = messageFactory.createWebServiceMessage();
-        convertOutbound(message, internalMessage);
+    public WebServiceMessage convertOutbound(Message<?> internalMessage, WebServiceEndpointConfiguration endpointConfiguration) {
+        WebServiceMessage message = endpointConfiguration.getMessageFactory().createWebServiceMessage();
+        convertOutbound(message, internalMessage, endpointConfiguration);
         return message;
     }
 
     @Override
-    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message) {
+    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message, WebServiceEndpointConfiguration endpointConfiguration) {
         SoapMessage soapRequest = ((SoapMessage)webServiceMessage);
 
         // Copy payload into soap-body:
@@ -116,7 +111,8 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             } else if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {
                 handleOutboundMimeMessageHeader(soapRequest,
                         headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length()),
-                        headerEntry.getValue());
+                        headerEntry.getValue(),
+                        endpointConfiguration.isHandleMimeHeaders());
             } else if (!headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
                 SoapHeaderElement headerElement;
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
@@ -144,12 +140,12 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     }
 
     @Override
-    public Message<?> convertInbound(WebServiceMessage message) {
-        return convertInbound(message, null);
+    public Message<?> convertInbound(WebServiceMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
+        return convertInbound(message, null, endpointConfiguration);
     }
 
     @Override
-    public Message<?> convertInbound(WebServiceMessage message, MessageContext messageContext) {
+    public Message<?> convertInbound(WebServiceMessage message, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration) {
         try {
             StringResult payloadResult = new StringResult();
 
@@ -166,7 +162,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             handleInboundMessageProperties(messageContext, messageBuilder);
 
             if (message instanceof SoapMessage) {
-                handleSoapMessage((SoapMessage) message, messageBuilder);
+                handleInboundSoapMessage((SoapMessage) message, messageBuilder, endpointConfiguration);
             }
 
             handleInboundHttpHeaders(messageBuilder);
@@ -180,16 +176,19 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     }
 
     /**
+     * Method handles SOAP specific message information such as SOAP action headers and SOAP attachments.
      *
      * @param soapMessage
      * @param messageBuilder
-     * @return
-     * @throws TransformerException
+     * @param endpointConfiguration
      */
-    protected void handleSoapMessage(SoapMessage soapMessage, MessageBuilder<String> messageBuilder) {
+    protected void handleInboundSoapMessage(SoapMessage soapMessage, MessageBuilder<String> messageBuilder, WebServiceEndpointConfiguration endpointConfiguration) {
         handleInboundSoapHeaders(soapMessage, messageBuilder);
         handleInboundAttachments(soapMessage, messageBuilder);
-        handleInboundMimeHeaders(soapMessage, messageBuilder);
+
+        if (endpointConfiguration.isHandleMimeHeaders()) {
+            handleInboundMimeHeaders(soapMessage, messageBuilder);
+        }
     }
 
     /**
@@ -277,8 +276,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * @param message the SOAP request message.
      * @param name the header name.
      * @param value the header value.
+     * @param handleMimeHeaders should handle mime headers.
      */
-    private void handleOutboundMimeMessageHeader(SoapMessage message, String name, Object value) {
+    private void handleOutboundMimeMessageHeader(SoapMessage message, String name, Object value, boolean handleMimeHeaders) {
         if (!handleMimeHeaders) {
             return;
         }
@@ -300,13 +300,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * comma delimited string value.
      * 
      * @param soapMessage the source SOAP message.
-     * @param messageBuilder the message build constructing the result message. 
+     * @param messageBuilder the message build constructing the result message.
      */
     protected void handleInboundMimeHeaders(SoapMessage soapMessage, MessageBuilder<String> messageBuilder) {
-        if (!handleMimeHeaders) {
-            return;
-        }
-
         Map<String, String> mimeHeaders = new HashMap<String, String>();
         MimeHeaders messageMimeHeaders = null;
         
@@ -398,57 +394,6 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     }
 
     /**
-     * Sets web service message factory implementation with builder pattern style.
-     * @param messageFactory
-     * @return
-     */
-    public SoapMessageConverter withWebServiceMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-        return this;
-    }
-
-    /**
-     * Sets SOAP attachment with builder pattern style.
-     * @param attachment
-     * @return
-     */
-    public SoapMessageConverter withAttachment(Attachment attachment) {
-        this.attachment = attachment;
-        return this;
-    }
-
-    /**
-     * Sets handle mime headers flag with builder pattern style.
-     * @param handleMimeHeaders
-     * @return
-     */
-    public SoapMessageConverter handleMimeHeaders(boolean handleMimeHeaders) {
-        this.handleMimeHeaders = handleMimeHeaders;
-        return this;
-    }
-
-    public SoapMessageConverter keepSoapEnvelope(boolean keepSoapEnvelope) {
-        this.keepSoapEnvelope = keepSoapEnvelope;
-        return this;
-    }
-
-    /**
-     * Gets the handle mime headers flag.
-     * @return
-     */
-    public boolean isHandleMimeHeaders() {
-        return handleMimeHeaders;
-    }
-
-    /**
-     * Sets the handle mime headers flag.
-     * @param handleMimeHeaders
-     */
-    public void setHandleMimeHeaders(boolean handleMimeHeaders) {
-        this.handleMimeHeaders = handleMimeHeaders;
-    }
-
-    /**
      * Gets the keep soap envelope flag.
      * @return
      */
@@ -464,35 +409,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         this.keepSoapEnvelope = keepSoapEnvelope;
     }
 
-    /**
-     * Gets the soap attachment.
-     * @return
-     */
-    public Attachment getAttachment() {
-        return attachment;
-    }
-
-    /**
-     * Sets the soap attachment.
-     * @param attachment
-     */
+    @Override
     public void setAttachment(Attachment attachment) {
         this.attachment = attachment;
     }
 
-    /**
-     * Gets the message factory.
-     * @return
-     */
-    public WebServiceMessageFactory getMessageFactory() {
-        return messageFactory;
-    }
-
-    /**
-     * Sets the message factory.
-     * @param messageFactory
-     */
-    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-    }
 }

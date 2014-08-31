@@ -18,6 +18,7 @@ package com.consol.citrus.ws;
 
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -257,7 +258,11 @@ public class WebServiceEndpointTest {
     @Test
     public void testMessageProcessingWithMimeRequestHeaders() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
-        endpoint.setHandleMimeHeaders(true);
+
+        WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
+        endpointConfiguration.setHandleMimeHeaders(true);
+
+        endpoint.setEndpointConfiguration(endpointConfiguration);
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
