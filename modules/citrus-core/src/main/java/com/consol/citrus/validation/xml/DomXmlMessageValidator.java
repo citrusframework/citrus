@@ -31,6 +31,8 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
+import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
@@ -39,6 +41,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageHeaders;
@@ -47,6 +50,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSException;
@@ -55,7 +59,11 @@ import org.xml.sax.SAXParseException;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,7 +181,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         for (Entry<String, String> entry : validationContext.getPathValidationExpressions().entrySet()) {
             String elementPathExpression = entry.getKey();
             String expectedValue = entry.getValue();
-            String actualValue = null;
+            String actualValue;
 
             elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
 
@@ -254,33 +262,65 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             log.info("Starting XML schema validation ...");
 
-            XsdSchema schema = null;
+            XmlValidator validator = null;
+            XsdSchemaRepository schemaRepository = null;
             if (validationContext.getSchema() != null) {
-                schema = applicationContext.getBean(validationContext.getSchema(), XsdSchema.class);
+                validator = applicationContext.getBean(validationContext.getSchema(), XsdSchema.class).createValidator();
             } else if (validationContext.getSchemaRepository() != null) {
-                schema = applicationContext.getBean(validationContext.getSchemaRepository(), XsdSchemaRepository.class).findSchema(doc);
+                schemaRepository = applicationContext.getBean(validationContext.getSchemaRepository(), XsdSchemaRepository.class);
             } else if (schemaRepositories.size() == 1) {
-                schema = schemaRepositories.get(0).findSchema(doc);
+                schemaRepository = schemaRepositories.get(0);
             } else if (schemaRepositories.size() > 0) {
                 for (XsdSchemaRepository repository : schemaRepositories) {
-                    if (repository.getName().equals(XsdSchemaRepository.DEFAULT_REPOSITORY_NAME)) {
-                        schema = repository.findSchema(doc);
+                    if (repository.canValidate(doc)) {
+                        schemaRepository = repository;
                     }
                 }
                 
-                if (schema == null) {
-                    throw new CitrusRuntimeException("Found multiple schema repositories in Spring bean context, " +
-                    		"either define the repository to be used or define a default repository " +
-                    		"(name=\"" + XsdSchemaRepository.DEFAULT_REPOSITORY_NAME + "\")");
+                if (schemaRepository == null) {
+                    throw new CitrusRuntimeException(String.format("Failed to find proper schema repository in Spring bean context for validating element '%s(%s)'",
+                            doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI()));
                 }
             } else {
                 log.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
                 return;
             }
             
-            XmlValidator validator = schema.createValidator();
-            SAXParseException[] results = validator.validate(new DOMSource(doc));
+            if (schemaRepository != null) {
+                if (!schemaRepository.canValidate(doc)) {
+                    throw new CitrusRuntimeException(String.format("Unable to find proper XML schema definition for element '%s(%s)' in schema repository '%s'",
+                            doc.getFirstChild().getLocalName(),
+                            doc.getFirstChild().getNamespaceURI(),
+                            schemaRepository.getName()));
+                }
 
+                List<Resource> schemas = new ArrayList<Resource>();
+
+                for (XsdSchema xsdSchema : schemaRepository.getSchemas()) {
+                    if (xsdSchema instanceof MultiResourceXsdSchema) {
+                        for (Resource resource : ((MultiResourceXsdSchema) xsdSchema).getSchemas()) {
+                            schemas.add(resource);
+                        }                            
+                    } else if (xsdSchema instanceof WsdlXsdSchema) {
+                        for (Resource resource : ((WsdlXsdSchema) xsdSchema).getSchemas()) {
+                            schemas.add(resource);
+                        }
+                    } else {
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        try {
+                            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                            transformerFactory.newTransformer().transform(xsdSchema.getSource(), new StreamResult(bos));
+                        } catch (TransformerException e) {
+                            throw new CitrusRuntimeException("Failed to read schema " + xsdSchema.getTargetNamespace(), e);
+                        }
+                        schemas.add(new ByteArrayResource(bos.toByteArray())); 
+                    }
+                }
+                
+                validator = XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
+            }
+            
+            SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
                 log.info("Schema of received XML validated OK");
             } else {

@@ -2,7 +2,7 @@
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
      xmlns="http://citrus"
-     targetNamespace="http://citrus"
+     targetNamespace="http://citrus/sample"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
      

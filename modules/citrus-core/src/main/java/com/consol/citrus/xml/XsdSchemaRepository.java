@@ -16,7 +16,6 @@
 
 package com.consol.citrus.xml;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
@@ -41,11 +40,8 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
-    /** The default repository name */
-    public static final String DEFAULT_REPOSITORY_NAME = "schemaRepository";
-    
     /** This repositories name in the Spring application context */
-    private String name = DEFAULT_REPOSITORY_NAME;
+    private String name = "schemaRepository";
     
     /** List of schema resources */
     private List<XsdSchema> schemas = new ArrayList<XsdSchema>();
@@ -60,23 +56,15 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
     private static Logger log = LoggerFactory.getLogger(XsdSchemaRepository.class);
     
     /**
-     * Find the matching schema for a given message namespace or root element
-     * name.
+     * Find the matching schema for document using given schema mapping strategy.
      * @param doc the document instance to validate.
-     * @return the matching schema instance
+     * @return boolean flag marking matching schema instance found
      * @throws IOException
      * @throws SAXException
      */
-    public XsdSchema findSchema(Document doc) throws IOException, SAXException {
+    public boolean canValidate(Document doc) throws IOException, SAXException {
         XsdSchema schema = schemaMappingStrategy.getSchema(schemas, doc);
-        
-        if (schema == null) {
-            throw new CitrusRuntimeException("Unable to find proper XML schema definition for element " + 
-                        doc.getFirstChild().getLocalName() + "(" + doc.getFirstChild().getNamespaceURI() + ") " +
-                        "add schema to schema repository or disable schema validation for this message");
-        }
-        
-        return schema;
+        return schema != null;
     }
     
     /**

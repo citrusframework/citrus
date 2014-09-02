@@ -36,8 +36,6 @@ The name and trademarks of copyright holders may NOT be used in advertising or p
            xmlns:tns="http://schemas.xmlsoap.org/soap/envelope/"
            targetNamespace="http://schemas.xmlsoap.org/soap/envelope/" >
 
-  <xs:import namespace="http://citrusframework.org/schemas/samples/HelloService.xsd" schemaLocation="HelloService.xsd"/>
-     
   <!-- Envelope, header and body -->
   <xs:element name="Envelope" type="tns:Envelope" />
   <xs:complexType name="Envelope" >

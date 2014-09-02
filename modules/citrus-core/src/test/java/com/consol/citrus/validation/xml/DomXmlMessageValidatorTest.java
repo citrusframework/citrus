@@ -115,7 +115,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void validateMissingDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+    public void validateNoDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
         Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
@@ -136,13 +136,92 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         
         XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
         schemaRepository2.setBeanName("schemaRepository2");
+        Resource schemaResource2 = new ClassPathResource("com/consol/citrus/validation/sample.xsd");
+        SimpleXsdSchema schema2 = new SimpleXsdSchema(schemaResource2);
+        schema2.afterPropertiesSet();
+
+        schemaRepository2.getSchemas().add(schema2);
+
         validator.addSchemaRepository(schemaRepository2);
         
+        validator.validateXMLSchema(message, new XmlMessageValidationContext());
+
+        message = MessageBuilder.withPayload("<message xmlns='http://citrus/sample'>"
+                + "<correlationId>Kx1R123456789</correlationId>"
+                + "<bookingId>Bx1G987654321</bookingId>"
+                + "<test>Hello TestFramework</test>"
+                + "</message>").build();
+
+        validator.validateXMLSchema(message, new XmlMessageValidationContext());
+    }
+
+    @Test
+    public void validateNoMatchingSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus/special'>"
+                + "<correlationId>Kx1R123456789</correlationId>"
+                + "<bookingId>Bx1G987654321</bookingId>"
+                + "<test>Hello TestFramework</test>"
+                + "</message>").build();
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        schemaRepository.setBeanName("schemaRepository1");
+        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
+        SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
+        schema.afterPropertiesSet();
+
+        schemaRepository.getSchemas().add(schema);
+
+        validator.addSchemaRepository(schemaRepository);
+
+        XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
+        schemaRepository2.setBeanName("schemaRepository2");
+        Resource schemaResource2 = new ClassPathResource("com/consol/citrus/validation/sample.xsd");
+        SimpleXsdSchema schema2 = new SimpleXsdSchema(schemaResource2);
+        schema2.afterPropertiesSet();
+
+        schemaRepository2.getSchemas().add(schema2);
+
+        validator.addSchemaRepository(schemaRepository2);
+
         try {
             validator.validateXMLSchema(message, new XmlMessageValidationContext());
-            Assert.fail("Missing exception due to missing default schema repository");
+            Assert.fail("Missing exception due to no matching schema repository error");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("either define the repository to be used or define a default repository"));
+            Assert.assertTrue(e.getMessage().startsWith("Failed to find proper schema repository"), e.getMessage());
+        }
+    }
+
+    @Test
+    public void validateNoMatchingSchema() throws SAXException, IOException, ParserConfigurationException {
+        Message<?> message = MessageBuilder.withPayload("<message xmlns='http://citrus/special'>"
+                + "<correlationId>Kx1R123456789</correlationId>"
+                + "<bookingId>Bx1G987654321</bookingId>"
+                + "<test>Hello TestFramework</test>"
+                + "</message>").build();
+
+        DomXmlMessageValidator validator = new DomXmlMessageValidator();
+
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+        schemaRepository.setBeanName("schemaRepository");
+        Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
+        SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
+        schema.afterPropertiesSet();
+        Resource schemaResource2 = new ClassPathResource("com/consol/citrus/validation/sample.xsd");
+        SimpleXsdSchema schema2 = new SimpleXsdSchema(schemaResource2);
+        schema2.afterPropertiesSet();
+
+        schemaRepository.getSchemas().add(schema);
+        schemaRepository.getSchemas().add(schema2);
+
+        validator.addSchemaRepository(schemaRepository);
+
+        try {
+            validator.validateXMLSchema(message, new XmlMessageValidationContext());
+            Assert.fail("Missing exception due to no matching schema repository error");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Unable to find proper XML schema definition"), e.getMessage());
         }
     }
 
