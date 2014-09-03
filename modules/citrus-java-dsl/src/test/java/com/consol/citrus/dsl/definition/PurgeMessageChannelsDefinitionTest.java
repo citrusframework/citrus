@@ -23,10 +23,13 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.MessageChannel;
+import org.springframework.integration.channel.DefaultHeaderChannelRegistry;
+import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.integration.support.channel.HeaderChannelRegistry;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,7 +40,7 @@ import static org.easymock.EasyMock.*;
 public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
     private MessageSelector messageSelector = EasyMock.createMock(MessageSelector.class);
     
-    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
+    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
     
     private MessageChannel channel1 = EasyMock.createMock(MessageChannel.class);
     private MessageChannel channel2 = EasyMock.createMock(MessageChannel.class);
@@ -110,7 +113,8 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-
+        expect(applicationContextMock.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
+                .andReturn(new DefaultHeaderChannelRegistry()).once();
         replay(applicationContextMock);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {

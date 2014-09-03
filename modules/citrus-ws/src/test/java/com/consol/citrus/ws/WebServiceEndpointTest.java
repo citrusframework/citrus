@@ -22,7 +22,7 @@ import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;

@@ -20,7 +20,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.*;
 import org.eclipse.jetty.http.HttpHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,7 +44,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         server.startup();
 
         //build a client to test the server
-        DefaultHttpClient httpclient = new DefaultHttpClient();
+        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet("http://localhost:8095/test");
         get.setHeader(HttpHeaders.ACCEPT, "text/xml");
         get.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml");

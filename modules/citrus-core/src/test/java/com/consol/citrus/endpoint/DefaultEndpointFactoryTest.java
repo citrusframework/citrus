@@ -21,7 +21,10 @@ import com.consol.citrus.channel.ChannelEndpointComponent;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.integration.context.IntegrationContextUtils;
+import org.springframework.integration.support.channel.HeaderChannelRegistry;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -57,6 +60,8 @@ public class DefaultEndpointFactoryTest {
     public void testResolveChannelEndpoint() throws Exception {
         reset(applicationContext);
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(Collections.<String, EndpointComponent>emptyMap()).once();
+        expect(applicationContext.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
+                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         replay(applicationContext);
 
         TestContext context = new TestContext();
@@ -78,6 +83,8 @@ public class DefaultEndpointFactoryTest {
 
         reset(applicationContext);
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(components).once();
+        expect(applicationContext.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
+                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         replay(applicationContext);
 
         TestContext context = new TestContext();
@@ -99,6 +106,8 @@ public class DefaultEndpointFactoryTest {
 
         reset(applicationContext);
         expect(applicationContext.getBeansOfType(EndpointComponent.class)).andReturn(components).once();
+        expect(applicationContext.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
+                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         replay(applicationContext);
 
         TestContext context = new TestContext();

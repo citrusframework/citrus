@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Endpoint adapter forwards incoming requests to message channel and waits synchronously for response

@@ -18,7 +18,7 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;

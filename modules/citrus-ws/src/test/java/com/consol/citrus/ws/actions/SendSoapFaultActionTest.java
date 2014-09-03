@@ -26,7 +26,7 @@ import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

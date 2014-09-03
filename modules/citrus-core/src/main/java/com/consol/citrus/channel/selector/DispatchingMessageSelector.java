@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.util.Assert;
 

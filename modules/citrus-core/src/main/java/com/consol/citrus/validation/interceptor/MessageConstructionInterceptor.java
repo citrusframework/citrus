@@ -17,7 +17,7 @@
 package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 
 /**

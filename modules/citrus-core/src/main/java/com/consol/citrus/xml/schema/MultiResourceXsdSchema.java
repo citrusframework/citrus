@@ -15,6 +15,7 @@
  */
 package com.consol.citrus.xml.schema;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -41,8 +42,12 @@ public class MultiResourceXsdSchema extends SimpleXsdSchema implements Initializ
     public static final String W3C_XML_SCHEMA_NS_URI = "http://www.w3.org/2001/XMLSchema";
     
     @Override
-    public XmlValidator createValidator() throws IOException {
-        return XmlValidatorFactory.createValidator(schemas, W3C_XML_SCHEMA_NS_URI);
+    public XmlValidator createValidator() {
+        try {
+            return XmlValidatorFactory.createValidator(schemas, W3C_XML_SCHEMA_NS_URI);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to create validator from multi resource schema files", e);
+        }
     }
     
     @Override

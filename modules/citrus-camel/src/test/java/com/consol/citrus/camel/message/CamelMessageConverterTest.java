@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultExchange;
 import org.easymock.EasyMock;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

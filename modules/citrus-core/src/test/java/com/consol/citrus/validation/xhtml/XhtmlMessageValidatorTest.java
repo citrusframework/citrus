@@ -25,7 +25,7 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.easymock.EasyMock;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

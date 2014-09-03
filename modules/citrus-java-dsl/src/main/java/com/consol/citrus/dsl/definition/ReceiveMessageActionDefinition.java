@@ -35,7 +35,7 @@ import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 
 import java.io.IOException;

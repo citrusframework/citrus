@@ -18,14 +18,12 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
@@ -109,31 +107,13 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
                 headers.put(CitrusMessageHeaders.HEADER_CONTENT, headerContent);
             }
             
-            checkHeaderTypes(headers);
-            
+            MessageHeaderUtils.checkHeaderTypes(headers);
+
             return headers;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
-        }
-    }
-    
-    /**
-     * Method checks all header types to meet Spring Integration type requirements. For instance
-     * sequence number must be of type {@link Integer}.
-     * 
-     * @param headers the headers to check.
-     */
-    private void checkHeaderTypes(Map<String, Object> headers) {
-        if (headers.containsKey(MessageHeaders.SEQUENCE_NUMBER)) {
-            String number = headers.get(MessageHeaders.SEQUENCE_NUMBER).toString();
-            headers.put(MessageHeaders.SEQUENCE_NUMBER, Integer.valueOf(number));
-        }
-        
-        if (headers.containsKey(MessageHeaders.SEQUENCE_SIZE)) {
-            String size = headers.get(MessageHeaders.SEQUENCE_SIZE).toString();
-            headers.put(MessageHeaders.SEQUENCE_SIZE, Integer.valueOf(size));
         }
     }
 

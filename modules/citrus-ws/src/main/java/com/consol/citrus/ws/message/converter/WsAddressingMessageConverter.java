@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;

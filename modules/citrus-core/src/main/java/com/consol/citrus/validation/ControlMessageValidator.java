@@ -16,22 +16,21 @@
 
 package com.consol.citrus.validation;
 
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Basic control message validator provides message header validation. Subclasses only have to add
@@ -94,7 +93,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             String expectedValue = entry.getValue().toString();
             String actualValue = null;
 
-            if (MessageUtils.isSpringInternalHeader(headerName) || headerName.equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+            if (MessageHeaderUtils.isSpringInternalHeader(headerName) || headerName.equals(CitrusMessageHeaders.HEADER_CONTENT)) {
                 continue;
             }
             //check if header expression is variable or function

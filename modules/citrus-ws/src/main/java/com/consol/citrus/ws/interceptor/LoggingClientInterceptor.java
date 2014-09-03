@@ -16,12 +16,12 @@
 
 package com.consol.citrus.ws.interceptor;
 
-import javax.xml.transform.TransformerException;
-
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapEnvelopeException;
+
+import javax.xml.transform.TransformerException;
 
 /**
  * Client interceptor implementation logging SOAP requests and responses as well as SOAP faults
@@ -74,5 +74,10 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
         }
         
         return true;
+    }
+
+    @Override
+    public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
+        //TODO make something
     }
 }

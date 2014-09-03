@@ -19,7 +19,7 @@ package com.consol.citrus.ws.message.callback;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.mime.Attachment;

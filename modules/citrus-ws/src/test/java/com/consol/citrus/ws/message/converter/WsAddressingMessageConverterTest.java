@@ -20,7 +20,7 @@ import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.easymock.EasyMock;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.namespace.QNameUtils;

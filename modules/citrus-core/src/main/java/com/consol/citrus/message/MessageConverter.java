@@ -17,7 +17,7 @@
 package com.consol.citrus.message;
 
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Message converter interface describes methods for converting a external message type T to the internal message

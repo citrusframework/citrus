@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xpath.XPathParseException;

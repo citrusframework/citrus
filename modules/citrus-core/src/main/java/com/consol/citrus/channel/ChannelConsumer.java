@@ -22,10 +22,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.integration.core.PollableChannel;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.util.StringUtils;
 
@@ -141,6 +141,6 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
         }
 
-        return endpointConfiguration.getChannelResolver().resolveChannelName(channelName);
+        return endpointConfiguration.getChannelResolver().resolveDestination(channelName);
     }
 }

@@ -20,7 +20,7 @@ import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Endpoint adapter forwards incoming requests to jms destination and waits for response

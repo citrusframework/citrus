@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.resolver;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Resolves endpoint uri so we can send messages to dynamic endpoints. Resolver works on request message and

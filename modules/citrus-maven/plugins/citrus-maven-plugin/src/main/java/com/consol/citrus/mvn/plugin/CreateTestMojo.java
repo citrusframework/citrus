@@ -72,7 +72,7 @@ public class CreateTestMojo extends AbstractMojo {
     private boolean interactiveMode;
 
     /**
-     * Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)
+     * Which unit test framework to use for test execution (default: testng; options: testng, junit)
      * @parameter 
      *          expression="${framework}"
      *          default-value="testng" */

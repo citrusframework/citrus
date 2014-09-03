@@ -16,10 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.xmlbeans.*;
@@ -31,8 +29,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.util.*;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates new Citrus test suite from a given WSDL with XML test file and executable Java class.
@@ -94,7 +93,7 @@ public class CreateTestsFromWsdlMojo extends AbstractMojo {
     private boolean interactiveMode = true;
 
     /**
-     * Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)
+     * Which unit test framework to use for test execution (default: testng; options: testng, junit)
      * @parameter 
      *          expression="${framework}"
      *          default-value="testng" */

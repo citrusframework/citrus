@@ -65,17 +65,13 @@ public class TestCaseCreator {
      * will create different Java classes according to the unit test framework.
      */
     public static enum UnitFramework {
-        TESTNG, JUNIT3, JUNIT4;
+        TESTNG, JUNIT;
         
         public static UnitFramework fromString(String value) {
             if (value.equalsIgnoreCase("testng")) {
                 return TESTNG;
-            } else if (value.equalsIgnoreCase("junit3")) {
-                return JUNIT3;
-            } else if (value.equalsIgnoreCase("junit4")) {
-                return JUNIT4;
             } else if (value.equalsIgnoreCase("junit")) {
-                return JUNIT3;
+                return JUNIT;
             } else {
                 throw new IllegalArgumentException("Found unsupported unit test framework '" + value + "'");
             }

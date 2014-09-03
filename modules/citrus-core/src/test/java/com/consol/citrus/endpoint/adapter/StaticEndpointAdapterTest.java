@@ -18,7 +18,7 @@ package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.testng.annotations.Test;
 
 /**

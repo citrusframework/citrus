@@ -17,12 +17,10 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.message.*;
 import org.springframework.http.*;
-import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -44,7 +42,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
         Map<String, ?> messageHeaders = message.getHeaders();
         for (Map.Entry<String, ?> header : messageHeaders.entrySet()) {
             if (!header.getKey().startsWith(CitrusMessageHeaders.PREFIX) &&
-                    !MessageUtils.isSpringInternalHeader(header.getKey()) &&
+                    !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
                     !httpHeaders.containsKey(header.getKey())) {
                 httpHeaders.add(header.getKey(), header.getValue().toString());
             }

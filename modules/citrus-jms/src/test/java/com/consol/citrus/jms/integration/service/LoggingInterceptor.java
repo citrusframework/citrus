@@ -18,9 +18,9 @@ package com.consol.citrus.jms.integration.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
-import org.springframework.integration.channel.interceptor.ChannelInterceptorAdapter;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.ChannelInterceptorAdapter;
 
 /**
  * @author Christoph Deppisch

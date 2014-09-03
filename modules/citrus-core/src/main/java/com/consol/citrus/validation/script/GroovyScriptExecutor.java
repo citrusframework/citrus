@@ -16,7 +16,7 @@
 
 package com.consol.citrus.validation.script;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 import com.consol.citrus.context.TestContext;
 

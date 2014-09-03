@@ -21,7 +21,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

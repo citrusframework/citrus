@@ -61,7 +61,10 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
         reset(httpServer);
         replay(httpServer);
 
-        servlet.initStrategies(new GenericApplicationContext());
+        GenericApplicationContext applicationContext = new GenericApplicationContext();
+        applicationContext.refresh();
+
+        servlet.initStrategies(applicationContext);
 
         verify(httpServer);
     }

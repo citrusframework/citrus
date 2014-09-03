@@ -22,7 +22,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

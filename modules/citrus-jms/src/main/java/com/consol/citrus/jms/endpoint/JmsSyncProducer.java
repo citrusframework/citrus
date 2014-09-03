@@ -21,7 +21,7 @@ import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;

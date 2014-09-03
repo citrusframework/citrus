@@ -28,10 +28,10 @@
   </bean>
 
   <bean id="channel" class="org.easymock.EasyMock" factory-method="createMock">
-    <constructor-arg value="org.springframework.integration.core.PollableChannel"/>
+    <constructor-arg value="org.springframework.messaging.PollableChannel"/>
   </bean>
 
   <bean id="channelResolver" class="org.easymock.EasyMock" factory-method="createMock">
-    <constructor-arg value="org.springframework.integration.support.channel.ChannelResolver"/>
+    <constructor-arg value="org.springframework.messaging.core.DestinationResolver"/>
   </bean>
 </beans>

@@ -19,7 +19,7 @@ package com.consol.citrus.endpoint.adapter.mapping;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Extracts predicate from message payload via XPath expression evaluation.

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

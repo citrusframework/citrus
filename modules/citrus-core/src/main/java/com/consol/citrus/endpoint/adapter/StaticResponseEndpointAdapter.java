@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 import java.util.HashMap;

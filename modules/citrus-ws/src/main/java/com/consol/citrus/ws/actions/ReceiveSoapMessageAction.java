@@ -23,7 +23,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 import java.io.IOException;
 
@@ -56,7 +56,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
     }
 
     /**
-     * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.integration.Message, com.consol.citrus.context.TestContext)
+     * @see com.consol.citrus.actions.ReceiveMessageAction#validateMessage(org.springframework.messaging.Message, com.consol.citrus.context.TestContext)
      */
     @Override
     protected void validateMessage(Message<?> receivedMessage, TestContext context) {

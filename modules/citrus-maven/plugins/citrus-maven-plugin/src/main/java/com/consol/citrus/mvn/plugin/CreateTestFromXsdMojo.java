@@ -16,8 +16,8 @@
 
 package com.consol.citrus.mvn.plugin;
 
-import java.io.File;
-
+import com.consol.citrus.util.TestCaseCreator;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.xmlbeans.*;
@@ -27,8 +27,7 @@ import org.codehaus.plexus.components.interactivity.PrompterException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.util.TestCaseCreator;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import java.io.File;
 
 /**
  * Creates new Citrus test cases with empty XML test file and executable Java class.
@@ -98,7 +97,7 @@ public class CreateTestFromXsdMojo extends AbstractMojo {
     private boolean interactiveMode;
 
     /**
-     * Which unit test framework to use for test execution (default: testng; options: testng, junit3, junit4)
+     * Which unit test framework to use for test execution (default: testng; options: testng, junit)
      * @parameter 
      *          expression="${framework}"
      *          default-value="testng" */

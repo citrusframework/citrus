@@ -27,7 +27,7 @@ import com.consol.citrus.ws.client.WebServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;

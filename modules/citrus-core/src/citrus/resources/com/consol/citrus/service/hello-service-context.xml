@@ -39,6 +39,6 @@
 
   <bean id="loggingInterceptor" class="com.consol.citrus.integration.service.LoggingInterceptor"/>
 
-  <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.integration.service.model"/>
+  <oxm:jaxb2-marshaller id="marshaller" context-path="com.consol.citrus.integration.service.model"/>
 
 </beans>

@@ -69,7 +69,7 @@
 
   <bean id="loggingInterceptor" class="com.consol.citrus.jms.integration.service.LoggingInterceptor"/>
 
-  <oxm:jaxb2-marshaller id="marshaller" contextPath="com.consol.citrus.jms.integration.service.model"/>
+  <oxm:jaxb2-marshaller id="marshaller" context-path="com.consol.citrus.jms.integration.service.model"/>
 
   <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 

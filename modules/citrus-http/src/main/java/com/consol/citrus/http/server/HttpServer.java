@@ -276,6 +276,9 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         public String getId() {
             return applicationContext.getId();
         }
+        public String getApplicationName() {
+            return applicationContext.getApplicationName();
+        }
         public String getDisplayName() {
             return applicationContext.getDisplayName();
         }
@@ -292,6 +295,12 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 throws BeansException {
             return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
         }
+
+        @Override
+        public String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
+            return applicationContext.getBeanNamesForAnnotation(annotationType);
+        }
+
         public Map<String, Object> getBeansWithAnnotation(
                 Class<? extends Annotation> annotationType)
                 throws BeansException {

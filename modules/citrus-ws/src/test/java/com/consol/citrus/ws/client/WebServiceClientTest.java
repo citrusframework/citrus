@@ -20,7 +20,7 @@ import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.easymock.EasyMock;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.client.core.*;
 import org.springframework.ws.soap.*;

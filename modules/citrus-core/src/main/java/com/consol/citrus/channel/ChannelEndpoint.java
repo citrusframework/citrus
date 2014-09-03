@@ -25,7 +25,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * Basic message endpoint sends and receives message from Spring message channel. When receiving messages channel must
- * implement {@link org.springframework.integration.core.PollableChannel} interface. When using message selector channel
+ * implement {@link org.springframework.messaging.PollableChannel} interface. When using message selector channel
  * must be of type {@link com.consol.citrus.channel.MessageSelectingQueueChannel}.
  *
  * @author Christoph Deppisch

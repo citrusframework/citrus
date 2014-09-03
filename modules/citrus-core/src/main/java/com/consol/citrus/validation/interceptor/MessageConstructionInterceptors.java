@@ -19,7 +19,7 @@ package com.consol.citrus.validation.interceptor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 import java.util.ArrayList;

@@ -34,7 +34,7 @@
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@Autowired
 @Qualifier("channelResolver")
-private ChannelResolver channelResolver;
+private DestinationResolver&lt;MessageChannel&gt; channelResolver;
 
 @CitrusTest
 public void purgeTest() {
@@ -75,7 +75,7 @@ public void purgeTest() {
     message selector is a Spring bean that implements a special message selector interface. A possible implementation could be a 
     selector deleting all messages that are older than five seconds:</para>
     
-    <programlisting language="java">import org.springframework.integration.Message;
+    <programlisting language="java">import org.springframework.messaging.Message;
 import org.springframework.integration.core.MessageSelector;
 
 public class TimeBasedMessageSelector implements MessageSelector {

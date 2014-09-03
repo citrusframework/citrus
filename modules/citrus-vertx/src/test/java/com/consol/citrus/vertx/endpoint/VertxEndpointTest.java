@@ -21,7 +21,7 @@ import com.consol.citrus.vertx.factory.SingleVertxInstanceFactory;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

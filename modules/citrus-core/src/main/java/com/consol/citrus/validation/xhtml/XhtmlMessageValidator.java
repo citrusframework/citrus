@@ -21,7 +21,7 @@ import java.io.StringWriter;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.w3c.tidy.Tidy;
 

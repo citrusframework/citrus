@@ -22,11 +22,13 @@ import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.integration.*;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.integration.context.IntegrationContextUtils;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.core.PollableChannel;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.integration.support.channel.HeaderChannelRegistry;
+import org.springframework.messaging.*;
+import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -47,7 +49,7 @@ public class ChannelEndpointSyncConsumerTest {
 
     private ReplyMessageCorrelator replyMessageCorrelator = EasyMock.createMock(ReplyMessageCorrelator.class);
     
-    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
+    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -101,7 +103,7 @@ public class ChannelEndpointSyncConsumerTest {
 
         reset(messagingTemplate, channel, replyChannel, channelResolver);
         
-        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
@@ -147,6 +149,8 @@ public class ChannelEndpointSyncConsumerTest {
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
         expect(factory.getBean("replyChannel", MessageChannel.class)).andReturn(replyChannel).once();
+        expect(factory.getBean(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME, HeaderChannelRegistry.class))
+                .andThrow(new NoSuchBeanDefinitionException(IntegrationContextUtils.INTEGRATION_HEADER_CHANNEL_REGISTRY_BEAN_NAME)).once();
         
         replay(messagingTemplate, channel, replyChannel, factory);
 

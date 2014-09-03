@@ -23,12 +23,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageChannel;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.messaging.core.DestinationResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
     private BeanFactory beanFactory;
     
     /** Channel resolver instance */
-    private ChannelResolver channelResolver;
+    private DestinationResolver<MessageChannel> channelResolver;
     
     /** Selector filter messages to be purged on channels */
     private MessageSelector messageSelector;
@@ -113,7 +113,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
             channelResolver = new BeanFactoryChannelResolver(beanFactory);
         }
         
-        return channelResolver.resolveChannelName(channelName);
+        return channelResolver.resolveDestination(channelName);
     }
     
     /**
@@ -194,7 +194,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Gets the channelResolver.
      * @return the channelResolver the channelResolver to get.
      */
-    public ChannelResolver getChannelResolver() {
+    public DestinationResolver<MessageChannel> getChannelResolver() {
         return channelResolver;
     }
 
@@ -202,7 +202,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
      * Sets the channelResolver.
      * @param channelResolver the channelResolver to set
      */
-    public void setChannelResolver(ChannelResolver channelResolver) {
+    public void setChannelResolver(DestinationResolver<MessageChannel> channelResolver) {
         this.channelResolver = channelResolver;
     }
 

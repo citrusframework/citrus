@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 

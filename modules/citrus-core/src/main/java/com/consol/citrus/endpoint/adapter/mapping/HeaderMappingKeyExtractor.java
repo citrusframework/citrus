@@ -17,7 +17,7 @@
 package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Extractor searches for header name in request headers for mapping name identification.

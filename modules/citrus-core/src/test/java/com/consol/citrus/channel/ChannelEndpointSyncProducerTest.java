@@ -20,10 +20,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultReplyMessageCorrelator;
 import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.easymock.EasyMock;
-import org.springframework.integration.*;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.messaging.*;
+import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,7 +40,7 @@ public class ChannelEndpointSyncProducerTest {
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     private MessageChannel channel = org.easymock.EasyMock.createMock(MessageChannel.class);
     private ReplyMessageCorrelator replyMessageCorrelator = org.easymock.EasyMock.createMock(ReplyMessageCorrelator.class);
-    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
+    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -94,7 +94,7 @@ public class ChannelEndpointSyncProducerTest {
 
         reset(messagingTemplate, channel, channelResolver);
         
-        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();

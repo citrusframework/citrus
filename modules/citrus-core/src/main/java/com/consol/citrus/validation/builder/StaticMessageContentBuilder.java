@@ -17,7 +17,7 @@
 package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;

@@ -22,7 +22,7 @@ import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;

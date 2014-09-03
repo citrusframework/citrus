@@ -18,8 +18,8 @@ package com.consol.citrus.channel.selector;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.integration.core.MessageSelector;
 
 /**

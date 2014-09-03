@@ -17,8 +17,8 @@
 package com.consol.citrus.validation;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 
 import com.consol.citrus.validation.callback.ValidationCallback;
 

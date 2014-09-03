@@ -21,7 +21,7 @@ import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
 import com.consol.citrus.message.MessageHandler;
 import org.springframework.http.*;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

@@ -31,7 +31,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Special request dispatching endpoint adapter invokes XML test case for each incoming message. Incoming message is

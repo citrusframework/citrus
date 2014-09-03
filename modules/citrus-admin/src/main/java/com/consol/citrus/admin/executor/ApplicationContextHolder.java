@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestContextManager;
 
 import com.consol.citrus.report.*;
@@ -89,7 +90,7 @@ public class ApplicationContextHolder implements DisposableBean {
         TestContextManager testContextManager = new TestContextManager(AbstractTestNGCitrusTest.class) {
             @Override
             public void prepareTestInstance(Object testInstance) throws Exception {
-                getTestContext().markApplicationContextDirty();
+                getTestContext().markApplicationContextDirty(DirtiesContext.HierarchyMode.CURRENT_LEVEL);
             }
         };
         

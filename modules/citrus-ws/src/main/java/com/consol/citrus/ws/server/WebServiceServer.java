@@ -267,6 +267,9 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
         public String getId() {
             return applicationContext.getId();
         }
+        public String getApplicationName() {
+            return applicationContext.getApplicationName();
+        }
         public String getDisplayName() {
             return applicationContext.getDisplayName();
         }
@@ -283,6 +286,11 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
                 throws BeansException {
             return applicationContext.getBeansOfType(type, includeNonSingletons, allowEagerInit);
         }
+
+        public String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
+            return applicationContext.getBeanNamesForAnnotation(annotationType);
+        }
+
         public Map<String, Object> getBeansWithAnnotation(
                 Class<? extends Annotation> annotationType)
                 throws BeansException {

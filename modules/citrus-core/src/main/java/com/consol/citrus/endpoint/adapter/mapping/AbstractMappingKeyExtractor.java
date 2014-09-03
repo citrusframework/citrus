@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Abstract mapping key extractor adds common mapping prefix and suffix added to evaluated mapping key.

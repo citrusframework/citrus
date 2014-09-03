@@ -21,7 +21,7 @@ import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Test executing message handler specialization which executes a Java DSL test builder instead of

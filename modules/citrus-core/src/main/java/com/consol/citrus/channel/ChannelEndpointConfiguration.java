@@ -19,9 +19,9 @@ package com.consol.citrus.channel;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.integration.MessageChannel;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.messaging.core.DestinationResolver;
 
 /**
  * @author Christoph Deppisch
@@ -42,7 +42,7 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
     private BeanFactory beanFactory;
 
     /** Channel resolver instance */
-    private ChannelResolver channelResolver;
+    private DestinationResolver<MessageChannel> channelResolver;
 
     /**
      * Set the message channel.
@@ -80,7 +80,7 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
      * Set the channel resolver.
      * @param channelResolver the channelResolver to set
      */
-    public void setChannelResolver(ChannelResolver channelResolver) {
+    public void setChannelResolver(DestinationResolver channelResolver) {
         this.channelResolver = channelResolver;
     }
 
@@ -120,7 +120,7 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
      * Gets the channelResolver.
      * @return the channelResolver
      */
-    public ChannelResolver getChannelResolver() {
+    public DestinationResolver<MessageChannel> getChannelResolver() {
         return channelResolver;
     }
 }

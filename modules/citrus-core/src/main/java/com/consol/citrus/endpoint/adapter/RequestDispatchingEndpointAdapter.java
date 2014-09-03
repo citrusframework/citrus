@@ -18,7 +18,7 @@ package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.endpoint.adapter.mapping.EndpointAdapterMappingStrategy;
 import com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Base endpoint adapter implementation that dispatches incoming messages according to some extracted message value as mapping key and

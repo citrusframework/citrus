@@ -23,7 +23,7 @@
     
     <para>With the creation of this test we have already made a very important decision. During creation, Citrus asks 
     you which execution framework should be used for this test. There are basically three options available: 
-    <literal>testng</literal>, <literal>junit3</literal> and <literal>junit4</literal>.</para>
+    <literal>testng</literal> and <literal>junit</literal>.</para>
     
     <para>So why is Citrus related to Unit tests although it is intended to be a framework for integration testing? 
     The answer to this question is quite simple: This is because Citrus wants to benefit from both JUnit and TestNG for 
@@ -170,25 +170,8 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
         Citrus test case. Second thing to mention is that the @CitrusTest and @CitrusXmlTest annotations do not work with JUnit which is a direct consequence from the first
         limitation that we have mentioned.</para>
 
-        <para>However Citrus offers complete JUnit support for both major versions 3.x and 4.x for executing test cases. If you choose <emphasis>junit3</emphasis> as execution framework
+        <para>However Citrus offers complete JUnit support for executing test cases. If you choose <emphasis>junit</emphasis> as execution framework
         Citrus generates a Java file that looks like this:</para>
-        
-        <programlisting language="java">package com.consol.citrus.samples;
-
-import com.consol.citrus.junit.AbstractJUnit38CitrusTest;
-  
-/**
- * TODO: Description
- *
- * @author Unknown
- */
-public class JUnit3SampleTest extends AbstractJUnit38CitrusTest {
-    public void testSampleTest() {
-        executeTest();
-    }
-}</programlisting>
-        
-        <para>For <emphasis>junit4</emphasis> the respective file looks like this:</para>
         
         <programlisting language="java">package com.consol.citrus.samples;
 

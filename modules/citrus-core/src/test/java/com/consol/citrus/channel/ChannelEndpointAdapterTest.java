@@ -17,7 +17,7 @@
 package com.consol.citrus.channel;
 
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;

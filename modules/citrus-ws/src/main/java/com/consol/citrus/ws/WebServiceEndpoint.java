@@ -18,15 +18,13 @@ package com.consol.citrus.ws;
 
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHandler;
-import com.consol.citrus.util.MessageUtils;
+import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.util.*;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
@@ -195,7 +193,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     private void addSoapHeaders(SoapMessage response, Message<?> replyMessage) throws TransformerException {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
-            if (MessageUtils.isSpringInternalHeader(headerEntry.getKey()) || 
+            if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey()) ||
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
                 continue;
             }

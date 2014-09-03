@@ -16,7 +16,7 @@
 
 package com.consol.citrus.vertx.message;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 /**

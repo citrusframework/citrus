@@ -20,16 +20,16 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.xml.transform.StringResult;
@@ -95,7 +95,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
             Map<String, Object> headers = new HashMap<String, Object>();
             for (String headerName : message.getHeaders().keySet()) {
-                if (!MessageUtils.isSpringInternalHeader(headerName)) {
+                if (!MessageHeaderUtils.isSpringInternalHeader(headerName)) {
                     headers.put(headerName, message.getHeaders().get(headerName));
                 }
             }

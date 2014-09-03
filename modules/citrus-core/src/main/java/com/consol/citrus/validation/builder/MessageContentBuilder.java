@@ -19,7 +19,7 @@ package com.consol.citrus.validation.builder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Interface for classes beeing able to build control messages for validation.

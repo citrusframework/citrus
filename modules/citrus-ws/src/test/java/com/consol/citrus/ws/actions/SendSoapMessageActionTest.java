@@ -26,7 +26,7 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceClient;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -17,7 +17,7 @@
 package com.consol.citrus.validation.callback;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Callback called by receive message action for validation purpose. Implementations

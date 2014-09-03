@@ -24,8 +24,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringSource;

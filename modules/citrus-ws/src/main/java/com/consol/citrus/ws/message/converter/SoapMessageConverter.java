@@ -18,16 +18,16 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
@@ -94,7 +94,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
 
         // Copy headers into soap-header:
         for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
-            if (MessageUtils.isSpringInternalHeader(headerEntry.getKey())) {
+            if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey())) {
                 continue;
             }
 
@@ -240,7 +240,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 Iterator<?> iter = soapHeader.examineAllHeaderElements();
                 while (iter.hasNext()) {
                     SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
-                    messageBuilder.setHeader(headerEntry.getName().getLocalPart(), headerEntry.getText());
+                    MessageHeaderUtils.setHeader(messageBuilder, headerEntry.getName().getLocalPart(), headerEntry.getText());
                 }
 
                 if (soapHeader.getSource() != null) {

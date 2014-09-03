@@ -22,7 +22,7 @@ import org.apache.camel.*;
 import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

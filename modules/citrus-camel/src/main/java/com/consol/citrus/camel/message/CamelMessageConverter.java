@@ -17,7 +17,7 @@
 package com.consol.citrus.camel.message;
 
 import org.apache.camel.Exchange;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 import java.util.Map;

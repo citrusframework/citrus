@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Interface describes mapping extraction along message dispatching message handler processing steps. Extractor

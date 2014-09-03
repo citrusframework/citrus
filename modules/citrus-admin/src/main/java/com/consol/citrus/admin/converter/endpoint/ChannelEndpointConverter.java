@@ -19,7 +19,7 @@ package com.consol.citrus.admin.converter.endpoint;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.model.config.core.ChannelEndpoint;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -43,7 +43,7 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
         endpointData.add(property("messagingTemplate", definition)
                 .optionKey(MessagingTemplate.class.getName()));
         endpointData.add(property("channelResolver", definition)
-                .optionKey(ChannelResolver.class.getName()));
+                .optionKey(DestinationResolver.class.getName()));
 
         addEndpointProperties(endpointData, definition);
 

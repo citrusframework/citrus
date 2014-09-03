@@ -18,8 +18,8 @@ package com.consol.citrus.endpoint.resolver;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.CitrusMessageHeaders;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.util.StringUtils;
 
 import java.util.StringTokenizer;

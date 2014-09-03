@@ -104,7 +104,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             return true;
         }
 
-        org.springframework.integration.Message<?> response = getEndpointAdapter().handleMessage(MessageBuilder
+        org.springframework.messaging.Message<?> response = getEndpointAdapter().handleMessage(MessageBuilder
                 .withPayload(mailMessageMapper.toXML(createAcceptRequest(from, recipient)))
                 .build());
 
@@ -134,7 +134,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             MailMessage mailMessage = createMailMessage(messageHeaders);
             mailMessage.setBody(handlePart(message.getMimeMessage()));
 
-            org.springframework.integration.Message response = invokeMessageHandler(mailMessage, messageHeaders);
+            org.springframework.messaging.Message response = invokeMessageHandler(mailMessage, messageHeaders);
 
             if (response != null && response.getPayload() != null) {
                 MailMessageResponse mailResponse = null;
@@ -160,7 +160,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param mailMessage
      * @param messageHeaders
      */
-    protected org.springframework.integration.Message<?> invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
+    protected org.springframework.messaging.Message<?> invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
         if (splitMultipart) {
             return split(mailMessage.getBody(), messageHeaders);
         } else {
@@ -179,11 +179,11 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param bodyPart
      * @param messageHeaders
      */
-    private org.springframework.integration.Message<?> split(BodyPart bodyPart, Map<String, String> messageHeaders) {
+    private org.springframework.messaging.Message<?> split(BodyPart bodyPart, Map<String, String> messageHeaders) {
         MailMessage mailMessage = createMailMessage(messageHeaders);
         mailMessage.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
 
-        Stack<org.springframework.integration.Message<?>> responseStack = new Stack<org.springframework.integration.Message<?>>();
+        Stack<org.springframework.messaging.Message<?>> responseStack = new Stack<org.springframework.messaging.Message<?>>();
         if (bodyPart instanceof AttachmentPart) {
             fillStack(getEndpointAdapter().handleMessage(org.springframework.integration.support.MessageBuilder
                     .withPayload(mailMessageMapper.toXML(mailMessage))
@@ -208,7 +208,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         return responseStack.isEmpty() ? null : responseStack.pop();
     }
 
-    private void fillStack(org.springframework.integration.Message<?> message, Stack<org.springframework.integration.Message<?>> responseStack) {
+    private void fillStack(org.springframework.messaging.Message<?> message, Stack<org.springframework.messaging.Message<?>> responseStack) {
         if (message != null) {
             responseStack.push(message);
         }

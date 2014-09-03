@@ -20,8 +20,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.*;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.messaging.*;
 import org.springframework.util.StringUtils;
 
 /**
@@ -107,6 +107,6 @@ public class ChannelProducer implements Producer {
             endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
         }
 
-        return endpointConfiguration.getChannelResolver().resolveChannelName(channelName);
+        return endpointConfiguration.getChannelResolver().resolveDestination(channelName);
     }
 }

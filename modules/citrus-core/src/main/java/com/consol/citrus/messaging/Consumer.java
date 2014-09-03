@@ -16,7 +16,7 @@
 
 package com.consol.citrus.messaging;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * @author Christoph Deppisch

@@ -24,7 +24,7 @@ import com.consol.citrus.message.MessageHandler;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.easymock.IArgumentMatcher;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

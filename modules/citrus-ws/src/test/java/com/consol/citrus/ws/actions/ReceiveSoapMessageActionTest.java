@@ -28,7 +28,7 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;

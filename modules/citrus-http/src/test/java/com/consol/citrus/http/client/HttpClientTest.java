@@ -23,7 +23,7 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.http.*;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.web.client.*;
 import org.testng.Assert;

@@ -23,7 +23,7 @@ import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.testng.Assert;

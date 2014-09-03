@@ -16,6 +16,7 @@
 
 package com.consol.citrus.xml.schema;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.ibm.wsdl.extensions.schema.SchemaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,8 +83,12 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
     }
     
     @Override
-    public XmlValidator createValidator() throws IOException {
-        return XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), W3C_XML_SCHEMA_NS_URI);
+    public XmlValidator createValidator() {
+        try {
+            return XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), W3C_XML_SCHEMA_NS_URI);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to create validation for WSDL schema files", e);
+        }
     }
     
     /**

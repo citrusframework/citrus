@@ -18,7 +18,7 @@ package com.consol.citrus.jms.integration.service;
 
 import com.consol.citrus.jms.integration.service.model.HelloRequest;
 import com.consol.citrus.jms.integration.service.model.HelloResponse;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 
 /**

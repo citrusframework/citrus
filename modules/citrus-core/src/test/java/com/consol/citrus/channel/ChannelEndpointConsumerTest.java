@@ -20,11 +20,10 @@ import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.easymock.EasyMock;
-import org.springframework.integration.Message;
+import org.springframework.messaging.*;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.core.PollableChannel;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,7 +41,7 @@ public class ChannelEndpointConsumerTest {
     
     private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
 
-    private ChannelResolver channelResolver = EasyMock.createMock(ChannelResolver.class);
+    private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -90,7 +89,7 @@ public class ChannelEndpointConsumerTest {
         
         reset(messagingTemplate, channel, channelResolver);
         
-        expect(channelResolver.resolveChannelName("testChannel")).andReturn(channel).once();
+        expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();

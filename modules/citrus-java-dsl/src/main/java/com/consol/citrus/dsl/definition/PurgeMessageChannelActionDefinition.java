@@ -18,10 +18,10 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import org.springframework.context.ApplicationContext;
-import org.springframework.integration.MessageChannel;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.integration.support.channel.ChannelResolver;
+import org.springframework.messaging.core.DestinationResolver;
 
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +62,7 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
      * Sets the channelResolver for using channel names.
      * @param channelResolver the channelResolver to set
      */
-    public PurgeMessageChannelActionDefinition channelResolver(ChannelResolver channelResolver) {
+    public PurgeMessageChannelActionDefinition channelResolver(DestinationResolver<MessageChannel> channelResolver) {
         action.setChannelResolver(channelResolver);
         return this;
     }

@@ -21,8 +21,8 @@ import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.messaging.ReplyProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.*;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.*;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 

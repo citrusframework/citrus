@@ -18,7 +18,7 @@ package com.consol.citrus.validation;
 
 import java.util.List;
 
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;

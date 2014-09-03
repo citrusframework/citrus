@@ -16,16 +16,15 @@
 
 package com.consol.citrus.util;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.TestCaseCreator.UnitFramework;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.TestCaseCreator.UnitFramework;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -63,13 +62,13 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testCreateJUnit4Test() throws IOException {
+    public void testCreateJUnitTest() throws IOException {
         TestCaseCreator creator = TestCaseCreator.build()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("SampleTest")
                                          .usePackage("com.consol.citrus")
-                                         .withFramework(UnitFramework.JUNIT4);
+                                         .withFramework(UnitFramework.JUNIT);
 
         creator.createTestCase();
         
@@ -93,43 +92,13 @@ public class TestCaseCreatorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testCreateJUnit3Test() throws IOException {
-        TestCaseCreator creator = TestCaseCreator.build()
-                                         .withAuthor("Christoph")
-                                         .withDescription("This is a sample test")
-                                         .withName("SampleTest")
-                                         .usePackage("com.consol.citrus")
-                                         .withFramework(UnitFramework.JUNIT3);
-
-        creator.createTestCase();
-        
-        File javaFile = new File("src/citrus/java/com/consol/citrus/SampleTest.java");
-        Assert.assertTrue(javaFile.exists());
-        
-        File xmlFile = new File("src/citrus/tests/com/consol/citrus/SampleTest.xml");
-        Assert.assertTrue(xmlFile.exists());
-        
-        String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
-        Assert.assertTrue(javaContent.contains("@author Christoph"));
-        Assert.assertTrue(javaContent.contains("public class SampleTest"));
-        Assert.assertTrue(javaContent.contains("* This is a sample test"));
-        Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
-        Assert.assertTrue(javaContent.contains("extends AbstractJUnit38CitrusTest"));
-        
-        String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
-        Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
-        Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));
-        Assert.assertTrue(xmlContent.contains("<testcase name=\"SampleTest\">"));
-    }
-    
-    @Test
     public void testInvalidName() throws IOException {
         TestCaseCreator creator = TestCaseCreator.build()
                                          .withAuthor("Christoph")
                                          .withDescription("This is a sample test")
                                          .withName("sampletest")
                                          .usePackage("com.consol.citrus")
-                                         .withFramework(UnitFramework.JUNIT4);
+                                         .withFramework(UnitFramework.JUNIT);
 
         try {
             creator.createTestCase();

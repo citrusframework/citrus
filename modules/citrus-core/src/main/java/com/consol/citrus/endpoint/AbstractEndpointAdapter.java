@@ -20,7 +20,7 @@ import com.consol.citrus.message.MessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.integration.Message;
+import org.springframework.messaging.Message;
 
 /**
  * Abstract endpoint adapter adds fallback message handler in case no response was provided.
