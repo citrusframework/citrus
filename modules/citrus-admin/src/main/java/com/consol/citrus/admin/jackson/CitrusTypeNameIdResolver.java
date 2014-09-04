@@ -75,6 +75,11 @@ public class CitrusTypeNameIdResolver implements TypeIdResolver {
     }
 
     @Override
+    public String idFromValueAndType(Object value, Class<?> suggestedType) {
+        return idFromValue(value);
+    }
+
+    @Override
     public JavaType typeFromId(String id) {
         if (typeMappings.containsKey(id)) {
             return typeMappings.get(id);
