@@ -17,17 +17,16 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -40,6 +39,7 @@ public class CamelEndpointTest {
     private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
     private ProducerTemplate producerTemplate = EasyMock.createMock(ProducerTemplate.class);
     private ConsumerTemplate consumerTemplate = EasyMock.createMock(ConsumerTemplate.class);
+    private Exchange exchange = EasyMock.createMock(Exchange.class);
 
     private MessageListeners messageListeners = EasyMock.createMock(MessageListeners.class);
 
@@ -54,17 +54,41 @@ public class CamelEndpointTest {
 
         Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
 
-        reset(camelContext, producerTemplate);
+        reset(camelContext, producerTemplate, exchange);
 
         expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        producerTemplate.sendBodyAndHeaders(eq(endpointUri), eq(requestMessage.getPayload()), anyObject(Map.class));
-        expectLastCall().once();
+        expect(producerTemplate.send(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
+        expect(exchange.getException()).andReturn(null).once();
 
-        replay(camelContext, producerTemplate);
+        replay(camelContext, producerTemplate, exchange);
 
         camelEndpoint.createProducer().send(requestMessage);
 
-        verify(camelContext, producerTemplate);
+        verify(camelContext, producerTemplate, exchange);
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testCamelEndpointProducerWithInternalException() {
+        String endpointUri = "direct:news-feed";
+        CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
+        endpointConfiguration.setCamelContext(camelContext);
+        endpointConfiguration.setEndpointUri(endpointUri);
+
+        CamelEndpoint camelEndpoint = new CamelEndpoint(endpointConfiguration);
+
+        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+
+        reset(camelContext, producerTemplate, exchange);
+
+        expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
+        expect(producerTemplate.send(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
+        expect(exchange.getException()).andReturn(new CamelExchangeException("Failed", exchange)).times(2);
+
+        replay(camelContext, producerTemplate, exchange);
+
+        camelEndpoint.createProducer().send(requestMessage);
+
+        verify(camelContext, producerTemplate, exchange);
     }
 
     @Test
@@ -119,8 +143,7 @@ public class CamelEndpointTest {
         reset(camelContext, producerTemplate, consumerTemplate, messageListeners);
 
         expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
-        producerTemplate.sendBodyAndHeaders(eq(endpointUri), eq(requestMessage.getPayload()), anyObject(Map.class));
-        expectLastCall().once();
+        expect(producerTemplate.send(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
 
         expect(camelContext.createConsumerTemplate()).andReturn(consumerTemplate).once();
         expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();

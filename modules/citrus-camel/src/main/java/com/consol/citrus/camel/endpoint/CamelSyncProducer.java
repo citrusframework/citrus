@@ -68,17 +68,13 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
                 .request(endpointConfiguration.getEndpointUri(), new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
-                        org.apache.camel.Message in = exchange.getIn();
-                        for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
-                            in.setHeader(header.getKey(), header.getValue());
-                        }
-                        in.setBody(message.getPayload());
+                        endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration);
                     }
                 });
 
 
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
-        Message<?> replyMessage = endpointConfiguration.getMessageConverter().convertMessage(response);
+        Message<?> replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
         onInboundMessage(replyMessage);
         onReplyMessage(message, replyMessage);
     }

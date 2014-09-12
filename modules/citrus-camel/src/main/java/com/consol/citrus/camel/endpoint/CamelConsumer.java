@@ -65,7 +65,7 @@ public class CamelConsumer implements Consumer {
 
         log.info("Received message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        Message message = endpointConfiguration.getMessageConverter().convertMessage(exchange);
+        Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration);
         onInboundMessage(message);
 
         return message;
