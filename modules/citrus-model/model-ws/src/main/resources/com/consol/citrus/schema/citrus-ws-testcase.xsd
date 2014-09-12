@@ -20,112 +20,11 @@
      targetNamespace="http://www.citrusframework.org/schema/ws/testcase"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
-    
-    <xs:import namespace="http://www.citrusframework.org/schema/testcase" 
-               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd" />
-    
-    <xs:element name="assert">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="core:actionType">
-                    <xs:sequence>
-                        <xs:element name="fault-detail" minOccurs="0" maxOccurs="unbounded">
-                            <xs:complexType>
-                                <xs:simpleContent>
-                                    <xs:extension base="xs:string">
-                                        <xs:attribute name="file" type="xs:string"/>
-                                        <xs:attribute name="schema-validation" type="xs:boolean"/>
-                                        <xs:attribute name="schema" type="xs:string"/>
-                                        <xs:attribute name="schema-repository" type="xs:string"/>
-                                    </xs:extension>
-                                </xs:simpleContent>
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:group ref="core:actionGroup"/>
-                    </xs:sequence>
-                    <xs:attribute name="fault-code" type="xs:string" use="required"/>
-                    <xs:attribute name="fault-string" type="xs:string"/>
-                    <xs:attribute name="fault-actor" type="xs:string"/>
-                    <xs:attribute name="fault-validator" type="xs:string"/>
-                    <xs:attribute name="message-factory" type="xs:string"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="send">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="core:sendActionType">
-                    <xs:sequence>
-                        <xs:element name="attachment" type="soapAttachmentType" minOccurs="0"/>
-                    </xs:sequence>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="send-fault">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="core:description" minOccurs="0"/>
-                <xs:element name="fault">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="fault-code" type="xs:string"/>
-                            <xs:element name="fault-string" type="xs:string" minOccurs="0"/>
-                            <xs:element name="fault-actor" type="xs:string" minOccurs="0"/>                            
-                            <xs:element name="fault-detail" minOccurs="0" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:simpleContent>
-                                        <xs:extension base="xs:string">
-                                            <xs:attribute name="file" type="xs:string"/>
-                                        </xs:extension>
-                                    </xs:simpleContent>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="header" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="element" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:attribute name="name" type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-            <xs:attribute name="with" type="xs:string"/>
-            <xs:attribute name="endpoint" type="xs:string"/>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="receive">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="core:receiveActionType">
-                    <xs:sequence>
-                        <xs:element name="attachment" minOccurs="0">
-                            <xs:complexType>
-                                <xs:complexContent>
-                                    <xs:extension base="soapAttachmentType">
-                                        <xs:attribute name="validator" type="xs:string"/>
-                                    </xs:extension>
-                                </xs:complexContent>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
 
-    <xs:complexType name="soapAttachmentType">
+    <xs:import namespace="http://www.citrusframework.org/schema/testcase"
+               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd" />
+
+    <xs:complexType name="SoapAttachmentType">
         <xs:choice>
             <xs:element name="data" type="xs:string"/>
             <xs:element name="resource">
@@ -137,5 +36,104 @@
         <xs:attribute name="content-id"/>
         <xs:attribute name="content-type"/>
         <xs:attribute name="charset-name"/>
-    </xs:complexType>    
+    </xs:complexType>
+
+    <xs:complexType name="SoapAssertActionType">
+        <xs:complexContent>
+            <xs:extension base="core:TestActionType">
+                <xs:sequence>
+                    <xs:element name="fault-detail" minOccurs="0" maxOccurs="unbounded">
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attribute name="file" type="xs:string"/>
+                                    <xs:attribute name="schema-validation" type="xs:boolean"/>
+                                    <xs:attribute name="schema" type="xs:string"/>
+                                    <xs:attribute name="schema-repository" type="xs:string"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:group ref="core:actionGroup"/>
+                </xs:sequence>
+                <xs:attribute name="fault-code" type="xs:string" use="required"/>
+                <xs:attribute name="fault-string" type="xs:string"/>
+                <xs:attribute name="fault-actor" type="xs:string"/>
+                <xs:attribute name="fault-validator" type="xs:string"/>
+                <xs:attribute name="message-factory" type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SoapSendActionType">
+        <xs:complexContent>
+            <xs:extension base="core:SendActionType">
+                <xs:sequence>
+                    <xs:element name="attachment" type="SoapAttachmentType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SoapSendFaultActionType">
+        <xs:sequence>
+            <xs:element ref="core:description" minOccurs="0"/>
+            <xs:element name="fault">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="fault-code" type="xs:string"/>
+                        <xs:element name="fault-string" type="xs:string" minOccurs="0"/>
+                        <xs:element name="fault-actor" type="xs:string" minOccurs="0"/>
+                        <xs:element name="fault-detail" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:string">
+                                        <xs:attribute name="file" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="header" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="element" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="with" type="xs:string"/>
+        <xs:attribute name="endpoint" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="SoapReceiveActionType">
+        <xs:complexContent>
+            <xs:extension base="core:ReceiveActionType">
+                <xs:sequence>
+                    <xs:element name="attachment" minOccurs="0">
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="SoapAttachmentType">
+                                    <xs:attribute name="validator" type="xs:string"/>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:element name="assert" type="SoapAssertActionType"/>
+    <xs:element name="send" type="SoapSendActionType"/>
+    <xs:element name="send-fault" type="SoapSendFaultActionType"/>
+    <xs:element name="receive" type="SoapReceiveActionType"/>
+
 </xs:schema>

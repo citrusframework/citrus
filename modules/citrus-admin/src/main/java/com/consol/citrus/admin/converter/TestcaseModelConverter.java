@@ -56,7 +56,7 @@ public class TestcaseModelConverter implements ObjectConverter<Testcase, TestCas
 
         testModel.setVariables(variables);
 
-        ActionListType actions = new ActionListType();
+        TestActionsType actions = new TestActionsType();
         for (TestAction testAction : definition.getActions()) {
             if (testAction instanceof ReceiveMessageAction) {
                 actions.getActionsAndSendsAndReceives().add(new ReceiveMessageActionConverter().convert((ReceiveMessageAction) testAction));

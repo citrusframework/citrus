@@ -28,7 +28,7 @@
     <bindings node="//xs:element[@name='variables']/xs:complexType/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
       <property name="VariableValue"/>
     </bindings>
-    <bindings node="//xs:element[@name='create-variables']/xs:complexType/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
+    <bindings node="//xs:complexType[@name='CreateVariablesActionType']/xs:sequence/xs:element[@name='variable']/xs:complexType/xs:sequence/xs:element[@name='value']">
       <property name="CreateVariableValue"/>
     </bindings>
     <bindings node="//xs:element[@name='parameter']/xs:complexType/xs:sequence/xs:element[@name='value']">
