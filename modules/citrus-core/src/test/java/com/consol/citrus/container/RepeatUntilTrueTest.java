@@ -16,29 +16,26 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.TestAction;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.container.RepeatUntilTrue;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
+
+    private TestAction action = EasyMock.createMock(TestAction.class);
+
     @Test
     public void testRepeat() {
         RepeatUntilTrue repeatUntilTrue = new RepeatUntilTrue();
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
 
         reset(action);
         
@@ -47,8 +44,7 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
         
         replay(action);
         
-        actions.add(action);
-        repeatUntilTrue.setActions(actions);
+        repeatUntilTrue.setActions(Collections.singletonList(action));
         
         repeatUntilTrue.setCondition("i = 5");
         repeatUntilTrue.setIndexName("i");
@@ -57,15 +53,14 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
         
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "4");
+
+        verify(action);
     }
     
     @Test
     public void testRepeatMinimumOnce() {
         RepeatUntilTrue repeatUntilTrue = new RepeatUntilTrue();
         
-        List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
-
         reset(action);
         
         action.execute(context);
@@ -73,8 +68,7 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
         
         replay(action);
         
-        actions.add(action);
-        repeatUntilTrue.setActions(actions);
+        repeatUntilTrue.setActions(Collections.singletonList(action));
         
         repeatUntilTrue.setCondition("i gt 0");
         repeatUntilTrue.setIndexName("i");
@@ -83,5 +77,7 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
         
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "1");
+
+        verify(action);
     }
 }

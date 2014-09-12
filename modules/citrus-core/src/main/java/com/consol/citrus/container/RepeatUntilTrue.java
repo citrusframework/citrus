@@ -45,6 +45,6 @@ public class RepeatUntilTrue extends AbstractIteratingTestAction {
         do {
             executeActions(context);
             index++;
-        } while (!checkCondition());
+        } while (!checkCondition(context));
     }
 }

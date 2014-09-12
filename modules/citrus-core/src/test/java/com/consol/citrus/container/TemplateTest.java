@@ -16,33 +16,29 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
-import static org.easymock.EasyMock.verify;
-
-import java.util.*;
-
-import org.easymock.EasyMock;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class TemplateTest extends AbstractTestNGUnitTest {
-    
+
+    private TestAction action = EasyMock.createMock(TestAction.class);
+
     @Test
     public void testTemplateExecution() {
         Template template = new Template();
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
+
 
         reset(action);
         
@@ -51,8 +47,7 @@ public class TemplateTest extends AbstractTestNGUnitTest {
         
         replay(action);
         
-        actions.add(action);
-        template.setActions(actions);
+        template.setActions(Collections.singletonList(action));
         
         template.execute(context);
         

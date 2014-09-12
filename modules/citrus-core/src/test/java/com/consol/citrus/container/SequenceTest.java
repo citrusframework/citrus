@@ -16,29 +16,27 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.easymock.EasyMock;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class SequenceTest extends AbstractTestNGUnitTest {
 
+    private TestAction action = EasyMock.createMock(TestAction.class);
+
     @Test
     public void testSingleAction() {
         Sequence sequenceAction = new Sequence();
-        
-        TestAction action = EasyMock.createMock(TestAction.class);
 
         reset(action);
         
@@ -47,12 +45,11 @@ public class SequenceTest extends AbstractTestNGUnitTest {
         
         replay(action);
         
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action);
-        
-        sequenceAction.setActions(actionList);
+        sequenceAction.setActions(Collections.singletonList(action));
         
         sequenceAction.execute(context);
+
+        verify(action);
     }
     
     @Test
