@@ -288,11 +288,14 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
                 
                 // Report all parsing errors
-                String validationErrors = "Found " + results.length + " XML validation errors: ";
-                for(SAXParseException e : results)
-                    validationErrors = validationErrors + "\n" + e.toString();
-                log.debug(validationErrors);
-                
+                log.debug("Found " + results.length + " schema validation errors");
+                StringBuilder errors = new StringBuilder();
+                for(SAXParseException e : results) {
+                    errors.append(e.toString());
+                    errors.append("\n");
+                }
+                log.debug(errors.toString());
+
                 throw new ValidationException("Schema validation failed:", results[0]);
             }
         } catch (IOException e) {
