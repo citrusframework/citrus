@@ -943,6 +943,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param actualValue
      * @param expectedValue
      * @param elementPathExpression
+     * @param context
      * @throws ValidationException if validation fails
      */
     private void validateExpectedActualElements(String actualValue, String expectedValue, String elementPathExpression, TestContext context)
