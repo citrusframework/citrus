@@ -511,9 +511,9 @@ Content-Length: 175
         configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling
         incoming requests (GET, PUT, DELETE, POST, etc.).</para>
 
-        <programlisting>&lt;bean id=&quot;citrusHandlerMapping&quot; class=&quot;org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping&quot;/&gt;
+        <programlisting>&lt;bean id=&quot;citrusHandlerMapping&quot; class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;/&gt;
 
-&lt;bean id=&quot;citrusMethodHandlerAdapter&quot; class=&quot;org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter&quot;&gt;
+&lt;bean id=&quot;citrusMethodHandlerAdapter&quot; class=&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter&quot;&gt;
   &lt;property name=&quot;messageConverters&quot;&gt;
     &lt;util:list id=&quot;converters&quot;&gt;
       &lt;bean class=&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;&gt;

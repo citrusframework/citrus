@@ -11,7 +11,7 @@
 
   <context:annotation-config/>
 
-  <bean id="citrusHandlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+  <bean id="citrusHandlerMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
     <property name="interceptors">
       <list>
         <ref bean="loggingInterceptor"/>
@@ -23,7 +23,7 @@
   <bean id="loggingInterceptor" class="com.consol.citrus.http.interceptor.LoggingHandlerInterceptor"/>
   <bean id="citrusHandlerInterceptor" class="com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor"/>
 
-  <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+  <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     <property name="messageConverters">
       <util:list id="converters">
         <bean class="org.springframework.http.converter.StringHttpMessageConverter">
