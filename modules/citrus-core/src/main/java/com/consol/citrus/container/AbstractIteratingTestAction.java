@@ -32,11 +32,9 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
 
     /** Looping index */
     protected int index = 1;
-    
+	
     @Override
     public void doExecute(TestContext context) {
-        condition = context.replaceDynamicContentInString(condition);
-        
         executeIteration(context);
     }
     
@@ -63,8 +61,9 @@ public abstract class AbstractIteratingTestAction extends AbstractActionContaine
      * Check aborting condition.
      * @return
      */
-    protected boolean checkCondition() {
-        String conditionString = condition;
+    protected boolean checkCondition(TestContext context) {
+        // replace dynamic content with each iteration
+        String conditionString = context.replaceDynamicContentInString(condition);
 
         if (conditionString.indexOf(indexName) != -1) {
             conditionString = conditionString.replaceAll(indexName, String.valueOf(index));

@@ -16,30 +16,28 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.TestAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.container.RepeatOnErrorUntilTrue;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
+
+    private TestAction action = EasyMock.createMock(TestAction.class);
+
     @Test
     public void testSuccessOnFirstIteration() {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
+
 
         reset(action);
         
@@ -48,9 +46,7 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         
         replay(action);
         
-        actions.add(action);
-        
-        repeat.setActions(actions);
+        repeat.setActions(Collections.singletonList(action));
         
         repeat.setIndexName("i");
         repeat.setCondition("i = 5");
@@ -63,7 +59,6 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
         
         List<TestAction> actions = new ArrayList<TestAction>();
-        TestAction action = EasyMock.createMock(TestAction.class);
 
         reset(action);
         

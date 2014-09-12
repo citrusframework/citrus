@@ -48,7 +48,7 @@ public class Iterate extends AbstractIteratingTestAction {
      */
     @Override
     public void executeIteration(TestContext context) {
-        while (checkCondition()) {
+        while (checkCondition(context)) {
             executeActions(context);
 
             index = index + step ;

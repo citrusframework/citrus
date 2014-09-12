@@ -55,7 +55,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
     public void executeIteration(TestContext context) {
         CitrusRuntimeException exception = null;
 
-        while(!checkCondition()) {
+        while(!checkCondition(context)) {
             try {
                 exception = null;
                 executeActions(context);

@@ -16,29 +16,28 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.easymock.EasyMock;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class ParallelTest extends AbstractTestNGUnitTest {
 
+    private TestAction action = EasyMock.createMock(TestAction.class);
+
     @Test
     public void testSingleAction() {
         Parallel parallelAction = new Parallel();
-        
-        TestAction action = EasyMock.createMock(TestAction.class);
 
         reset(action);
         
@@ -53,14 +52,14 @@ public class ParallelTest extends AbstractTestNGUnitTest {
         parallelAction.setActions(actionList);
         
         parallelAction.execute(context);
+
+        verify(action);
     }
     
     @Test
     public void testParallelMultipleActions() {
         Parallel parallelAction = new Parallel();
         
-        TestAction action = EasyMock.createMock(TestAction.class);
-
         reset(action);
         
         action.execute(context);
@@ -76,6 +75,8 @@ public class ParallelTest extends AbstractTestNGUnitTest {
         parallelAction.setActions(actionList);
         
         parallelAction.execute(context);
+
+        verify(action);
     }
     
     @Test
@@ -140,8 +141,6 @@ public class ParallelTest extends AbstractTestNGUnitTest {
     public void testSomeFailingActions() {
         Parallel parallelAction = new Parallel();
         
-        TestAction action = EasyMock.createMock(TestAction.class);
-
         reset(action);
         
         action.execute(context);
@@ -158,5 +157,7 @@ public class ParallelTest extends AbstractTestNGUnitTest {
         parallelAction.setActions(actionList);
         
         parallelAction.execute(context);
+
+        verify(action);
     }
 }

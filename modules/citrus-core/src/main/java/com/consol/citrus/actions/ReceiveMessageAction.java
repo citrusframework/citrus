@@ -126,11 +126,6 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
                 throw new CitrusRuntimeException("Failed to receive message - message is not available");
             }
 
-            // extract variables from received message content
-            for (VariableExtractor variableExtractor : variableExtractors) {
-                variableExtractor.extractVariables(receivedMessage, context);
-            }
-            
             //validate the message
             validateMessage(receivedMessage, context);
         } catch (IOException e) {
@@ -185,6 +180,12 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @param receivedMessage
      */
     protected void validateMessage(Message<?> receivedMessage, TestContext context) throws IOException {
+	
+        // extract variables from received message content
+        for (VariableExtractor variableExtractor : variableExtractors) {
+            variableExtractor.extractVariables(receivedMessage, context);
+        }
+
         if (validationCallback != null) {
             validationCallback.validate(receivedMessage);
         } else if (validator != null) {

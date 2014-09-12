@@ -16,18 +16,16 @@
 
 package com.consol.citrus.container;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.easymock.EasyMock;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Matthias Beil
@@ -35,13 +33,13 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  */
 public class ConditionalTest extends AbstractTestNGUnitTest {
 
+    private TestAction action = EasyMock.createMock(TestAction.class);
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void testConditionFalse() {
 
         final Conditional conditionalAction = new Conditional();
         conditionalAction.setExpression("1 = 0");
-
-        final TestAction action = EasyMock.createMock(TestAction.class);
 
         reset(action);
 
@@ -50,14 +48,14 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
         replay(action);
 
-        final List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action);
-        conditionalAction.setActions(actionList);
+        conditionalAction.setActions(Collections.singletonList(action));
 
         conditionalAction.execute(this.context);
 
         // must throw IllegalStateException, as the action should never be called
         expectLastCall().once();
+
+        verify(action);
     }
 
     @Test
