@@ -30,6 +30,7 @@
       <xs:attribute name="auto-accept" type="xs:boolean"/>
       <xs:attribute name="split-multipart" type="xs:boolean"/>
       <xs:attribute name="mail-properties" type="xs:string"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -43,6 +44,7 @@
       <xs:attribute name="password" type="xs:string"/>
       <xs:attribute name="properties" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
+      <xs:attribute name="message-converter" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 

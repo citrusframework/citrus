@@ -17,6 +17,7 @@
 package com.consol.citrus.mail.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMessageMapper;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -51,6 +52,9 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Mail message mapper converts from XML to mail message object */
     private MailMessageMapper mailMessageMapper = new MailMessageMapper();
+
+    /** Mail message converter */
+    private MailMessageConverter messageConverter = new MailMessageConverter();
 
     /**
      * Gets the mail protocol.
@@ -192,4 +196,19 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
         this.javaMailSender = javaMailSender;
     }
 
+    /**
+     * Gets the mail message converter.
+     * @return
+     */
+    public MailMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the mail message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(MailMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
+    }
 }

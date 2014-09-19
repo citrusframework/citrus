@@ -18,24 +18,18 @@ package com.consol.citrus.mail.client;
 
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.mail.model.AttachmentPart;
-import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.messaging.Message;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -70,13 +64,13 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
     public void send(Message<?> message) {
         log.info(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
-        MimeMessage mimeMessage = createMailMessage(message);
-        getEndpointConfiguration().getJavaMailSender().send(mimeMessage);
+        MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
+        getEndpointConfiguration().getJavaMailSender().send(mimeMessage.getMimeMessage());
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         String mailMessageContent;
         try {
-            mimeMessage.writeTo(bos);
+            mimeMessage.getMimeMessage().writeTo(bos);
             mailMessageContent = bos.toString(); //TODO use message charset encoding
         } catch (IOException e) {
             mailMessageContent = message.toString();
@@ -97,61 +91,6 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
         }
 
         log.info(String.format("Message was successfully sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
-    }
-
-    /**
-     * Create mime mail message from Citrus mail message object payload.
-     * @param message
-     * @return
-     */
-    protected MimeMessage createMailMessage(Message<?> message) {
-        Object payload = message.getPayload();
-
-        MailMessage mailMessage = null;
-        if (payload != null) {
-            if (payload instanceof MailMessage) {
-                mailMessage = (MailMessage) payload;
-            } else if (payload instanceof String) {
-                mailMessage = (MailMessage) getEndpointConfiguration().getMailMessageMapper().fromXML(payload.toString());
-            }
-        }
-
-        if (mailMessage == null) {
-            throw new CitrusRuntimeException("Unable to create proper mail message from paylaod: " + payload);
-        }
-
-        try {
-            MimeMessage mimeMessage = getEndpointConfiguration().getJavaMailSender().createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, mailMessage.getBody().hasAttachments(), mailMessage.getBody().getCharsetName());
-
-            mimeMessageHelper.setFrom(mailMessage.getFrom());
-            mimeMessageHelper.setTo(StringUtils.commaDelimitedListToStringArray(mailMessage.getTo()));
-
-            if (StringUtils.hasText(mailMessage.getCc())) {
-                mimeMessageHelper.setCc(StringUtils.commaDelimitedListToStringArray(mailMessage.getCc()));
-            }
-
-            if (StringUtils.hasText(mailMessage.getBcc())) {
-                mimeMessageHelper.setBcc(StringUtils.commaDelimitedListToStringArray(mailMessage.getBcc()));
-            }
-
-            mimeMessageHelper.setReplyTo(mailMessage.getReplyTo() != null ? mailMessage.getReplyTo() : mailMessage.getFrom());
-            mimeMessageHelper.setSentDate(new Date());
-            mimeMessageHelper.setSubject(mailMessage.getSubject());
-            mimeMessageHelper.setText(mailMessage.getBody().getContent());
-
-            if (mailMessage.getBody().hasAttachments()) {
-                for (AttachmentPart attachmentPart : mailMessage.getBody().getAttachments()) {
-                    mimeMessageHelper.addAttachment(attachmentPart.getFileName(),
-                            new ByteArrayResource(attachmentPart.getContent().getBytes(Charset.forName(attachmentPart.getCharsetName()))),
-                            attachmentPart.getContentType());
-                }
-            }
-
-            return mimeMessage;
-        } catch (MessagingException e) {
-            throw new CitrusRuntimeException("Failed to create mail mime message", e);
-        }
     }
 
     /**

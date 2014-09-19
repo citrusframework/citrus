@@ -21,6 +21,7 @@
                        host="localhost"
                        port="25000"
                        actor="testActor"
+                       message-converter="messageConverter"
                        properties="javaMailProperties"/>
 
   <util:properties id="javaMailProperties">
@@ -29,6 +30,10 @@
 
   <bean id="testActor" class="com.consol.citrus.TestActor">
     <property name="name" value="SampleTestActor"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
   </bean>
 
 </beans>

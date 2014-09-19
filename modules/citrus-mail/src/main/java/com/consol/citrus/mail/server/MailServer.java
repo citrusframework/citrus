@@ -17,29 +17,23 @@
 package com.consol.citrus.mail.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.mail.client.MailEndpointConfiguration;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
+import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.*;
-import com.consol.citrus.mail.model.BodyPart;
 import com.consol.citrus.server.AbstractServer;
-import com.thoughtworks.xstream.XStream;
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
 import org.subethamail.smtp.server.SMTPServer;
 
-import javax.mail.*;
+import javax.mail.MessagingException;
+import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimePart;
-import java.io.*;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -62,7 +56,10 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     private int port = 25;
 
     /** XML message mapper */
-    private XStream mailMessageMapper = new MailMessageMapper();
+    private MailMessageMapper mailMessageMapper = new MailMessageMapper();
+
+    /** Mail message converter */
+    private MailMessageConverter messageConverter = new MailMessageConverter();
 
     /** Java mail session */
     private Session mailSession;
@@ -76,14 +73,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     /** Should split multipart messages for each mime part */
     private boolean splitMultipart = false;
 
-    /** Mail delivery date format */
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-
     /** Smtp server instance */
     private SMTPServer smtpServer;
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MailServer.class);
 
     @Override
     protected void startup() {
@@ -129,12 +120,11 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     @Override
     public void deliver(String from, String recipient, InputStream data) {
         try {
-            MimeMailMessage message = new MimeMailMessage(new MimeMessage(getSession(), data));
-            Map<String, String> messageHeaders = createMessageHeaders(message);
-            MailMessage mailMessage = createMailMessage(messageHeaders);
-            mailMessage.setBody(handlePart(message.getMimeMessage()));
+            MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessage(getSession(), data));
+            org.springframework.messaging.Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration());
 
-            org.springframework.messaging.Message response = invokeMessageHandler(mailMessage, messageHeaders);
+
+            org.springframework.messaging.Message response = invokeMessageHandler(request);
 
             if (response != null && response.getPayload() != null) {
                 MailMessageResponse mailResponse = null;
@@ -150,23 +140,22 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             }
         } catch (MessagingException e) {
             throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
         }
     }
 
     /**
      * Invokes the message handler with constructed mail message and headers.
-     * @param mailMessage
-     * @param messageHeaders
+     * @param request
      */
-    protected org.springframework.messaging.Message<?> invokeMessageHandler(MailMessage mailMessage, Map<String, String> messageHeaders) {
+    protected org.springframework.messaging.Message<?> invokeMessageHandler(org.springframework.messaging.Message<?> request) {
+        MailMessage mailMessage = (MailMessage) request.getPayload();
+
         if (splitMultipart) {
-            return split(mailMessage.getBody(), messageHeaders);
+            return split(mailMessage.getBody(), request.getHeaders());
         } else {
             return getEndpointAdapter().handleMessage(org.springframework.integration.support.MessageBuilder
                     .withPayload(mailMessageMapper.toXML(mailMessage))
-                    .copyHeaders(messageHeaders)
+                    .copyHeaders(request.getHeaders())
                     .build());
         }
     }
@@ -179,7 +168,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param bodyPart
      * @param messageHeaders
      */
-    private org.springframework.messaging.Message<?> split(BodyPart bodyPart, Map<String, String> messageHeaders) {
+    private org.springframework.messaging.Message<?> split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
         MailMessage mailMessage = createMailMessage(messageHeaders);
         mailMessage.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
 
@@ -215,218 +204,32 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     }
 
     /**
-     * Process message part. Can be a text, binary or multipart instance.
-     * @param part
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handlePart(MimePart part) throws IOException, MessagingException {
-        String contentType = parseContentType(part.getContentType());
-
-        if (part.isMimeType("multipart/*")) {
-            return handleMultiPart((Multipart) part.getContent());
-        } else if (part.isMimeType("text/*")) {
-            return handleTextPart(part, contentType);
-        } else if (part.isMimeType("image/*")) {
-            return handleImageBinaryPart(part, contentType);
-        } else if (part.isMimeType("application/*")) {
-            return handleApplicationContentPart(part, contentType);
-        } else {
-            return handleBinaryPart(part, contentType);
-        }
-    }
-
-    /**
-     * Construct multipart body with first part being the body content and further parts being the attachments.
-     * @param body
-     * @return
-     * @throws IOException
-     */
-    private BodyPart handleMultiPart(Multipart body) throws IOException, MessagingException {
-        BodyPart bodyPart = null;
-        for (int i = 0; i < body.getCount(); i++) {
-            MimePart entity = (MimePart) body.getBodyPart(i);
-
-            if (bodyPart == null) {
-                bodyPart = handlePart(entity);
-            } else {
-                BodyPart attachment = handlePart(entity);
-                bodyPart.addPart(new AttachmentPart(attachment.getContent(), parseContentType(attachment.getContentType()), entity.getFileName()));
-            }
-        }
-
-        return bodyPart;
-    }
-
-    /**
-     * Construct body part form special application data. Based on known application content types delegate to text,
-     * image or binary body construction.
-     * @param applicationData
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handleApplicationContentPart(MimePart applicationData, String contentType) throws IOException, MessagingException {
-        if (applicationData.isMimeType("application/pdf")) {
-            return handleImageBinaryPart(applicationData, contentType);
-        } else if (applicationData.isMimeType("application/rtf")) {
-            return handleImageBinaryPart(applicationData, contentType);
-        } else if (applicationData.isMimeType("application/java")) {
-            return handleTextPart(applicationData, contentType);
-        } else if (applicationData.isMimeType("application/x-javascript")) {
-            return handleTextPart(applicationData, contentType);
-        } else if (applicationData.isMimeType("application/xhtml+xml")) {
-            return handleTextPart(applicationData, contentType);
-        } else if (applicationData.isMimeType("application/json")) {
-            return handleTextPart(applicationData, contentType);
-        } else if (applicationData.isMimeType("application/postscript")) {
-            return handleTextPart(applicationData, contentType);
-        } else {
-            return handleBinaryPart(applicationData, contentType);
-        }
-    }
-
-    /**
-     * Construct base64 body part from image data.
-     * @param image
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handleImageBinaryPart(MimePart image, String contentType) throws IOException, MessagingException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        FileCopyUtils.copy(image.getInputStream(), bos);
-        String base64 = Base64.encodeBase64String(bos.toByteArray());
-        return new BodyPart(base64, contentType);
-    }
-
-    /**
-     * Construct simple body part from binary data just adding file name as content.
-     * @param mediaPart
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handleBinaryPart(MimePart mediaPart, String contentType) throws IOException, MessagingException {
-        String contentId = mediaPart.getContentID() != null ? "(" + mediaPart.getContentID() + ")" : "";
-        return new BodyPart(mediaPart.getFileName() + contentId, contentType);
-    }
-
-    /**
-     * Construct simple binary body part with base64 data.
-     * @param textPart
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    protected BodyPart handleTextPart(MimePart textPart, String contentType) throws IOException, MessagingException {
-        String text = (String) textPart.getContent();
-        return new BodyPart(stripMailBodyEnding(text), contentType);
-    }
-
-    /**
-     * When content type has multiple lines this method just returns plain content type information in first line.
-     * This is the case when multipart mixed content type has boundary information in next line.
-     * @param contentType
-     * @return
-     * @throws IOException
-     */
-    private String parseContentType(String contentType) throws IOException {
-        if (contentType.indexOf(System.getProperty("line.separator")) > 0) {
-            BufferedReader reader = new BufferedReader(new StringReader(contentType));
-
-            try {
-                String plainContentType = reader.readLine();
-                if (plainContentType != null && plainContentType.trim().endsWith(";")) {
-                    plainContentType = plainContentType.trim().substring(0, plainContentType.length() - 1);
-                }
-
-                return plainContentType;
-            } finally {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Failed to close reader", e);
-                }
-            }
-        }
-
-        return contentType;
-    }
-
-    /**
-     * Removes SMTP mail body ending which is defined by single '.' character in separate line marking
-     * the mail body end of file.
-     * @param textBody
+     * Creates a new mail message model object from message headers.
+     * @param messageHeaders
      * @return
      */
-    private String stripMailBodyEnding(String textBody) throws IOException {
-        BufferedReader reader = null;
-        StringBuilder body = new StringBuilder();
-
-        try {
-            reader = new BufferedReader(new StringReader(textBody));
-
-            String line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                if (line.trim().equals(".")) {
-                    break;
-                }
-
-                body.append(line);
-                body.append(System.getProperty("line.separator"));
-                line = reader.readLine();
-            }
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.warn("Failed to close reader", e);
-                }
-            }
-        }
-
-        return body.toString().trim();
+    protected MailMessage createMailMessage(Map<String, Object> messageHeaders) {
+        MailMessage message = new MailMessage();
+        message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM).toString());
+        message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO).toString());
+        message.setCc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC).toString());
+        message.setBcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC).toString());
+        message.setSubject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT).toString());
+        return message;
     }
 
     private AcceptRequest createAcceptRequest(String from, String recipient) {
         return new AcceptRequest(from, recipient);
     }
 
-    /**
-     * Creates a new mail message model object from message headers.
-     * @param messageHeaders
-     * @return
-     */
-    protected MailMessage createMailMessage(Map<String, String> messageHeaders) {
-        MailMessage message = new MailMessage();
-        message.setFrom(messageHeaders.get(CitrusMailMessageHeaders.MAIL_FROM));
-        message.setTo(messageHeaders.get(CitrusMailMessageHeaders.MAIL_TO));
-        message.setCc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_CC));
-        message.setBcc(messageHeaders.get(CitrusMailMessageHeaders.MAIL_BCC));
-        message.setSubject(messageHeaders.get(CitrusMailMessageHeaders.MAIL_SUBJECT));
-        return message;
-    }
+    @Override
+    public MailEndpointConfiguration getEndpointConfiguration() {
+        MailEndpointConfiguration endpointConfiguration = new MailEndpointConfiguration();
+        endpointConfiguration.setMessageConverter(messageConverter);
+        endpointConfiguration.setMailMessageMapper(mailMessageMapper);
+        endpointConfiguration.setJavaMailProperties(javaMailProperties);
 
-    /**
-     * Reads basic message information such as sender, recipients and mail subject to message headers.
-     * @param msg
-     * @return
-     */
-    protected Map<String,String> createMessageHeaders(MimeMailMessage msg) throws MessagingException, IOException {
-        Map<String, String> headers = new HashMap<String, String>();
-        headers.put(CitrusMailMessageHeaders.MAIL_MESSAGE_ID, msg.getMimeMessage().getMessageID());
-        headers.put(CitrusMailMessageHeaders.MAIL_FROM, StringUtils.arrayToCommaDelimitedString(msg.getMimeMessage().getFrom()));
-        headers.put(CitrusMailMessageHeaders.MAIL_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(Message.RecipientType.TO))));
-        headers.put(CitrusMailMessageHeaders.MAIL_CC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(Message.RecipientType.CC))));
-        headers.put(CitrusMailMessageHeaders.MAIL_BCC, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getRecipients(Message.RecipientType.BCC))));
-        headers.put(CitrusMailMessageHeaders.MAIL_REPLY_TO, StringUtils.arrayToCommaDelimitedString((msg.getMimeMessage().getReplyTo())));
-        headers.put(CitrusMailMessageHeaders.MAIL_DATE, msg.getMimeMessage().getSentDate() != null ? dateFormat.format(msg.getMimeMessage().getSentDate()) : null);
-        headers.put(CitrusMailMessageHeaders.MAIL_SUBJECT, msg.getMimeMessage().getSubject());
-        headers.put(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, parseContentType(msg.getMimeMessage().getContentType()));
-
-        return headers;
+        return endpointConfiguration;
     }
 
     /**
@@ -460,7 +263,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * Gets the mail message mapper.
      * @return
      */
-    public XStream getMailMessageMapper() {
+    public MailMessageMapper getMailMessageMapper() {
         return mailMessageMapper;
     }
 
@@ -468,7 +271,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * Sets the mail message mapper.
      * @param mailMessageMapper
      */
-    public void setMailMessageMapper(XStream mailMessageMapper) {
+    public void setMailMessageMapper(MailMessageMapper mailMessageMapper) {
         this.mailMessageMapper = mailMessageMapper;
     }
 
@@ -534,5 +337,21 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      */
     public void setSplitMultipart(boolean splitMultipart) {
         this.splitMultipart = splitMultipart;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public MailMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(MailMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

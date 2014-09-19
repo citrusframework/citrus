@@ -46,6 +46,7 @@ public class MailClientParser extends AbstractBeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, element.getAttribute("password"), "password");
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfigurationBuilder, element.getAttribute("properties"), "javaMailProperties");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfigurationBuilder, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id") + "Configuration", endpointConfigurationBuilder.getBeanDefinition());

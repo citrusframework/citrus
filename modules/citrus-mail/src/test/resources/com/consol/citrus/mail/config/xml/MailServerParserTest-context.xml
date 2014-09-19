@@ -17,6 +17,7 @@
   <citrus-mail:server id="mailServer3"
                       auto-start="false"
                       split-multipart="true"
+                      message-converter="messageConverter"
                       mail-properties="mailProperties"
                       endpoint-adapter="endpointAdapter"/>
 
@@ -26,6 +27,10 @@
 
   <bean id="endpointAdapter" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.mail.message.MailMessageConverter"/>
   </bean>
 
 </beans>

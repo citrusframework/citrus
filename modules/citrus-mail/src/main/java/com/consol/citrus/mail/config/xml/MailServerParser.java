@@ -36,6 +36,8 @@ public class MailServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-accept"), "autoAccept");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("split-multipart"), "splitMultipart");
 
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
+
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("mail-properties"), "javaMailProperties");
     }
 
