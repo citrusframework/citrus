@@ -48,6 +48,7 @@ public class VertxSyncEndpointParserTest extends AbstractBeanDefinitionParserTes
         Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
         Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("specialVertxInstanceFactory"));
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
+        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getHost(), "127.0.0.1");
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getPort(), 10105);
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed2");

@@ -74,7 +74,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
                 @Override
                 public void handle(org.vertx.java.core.eventbus.Message event) {
                     log.info("Received synchronous response message on event bus reply address");
-                    onReplyMessage(message, endpointConfiguration.getMessageConverter().convertMessage(event));
+                    onReplyMessage(message, endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration));
                 }
             });
     }

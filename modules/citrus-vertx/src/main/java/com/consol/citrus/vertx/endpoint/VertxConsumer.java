@@ -67,7 +67,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
         vertx.eventBus().registerHandler(endpointConfiguration.getAddress(), vertxMessageHandler);
 
         long timeLeft = timeout;
-        Message<?> message = endpointConfiguration.getMessageConverter().convertMessage(vertxMessageHandler.getMessage());
+        Message<?> message = endpointConfiguration.getMessageConverter().convertInbound(vertxMessageHandler.getMessage(), endpointConfiguration);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -84,7 +84,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
                 RETRY_LOG.warn("Thread interrupted while waiting for message on Vert.x event bus", e);
             }
 
-            message = endpointConfiguration.getMessageConverter().convertMessage(vertxMessageHandler.getMessage());
+            message = endpointConfiguration.getMessageConverter().convertInbound(vertxMessageHandler.getMessage(), endpointConfiguration);
         }
 
         if (message == null) {

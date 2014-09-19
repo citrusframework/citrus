@@ -15,6 +15,7 @@
                          port="10105"
                          vertx-factory="specialVertxInstanceFactory"
                          message-correlator="replyMessageCorrelator"
+                         message-converter="messageConverter"
                          timeout="10000"
                          address="news-feed2"/>
 
@@ -40,5 +41,9 @@
 
   <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
+  </bean>
+
+  <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.vertx.message.VertxMessageConverter"/>
   </bean>
 </beans>

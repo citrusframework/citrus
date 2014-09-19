@@ -46,6 +46,7 @@ public class VertxEndpointParserTest extends AbstractBeanDefinitionParserTest {
         vertxEndpoint = endpoints.get("vertxEndpoint2");
         Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
         Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("specialVertxInstanceFactory"));
+        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getHost(), "127.0.0.1");
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getPort(), 10105);
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed2");
