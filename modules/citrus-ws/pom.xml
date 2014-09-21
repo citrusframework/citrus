@@ -79,7 +79,7 @@
     </dependency>
     <dependency>
         <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-core</artifactId>
+        <artifactId>activemq-all</artifactId>
         <scope>test</scope>
     </dependency>
     <dependency>
