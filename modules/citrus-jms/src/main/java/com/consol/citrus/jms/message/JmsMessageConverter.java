@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms.endpoint;
+package com.consol.citrus.jms.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.message.MessageConverter;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;

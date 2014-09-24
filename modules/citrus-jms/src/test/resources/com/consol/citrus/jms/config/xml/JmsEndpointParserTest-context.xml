@@ -46,6 +46,6 @@
 
   <!-- Custom message converter -->
   <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
-    <constructor-arg value="com.consol.citrus.jms.endpoint.JmsMessageConverter"/>
+    <constructor-arg value="com.consol.citrus.jms.message.JmsMessageConverter"/>
   </bean>
 </beans>

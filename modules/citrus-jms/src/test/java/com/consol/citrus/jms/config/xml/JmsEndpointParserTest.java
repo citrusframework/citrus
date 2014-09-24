@@ -18,7 +18,7 @@ package com.consol.citrus.jms.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
-import com.consol.citrus.jms.endpoint.JmsMessageConverter;
+import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -17,6 +17,7 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.jms.message.JmsMessageConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.jms.DefaultJmsHeaderMapper;
