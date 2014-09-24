@@ -373,7 +373,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected Object[][] getParameterValues() {
-        return new Object[][] { {} };
+        return new Object[0][];
     }
 
     /**
