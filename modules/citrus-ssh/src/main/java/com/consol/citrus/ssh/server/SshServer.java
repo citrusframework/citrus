@@ -94,10 +94,12 @@ public class SshServer extends AbstractServer {
             sshd.setPasswordAuthenticator(new SimplePasswordAuthenticator(user, password));
             authFound = true;
         }
+
         if (allowedKeyPath != null) {
             sshd.setPublickeyAuthenticator(new SinglePublicKeyAuthenticator(user, allowedKeyPath));
             authFound = true;
         }
+
         if (!authFound) {
             throw new CitrusRuntimeException("Neither 'password' nor 'allowed-key-path' is set. Please provide at least one");
         }

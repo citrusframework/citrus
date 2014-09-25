@@ -48,12 +48,6 @@
     </dependency>
     
     <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-      <optional>true</optional>
-    </dependency>
-    
-    <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
     </dependency>

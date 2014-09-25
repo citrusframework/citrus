@@ -286,6 +286,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                         + "found value: NULL expected value: " + controlValue);
             }
         }
+
         if (resultValue.equals(controlValue)) {
             if (log.isDebugEnabled()) {
                 log.debug("Validation successful for column: '" + columnName +

@@ -105,8 +105,8 @@ public class SshServerTest {
             org.apache.sshd.SshServer sshd = (org.apache.sshd.SshServer) ReflectionTestUtils.getField(server, "sshd");
             KeyPairProvider prov = sshd.getKeyPairProvider();
             assertTrue(prov instanceof FileKeyPairProvider);
-            KeyPair[] keys = ((FileKeyPairProvider) prov).loadKeys();
-            assertEquals(keys.length,0);
+            Iterable<KeyPair> keys = prov.loadKeys();
+            assertFalse(keys.iterator().hasNext());
         } finally {
             server.stop();
         }
