@@ -452,6 +452,18 @@
         <version>${apache.camel.version}</version>
       </dependency>
 
+      <!-- JaxB Bindings (API and implementation) -->
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>2.2.7</version>
+      </dependency>
+
       <!-- Logging -->
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -747,11 +759,11 @@
             <excludeSubProjects>false</excludeSubProjects>
           </configuration>
         </plugin>
-        
+
         <plugin>
-          <groupId>org.jvnet.jaxb2.maven2</groupId>
-          <artifactId>maven-jaxb2-plugin</artifactId>
-          <version>0.9.1</version>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jaxb2-maven-plugin</artifactId>
+          <version>1.5</version>
         </plugin>
         
         <plugin>
