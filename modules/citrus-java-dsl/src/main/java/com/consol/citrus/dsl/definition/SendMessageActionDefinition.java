@@ -28,10 +28,12 @@ import com.consol.citrus.validation.interceptor.XpathMessageConstructionIntercep
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.messaging.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
@@ -58,17 +60,23 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
     /** Message constructing interceptor */
     private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
-    
+
+    /** Basic application context */
+    private ApplicationContext applicationContext;
+
+    /** Handle for test action position in test case sequence use when switching to SOAP specific definition */
     private PositionHandle positionHandle;
-    
+
+
     /**
      * Default constructor with test action.
      * @param action
+     * @param ctx
      * @param positionHandle
      */
-    public SendMessageActionDefinition(A action, PositionHandle positionHandle) {
+    public SendMessageActionDefinition(A action, ApplicationContext ctx, PositionHandle positionHandle) {
         super(action);
-        
+        this.applicationContext = ctx;
         this.positionHandle = positionHandle;
         this.self = (T) this;
     }
@@ -135,7 +143,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     }
     
     /**
-     * Sets payload POJO object with marshaller.
+     * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper.
      * @param payload
      * @param marshaller
      * @return
@@ -161,6 +169,31 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         }
         
         return self;
+    }
+
+    /**
+     * Sets payload POJO object which is marshalled to a character sequence using the default object to xml mapper that
+     * is available in Spring bean application context.
+     *
+     * @param payload
+     * @return
+     */
+    public T payloadModel(Object payload) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        return payload(payload, applicationContext.getBean(Marshaller.class));
+    }
+
+    /**
+     * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper that
+     * is accessed by its bean name in Spring bean application context.
+     *
+     * @param payload
+     * @param marshallerName
+     * @return
+     */
+    public T payload(Object payload, String marshallerName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        return payload(payload, applicationContext.getBean(marshallerName, Marshaller.class));
     }
 
     /**
@@ -313,7 +346,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
         positionHandle.switchTestAction(sendSoapMessageAction);
 
-        return new SendSoapMessageActionDefinition(sendSoapMessageAction);
+        return new SendSoapMessageActionDefinition(sendSoapMessageAction, applicationContext);
     }
 
     /**
@@ -329,7 +362,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @return HTTP specific definition.
      */
     public SendHttpMessageActionDefinition http() {
-        return new SendHttpMessageActionDefinition(action, positionHandle);
+        return new SendHttpMessageActionDefinition(action, applicationContext, positionHandle);
     }
 
 }

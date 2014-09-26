@@ -40,7 +40,10 @@ import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.*;
@@ -54,10 +57,15 @@ import static org.easymock.EasyMock.*;
 public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
-
     private Resource resource = EasyMock.createMock(Resource.class);
-    
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
+
+    private XStreamMarshaller marshaller = new XStreamMarshaller();
+
+    @BeforeClass
+    public void prepareMarshaller() {
+        marshaller.getXStream().processAnnotations(TestRequest.class);
+    }
 
     @Test
     public void testReceiveBuilder() {
@@ -87,6 +95,113 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
         Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+    }
+
+    @Test
+    public void testReceiveBuilderWithPayloadModel() {
+        reset(applicationContextMock);
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .payloadModel(new TestRequest("Hello Citrus!"));
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        verify(applicationContextMock);
+    }
+
+    @Test
+    public void testReceiveBuilderWithPayloadModelExplicitMarshaller() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .payload(new TestRequest("Hello Citrus!"), marshaller);
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        verify(applicationContextMock);
+    }
+
+    @Test
+    public void testReceiveBuilderWithPayloadModelExplicitMarshallerName() {
+        reset(applicationContextMock);
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .payload(new TestRequest("Hello Citrus!"), "myMarshaller");
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), XmlMessageValidationContext.class);
+
+        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        verify(applicationContextMock);
     }
     
     @Test

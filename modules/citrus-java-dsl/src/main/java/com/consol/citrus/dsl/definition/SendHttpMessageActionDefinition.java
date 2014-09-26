@@ -21,6 +21,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 
@@ -37,10 +38,11 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      * Constructor delegating to the parent constructor
      *
      * @param action action defined by this definiton
+     * @param ctx the Spring application context
      * @param positionHandle position within the list of test actions.
      */
-    public SendHttpMessageActionDefinition(SendMessageAction action, PositionHandle positionHandle) {
-        super(action, positionHandle);
+    public SendHttpMessageActionDefinition(SendMessageAction action, ApplicationContext ctx, PositionHandle positionHandle) {
+        super(action, ctx, positionHandle);
     }
 
     /**

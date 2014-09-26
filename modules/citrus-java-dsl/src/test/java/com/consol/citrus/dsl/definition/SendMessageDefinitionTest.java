@@ -33,7 +33,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -51,6 +54,13 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     private Resource resource = EasyMock.createMock(Resource.class);
+
+    private XStreamMarshaller marshaller = new XStreamMarshaller();
+
+    @BeforeClass
+    public void prepareMarshaller() {
+        marshaller.getXStream().processAnnotations(TestRequest.class);
+    }
 
     @Test
     public void testSendBuilderWithMessageInstance() {
@@ -86,7 +96,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(messageEndpoint)
-                        .message(message);
+                    .message(message);
             }
         };
 
@@ -121,8 +131,8 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(messageEndpoint)
-                        .message(message)
-                        .header("additional", "new");
+                    .message(message)
+                    .header("additional", "new");
             }
         };
 
@@ -150,6 +160,104 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(constructed.getHeaders().get("operation"), "foo");
         Assert.assertEquals(constructed.getHeaders().get("additional"), "new");
     }
+
+    @Test
+    public void testSendBuilderWithPayloadModel() {
+        reset(applicationContextMock);
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .payloadModel(new TestRequest("Hello Citrus!"));
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+
+        verify(applicationContextMock);
+    }
+
+    @Test
+    public void testSendBuilderWithPayloadModelExplicitMarshaller() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                    .payload(new TestRequest("Hello Citrus!"), marshaller);
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+
+        verify(applicationContextMock);
+    }
+
+    @Test
+    public void testSendBuilderWithPayloadModelExplicitMarshallerName() {
+        reset(applicationContextMock);
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .payload(new TestRequest("Hello Citrus!"), "myMarshaller");
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+
+        verify(applicationContextMock);
+    }
     
     @Test
     public void testSendBuilderWithPayloadData() {
@@ -176,7 +284,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
     }
-    
+
     @Test
     public void testSendBuilderWithPayloadResource() throws IOException {
         MockBuilder builder = new MockBuilder(applicationContext) {
@@ -444,4 +552,5 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
         Assert.assertEquals(((XpathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
     }
+
 }

@@ -72,5 +72,12 @@
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
+
+    <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

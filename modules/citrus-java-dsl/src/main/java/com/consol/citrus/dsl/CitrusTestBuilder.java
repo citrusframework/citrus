@@ -516,7 +516,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpoint(client);
 
         testCase.addTestAction(action);
-        return new SendSoapMessageActionDefinition(action);
+        return new SendSoapMessageActionDefinition(action, applicationContext);
     }
 
     /**
@@ -530,7 +530,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
+        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -545,7 +545,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpointUri(messageEndpointUri);
 
         testCase.addTestAction(action);
-        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, new PositionHandle(testCase.getActions()));
+        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -560,7 +560,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpointUri(messageEndpointUri);
 
         testCase.addTestAction(action);
-        return new SendSoapFaultActionDefinition(action, new PositionHandle(testCase.getActions()));
+        return new SendSoapFaultActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
 
     /**
@@ -575,7 +575,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
-        return new SendSoapFaultActionDefinition(action, new PositionHandle(testCase.getActions()));
+        return new SendSoapFaultActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
     }
 
     /**

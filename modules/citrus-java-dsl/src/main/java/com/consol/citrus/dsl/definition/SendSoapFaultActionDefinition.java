@@ -21,6 +21,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -38,10 +39,11 @@ public class SendSoapFaultActionDefinition extends SendMessageActionDefinition<S
     /**
      * Default constructor with test action.
      * @param action
+     * @param ctx
      * @param positionHandle
      */
-    public SendSoapFaultActionDefinition(SendMessageAction action, PositionHandle positionHandle) {
-        super(action, positionHandle);
+    public SendSoapFaultActionDefinition(SendMessageAction action, ApplicationContext ctx, PositionHandle positionHandle) {
+        super(action, ctx, positionHandle);
         
         action.setMessageBuilder(soapFaultMessageBuilder);
     }

@@ -36,7 +36,9 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.messaging.Message;
+import org.springframework.oxm.*;
 import org.springframework.util.Assert;
+import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
 import java.util.Map;
@@ -134,6 +136,54 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         }
 
         return self;
+    }
+
+    /**
+     * Expect this message payload as model object which is marshalled to a character sequence
+     * using the default object to xml mapper before validation is performed.
+     * @param payload
+     * @param marshaller
+     * @return
+     */
+    public T payload(Object payload, Marshaller marshaller) {
+        StringResult result = new StringResult();
+
+        try {
+            marshaller.marshal(payload, result);
+        } catch (XmlMappingException e) {
+            throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
+        }
+
+        getPayloadTemplateMessageBuilder().setPayloadData(result.toString());
+
+        return self;
+    }
+
+    /**
+     * Expect this message payload as model object which is marshalled to a character sequence using the default object to xml mapper that
+     * is available in Spring bean application context.
+     *
+     * @param payload
+     * @return
+     */
+    public T payloadModel(Object payload) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        return payload(payload, applicationContext.getBean(Marshaller.class));
+    }
+
+    /**
+     * Expect this message payload as model object which is marshalled to a character sequence using the given object to xml mapper that
+     * is accessed by its bean name in Spring bean application context.
+     *
+     * @param payload
+     * @param marshallerName
+     * @return
+     */
+    public T payload(Object payload, String marshallerName) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+        return payload(payload, applicationContext.getBean(marshallerName, Marshaller.class));
     }
     
     /**

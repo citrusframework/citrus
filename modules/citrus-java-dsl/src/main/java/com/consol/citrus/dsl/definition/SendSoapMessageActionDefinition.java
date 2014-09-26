@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -35,9 +36,10 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
     /**
      * Default constructor using action.
      * @param action
+     * @param applicationContext
      */
-    public SendSoapMessageActionDefinition(SendSoapMessageAction action) {
-        super(action, null);
+    public SendSoapMessageActionDefinition(SendSoapMessageAction action, ApplicationContext applicationContext) {
+        super(action, applicationContext, null);
     }
     
     /**
