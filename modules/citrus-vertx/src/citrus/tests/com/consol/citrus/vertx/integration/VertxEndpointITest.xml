@@ -21,7 +21,7 @@
         <message>Test: Send Vert.x message on event bus</message>
       </echo>
 
-      <send endpoint="vertxNewsEndpoint">
+      <send endpoint="vertxNewsEndpoint" fork="true">
         <message type="plaintext">
           <data>News from Citrus! Today is citrus:currentDate()</data>
         </message>
