@@ -18,7 +18,6 @@ package com.consol.citrus.vertx.factory;
 
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 import org.vertx.java.core.Vertx;
-import org.vertx.java.core.VertxFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,29 +29,25 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CachingVertxInstanceFactory implements VertxInstanceFactory {
+public class CachingVertxInstanceFactory extends AbstractVertxInstanceFactory {
 
     /** Cache holds Vert.x instances identified by cluster hostname port combination */
     private Map<String, Vertx> instanceCache = new HashMap<String, Vertx>();
 
     @Override
     public synchronized Vertx newInstance(VertxEndpointConfiguration endpointConfiguration) {
+        String instanceKey;
         if (endpointConfiguration.getPort() > 0) {
-            String instanceKey = endpointConfiguration.getHost() + ":" + endpointConfiguration.getPort();
-            if (instanceCache.containsKey(instanceKey)) {
-                return instanceCache.get(instanceKey);
-            } else {
-                Vertx vertx = VertxFactory.newVertx(endpointConfiguration.getPort(), endpointConfiguration.getHost());
-                instanceCache.put(instanceKey, vertx);
-                return vertx;
-            }
+            instanceKey = endpointConfiguration.getHost() + ":" + endpointConfiguration.getPort();
+        } else {
+            instanceKey = endpointConfiguration.getHost();
         }
 
-        if (instanceCache.containsKey(endpointConfiguration.getHost())) {
-            return instanceCache.get(endpointConfiguration.getHost());
+        if (instanceCache.containsKey(instanceKey)) {
+            return instanceCache.get(instanceKey);
         } else {
-            Vertx vertx = VertxFactory.newVertx(endpointConfiguration.getHost());
-            instanceCache.put(endpointConfiguration.getHost(), vertx);
+            Vertx vertx = createVertx(endpointConfiguration);
+            instanceCache.put(instanceKey, vertx);
             return vertx;
         }
     }

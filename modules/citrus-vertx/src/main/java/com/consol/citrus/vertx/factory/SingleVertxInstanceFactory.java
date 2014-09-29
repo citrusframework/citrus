@@ -18,13 +18,14 @@ package com.consol.citrus.vertx.factory;
 
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 import org.vertx.java.core.Vertx;
-import org.vertx.java.core.VertxFactory;
 
 /**
+ * Vertx instance factory creates a new instance only once and holds reuses this single instance all the time.
+ *
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class SingleVertxInstanceFactory implements VertxInstanceFactory {
+public class SingleVertxInstanceFactory extends AbstractVertxInstanceFactory {
 
     /** Vert.x instance */
     private Vertx vertx;
@@ -35,20 +36,13 @@ public class SingleVertxInstanceFactory implements VertxInstanceFactory {
             vertx = createVertx(endpointConfiguration);
         }
 
-        return vertx;
-    }
-
-    /**
-     * Creates new Vert.x instance with default factory. Subclasses may overwrite this
-     * method in order to provide special Vert.x instance.
-     * @return
-     */
-    protected Vertx createVertx(VertxEndpointConfiguration endpointConfiguration) {
-        if (endpointConfiguration.getPort() > 0) {
-            return VertxFactory.newVertx(endpointConfiguration.getPort(), endpointConfiguration.getHost());
-        } else {
-            return VertxFactory.newVertx(endpointConfiguration.getHost());
+        try {
+            Thread.sleep(5000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        return vertx;
     }
 
     /**
