@@ -45,7 +45,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id")
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
                     .soap()
                     .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
                     .timeout(5000L),
@@ -54,7 +54,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                     "<ns0:Success>true</ns0:Success>" +
                                 "</ns0:SoapMessageWithAttachmentResponse>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         
@@ -78,7 +78,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "</ns0:SoapMessageWithAttachmentRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id")
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
                     .soap()
                     .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
                     .timeout(5000L),
@@ -87,7 +87,7 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                     "<ns0:Success>true</ns0:Success>" +
                                 "</ns0:SoapMessageWithAttachmentResponse>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         

@@ -19,6 +19,7 @@ package com.consol.citrus.jms.message;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
+import com.consol.citrus.message.CitrusMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 /**
+ * Special message converter automatically adds SOAP envelope with proper SOAP header and body elements.
+ * For incoming messages automatically removes SOAP envelope so message only contains SOAP body as message payload.
+ *
+ * Converter also takes care on special SOAP message headers such as SOAP action.
+ *
  * @author Christoph Deppisch
  * @since 2.0
  */
@@ -50,9 +56,12 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
     /** Message transformer */
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
+    /** Special SOAP action header */
+    private final static String INTERNAL_SOAP_ACTION_HEADER = CitrusMessageHeaders.PREFIX + "_soap_action";
+    private final static String SOAP_ACTION_HEADER = "SOAPAction";
+
     @Override
     public org.springframework.messaging.Message<?> convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration) {
-
         try {
             org.springframework.messaging.Message<?> message = super.convertInbound(jmsMessage, endpointConfiguration);
             ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload().toString().getBytes(getDefaultCharset()));
@@ -84,7 +93,15 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             soapMessage.writeTo(bos);
 
-            return super.createJmsMessage(MessageBuilder.withPayload(new String(bos.toByteArray())).copyHeaders(message.getHeaders()).build(), session, endpointConfiguration);
+            MessageBuilder messageBuilder = MessageBuilder.withPayload(new String(bos.toByteArray())).copyHeaders(message.getHeaders());
+
+            // Translate SOAP action header if present
+            if (message.getHeaders().containsKey(INTERNAL_SOAP_ACTION_HEADER)) {
+                messageBuilder.setHeader(SOAP_ACTION_HEADER, message.getHeaders().get(INTERNAL_SOAP_ACTION_HEADER));
+                messageBuilder.removeHeader(INTERNAL_SOAP_ACTION_HEADER);
+            }
+
+            return super.createJmsMessage(messageBuilder.build(), session, endpointConfiguration);
         } catch (TransformerException e) {
             throw new CitrusRuntimeException("Failed to transform payload to SOAP body", e);
         } catch (IOException e) {

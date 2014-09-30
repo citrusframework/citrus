@@ -59,7 +59,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 sendSoapFault("webServiceResponseSender")
                     .faultCode("{http://www.citrusframework.org/faults}citrus-ns:TEC-1000")
                     .faultString("Invalid request")
@@ -69,7 +69,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:ErrorCode>TEC-1000</ns0:ErrorCode>" +
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                 "</ns0:FaultDetail>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         
@@ -96,7 +96,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 sendSoapFault("webServiceResponseSender")
                     .faultCode("{http://www.citrusframework.org/faults}citrus-ns:TEC-1000")
                     .faultString("Invalid request")
@@ -107,7 +107,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:ErrorCode>TEC-1000</ns0:ErrorCode>" +
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                 "</ns0:FaultDetail>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         
@@ -140,7 +140,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 sendSoapFault("webServiceResponseSender")
                     .faultCode("{http://www.citrusframework.org/faults}citrus-ns:TEC-1000")
                     .faultString("Invalid request")
@@ -150,7 +150,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:ErrorCode>TEC-1000</ns0:ErrorCode>" +
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                 "</ns0:FaultDetail>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         
@@ -183,7 +183,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 sendSoapFault("webServiceResponseSender")
                     .faultCode("{http://www.citrusframework.org/faults}citrus-ns:TEC-1000")
                     .faultString("Invalid request")
@@ -193,7 +193,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:ErrorCode>TEC-1000</ns0:ErrorCode>" +
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                 "</ns0:FaultDetail>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         
@@ -228,7 +228,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 sendSoapFault("webServiceResponseSender")
                     .faultCode("{http://www.citrusframework.org/faults}citrus-ns:TEC-1000")
                     .faultString("Invalid request")
@@ -239,7 +239,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                     "<ns0:Reason>Client</ns0:Reason>" +
                                 "</ns0:FaultDetail>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         
@@ -274,7 +274,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                   "<ns0:Text>Hello WebServer</ns0:Text>" +
                               "</ns0:HelloRequest>")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 sendSoapFault("webServiceResponseSender")
                     .faultCode("{http://www.citrusframework.org/faults}citrus-ns:TEC-1000")
                     .faultString("Invalid request")
@@ -285,7 +285,7 @@ public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:Text>Invalid request</ns0:Text>" +
                                     "<ns0:Reason>Client</ns0:Reason>" +
                                 "</ns0:FaultDetail>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         

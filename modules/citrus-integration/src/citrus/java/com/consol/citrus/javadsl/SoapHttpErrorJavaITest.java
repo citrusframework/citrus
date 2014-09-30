@@ -58,10 +58,10 @@ public class SoapHttpErrorJavaITest extends TestNGCitrusTestBuilder {
                     .header("operation", "sayHello")
                     .header("citrus_soap_action", "sayHello")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 send("webServiceResponseSender")
                     .header("citrus_http_status_code", "500")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
     }

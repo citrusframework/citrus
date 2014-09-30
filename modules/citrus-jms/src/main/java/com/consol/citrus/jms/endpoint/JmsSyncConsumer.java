@@ -16,15 +16,15 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.jms.message.CitrusJmsMessageHeaders;
 import com.consol.citrus.message.CitrusMessageHeaders;
 import com.consol.citrus.messaging.ReplyProducer;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.integration.jms.JmsHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 
 import javax.jms.*;
@@ -127,9 +127,9 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      */
     public void saveReplyDestination(Message<?> receivedMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
-            replyDestinations.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
+            replyDestinations.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeaders().get(CitrusJmsMessageHeaders.REPLY_TO));
         } else {
-            replyDestinations.put("", (Destination)receivedMessage.getHeaders().get(JmsHeaders.REPLY_TO));
+            replyDestinations.put("", (Destination)receivedMessage.getHeaders().get(CitrusJmsMessageHeaders.REPLY_TO));
         }
     }
 

@@ -206,9 +206,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 
                 transformer.transform(new StringSource(headerEntry.getValue().toString()), 
                         response.getSoapHeader().getResult());
-            } else if (headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
-                continue; //leave out Citrus internal header entries
-            } else {
+            } else if (!headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
                 SoapHeaderElement headerElement;
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
                     QName qname = QNameUtils.parseQNameString(headerEntry.getKey());

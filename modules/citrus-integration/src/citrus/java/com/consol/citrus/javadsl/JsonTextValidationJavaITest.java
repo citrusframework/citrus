@@ -46,7 +46,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
                             "\"attribute\" : \"HeapMemoryUsage\"," +
                             "\"path\" : \"@equalsIgnoreCase('USED')@\"" +
                           "}")
-                   .extractFromHeader("jms_messageId", "correlation_id"),
+                   .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                 send("httpServerResponseEndpoint")
                    .payload("{" +
                         "\"timestamp\" : \"2011-01-01\"," +
@@ -63,7 +63,7 @@ public class JsonTextValidationJavaITest extends TestNGCitrusTestBuilder {
                    .header("citrus_http_status_code", "200")
                    .header("citrus_http_version", "HTTP/1.1")
                    .header("citrus_http_reason_phrase", "OK")
-                   .header("jms_correlationId", "${correlation_id}")
+                   .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );
         

@@ -16,13 +16,13 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.jms.message.CitrusJmsMessageHeaders;
 import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.jms.JmsHeaders;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -157,7 +157,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(jmsTemplate, connectionFactory, messageProducer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
+        jmsSyncConsumer.saveReplyDestination(MessageBuilder.withPayload("").setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination).build());
         jmsSyncConsumer.send(message);
 
         verify(jmsTemplate, connectionFactory, messageProducer);
@@ -190,7 +190,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(MessageBuilder.withPayload("").setHeader(JmsHeaders.REPLY_TO, replyDestination).build());
+        jmsSyncConsumer.saveReplyDestination(MessageBuilder.withPayload("").setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination).build());
         jmsSyncConsumer.send(message);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -205,7 +205,7 @@ public class JmsEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Message<String> requestMessage = MessageBuilder.withPayload("")
-                .setHeader(JmsHeaders.REPLY_TO, replyDestination)
+                .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination)
                 .build();
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -243,7 +243,7 @@ public class JmsEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         Message<String> requestMessage = MessageBuilder.withPayload("")
-                .setHeader(JmsHeaders.REPLY_TO, replyDestination)
+                .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination)
                 .build();
 
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();

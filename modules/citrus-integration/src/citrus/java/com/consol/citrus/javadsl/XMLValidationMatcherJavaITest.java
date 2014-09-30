@@ -54,7 +54,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .header("citrus_http_method", "POST")
                     .header("citrus_http_request_uri", "/test")
-                    .extractFromHeader("jms_messageId", "correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                 send("httpServerResponseEndpoint")
                     .payload("<testResponseMessage>" +
                                     "<text>Hello Citrus</text>" +
@@ -63,7 +63,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
                     .header("citrus_http_version", "HTTP/1.1")
                     .header("citrus_http_reason_phrase", "OK")
                     .header("Content-Type", "text/xml")
-                    .header("jms_correlationId", "${correlation_id}")
+                    .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );
         

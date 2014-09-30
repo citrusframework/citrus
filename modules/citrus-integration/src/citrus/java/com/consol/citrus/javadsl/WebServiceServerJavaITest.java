@@ -51,7 +51,7 @@ public class WebServiceServerJavaITest extends TestNGCitrusTestBuilder {
                               "</ns0:HelloRequest>")
                     .header("Operation", "sayHello")
                     .schemaValidation(false)
-                    .extractFromHeader("jms_messageId", "internal_correlation_id"),
+                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
                 send("webServiceResponseSender")
                     .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +
@@ -59,7 +59,7 @@ public class WebServiceServerJavaITest extends TestNGCitrusTestBuilder {
                                     "<ns0:User>WebServer</ns0:User>" +
                                     "<ns0:Text>Hello ${user}</ns0:Text>" +
                                 "</ns0:HelloResponse>")
-                    .header("jms_correlationId", "${internal_correlation_id}")
+                    .header("citrus_jms_correlationId", "${internal_correlation_id}")
             )
         );
         

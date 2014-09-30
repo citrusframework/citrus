@@ -36,13 +36,13 @@ public class PlainTextValidationJavaITest extends TestNGCitrusTestBuilder {
                 receive("httpServerRequestEndpoint")
                    .messageType(MessageType.PLAINTEXT)
                    .payload("Hello, World!")
-                   .extractFromHeader("jms_messageId", "correlation_id"),
+                   .extractFromHeader("citrus_jms_messageId", "correlation_id"),
                 send("httpServerResponseEndpoint")
                    .payload("Hello, Citrus!")
                    .header("citrus_http_status_code", "200")
                    .header("citrus_http_version", "HTTP/1.1")
                    .header("citrus_http_reason_phrase", "OK")
-                   .header("jms_correlationId", "${correlation_id}")
+                   .header("citrus_jms_correlationId", "${correlation_id}")
             )
         );
         

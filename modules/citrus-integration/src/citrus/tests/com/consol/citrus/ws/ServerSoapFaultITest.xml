@@ -56,7 +56,7 @@
                   		</data>
                   	</message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -76,7 +76,7 @@
                   		</ws:fault-detail>
                   	</ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -121,7 +121,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -142,7 +142,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -197,7 +197,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -217,7 +217,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -273,7 +273,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -294,7 +294,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -350,7 +350,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -371,7 +371,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -427,7 +427,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -448,7 +448,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -509,7 +509,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -535,7 +535,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>
@@ -607,7 +607,7 @@
                         </data>
                     </message>
                     <extract>
-                        <header name="jms_messageId" variable="internal_correlation_id"/>
+                        <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
                     </extract>
                   </receive>
                   
@@ -644,7 +644,7 @@
                         </ws:fault-detail>
                     </ws:fault>
                     <ws:header>
-                        <ws:element name="jms_correlationId" value="${internal_correlation_id}"/>
+                        <ws:element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                     </ws:header>
                   </ws:send-fault>
               </sequential>

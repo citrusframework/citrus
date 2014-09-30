@@ -51,7 +51,7 @@ public class SoapForkModeJavaITest extends TestNGCitrusTestBuilder {
                           "<ns0:Text>Hello WebServer</ns0:Text>" +
                       "</ns0:HelloRequest>")
             .schemaValidation(false)
-            .extractFromHeader("jms_messageId", "internal_correlation_id");
+            .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
             
         send("webServiceResponseSender")
             .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
@@ -60,7 +60,7 @@ public class SoapForkModeJavaITest extends TestNGCitrusTestBuilder {
                             "<ns0:User>WebServer</ns0:User>" +
                             "<ns0:Text>Hello ${user}</ns0:Text>" +
                         "</ns0:HelloResponse>")
-            .header("jms_correlationId", "${internal_correlation_id}");
+            .header("citrus_jms_correlationId", "${internal_correlation_id}");
         
         receive("webServiceClient")
             .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +

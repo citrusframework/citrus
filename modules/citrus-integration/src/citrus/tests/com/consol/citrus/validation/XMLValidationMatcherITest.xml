@@ -57,7 +57,7 @@
                             <element name="citrus_http_request_uri" value="/test"/>
                         </header>
                         <extract>
-                            <header name="jms_messageId" variable="correlation_id"/>
+                            <header name="citrus_jms_messageId" variable="correlation_id"/>
                         </extract>
                     </receive>
                     
@@ -76,7 +76,7 @@
                             <element name="citrus_http_version" value="HTTP/1.1"/>
                             <element name="citrus_http_reason_phrase" value="OK"/>
                             <element name="Content-Type" value="text/xml"/>
-                            <element name="jms_correlationId" value="${correlation_id}"/>
+                            <element name="citrus_jms_correlationId" value="${correlation_id}"/>
                         </header>
                     </send>
                 </sequential>
