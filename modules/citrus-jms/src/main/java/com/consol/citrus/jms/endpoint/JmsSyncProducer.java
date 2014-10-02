@@ -263,11 +263,11 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @throws JMSException
      */
     private Destination getReplyDestination(Session session, Message message) throws JMSException {
-        if (message.getHeaders().get(MessageHeaders.REPLY_CHANNEL) != null) {
-            if (message.getHeaders().get(MessageHeaders.REPLY_CHANNEL) instanceof Destination) {
-                return (Destination) message.getHeaders().get(MessageHeaders.REPLY_CHANNEL);
+        if (message.getHeader(MessageHeaders.REPLY_CHANNEL) != null) {
+            if (message.getHeader(MessageHeaders.REPLY_CHANNEL) instanceof Destination) {
+                return (Destination) message.getHeader(MessageHeaders.REPLY_CHANNEL);
             } else {
-                return resolveDestinationName(message.getHeaders().get(MessageHeaders.REPLY_CHANNEL).toString(), session);
+                return resolveDestinationName(message.getHeader(MessageHeaders.REPLY_CHANNEL).toString(), session);
             }
         } else if (endpointConfiguration.getReplyDestination() != null) {
             return endpointConfiguration.getReplyDestination();

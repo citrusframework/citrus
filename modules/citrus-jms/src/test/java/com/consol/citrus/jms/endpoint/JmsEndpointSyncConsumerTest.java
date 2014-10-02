@@ -195,7 +195,7 @@ public class JmsEndpointSyncConsumerTest {
                 .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, requestMessage.getHeaders().get(MessageHeaders.ID));
+        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, requestMessage.getHeader(MessageHeaders.ID));
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(jmsTemplate, connectionFactory, messageProducer, connection, session);

@@ -25,10 +25,46 @@ import java.util.Map;
 public interface Message {
 
     /**
-     * Gets the message headers as key value map.
+     * Gets the unique message id;
      * @return
      */
-    Map<String, Object> getHeaders();
+    public String getId();
+
+    /**
+     * Gets the message header value by its header name.
+     * @param headerName
+     * @return
+     */
+    Object getHeader(String headerName);
+
+    /**
+     * Sets new header entry in message header list.
+     * @param headerName
+     * @param headerValue
+     * @return
+     */
+    public DefaultMessage setHeader(String headerName, Object headerValue);
+
+    /**
+     * Removes the message header if it not a reserved message header such as unique message id.
+     * @param headerName
+     * @return
+     */
+    void removeHeader(String headerName);
+
+    /**
+     * Gets exact copy of actual message headers.
+     * @return
+     */
+    public Map<String, Object> copyHeaders();
+
+    /**
+     * Gets message payload with required type conversion.
+     * @param type
+     * @param <T>
+     * @return
+     */
+    public <T> T getPayload(Class<T> type);
 
     /**
      * Gets the message payload.

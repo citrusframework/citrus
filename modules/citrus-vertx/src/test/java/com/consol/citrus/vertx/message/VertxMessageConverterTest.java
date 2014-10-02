@@ -49,8 +49,8 @@ public class VertxMessageConverterTest {
         Message message = messageConverter.convertInbound(vertxMessage, new VertxEndpointConfiguration());
 
         Assert.assertEquals(message.getPayload(), "Hello Citrus!");
-        Assert.assertEquals(message.getHeaders().get(CitrusVertxMessageHeaders.VERTX_ADDRESS), "hello");
-        Assert.assertEquals(message.getHeaders().get(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "answer");
+        Assert.assertEquals(message.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), "hello");
+        Assert.assertEquals(message.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "answer");
 
         verify(vertxMessage);
     }

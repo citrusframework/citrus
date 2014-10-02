@@ -286,7 +286,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
     }
 
     private String getRemoteUser(Message message) {
-        String rUser = (String) message.getHeaders().get("user");
+        String rUser = (String) message.getHeader("user");
         if (rUser == null) {
             // Use default uses
             rUser = getEndpointConfiguration().getUser();

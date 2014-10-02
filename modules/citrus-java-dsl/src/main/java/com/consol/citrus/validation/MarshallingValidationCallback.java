@@ -64,7 +64,7 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
      * Validate message automatically unmarshalling message payload.
      */
     public final void validate(Message message) {
-        validate(unmarshalMessage(message), message.getHeaders());
+        validate(unmarshalMessage(message), message.copyHeaders());
     }
     
     /**

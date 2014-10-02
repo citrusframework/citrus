@@ -82,13 +82,13 @@ public class MessageHeaderUtils {
      */
     public static void setHeader(Message message, String name, String value) {
         if (name.equals(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER)) {
-            message.getHeaders().put(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER, Integer.valueOf(value));
+            message.setHeader(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER, Integer.valueOf(value));
         } else if (name.equals(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE)) {
-            message.getHeaders().put(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, Integer.valueOf(value));
+            message.setHeader(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, Integer.valueOf(value));
         } else if (name.equals(IntegrationMessageHeaderAccessor.PRIORITY)) {
-            message.getHeaders().put(IntegrationMessageHeaderAccessor.PRIORITY, Integer.valueOf(value));
+            message.setHeader(IntegrationMessageHeaderAccessor.PRIORITY, Integer.valueOf(value));
         } else {
-            message.getHeaders().put(name, value);
+            message.setHeader(name, value);
         }
     }
 

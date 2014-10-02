@@ -53,7 +53,7 @@ public class MessageValidatorRegistry implements InitializingBean {
      * @return  the list of matching message validators.
      */
     public List<MessageValidator<? extends ValidationContext>> findMessageValidators(Message message) {
-        return findMessageValidators(message.getHeaders().get(MessageHeaders.MESSAGE_TYPE).toString());
+        return findMessageValidators(message.getHeader(MessageHeaders.MESSAGE_TYPE).toString());
     }
 
 

@@ -94,7 +94,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
-        Assert.assertTrue(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertNotNull(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeader("operation"));
     }
 
     @Test

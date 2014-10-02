@@ -131,7 +131,7 @@ public class ChannelEndpointSyncProducerTest {
 
         Message replyMessage = channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+        Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
         
         verify(messagingTemplate, channel);
     }
@@ -166,7 +166,7 @@ public class ChannelEndpointSyncProducerTest {
 
         Message replyMessage = channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+        Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
 
         verify(messagingTemplate, channel);
     }
@@ -203,7 +203,7 @@ public class ChannelEndpointSyncProducerTest {
 
         Message replyMessage = channelSyncProducer.findReplyMessage(MessageHeaders.ID + " = '123456789'");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+        Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
 
         verify(messagingTemplate, channel, replyMessageCorrelator);
     }

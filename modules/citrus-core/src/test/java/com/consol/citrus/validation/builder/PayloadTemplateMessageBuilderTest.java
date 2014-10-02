@@ -92,8 +92,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("operation"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("operation"), "unitTesting");
+        Assert.assertNotNull(resultingMessage.getHeader("operation"));
+        Assert.assertEquals(resultingMessage.getHeader("operation"), "unitTesting");
     }
     
     @Test
@@ -112,22 +112,22 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("intValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("intValue"), new Integer(5));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("longValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("longValue"), new Long(5));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("floatValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("floatValue"), new Float(5.0f));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("doubleValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("doubleValue"), new Double(5.0));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("boolValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("boolValue"), new Boolean(true));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("shortValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("shortValue"), new Short("5"));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("byteValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("byteValue"), new Byte("1"));
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("stringValue"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("stringValue"), new String("5.0"));
+        Assert.assertNotNull(resultingMessage.getHeader("intValue"));
+        Assert.assertEquals(resultingMessage.getHeader("intValue"), new Integer(5));
+        Assert.assertNotNull(resultingMessage.getHeader("longValue"));
+        Assert.assertEquals(resultingMessage.getHeader("longValue"), new Long(5));
+        Assert.assertNotNull(resultingMessage.getHeader("floatValue"));
+        Assert.assertEquals(resultingMessage.getHeader("floatValue"), new Float(5.0f));
+        Assert.assertNotNull(resultingMessage.getHeader("doubleValue"));
+        Assert.assertEquals(resultingMessage.getHeader("doubleValue"), new Double(5.0));
+        Assert.assertNotNull(resultingMessage.getHeader("boolValue"));
+        Assert.assertEquals(resultingMessage.getHeader("boolValue"), new Boolean(true));
+        Assert.assertNotNull(resultingMessage.getHeader("shortValue"));
+        Assert.assertEquals(resultingMessage.getHeader("shortValue"), new Short("5"));
+        Assert.assertNotNull(resultingMessage.getHeader("byteValue"));
+        Assert.assertEquals(resultingMessage.getHeader("byteValue"), new Byte("1"));
+        Assert.assertNotNull(resultingMessage.getHeader("stringValue"));
+        Assert.assertEquals(resultingMessage.getHeader("stringValue"), new String("5.0"));
     }
     
     @Test
@@ -141,8 +141,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("operation"));
-        Assert.assertEquals(resultingMessage.getHeaders().get("operation"), "unitTesting");
+        Assert.assertNotNull(resultingMessage.getHeader("operation"));
+        Assert.assertEquals(resultingMessage.getHeader("operation"), "unitTesting");
     }
     
     @Test
@@ -152,8 +152,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(resultingMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT), "MessageHeaderData");
+        Assert.assertNotNull(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT), "MessageHeaderData");
     }
     
     @Test
@@ -164,8 +164,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(resultingMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT), "This header data contains variables!");
+        Assert.assertNotNull(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT), "This header data contains variables!");
     }
     
     @Test
@@ -175,8 +175,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(resultingMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT), "MessageHeaderData");
+        Assert.assertNotNull(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT), "MessageHeaderData");
     }
     
     @Test
@@ -187,8 +187,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(resultingMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT), "This header data contains variables!");
+        Assert.assertNotNull(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(resultingMessage.getHeader(MessageHeaders.HEADER_CONTENT), "This header data contains variables!");
     }
     
     @Test
@@ -197,7 +197,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
             @Override
             public Message interceptMessage(Message message, String messageType, TestContext context) {
                 message.setPayload("InterceptedMessagePayload");
-                message.getHeaders().put("NewHeader", "new");
+                message.setHeader("NewHeader", "new");
 
                 return message;
             }
@@ -213,6 +213,6 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
         Assert.assertEquals(resultingMessage.getPayload(), "InterceptedMessagePayload");
-        Assert.assertTrue(resultingMessage.getHeaders().containsKey("NewHeader"));
+        Assert.assertNotNull(resultingMessage.getHeader("NewHeader"));
     }
 }

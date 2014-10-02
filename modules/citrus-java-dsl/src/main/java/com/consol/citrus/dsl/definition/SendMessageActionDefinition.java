@@ -20,9 +20,7 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHeaderUtils;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
@@ -102,9 +100,10 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
             messageBuilder.setPayloadData(message.getPayload().toString());
 
             Map<String, Object> headers = new HashMap<String, Object>();
-            for (String headerName : message.getHeaders().keySet()) {
-                if (!MessageHeaderUtils.isSpringInternalHeader(headerName)) {
-                    headers.put(headerName, message.getHeaders().get(headerName));
+            for (String headerName : message.copyHeaders().keySet()) {
+                if (!MessageHeaderUtils.isSpringInternalHeader(headerName) &&
+                        !headerName.startsWith(MessageHeaders.MESSAGE_PREFIX)) {
+                    headers.put(headerName, message.getHeader(headerName));
                 }
             }
 

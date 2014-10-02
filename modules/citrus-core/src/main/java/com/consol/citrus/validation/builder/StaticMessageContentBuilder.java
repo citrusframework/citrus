@@ -62,7 +62,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         Map<String, Object> headers = super.buildMessageHeaders(context);
-        headers.putAll(message.getHeaders());
+        headers.putAll(message.copyHeaders());
 
         return headers;
     }

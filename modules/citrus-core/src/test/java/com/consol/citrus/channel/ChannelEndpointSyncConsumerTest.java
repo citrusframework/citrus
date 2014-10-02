@@ -80,8 +80,8 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -120,8 +120,8 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -163,8 +163,8 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), "replyChannel");
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), "replyChannel");
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -201,7 +201,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -240,7 +240,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
         Assert.assertNull(channelSyncConsumer.findReplyChannel(""));
         Assert.assertNull(channelSyncConsumer.findReplyChannel(MessageHeaders.ID + " = 'totally_wrong'"));
@@ -304,7 +304,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNull(savedReplyChannel);
@@ -344,7 +344,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message request = new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, request.getHeaders().get(MessageHeaders.ID));
+        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, request.getHeader(MessageHeaders.ID));
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(messagingTemplate, replyChannel);

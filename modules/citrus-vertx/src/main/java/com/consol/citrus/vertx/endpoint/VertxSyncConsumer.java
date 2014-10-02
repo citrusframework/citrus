@@ -71,15 +71,15 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
 
         String replyAddress;
         if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
+            Assert.notNull(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
                     "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
 
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
             replyAddress = replyAddressMap.remove(correlationKey);
             Assert.notNull(replyAddress, "Unable to locate reply address with correlation key: '" + correlationKey + "'");
 
             //remove citrus specific header from message
-            message.getHeaders().remove(MessageHeaders.SYNC_MESSAGE_CORRELATOR);
+            message.removeHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR);
         } else {
             replyAddress = replyAddressMap.remove("");
             Assert.notNull(replyAddress, "Unable to locate reply address on event bus");
@@ -102,9 +102,9 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      */
     public void saveReplyDestination(Message receivedMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
-            replyAddressMap.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), receivedMessage.getHeaders().get(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
+            replyAddressMap.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         } else {
-            replyAddressMap.put("", receivedMessage.getHeaders().get(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
+            replyAddressMap.put("", receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }
     }
 

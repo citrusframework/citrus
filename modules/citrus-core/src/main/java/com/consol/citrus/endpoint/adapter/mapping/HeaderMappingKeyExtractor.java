@@ -47,8 +47,8 @@ public class HeaderMappingKeyExtractor extends AbstractMappingKeyExtractor {
 
     @Override
     public String getMappingKey(Message request) {
-        if (request.getHeaders().containsKey(headerName)) {
-            return request.getHeaders().get(headerName).toString();
+        if (request.getHeader(headerName) != null) {
+            return request.getHeader(headerName).toString();
         } else {
             throw new CitrusRuntimeException(String.format("Unable to find header '%s' in request message", headerName));
         }

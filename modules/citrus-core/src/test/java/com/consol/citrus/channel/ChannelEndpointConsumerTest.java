@@ -69,7 +69,7 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
         verify(messagingTemplate, channel);
     }
     
@@ -102,7 +102,7 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
 
         verify(messagingTemplate, channel, channelResolver);
     }
@@ -133,7 +133,7 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
 
         verify(messagingTemplate, channel);
     }
@@ -164,7 +164,7 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive(25000L);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
 
         verify(messagingTemplate, channel);
     }
@@ -224,8 +224,8 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
-        Assert.assertEquals(receivedMessage.getHeaders().get("Operation"), "sayHello");
+        Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
 
         verify(queueChannel);
     }

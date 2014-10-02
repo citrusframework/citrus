@@ -17,8 +17,8 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.LinkedHashMap;
@@ -28,17 +28,17 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class ChannelMessageConverter implements MessageConverter<Message, ChannelEndpointConfiguration> {
+public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message, ChannelEndpointConfiguration> {
 
     @Override
-    public Message convertOutbound(com.consol.citrus.message.Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
+    public org.springframework.messaging.Message convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
         return MessageBuilder.withPayload(internalMessage.getPayload())
-                    .copyHeaders(internalMessage.getHeaders())
+                    .copyHeaders(internalMessage.copyHeaders())
                     .build();
     }
 
     @Override
-    public com.consol.citrus.message.Message convertInbound(Message externalMessage, ChannelEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(org.springframework.messaging.Message externalMessage, ChannelEndpointConfiguration endpointConfiguration) {
         if (externalMessage == null) {
             return null;
         }
@@ -49,6 +49,6 @@ public class ChannelMessageConverter implements MessageConverter<Message, Channe
     }
 
     @Override
-    public void convertOutbound(Message externalMessage, com.consol.citrus.message.Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(org.springframework.messaging.Message externalMessage, Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
     }
 }

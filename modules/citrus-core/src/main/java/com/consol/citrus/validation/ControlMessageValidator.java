@@ -56,8 +56,8 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
         validateMessagePayload(receivedMessage, controlMessage, context);
         
         // validate message headers
-        validateMessageHeader(controlMessage.getHeaders(), 
-                receivedMessage.getHeaders(), 
+        validateMessageHeader(controlMessage.copyHeaders(),
+                receivedMessage.copyHeaders(),
                 context);
     }
     

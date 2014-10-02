@@ -26,7 +26,7 @@ public class DefaultReplyMessageCorrelator implements ReplyMessageCorrelator {
 
     @Override
     public String getCorrelationKey(Message request) {
-        return MessageHeaders.ID + " = '" + request.getHeaders().get(MessageHeaders.ID).toString() + "'";
+        return MessageHeaders.ID + " = '" + request.getHeader(MessageHeaders.ID).toString() + "'";
     }
 
     /**

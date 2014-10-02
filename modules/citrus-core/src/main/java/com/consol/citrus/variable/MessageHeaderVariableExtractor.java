@@ -45,11 +45,11 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
             String headerElementName = entry.getKey();
             String targetVariableName = entry.getValue();
 
-            if (message.getHeaders().get(headerElementName) == null) {
+            if (message.getHeader(headerElementName) == null) {
                 throw new UnknownElementException("Could not find header element " + headerElementName + " in received header");
             }
 
-            context.setVariable(targetVariableName, message.getHeaders().get(headerElementName).toString());
+            context.setVariable(targetVariableName, message.getHeader(headerElementName).toString());
         }
     }
 

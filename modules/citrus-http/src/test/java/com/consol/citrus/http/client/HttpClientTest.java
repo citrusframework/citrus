@@ -75,8 +75,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate);
     }
@@ -125,8 +125,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate);
     }
@@ -176,8 +176,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate);
     }
@@ -223,8 +223,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate);
     }
@@ -269,8 +269,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate);
     }
@@ -315,8 +315,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate);
     }
@@ -355,8 +355,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive("correlationKey", endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate, correlator);
     }
@@ -395,8 +395,8 @@ public class HttpClientTest {
 
         Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
 
         verify(restTemplate, endpointUriResolver);
     }
@@ -431,8 +431,8 @@ public class HttpClientTest {
         httpClient.send(requestMessage);
 
         Message responseMessage = httpClient.receive(1000L);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.FORBIDDEN);
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "FORBIDDEN");
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.FORBIDDEN);
+        Assert.assertEquals(responseMessage.getHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "FORBIDDEN");
 
         verify(restTemplate);
     }

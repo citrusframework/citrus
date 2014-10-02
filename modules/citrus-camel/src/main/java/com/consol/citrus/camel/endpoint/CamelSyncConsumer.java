@@ -86,10 +86,10 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         Exchange exchange;
         if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
+            Assert.notNull(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
                     "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
 
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
             exchange = exchanges.remove(correlationKey);
             Assert.notNull(exchange, "Unable to locate camel exchange with correlation key: '" + correlationKey + "'");
         } else {
@@ -116,18 +116,18 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
      */
     private void buildOutMessage(Exchange exchange, Message message) {
         org.apache.camel.Message reply = exchange.getOut();
-        for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
+        for (Map.Entry<String, Object> header : message.copyHeaders().entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX)) {
                 reply.setHeader(header.getKey(), header.getValue());
             }
         }
 
-        if (message.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION)) {
-            String exceptionClass = message.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION).toString();
+        if (message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION) != null) {
+            String exceptionClass = message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION).toString();
             String exceptionMsg = null;
 
-            if (message.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE)) {
-                exceptionMsg = message.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE).toString();
+            if (message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE) != null) {
+                exceptionMsg = message.getHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE).toString();
             }
 
             try {

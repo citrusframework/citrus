@@ -90,7 +90,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         }
 
         // Copy headers into soap-header:
-        for (Entry<String, Object> headerEntry : message.getHeaders().entrySet()) {
+        for (Entry<String, Object> headerEntry : message.copyHeaders().entrySet()) {
             if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey())) {
                 continue;
             }
@@ -204,18 +204,18 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         if (connection instanceof HttpServletConnection) {
             UrlPathHelper pathHelper = new UrlPathHelper();
             HttpServletConnection servletConnection = (HttpServletConnection) connection;
-            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletConnection.getHttpServletRequest()));
-            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletConnection.getHttpServletRequest()));
+            message.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletConnection.getHttpServletRequest()));
+            message.setHeader(CitrusSoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletConnection.getHttpServletRequest()));
 
             String queryParams = pathHelper.getOriginatingQueryString(servletConnection.getHttpServletRequest());
-            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
+            message.setHeader(CitrusSoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
 
-            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_REQUEST_METHOD, servletConnection.getHttpServletRequest().getMethod().toString());
+            message.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_METHOD, servletConnection.getHttpServletRequest().getMethod().toString());
         } else {
             log.warn("Unable to get complete set of http request headers");
 
             try {
-                message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, connection.getUri());
+                message.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, connection.getUri());
             } catch (URISyntaxException e) {
                 log.warn("Unable to get http request uri from http connection", e);
             }
@@ -246,19 +246,19 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                     Transformer transformer = transformerFactory.newTransformer();
                     transformer.transform(soapHeader.getSource(), headerData);
 
-                    message.getHeaders().put(MessageHeaders.HEADER_CONTENT, headerData.toString());
+                    message.setHeader(MessageHeaders.HEADER_CONTENT, headerData.toString());
                 }
             }
 
             if (StringUtils.hasText(soapMessage.getSoapAction())) {
                 if (soapMessage.getSoapAction().equals("\"\"")) {
-                    message.getHeaders().put(CitrusSoapMessageHeaders.SOAP_ACTION, "");
+                    message.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
                 } else {
                     if (soapMessage.getSoapAction().startsWith("\"") && soapMessage.getSoapAction().endsWith("\"")) {
-                        message.getHeaders().put(CitrusSoapMessageHeaders.SOAP_ACTION,
+                        message.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION,
                                 soapMessage.getSoapAction().substring(1, soapMessage.getSoapAction().length()-1));
                     } else {
-                        message.getHeaders().put(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
+                        message.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
                     }
                 }
             }
@@ -329,7 +329,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
             
             for (Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
-                message.getHeaders().put(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
+                message.setHeader(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
             }
         }
     }
@@ -347,7 +347,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         String[] propertyNames = messageContext.getPropertyNames();
         if (propertyNames != null) {
             for (String propertyName : propertyNames) {
-                message.getHeaders().put(propertyName, messageContext.getProperty(propertyName));
+                message.setHeader(propertyName, messageContext.getProperty(propertyName));
             }
         }
     }
@@ -376,11 +376,11 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                         log.debug("SOAP message contains attachment with contentId '" + contentId + "'");
                     }
 
-                    message.getHeaders().put(contentId, attachment);
-                    message.getHeaders().put(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
-                    message.getHeaders().put(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());
-                    message.getHeaders().put(CitrusSoapMessageHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
-                    message.getHeaders().put(CitrusSoapMessageHeaders.CHARSET_NAME, "UTF-8"); // TODO map this dynamically
+                    message.setHeader(contentId, attachment);
+                    message.setHeader(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
+                    message.setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());
+                    message.setHeader(CitrusSoapMessageHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
+                    message.setHeader(CitrusSoapMessageHeaders.CHARSET_NAME, "UTF-8"); // TODO map this dynamically
                 } else {
                     log.warn("Could not handle SOAP attachment with empty 'contentId'. Attachment is ignored in further processing");
                 }

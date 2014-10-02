@@ -40,7 +40,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message, testMessage);
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
+        Assert.assertEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -53,9 +53,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
-        Assert.assertTrue(message.getHeaders().containsKey("additional"));
-        Assert.assertEquals(message.getHeaders().get("additional"), "new");
+        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(message.getHeader("additional"));
+        Assert.assertEquals(message.getHeader("additional"), "new");
     }
 
     @Test
@@ -68,9 +68,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
-        Assert.assertTrue(message.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(message.getHeaders().get(MessageHeaders.HEADER_CONTENT), "TestMessageData");
+        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(message.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(message.getHeader(MessageHeaders.HEADER_CONTENT), "TestMessageData");
     }
 
     @Test
@@ -83,9 +83,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
-        Assert.assertTrue(message.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(message.getHeaders().get(MessageHeaders.HEADER_CONTENT), "TestMessageData");
+        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(message.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(message.getHeader(MessageHeaders.HEADER_CONTENT), "TestMessageData");
     }
 
     @Test
@@ -103,7 +103,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
+        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
     }
 
     @Test
@@ -116,6 +116,6 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
+        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
     }
 }

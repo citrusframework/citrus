@@ -16,9 +16,15 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.beans.SimpleTypeConverter;
+
 import java.util.*;
 
 /**
+ * Default message implementation holds message payload and message headers. Also provides access methods for special
+ * header elements such as unique message id and creation timestamp.
+ *
  * @author Christoph Deppisch
  * @since 2.0
  */
@@ -51,25 +57,55 @@ public class DefaultMessage implements Message {
         this.headers.put(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
     }
 
+    @Override
+    public String getId() {
+        return headers.get(MessageHeaders.ID).toString();
+    }
+
     /**
-     * Sets new header entry in message header list.
-     * @param headerName
-     * @param headerValue
+     * Gets the message creation timestamp;
      * @return
      */
+    public Long getTimestamp() {
+        return (Long) headers.get(MessageHeaders.TIMESTAMP);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s(%s) [payload: %s][headers: %s]", getClass().getSimpleName(), getId(), payload, headers);
+    }
+
+    @Override
     public DefaultMessage setHeader(String headerName, Object headerValue) {
+        if (headerName.equals(MessageHeaders.ID)) {
+            throw new CitrusRuntimeException("Not allowed to set reserved message header: " + MessageHeaders.ID);
+        }
+
         headers.put(headerName, headerValue);
         return this;
     }
 
     @Override
-    public String toString() {
-        return String.format("Message[payload: %s][headers: %s]", getPayload(), getHeaders());
+    public Object getHeader(String headerName) {
+        return headers.get(headerName);
     }
 
     @Override
-    public Map<String, Object> getHeaders() {
-        return headers;
+    public void removeHeader(String headerName) {
+        if (headerName.equals(MessageHeaders.ID)) {
+            throw new CitrusRuntimeException("Not allowed to remove reserved message header from message: " + MessageHeaders.ID);
+        }
+
+        headers.remove(headerName);
+    }
+
+    @Override
+    public <T> T getPayload(Class<T> type) {
+        if (type.isInstance(payload)) {
+            return type.cast(payload);
+        }
+
+        return new SimpleTypeConverter().convertIfNecessary(payload, type);
     }
 
     @Override
@@ -80,5 +116,12 @@ public class DefaultMessage implements Message {
     @Override
     public void setPayload(Object payload) {
         this.payload = payload;
+    }
+
+    @Override
+    public Map<String, Object> copyHeaders() {
+        LinkedHashMap copy = new LinkedHashMap(headers.size());
+        copy.putAll(headers);
+        return copy;
     }
 }

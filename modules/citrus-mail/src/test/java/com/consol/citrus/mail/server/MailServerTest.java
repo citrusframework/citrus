@@ -56,15 +56,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -101,15 +101,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -146,15 +146,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "multipart/mixed");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -270,15 +270,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -316,15 +316,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=utf-8");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -344,16 +344,16 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/html; charset=utf-8");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2006-10-26T13:10:50+0200");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Multipart Testmail");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/html; charset=utf-8");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "index.html");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -391,15 +391,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain; charset=ISO-8859-15; format=flowed");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -419,16 +419,16 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID), "<52A1988D.2060403@consol.de>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "Foo <foo@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "FooBar <foobar@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "Foo <foo@mail.com>");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE), "2013-12-06T10:27:41+0100");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "This is brand_logo.png");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "image/png");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FILENAME), "brand_logo.png");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),
@@ -465,15 +465,15 @@ public class MailServerTest {
                 Message message = (Message) getCurrentArguments()[0];
 
                 Assert.assertNotNull(message.getPayload());
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
-                Assert.assertNull(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_DATE));
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
-                Assert.assertEquals(message.getHeaders().get(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_MESSAGE_ID));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_FROM), "foo@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_TO), "bar@mail.com,copy@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CC), "foobar@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_BCC), "secret@mail.com");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_REPLY_TO), "reply@mail.com");
+                Assert.assertNull(message.getHeader(CitrusMailMessageHeaders.MAIL_DATE));
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_SUBJECT), "Testmail");
+                Assert.assertEquals(message.getHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE), "text/plain");
 
                 try {
                     Assert.assertEquals(StringUtils.trimAllWhitespace(message.getPayload().toString()),

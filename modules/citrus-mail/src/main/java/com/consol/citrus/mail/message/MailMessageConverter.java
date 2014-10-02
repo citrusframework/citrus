@@ -58,7 +58,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
             MimeMessage mimeMessage = endpointConfiguration.getJavaMailSender().createMimeMessage();
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessageHelper(mimeMessage, mailMessage.getBody().hasAttachments(), mailMessage.getBody().getCharsetName()));
 
-            convertOutbound(mimeMailMessage, new DefaultMessage(mailMessage, message.getHeaders()), endpointConfiguration);
+            convertOutbound(mimeMailMessage, new DefaultMessage(mailMessage, message.copyHeaders()), endpointConfiguration);
 
             return mimeMailMessage;
         } catch (MessagingException e) {

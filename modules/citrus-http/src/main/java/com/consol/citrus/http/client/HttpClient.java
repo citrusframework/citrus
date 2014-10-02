@@ -86,8 +86,8 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         }
 
         HttpMethod method = getEndpointConfiguration().getRequestMethod();
-        if (message.getHeaders().containsKey(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD)) {
-            method = HttpMethod.valueOf((String)message.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
+        if (message.getHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD) != null) {
+            method = HttpMethod.valueOf((String)message.getHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
         }
 
         HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());

@@ -277,8 +277,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
+                Assert.assertNotNull(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;
@@ -314,8 +314,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
+                Assert.assertNotNull(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;
@@ -353,8 +353,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
+                Assert.assertNotNull(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;
@@ -392,8 +392,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
+                Assert.assertNotNull(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeader(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;

@@ -83,8 +83,8 @@ public class VertxSyncEndpointTest {
         Message reply = vertxEndpoint.createConsumer().receive(5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Vertx!");
-        Assert.assertEquals(reply.getHeaders().get(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
-        Assert.assertEquals(reply.getHeaders().get(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
+        Assert.assertEquals(reply.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
+        Assert.assertEquals(reply.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
 
         verify(vertx, eventBus, messageMock);
     }
@@ -124,8 +124,8 @@ public class VertxSyncEndpointTest {
 
         Message receivedMessage = vertxEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Vertx!");
-        Assert.assertEquals(receivedMessage.getHeaders().get(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
-        Assert.assertEquals(receivedMessage.getHeaders().get(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
+        Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
+        Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
 
         vertxEndpoint.createProducer().send(replyMessage);
 

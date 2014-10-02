@@ -42,7 +42,7 @@ public class StaticResponseEndpointAdapterTest {
                 new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
         Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");
-        Assert.assertNotNull(response.getHeaders().get("Operation"));
-        Assert.assertEquals(response.getHeaders().get("Operation"), "UnitTest");
+        Assert.assertNotNull(response.getHeader("Operation"));
+        Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
     }
 }

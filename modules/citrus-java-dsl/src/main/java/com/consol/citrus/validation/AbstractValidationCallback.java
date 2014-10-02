@@ -37,7 +37,7 @@ public abstract class AbstractValidationCallback implements ValidationCallback {
      * Validate message automatically unmarshalling message payload.
      */
     public final void validate(Message message) {
-        validate(message.getPayload(), message.getHeaders());
+        validate(message.getPayload(), message.copyHeaders());
     }
     
     /**

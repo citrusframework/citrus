@@ -71,7 +71,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
             xhtmlPayload = xhtmlPayload.replaceFirst(W3_XHTML1_URL, "org/w3/xhtml/");
         }
         
-        super.validateMessage(new DefaultMessage(xhtmlPayload, receivedMessage.getHeaders()),
+        super.validateMessage(new DefaultMessage(xhtmlPayload, receivedMessage.copyHeaders()),
                 context, validationContext);
     }
     

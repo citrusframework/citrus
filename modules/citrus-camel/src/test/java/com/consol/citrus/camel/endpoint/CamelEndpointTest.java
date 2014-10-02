@@ -114,10 +114,10 @@ public class CamelEndpointTest {
 
         Message receivedMessage = camelEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(receivedMessage.getHeaders().get("operation"), "newsFeed");
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_ID));
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
+        Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
+        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID));
+        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
 
         verify(camelContext, consumerTemplate);
     }

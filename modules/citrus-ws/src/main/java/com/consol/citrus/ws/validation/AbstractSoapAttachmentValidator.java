@@ -51,21 +51,21 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
     public void validateAttachment(Message receivedMessage, SoapAttachment controlAttachment) throws IOException {
         log.info("Validating SOAP attachments ...");
         
-        if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_ID)) {
+        if (receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_ID) != null) {
             if (log.isDebugEnabled()) {
-                log.debug("Found attachment with contentId '" + receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID) + "'");
+                log.debug("Found attachment with contentId '" + receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_ID) + "'");
             }
             
             SoapAttachment attachment = new SoapAttachment();
             
-            attachment.setContentId(receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID).toString());
+            attachment.setContentId(receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_ID).toString());
             
-            if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_TYPE)) {
-                attachment.setContentType(receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_TYPE).toString());
+            if (receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_TYPE) != null) {
+                attachment.setContentType(receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_TYPE).toString());
             }
             
-            if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT)) {
-                Object contentObject = receivedMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT);
+            if (receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT) != null) {
+                Object contentObject = receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT);
                 
                 if (contentObject instanceof byte[]) {
                     String content = new String((byte[])contentObject, controlAttachment.getCharsetName());
@@ -165,7 +165,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
 
     /**
      * Delegate content body validation to subclasses.
-     * @param attachment
+     * @param receivedAttachment
      * @param controlAttachment
      */
     protected abstract void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment);

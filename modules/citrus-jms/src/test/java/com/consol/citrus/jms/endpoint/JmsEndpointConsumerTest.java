@@ -238,8 +238,8 @@ public class JmsEndpointConsumerTest {
         
         Message receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey("Operation"));
-        Assert.assertTrue(receivedMessage.getHeaders().get("Operation").equals("sayHello"));
+        Assert.assertNotNull(receivedMessage.getHeader("Operation"));
+        Assert.assertTrue(receivedMessage.getHeader("Operation").equals("sayHello"));
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
     }

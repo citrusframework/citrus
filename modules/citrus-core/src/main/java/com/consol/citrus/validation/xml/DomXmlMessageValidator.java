@@ -103,7 +103,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             Message controlMessage = validationContext.getControlMessage(context);
             if (controlMessage != null) {
-                validateMessageHeader(controlMessage.getHeaders(), receivedMessage.getHeaders(), validationContext, context);
+                validateMessageHeader(controlMessage.copyHeaders(), receivedMessage.copyHeaders(), validationContext, context);
             }
 
             log.info("XML message validation successful: All values OK");

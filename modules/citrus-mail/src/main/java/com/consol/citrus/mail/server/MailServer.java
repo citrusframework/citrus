@@ -149,9 +149,9 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         MailMessage mailMessage = (MailMessage) request.getPayload();
 
         if (splitMultipart) {
-            return split(mailMessage.getBody(), request.getHeaders());
+            return split(mailMessage.getBody(), request.copyHeaders());
         } else {
-            return getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), request.getHeaders()));
+            return getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), request.copyHeaders()));
         }
     }
 

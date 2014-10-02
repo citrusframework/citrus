@@ -68,10 +68,10 @@ public class CamelSyncEndpointTest {
         Message reply = camelEndpoint.createConsumer().receive(5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(reply.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
-        Assert.assertTrue(reply.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertTrue(reply.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
-        Assert.assertEquals(reply.getHeaders().get("operation"), "newsFeed");
+        Assert.assertEquals(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
+        Assert.assertNotNull(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertNotNull(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
+        Assert.assertEquals(reply.getHeader("operation"), "newsFeed");
 
         verify(camelContext, producerTemplate);
     }
@@ -106,10 +106,10 @@ public class CamelSyncEndpointTest {
 
         Message receivedMessage = camelEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
-        Assert.assertEquals(receivedMessage.getHeaders().get("operation"), "newsFeed");
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_ID));
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
-        Assert.assertTrue(receivedMessage.getHeaders().containsKey(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
+        Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
+        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID));
+        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
+        Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
 
         camelEndpoint.createProducer().send(replyMessage);
 

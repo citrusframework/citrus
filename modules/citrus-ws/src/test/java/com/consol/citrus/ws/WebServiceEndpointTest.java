@@ -60,7 +60,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
@@ -118,10 +118,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -181,10 +181,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get("Operation"));
-                Assert.assertEquals(message.getHeaders().get("Operation"), "sayHello");
+                Assert.assertNotNull(message.getHeader("Operation"));
+                Assert.assertEquals(message.getHeader("Operation"), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -259,10 +259,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get("Operation"));
-                Assert.assertEquals(message.getHeaders().get("Operation"), "sayHello");
+                Assert.assertNotNull(message.getHeader("Operation"));
+                Assert.assertEquals(message.getHeader("Operation"), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -345,10 +345,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -428,10 +428,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -514,10 +514,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -599,10 +599,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -680,13 +680,13 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertNotNull(message.getHeaders().get("myContentId"));
+                Assert.assertNotNull(message.getHeader("myContentId"));
                 
-                Attachment attachment = (Attachment)message.getHeaders().get("myContentId");
+                Attachment attachment = (Attachment)message.getHeader("myContentId");
                 Assert.assertEquals(attachment.getContentId(), "myContentId");
                 Assert.assertEquals(attachment.getContentType(), "text/xml");
                 
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -754,10 +754,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -831,10 +831,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -909,10 +909,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -993,10 +993,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -1076,10 +1076,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -1143,10 +1143,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -1225,10 +1225,10 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
+                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
                 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -1309,7 +1309,7 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
+                Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;

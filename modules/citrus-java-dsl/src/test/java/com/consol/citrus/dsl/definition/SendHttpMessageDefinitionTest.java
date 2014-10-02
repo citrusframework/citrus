@@ -73,9 +73,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 3L);
-        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.ID));
-        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
 
         Assert.assertFalse(action.isForkMode());
