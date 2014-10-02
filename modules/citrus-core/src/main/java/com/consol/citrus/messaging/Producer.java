@@ -16,7 +16,7 @@
 
 package com.consol.citrus.messaging;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * @author Christoph Deppisch
@@ -28,6 +28,6 @@ public interface Producer {
      * Sends the message.
      * @param message the message object to send.
      */
-    void send(Message<?> message);
+    void send(Message message);
 
 }

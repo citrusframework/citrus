@@ -44,6 +44,9 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
     /** Channel resolver instance */
     private DestinationResolver<MessageChannel> channelResolver;
 
+    /** Message converter */
+    private ChannelMessageConverter messageConverter = new ChannelMessageConverter();
+
     /**
      * Set the message channel.
      * @param channel the channel to set
@@ -122,5 +125,21 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
      */
     public DestinationResolver<MessageChannel> getChannelResolver() {
         return channelResolver;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public ChannelMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(ChannelMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 }

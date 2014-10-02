@@ -19,12 +19,12 @@ package com.consol.citrus.endpoint;
 import com.consol.citrus.dsl.endpoint.TestExecutingEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -51,13 +51,13 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
         mappingNameExtractor.setXpathExpression("//Test/@name");
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<Test name=\"FooTest\"></Test>").build());
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage("<Test name=\"FooTest\"></Test>"));
 
         Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
 
         response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<Test name=\"BarTest\"></Test>").build());
+                new DefaultMessage("<Test name=\"BarTest\"></Test>"));
 
         Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
     }
@@ -70,9 +70,9 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
         XPathPayloadMappingKeyExtractor mappingNameExtractor = new XPathPayloadMappingKeyExtractor();
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload(
-                    "<FooBarTest></FooBarTest>").build());
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage(
+                        "<FooBarTest></FooBarTest>"));
 
         Assert.assertEquals(response.getPayload(), "<FooBarTest>OK</FooBarTest>");
     }
@@ -87,8 +87,8 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         try {
-            endpointAdapter.handleMessage(MessageBuilder.withPayload(
-                    "<FooTest>foo test please</FooTest>").build());
+            endpointAdapter.handleMessage(new DefaultMessage(
+                    "<FooTest>foo test please</FooTest>"));
             Assert.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");
@@ -105,8 +105,8 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
         endpointAdapter.setMappingKeyExtractor(mappingNameExtractor);
 
         try {
-            endpointAdapter.handleMessage(MessageBuilder.withPayload(
-                    "<Test name=\"UNKNOWN_TEST\"></Test>").build());
+            endpointAdapter.handleMessage(new DefaultMessage(
+                    "<Test name=\"UNKNOWN_TEST\"></Test>"));
             Assert.fail("Missing exception due to unknown message handler");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);

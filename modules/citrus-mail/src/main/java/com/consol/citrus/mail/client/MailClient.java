@@ -20,11 +20,11 @@ import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
@@ -61,7 +61,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         log.info(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
         MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());

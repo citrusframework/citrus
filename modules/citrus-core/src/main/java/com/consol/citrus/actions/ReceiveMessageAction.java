@@ -21,6 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.validation.ControlMessageValidationContext;
@@ -32,7 +33,6 @@ import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.messaging.Message;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -103,7 +103,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      */
     @Override
     public void doExecute(TestContext context) {
-        Message<?> receivedMessage;
+        Message receivedMessage;
         String selectorString = null;
         
         try {
@@ -137,7 +137,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Receives the message with respective message receiver implementation.
      * @return
      */
-    private Message<?> receive(TestContext context) {
+    private Message receive(TestContext context) {
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
         return receiveTimeout > 0 ? messageEndpoint.createConsumer().receive(receiveTimeout) :
                 messageEndpoint.createConsumer().receive(messageEndpoint.getEndpointConfiguration().getTimeout());
@@ -150,7 +150,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @param selectorString the message selector string.
      * @return
      */
-    private Message<?> receiveSelected(TestContext context, String selectorString) {
+    private Message receiveSelected(TestContext context, String selectorString) {
         if (log.isDebugEnabled()) {
             log.debug("Setting message selector: '" + selectorString + "'");
         }
@@ -179,7 +179,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Override this message if you want to add additional message validation
      * @param receivedMessage
      */
-    protected void validateMessage(Message<?> receivedMessage, TestContext context) throws IOException {
+    protected void validateMessage(Message receivedMessage, TestContext context) throws IOException {
 	
         // extract variables from received message content
         for (VariableExtractor variableExtractor : variableExtractors) {

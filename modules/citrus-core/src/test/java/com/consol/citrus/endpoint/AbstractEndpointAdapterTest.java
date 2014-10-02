@@ -16,10 +16,8 @@
 
 package com.consol.citrus.endpoint;
 
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,7 +35,7 @@ public class AbstractEndpointAdapterTest {
     public void testEndpointAdapter() {
         AbstractEndpointAdapter abstractEndpointAdapter = new AbstractEndpointAdapter() {
             @Override
-            protected Message<?> handleMessageInternal(Message<?> message) {
+            protected Message handleMessageInternal(Message message) {
                 return null;
             }
 
@@ -52,14 +50,14 @@ public class AbstractEndpointAdapterTest {
             }
         };
 
-        Assert.assertNull(abstractEndpointAdapter.handleMessage(MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build()));
+        Assert.assertNull(abstractEndpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
     }
 
     @Test
     public void testFallbackMessageHandler() {
         AbstractEndpointAdapter abstractEndpointAdapter = new AbstractEndpointAdapter() {
             @Override
-            protected Message<?> handleMessageInternal(Message<?> message) {
+            protected Message handleMessageInternal(Message message) {
                 return null;
             }
 
@@ -74,14 +72,14 @@ public class AbstractEndpointAdapterTest {
             }
         };
 
-        Message<String> request = MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build();
+        Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
         reset(messageHandler);
-        expect(messageHandler.handleMessage(request)).andReturn((Message) MessageBuilder.withPayload("OK").build()).once();
+        expect(messageHandler.handleMessage(request)).andReturn((Message) new DefaultMessage("OK")).once();
         replay(messageHandler);
 
         abstractEndpointAdapter.setFallbackMessageHandler(messageHandler);
-        Message<?> response = abstractEndpointAdapter.handleMessage(request);
+        Message response = abstractEndpointAdapter.handleMessage(request);
 
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload().toString(), "OK");

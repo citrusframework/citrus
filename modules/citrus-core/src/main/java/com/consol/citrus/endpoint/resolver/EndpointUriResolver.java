@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.resolver;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Resolves endpoint uri so we can send messages to dynamic endpoints. Resolver works on request message and
@@ -33,5 +33,5 @@ public interface EndpointUriResolver {
      * @param defaultUri the fallback uri in case no mapping was found.
      * @return the endpoint uri String representation
      */
-    String resolveEndpointUri(Message<?> message, String defaultUri);
+    String resolveEndpointUri(Message message, String defaultUri);
 }

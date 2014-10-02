@@ -16,26 +16,24 @@
 
 package com.consol.citrus.validation.script;
 
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
-
-import java.io.IOException;
-
-import org.codehaus.groovy.control.CompilationFailedException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
+import org.codehaus.groovy.control.CompilationFailedException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 /**
  * Builds a control message from Groovy code with markup builder support.
  * 
  * @author Christoph Deppisch
  */
-public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder<String> {
+public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
 
     /** Default path to script template */
     private Resource scriptTemplateResource = new ClassPathResource("com/consol/citrus/script/markup-builder-template.groovy");

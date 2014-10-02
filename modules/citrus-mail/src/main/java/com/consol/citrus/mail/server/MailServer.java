@@ -21,9 +21,10 @@ import com.consol.citrus.mail.client.MailEndpointConfiguration;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.helper.SimpleMessageListener;
@@ -95,9 +96,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             return true;
         }
 
-        org.springframework.messaging.Message<?> response = getEndpointAdapter().handleMessage(MessageBuilder
-                .withPayload(mailMessageMapper.toXML(createAcceptRequest(from, recipient)))
-                .build());
+        Message response = getEndpointAdapter().handleMessage(
+                new DefaultMessage(mailMessageMapper.toXML(createAcceptRequest(from, recipient))));
 
         if (response == null || response.getPayload() == null) {
             throw new CitrusRuntimeException("Did not receive accept response. Missing accept response because autoAccept is disabled.");
@@ -121,10 +121,8 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     public void deliver(String from, String recipient, InputStream data) {
         try {
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessage(getSession(), data));
-            org.springframework.messaging.Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration());
-
-
-            org.springframework.messaging.Message response = invokeMessageHandler(request);
+            Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration());
+            Message response = invokeMessageHandler(request);
 
             if (response != null && response.getPayload() != null) {
                 MailMessageResponse mailResponse = null;
@@ -147,16 +145,13 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * Invokes the message handler with constructed mail message and headers.
      * @param request
      */
-    protected org.springframework.messaging.Message<?> invokeMessageHandler(org.springframework.messaging.Message<?> request) {
+    protected Message invokeMessageHandler(Message request) {
         MailMessage mailMessage = (MailMessage) request.getPayload();
 
         if (splitMultipart) {
             return split(mailMessage.getBody(), request.getHeaders());
         } else {
-            return getEndpointAdapter().handleMessage(org.springframework.integration.support.MessageBuilder
-                    .withPayload(mailMessageMapper.toXML(mailMessage))
-                    .copyHeaders(request.getHeaders())
-                    .build());
+            return getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), request.getHeaders()));
         }
     }
 
@@ -168,24 +163,18 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
      * @param bodyPart
      * @param messageHeaders
      */
-    private org.springframework.messaging.Message<?> split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
+    private Message split(BodyPart bodyPart, Map<String, Object> messageHeaders) {
         MailMessage mailMessage = createMailMessage(messageHeaders);
         mailMessage.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
 
-        Stack<org.springframework.messaging.Message<?>> responseStack = new Stack<org.springframework.messaging.Message<?>>();
+        Stack<Message> responseStack = new Stack<Message>();
         if (bodyPart instanceof AttachmentPart) {
-            fillStack(getEndpointAdapter().handleMessage(org.springframework.integration.support.MessageBuilder
-                    .withPayload(mailMessageMapper.toXML(mailMessage))
-                    .copyHeaders(messageHeaders)
+            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
-                    .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())
-                    .build()), responseStack);
+                    .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())), responseStack);
         } else {
-            fillStack(getEndpointAdapter().handleMessage(org.springframework.integration.support.MessageBuilder
-                    .withPayload(mailMessageMapper.toXML(mailMessage))
-                    .copyHeaders(messageHeaders)
-                    .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
-                    .build()), responseStack);
+            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), messageHeaders)
+                    .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())), responseStack);
         }
 
         if (bodyPart.hasAttachments()) {
@@ -197,7 +186,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         return responseStack.isEmpty() ? null : responseStack.pop();
     }
 
-    private void fillStack(org.springframework.messaging.Message<?> message, Stack<org.springframework.messaging.Message<?>> responseStack) {
+    private void fillStack(Message message, Stack<Message> responseStack) {
         if (message != null) {
             responseStack.push(message);
         }

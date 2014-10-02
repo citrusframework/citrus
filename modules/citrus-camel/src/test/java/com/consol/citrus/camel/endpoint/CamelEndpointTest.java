@@ -18,13 +18,12 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -52,7 +51,7 @@ public class CamelEndpointTest {
 
         CamelEndpoint camelEndpoint = new CamelEndpoint(endpointConfiguration);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
         reset(camelContext, producerTemplate, exchange);
 
@@ -76,7 +75,7 @@ public class CamelEndpointTest {
 
         CamelEndpoint camelEndpoint = new CamelEndpoint(endpointConfiguration);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
         reset(camelContext, producerTemplate, exchange);
 
@@ -133,7 +132,7 @@ public class CamelEndpointTest {
         CamelEndpoint camelEndpoint = new CamelEndpoint(endpointConfiguration);
         camelEndpoint.setMessageListener(messageListeners);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
         DefaultMessage message = new DefaultMessage();
         message.setBody("Hello from Camel!");

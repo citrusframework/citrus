@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     private static Logger log = LoggerFactory.getLogger(ChannelSyncProducer.class);
 
     /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
+    private Map<String, Message> replyMessages = new HashMap<String, Message>();
 
     /** Endpoint configuration */
     private final ChannelSyncEndpointConfiguration endpointConfiguration;
@@ -53,7 +53,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         String destinationChannelName = getDestinationChannelName();
 
         log.info("Sending message to channel: '" + destinationChannelName + "'");
@@ -63,11 +63,11 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
         }
 
         endpointConfiguration.getMessagingTemplate().setReceiveTimeout(endpointConfiguration.getTimeout());
-        Message<?> replyMessage;
 
         log.info("Message was successfully sent to channel: '" + destinationChannelName + "'");
 
-        replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(), message);
+        org.springframework.messaging.Message replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(),
+                endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration));
 
         if (replyMessage == null) {
             throw new ActionTimeoutException("Reply timed out after " +
@@ -76,28 +76,28 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
             log.info("Received synchronous response message from reply channel");
         }
 
-        onReplyMessage(message, replyMessage);
+        onReplyMessage(message, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration));
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive("", endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(String selector) {
+    public Message receive(String selector) {
         return receive(selector, endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         return receive("", timeout);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         long timeLeft = timeout;
-        Message<?> message = findReplyMessage(selector);
+        Message message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -123,7 +123,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      * @param correlationKey
      * @param replyMessage the reply message.
      */
-    public void onReplyMessage(String correlationKey, Message<?> replyMessage) {
+    public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
     }
 
@@ -132,7 +132,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      * @param requestMessage
      * @param replyMessage
      */
-    public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
+    public void onReplyMessage(Message requestMessage, Message replyMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
             onReplyMessage(endpointConfiguration.getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
@@ -145,7 +145,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      * @param correlationKey
      * @return
      */
-    public Message<?> findReplyMessage(String correlationKey) {
+    public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
     }
 }

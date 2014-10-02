@@ -16,16 +16,15 @@
 
 package com.consol.citrus.validation.script;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
@@ -34,15 +33,15 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     private GroovyXmlMessageValidator validator = new GroovyXmlMessageValidator();
     
-    private Message<?> message;
+    private Message message;
 
     @BeforeMethod
     public void prepareTestData() {
-        message = MessageBuilder.withPayload("<RequestMessage Id=\"123456789\" xmlns=\"http://citrus/test\">"
+        message = new DefaultMessage("<RequestMessage Id=\"123456789\" xmlns=\"http://citrus/test\">"
                 + "<CorrelationId>Kx1R123456789</CorrelationId>"
                 + "<BookingId>Bx1G987654321</BookingId>"
                 + "<Text>Hello TestFramework</Text>"
-            + "</RequestMessage>").build();
+            + "</RequestMessage>");
     }
     
     @Test

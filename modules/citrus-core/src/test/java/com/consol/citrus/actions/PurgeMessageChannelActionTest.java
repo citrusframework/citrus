@@ -100,7 +100,7 @@ public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
         purgeChannelAction.afterPropertiesSet();
         
         MessageSelector messageSelector = new MessageSelector() {
-            public boolean accept(Message<?> message) {
+            public boolean accept(Message message) {
                 return false;
             }
         };

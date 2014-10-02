@@ -17,9 +17,9 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.testng.Assert;
@@ -27,7 +27,6 @@ import org.testng.annotations.Test;
 
 import javax.jms.*;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -50,11 +49,8 @@ public class JmsEndpointProducerTest {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         reset(jmsTemplate, connectionFactory, destination, messageProducer);
 
         expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
@@ -76,11 +72,8 @@ public class JmsEndpointProducerTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();
@@ -109,11 +102,8 @@ public class JmsEndpointProducerTest {
 
         endpoint.getEndpointConfiguration().setDestinationName("myDestination");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         reset(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
         expect(connectionFactory.createConnection()).andReturn(connection).once();

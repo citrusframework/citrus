@@ -1,5 +1,12 @@
 package com.consol.citrus.validation.matcher.core;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.validation.matcher.ValidationMatcher;
+import com.consol.citrus.validation.xml.DomXmlMessageValidator;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -7,14 +14,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.integration.support.MessageBuilder;
-
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.matcher.ValidationMatcher;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
  * Validation matcher receives a XML data and validates it against expected XML with full
@@ -45,10 +44,10 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
       */
     public void validate(String fieldName, String value, String control) throws ValidationException {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setControlMessage(MessageBuilder.withPayload(control).build());
+        validationContext.setControlMessage(new DefaultMessage(control));
         
         TestContext context = testContextFactory.getObject();
-        xmlMessageValidator.validateMessage(MessageBuilder.withPayload(removeCDataElements(value)).build(), context, validationContext);
+        xmlMessageValidator.validateMessage(new DefaultMessage(removeCDataElements(value)), context, validationContext);
     }
 
     /**

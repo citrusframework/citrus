@@ -16,19 +16,18 @@
 
 package com.consol.citrus.ws.validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Soap attachment validator delegating attachment content validation to a {@link MessageValidator}.
@@ -61,10 +60,10 @@ public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator 
 	        String controlContent = controlAttachment.getContent();
 	        String receivedContent = receivedAttachment.getContent();
 	        
-	        Message<String> controlMessage = MessageBuilder.withPayload(controlContent).build();
+	        Message controlMessage = new DefaultMessage(controlContent);
 	        validationContext.setControlMessage(controlMessage);
 
-	        Message<String> receivedMessage = MessageBuilder.withPayload(receivedContent).build();
+	        Message receivedMessage = new DefaultMessage(receivedContent);
 	        validator.validateMessage(receivedMessage, null, validationContext);
 	    } else {
             Assert.isTrue(controlAttachment.getContent() == null || controlAttachment.getContent().trim().length() == 0, 

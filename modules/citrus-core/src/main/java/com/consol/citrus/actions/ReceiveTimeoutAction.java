@@ -20,11 +20,11 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 /**
@@ -60,7 +60,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     @Override
     public void doExecute(TestContext context) {
         try {
-            Message<?> receivedMessage;
+            Message receivedMessage;
             Consumer consumer = getOrCreateEndpoint(context).createConsumer();
 
             if (StringUtils.hasText(messageSelector) && consumer instanceof SelectiveConsumer) {

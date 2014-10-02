@@ -19,7 +19,7 @@ package com.consol.citrus.ws.message.callback;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.mime.Attachment;
@@ -39,7 +39,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
     private static Logger log = LoggerFactory.getLogger(SoapRequestMessageCallback.class);
     
     /** The internal message content source */
-    private Message<?> message;
+    private Message message;
 
     /** Optional SOAP attachment */
     private Attachment attachment;
@@ -53,7 +53,7 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
      * @param message
      * @param endpointConfiguration
      */
-    public SoapRequestMessageCallback(Message<?> message, WebServiceEndpointConfiguration endpointConfiguration) {
+    public SoapRequestMessageCallback(Message message, WebServiceEndpointConfiguration endpointConfiguration) {
         this.message = message;
         this.endpointConfiguration = endpointConfiguration;
     }

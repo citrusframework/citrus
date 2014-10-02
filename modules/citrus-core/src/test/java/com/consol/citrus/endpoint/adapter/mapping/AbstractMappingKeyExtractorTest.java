@@ -16,8 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,18 +31,18 @@ public class AbstractMappingKeyExtractorTest {
     public void testMappingKeyPrefixSuffix() {
         AbstractMappingKeyExtractor mappingKeyExtractor = new AbstractMappingKeyExtractor() {
             @Override
-            protected String getMappingKey(Message<?> request) {
+            protected String getMappingKey(Message request) {
                 return "key";
             }
         };
 
         mappingKeyExtractor.setMappingKeyPrefix("pre_");
-        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(MessageBuilder.withPayload("").build()), "pre_key");
+        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(new DefaultMessage("")), "pre_key");
 
         mappingKeyExtractor.setMappingKeySuffix("_end");
-        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(MessageBuilder.withPayload("").build()), "pre_key_end");
+        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(new DefaultMessage("")), "pre_key_end");
 
         mappingKeyExtractor.setMappingKeyPrefix("");
-        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(MessageBuilder.withPayload("").build()), "key_end");
+        Assert.assertEquals(mappingKeyExtractor.extractMappingKey(new DefaultMessage("")), "key_end");
     }
 }

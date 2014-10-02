@@ -18,7 +18,7 @@ package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.endpoint.adapter.mapping.EndpointAdapterMappingStrategy;
 import com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Base endpoint adapter implementation that dispatches incoming messages according to some extracted message value as mapping key and
@@ -37,7 +37,7 @@ public class RequestDispatchingEndpointAdapter extends StaticEndpointAdapter {
     private EndpointAdapterMappingStrategy mappingStrategy;
 
     @Override
-    protected Message<?> handleMessageInternal(Message<?> message) {
+    protected Message handleMessageInternal(Message message) {
         return dispatchMessage(message, mappingKeyExtractor.extractMappingKey(message));
     }
 
@@ -48,7 +48,7 @@ public class RequestDispatchingEndpointAdapter extends StaticEndpointAdapter {
      * @param mappingKey
      * @return
      */
-    public Message<?> dispatchMessage(Message<?> request, String mappingKey) {
+    public Message dispatchMessage(Message request, String mappingKey) {
         return mappingStrategy.getEndpointAdapter(mappingKey).handleMessage(request);
     }
 

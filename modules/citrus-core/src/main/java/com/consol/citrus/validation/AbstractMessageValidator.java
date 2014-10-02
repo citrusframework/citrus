@@ -16,13 +16,12 @@
 
 package com.consol.citrus.validation;
 
-import java.util.List;
-
-import org.springframework.messaging.Message;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.ValidationContext;
+
+import java.util.List;
 
 /**
  * Base abstract implementation for message validators. Calls method to finds a proper validation context
@@ -35,7 +34,7 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
     /**
      * Try to find proper validation context in list and perform message validation.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context,
+    public void validateMessage(Message receivedMessage, TestContext context,
             List<ValidationContext> validationContexts) throws ValidationException {
         T validationContext = findValidationContext(validationContexts);
         

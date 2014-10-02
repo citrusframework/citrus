@@ -16,8 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,8 +29,8 @@ public class TimeoutProducingEndpointAdapterTest {
     @Test
     public void testHandleMessage() {
         TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
         Assert.assertNull(response);
     }

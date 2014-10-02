@@ -16,14 +16,13 @@
 
 package com.consol.citrus.validation.script;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author DanielP
@@ -34,8 +33,8 @@ public class GroovyJsonMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testGroovyScriptValidation() throws ValidationException {
-        Message<?> message = MessageBuilder.withPayload("{\"person\":{\"name\":\"Christoph\",\"age\":31," +
-        		"\"pets\":[\"dog\",\"cat\"]}}").build();
+        Message message = new DefaultMessage("{\"person\":{\"name\":\"Christoph\",\"age\":31," +
+        		"\"pets\":[\"dog\",\"cat\"]}}");
         
         String validationScript = "assert json.size() == 1 \n" +
                                   "assert json.person.name == 'Christoph' \n" +

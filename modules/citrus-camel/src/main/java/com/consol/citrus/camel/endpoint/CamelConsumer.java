@@ -18,11 +18,11 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 
 /**
  * @author Christoph Deppisch
@@ -49,12 +49,12 @@ public class CamelConsumer implements Consumer {
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive(endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         log.info("Receiving message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         Exchange exchange = endpointConfiguration.getCamelContext().createConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
@@ -75,7 +75,7 @@ public class CamelConsumer implements Consumer {
      * Informs message listeners if present.
      * @param receivedMessage
      */
-    protected void onInboundMessage(Message<?> receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage) {
         if (messageListener != null) {
             messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {

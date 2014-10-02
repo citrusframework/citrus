@@ -17,8 +17,9 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultReplyMessageCorrelator;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import org.easymock.EasyMock;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
@@ -49,13 +50,10 @@ public class ChannelEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
@@ -64,7 +62,7 @@ public class ChannelEndpointSyncProducerTest {
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
         replay(messagingTemplate, channel);
 
@@ -82,13 +80,10 @@ public class ChannelEndpointSyncProducerTest {
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
@@ -99,7 +94,7 @@ public class ChannelEndpointSyncProducerTest {
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
         replay(messagingTemplate, channel, channelResolver);
 
@@ -115,13 +110,10 @@ public class ChannelEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
@@ -130,16 +122,16 @@ public class ChannelEndpointSyncProducerTest {
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
         replay(messagingTemplate, channel);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message);
 
-        Message<String> replyMessage = (Message<String>) channelSyncProducer.findReplyMessage("");
+        Message replyMessage = channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
+        Assert.assertEquals(replyMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
         
         verify(messagingTemplate, channel);
     }
@@ -153,13 +145,10 @@ public class ChannelEndpointSyncProducerTest {
 
         endpoint.getEndpointConfiguration().setTimeout(10000L);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
@@ -168,17 +157,17 @@ public class ChannelEndpointSyncProducerTest {
         messagingTemplate.setReceiveTimeout(10000L);
         expectLastCall().once();
         
-        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
 
         replay(messagingTemplate, channel);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message);
 
-        Message<String> replyMessage = (Message<String>) channelSyncProducer.findReplyMessage("");
+        Message replyMessage = channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
-        
+        Assert.assertEquals(replyMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+
         verify(messagingTemplate, channel);
     }
     
@@ -189,13 +178,10 @@ public class ChannelEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
@@ -206,7 +192,7 @@ public class ChannelEndpointSyncProducerTest {
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(response).once();
+        expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
         expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
@@ -215,10 +201,10 @@ public class ChannelEndpointSyncProducerTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message);
 
-        Message<String> replyMessage = (Message<String>) channelSyncProducer.findReplyMessage(MessageHeaders.ID + " = '123456789'");
+        Message replyMessage = channelSyncProducer.findReplyMessage(MessageHeaders.ID + " = '123456789'");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
-        Assert.assertEquals(replyMessage.getHeaders(), response.getHeaders());
-        
+        Assert.assertEquals(replyMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
+
         verify(messagingTemplate, channel, replyMessageCorrelator);
     }
     
@@ -228,17 +214,14 @@ public class ChannelEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(messagingTemplate, channel);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
-        expect(messagingTemplate.sendAndReceive(channel, message)).andReturn(null).once();
+        expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(null).once();
         
         replay(messagingTemplate, channel);
 
@@ -257,10 +240,7 @@ public class ChannelEndpointSyncProducerTest {
     public void testOnReplyMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.onReplyMessage("", message);
@@ -272,10 +252,7 @@ public class ChannelEndpointSyncProducerTest {
     public void testOnReplyMessageWithCorrelatorKey() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);

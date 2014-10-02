@@ -19,15 +19,13 @@ package com.consol.citrus.mail.message;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.client.MailEndpointConfiguration;
 import com.consol.citrus.mail.model.*;
-import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.*;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
@@ -53,14 +51,14 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
     @Override
-    public MimeMailMessage convertOutbound(Message<?> message, MailEndpointConfiguration endpointConfiguration) {
+    public MimeMailMessage convertOutbound(Message message, MailEndpointConfiguration endpointConfiguration) {
         MailMessage mailMessage = getMailMessage(message, endpointConfiguration);
 
         try {
             MimeMessage mimeMessage = endpointConfiguration.getJavaMailSender().createMimeMessage();
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessageHelper(mimeMessage, mailMessage.getBody().hasAttachments(), mailMessage.getBody().getCharsetName()));
 
-            convertOutbound(mimeMailMessage, MessageBuilder.withPayload(mailMessage).copyHeaders(message.getHeaders()).build(), endpointConfiguration);
+            convertOutbound(mimeMailMessage, new DefaultMessage(mailMessage, message.getHeaders()), endpointConfiguration);
 
             return mimeMailMessage;
         } catch (MessagingException e) {
@@ -69,7 +67,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     }
 
     @Override
-    public void convertOutbound(MimeMailMessage mimeMailMessage, Message<?> message, MailEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(MimeMailMessage mimeMailMessage, Message message, MailEndpointConfiguration endpointConfiguration) {
         MailMessage mailMessage = getMailMessage(message, endpointConfiguration);
 
         try {
@@ -102,16 +100,13 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     }
 
     @Override
-    public Message<?> convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(MimeMailMessage message, MailEndpointConfiguration endpointConfiguration) {
         try {
             Map<String, Object> messageHeaders = createMessageHeaders(message);
             MailMessage mailMessage = createMailMessage(messageHeaders);
             mailMessage.setBody(handlePart(message.getMimeMessage()));
 
-            return org.springframework.integration.support.MessageBuilder
-                                    .withPayload(mailMessage)
-                                    .copyHeaders(messageHeaders)
-                                    .build();
+            return new DefaultMessage(mailMessage, messageHeaders);
         } catch (MessagingException e) {
             throw new CitrusRuntimeException("Failed to convert mail mime message", e);
         } catch (IOException e) {
@@ -338,7 +333,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
      * @param endpointConfiguration
      * @return
      */
-    private MailMessage getMailMessage(Message<?> message, MailEndpointConfiguration endpointConfiguration) {
+    private MailMessage getMailMessage(Message message, MailEndpointConfiguration endpointConfiguration) {
         Object payload = message.getPayload();
 
         MailMessage mailMessage = null;

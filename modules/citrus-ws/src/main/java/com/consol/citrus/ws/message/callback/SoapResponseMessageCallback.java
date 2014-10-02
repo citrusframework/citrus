@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 
@@ -33,7 +33,7 @@ import java.io.IOException;
 public class SoapResponseMessageCallback implements WebServiceMessageCallback {
 
     /** The response message built from WebService response message */
-    private Message<?> response;
+    private Message response;
 
     /** Endpoint configuration */
     private WebServiceEndpointConfiguration endpointConfiguration;
@@ -59,7 +59,7 @@ public class SoapResponseMessageCallback implements WebServiceMessageCallback {
      * Gets the constructed Spring Integration response message object.
      * @return the response message.
      */
-    public Message<?> getResponse() {
+    public Message getResponse() {
         return response;
     }
 }

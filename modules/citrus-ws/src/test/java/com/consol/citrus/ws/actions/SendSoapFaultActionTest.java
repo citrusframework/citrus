@@ -21,12 +21,12 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -61,7 +61,7 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         producer.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
+                Message sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
                 Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
                         "{{http://citrusframework.org}ws:TEC-1000}{Internal server error}{en}");
@@ -99,7 +99,7 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         producer.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
+                Message sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
                 Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
                         "{{http://citrusframework.org}ws:TEC-1000}{Internal server error}{en}{SERVER}");
@@ -135,7 +135,7 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         producer.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
+                Message sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
                 Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
                         "{{http://citrusframework.org}ws:TEC-1000}");
@@ -175,7 +175,7 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         producer.send((Message)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                Message<?> sentMessage = (Message)EasyMock.getCurrentArguments()[0];
+                Message sentMessage = (Message)EasyMock.getCurrentArguments()[0];
                 Assert.assertNotNull(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT));
                 Assert.assertEquals(sentMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT), 
                         "{{http://citrusframework.org}ws:TEC-1000}{Internal server error}{en}");

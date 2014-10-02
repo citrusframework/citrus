@@ -18,11 +18,11 @@ package com.consol.citrus.camel.message;
 
 import com.consol.citrus.camel.endpoint.CamelEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.apache.camel.*;
 import org.apache.camel.impl.DefaultExchange;
 import org.easymock.EasyMock;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -40,9 +40,8 @@ public class CamelMessageConverterTest {
 
     @Test
     public void testConvertOutbound() {
-        Message message = MessageBuilder.withPayload("Hello from Citrus!")
-                .setHeader("operation", "sayHello")
-                .build();
+        Message message = new DefaultMessage("Hello from Citrus!")
+                .setHeader("operation", "sayHello");
 
         Exchange exchange = messageConverter.convertOutbound(message, endpointConfiguration);
 
@@ -52,9 +51,8 @@ public class CamelMessageConverterTest {
 
     @Test
     public void testConvertOutboundExchange() {
-        Message message = MessageBuilder.withPayload("Hello from Citrus!")
-                .setHeader("operation", "sayHello")
-                .build();
+        Message message = new DefaultMessage("Hello from Citrus!")
+                .setHeader("operation", "sayHello");
 
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());

@@ -16,15 +16,14 @@
 
 package com.consol.citrus.validation.json;
 
-import org.json.simple.parser.ParseException;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.json.simple.parser.ParseException;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -35,8 +34,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidation() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
 
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
 
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -45,8 +44,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testSloppyJsonValidation() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator().strict(false);
 
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"id\":\"x123456789x\"}");
 
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -55,8 +54,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationNestedObjects() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -65,14 +64,14 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWithArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
 
-        Message<String> receivedMessage = MessageBuilder.withPayload("[" +
+        Message receivedMessage = new DefaultMessage("[" +
         		"{\"text\":\"Hello World!\", \"index\":1}, " +
         		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-        		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("[" +
+        		"{\"text\":\"Hola del mundo!\", \"index\":3}]");
+        Message controlMessage = new DefaultMessage("[" +
         		"{\"text\":\"Hello World!\", \"index\":1}, " +
         		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-        		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
+        		"{\"text\":\"Hola del mundo!\", \"index\":3}]");
 
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -82,11 +81,11 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         validator.setStrict(false);
 
-        Message<String> receivedMessage = MessageBuilder.withPayload("[" +
+        Message receivedMessage = new DefaultMessage("[" +
         		"{\"text\":\"Hello World!\", \"index\":1}, " +
         		"{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-        		"{\"text\":\"Hola del mundo!\", \"index\":3}]").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("[{\"text\":\"Hello World!\", \"index\":1}] ").build();
+        		"{\"text\":\"Hola del mundo!\", \"index\":3}]");
+        Message controlMessage = new DefaultMessage("[{\"text\":\"Hello World!\", \"index\":1}] ");
 
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -95,14 +94,14 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWithNestedArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+        Message receivedMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -111,8 +110,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationVariableSupport() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello ${world}!\", \"index\":${index}, \"id\":\"${id}\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello ${world}!\", \"index\":${index}, \"id\":\"${id}\"}");
         
         context.setVariable("world", "World");
         context.setVariable("index", "5");
@@ -125,8 +124,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWrongNumberOfEntries() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\", \"missing\":\"this is missing\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\", \"missing\":\"this is missing\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -144,8 +143,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWrongValue() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"wrong\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"wrong\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -163,8 +162,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWrongValueInNestedObjects() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"wrong\"}, \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"wrong\"}, \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -182,14 +181,14 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWrongValueInArrays() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+        Message receivedMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":0}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -207,13 +206,13 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationWrongArraySize() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+        Message receivedMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
-                "{\"text\":\"Hallo Welt!\", \"index\":2}], \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+                "{\"text\":\"Hallo Welt!\", \"index\":2}], \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -231,11 +230,11 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationArrayTypeMismatch() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"greetings\":{\"text\":\"Hello World!\", \"index\":1}, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+        Message receivedMessage = new DefaultMessage("{\"greetings\":{\"text\":\"Hello World!\", \"index\":1}, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -253,11 +252,11 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationObjectTypeMismatch() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"greetings\":[" +
+        Message receivedMessage = new DefaultMessage("{\"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"greetings\":{\"text\":\"Hello World!\", \"index\":1}, \"id\":\"x123456789x\"}").build();
+                "{\"text\":\"Hola del mundo!\", \"index\":3}], \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"greetings\":{\"text\":\"Hello World!\", \"index\":1}, \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -275,11 +274,11 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationIgnoreEntries() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"object\":{\"id\":\"x123456789x\"}, \"greetings\":[" +
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"object\":{\"id\":\"x123456789x\"}, \"greetings\":[" +
                 "{\"text\":\"Hello World!\", \"index\":1}, " +
                 "{\"text\":\"Hallo Welt!\", \"index\":2}, " +
-                "{\"text\":\"Hola del mundo!\", \"index\":3}],}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":\"@ignore@\", \"object\":{\"id\":\"@ignore@\"}, \"greetings\":\"@ignore@\"}").build();
+                "{\"text\":\"Hola del mundo!\", \"index\":3}],}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":\"@ignore@\", \"object\":{\"id\":\"@ignore@\"}, \"greetings\":\"@ignore@\"}");
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -288,8 +287,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonValidationInvalidJsonText() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"wrong\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":invalid, \"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"wrong\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":invalid, \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -306,8 +305,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonNullValueValidation() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}");
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -316,8 +315,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonEmptyMessageValidation() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("").build();
+        Message receivedMessage = new DefaultMessage("");
+        Message controlMessage = new DefaultMessage("");
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -326,8 +325,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonEmptyMessageValidationError() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        Message receivedMessage = new DefaultMessage("");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -336,8 +335,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getMessage().contains("expected message contents, but received empty message"));
         }
         
-        receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        controlMessage = MessageBuilder.withPayload("").build();
+        receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        controlMessage = new DefaultMessage("");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -351,8 +350,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testJsonNullValueMismatch() {
         JsonTextMessageValidator validator = new JsonTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
+        Message receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);
@@ -361,8 +360,8 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getMessage().contains("expected 'null' but was 'x123456789x'"));
         }
         
-        receivedMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}").build();
-        controlMessage = MessageBuilder.withPayload("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}").build();
+        receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":null}");
+        controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);

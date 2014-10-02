@@ -16,11 +16,11 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.messaging.Message;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -46,7 +46,7 @@ public class ChannelEndpointAdapterTest {
     public void purgeChannel() {
         channel.purge(new MessageSelector() {
             @Override
-            public boolean accept(Message<?> message) {
+            public boolean accept(org.springframework.messaging.Message message) {
                 return false; //purge all messages
             }
         });
@@ -54,26 +54,26 @@ public class ChannelEndpointAdapterTest {
 
     @Test
     public void testEndpointAdapter() {
-        final Message<String> request = MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build();
+        final Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
         new SimpleAsyncTaskExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                Message<?> receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(endpointConfiguration.getTimeout());
+                Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(endpointConfiguration.getTimeout());
                 Assert.assertNotNull(receivedMessage);
                 Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
 
-                endpointAdapter.getEndpoint().createProducer().send(MessageBuilder.withPayload("OK").build());
+                endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"));
             }
         });
 
-        Message<?> response = endpointAdapter.handleMessage(request);
+        Message response = endpointAdapter.handleMessage(request);
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload().toString(), "OK");
     }
 
     @Test
     public void testNoResponse() {
-        Assert.assertNull(endpointAdapter.handleMessage(MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build()));
+        Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
     }
 }

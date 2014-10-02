@@ -16,7 +16,7 @@
 
 package com.consol.citrus.messaging;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * @author Christoph Deppisch
@@ -29,7 +29,7 @@ public interface SelectiveConsumer extends Consumer {
      * @param selector
      * @return
      */
-    Message<?> receive(String selector);
+    Message receive(String selector);
 
     /**
      * Receive message with a message selector and a receive timeout.
@@ -37,5 +37,5 @@ public interface SelectiveConsumer extends Consumer {
      * @param timeout
      * @return
      */
-    Message<?> receive(String selector, long timeout);
+    Message receive(String selector, long timeout);
 }

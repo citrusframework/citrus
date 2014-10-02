@@ -21,6 +21,8 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -29,8 +31,6 @@ import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -70,11 +70,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -105,11 +105,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -140,11 +140,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -175,11 +175,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -210,11 +210,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -245,11 +245,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -280,11 +280,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -315,11 +315,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -350,11 +350,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -385,11 +385,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -425,11 +425,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/ns1'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
-                    + "</ns1:root>").build();
+                    + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -465,11 +465,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -506,11 +506,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -548,11 +548,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -588,11 +588,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/ns1'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
-                    + "</ns1:root>").build();
+                    + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -628,11 +628,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -669,11 +669,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -711,11 +711,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -753,11 +753,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+        Message message = new DefaultMessage("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
-                    + "</ns0:root>").build();
+                    + "</ns0:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -795,11 +795,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -837,11 +837,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -880,11 +880,11 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
-                    + "</root>").build();
+                    + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -922,13 +922,13 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root xmlns='http://citrus/default'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrus/default'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -964,13 +964,13 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/default'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
                             + "<ns1:sub-elementC attribute='C'>text-value</ns1:sub-elementC>"
                         + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -1006,13 +1006,13 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<ns1:root xmlns:ns1='http://citrus/default'>"
+        Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
                             + "<ns1:sub-elementC attribute='C'>text-value</ns1:sub-elementC>"
                         + "</ns1:element>" 
-                        + "</ns1:root>").build();
+                        + "</ns1:root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();

@@ -22,7 +22,7 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.*;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -30,7 +30,6 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -52,10 +51,10 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(httpClient)
-                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
+                        .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
 
                 send(httpClient)
-                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
+                        .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                         .fork(true);
             }
         };
@@ -74,7 +73,9 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 3L);
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
 
         Assert.assertFalse(action.isForkMode());

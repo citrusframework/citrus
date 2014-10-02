@@ -17,7 +17,7 @@
 package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -29,20 +29,20 @@ import java.util.Map;
  *  
  * @author Christoph Deppisch
  */
-public class StaticMessageContentBuilder<T> extends AbstractMessageContentBuilder<T> {
+public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
 
     /** The static message to build here */
-    private Message<T> message;
+    private Message message;
 
     /**
      * Default constructor with static message to be built by this message builder.
      */
-    public StaticMessageContentBuilder(Message<T> message) {
+    public StaticMessageContentBuilder(Message message) {
         this.message = message;
     }
 
     @Override
-    public Message<T> buildMessageContent(TestContext context, String messageType) {
+    public Message buildMessageContent(TestContext context, String messageType) {
         if (getMessageHeaders().isEmpty()
                 && !StringUtils.hasText(getMessageHeaderData())
                 && !StringUtils.hasText(getMessageHeaderResourcePath())
@@ -55,7 +55,7 @@ public class StaticMessageContentBuilder<T> extends AbstractMessageContentBuilde
     }
 
     @Override
-    protected T buildMessagePayload(TestContext context) {
+    protected Object buildMessagePayload(TestContext context) {
         return message.getPayload();
     }
 
@@ -70,15 +70,15 @@ public class StaticMessageContentBuilder<T> extends AbstractMessageContentBuilde
     /**
      * Default constructor with static message to be built by this message builder.
      */
-    public static <T> StaticMessageContentBuilder<T> withMessage(Message<T> message) {
-        return new StaticMessageContentBuilder<T>(message);
+    public static StaticMessageContentBuilder withMessage(Message message) {
+        return new StaticMessageContentBuilder(message);
     }
 
     /**
      * Gets the message.
      * @return the message the message to get.
      */
-    public Message<T> getMessage() {
+    public Message getMessage() {
         return message;
     }
 

@@ -16,13 +16,11 @@
 
 package com.consol.citrus.ssh;
 
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.server.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
@@ -93,10 +91,9 @@ public class SshCommand implements Command, Runnable {
      */
     private SshResponse sendToMessageHandler(SshRequest pReq) {
         XmlMapper mapper = new XmlMapper();
-        Message<?> response = messageHandler.handleMessage(
-                MessageBuilder.withPayload(mapper.toXML(pReq))
-                              .setHeader("user", user)
-                              .build());
+        Message response = messageHandler.handleMessage(
+                new DefaultMessage(mapper.toXML(pReq))
+                              .setHeader("user", user));
         String msgResp = (String) response.getPayload();
         return (SshResponse) mapper.fromXML(msgResp);
     }

@@ -18,15 +18,10 @@ package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.exceptions.*;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.AbstractMessageValidator;
-import com.consol.citrus.validation.ControlMessageValidator;
-import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
@@ -43,12 +38,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
@@ -65,11 +55,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -100,7 +87,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext the validation context
      * @throws ValidationException if validation fails
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context,
+    public void validateMessage(Message receivedMessage, TestContext context,
             XmlMessageValidationContext validationContext) throws ValidationException {
         log.info("Start XML message validation");
 
@@ -114,7 +101,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             validateMessagePayload(receivedMessage, validationContext, context);
             validateMessageElements(receivedMessage, validationContext, context);
 
-            Message<?> controlMessage = validationContext.getControlMessage(context);
+            Message controlMessage = validationContext.getControlMessage(context);
             if (controlMessage != null) {
                 validateMessageHeader(controlMessage.getHeaders(), receivedMessage.getHeaders(), validationContext, context);
             }
@@ -144,16 +131,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      * @param context
      */
-    protected void validateMessageHeader(MessageHeaders controlHeaders,
-            MessageHeaders receivedHeaders,
+    protected void validateMessageHeader(Map<String, Object> controlHeaders,
+            Map<String, Object> receivedHeaders,
             XmlMessageValidationContext validationContext,
             TestContext context) {
         
-        if (controlHeaders.containsKey(CitrusMessageHeaders.HEADER_CONTENT)) {
-            Assert.isTrue(receivedHeaders.containsKey(CitrusMessageHeaders.HEADER_CONTENT), "Missing header XML fragment in received message");
+        if (controlHeaders.containsKey(MessageHeaders.HEADER_CONTENT)) {
+            Assert.isTrue(receivedHeaders.containsKey(MessageHeaders.HEADER_CONTENT), "Missing header XML fragment in received message");
             
-            validateXmlHeaderFragment(receivedHeaders.get(CitrusMessageHeaders.HEADER_CONTENT).toString(), 
-                    controlHeaders.get(CitrusMessageHeaders.HEADER_CONTENT).toString(), validationContext, context);
+            validateXmlHeaderFragment(receivedHeaders.get(MessageHeaders.HEADER_CONTENT).toString(),
+                    controlHeaders.get(MessageHeaders.HEADER_CONTENT).toString(), validationContext, context);
         }
         
         ControlMessageValidator validatorDelegate = new ControlMessageValidator();
@@ -167,7 +154,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      * @param context
      */
-    protected void validateMessageElements(Message<?> receivedMessage,
+    protected void validateMessageElements(Message receivedMessage,
             XmlMessageValidationContext validationContext, TestContext context) {
         if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
         assertPayloadExists(receivedMessage);
@@ -238,7 +225,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param dtdResource
      * @param receivedMessage
      */
-    protected void validateDTD(Resource dtdResource, Message<?> receivedMessage) {
+    protected void validateDTD(Resource dtdResource, Message receivedMessage) {
         //TODO implement this
     }
 
@@ -248,7 +235,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param receivedMessage
      * @param validationContext
      */
-    protected void validateXMLSchema(Message<?> receivedMessage, XmlMessageValidationContext validationContext) {
+    protected void validateXMLSchema(Message receivedMessage, XmlMessageValidationContext validationContext) {
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
             return;
         }
@@ -353,7 +340,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param expectedNamespaces
      * @param receivedMessage
      */
-    protected void validateNamespaces(Map<String, String> expectedNamespaces, Message<?> receivedMessage) {
+    protected void validateNamespaces(Map<String, String> expectedNamespaces, Message receivedMessage) {
         if (CollectionUtils.isEmpty(expectedNamespaces)) { return; }
 
         if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
@@ -432,9 +419,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      * @param context
      */
-    protected void validateMessagePayload(Message<?> receivedMessage, XmlMessageValidationContext validationContext,
+    protected void validateMessagePayload(Message receivedMessage, XmlMessageValidationContext validationContext,
             TestContext context) {
-        Message<?> controlMessage = validationContext.getControlMessage(context);
+        Message controlMessage = validationContext.getControlMessage(context);
 
         if (controlMessage == null || controlMessage.getPayload() == null) {
             log.info("Skip message payload validation as no control message was defined");
@@ -497,7 +484,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         validateXmlTree(received, source, validationContext, 
-                namespaceContextBuilder.buildContext(MessageBuilder.withPayload(receivedHeaderData).build(), validationContext.getNamespaces()), 
+                namespaceContextBuilder.buildContext(new DefaultMessage(receivedHeaderData), validationContext.getNamespaces()),
                 context);
         
     }
@@ -962,7 +949,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param message the message to check for payload
      * @throws ValidationException if message does not contain payload
      */
-    private void assertPayloadExists(Message<?> message) throws ValidationException {
+    private void assertPayloadExists(Message message) throws ValidationException {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
             throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }

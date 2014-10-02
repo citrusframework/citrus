@@ -16,14 +16,13 @@
 
 package com.consol.citrus.vertx.endpoint;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.ReplyProducer;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.vertx.java.core.Vertx;
 
@@ -59,41 +58,38 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     }
 
     @Override
-    public Message<?> receive(long timeout) {
-        Message<?> receivedMessage = super.receive(timeout);
+    public Message receive(long timeout) {
+        Message receivedMessage = super.receive(timeout);
         saveReplyDestination(receivedMessage);
 
         return receivedMessage;
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String replyAddress;
-        Message<?> replyMessage;
-
         if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
-                    "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
+            Assert.notNull(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
+                    "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
 
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
             replyAddress = replyAddressMap.remove(correlationKey);
             Assert.notNull(replyAddress, "Unable to locate reply address with correlation key: '" + correlationKey + "'");
 
             //remove citrus specific header from message
-            replyMessage = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
+            message.getHeaders().remove(MessageHeaders.SYNC_MESSAGE_CORRELATOR);
         } else {
-            replyMessage = message;
             replyAddress = replyAddressMap.remove("");
             Assert.notNull(replyAddress, "Unable to locate reply address on event bus");
         }
 
         log.info("Sending Vert.x message to event bus address: '" + replyAddress + "'");
 
-        vertx.eventBus().send(replyAddress, replyMessage.getPayload());
+        vertx.eventBus().send(replyAddress, message.getPayload());
 
-        onOutboundMessage(replyMessage);
+        onOutboundMessage(message);
 
         log.info("Message was successfully sent to event bus address: '" + replyAddress + "'");
     }
@@ -104,7 +100,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      *
      * @param receivedMessage
      */
-    public void saveReplyDestination(Message<?> receivedMessage) {
+    public void saveReplyDestination(Message receivedMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
             replyAddressMap.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), receivedMessage.getHeaders().get(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         } else {
@@ -116,7 +112,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      * Informs message listeners if present.
      * @param message
      */
-    protected void onOutboundMessage(Message<?> message) {
+    protected void onOutboundMessage(Message message) {
         if (getMessageListener() != null) {
             getMessageListener().onOutboundMessage(message.toString());
         } else {

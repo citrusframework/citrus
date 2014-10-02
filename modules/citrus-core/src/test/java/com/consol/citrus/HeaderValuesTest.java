@@ -20,6 +20,8 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -29,8 +31,6 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -59,7 +59,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -68,9 +68,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C")
-                        .build();
-        
+                        .setHeader("header-valueC", "C");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
@@ -110,7 +109,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -119,9 +118,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C")
-                        .build();
-        
+                        .setHeader("header-valueC", "C");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
@@ -163,7 +161,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -172,9 +170,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C")
-                        .build();
-        
+                        .setHeader("header-valueC", "C");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
@@ -216,7 +213,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -225,9 +222,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C")
-                        .build();
-        
+                        .setHeader("header-valueC", "C");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
@@ -268,7 +264,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -277,9 +273,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "")
                         .setHeader("header-valueB", "")
-                        .setHeader("header-valueC", "")
-                        .build();
-        
+                        .setHeader("header-valueC", "");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
@@ -321,7 +316,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -330,9 +325,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "")
                         .setHeader("header-valueB", "")
-                        .setHeader("header-valueC", "")
-                        .build();
-        
+                        .setHeader("header-valueC", "");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
@@ -374,7 +368,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
@@ -383,9 +377,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
-                        .setHeader("header-valueC", "C")
-                        .build();
-        
+                        .setHeader("header-valueC", "C");
+
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);

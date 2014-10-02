@@ -19,14 +19,14 @@ package com.consol.citrus.ws.actions;
 import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceClient;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
 import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -277,8 +277,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), 
+                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;
@@ -314,8 +314,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), 
+                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;
@@ -353,8 +353,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), 
+                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;
@@ -392,8 +392,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
 
-                Assert.assertNotNull(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
-                Assert.assertEquals(constructedMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), 
+                Assert.assertNotNull(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
+                Assert.assertEquals(constructedMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 
                 return null;

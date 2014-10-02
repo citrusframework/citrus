@@ -16,15 +16,14 @@
 
 package com.consol.citrus.validation.script;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
@@ -33,11 +32,11 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
     
     GroovyScriptMessageValidator validator = new GroovyScriptMessageValidator();
     
-    private Message<?> message;
+    private Message message;
 
     @BeforeMethod
     public void prepareTestData() {
-        message = MessageBuilder.withPayload("This is plain text!").setHeader("operation", "unitTesting").build();
+        message = new DefaultMessage("This is plain text!").setHeader("operation", "unitTesting");
     }
     
     @Test

@@ -43,8 +43,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * 
      * @param messageElement
      */
-    public AbstractMessageContentBuilder<?> constructMessageBuilder(Element messageElement) {
-        AbstractMessageContentBuilder<?> messageBuilder = null;
+    public AbstractMessageContentBuilder constructMessageBuilder(Element messageElement) {
+        AbstractMessageContentBuilder messageBuilder = null;
         
         if (messageElement != null) {
             messageBuilder = parsePayloadTemplateBuilder(messageElement);
@@ -154,7 +154,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @param actionElement the action DOM element.
      * @param messageBuilder the message content builder.
      */
-    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder<?> messageBuilder) {
+    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder) {
         Element headerElement = DomUtils.getChildElementByTagName(actionElement, "header");
         Map<String, Object> messageHeaders = new HashMap<String, Object>();
 

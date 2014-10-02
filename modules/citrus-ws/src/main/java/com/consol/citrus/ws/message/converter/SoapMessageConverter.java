@@ -17,8 +17,7 @@
 package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
@@ -26,8 +25,6 @@ import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
@@ -72,14 +69,14 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     private boolean keepSoapEnvelope = false;
 
     @Override
-    public WebServiceMessage convertOutbound(Message<?> internalMessage, WebServiceEndpointConfiguration endpointConfiguration) {
+    public WebServiceMessage convertOutbound(Message internalMessage, WebServiceEndpointConfiguration endpointConfiguration) {
         WebServiceMessage message = endpointConfiguration.getMessageFactory().createWebServiceMessage();
         convertOutbound(message, internalMessage, endpointConfiguration);
         return message;
     }
 
     @Override
-    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message, WebServiceEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(WebServiceMessage webServiceMessage, Message message, WebServiceEndpointConfiguration endpointConfiguration) {
         SoapMessage soapRequest = ((SoapMessage)webServiceMessage);
 
         // Copy payload into soap-body:
@@ -100,7 +97,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
 
             if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 soapRequest.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().equalsIgnoreCase(CitrusMessageHeaders.HEADER_CONTENT)) {
+            } else if (headerEntry.getKey().equalsIgnoreCase(MessageHeaders.HEADER_CONTENT)) {
                 try {
                     Transformer transformer = transformerFactory.newTransformer();
                     transformer.transform(new StringSource(headerEntry.getValue().toString()),
@@ -113,7 +110,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                         headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length()),
                         headerEntry.getValue(),
                         endpointConfiguration.isHandleMimeHeaders());
-            } else if (!headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
+            } else if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                 SoapHeaderElement headerElement;
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
                     headerElement = soapRequest.getSoapHeader().addHeaderElement(QNameUtils.parseQNameString(headerEntry.getKey()));
@@ -140,34 +137,34 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     }
 
     @Override
-    public Message<?> convertInbound(WebServiceMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(WebServiceMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
         return convertInbound(message, null, endpointConfiguration);
     }
 
     @Override
-    public Message<?> convertInbound(WebServiceMessage message, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(WebServiceMessage webServiceMessage, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration) {
         try {
             StringResult payloadResult = new StringResult();
 
             if (keepSoapEnvelope) {
-                message.writeTo(payloadResult.getOutputStream());
-            } else if (message.getPayloadSource() != null) {
+                webServiceMessage.writeTo(payloadResult.getOutputStream());
+            } else if (webServiceMessage.getPayloadSource() != null) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
-                transformer.transform(message.getPayloadSource(), payloadResult);
+                transformer.transform(webServiceMessage.getPayloadSource(), payloadResult);
             }
 
-            MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(payloadResult.toString());
+            Message message = new DefaultMessage(payloadResult.toString());
 
-            handleInboundMessageProperties(messageContext, messageBuilder);
+            handleInboundMessageProperties(messageContext, message);
 
-            if (message instanceof SoapMessage) {
-                handleInboundSoapMessage((SoapMessage) message, messageBuilder, endpointConfiguration);
+            if (webServiceMessage instanceof SoapMessage) {
+                handleInboundSoapMessage((SoapMessage) webServiceMessage, message, endpointConfiguration);
             }
 
-            handleInboundHttpHeaders(messageBuilder);
+            handleInboundHttpHeaders(message);
 
-            return messageBuilder.build();
+            return message;
         } catch (TransformerException e) {
             throw new CitrusRuntimeException("Failed to read web service message payload source", e);
         } catch (IOException e) {
@@ -179,24 +176,24 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * Method handles SOAP specific message information such as SOAP action headers and SOAP attachments.
      *
      * @param soapMessage
-     * @param messageBuilder
+     * @param message
      * @param endpointConfiguration
      */
-    protected void handleInboundSoapMessage(SoapMessage soapMessage, MessageBuilder<String> messageBuilder, WebServiceEndpointConfiguration endpointConfiguration) {
-        handleInboundSoapHeaders(soapMessage, messageBuilder);
-        handleInboundAttachments(soapMessage, messageBuilder);
+    protected void handleInboundSoapMessage(SoapMessage soapMessage, Message message, WebServiceEndpointConfiguration endpointConfiguration) {
+        handleInboundSoapHeaders(soapMessage, message);
+        handleInboundAttachments(soapMessage, message);
 
         if (endpointConfiguration.isHandleMimeHeaders()) {
-            handleInboundMimeHeaders(soapMessage, messageBuilder);
+            handleInboundMimeHeaders(soapMessage, message);
         }
     }
 
     /**
      * Reads information from Http connection and adds them as Http marked headers to internal message representation.
      *
-     * @param messageBuilder
+     * @param message
      */
-    protected void handleInboundHttpHeaders(MessageBuilder<String> messageBuilder) {
+    protected void handleInboundHttpHeaders(Message message) {
         TransportContext transportContext = TransportContextHolder.getTransportContext();
         if (transportContext == null) {
             log.warn("Unable to get complete set of http request headers - no transport context available");
@@ -207,18 +204,18 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         if (connection instanceof HttpServletConnection) {
             UrlPathHelper pathHelper = new UrlPathHelper();
             HttpServletConnection servletConnection = (HttpServletConnection) connection;
-            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletConnection.getHttpServletRequest()));
-            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletConnection.getHttpServletRequest()));
+            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletConnection.getHttpServletRequest()));
+            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletConnection.getHttpServletRequest()));
 
             String queryParams = pathHelper.getOriginatingQueryString(servletConnection.getHttpServletRequest());
-            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
+            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
 
-            messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_METHOD, servletConnection.getHttpServletRequest().getMethod().toString());
+            message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_REQUEST_METHOD, servletConnection.getHttpServletRequest().getMethod().toString());
         } else {
             log.warn("Unable to get complete set of http request headers");
 
             try {
-                messageBuilder.setHeader(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, connection.getUri());
+                message.getHeaders().put(CitrusSoapMessageHeaders.HTTP_REQUEST_URI, connection.getUri());
             } catch (URISyntaxException e) {
                 log.warn("Unable to get http request uri from http connection", e);
             }
@@ -230,9 +227,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * adds them to message builder as normal headers. Also takes care of soap action header.
      * 
      * @param soapMessage the web service message.
-     * @param messageBuilder the response message builder.
+     * @param message the response message builder.
      */
-    protected void handleInboundSoapHeaders(SoapMessage soapMessage, MessageBuilder<?> messageBuilder) {
+    protected void handleInboundSoapHeaders(SoapMessage soapMessage, Message message) {
         try {
             SoapHeader soapHeader = soapMessage.getSoapHeader();
 
@@ -240,7 +237,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 Iterator<?> iter = soapHeader.examineAllHeaderElements();
                 while (iter.hasNext()) {
                     SoapHeaderElement headerEntry = (SoapHeaderElement) iter.next();
-                    MessageHeaderUtils.setHeader(messageBuilder, headerEntry.getName().getLocalPart(), headerEntry.getText());
+                    MessageHeaderUtils.setHeader(message, headerEntry.getName().getLocalPart(), headerEntry.getText());
                 }
 
                 if (soapHeader.getSource() != null) {
@@ -249,19 +246,19 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                     Transformer transformer = transformerFactory.newTransformer();
                     transformer.transform(soapHeader.getSource(), headerData);
 
-                    messageBuilder.setHeader(CitrusMessageHeaders.HEADER_CONTENT, headerData.toString());
+                    message.getHeaders().put(MessageHeaders.HEADER_CONTENT, headerData.toString());
                 }
             }
 
             if (StringUtils.hasText(soapMessage.getSoapAction())) {
                 if (soapMessage.getSoapAction().equals("\"\"")) {
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "");
+                    message.getHeaders().put(CitrusSoapMessageHeaders.SOAP_ACTION, "");
                 } else {
                     if (soapMessage.getSoapAction().startsWith("\"") && soapMessage.getSoapAction().endsWith("\"")) {
-                        messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION,
+                        message.getHeaders().put(CitrusSoapMessageHeaders.SOAP_ACTION,
                                 soapMessage.getSoapAction().substring(1, soapMessage.getSoapAction().length()-1));
                     } else {
-                        messageBuilder.setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
+                        message.getHeaders().put(CitrusSoapMessageHeaders.SOAP_ACTION, soapMessage.getSoapAction());
                     }
                 }
             }
@@ -300,9 +297,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * comma delimited string value.
      * 
      * @param soapMessage the source SOAP message.
-     * @param messageBuilder the message build constructing the result message.
+     * @param message the message build constructing the result message.
      */
-    protected void handleInboundMimeHeaders(SoapMessage soapMessage, MessageBuilder<String> messageBuilder) {
+    protected void handleInboundMimeHeaders(SoapMessage soapMessage, Message message) {
         Map<String, String> mimeHeaders = new HashMap<String, String>();
         MimeHeaders messageMimeHeaders = null;
         
@@ -332,7 +329,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
             
             for (Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
-                messageBuilder.setHeader(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
+                message.getHeaders().put(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
             }
         }
     }
@@ -342,15 +339,15 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * as normal header entries.
      * 
      * @param messageContext the web service request message context.
-     * @param messageBuilder the request message builder.
+     * @param message the request message builder.
      */
-    protected void handleInboundMessageProperties(MessageContext messageContext, MessageBuilder<String> messageBuilder) {
+    protected void handleInboundMessageProperties(MessageContext messageContext, Message message) {
         if (messageContext == null) { return; }
         
         String[] propertyNames = messageContext.getPropertyNames();
         if (propertyNames != null) {
             for (String propertyName : propertyNames) {
-                messageBuilder.setHeader(propertyName, messageContext.getProperty(propertyName));
+                message.getHeaders().put(propertyName, messageContext.getProperty(propertyName));
             }
         }
     }
@@ -359,10 +356,10 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * Adds attachments if present in soap web service message.
      * 
      * @param soapMessage the web service message.
-     * @param messageBuilder the response message builder.
+     * @param message the response message builder.
      * @throws IOException 
      */
-    protected void handleInboundAttachments(SoapMessage soapMessage, MessageBuilder<String> messageBuilder) {
+    protected void handleInboundAttachments(SoapMessage soapMessage, Message message) {
         try {
             Iterator<?> attachments = soapMessage.getAttachments();
 
@@ -379,11 +376,11 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                         log.debug("SOAP message contains attachment with contentId '" + contentId + "'");
                     }
 
-                    messageBuilder.setHeader(contentId, attachment);
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
-                    messageBuilder.setHeader(CitrusSoapMessageHeaders.CHARSET_NAME, "UTF-8"); // TODO map this dynamically
+                    message.getHeaders().put(contentId, attachment);
+                    message.getHeaders().put(CitrusSoapMessageHeaders.CONTENT_ID, contentId);
+                    message.getHeaders().put(CitrusSoapMessageHeaders.CONTENT_TYPE, attachment.getContentType());
+                    message.getHeaders().put(CitrusSoapMessageHeaders.CONTENT, FileUtils.readToString(attachment.getInputStream()).trim());
+                    message.getHeaders().put(CitrusSoapMessageHeaders.CHARSET_NAME, "UTF-8"); // TODO map this dynamically
                 } else {
                     log.warn("Could not handle SOAP attachment with empty 'contentId'. Attachment is ignored in further processing");
                 }

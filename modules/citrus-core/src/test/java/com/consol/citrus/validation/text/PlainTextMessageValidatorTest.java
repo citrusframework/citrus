@@ -16,13 +16,12 @@
 
 package com.consol.citrus.validation.text;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 
 /**
  * @author Christoph Deppisch
@@ -33,8 +32,8 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testPlainTextValidation() {
         PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("Hello World!").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("Hello World!").build();
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("Hello World!");
         
         validator.validateMessagePayload(receivedMessage, controlMessage, context);
     }
@@ -43,8 +42,8 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testPlainTextValidationVariableSupport() {
         PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("Hello World!").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("Hello ${world}!").build();
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("Hello ${world}!");
         
         context.setVariable("world", "World");
         
@@ -55,8 +54,8 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
     public void testPlainTextValidationWrongValue() {
         PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        Message<String> receivedMessage = MessageBuilder.withPayload("Hello World!").build();
-        Message<String> controlMessage = MessageBuilder.withPayload("Hello Citrus!").build();
+        Message receivedMessage = new DefaultMessage("Hello World!");
+        Message controlMessage = new DefaultMessage("Hello Citrus!");
         
         try {
             validator.validateMessagePayload(receivedMessage, controlMessage, context);

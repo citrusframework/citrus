@@ -24,10 +24,10 @@ import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class SendMessageAction extends AbstractTestAction {
     private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
     
     /** Builder constructing a control message */
-    private MessageContentBuilder<?> messageBuilder = new PayloadTemplateMessageBuilder();
+    private MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
     
     /** Forks the message sending action so other actions can take place while this
      * message sender is waiting for the synchronous response */
@@ -82,7 +82,7 @@ public class SendMessageAction extends AbstractTestAction {
      */
     @Override
     public void doExecute(TestContext context) {
-        final Message<?> message = createMessage(context, messageType);
+        final Message message = createMessage(context, messageType);
         
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : variableExtractors) {
@@ -123,7 +123,7 @@ public class SendMessageAction extends AbstractTestAction {
      * @param messageType
      * @return
      */
-    protected Message<?> createMessage(TestContext context, String messageType) {
+    protected Message createMessage(TestContext context, String messageType) {
         if (dataDictionary != null) {
             messageBuilder.setDataDictionary(dataDictionary);
         }
@@ -166,7 +166,7 @@ public class SendMessageAction extends AbstractTestAction {
      * Sets the message builder implementation.
      * @param messageBuilder the messageBuilder to set
      */
-    public void setMessageBuilder(MessageContentBuilder<?> messageBuilder) {
+    public void setMessageBuilder(MessageContentBuilder messageBuilder) {
         this.messageBuilder = messageBuilder;
     }
 
@@ -190,7 +190,7 @@ public class SendMessageAction extends AbstractTestAction {
      * Gets the messageBuilder.
      * @return the messageBuilder
      */
-    public MessageContentBuilder<?> getMessageBuilder() {
+    public MessageContentBuilder getMessageBuilder() {
         return messageBuilder;
     }
 

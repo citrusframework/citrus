@@ -16,16 +16,16 @@
 
 package com.consol.citrus.validation.builder;
 
-import java.io.IOException;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 
+import java.io.IOException;
+
 /**
  * @author Christoph Deppisch
  */
-public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder<String> {
+public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder {
 
     /** Message payload defined in external file resource path */
     private String payloadResourcePath;

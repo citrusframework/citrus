@@ -16,27 +16,25 @@
 
 package com.consol.citrus.variable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.xml.namespace.NamespaceContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.util.CollectionUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.namespace.NamespaceContext;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Class reads message elements via XPath expressions and saves the text values as new test variables.
@@ -64,7 +62,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /**
      * Extract variables using Xpath expressions.
      */
-    public void extractVariables(Message<?> message, TestContext context) {
+    public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(xPathExpressions)) {return;}
 
         if (log.isDebugEnabled()) {

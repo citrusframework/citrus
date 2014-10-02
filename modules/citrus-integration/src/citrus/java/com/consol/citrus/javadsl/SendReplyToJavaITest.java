@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.message.MessageHeaders;
 import org.testng.annotations.Test;
 
 /**
@@ -44,7 +45,7 @@ public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
                         "</GetDateRequestMessage>")
                 .header("Operation", "${operation}")
                 .header("ConversationId", "${conversationId}")
-                .extractFromHeader("id", "syncRequestCorrelatorId"),
+                .extractFromHeader(MessageHeaders.ID, "syncRequestCorrelatorId"),
                 
             sequential(
                 receive("syncGetDateRequestReceiver")
@@ -59,7 +60,7 @@ public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
                         "</GetDateRequestMessage>")
                     .header("Operation", "${operation}")
                     .header("ConversationId", "${conversationId}")
-                    .extractFromHeader("id", "syncMessageCorrelatorId")
+                    .extractFromHeader(MessageHeaders.ID, "syncMessageCorrelatorId")
                     .validator("xmlMessageValidator"),
                     
                 send("syncGetDateRequestReceiver")
@@ -77,7 +78,7 @@ public class SendReplyToJavaITest extends TestNGCitrusTestBuilder {
                     .header("citrus_sync_message_correlator", "${syncMessageCorrelatorId}"),
                     
                 receive("syncGetDateRequestSender")
-                    .selector("id = '${syncRequestCorrelatorId}'")
+                    .selector("citrus_message_id = '${syncRequestCorrelatorId}'")
                     .payload("<GetDateResponseMessage>" +
                                 "<MessageHeader>" +
                                 "<ConversationId>${conversationId}</ConversationId>" +

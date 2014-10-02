@@ -17,7 +17,7 @@
 package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,22 +31,22 @@ public class XPathPayloadMappingKeyExtractorTest {
         XPathPayloadMappingKeyExtractor extractor = new XPathPayloadMappingKeyExtractor();
         extractor.setXpathExpression("local-name(//MessageBody/*)");
 
-        Assert.assertEquals(extractor.extractMappingKey(MessageBuilder.withPayload(
-                "<MessageBody><Foo>foo</Foo></MessageBody>").build()), "Foo");
+        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
+                "<MessageBody><Foo>foo</Foo></MessageBody>")), "Foo");
 
-        Assert.assertEquals(extractor.extractMappingKey(MessageBuilder.withPayload(
-                "<MessageBody><Bar>bar</Bar></MessageBody>").build()), "Bar");
+        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
+                "<MessageBody><Bar>bar</Bar></MessageBody>")), "Bar");
     }
 
     @Test
     public void testExtractMappingKeyWithoutXpathExpressionSet() throws Exception {
         XPathPayloadMappingKeyExtractor extractor = new XPathPayloadMappingKeyExtractor();
 
-        Assert.assertEquals(extractor.extractMappingKey(MessageBuilder.withPayload(
-                "<Foo>foo</Foo>").build()), "Foo");
+        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
+                "<Foo>foo</Foo>")), "Foo");
 
-        Assert.assertEquals(extractor.extractMappingKey(MessageBuilder.withPayload(
-                "<Bar>bar</Bar>").build()), "Bar");
+        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage(
+                "<Bar>bar</Bar>")), "Bar");
     }
 
     @Test
@@ -55,8 +55,8 @@ public class XPathPayloadMappingKeyExtractorTest {
         extractor.setXpathExpression("//I_DO_NOT_EXIST");
 
         try {
-            extractor.extractMappingKey(MessageBuilder.withPayload(
-                    "<MessageBody><Foo>foo</Foo></MessageBody>").build());
+            extractor.extractMappingKey(new DefaultMessage(
+                    "<MessageBody><Foo>foo</Foo></MessageBody>"));
             Assert.fail("Missing exception due to bad XPath expression");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "No result for XPath expression: '//I_DO_NOT_EXIST'");

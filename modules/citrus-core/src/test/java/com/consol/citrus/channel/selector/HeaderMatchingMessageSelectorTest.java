@@ -15,13 +15,13 @@
  */
 package com.consol.citrus.channel.selector;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -37,11 +37,11 @@ public class HeaderMatchingMessageSelectorTest {
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foo")
                 .build();
-        
+
         Message<String> declineMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foobar")
                 .build();
-        
+
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
     }

@@ -16,17 +16,16 @@
 
 package com.consol.citrus.ws.validation;
 
-import java.io.IOException;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import java.io.IOException;
 
 /**
  * Abstract SOAP attachment validator tries to find attachment within received message and compares
@@ -49,7 +48,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
      * @param receivedMessage
      * @param controlAttachment
      */
-    public void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException {
+    public void validateAttachment(Message receivedMessage, SoapAttachment controlAttachment) throws IOException {
         log.info("Validating SOAP attachments ...");
         
         if (receivedMessage.getHeaders().containsKey(CitrusSoapMessageHeaders.CONTENT_ID)) {

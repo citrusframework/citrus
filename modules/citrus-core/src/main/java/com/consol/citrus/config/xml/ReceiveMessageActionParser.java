@@ -232,7 +232,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             }
         }
 
-        AbstractMessageContentBuilder<?> messageBuilder = constructMessageBuilder(messageElement);
+        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
         parseHeaderElements(element, messageBuilder);
         
         context.setMessageBuilder(messageBuilder);

@@ -21,22 +21,32 @@ package com.consol.citrus.message;
  * 
  * @author Christoph Deppisch
  */
-public final class CitrusMessageHeaders {
+public final class MessageHeaders {
     /**
      * Prevent instantiation.
      */
-    private CitrusMessageHeaders() {
+    private MessageHeaders() {
     }
     
     /** Common header name prefix */
     public static final String PREFIX = "citrus_";
-    
-    /** Synchronous message correlation */
-    public static final String SYNC_MESSAGE_CORRELATOR = PREFIX + "sync_message_correlator";
-    
+
+    /** Message related header prefix */
+    public static final String MESSAGE_PREFIX = PREFIX + "message_";
+
+    /** Unique message id */
+    public static final String ID = MESSAGE_PREFIX + "id";
+
+    /** Time message was created */
+    public static final String TIMESTAMP = MESSAGE_PREFIX + "timestamp";
+
     /** Header content data */
-    public static final String HEADER_CONTENT = PREFIX + "header_content";
+    public static final String HEADER_CONTENT = MESSAGE_PREFIX + "header_content";
 
     /** Header indicating the message type (e.g. xml, json, csv, plaintext, etc) */
-    public static final String MESSAGE_TYPE = PREFIX + "message_type";
+    public static final String MESSAGE_TYPE = MESSAGE_PREFIX + "type";
+
+    /** Synchronous message correlation */
+    public static final String SYNC_MESSAGE_CORRELATOR = PREFIX + "sync_message_correlator";
+
 }

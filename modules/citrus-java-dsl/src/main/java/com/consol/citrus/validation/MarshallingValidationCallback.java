@@ -16,23 +16,21 @@
 
 package com.consol.citrus.validation;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.callback.ValidationCallback;
 import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.validation.callback.ValidationCallback;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Validation callback automatically unmarshalling message payload so we work with
@@ -65,7 +63,7 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
     /**
      * Validate message automatically unmarshalling message payload.
      */
-    public final void validate(Message<?> message) {
+    public final void validate(Message message) {
         validate(unmarshalMessage(message), message.getHeaders());
     }
     
@@ -74,10 +72,10 @@ public abstract class MarshallingValidationCallback<T> implements ValidationCall
      * @param message marshalled message payload object.
      * @param headers message headers
      */
-    public abstract void validate(T message, MessageHeaders headers); 
+    public abstract void validate(T message, Map<String, Object> headers);
     
     @SuppressWarnings("unchecked")
-    private T unmarshalMessage(Message<?> message) {
+    private T unmarshalMessage(Message message) {
         if (unmarshaller == null) {
             Assert.notNull(applicationContext, "Marshalling validation callback requires marshaller instance " +
             		"or Spring application context with nested bean definition of type marshaller");

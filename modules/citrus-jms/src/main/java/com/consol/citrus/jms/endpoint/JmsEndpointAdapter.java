@@ -18,9 +18,9 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 
 /**
  * Endpoint adapter forwards incoming requests to jms destination and waits for response
@@ -54,11 +54,11 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
     }
 
     @Override
-    protected Message<?> handleMessageInternal(Message<?> request) {
+    protected Message handleMessageInternal(Message request) {
         log.info("Forwarding request to jms destination ...");
 
         producer.send(request);
-        Message<?> replyMessage = producer.receive(endpointConfiguration.getTimeout());
+        Message replyMessage = producer.receive(endpointConfiguration.getTimeout());
 
         return replyMessage;
     }

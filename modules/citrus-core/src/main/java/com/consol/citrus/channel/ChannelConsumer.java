@@ -20,9 +20,9 @@ import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.PollableChannel;
@@ -51,7 +51,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         String destinationChannelName;
         MessageChannel destinationChannel = getDestinationChannel();
 
@@ -63,7 +63,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
 
         log.info("Receiving message from: " + destinationChannelName);
 
-        Message<?> message;
+        Message message;
         if (StringUtils.hasText(selector)) {
             if (!(destinationChannel instanceof MessageSelectingQueueChannel)) {
                 throw new CitrusRuntimeException("Message channel type '" + endpointConfiguration.getChannel().getClass() +
@@ -74,9 +74,9 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel) destinationChannel);
 
             if (timeout <= 0) {
-                message = queueChannel.receive(messageSelector);
+                message = endpointConfiguration.getMessageConverter().convertInbound(queueChannel.receive(messageSelector), endpointConfiguration);
             } else {
-                message = queueChannel.receive(messageSelector, timeout);
+                message = endpointConfiguration.getMessageConverter().convertInbound(queueChannel.receive(messageSelector, timeout), endpointConfiguration);
             }
         } else {
             if (!(destinationChannel instanceof PollableChannel)) {
@@ -85,7 +85,8 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
             }
 
             endpointConfiguration.getMessagingTemplate().setReceiveTimeout(timeout);
-            message = endpointConfiguration.getMessagingTemplate().receive((PollableChannel) destinationChannel);
+            message = endpointConfiguration.getMessageConverter().convertInbound(
+                    endpointConfiguration.getMessagingTemplate().receive((PollableChannel) destinationChannel), endpointConfiguration);
         }
 
         if (message == null) {

@@ -21,6 +21,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -34,8 +36,6 @@ import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.*;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -71,10 +71,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		
-		Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -105,10 +102,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -145,10 +139,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setScriptData(sb.toString());
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -187,10 +178,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setScriptData(sb.toString());
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -222,10 +210,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -258,10 +243,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("myText", "Hello World!");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -295,10 +277,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("myText", "Hello World!");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -330,10 +309,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -370,10 +346,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -410,10 +383,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -452,11 +422,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -497,11 +464,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -542,10 +506,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -581,12 +542,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
         controlMessageBuilder.setMessageHeaders(headers);
-        
+
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -625,9 +584,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -664,9 +621,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -702,10 +657,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -752,9 +704,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -792,9 +742,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -829,10 +777,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -869,10 +815,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -909,10 +853,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setPathValidationExpressions(messageElements);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -953,10 +895,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setNamespaces(namespaces);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -997,9 +937,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1043,10 +981,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1092,10 +1028,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1141,10 +1075,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1194,10 +1126,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         variableExtractor.setNamespaces(namespaces);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1235,10 +1165,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         receiveAction.setReceiveTimeout(3000L);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1274,9 +1201,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1314,9 +1239,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1353,9 +1276,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1394,9 +1315,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1461,10 +1380,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1495,10 +1411,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1535,10 +1448,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setValidationScript("assert root.Message.name() == 'Message'\n" + 
                 "assert root.Message.text() == 'Hello World!'");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1567,10 +1477,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScriptResourcePath("classpath:com/consol/citrus/actions/test-validation-script.groovy");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -1600,10 +1507,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(headers)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();

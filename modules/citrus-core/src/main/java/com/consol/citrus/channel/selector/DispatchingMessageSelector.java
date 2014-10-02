@@ -16,17 +16,16 @@
 
 package com.consol.citrus.channel.selector;
 
-import java.util.*;
-import java.util.Map.Entry;
-
+import com.consol.citrus.message.MessageSelectorBuilder;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.messaging.Message;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.util.Assert;
 
-import com.consol.citrus.message.MessageSelectorBuilder;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Message selector dispatches incoming messages to several other selector implementations
@@ -56,9 +55,7 @@ public class DispatchingMessageSelector implements MessageSelector {
         Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
     }
     
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean accept(Message<?> message) {
         boolean success = true;
         

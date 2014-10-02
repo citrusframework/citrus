@@ -18,11 +18,10 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.jms.message.CitrusJmsMessageHeaders;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
 import org.easymock.EasyMock;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
-import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -54,11 +53,8 @@ public class JmsEndpointSyncConsumerTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(connectionFactory, destination, connection, session, messageConsumer);
@@ -82,7 +78,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(connectionFactory, destination, connection, session, messageConsumer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
-        Message<?> receivedMessage = jmsSyncConsumer.receive();
+        Message receivedMessage = jmsSyncConsumer.receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         Assert.assertEquals(jmsSyncConsumer.findReplyDestination(), replyDestination);
@@ -100,11 +96,8 @@ public class JmsEndpointSyncConsumerTest {
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(connectionFactory, destination, connection, session, messageConsumer);
@@ -128,7 +121,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(connectionFactory, destination, connection, session, messageConsumer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
-        Message<?> receivedMessage = jmsSyncConsumer.receive();
+        Message receivedMessage = jmsSyncConsumer.receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         Assert.assertNull(jmsSyncConsumer.findReplyDestination(
@@ -144,10 +137,7 @@ public class JmsEndpointSyncConsumerTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(jmsTemplate, connectionFactory, messageProducer);
 
@@ -157,7 +147,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(jmsTemplate, connectionFactory, messageProducer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(MessageBuilder.withPayload("").setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination).build());
+        jmsSyncConsumer.saveReplyDestination(new DefaultMessage("").setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination));
         jmsSyncConsumer.send(message);
 
         verify(jmsTemplate, connectionFactory, messageProducer);
@@ -168,10 +158,7 @@ public class JmsEndpointSyncConsumerTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
@@ -190,7 +177,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(MessageBuilder.withPayload("").setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination).build());
+        jmsSyncConsumer.saveReplyDestination(new DefaultMessage("").setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination));
         jmsSyncConsumer.send(message);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -204,15 +191,12 @@ public class JmsEndpointSyncConsumerTest {
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        Message<String> requestMessage = MessageBuilder.withPayload("")
-                .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination)
-                .build();
+        Message requestMessage = new DefaultMessage("")
+                .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, requestMessage.getHeaders().getId());
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, requestMessage.getHeaders().get(MessageHeaders.ID));
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
@@ -242,17 +226,13 @@ public class JmsEndpointSyncConsumerTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        Message<String> requestMessage = MessageBuilder.withPayload("")
-                .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination)
-                .build();
+        Message requestMessage = new DefaultMessage("")
+                .setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyDestination);
 
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
@@ -275,10 +255,8 @@ public class JmsEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();

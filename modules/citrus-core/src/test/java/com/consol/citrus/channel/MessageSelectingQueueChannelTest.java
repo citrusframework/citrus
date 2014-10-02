@@ -16,17 +16,16 @@
 
 package com.consol.citrus.channel;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
+import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Christoph Deppisch

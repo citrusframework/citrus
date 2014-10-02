@@ -16,7 +16,7 @@
 
 package com.consol.citrus.variable;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 import com.consol.citrus.context.TestContext;
 
@@ -32,5 +32,5 @@ public interface VariableExtractor {
      * @param message
      * @param context
      */
-    void extractVariables(Message<?> message, TestContext context);
+    void extractVariables(Message message, TestContext context);
 }

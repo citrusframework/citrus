@@ -17,13 +17,12 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -49,7 +48,7 @@ public class CamelSyncEndpointTest {
 
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
         DefaultMessage message = new DefaultMessage();
         message.setBody("Hello from Camel!");
@@ -66,7 +65,7 @@ public class CamelSyncEndpointTest {
         replay(camelContext, producerTemplate);
 
         camelEndpoint.createProducer().send(requestMessage);
-        Message<?> reply = camelEndpoint.createConsumer().receive(5000L);
+        Message reply = camelEndpoint.createConsumer().receive(5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Camel!");
         Assert.assertEquals(reply.getHeaders().get(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
@@ -92,9 +91,8 @@ public class CamelSyncEndpointTest {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
 
-        Message<?> replyMessage = MessageBuilder.withPayload("Hello from Citrus!")
-                                                .setHeader("operation", "hello")
-                                                .build();
+        Message replyMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!")
+                                                .setHeader("operation", "hello");
 
         reset(camelContext, consumerTemplate);
 
@@ -131,7 +129,7 @@ public class CamelSyncEndpointTest {
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
         camelEndpoint.setMessageListener(messageListeners);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
         DefaultMessage message = new DefaultMessage();
         message.setBody("Hello from Camel!");

@@ -16,14 +16,13 @@
 
 package com.consol.citrus.ws.validation;
 
-import java.io.IOException;
-
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -32,12 +31,11 @@ public class SimpleSoapAttachmentValidatorTest {
     
     @Test
     public void testSimpleValidation() throws IOException {
-        Message<?> testMessage = MessageBuilder.withPayload("Some Payload")
+        Message testMessage = new DefaultMessage("Some Payload")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT, "This is a test!")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT_ID, "soapAttachmentId")
-                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain")
-                                    .build();
-        
+                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain");
+
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentId("soapAttachmentId");
         controlAttachment.setContentType("text/plain");
@@ -49,12 +47,11 @@ public class SimpleSoapAttachmentValidatorTest {
     
     @Test
     public void testSimpleValidationUnknownContentId() throws IOException {
-        Message<?> testMessage = MessageBuilder.withPayload("Some Payload")
+        Message testMessage = new DefaultMessage("Some Payload")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT, "This is a test!")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT_ID, "soapAttachmentId")
-                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain")
-                                    .build();
-        
+                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain");
+
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentType("text/plain");
         controlAttachment.setContent("This is a test!");
@@ -65,12 +62,11 @@ public class SimpleSoapAttachmentValidatorTest {
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSimpleValidationWrongContentId() throws IOException {
-        Message<?> testMessage = MessageBuilder.withPayload("Some Payload")
+        Message testMessage = new DefaultMessage("Some Payload")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT, "This is a test!")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT_ID, "soapAttachmentId")
-                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain")
-                                    .build();
-        
+                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain");
+
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentId("wrongAttachmentId");
         controlAttachment.setContentType("text/plain");
@@ -82,12 +78,11 @@ public class SimpleSoapAttachmentValidatorTest {
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSimpleValidationWrongContent() throws IOException {
-        Message<?> testMessage = MessageBuilder.withPayload("Some Payload")
+        Message testMessage = new DefaultMessage("Some Payload")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT, "This is a test!")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT_ID, "soapAttachmentId")
-                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain")
-                                    .build();
-        
+                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain");
+
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentId("soapAttachmentId");
         controlAttachment.setContentType("text/plain");
@@ -99,12 +94,11 @@ public class SimpleSoapAttachmentValidatorTest {
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSimpleValidationWrongContentType() throws IOException {
-        Message<?> testMessage = MessageBuilder.withPayload("Some Payload")
+        Message testMessage = new DefaultMessage("Some Payload")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT, "This is a test!")
                                     .setHeader(CitrusSoapMessageHeaders.CONTENT_ID, "soapAttachmentId")
-                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain")
-                                    .build();
-        
+                                    .setHeader(CitrusSoapMessageHeaders.CONTENT_TYPE, "text/plain");
+
         SoapAttachment controlAttachment = new SoapAttachment();
         controlAttachment.setContentId("soapAttachmentId");
         controlAttachment.setContentType("text/xml");

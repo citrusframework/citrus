@@ -16,8 +16,6 @@
 
 package com.consol.citrus.message;
 
-import org.springframework.messaging.Message;
-
 /**
  * Message correlator interface for synchronous reply messages. Correlator uses
  * a specific header entry in messages in order to construct a unique message correlation key.
@@ -30,7 +28,7 @@ public interface ReplyMessageCorrelator {
      * @param request
      * @return
      */
-    String getCorrelationKey(Message<?> request);
+    String getCorrelationKey(Message request);
     
     /**
      * Get the correlation header name.

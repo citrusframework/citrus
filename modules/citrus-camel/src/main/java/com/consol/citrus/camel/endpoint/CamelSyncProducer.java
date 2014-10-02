@@ -18,11 +18,11 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.message.Message;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     private static Logger log = LoggerFactory.getLogger(CamelSyncProducer.class);
 
     /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
+    private Map<String, Message> replyMessages = new HashMap<String, Message>();
 
     /** Endpoint configuration */
     private final CamelSyncEndpointConfiguration endpointConfiguration;
@@ -57,7 +57,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(final Message<?> message) {
+    public void send(final Message message) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         onOutboundMessage(message);
@@ -74,30 +74,30 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
 
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
-        Message<?> replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
+        Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
         onInboundMessage(replyMessage);
         onReplyMessage(message, replyMessage);
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive("", endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(String selector) {
+    public Message receive(String selector) {
         return receive(selector, endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         return receive("", timeout);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         long timeLeft = timeout;
-        Message<?> message = findReplyMessage(selector);
+        Message message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -123,7 +123,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
      * @param correlationKey
      * @param replyMessage the reply message.
      */
-    public void onReplyMessage(String correlationKey, Message<?> replyMessage) {
+    public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
     }
 
@@ -132,7 +132,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
      * @param requestMessage
      * @param replyMessage
      */
-    public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
+    public void onReplyMessage(Message requestMessage, Message replyMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
             onReplyMessage(endpointConfiguration.getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
@@ -144,7 +144,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
      * Informs message listeners if present.
      * @param receivedMessage
      */
-    protected void onInboundMessage(Message<?> receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage) {
         if (getMessageListener() != null) {
             getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {
@@ -157,7 +157,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
      * @param correlationKey
      * @return
      */
-    public Message<?> findReplyMessage(String correlationKey) {
+    public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
     }
 }

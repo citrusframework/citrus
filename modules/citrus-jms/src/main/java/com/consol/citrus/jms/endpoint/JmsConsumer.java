@@ -18,10 +18,10 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 /**
@@ -51,7 +51,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         String destinationName;
 
         if (StringUtils.hasText(selector)) {
@@ -75,7 +75,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
             throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName + "'");
         }
 
-        Message<?> receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage, endpointConfiguration);
+        Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage, endpointConfiguration);
 
         log.info("Received JMS message on destination: '" + destinationName + "'");
         onInboundMessage(receivedMessage);
@@ -87,7 +87,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * Informs message listeners if present.
      * @param receivedMessage
      */
-    protected void onInboundMessage(Message<?> receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage) {
         if (messageListener != null) {
             messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {

@@ -17,7 +17,7 @@
 package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 
 /**
@@ -34,7 +34,7 @@ public interface MessageConstructionInterceptor {
      * @param messageType the message type.
      * @param context the current test context.
      */
-    Message<?> interceptMessageConstruction(Message<?> message, String messageType, TestContext context);
+    Message interceptMessageConstruction(Message message, String messageType, TestContext context);
 
     /**
      * Checks if this message interceptor is capable of this message type. XML message interceptors may only apply to this message

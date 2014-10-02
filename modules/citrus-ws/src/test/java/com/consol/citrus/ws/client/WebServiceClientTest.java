@@ -17,11 +17,8 @@
 package com.consol.citrus.ws.client;
 
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.client.core.*;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -42,7 +39,7 @@ public class WebServiceClientTest {
         WebServiceClient client = new WebServiceClient();
         client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(webServiceTemplate);
 
@@ -72,7 +69,7 @@ public class WebServiceClientTest {
         ReplyMessageCorrelator correlator = EasyMock.createMock(ReplyMessageCorrelator.class);
         client.getEndpointConfiguration().setCorrelator(correlator);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(webServiceTemplate, correlator);
 
@@ -103,7 +100,7 @@ public class WebServiceClientTest {
         EndpointUriResolver endpointUriResolver = EasyMock.createMock(EndpointUriResolver.class);
         client.getEndpointConfiguration().setEndpointResolver(endpointUriResolver);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(webServiceTemplate, endpointUriResolver);
 
@@ -133,7 +130,7 @@ public class WebServiceClientTest {
         client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
         client.getEndpointConfiguration().setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         SoapMessage soapFaultMessage = EasyMock.createMock(SoapMessage.class);
         SoapBody soapBody = EasyMock.createMock(SoapBody.class);

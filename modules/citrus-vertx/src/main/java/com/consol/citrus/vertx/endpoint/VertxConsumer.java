@@ -18,10 +18,10 @@ package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractMessageConsumer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 
@@ -60,14 +60,14 @@ public class VertxConsumer extends AbstractMessageConsumer {
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         log.info("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();
         vertx.eventBus().registerHandler(endpointConfiguration.getAddress(), vertxMessageHandler);
 
         long timeLeft = timeout;
-        Message<?> message = endpointConfiguration.getMessageConverter().convertInbound(vertxMessageHandler.getMessage(), endpointConfiguration);
+        Message message = endpointConfiguration.getMessageConverter().convertInbound(vertxMessageHandler.getMessage(), endpointConfiguration);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -102,7 +102,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
      * Informs message listeners if present.
      * @param receivedMessage
      */
-    protected void onInboundMessage(Message<?> receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage) {
         if (messageListener != null) {
             messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {

@@ -21,6 +21,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
@@ -35,7 +36,6 @@ import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
 import org.springframework.oxm.*;
 import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringResult;
@@ -102,7 +102,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @param controlMessage
      * @return
      */
-    public T message(Message<?> controlMessage) {
+    public T message(Message controlMessage) {
         if (validationContext != null) {
             throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
         }
@@ -516,13 +516,13 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * Gets the message builder on the validation context. Constructs message content builder if necessary.
      * @return
      */
-    protected AbstractMessageContentBuilder<?> getMessageContentBuilder() {
+    protected AbstractMessageContentBuilder getMessageContentBuilder() {
         if (validationContext == null) {
             initializeValidationContext();
         }
 
         if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
-            return (AbstractMessageContentBuilder<?>) validationContext.getMessageBuilder();
+            return (AbstractMessageContentBuilder) validationContext.getMessageBuilder();
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             validationContext.setMessageBuilder(messageBuilder);

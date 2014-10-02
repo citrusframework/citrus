@@ -15,7 +15,7 @@
  */
 package com.consol.citrus.mail.message;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 
 /**
  * Citrus mail headers set during mail message processing.
@@ -31,7 +31,7 @@ public abstract class CitrusMailMessageHeaders {
     }
 
     /** Special header prefix for http transport headers in SOAP message sender */
-    public static final String MAIL_PREFIX = CitrusMessageHeaders.PREFIX + "mail_";
+    public static final String MAIL_PREFIX = MessageHeaders.PREFIX + "mail_";
 
     /** Mail message id */
     public static final String MAIL_MESSAGE_ID = MAIL_PREFIX + "message_id";

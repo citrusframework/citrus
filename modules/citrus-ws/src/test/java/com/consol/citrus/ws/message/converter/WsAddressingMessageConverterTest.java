@@ -16,12 +16,12 @@
 
 package com.consol.citrus.ws.message.converter;
 
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
@@ -32,7 +32,6 @@ import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.eq;
 
 /**
  * @author Christoph Deppisch
@@ -48,8 +47,7 @@ public class WsAddressingMessageConverterTest {
 
     @Test
     public void testOutboundWsAddressingHeaders() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
-                .build();
+        Message testMessage = new DefaultMessage(requestPayload);
 
         WsAddressingHeaders wsAddressingHeaders = new WsAddressingHeaders();
         wsAddressingHeaders.setVersion(WsAddressingVersion.VERSION10);

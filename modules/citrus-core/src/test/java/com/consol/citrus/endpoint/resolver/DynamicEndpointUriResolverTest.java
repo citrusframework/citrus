@@ -17,8 +17,8 @@
 package com.consol.citrus.endpoint.resolver;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -32,11 +32,10 @@ public class DynamicEndpointUriResolverTest {
     public void testEndpointMapping() {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message<?> testMessage;
+        Message testMessage;
 
         testMessage = createTestMessage()
-                .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, "http://localhost:8080/request")
-                .build();
+                .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, "http://localhost:8080/request");
 
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), "http://localhost:8080/request");
     }
@@ -45,7 +44,7 @@ public class DynamicEndpointUriResolverTest {
     public void testEndpointMappingWithPath() {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message<?> testMessage;
+        Message testMessage;
         String[][] tests = new String[][] {
                 { "http://localhost:8080/request", "/test", "http://localhost:8080/request/test" },
                 { "http://localhost:8080/request/", "/test", "http://localhost:8080/request/test" },
@@ -58,8 +57,7 @@ public class DynamicEndpointUriResolverTest {
         for (String[] test : tests) {
             testMessage = createTestMessage()
                     .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, test[0])
-                    .setHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, test[1])
-                    .build();
+                    .setHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, test[1]);
 
             Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), test[2]);
         }
@@ -69,7 +67,7 @@ public class DynamicEndpointUriResolverTest {
     public void testEndpointMappingWithQueryParams() {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message<?> testMessage;
+        Message testMessage;
         String[][] tests = new String[][] {
                 { "http://localhost:8080/request", "param1=value1", "http://localhost:8080/request?param1=value1" },
                 { "http://localhost:8080/request", "", "http://localhost:8080/request" },
@@ -81,8 +79,7 @@ public class DynamicEndpointUriResolverTest {
         for (String[] test : tests) {
             testMessage = createTestMessage()
                     .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, test[0])
-                    .setHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, test[1])
-                    .build();
+                    .setHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, test[1]);
 
             Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), test[2]);
         }
@@ -92,7 +89,7 @@ public class DynamicEndpointUriResolverTest {
     public void testDefaultEndpointUri() {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message<?> testMessage = createTestMessage().build();
+        Message testMessage = createTestMessage();
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), "http://localhost:8080/default");
 
         endpointUriResolver.setDefaultEndpointUri("http://localhost:8080/default");
@@ -103,7 +100,7 @@ public class DynamicEndpointUriResolverTest {
     public void testResolveException() {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message<?> testMessage = createTestMessage().build();
+        Message testMessage = createTestMessage();
 
         try {
             endpointUriResolver.resolveEndpointUri(testMessage, null);
@@ -120,7 +117,7 @@ public class DynamicEndpointUriResolverTest {
      * Creates basic test message.
      * @return
      */
-    private MessageBuilder<String> createTestMessage() {
-        return MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+    private DefaultMessage createTestMessage() {
+        return new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
     }
 }

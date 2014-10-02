@@ -17,9 +17,10 @@
 package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.endpoint.adapter.mapping.*;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor;
+import com.consol.citrus.endpoint.adapter.mapping.SimpleMappingStrategy;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -36,7 +37,7 @@ public class RequestDispatchingEndpointAdapterTest {
 
         endpointAdapter.setMappingKeyExtractor(new MappingKeyExtractor() {
             @Override
-            public String extractMappingKey(Message<?> request) {
+            public String extractMappingKey(Message request) {
                 return "foo";
             }
         });
@@ -45,8 +46,8 @@ public class RequestDispatchingEndpointAdapterTest {
         mappingStrategy.setAdapterMappings(Collections.<String, EndpointAdapter>singletonMap("foo", new EmptyResponseEndpointAdapter()));
         endpointAdapter.setMappingStrategy(mappingStrategy);
 
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
         Assert.assertEquals(response.getPayload(), "");
     }

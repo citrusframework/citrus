@@ -19,10 +19,10 @@ package com.consol.citrus.mail.client;
 import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.mail.model.MailMessageMapper;
 import com.consol.citrus.mail.server.MailServer;
+import com.consol.citrus.message.DefaultMessage;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
@@ -79,7 +79,7 @@ public class MailClientTest {
 
         replay(javaMailSender);
 
-        mailClient.send(MessageBuilder.withPayload(mailMessage).build());
+        mailClient.send(new DefaultMessage(mailMessage));
 
         verify(javaMailSender);
     }
@@ -123,7 +123,7 @@ public class MailClientTest {
 
         replay(javaMailSender);
 
-        mailClient.send(MessageBuilder.withPayload(mailMessage).build());
+        mailClient.send(new DefaultMessage(mailMessage));
 
         verify(javaMailSender);
     }

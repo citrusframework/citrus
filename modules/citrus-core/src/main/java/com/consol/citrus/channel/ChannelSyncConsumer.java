@@ -17,11 +17,11 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.ReplyProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.*;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -53,32 +53,29 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
-        Message<?> receivedMessage = super.receive(selector, timeout);
+    public Message receive(String selector, long timeout) {
+        Message receivedMessage = super.receive(selector, timeout);
         saveReplyMessageChannel(receivedMessage);
 
         return receivedMessage;
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         Assert.notNull(message, "Can not send empty message");
 
         MessageChannel replyChannel;
-        Message<?> replyMessage;
-
         if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
-                    "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
+            Assert.notNull(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
+                    "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
 
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
             replyChannel = findReplyChannel(correlationKey);
             Assert.notNull(replyChannel, "Unable to locate reply channel with correlation key: " + correlationKey);
 
             //remove citrus specific header from message
-            replyMessage = MessageBuilder.fromMessage(message).removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).build();
+            message.getHeaders().remove(com.consol.citrus.message.MessageHeaders.SYNC_MESSAGE_CORRELATOR);
         } else {
-            replyMessage = message;
             replyChannel = findReplyChannel("");
             Assert.notNull(replyChannel, "Unable to locate reply channel");
         }
@@ -86,11 +83,12 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         log.info("Sending message to reply channel: '" + replyChannel + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + replyMessage.toString());
+            log.debug("Message to send is:\n" + message.toString());
         }
 
         try {
-            endpointConfiguration.getMessagingTemplate().send(replyChannel, replyMessage);
+            endpointConfiguration.getMessagingTemplate().send(replyChannel,
+                    endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration));
         } catch (MessageDeliveryException e) {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + replyChannel + "'", e);
         }
@@ -102,13 +100,13 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
      * Store reply message channel.
      * @param receivedMessage
      */
-    public void saveReplyMessageChannel(Message<?> receivedMessage) {
+    public void saveReplyMessageChannel(Message receivedMessage) {
         MessageChannel replyChannel;
 
-        if (receivedMessage.getHeaders().getReplyChannel() instanceof MessageChannel) {
-            replyChannel = (MessageChannel)receivedMessage.getHeaders().getReplyChannel();
-        } else if (StringUtils.hasText((String) receivedMessage.getHeaders().getReplyChannel())){
-            replyChannel = resolveChannelName(receivedMessage.getHeaders().getReplyChannel().toString());
+        if (receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL) instanceof MessageChannel) {
+            replyChannel = (MessageChannel)receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL);
+        } else if (StringUtils.hasText((String) receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL))){
+            replyChannel = resolveChannelName(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL).toString());
         } else {
             log.warn("Unable to retrieve reply message channel for message \n" +
                     receivedMessage + "\n - no reply channel found in message headers!");

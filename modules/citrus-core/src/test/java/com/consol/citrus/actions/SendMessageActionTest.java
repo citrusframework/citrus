@@ -21,6 +21,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -32,9 +33,6 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -68,10 +66,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 		
 		sendAction.setMessageBuilder(messageBuilder);
 		
-		Map<String, Object> headers = new HashMap<String, Object>();
-		final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-		                        .copyHeaders(headers)
-		                        .build();
+		final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -109,10 +104,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -154,10 +146,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 		
 		sendAction.setMessageBuilder(scriptMessageBuidler);
 		
-		Map<String, Object> headers = new HashMap<String, Object>();
-		final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-		                        .copyHeaders(headers)
-		                        .build();
+		final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -201,10 +190,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(scriptMessageBuidler);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -242,10 +228,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(scriptMessageBuidler);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -285,10 +268,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("myText", "Hello World!");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -328,10 +308,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("myText", "Hello World!");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -369,10 +346,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -416,10 +390,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -463,10 +434,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -511,10 +479,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\"><ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\"><ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -560,10 +525,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -602,9 +564,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         final Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
@@ -650,9 +610,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         final Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "${myOperation}");
@@ -754,9 +712,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         final Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        final Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         final Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
@@ -818,7 +774,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
                 XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setControlMessage(MessageBuilder.withPayload("").build());
+                validationContext.setControlMessage(new DefaultMessage(""));
                 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
                 return null;
@@ -845,10 +801,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -886,10 +839,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-16\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -927,10 +877,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
@@ -999,10 +946,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         
         sendAction.setMessageBuilder(messageBuilder);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message controlMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();

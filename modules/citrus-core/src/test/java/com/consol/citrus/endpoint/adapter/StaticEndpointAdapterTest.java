@@ -18,7 +18,7 @@ package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.testng.annotations.Test;
 
 /**
@@ -30,7 +30,7 @@ public class StaticEndpointAdapterTest {
     public void testEndpointAdapter() {
         EndpointAdapter endpointAdapter = new StaticEndpointAdapter() {
             @Override
-            protected Message<?> handleMessageInternal(Message<?> message) {
+            protected Message handleMessageInternal(Message message) {
                 return null;
             }
         };

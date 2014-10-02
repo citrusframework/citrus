@@ -20,7 +20,7 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.*;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -31,8 +31,6 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.testng.Assert;
@@ -68,7 +66,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 send(messageEndpoint)
-                    .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
+                    .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
             }
         };
         
@@ -85,13 +83,15 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "Foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 3L);
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
     }
 
     @Test
     public void testSendBuilderWithObjectMessageInstance() {
-        final Message message = MessageBuilder.withPayload(new Integer(10)).setHeader("operation", "foo").build();
+        final Message message = new DefaultMessage(new Integer(10)).setHeader("operation", "foo");
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
@@ -115,18 +115,18 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().getId(), message.getHeaders().getId());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(MessageHeaders.ID), message.getHeaders().get(MessageHeaders.ID));
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get("operation"), "foo");
 
         Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size());
         Assert.assertEquals(constructed.getHeaders().get("operation"), "foo");
-        Assert.assertEquals(constructed.getHeaders().getId(), message.getHeaders().getId());
+        Assert.assertEquals(constructed.getHeaders().get(MessageHeaders.ID), message.getHeaders().get(MessageHeaders.ID));
     }
 
     @Test
     public void testSendBuilderWithObjectMessageInstanceAdditionalHeader() {
-        final Message message = MessageBuilder.withPayload(new Integer(10)).setHeader("operation", "foo").build();
+        final Message message = new DefaultMessage(new Integer(10)).setHeader("operation", "foo");
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
@@ -152,7 +152,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "new");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().getId(), message.getHeaders().getId());
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(MessageHeaders.ID), message.getHeaders().get(MessageHeaders.ID));
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get("operation"), "foo");
 
         Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
@@ -385,7 +385,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                 
                 send(messageEndpoint)
-                    .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
+                    .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
             }
         };
@@ -416,7 +416,9 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertNull(messageBuilder.getMessageHeaderResourcePath());
     }
@@ -431,7 +433,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .header(resource);
                 
                 send(messageEndpoint)
-                    .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
+                    .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header(resource);
             }
         };
@@ -466,7 +468,9 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessageHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessageHeaderData(), "otherHeaderData");
     }
     

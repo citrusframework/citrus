@@ -18,6 +18,7 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
@@ -44,7 +45,7 @@ public class ChannelProducer implements Producer {
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         String destinationChannelName = getDestinationChannelName();
 
         log.info("Sending message to channel: '" + destinationChannelName + "'");
@@ -54,7 +55,8 @@ public class ChannelProducer implements Producer {
         }
 
         try {
-            endpointConfiguration.getMessagingTemplate().send(getDestinationChannel(), message);
+            endpointConfiguration.getMessagingTemplate().send(getDestinationChannel(),
+                    endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration));
         } catch (MessageDeliveryException e) {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
         }

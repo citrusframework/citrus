@@ -17,7 +17,7 @@
 package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Extractor searches for header name in request headers for mapping name identification.
@@ -46,7 +46,7 @@ public class HeaderMappingKeyExtractor extends AbstractMappingKeyExtractor {
     }
 
     @Override
-    public String getMappingKey(Message<?> request) {
+    public String getMappingKey(Message request) {
         if (request.getHeaders().containsKey(headerName)) {
             return request.getHeaders().get(headerName).toString();
         } else {

@@ -16,11 +16,11 @@
 
 package com.consol.citrus.validation;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
 
 /**
  * Validation callback automatically extracts message payload and headers so we work with
@@ -36,7 +36,7 @@ public abstract class AbstractValidationCallback implements ValidationCallback {
     /**
      * Validate message automatically unmarshalling message payload.
      */
-    public final void validate(Message<?> message) {
+    public final void validate(Message message) {
         validate(message.getPayload(), message.getHeaders());
     }
     
@@ -45,7 +45,7 @@ public abstract class AbstractValidationCallback implements ValidationCallback {
      * @param payload the message payload object.
      * @param headers the message headers
      */
-    public abstract void validate(Object payload, MessageHeaders headers);
+    public abstract void validate(Object payload, Map<String, Object> headers);
     
     /**
      * Sets the applicationContext.

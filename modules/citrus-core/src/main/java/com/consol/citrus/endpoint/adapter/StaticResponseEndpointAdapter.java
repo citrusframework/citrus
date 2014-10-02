@@ -16,8 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +37,8 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
     private Map<String, Object> messageHeader = new HashMap<String, Object>();
 
     @Override
-    public Message<?> handleMessageInternal(Message<?> message) {
-        return MessageBuilder.withPayload(messagePayload).copyHeaders(messageHeader).build();
+    public Message handleMessageInternal(Message message) {
+        return new DefaultMessage(messagePayload, messageHeader);
     }
 
     /**

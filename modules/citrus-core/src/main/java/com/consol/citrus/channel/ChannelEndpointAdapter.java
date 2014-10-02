@@ -18,12 +18,12 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.messaging.Message;
 
 /**
  * Endpoint adapter forwards incoming requests to message channel and waits synchronously for response
@@ -57,10 +57,10 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements B
     }
 
     @Override
-    public Message<?> handleMessageInternal(Message<?> request) {
+    public Message handleMessageInternal(Message request) {
         log.info("Forwarding request to message channel ...");
 
-        Message<?> replyMessage = null;
+        Message replyMessage = null;
         try {
             producer.send(request);
             replyMessage = producer.receive(endpointConfiguration.getTimeout());

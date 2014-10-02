@@ -24,10 +24,10 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -63,7 +63,7 @@ public class SendSoapMessageAction extends SendMessageAction {
 
     @Override
     public void doExecute(final TestContext context) {
-        final Message<?> message = createMessage(context, getMessageType());
+        final Message message = createMessage(context, getMessageType());
         
         // extract variables from before sending message so we can save dynamic message ids
         for (VariableExtractor variableExtractor : getVariableExtractors()) {
@@ -111,7 +111,7 @@ public class SendSoapMessageAction extends SendMessageAction {
      * @param attachmentContent the optional attachmentContent.
      * @param webServiceClient the actual soap client.
      */
-    private void sendSoapMessage(Message<?> message, String attachmentContent, WebServiceClient webServiceClient) {
+    private void sendSoapMessage(Message message, String attachmentContent, WebServiceClient webServiceClient) {
         if (attachmentContent != null) {
             attachment.setContent(attachmentContent);
             webServiceClient.send(message, attachment);

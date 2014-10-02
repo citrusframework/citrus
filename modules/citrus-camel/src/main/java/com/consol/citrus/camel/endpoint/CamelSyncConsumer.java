@@ -18,13 +18,13 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.ReplyProducer;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
@@ -57,7 +57,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         log.info("Receiving message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         Exchange exchange = endpointConfiguration.getCamelContext().createConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
@@ -81,15 +81,15 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         Exchange exchange;
         if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
-                    "you need to set " + CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
+            Assert.notNull(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
+                    "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
 
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
+            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeaders().get(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
             exchange = exchanges.remove(correlationKey);
             Assert.notNull(exchange, "Unable to locate camel exchange with correlation key: '" + correlationKey + "'");
         } else {
@@ -117,7 +117,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     private void buildOutMessage(Exchange exchange, Message message) {
         org.apache.camel.Message reply = exchange.getOut();
         for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
-            if (!header.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
+            if (!header.getKey().startsWith(MessageHeaders.PREFIX)) {
                 reply.setHeader(header.getKey(), header.getValue());
             }
         }
@@ -151,7 +151,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
      * Informs message listeners if present.
      * @param message
      */
-    protected void onOutboundMessage(Message<?> message) {
+    protected void onOutboundMessage(Message message) {
         if (getMessageListener() != null) {
             getMessageListener().onOutboundMessage(message.toString());
         } else {

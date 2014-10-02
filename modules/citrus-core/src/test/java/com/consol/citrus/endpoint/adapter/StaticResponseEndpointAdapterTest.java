@@ -16,8 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,8 +38,8 @@ public class StaticResponseEndpointAdapterTest {
         endpointAdapter.setMessageHeader(header);
         endpointAdapter.setMessagePayload("<TestMessage>Hello User!</TestMessage>");
 
-        Message<?> response = endpointAdapter.handleMessage(
-                MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build());
+        Message response = endpointAdapter.handleMessage(
+                new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
         Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");
         Assert.assertNotNull(response.getHeaders().get("Operation"));

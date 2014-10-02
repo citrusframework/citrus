@@ -16,18 +16,16 @@
 
 package com.consol.citrus.ssh;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.*;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.easymock.IArgumentMatcher;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.testng.AssertJUnit.assertEquals;
@@ -115,7 +113,7 @@ public class SshCommandTest {
     private void prepare(String pInput, String pOutput, String pError, int pExitCode) {
         String request = xmlMapper.toXML(new SshRequest(COMMAND, pInput));
         SshResponse resp = new SshResponse(pOutput, pError, pExitCode);
-        Message respMsg = MessageBuilder.withPayload(xmlMapper.toXML(resp)).build();
+        Message respMsg = new DefaultMessage(xmlMapper.toXML(resp));
         expect(handler.handleMessage(eqMessage(request))).andReturn(respMsg);
         replay(handler);
 
@@ -130,10 +128,10 @@ public class SshCommandTest {
      * @param expected
      * @return
      */
-    public Message<?> eqMessage(final String expected) {
+    public Message eqMessage(final String expected) {
         reportMatcher(new IArgumentMatcher() {
             public boolean matches(Object argument) {
-                Message<?> msg = (Message<?>) argument;
+                Message msg = (Message) argument;
                 String payload = (String) msg.getPayload();
                 return expected.equals(payload);
             }

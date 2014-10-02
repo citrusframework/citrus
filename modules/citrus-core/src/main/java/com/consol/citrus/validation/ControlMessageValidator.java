@@ -18,18 +18,16 @@ package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.*;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -49,10 +47,10 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * Implementation performs message header validation as well as message
      * payload validation.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context,
+    public void validateMessage(Message receivedMessage, TestContext context,
             ControlMessageValidationContext validationContext) {
         
-        Message<?> controlMessage = validationContext.getControlMessage(context);
+        Message controlMessage = validationContext.getControlMessage(context);
         
         // validate message payload first
         validateMessagePayload(receivedMessage, controlMessage, context);
@@ -71,8 +69,8 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * @param controlMessage the expected control message.
      * @param context the current test context with all variables.
      */
-    public void validateMessagePayload(Message<?> receivedMessage, 
-            Message<?> controlMessage, TestContext context) throws ValidationException {
+    public void validateMessagePayload(Message receivedMessage,
+            Message controlMessage, TestContext context) throws ValidationException {
     }
     
     
@@ -83,7 +81,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * @param receivedHeaders the actual headers from message received.
      * @param context the current test context.
      */
-    public void validateMessageHeader(MessageHeaders controlHeaders, MessageHeaders receivedHeaders, TestContext context) {
+    public void validateMessageHeader(Map<String, Object> controlHeaders, Map<String, Object> receivedHeaders, TestContext context) {
         if (CollectionUtils.isEmpty(controlHeaders)) { return; }
 
         log.info("Start message header validation");
@@ -93,7 +91,8 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
             String expectedValue = entry.getValue().toString();
             String actualValue = null;
 
-            if (MessageHeaderUtils.isSpringInternalHeader(headerName) || headerName.equals(CitrusMessageHeaders.HEADER_CONTENT)) {
+            if (MessageHeaderUtils.isSpringInternalHeader(headerName) ||
+                    headerName.startsWith(MessageHeaders.MESSAGE_PREFIX)) {
                 continue;
             }
             //check if header expression is variable or function

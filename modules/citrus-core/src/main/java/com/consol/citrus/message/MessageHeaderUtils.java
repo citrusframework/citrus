@@ -17,7 +17,6 @@
 package com.consol.citrus.message;
 
 import org.springframework.integration.IntegrationMessageHeaderAccessor;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.MessageHeaders;
 
 import java.util.Map;
@@ -77,19 +76,19 @@ public class MessageHeaderUtils {
     /**
      * Safely sets header on message builder. Some headers need to be cast to specific type such
      * as PRIORITY in {@link org.springframework.integration.IntegrationMessageHeaderAccessor}.
-     * @param messageBuilder
+     * @param message
      * @param name
      * @param value
      */
-    public static void setHeader(MessageBuilder messageBuilder, String name, String value) {
+    public static void setHeader(Message message, String name, String value) {
         if (name.equals(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER)) {
-            messageBuilder.setHeader(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER, Integer.valueOf(value));
+            message.getHeaders().put(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER, Integer.valueOf(value));
         } else if (name.equals(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE)) {
-            messageBuilder.setHeader(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, Integer.valueOf(value));
+            message.getHeaders().put(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, Integer.valueOf(value));
         } else if (name.equals(IntegrationMessageHeaderAccessor.PRIORITY)) {
-            messageBuilder.setHeader(IntegrationMessageHeaderAccessor.PRIORITY, Integer.valueOf(value));
+            message.getHeaders().put(IntegrationMessageHeaderAccessor.PRIORITY, Integer.valueOf(value));
         } else {
-            messageBuilder.setHeader(name, value);
+            message.getHeaders().put(name, value);
         }
     }
 

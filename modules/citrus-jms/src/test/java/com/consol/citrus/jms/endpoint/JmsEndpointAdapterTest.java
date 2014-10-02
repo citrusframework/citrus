@@ -16,11 +16,12 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import javax.jms.*;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class JmsEndpointAdapterTest {
 
         replay(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
-        Message<?> response = endpointAdapter.handleMessage(MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build());
+        Message response = endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>"));
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload().toString(), "<TestResponse>Hello World!</TestResponse>");
 
@@ -116,7 +117,7 @@ public class JmsEndpointAdapterTest {
 
         replay(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
-        Assert.assertNull(endpointAdapter.handleMessage(MessageBuilder.withPayload("<TestMessage><text>Hi!</text></TestMessage>").build()));
+        Assert.assertNull(endpointAdapter.handleMessage(new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>")));
 
         verify(connectionFactory, connection, session, messageConsumer, messageProducer, tempReplyQueue);
     }

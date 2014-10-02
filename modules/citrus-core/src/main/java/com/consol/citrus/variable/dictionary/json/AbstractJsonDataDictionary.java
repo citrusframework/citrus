@@ -18,6 +18,7 @@ package com.consol.citrus.variable.dictionary.json;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.json.simple.JSONArray;
@@ -44,11 +45,11 @@ public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<
     private static Logger log = LoggerFactory.getLogger(AbstractJsonDataDictionary.class);
 
     @Override
-    protected String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
+    protected Message interceptMessage(Message message, String messageType, TestContext context) {
         JSONParser parser = new JSONParser();
 
         try {
-            Object json = parser.parse(messagePayload);
+            Object json = parser.parse(message.getPayload().toString());
 
             if (json instanceof JSONObject) {
                 traverseJsonData((JSONObject) json, "", context);
@@ -60,11 +61,12 @@ public abstract class AbstractJsonDataDictionary extends AbstractDataDictionary<
                 throw new CitrusRuntimeException("Unsupported json type " + json.getClass());
             }
 
-            return json.toString();
+            message.setPayload(json.toString());
         } catch (ParseException e) {
             log.warn("Data dictionary unable to parse JSON object", e);
-            return messagePayload;
         }
+
+        return message;
     }
 
     private void traverseJsonData(JSONObject jsonData, String jsonPath, TestContext context) {

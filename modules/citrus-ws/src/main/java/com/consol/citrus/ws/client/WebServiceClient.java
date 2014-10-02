@@ -19,13 +19,12 @@ package com.consol.citrus.ws.client;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
@@ -51,7 +50,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     private static Logger log = LoggerFactory.getLogger(WebServiceClient.class);
 
     /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
+    private Map<String, Message> replyMessages = new HashMap<String, Message>();
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -77,7 +76,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         send(message, null);
     }
 
@@ -86,7 +85,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @param message
      * @param attachment
      */
-    public void send(final Message<?> message, final Attachment attachment) {
+    public void send(final Message message, final Attachment attachment) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String endpointUri;
@@ -131,24 +130,24 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive("", getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message<?> receive(String selector) {
+    public Message receive(String selector) {
         return receive(selector, getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         return receive("", timeout);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         long timeLeft = timeout;
-        Message<?> message = findReplyMessage(selector);
+        Message message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= getEndpointConfiguration().getPollingInterval();
@@ -174,7 +173,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @param correlationKey
      * @param replyMessage the reply message.
      */
-    public void onReplyMessage(String correlationKey, Message<?> replyMessage) {
+    public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
     }
 
@@ -183,7 +182,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @param requestMessage
      * @param replyMessage
      */
-    public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
+    public void onReplyMessage(Message requestMessage, Message replyMessage) {
         if (getEndpointConfiguration().getCorrelator() != null) {
             onReplyMessage(getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
@@ -196,7 +195,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @param correlationKey
      * @return
      */
-    public Message<?> findReplyMessage(String correlationKey) {
+    public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
     }
 
@@ -228,7 +227,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     private class InternalFaultMessageResolver implements FaultMessageResolver {
 
         /** Request message associated with this response error handler */
-        private Message<?> requestMessage;
+        private Message requestMessage;
 
         /** The endpoint that was initially invoked */
         private String endpointUri;
@@ -237,7 +236,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
          * Default constructor provided with request message
          * associated with this fault resolver and endpoint uri.
          */
-        public InternalFaultMessageResolver(Message<?> requestMessage, String endpointUri) {
+        public InternalFaultMessageResolver(Message requestMessage, String endpointUri) {
             this.requestMessage = requestMessage;
             this.endpointUri = endpointUri;
         }
@@ -251,7 +250,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                 try {
                     callback.doWithMessage(webServiceResponse);
 
-                    Message<?> responseMessage = callback.getResponse();
+                    Message responseMessage = callback.getResponse();
 
                     if (webServiceResponse instanceof SoapMessage) {
                         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -260,7 +259,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                         StringResult faultPayload = new StringResult();
                         transformer.transform(((SoapMessage)webServiceResponse).getSoapBody().getFault().getSource(), faultPayload);
 
-                        responseMessage = MessageBuilder.withPayload(faultPayload.toString()).copyHeaders(responseMessage.getHeaders()).build();
+                        responseMessage.setPayload(faultPayload.toString());
                     }
 
                     log.info("Received SOAP fault response from endpoint: '" + endpointUri + "'");

@@ -16,19 +16,18 @@
 
 package com.consol.citrus.validation.xhtml;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
-import org.w3c.tidy.Tidy;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
+import org.w3c.tidy.Tidy;
+
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * XHTML message validator using W3C jtidy to automatically convert HTML content to XHTML fixing most common
@@ -54,7 +53,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
     private static final String XHTML_DOCTYPE_DEFINITION = "DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0";
     
     @Override
-    public void validateMessage(Message<?> receivedMessage,
+    public void validateMessage(Message receivedMessage,
             TestContext context, XmlMessageValidationContext validationContext)
             throws ValidationException {
         
@@ -72,7 +71,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
             xhtmlPayload = xhtmlPayload.replaceFirst(W3_XHTML1_URL, "org/w3/xhtml/");
         }
         
-        super.validateMessage(MessageBuilder.withPayload(xhtmlPayload).copyHeaders(receivedMessage.getHeaders()).build(), 
+        super.validateMessage(new DefaultMessage(xhtmlPayload, receivedMessage.getHeaders()),
                 context, validationContext);
     }
     

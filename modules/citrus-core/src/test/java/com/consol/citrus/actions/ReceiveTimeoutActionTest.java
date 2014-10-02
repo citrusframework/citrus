@@ -19,11 +19,11 @@ package com.consol.citrus.actions;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -84,7 +84,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
         receiveTimeout.setEndpoint(endpoint);
         
-        Message message = MessageBuilder.withPayload("<TestMessage>Hello World!</TestMessage>").build();
+        Message message = new DefaultMessage("<TestMessage>Hello World!</TestMessage>");
 
         reset(endpoint, consumer, endpointConfiguration);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();

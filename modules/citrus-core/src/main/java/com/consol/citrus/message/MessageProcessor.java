@@ -18,8 +18,6 @@ package com.consol.citrus.message;
 
 import java.util.List;
 
-import org.springframework.messaging.Message;
-
 /**
  * Message processor having 0-n message handlers. According to a dispatching message element
  * processor tries to delegate message processing to a message handler, that will take care 
@@ -37,7 +35,7 @@ public interface MessageProcessor {
      * @param message
      * @return
      */
-    Message<?> processMessage(Message<?> message);
+    Message processMessage(Message message);
 
     /**
      * List of message handlers.

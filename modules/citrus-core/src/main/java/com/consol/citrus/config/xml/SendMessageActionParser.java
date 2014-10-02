@@ -82,7 +82,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
             builder.addPropertyReference("dataDictionary", dataDictionary);
         }
 
-        AbstractMessageContentBuilder<?> messageBuilder = constructMessageBuilder(messageElement);
+        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
         parseHeaderElements(element, messageBuilder);
         
         if (messageBuilder != null) {
@@ -100,7 +100,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
     }
 
     @Override
-    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder<?> messageBuilder) {
+    protected void parseHeaderElements(Element actionElement, AbstractMessageContentBuilder messageBuilder) {
         super.parseHeaderElements(actionElement, messageBuilder);
     }
 

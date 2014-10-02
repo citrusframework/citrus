@@ -20,8 +20,8 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.messaging.Message;
 
 /**
  * Test executing message handler specialization which executes a Java DSL test builder instead of
@@ -33,7 +33,7 @@ import org.springframework.messaging.Message;
 public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapter {
 
     @Override
-    public Message<?> dispatchMessage(final Message<?> request, String mappingName) {
+    public Message dispatchMessage(final Message request, String mappingName) {
         final CitrusTestBuilder testBuilder;
 
         try {
@@ -54,7 +54,7 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
     }
 
     @Override
-    protected final void prepareExecution(Message<?> request, TestCase testCase) {
+    protected final void prepareExecution(Message request, TestCase testCase) {
         super.prepareExecution(request, testCase);
     }
 
@@ -64,6 +64,6 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
      * @param request the triggering request message.
      * @param testBuilder the found test builder.
      */
-    protected void prepareExecution(Message<?> request, CitrusTestBuilder testBuilder) {
+    protected void prepareExecution(Message request, CitrusTestBuilder testBuilder) {
     }
 }

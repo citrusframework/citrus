@@ -22,8 +22,7 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
@@ -35,7 +34,7 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public abstract class AbstractMessageContentBuilder<T> implements MessageContentBuilder<T> {
+public abstract class AbstractMessageContentBuilder implements MessageContentBuilder {
 
     /** The control headers expected for this message */
     private Map<String, Object> messageHeaders = new HashMap<String, Object>();
@@ -57,30 +56,27 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
      * subclass implementation.
      */
     @Override
-    public Message<T> buildMessageContent(TestContext context, String messageType) {
+    public Message buildMessageContent(TestContext context, String messageType) {
+        Object payload = buildMessagePayload(context);
 
-        T payload = buildMessagePayload(context);
-
-        Message<T> message = MessageBuilder.withPayload(payload)
-                .copyHeaders(buildMessageHeaders(context))
-                .build();
+        Message message = new DefaultMessage(payload, buildMessageHeaders(context));
 
         if (payload != null) {
             if (dataDictionary != null) {
-                message = (Message<T>) dataDictionary.interceptMessageConstruction(message, messageType, context);
+                message = dataDictionary.interceptMessageConstruction(message, messageType, context);
             }
 
-            message = (Message<T>) context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
+            message = context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
 
             for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                message = (Message<T>) modifyer.interceptMessageConstruction(message, messageType, context);
+                message = modifyer.interceptMessageConstruction(message, messageType, context);
             }
         }
 
         return message;
     }
     
-    protected abstract T buildMessagePayload(TestContext context);
+    protected abstract Object buildMessagePayload(TestContext context);
 
     protected Map<String, Object> buildMessageHeaders(TestContext context) {
         try {
@@ -104,7 +100,7 @@ public abstract class AbstractMessageContentBuilder<T> implements MessageContent
             }
             
             if (StringUtils.hasText(headerContent)) {
-                headers.put(CitrusMessageHeaders.HEADER_CONTENT, headerContent);
+                headers.put(MessageHeaders.HEADER_CONTENT, headerContent);
             }
             
             MessageHeaderUtils.checkHeaderTypes(headers);

@@ -17,7 +17,7 @@
 package com.consol.citrus.messaging;
 
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +36,7 @@ public abstract class AbstractMessageConsumer implements Consumer {
         this.endpointConfiguration = endpointConfiguration;
     }
 
-    public Message<?> receive() {
+    public Message receive() {
         return receive(endpointConfiguration.getTimeout());
     }
 }

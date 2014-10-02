@@ -17,7 +17,7 @@
 package com.consol.citrus.endpoint.adapter.mapping;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,9 +31,9 @@ public class HeaderMappingKeyExtractorTest {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor();
         extractor.setHeaderName("Foo");
 
-        Assert.assertEquals(extractor.extractMappingKey(MessageBuilder.withPayload("Foo")
+        Assert.assertEquals(extractor.extractMappingKey(new DefaultMessage("Foo")
                 .setHeader("Foo", "foo")
-                .setHeader("Bar", "bar").build()), "foo");
+                .setHeader("Bar", "bar")), "foo");
     }
 
     @Test
@@ -41,9 +41,9 @@ public class HeaderMappingKeyExtractorTest {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor();
 
         try {
-            extractor.extractMappingKey(MessageBuilder.withPayload("Foo")
+            extractor.extractMappingKey(new DefaultMessage("Foo")
                     .setHeader("Foo", "foo")
-                    .setHeader("Bar", "bar").build());
+                    .setHeader("Bar", "bar"));
             Assert.fail("Missing exception due to unknown header");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to find header"));
@@ -55,9 +55,9 @@ public class HeaderMappingKeyExtractorTest {
         HeaderMappingKeyExtractor extractor = new HeaderMappingKeyExtractor("UNKNOWN");
 
         try {
-            extractor.extractMappingKey(MessageBuilder.withPayload("Foo")
+            extractor.extractMappingKey(new DefaultMessage("Foo")
                     .setHeader("Foo", "foo")
-                    .setHeader("Bar", "bar").build());
+                    .setHeader("Bar", "bar"));
             Assert.fail("Missing exception due to unknown header");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to find header 'UNKNOWN'"));

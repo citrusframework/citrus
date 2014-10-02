@@ -16,26 +16,24 @@
 
 package com.consol.citrus.validation.script;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.validation.AbstractMessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-
-import java.util.List;
-
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.validation.AbstractMessageValidator;
-import com.consol.citrus.validation.context.ValidationContext;
+import java.util.List;
 
 /**
  * Groovy script message validator passing the message to a validation script.
@@ -74,7 +72,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     /**
      * Validates the message with test context and script validation context.
      */
-    public void validateMessage(Message<?> receivedMessage, TestContext context, ScriptValidationContext validationContext) 
+    public void validateMessage(Message receivedMessage, TestContext context, ScriptValidationContext validationContext)
         throws ValidationException {
         try {
             String validationScript = validationContext.getValidationScript(context);

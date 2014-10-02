@@ -16,13 +16,10 @@
 
 package com.consol.citrus.validation.builder;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -35,71 +32,66 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBuildMessageContent() throws Exception {
-        Message testMessage = MessageBuilder.withPayload("TestMessage")
-                .setHeader("header1", "value1")
-                .build();
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message, testMessage);
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertEquals(message.getHeaders().getId(), testMessage.getHeaders().getId());
+        Assert.assertEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
     }
 
     @Test
     public void testBuildMessageContentWithAdditionalHeader() throws Exception {
-        Message testMessage = MessageBuilder.withPayload("TestMessage")
-                .setHeader("header1", "value1")
-                .build();
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
         messageBuilder.getMessageHeaders().put("additional", "new");
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().getId(), testMessage.getHeaders().getId());
+        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
         Assert.assertTrue(message.getHeaders().containsKey("additional"));
         Assert.assertEquals(message.getHeaders().get("additional"), "new");
     }
 
     @Test
     public void testBuildMessageContentWithAdditionalHeaderData() throws Exception {
-        Message testMessage = MessageBuilder.withPayload("TestMessage")
-                .setHeader("header1", "value1")
-                .build();
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
         messageBuilder.setMessageHeaderData("TestMessageData");
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().getId(), testMessage.getHeaders().getId());
-        Assert.assertTrue(message.getHeaders().containsKey(CitrusMessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(message.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), "TestMessageData");
+        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
+        Assert.assertTrue(message.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(message.getHeaders().get(MessageHeaders.HEADER_CONTENT), "TestMessageData");
     }
 
     @Test
     public void testBuildMessageContentWithAdditionalHeaderResource() throws Exception {
-        Message testMessage = MessageBuilder.withPayload("TestMessage")
-                .setHeader("header1", "value1")
-                .build();
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
         messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().getId(), testMessage.getHeaders().getId());
-        Assert.assertTrue(message.getHeaders().containsKey(CitrusMessageHeaders.HEADER_CONTENT));
-        Assert.assertEquals(message.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), "TestMessageData");
+        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
+        Assert.assertTrue(message.getHeaders().containsKey(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(message.getHeaders().get(MessageHeaders.HEADER_CONTENT), "TestMessageData");
     }
 
     @Test
     public void testBuildMessageContentWithMessageInterceptor() throws Exception {
-        Message testMessage = MessageBuilder.withPayload("TestMessage")
-                .setHeader("header1", "value1")
-                .build();
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
         messageBuilder.getMessageInterceptors().add(new AbstractMessageConstructionInterceptor() {
@@ -111,20 +103,19 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().getId(), testMessage.getHeaders().getId());
+        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
     }
 
     @Test
     public void testBuildMessageContentWithDataDictionary() throws Exception {
-        Message testMessage = MessageBuilder.withPayload("TestMessage")
-                .setHeader("header1", "value1")
-                .build();
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
         messageBuilder.setDataDictionary(new JsonMappingDataDictionary());
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
-        Assert.assertNotEquals(message.getHeaders().getId(), testMessage.getHeaders().getId());
+        Assert.assertNotEquals(message.getHeaders().get(MessageHeaders.ID), testMessage.getHeaders().get(MessageHeaders.ID));
     }
 }

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Abstract mapping key extractor adds common mapping prefix and suffix added to evaluated mapping key.
@@ -33,7 +33,7 @@ public abstract class AbstractMappingKeyExtractor implements MappingKeyExtractor
     private String mappingKeySuffix = "";
 
     @Override
-    public final String extractMappingKey(Message<?> request) {
+    public final String extractMappingKey(Message request) {
         return mappingKeyPrefix + getMappingKey(request) + mappingKeySuffix;
     }
 
@@ -42,7 +42,7 @@ public abstract class AbstractMappingKeyExtractor implements MappingKeyExtractor
      * @param request
      * @return
      */
-    protected abstract String getMappingKey(Message<?> request);
+    protected abstract String getMappingKey(Message request);
 
     /**
      * Sets the static mapping key prefix automatically added to extracted mapping key.

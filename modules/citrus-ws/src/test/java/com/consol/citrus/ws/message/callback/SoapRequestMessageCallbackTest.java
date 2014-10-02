@@ -16,15 +16,13 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.*;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -53,9 +51,8 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapBody() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
-                                                    .build();
-        
+        Message testMessage = new DefaultMessage(requestPayload);
+
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         StringResult soapBodyResult = new StringResult();
@@ -76,10 +73,9 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapAction() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
-                                                    .setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "soapAction")
-                                                    .build();
-        
+        Message testMessage = new DefaultMessage(requestPayload)
+                                                    .setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "soapAction");
+
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         reset(soapRequest, soapBody);
@@ -104,10 +100,9 @@ public class SoapRequestMessageCallbackTest {
                             		"<messageId>123456789</messageId>" + 
                         		"</header>";
         
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
-                                                    .setHeader(CitrusMessageHeaders.HEADER_CONTENT, soapHeaderContent)
-                                                    .build();
-        
+        Message testMessage = new DefaultMessage(requestPayload)
+                                                    .setHeader(MessageHeaders.HEADER_CONTENT, soapHeaderContent);
+
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         StringResult soapHeaderResult = new StringResult();
@@ -131,11 +126,10 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapHeader() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
+        Message testMessage = new DefaultMessage(requestPayload)
                                                     .setHeader("operation", "unitTest")
-                                                    .setHeader("messageId", "123456789")
-                                                    .build();
-        
+                                                    .setHeader("messageId", "123456789");
+
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
@@ -164,11 +158,10 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapHeaderQNameString() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
+        Message testMessage = new DefaultMessage(requestPayload)
                                                     .setHeader("{http://www.citrus.com}citrus:operation", "unitTest")
-                                                    .setHeader("{http://www.citrus.com}citrus:messageId", "123456789")
-                                                    .build();
-        
+                                                    .setHeader("{http://www.citrus.com}citrus:messageId", "123456789");
+
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
@@ -198,11 +191,10 @@ public class SoapRequestMessageCallbackTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMimeHeader() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
+        Message testMessage = new DefaultMessage(requestPayload)
                                                     .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "operation", "unitTest")
-                                                    .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789")
-                                                    .build();
-        
+                                                    .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789");
+
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         
@@ -237,8 +229,7 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapAttachment() throws TransformerException, IOException {
-        Message<String> testMessage = MessageBuilder.withPayload(requestPayload)
-                                                    .build();
+        Message testMessage = new DefaultMessage(requestPayload);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("attContentId");

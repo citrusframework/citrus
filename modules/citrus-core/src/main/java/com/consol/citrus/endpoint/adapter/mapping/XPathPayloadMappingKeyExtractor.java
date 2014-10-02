@@ -19,7 +19,7 @@ package com.consol.citrus.endpoint.adapter.mapping;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Extracts predicate from message payload via XPath expression evaluation.
@@ -36,7 +36,7 @@ public class XPathPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     @Override
-    public String getMappingKey(Message<?> request) {
+    public String getMappingKey(Message request) {
         return XPathUtils.evaluateAsString(
                 XMLUtils.parseMessagePayload(request.getPayload().toString()),
                 xpathExpression,

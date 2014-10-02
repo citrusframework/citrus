@@ -16,12 +16,12 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.xml.transform.StringSource;
@@ -74,10 +74,10 @@ public class SoapResponseMessageCallbackTest {
         
         callback.doWithMessage(soapResponse);
         
-        Message<?> responseMessage = callback.getResponse();
+        Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertNull(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
-        Assert.assertNull(responseMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
+        Assert.assertNull(responseMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
         
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -108,10 +108,10 @@ public class SoapResponseMessageCallbackTest {
         
         callback.doWithMessage(soapResponse);
         
-        Message<?> responseMessage = callback.getResponse();
+        Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertNull(responseMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
+        Assert.assertNull(responseMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
         
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -147,10 +147,10 @@ public class SoapResponseMessageCallbackTest {
         
         callback.doWithMessage(soapResponse);
         
-        Message<?> responseMessage = callback.getResponse();
+        Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "");
-        Assert.assertEquals(responseMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
+        Assert.assertEquals(responseMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
         
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -188,11 +188,11 @@ public class SoapResponseMessageCallbackTest {
         
         callback.doWithMessage(soapResponse);
         
-        Message<?> responseMessage = callback.getResponse();
+        Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeaders().get("{http://citrusframework.org}citrus:messageId"), "123456789");
-        Assert.assertNull(responseMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
+        Assert.assertNull(responseMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
         
         verify(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
     }
@@ -229,10 +229,10 @@ public class SoapResponseMessageCallbackTest {
         
         callback.doWithMessage(soapResponse);
         
-        Message<?> responseMessage = callback.getResponse();
+        Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertNull(responseMessage.getHeaders().get(CitrusMessageHeaders.HEADER_CONTENT));
+        Assert.assertNull(responseMessage.getHeaders().get(MessageHeaders.HEADER_CONTENT));
         
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_ID), attachment.getContentId());
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusSoapMessageHeaders.CONTENT_TYPE), attachment.getContentType());

@@ -18,13 +18,10 @@ package com.consol.citrus.http.client;
 
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.http.*;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.web.client.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -49,7 +46,7 @@ public class HttpClientTest {
         endpointConfiguration.setRequestMethod(HttpMethod.POST);
         endpointConfiguration.setRequestUrl(requestUrl);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -76,7 +73,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -97,9 +94,8 @@ public class HttpClientTest {
         endpointConfiguration.setContentType("text/xml");
         endpointConfiguration.setCharset("ISO-8859-1");
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .setHeader("Operation", "foo")
-                .build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .setHeader("Operation", "foo");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -127,7 +123,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -148,10 +144,9 @@ public class HttpClientTest {
         endpointConfiguration.setContentType("text/xml");
         endpointConfiguration.setCharset("ISO-8859-1");
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .setHeader("Content-Type", "application/xml;charset=UTF-8")
-                .setHeader("Accept", "application/xml")
-                .build();
+                .setHeader("Accept", "application/xml");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -179,7 +174,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -198,9 +193,8 @@ public class HttpClientTest {
         endpointConfiguration.setRequestMethod(HttpMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .setHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, "GET")
-                .build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .setHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, "GET");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -227,7 +221,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -246,7 +240,7 @@ public class HttpClientTest {
         endpointConfiguration.setRequestMethod(HttpMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -273,7 +267,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -292,7 +286,7 @@ public class HttpClientTest {
         endpointConfiguration.setRequestMethod(HttpMethod.PUT);
         endpointConfiguration.setRequestUrl(requestUrl);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -319,7 +313,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -341,7 +335,7 @@ public class HttpClientTest {
         ReplyMessageCorrelator correlator = EasyMock.createMock(ReplyMessageCorrelator.class);
         endpointConfiguration.setCorrelator(correlator);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -359,7 +353,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive("correlationKey", endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive("correlationKey", endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -378,7 +372,7 @@ public class HttpClientTest {
         endpointConfiguration.setRequestMethod(HttpMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         EndpointUriResolver endpointUriResolver = EasyMock.createMock(EndpointUriResolver.class);
         endpointConfiguration.setEndpointUriResolver(endpointUriResolver);
@@ -399,7 +393,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
+        Message responseMessage = httpClient.receive(endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
@@ -420,7 +414,7 @@ public class HttpClientTest {
 
         endpointConfiguration.setErrorHandlingStrategy(ErrorHandlingStrategy.PROPAGATE);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
@@ -436,7 +430,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        Message<?> responseMessage = httpClient.receive(1000L);
+        Message responseMessage = httpClient.receive(1000L);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.FORBIDDEN);
         Assert.assertEquals(responseMessage.getHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "FORBIDDEN");
 
@@ -454,7 +448,7 @@ public class HttpClientTest {
 
         endpointConfiguration.setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build();
+        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 

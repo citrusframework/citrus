@@ -19,6 +19,8 @@ package com.consol.citrus.channel;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.beans.factory.BeanFactory;
@@ -29,6 +31,7 @@ import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.support.channel.HeaderChannelRegistry;
 import org.springframework.messaging.*;
 import org.springframework.messaging.core.DestinationResolver;
+import org.springframework.messaging.support.GenericMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -59,7 +62,7 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
                                 .build();
@@ -77,7 +80,8 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -96,7 +100,7 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
                                 .build();
@@ -116,7 +120,8 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -136,7 +141,7 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setBeanFactory(factory);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannelName("replyChannel")
                                 .build();
@@ -158,7 +163,8 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), "replyChannel");
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -177,7 +183,7 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
                                 .build();
@@ -195,7 +201,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNotNull(savedReplyChannel);
@@ -214,7 +220,7 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setCorrelator(replyMessageCorrelator);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannel(replyChannel)
                                 .build();
@@ -226,7 +232,7 @@ public class ChannelEndpointSyncConsumerTest {
         
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
-        expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
+        expect(replyMessageCorrelator.getCorrelationKey(anyObject(Message.class))).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
         replay(messagingTemplate, channel, replyChannel, replyMessageCorrelator);
 
@@ -234,7 +240,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
         Assert.assertNull(channelSyncConsumer.findReplyChannel(""));
         Assert.assertNull(channelSyncConsumer.findReplyChannel(MessageHeaders.ID + " = 'totally_wrong'"));
@@ -281,7 +287,7 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .build();
 
@@ -298,7 +304,7 @@ public class ChannelEndpointSyncConsumerTest {
         Message receivedMessage = channelSyncConsumer.receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
         MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
         Assert.assertNull(savedReplyChannel);
@@ -311,20 +317,17 @@ public class ChannelEndpointSyncConsumerTest {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(messagingTemplate, replyChannel);
 
-        messagingTemplate.send(replyChannel, message);
+        messagingTemplate.send(eq(replyChannel), anyObject(org.springframework.messaging.Message.class));
         expectLastCall().once();
 
         replay(messagingTemplate, replyChannel);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        channelSyncConsumer.saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
+        channelSyncConsumer.saveReplyMessageChannel(new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel));
         channelSyncConsumer.send(message);
 
         verify(messagingTemplate, replyChannel);
@@ -338,24 +341,18 @@ public class ChannelEndpointSyncConsumerTest {
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        Message<String> request = MessageBuilder.withPayload("").setReplyChannel(replyChannel).build();
+        Message request = new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, request.getHeaders().getId());
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
-
-        final Message<String> sentMessage = MessageBuilder.fromMessage(message)
-                .removeHeader(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR)
-                .build();
+        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, request.getHeaders().get(MessageHeaders.ID));
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(messagingTemplate, replyChannel);
 
-        messagingTemplate.send(eq(replyChannel), (Message<?>)anyObject());
+        messagingTemplate.send(eq(replyChannel), anyObject(org.springframework.messaging.Message.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                Assert.assertEquals(((Message<?>)getCurrentArguments()[1]).getPayload(), sentMessage.getPayload());
+                Assert.assertEquals(((GenericMessage)getCurrentArguments()[1]).getPayload(), message.getPayload());
                 return null;
             }
         }).once();
@@ -377,10 +374,7 @@ public class ChannelEndpointSyncConsumerTest {
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
@@ -402,10 +396,8 @@ public class ChannelEndpointSyncConsumerTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
@@ -439,21 +431,18 @@ public class ChannelEndpointSyncConsumerTest {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(messagingTemplate, replyChannel);
 
-        messagingTemplate.send(replyChannel, message);
+        messagingTemplate.send(eq(replyChannel), anyObject(org.springframework.messaging.Message.class));
         expectLastCall().andThrow(new MessageDeliveryException("Internal error!")).once();
 
         replay(messagingTemplate, replyChannel);
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.saveReplyMessageChannel(MessageBuilder.withPayload("").setReplyChannel(replyChannel).build());
+            channelSyncConsumer.saveReplyMessageChannel(new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel));
             channelSyncConsumer.send(message);
         } catch(CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Failed to send message to channel: "));

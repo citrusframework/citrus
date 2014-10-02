@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 
@@ -45,7 +45,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
     /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
+    private Map<String, Message> replyMessages = new HashMap<String, Message>();
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -71,7 +71,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         String endpointUri;
         if (getEndpointConfiguration().getEndpointUriResolver() != null) {
             endpointUri = getEndpointConfiguration().getEndpointUriResolver().resolveEndpointUri(message, getEndpointConfiguration().getRequestUrl());
@@ -101,24 +101,24 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive("", getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message<?> receive(String selector) {
+    public Message receive(String selector) {
         return receive(selector, getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         return receive("", timeout);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         long timeLeft = timeout;
-        Message<?> message = findReplyMessage(selector);
+        Message message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= getEndpointConfiguration().getPollingInterval();
@@ -147,13 +147,13 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     private class InternalResponseErrorHandler implements ResponseErrorHandler {
 
         /** Request message associated with this response error handler */
-        private Message<?> requestMessage;
+        private Message requestMessage;
 
         /**
          * Default constructor provided with request message
          * associated with this error handler.
          */
-        public InternalResponseErrorHandler(Message<?> requestMessage) {
+        public InternalResponseErrorHandler(Message requestMessage) {
             this.requestMessage = requestMessage;
         }
 
@@ -170,7 +170,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
          */
         public void handleError(ClientHttpResponse response) throws IOException {
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.PROPAGATE)) {
-                Message<?> responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
+                Message responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
                         new ResponseEntity(response.getBody(), response.getHeaders(), response.getStatusCode()), getEndpointConfiguration());
                 onReplyMessage(requestMessage, responseMessage);
             } else if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
@@ -187,7 +187,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
      * @param correlationKey
      * @param replyMessage the reply message.
      */
-    public void onReplyMessage(String correlationKey, Message<?> replyMessage) {
+    public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
     }
 
@@ -196,7 +196,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
      * @param requestMessage
      * @param replyMessage
      */
-    public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
+    public void onReplyMessage(Message requestMessage, Message replyMessage) {
         if (getEndpointConfiguration().getCorrelator() != null) {
             onReplyMessage(getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
@@ -209,7 +209,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
      * @param correlationKey
      * @return
      */
-    public Message<?> findReplyMessage(String correlationKey) {
+    public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
     }
 

@@ -18,12 +18,12 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 
 /**
  * @author Christoph Deppisch
@@ -50,7 +50,7 @@ public class CamelProducer implements Producer {
     }
 
     @Override
-    public void send(final Message<?> message) {
+    public void send(final Message message) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         Exchange camelExchange = endpointConfiguration.getCamelContext().createProducerTemplate()
@@ -74,7 +74,7 @@ public class CamelProducer implements Producer {
      * Informs message listeners if present.
      * @param message
      */
-    protected void onOutboundMessage(Message<?> message) {
+    protected void onOutboundMessage(Message message) {
         if (messageListener != null) {
             messageListener.onOutboundMessage(message.toString());
         } else {

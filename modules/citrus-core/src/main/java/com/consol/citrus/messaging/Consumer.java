@@ -16,7 +16,7 @@
 
 package com.consol.citrus.messaging;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * @author Christoph Deppisch
@@ -28,12 +28,12 @@ public interface Consumer {
      * Receive message with default timeout.
      * @return
      */
-    Message<?> receive();
+    Message receive();
 
     /**
      * Receive message with a given timeout.
      * @param timeout
      * @return
      */
-    Message<?> receive(long timeout);
+    Message receive(long timeout);
 }

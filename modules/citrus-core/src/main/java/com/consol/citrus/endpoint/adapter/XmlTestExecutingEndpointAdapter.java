@@ -23,6 +23,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
@@ -31,7 +32,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.messaging.Message;
 
 /**
  * Special request dispatching endpoint adapter invokes XML test case for each incoming message. Incoming message is
@@ -57,7 +57,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     private String packageName = "com.consol.citrus.tests";
 
     @Override
-    public Message<?> dispatchMessage(final Message<?> request, String mappingName) {
+    public Message dispatchMessage(final Message request, String mappingName) {
         final TestCase test;
         final TestContext testContext;
 
@@ -120,7 +120,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
      * @param request the triggering request message.
      * @param testCase the found test builder.
      */
-    protected void prepareExecution(Message<?> request, TestCase testCase) {
+    protected void prepareExecution(Message request, TestCase testCase) {
     }
 
     /**

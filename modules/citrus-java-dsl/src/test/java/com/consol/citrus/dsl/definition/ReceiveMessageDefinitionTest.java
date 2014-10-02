@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -39,7 +40,6 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.testng.Assert;
@@ -73,7 +73,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 receive(messageEndpoint)
-                    .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build());
+                    .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
             }
         };
         
@@ -93,8 +93,8 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertTrue(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
     }
 
     @Test
@@ -380,7 +380,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                 
                 receive(messageEndpoint)
-                    .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
+                    .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
             }
         };
@@ -428,7 +428,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .header(resource);
                 
                 receive(messageEndpoint)
-                    .message(MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>").build())
+                    .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header(resource);
             }
         };

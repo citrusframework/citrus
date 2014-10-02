@@ -17,7 +17,6 @@
 package com.consol.citrus.message;
 
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import org.springframework.messaging.Message;
 
 /**
  * Message converter interface describes methods for converting a external message type T to the internal message
@@ -35,7 +34,7 @@ public interface MessageConverter<T, C extends EndpointConfiguration> {
      * @param endpointConfiguration
      * @return
      */
-    T convertOutbound(Message<?> internalMessage, C endpointConfiguration);
+    T convertOutbound(Message internalMessage, C endpointConfiguration);
 
     /**
      * Converts internal message representation to external message for outbound communication.
@@ -47,7 +46,7 @@ public interface MessageConverter<T, C extends EndpointConfiguration> {
      * @param endpointConfiguration
      * @return
      */
-    void convertOutbound(T externalMessage, Message<?> internalMessage, C endpointConfiguration);
+    void convertOutbound(T externalMessage, Message internalMessage, C endpointConfiguration);
 
     /**
      * Converts external message to internal representation.
@@ -56,5 +55,5 @@ public interface MessageConverter<T, C extends EndpointConfiguration> {
      * @param endpointConfiguration
      * @return
      */
-    Message<?> convertInbound(T externalMessage, C endpointConfiguration);
+    Message convertInbound(T externalMessage, C endpointConfiguration);
 }

@@ -18,14 +18,14 @@ package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ssh.SshRequest;
 import com.consol.citrus.ssh.SshResponse;
 import com.jcraft.jsch.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
@@ -44,7 +44,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
     public static final String CLASSPATH_PREFIX = "classpath:";
 
     /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
+    private Map<String, Message> replyMessages = new HashMap<String, Message>();
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -81,7 +81,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      *
      * @param message the message object to send.
      */
-    public void send(Message<?> message) {
+    public void send(Message message) {
         String payload = (String) message.getPayload();
         SshRequest request = (SshRequest) getEndpointConfiguration().getXmlMapper().fromXML(payload);
 
@@ -113,30 +113,30 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
             disconnect();
         }
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
-        Message<String> response = MessageBuilder.withPayload(getEndpointConfiguration().getXmlMapper().toXML(sshResp))
-                .setHeader("user", rUser).build();
+        Message response = new DefaultMessage(getEndpointConfiguration().getXmlMapper().toXML(sshResp))
+                .setHeader("user", rUser);
         onReplyMessage(message, response);
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive("", getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message<?> receive(String selector) {
+    public Message receive(String selector) {
         return receive(selector, getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         return receive("", timeout);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         long timeLeft = timeout;
-        Message<?> message = findReplyMessage(selector);
+        Message message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= getEndpointConfiguration().getPollingInterval();
@@ -162,7 +162,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param correlationKey
      * @param replyMessage the reply message.
      */
-    public void onReplyMessage(String correlationKey, Message<?> replyMessage) {
+    public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
     }
 
@@ -171,7 +171,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param requestMessage
      * @param replyMessage
      */
-    public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
+    public void onReplyMessage(Message requestMessage, Message replyMessage) {
         if (getEndpointConfiguration().getCorrelator() != null) {
             onReplyMessage(getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
@@ -184,7 +184,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param correlationKey
      * @return
      */
-    public Message<?> findReplyMessage(String correlationKey) {
+    public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
     }
 
@@ -285,7 +285,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
     }
 
-    private String getRemoteUser(Message<?> message) {
+    private String getRemoteUser(Message message) {
         String rUser = (String) message.getHeaders().get("user");
         if (rUser == null) {
             // Use default uses

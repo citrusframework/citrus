@@ -21,6 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.ControlMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
@@ -28,7 +29,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -54,8 +54,8 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void validateMessagePayload(Message<?> receivedMessage,
-            Message<?> controlMessage,
+    public void validateMessagePayload(Message receivedMessage,
+            Message controlMessage,
             TestContext context) throws ValidationException {
         log.info("Start JSON message validation");
         

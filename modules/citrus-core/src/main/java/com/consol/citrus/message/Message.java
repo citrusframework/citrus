@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.script;
+package com.consol.citrus.message;
 
-import com.consol.citrus.message.Message;
-
-import com.consol.citrus.context.TestContext;
+import java.util.Map;
 
 /**
- * Executes a validation-script
+ * @author Christoph Deppisch
+ * @since 2.0
  */
- public interface GroovyScriptExecutor {
-     void validate(Message receivedMessage, TestContext context);
- }
+public interface Message {
+
+    /**
+     * Gets the message headers as key value map.
+     * @return
+     */
+    Map<String, Object> getHeaders();
+
+    /**
+     * Gets the message payload.
+     * @return
+     */
+    Object getPayload();
+
+    /**
+     * Sets the message payload.
+     * @param payload
+     */
+    void setPayload(Object payload);
+
+}

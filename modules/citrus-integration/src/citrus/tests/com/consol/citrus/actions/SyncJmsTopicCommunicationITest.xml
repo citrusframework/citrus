@@ -67,7 +67,7 @@
                                 <element name="CorrelationId" value="${correlationId}"/>
                             </header>
                             <extract>
-                                <header name="id" variable="syncMessageCorrelatorId"></header>
+                                <header name="citrus_message_id" variable="syncMessageCorrelatorId"></header>
                             </extract>
                         </receive>
                         

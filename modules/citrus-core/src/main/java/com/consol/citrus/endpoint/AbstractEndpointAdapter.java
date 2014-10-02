@@ -20,7 +20,7 @@ import com.consol.citrus.message.MessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Abstract endpoint adapter adds fallback message handler in case no response was provided.
@@ -40,8 +40,8 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public final Message<?> handleMessage(Message<?> request) {
-        Message<?> replyMessage = handleMessageInternal(request);
+    public final Message handleMessage(Message request) {
+        Message replyMessage = handleMessageInternal(request);
 
         if ((replyMessage == null || replyMessage.getPayload() == null)) {
             if (fallbackMessageHandler != null) {
@@ -63,7 +63,7 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
      * @param message
      * @return
      */
-    protected abstract Message<?> handleMessageInternal(Message<?> message);
+    protected abstract Message handleMessageInternal(Message message);
 
     @Override
     public void setBeanName(String name) {

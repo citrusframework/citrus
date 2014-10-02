@@ -17,6 +17,7 @@
 package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
@@ -38,12 +39,12 @@ import java.io.StringWriter;
 public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<Node> {
 
     @Override
-    protected String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
-        if (!StringUtils.hasText(messagePayload)) {
-            return messagePayload;
+    protected Message interceptMessage(Message message, String messageType, TestContext context) {
+        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
+            return message;
         }
 
-        Document doc = XMLUtils.parseMessagePayload(messagePayload);
+        Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
 
         LSSerializer serializer = XMLUtils.createLSSerializer();
 
@@ -58,7 +59,8 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
 
         serializer.write(doc, output);
 
-        return writer.toString();
+        message.setPayload(writer.toString());
+        return message;
     }
 
     /**

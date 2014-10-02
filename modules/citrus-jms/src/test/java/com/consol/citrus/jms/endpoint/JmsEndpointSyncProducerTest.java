@@ -18,10 +18,9 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -56,11 +55,8 @@ public class JmsEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setReplyDestination(replyDestinationQueue);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
@@ -96,10 +92,7 @@ public class JmsEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setDestinationName("myDestination");
         endpoint.getEndpointConfiguration().setReplyDestinationName("replyDestination");
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
@@ -139,11 +132,8 @@ public class JmsEndpointSyncProducerTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
@@ -185,11 +175,8 @@ public class JmsEndpointSyncProducerTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setReplyDestination(replyDestinationQueue);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
@@ -229,11 +216,8 @@ public class JmsEndpointSyncProducerTest {
         ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
-        
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         TextMessage jmsResponse = new TextMessageImpl("<TestResponse>Hello World!</TestResponse>", responseHeaders);
         
@@ -282,10 +266,7 @@ public class JmsEndpointSyncProducerTest {
     public void testOnReplyMessage() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
         jmsSyncProducer.onReplyMessage("", message);
@@ -297,10 +278,7 @@ public class JmsEndpointSyncProducerTest {
     public void testOnReplyMessageWithCorrelatorKey() {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
 
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .copyHeaders(headers)
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
         jmsSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);
@@ -312,15 +290,14 @@ public class JmsEndpointSyncProducerTest {
     public void testReplyMessageRetries() {
         retryCount = 0;
 
-        final Message<String> message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
                 return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
-                    public Message<?> findReplyMessage(String correlationKey) {
+                    public Message findReplyMessage(String correlationKey) {
                         retryCount++;
                         if (retryCount == 5) {
                             return message;
@@ -347,7 +324,7 @@ public class JmsEndpointSyncProducerTest {
             public SelectiveConsumer createConsumer() {
                 return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
-                    public Message<?> findReplyMessage(String correlationKey) {
+                    public Message findReplyMessage(String correlationKey) {
                         retryCount++;
                         return null;
                     }
@@ -372,7 +349,7 @@ public class JmsEndpointSyncProducerTest {
             public SelectiveConsumer createConsumer() {
                 return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
-                    public Message<?> findReplyMessage(String correlationKey) {
+                    public Message findReplyMessage(String correlationKey) {
                         retryCount++;
                         return null;
                     }
@@ -397,7 +374,7 @@ public class JmsEndpointSyncProducerTest {
             public SelectiveConsumer createConsumer() {
                 return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
                     @Override
-                    public Message<?> findReplyMessage(String correlationKey) {
+                    public Message findReplyMessage(String correlationKey) {
                         retryCount++;
                         return null;
                     }

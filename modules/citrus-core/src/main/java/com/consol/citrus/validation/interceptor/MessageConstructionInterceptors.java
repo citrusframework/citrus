@@ -17,10 +17,9 @@
 package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +36,8 @@ public class MessageConstructionInterceptors implements MessageConstructionInter
     private List<MessageConstructionInterceptor> messageConstructionInterceptors = new ArrayList<MessageConstructionInterceptor>();
 
     @Override
-    public Message<?> interceptMessageConstruction(Message<?> message, String messageType, TestContext context) {
+    public Message interceptMessageConstruction(Message message, String messageType, TestContext context) {
         if (messageConstructionInterceptors.size() > 0) {
-            Message<?> intercepted = MessageBuilder.withPayload(message.getPayload()).copyHeaders(message.getHeaders()).build();
-
             for (MessageConstructionInterceptor interceptor : messageConstructionInterceptors) {
                 if (interceptor instanceof DataDictionary &&
                         !((DataDictionary) interceptor).isGlobalScope()) {
@@ -48,10 +45,10 @@ public class MessageConstructionInterceptors implements MessageConstructionInter
                     continue;
                 }
 
-                intercepted = interceptor.interceptMessageConstruction(intercepted, messageType, context);
+                message = interceptor.interceptMessageConstruction(message, messageType, context);
             }
 
-            return intercepted;
+            return message;
         }
 
         return message;

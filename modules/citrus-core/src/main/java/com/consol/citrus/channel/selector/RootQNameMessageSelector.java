@@ -15,8 +15,8 @@
  */
 package com.consol.citrus.channel.selector;
 
-import javax.xml.namespace.QName;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
@@ -26,8 +26,7 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.LSException;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.XMLUtils;
+import javax.xml.namespace.QName;
 
 /**
  * Message selector accepts XML messages according to specified root element QName.
@@ -56,9 +55,7 @@ public class RootQNameMessageSelector implements MessageSelector {
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean accept(Message<?> message) {
         Document doc;
         

@@ -16,10 +16,8 @@
 
 package com.consol.citrus.vertx.message;
 
-import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.*;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 
 /**
  * Message converter implementation converts inbound Vert.x messages to internal message representation. Outbound message conversion is not supported
@@ -32,25 +30,25 @@ public class VertxMessageConverter implements MessageConverter<org.vertx.java.co
 
 
     @Override
-    public Message<?> convertInbound(org.vertx.java.core.eventbus.Message message, VertxEndpointConfiguration endpointConfiguration) {
-        if (message == null) {
+    public Message convertInbound(org.vertx.java.core.eventbus.Message vertxMessage, VertxEndpointConfiguration endpointConfiguration) {
+        if (vertxMessage == null) {
             return null;
         }
 
-        MessageBuilder builder = MessageBuilder.withPayload(message.body());
-        builder.setHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS, message.address());
-        builder.setHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS, message.replyAddress());
+        Message message = new DefaultMessage(vertxMessage.body())
+                .setHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS, vertxMessage.address())
+                .setHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS, vertxMessage.replyAddress());
 
-        return builder.build();
+        return message;
     }
 
     @Override
-    public org.vertx.java.core.eventbus.Message convertOutbound(Message<?> internalMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public org.vertx.java.core.eventbus.Message convertOutbound(Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
         throw new UnsupportedOperationException("Unable to convert Vert.x outbound message");
     }
 
     @Override
-    public void convertOutbound(org.vertx.java.core.eventbus.Message externalMessage, Message<?> internalMessage, VertxEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(org.vertx.java.core.eventbus.Message externalMessage, Message internalMessage, VertxEndpointConfiguration endpointConfiguration) {
         throw new UnsupportedOperationException("Unable to convert Vert.x outbound message");
     }
 }

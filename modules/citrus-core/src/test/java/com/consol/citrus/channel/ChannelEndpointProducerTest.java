@@ -17,16 +17,15 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.easymock.EasyMock;
 import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.*;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -47,14 +46,11 @@ public class ChannelEndpointProducerTest {
 
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messagingTemplate, channel);
         
-        messagingTemplate.send(channel, message);
+        messagingTemplate.send(eq(channel), anyObject(org.springframework.messaging.Message.class));
         expectLastCall().once();
         
         replay(messagingTemplate, channel);
@@ -74,16 +70,13 @@ public class ChannelEndpointProducerTest {
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messagingTemplate, channel, channelResolver);
         
         expect(channelResolver.resolveDestination("testChannel")).andReturn(channel).once();
         
-        messagingTemplate.send(channel, message);
+        messagingTemplate.send(eq(channel), anyObject(org.springframework.messaging.Message.class));
         expectLastCall().once();
         
         replay(messagingTemplate, channel, channelResolver);
@@ -101,14 +94,11 @@ public class ChannelEndpointProducerTest {
 
         endpoint.getEndpointConfiguration().setChannel(channel);
         
-        Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(headers)
-                                .build();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         reset(messagingTemplate, channel);
         
-        messagingTemplate.send(channel, message);
+        messagingTemplate.send(eq(channel), anyObject(org.springframework.messaging.Message.class));
         expectLastCall().andThrow(new MessageDeliveryException("Internal error!")).once();
         
         replay(messagingTemplate, channel);

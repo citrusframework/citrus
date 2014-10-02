@@ -16,7 +16,7 @@
 
 package com.consol.citrus.vertx.message;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +31,7 @@ public abstract class CitrusVertxMessageHeaders {
     }
 
     /** Special header prefix for vertx transport headers */
-    public static final String VERTX_PREFIX = CitrusMessageHeaders.PREFIX + "vertx_";
+    public static final String VERTX_PREFIX = MessageHeaders.PREFIX + "vertx_";
 
     public static final String VERTX_ADDRESS = VERTX_PREFIX + "address";
 

@@ -17,10 +17,10 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.util.Assert;
 
@@ -53,7 +53,7 @@ public class JmsProducer implements Producer {
     }
 
     @Override
-    public void send(final Message<?> message) {
+    public void send(final Message message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
@@ -78,7 +78,7 @@ public class JmsProducer implements Producer {
      * Informs message listeners if present.
      * @param message
      */
-    protected void onOutboundMessage(Message<?> message) {
+    protected void onOutboundMessage(Message message) {
         if (messageListener != null) {
             messageListener.onOutboundMessage(message.toString());
         } else {

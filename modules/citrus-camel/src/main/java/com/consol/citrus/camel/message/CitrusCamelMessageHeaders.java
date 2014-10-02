@@ -16,7 +16,7 @@
 
 package com.consol.citrus.camel.message;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +31,7 @@ public abstract class CitrusCamelMessageHeaders {
     }
 
     /** Special header prefix for camel transport headers */
-    public static final String CAMEL_PREFIX = CitrusMessageHeaders.PREFIX + "camel_";
+    public static final String CAMEL_PREFIX = MessageHeaders.PREFIX + "camel_";
 
     public static final String EXCHANGE_ID = CAMEL_PREFIX + "exchange_id";
     public static final String EXCHANGE_PATTERN = CAMEL_PREFIX + "exchange_pattern";

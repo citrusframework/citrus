@@ -18,6 +18,8 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -28,12 +30,11 @@ import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.easymock.EasyMock.*;
 
@@ -63,10 +64,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setAttachmentData("TestAttachment!");
 
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -114,10 +112,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setAttachmentData("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         soapMessageAction.setCharsetName("UTF-16");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -165,10 +160,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setAttachmentData("");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -212,10 +204,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -251,10 +240,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentType("text/xml");
         soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -304,10 +290,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentType("text/xml");
         soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -357,10 +340,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentType("text/xml");
         soapMessageAction.setAttachmentData("<TestAttachment><Message>${myText}</Message></TestAttachment>");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        Message controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                    .copyHeaders(controlHeaders)
-                                    .build();
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();

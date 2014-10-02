@@ -16,13 +16,13 @@
 
 package com.consol.citrus.vertx.endpoint;
 
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.vertx.factory.SingleVertxInstanceFactory;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -31,8 +31,6 @@ import org.vertx.java.core.Vertx;
 import org.vertx.java.core.eventbus.EventBus;
 
 import static org.easymock.EasyMock.*;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 /**
  * @author Christoph Deppisch
@@ -61,7 +59,7 @@ public class VertxSyncEndpointTest {
         VertxSyncEndpoint vertxEndpoint = new VertxSyncEndpoint(endpointConfiguration);
         vertxEndpoint.setVertxInstanceFactory(instanceFactory);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new DefaultMessage("Hello from Citrus!");
 
         reset(vertx, eventBus, messageMock);
 
@@ -82,7 +80,7 @@ public class VertxSyncEndpointTest {
         replay(vertx, eventBus, messageMock);
 
         vertxEndpoint.createProducer().send(requestMessage);
-        Message<?> reply = vertxEndpoint.createConsumer().receive(5000L);
+        Message reply = vertxEndpoint.createConsumer().receive(5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Vertx!");
         Assert.assertEquals(reply.getHeaders().get(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
@@ -100,7 +98,7 @@ public class VertxSyncEndpointTest {
         VertxSyncEndpoint vertxEndpoint = new VertxSyncEndpoint(endpointConfiguration);
         vertxEndpoint.setVertxInstanceFactory(instanceFactory);
 
-        Message<?> replyMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message replyMessage = new DefaultMessage("Hello from Citrus!");
 
         reset(vertx, eventBus, messageMock);
 
@@ -144,7 +142,7 @@ public class VertxSyncEndpointTest {
         vertxEndpoint.setVertxInstanceFactory(instanceFactory);
         vertxEndpoint.setMessageListener(messageListeners);
 
-        Message<?> requestMessage = MessageBuilder.withPayload("Hello from Citrus!").build();
+        Message requestMessage = new DefaultMessage("Hello from Citrus!");
 
         reset(vertx, eventBus, messageListeners);
 

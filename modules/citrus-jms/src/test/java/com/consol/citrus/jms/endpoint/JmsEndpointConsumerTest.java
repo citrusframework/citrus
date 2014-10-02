@@ -18,9 +18,9 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -51,10 +51,8 @@ public class JmsEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         reset(jmsTemplate, connectionFactory, destination);
 
         jmsTemplate.setReceiveTimeout(5000L);
@@ -62,11 +60,11 @@ public class JmsEndpointConsumerTest {
         
         expect(jmsTemplate.getDefaultDestination()).andReturn(destination).atLeastOnce();
         
-        expect(jmsTemplate.receive()).andReturn(new TextMessageImpl(controlMessage.getPayload(), controlHeaders));
+        expect(jmsTemplate.receive()).andReturn(new TextMessageImpl(controlMessage.getPayload().toString(), controlHeaders));
 
         replay(jmsTemplate, connectionFactory, destination);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
 
         verify(jmsTemplate, connectionFactory, destination);
@@ -79,11 +77,8 @@ public class JmsEndpointConsumerTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -102,7 +97,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -115,11 +110,8 @@ public class JmsEndpointConsumerTest {
 
         endpoint.getEndpointConfiguration().setDestinationName("myDestination");
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -140,7 +132,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -188,11 +180,8 @@ public class JmsEndpointConsumerTest {
 
         endpoint.getEndpointConfiguration().setTimeout(10000L);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -211,7 +200,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -226,10 +215,8 @@ public class JmsEndpointConsumerTest {
         
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
+
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
         
@@ -249,7 +236,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive();
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         Assert.assertTrue(receivedMessage.getHeaders().containsKey("Operation"));
         Assert.assertTrue(receivedMessage.getHeaders().get("Operation").equals("sayHello"));
@@ -264,11 +251,8 @@ public class JmsEndpointConsumerTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -287,7 +271,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -301,11 +285,8 @@ public class JmsEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setTimeout(10000L);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
-        final Message<String> controlMessage = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(controlHeaders)
-                                .build();
-        
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
         Map<String, Object> headers = new HashMap<String, Object>();
         
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -324,7 +305,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message<?> receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);

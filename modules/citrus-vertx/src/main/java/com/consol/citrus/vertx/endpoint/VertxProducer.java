@@ -17,10 +17,10 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.vertx.java.core.Vertx;
 
 /**
@@ -53,7 +53,7 @@ public class VertxProducer implements Producer {
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         try {
             sendOrPublishMessage(message);
         } catch (IllegalStateException e) {
@@ -77,7 +77,7 @@ public class VertxProducer implements Producer {
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
     }
 
-    private void sendOrPublishMessage(Message<?> message) {
+    private void sendOrPublishMessage(Message message) {
         if (endpointConfiguration.isPubSubDomain()) {
             log.info("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             vertx.eventBus().publish(endpointConfiguration.getAddress(), message.getPayload());
@@ -91,7 +91,7 @@ public class VertxProducer implements Producer {
      * Informs message listeners if present.
      * @param message
      */
-    protected void onOutboundMessage(Message<?> message) {
+    protected void onOutboundMessage(Message message) {
         if (messageListener != null) {
             messageListener.onOutboundMessage(message.toString());
         } else {

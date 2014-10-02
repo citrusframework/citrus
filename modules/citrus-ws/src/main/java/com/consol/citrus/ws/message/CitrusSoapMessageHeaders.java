@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 
 /**
  * @author Christoph Deppisch
@@ -30,10 +30,10 @@ public abstract class CitrusSoapMessageHeaders {
     }
     
     /** Citrus ws specific header prefix */
-    public static final String SOAP_PREFIX = CitrusMessageHeaders.PREFIX + "soap_";
+    public static final String SOAP_PREFIX = MessageHeaders.PREFIX + "soap_";
 
     /** Special header prefix for http transport headers in SOAP message sender */
-    public static final String HTTP_PREFIX = CitrusMessageHeaders.PREFIX + "http_";
+    public static final String HTTP_PREFIX = MessageHeaders.PREFIX + "http_";
     
     /** Special status code header */
     public static final String HTTP_STATUS_CODE = HTTP_PREFIX + "status_code";

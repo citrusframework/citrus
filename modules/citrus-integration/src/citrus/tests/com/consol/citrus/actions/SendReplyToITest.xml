@@ -66,7 +66,7 @@
                       <element name="ConversationId" value="${conversationId}"/>
                   </header>
                   <extract>
-                      <header name="id" variable="syncRequestCorrelatorId"></header>
+                      <header name="citrus_message_id" variable="syncRequestCorrelatorId"></header>
                   </extract>
               </send>
               
@@ -92,7 +92,7 @@
                         <element name="ConversationId" value="${conversationId}"/>
                     </header>
                     <extract>
-                        <header name="id" variable="syncMessageCorrelatorId"></header>
+                        <header name="citrus_message_id" variable="syncMessageCorrelatorId"></header>
                     </extract>
                 </receive>
                 <send with="syncGetDateRequestReceiver">
@@ -121,7 +121,7 @@
                 
                 <receive with="syncGetDateRequestSender" timeout="5000">
                     <selector>
-                        <element name="id" value="${syncRequestCorrelatorId}"/>
+                        <element name="citrus_message_id" value="${syncRequestCorrelatorId}"/>
                     </selector>
                     <message>
                         <data>

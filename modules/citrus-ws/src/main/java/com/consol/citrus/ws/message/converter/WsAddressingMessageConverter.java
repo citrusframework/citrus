@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.addressing.WsAddressingVersion;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
@@ -53,7 +53,7 @@ public class WsAddressingMessageConverter extends SoapMessageConverter {
     }
 
     @Override
-    public void convertOutbound(WebServiceMessage webServiceMessage, Message<?> message, WebServiceEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(WebServiceMessage webServiceMessage, Message message, WebServiceEndpointConfiguration endpointConfiguration) {
         super.convertOutbound(webServiceMessage, message, endpointConfiguration);
 
         SoapMessage soapMessage = (SoapMessage) webServiceMessage;

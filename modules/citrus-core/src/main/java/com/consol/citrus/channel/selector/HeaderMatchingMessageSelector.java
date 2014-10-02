@@ -15,12 +15,12 @@
  */
 package com.consol.citrus.channel.selector;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.integration.core.MessageSelector;
+
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Message selector matches one or more header elements with the message header. Only in case all 
@@ -41,9 +41,7 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
         this.matchingHeaders = matchingHeaders;
     }
     
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean accept(Message<?> message) {
         MessageHeaders messageHeaders = message.getHeaders();
         

@@ -20,6 +20,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -33,7 +34,6 @@ import com.consol.citrus.ws.server.WebServiceServer;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -74,7 +74,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 receive(server)
-                        .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
+                        .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                         .attachment(testAttachment);
             }
         };
@@ -95,8 +95,8 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
 
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertTrue(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
 
         Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
@@ -112,7 +112,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 receive(messageEndpoint)
                     .soap()
-                    .message(MessageBuilder.withPayload("Foo").setHeader("operation", "foo").build())
+                    .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                     .attachment(testAttachment);
             }
         };
@@ -133,8 +133,8 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(0);
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
-        Assert.assertTrue(((StaticMessageContentBuilder<?>)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
+        Assert.assertEquals(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertTrue(((StaticMessageContentBuilder)validationContext.getMessageBuilder()).getMessage().getHeaders().containsKey("operation"));
         
         Assert.assertNull(action.getAttachmentResourcePath());
         Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());

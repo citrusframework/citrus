@@ -16,8 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 
 /**
  * Endpoint adapter always returning empty response message.
@@ -28,7 +28,7 @@ import org.springframework.integration.support.MessageBuilder;
 public class EmptyResponseEndpointAdapter extends StaticEndpointAdapter {
 
     @Override
-    public Message<?> handleMessageInternal(Message<?> message) {
-        return MessageBuilder.withPayload("").build();
+    public Message handleMessageInternal(Message message) {
+        return new DefaultMessage("");
     }
 }

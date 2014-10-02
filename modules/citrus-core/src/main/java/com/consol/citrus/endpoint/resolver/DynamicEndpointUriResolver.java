@@ -17,11 +17,11 @@
 package com.consol.citrus.endpoint.resolver;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import org.springframework.util.StringUtils;
 
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -34,9 +34,9 @@ import java.util.StringTokenizer;
 public class DynamicEndpointUriResolver implements EndpointUriResolver {
 
     /** Static header entry name specifying the dynamic endpoint uri */
-    public static final String ENDPOINT_URI_HEADER_NAME = CitrusMessageHeaders.PREFIX + "endpoint_uri";
-    public static final String REQUEST_PATH_HEADER_NAME = CitrusMessageHeaders.PREFIX + "request_path";
-    public static final String QUERY_PARAM_HEADER_NAME = CitrusMessageHeaders.PREFIX + "query_param";
+    public static final String ENDPOINT_URI_HEADER_NAME = MessageHeaders.PREFIX + "endpoint_uri";
+    public static final String REQUEST_PATH_HEADER_NAME = MessageHeaders.PREFIX + "request_path";
+    public static final String QUERY_PARAM_HEADER_NAME = MessageHeaders.PREFIX + "query_param";
 
     /** Default fallback uri */
     private String defaultEndpointUri;
@@ -44,8 +44,8 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
     /**
      * Get the endpoint uri according to message header entry with fallback default uri.
      */
-    public String resolveEndpointUri(Message<?> message, String defaultUri) {
-        MessageHeaders headers = message.getHeaders();
+    public String resolveEndpointUri(Message message, String defaultUri) {
+        Map<String, Object> headers = message.getHeaders();
 
         String requestUri;
         if (headers.containsKey(ENDPOINT_URI_HEADER_NAME)) {
@@ -73,7 +73,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
      * @param headers
      * @return
      */
-    private String appendRequestPath(String uri, MessageHeaders headers) {
+    private String appendRequestPath(String uri, Map<String, Object> headers) {
         if (!headers.containsKey(REQUEST_PATH_HEADER_NAME)) {
             return uri;
         }
@@ -99,7 +99,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
      * @param headers
      * @return
      */
-    private String appendQueryParams(String uri, MessageHeaders headers) {
+    private String appendQueryParams(String uri, Map<String, Object> headers) {
         if (!headers.containsKey(QUERY_PARAM_HEADER_NAME)) {
             return uri;
         }

@@ -19,10 +19,8 @@ package com.consol.citrus.http.controller;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.*;
 import org.springframework.http.*;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -99,31 +97,29 @@ public class HttpMessageController {
      * @return
      */
     private ResponseEntity<String> handleRequestInternal(HttpMethod method, HttpEntity<String> requestEntity) {
-        MessageBuilder requestBuilder = MessageBuilder.fromMessage(endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration));
+        Message request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration);
 
         HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
 
-        requestBuilder.setHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletRequest));
-        requestBuilder.setHeader(CitrusHttpMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletRequest));
+        request.getHeaders().put(CitrusHttpMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletRequest));
+        request.getHeaders().put(CitrusHttpMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletRequest));
 
         String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
-        requestBuilder.setHeader(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
+        request.getHeaders().put(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
 
-        requestBuilder.setHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.toString());
+        request.getHeaders().put(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.toString());
 
-        Message<?> response = messageHandler.handleMessage(requestBuilder.build());
+        Message response = messageHandler.handleMessage(request);
 
         if (response == null) {
-            responseCache = new ResponseEntity<String>(HttpStatus.OK);
+            responseCache = new ResponseEntity(HttpStatus.OK);
         } else {
             if (!response.getHeaders().containsKey(CitrusHttpMessageHeaders.HTTP_STATUS_CODE)) {
-                response = MessageBuilder.fromMessage(response)
-                        .setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, HttpStatus.OK.value())
-                        .build();
+                response.getHeaders().put(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, HttpStatus.OK.value());
             }
 
-            responseCache = (ResponseEntity<String>) endpointConfiguration.getMessageConverter().convertOutbound(response, endpointConfiguration);
+            responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(response, endpointConfiguration);
         }
 
         return responseCache;

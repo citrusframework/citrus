@@ -19,6 +19,7 @@ package com.consol.citrus.channel;
 import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import org.easymock.EasyMock;
 import org.springframework.messaging.*;
 import org.springframework.integration.core.MessagingTemplate;
@@ -52,7 +53,7 @@ public class ChannelEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
@@ -68,7 +69,7 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
         verify(messagingTemplate, channel);
     }
     
@@ -83,7 +84,7 @@ public class ChannelEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
@@ -101,7 +102,8 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+
         verify(messagingTemplate, channel, channelResolver);
     }
     
@@ -115,7 +117,7 @@ public class ChannelEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
@@ -131,7 +133,8 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive();
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+
         verify(messagingTemplate, channel);
     }
     
@@ -145,7 +148,7 @@ public class ChannelEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setTimeout(10000L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
-        final Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+        final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
         
@@ -161,7 +164,8 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive(25000L);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+
         verify(messagingTemplate, channel);
     }
     
@@ -208,7 +212,7 @@ public class ChannelEndpointConsumerTest {
         }
         
         MessageSelectingQueueChannel queueChannel = EasyMock.createMock(MessageSelectingQueueChannel.class);
-        Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
+        org.springframework.messaging.Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
         reset(queueChannel);
         
         expect(queueChannel.receive(anyObject(HeaderMatchingMessageSelector.class)))
@@ -220,7 +224,9 @@ public class ChannelEndpointConsumerTest {
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
-        Assert.assertEquals(receivedMessage.getHeaders(), message.getHeaders());
+        Assert.assertEquals(receivedMessage.getHeaders().get(MessageHeaders.ID), message.getHeaders().getId());
+        Assert.assertEquals(receivedMessage.getHeaders().get("Operation"), "sayHello");
+
         verify(queueChannel);
     }
     

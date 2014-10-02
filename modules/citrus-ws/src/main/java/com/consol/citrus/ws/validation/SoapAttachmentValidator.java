@@ -16,11 +16,10 @@
 
 package com.consol.citrus.ws.validation;
 
-import java.io.IOException;
-
-import org.springframework.messaging.Message;
-
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.SoapAttachment;
+
+import java.io.IOException;
 
 
 /**
@@ -41,5 +40,5 @@ public interface SoapAttachmentValidator {
      * @param controlAttachment
      * @throws IOException
      */
-    void validateAttachment(Message<?> receivedMessage, SoapAttachment controlAttachment) throws IOException;
+    void validateAttachment(Message receivedMessage, SoapAttachment controlAttachment) throws IOException;
 }

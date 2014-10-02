@@ -19,12 +19,12 @@ package com.consol.citrus.ws;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
 import org.springframework.util.*;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
@@ -84,12 +84,12 @@ public class WebServiceEndpoint implements MessageEndpoint {
     public void invoke(final MessageContext messageContext) throws Exception {
         Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
         
-        Message<?> requestMessage = endpointConfiguration.getMessageConverter().convertInbound(messageContext.getRequest(), messageContext, endpointConfiguration);
+        Message requestMessage = endpointConfiguration.getMessageConverter().convertInbound(messageContext.getRequest(), messageContext, endpointConfiguration);
         
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
         //delegate request processing to message handler
-        Message<?> replyMessage = messageHandler.handleMessage(requestMessage);
+        Message replyMessage = messageHandler.handleMessage(requestMessage);
         
         if (simulateHttpStatusCode(replyMessage)) {
             return;
@@ -122,7 +122,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @return
      * @throws IOException 
      */
-    private boolean simulateHttpStatusCode(Message<?> replyMessage) throws IOException {
+    private boolean simulateHttpStatusCode(Message replyMessage) throws IOException {
         if (replyMessage == null || CollectionUtils.isEmpty(replyMessage.getHeaders())) {
             return false;
         }
@@ -151,7 +151,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param response the soap response message.
      * @param replyMessage the internal reply message.
      */
-    private void addMimeHeaders(SoapMessage response, Message<?> replyMessage) {
+    private void addMimeHeaders(SoapMessage response, Message replyMessage) {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {
                 String headerName = headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length());
@@ -174,7 +174,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param response
      * @param replyMessage
      */
-    private void addSoapBody(SoapMessage response, Message<?> replyMessage) throws TransformerException {
+    private void addSoapBody(SoapMessage response, Message replyMessage) throws TransformerException {
         if (!(replyMessage.getPayload() instanceof String) || 
                 StringUtils.hasText(replyMessage.getPayload().toString())) {
             Source responseSource = getPayloadAsSource(replyMessage.getPayload());
@@ -191,7 +191,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param response
      * @param replyMessage
      */
-    private void addSoapHeaders(SoapMessage response, Message<?> replyMessage) throws TransformerException {
+    private void addSoapHeaders(SoapMessage response, Message replyMessage) throws TransformerException {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey()) ||
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
@@ -200,13 +200,13 @@ public class WebServiceEndpoint implements MessageEndpoint {
             
             if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.SOAP_ACTION)) {
                 response.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().equalsIgnoreCase(CitrusMessageHeaders.HEADER_CONTENT)) {
+            } else if (headerEntry.getKey().equalsIgnoreCase(MessageHeaders.HEADER_CONTENT)) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 
                 transformer.transform(new StringSource(headerEntry.getValue().toString()), 
                         response.getSoapHeader().getResult());
-            } else if (!headerEntry.getKey().startsWith(CitrusMessageHeaders.PREFIX)) {
+            } else if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                 SoapHeaderElement headerElement;
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
                     QName qname = QNameUtils.parseQNameString(headerEntry.getKey());
@@ -233,7 +233,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param response
      * @param replyMessage
      */
-    private void addSoapFault(SoapMessage response, Message<?> replyMessage) throws TransformerException {
+    private void addSoapFault(SoapMessage response, Message replyMessage) throws TransformerException {
         SoapFaultDefinitionHolder definitionHolder = SoapFaultDefinitionHolder.fromString(
                 replyMessage.getHeaders().get(CitrusSoapMessageHeaders.SOAP_FAULT).toString());
         

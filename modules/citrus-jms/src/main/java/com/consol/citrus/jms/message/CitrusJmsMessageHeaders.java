@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.message;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 
 /**
  * @author Christoph Deppisch
@@ -24,7 +24,7 @@ import com.consol.citrus.message.CitrusMessageHeaders;
  */
 public class CitrusJmsMessageHeaders {
 
-    public static final String JMS_PREFIX = CitrusMessageHeaders.PREFIX + "jms_";
+    public static final String JMS_PREFIX = MessageHeaders.PREFIX + "jms_";
 
     public static final String MESSAGE_ID = JMS_PREFIX + "messageId";
 

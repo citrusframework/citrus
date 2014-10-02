@@ -17,14 +17,14 @@
 package com.consol.citrus.validation;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.CitrusMessageHeaders;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +52,8 @@ public class MessageValidatorRegistry implements InitializingBean {
      * @param message the message to validate.
      * @return  the list of matching message validators.
      */
-    public List<MessageValidator<? extends ValidationContext>> findMessageValidators(Message<?> message) {
-        return findMessageValidators(message.getHeaders().get(CitrusMessageHeaders.MESSAGE_TYPE).toString());
+    public List<MessageValidator<? extends ValidationContext>> findMessageValidators(Message message) {
+        return findMessageValidators(message.getHeaders().get(MessageHeaders.MESSAGE_TYPE).toString());
     }
 
 

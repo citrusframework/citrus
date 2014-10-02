@@ -16,10 +16,10 @@
 
 package com.consol.citrus.vertx.message;
 
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
 import org.easymock.EasyMock;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -62,11 +62,11 @@ public class VertxMessageConverterTest {
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testConvertOutbound() {
-        messageConverter.convertOutbound(MessageBuilder.withPayload("This is a test!").build(), new VertxEndpointConfiguration());
+        messageConverter.convertOutbound(new DefaultMessage("This is a test!"), new VertxEndpointConfiguration());
     }
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testConvertOutboundOnExternalMessage() {
-        messageConverter.convertOutbound(vertxMessage, MessageBuilder.withPayload("This is a test!").build(), new VertxEndpointConfiguration());
+        messageConverter.convertOutbound(vertxMessage, new DefaultMessage("This is a test!"), new VertxEndpointConfiguration());
     }
 }

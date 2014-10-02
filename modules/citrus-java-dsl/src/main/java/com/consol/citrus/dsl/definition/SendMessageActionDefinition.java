@@ -22,6 +22,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
@@ -30,7 +31,6 @@ import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.messaging.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.Assert;
@@ -96,7 +96,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @param message
      * @return
      */
-    public T message(Message<?> message) {
+    public T message(Message message) {
         if (message.getPayload() != null && message.getPayload() instanceof String) {
             PayloadTemplateMessageBuilder messageBuilder = getPayloadTemplateMessageBuilder();
             messageBuilder.setPayloadData(message.getPayload().toString());
@@ -246,9 +246,9 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      *
      * @return the message builder in use
      */
-    protected AbstractMessageContentBuilder<?> getMessageContentBuilder() {
-        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder<?>) {
-            return (AbstractMessageContentBuilder<?>) action.getMessageBuilder();
+    protected AbstractMessageContentBuilder getMessageContentBuilder() {
+        if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
+            return (AbstractMessageContentBuilder) action.getMessageBuilder();
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             action.setMessageBuilder(messageBuilder);
@@ -317,7 +317,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
             xpathMessageConstructionInterceptor = new XpathMessageConstructionInterceptor();
 
             if (action.getMessageBuilder() != null) {
-                ((MessageContentBuilder<String>)action.getMessageBuilder()).add(xpathMessageConstructionInterceptor);
+                (action.getMessageBuilder()).add(xpathMessageConstructionInterceptor);
             } else {
                 PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
                 messageBuilder.getMessageInterceptors().add(xpathMessageConstructionInterceptor);

@@ -17,11 +17,9 @@
 package com.consol.citrus.camel.message;
 
 import com.consol.citrus.camel.endpoint.CamelEndpointConfiguration;
-import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.*;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultExchange;
-import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.Message;
 
 import java.util.Map;
 
@@ -35,14 +33,14 @@ import java.util.Map;
 public class CamelMessageConverter implements MessageConverter<Exchange, CamelEndpointConfiguration> {
 
     @Override
-    public Exchange convertOutbound(Message<?> message, CamelEndpointConfiguration endpointConfiguration) {
+    public Exchange convertOutbound(Message message, CamelEndpointConfiguration endpointConfiguration) {
         Exchange exchange = new DefaultExchange(endpointConfiguration.getCamelContext());
         convertOutbound(exchange, message, endpointConfiguration);
         return exchange;
     }
 
     @Override
-    public void convertOutbound(Exchange exchange, Message<?> message, CamelEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(Exchange exchange, Message message, CamelEndpointConfiguration endpointConfiguration) {
         org.apache.camel.Message in = exchange.getIn();
         for (Map.Entry<String, Object> header : message.getHeaders().entrySet()) {
             in.setHeader(header.getKey(), header.getValue());
@@ -51,20 +49,19 @@ public class CamelMessageConverter implements MessageConverter<Exchange, CamelEn
     }
 
     @Override
-    public Message<?> convertInbound(Exchange exchange, CamelEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(Exchange exchange, CamelEndpointConfiguration endpointConfiguration) {
         if (exchange == null) {
             return null;
         }
 
-        org.apache.camel.Message message;
+        org.apache.camel.Message camelMessage;
         if (exchange.hasOut()) {
-            message = exchange.getOut();
+            camelMessage = exchange.getOut();
         } else {
-            message = exchange.getIn();
+            camelMessage = exchange.getIn();
         }
 
-        MessageBuilder messageBuilder = MessageBuilder.withPayload(message.getBody())
-                .copyHeaders(message.getHeaders())
+        Message message = new DefaultMessage(camelMessage.getBody(), camelMessage.getHeaders())
                 .setHeader(CitrusCamelMessageHeaders.EXCHANGE_ID, exchange.getExchangeId())
                 .setHeader(CitrusCamelMessageHeaders.ROUTE_ID, exchange.getFromRouteId())
                 .setHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN, exchange.getPattern().name())
@@ -72,14 +69,14 @@ public class CamelMessageConverter implements MessageConverter<Exchange, CamelEn
 
         //add all exchange properties
         for (Map.Entry<String, Object> property : exchange.getProperties().entrySet()) {
-            messageBuilder.setHeader(property.getKey(), property.getValue());
+            message.getHeaders().put(property.getKey(), property.getValue());
         }
 
         if (exchange.getException() != null) {
-            messageBuilder.setHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION, exchange.getException().getClass().getName());
-            messageBuilder.setHeader(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE, exchange.getException().getMessage());
+            message.getHeaders().put(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION, exchange.getException().getClass().getName());
+            message.getHeaders().put(CitrusCamelMessageHeaders.EXCHANGE_EXCEPTION_MESSAGE, exchange.getException().getMessage());
         }
 
-        return messageBuilder.build();
+        return message;
     }
 }

@@ -20,6 +20,8 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -29,8 +31,6 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -71,7 +71,7 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<!DOCTYPE root [ "
+        Message message = new DefaultMessage("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
                 + "<!ELEMENT text (#PCDATA)>"
@@ -80,7 +80,7 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -114,12 +114,12 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
+        Message message = new DefaultMessage("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -149,12 +149,12 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+        Message message = new DefaultMessage("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -184,12 +184,12 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+        Message message = new DefaultMessage("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -225,12 +225,12 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+        Message message = new DefaultMessage("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();

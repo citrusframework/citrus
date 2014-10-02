@@ -17,11 +17,12 @@
 package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ssh.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.ssh.SshRequest;
+import com.consol.citrus.ssh.XmlMapper;
 import com.jcraft.jsch.*;
 import org.easymock.IArgumentMatcher;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -187,10 +188,9 @@ public class SshClientTest {
         expect(channel.isConnected()).andReturn(true);
     }
 
-    private Message<?> createMessage(String pCommand, String pInput) {
+    private Message createMessage(String pCommand, String pInput) {
         SshRequest request = new SshRequest(pCommand,pInput);
-        return MessageBuilder.withPayload(xstream.toXML(request))
-                             .build();
+        return new DefaultMessage(xstream.toXML(request));
     }
 
     private void strictHostChecking(boolean flag,String knownHosts) {

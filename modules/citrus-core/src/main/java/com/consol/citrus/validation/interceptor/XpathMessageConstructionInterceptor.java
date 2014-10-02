@@ -19,6 +19,7 @@ package com.consol.citrus.validation.interceptor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -71,12 +72,12 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      * needs to be XML here.
      */
     @Override
-    public String interceptMessagePayload(String messagePayload, String messageType, TestContext context) {
-        if (!StringUtils.hasText(messagePayload)) {
-            return messagePayload;
+    public Message interceptMessage(Message message, String messageType, TestContext context) {
+        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
+            return message;
         }
 
-        Document doc = XMLUtils.parseMessagePayload(messagePayload);
+        Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
 
         if (doc == null) {
             throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
@@ -97,7 +98,7 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
             Node node;
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                nsContext.setBindings(XMLUtils.lookupNamespaces(messagePayload));
+                nsContext.setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
                 node = XPathUtils.evaluateAsNode(doc, pathExpression, nsContext);
             } else {
                 node = XMLUtils.findNodeByName(doc, pathExpression);
@@ -122,7 +123,8 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
             }
         }
         
-        return XMLUtils.serialize(doc);
+        message.setPayload(XMLUtils.serialize(doc));
+        return message;
     }
 
     @Override

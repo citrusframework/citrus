@@ -16,14 +16,11 @@
 
 package com.consol.citrus.ws;
 
-import com.consol.citrus.message.CitrusMessageHeaders;
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
@@ -57,18 +54,12 @@ public class WebServiceEndpointTest {
     public void testMessageProcessing() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
-        Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
@@ -121,17 +112,12 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -189,17 +175,12 @@ public class WebServiceEndpointTest {
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
         requestHeaders.put("Operation", "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get("Operation"));
@@ -272,17 +253,12 @@ public class WebServiceEndpointTest {
         requestHeaders.put("Accept", "text/xml, text/html, image/gif, image/jpeg");
         requestHeaders.put("Content-Type", "text/xml");
         
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get("Operation"));
@@ -361,18 +337,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("{http://www.consol.de/citrus}citrus:Operation", "sayHello");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -448,18 +420,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("Operation", "sayHello");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -538,18 +506,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("Operation", "sayHello");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -627,18 +591,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("Operation", "sayHello");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -714,17 +674,12 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertNotNull(message.getHeaders().get("myContentId"));
                 
                 Attachment attachment = (Attachment)message.getHeaders().get("myContentId");
@@ -791,18 +746,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request, because of unknown error}");
-        final Message<String> responseMessage = MessageBuilder.withPayload("")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -872,18 +823,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{CLIENT}{Invalid request}");
-        final Message<String> responseMessage = MessageBuilder.withPayload("")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -953,19 +900,15 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
         responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -1040,20 +983,16 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
         responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
         responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_2", "<Error><text>This request was not OK!</text></Error>");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -1128,19 +1067,15 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "answerHello");
-        responseHeaders.put(CitrusMessageHeaders.SYNC_MESSAGE_CORRELATOR, "someCorrelator");
-        final Message<String> responseMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        responseHeaders.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, "someCorrelator");
+        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -1200,18 +1135,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{{http://www.consol.de/citrus}citrus:TEC-1000}{Invalid request}");
-        final Message<String> responseMessage = MessageBuilder.withPayload("")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -1286,18 +1217,14 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
         requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
-        final Message<String> requestMessage = MessageBuilder.withPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{{http://www.consol.de/citrus}citrus:TEC-1000}{Invalid request}");
-        final Message<String> responseMessage = MessageBuilder.withPayload("")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message responseMessage = new DefaultMessage("", responseHeaders);
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 
                 Assert.assertNotNull(message.getHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION));
@@ -1377,18 +1304,11 @@ public class WebServiceEndpointTest {
     public void testEmptySoapMessageProcessing() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
-        Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        final Message<String> requestMessage = MessageBuilder.withPayload("")
-                                .copyHeaders(requestHeaders)
-                                .build();
-        
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        final Message<String> responseMessage = MessageBuilder.withPayload("")
-                                .copyHeaders(responseHeaders)
-                                .build();
-        
+        final Message requestMessage = new DefaultMessage("");
+        final Message responseMessage = new DefaultMessage("");
+
         endpoint.setMessageHandler(new MessageHandler() {
-            public Message<?> handleMessage(Message<?> message) {
+            public Message handleMessage(Message message) {
                 Assert.assertEquals(message.getHeaders().size(), requestMessage.getHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 

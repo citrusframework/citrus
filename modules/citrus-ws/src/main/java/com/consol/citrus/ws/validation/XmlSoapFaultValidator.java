@@ -16,16 +16,15 @@
 
 package com.consol.citrus.ws.validation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Soap fault validator implementation that delegates soap fault detail validation to default XML message validator
@@ -53,10 +52,10 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
             xmlMessageValidationContext = new XmlMessageValidationContext();
         }
         
-        Message<String> controlMessage = MessageBuilder.withPayload(controlDetailString).build();
+        Message controlMessage = new DefaultMessage(controlDetailString);
         xmlMessageValidationContext.setControlMessage(controlMessage);
 
-        Message<String> receivedMessage = MessageBuilder.withPayload(receivedDetailString).build();
+        Message receivedMessage = new DefaultMessage(receivedDetailString);
         messageValidator.validateMessage(receivedMessage, context, xmlMessageValidationContext);
     }
 

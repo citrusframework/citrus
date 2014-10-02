@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 
 /**
  * Endpoint adapter produces no response message forcing a request timeout on client side.
@@ -27,7 +27,7 @@ import org.springframework.messaging.Message;
 public class TimeoutProducingEndpointAdapter extends StaticEndpointAdapter {
 
     @Override
-    public Message<?> handleMessageInternal(Message<?> message) {
+    public Message handleMessageInternal(Message message) {
         return null;
     }
 }

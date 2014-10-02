@@ -21,10 +21,11 @@ import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
+import com.consol.citrus.message.Message;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -48,7 +49,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     private final String name;
 
     /** Store of reply messages */
-    private Map<String, Message<?>> replyMessages = new HashMap<String, Message<?>>();
+    private Map<String, Message> replyMessages = new HashMap<String, Message>();
 
     /** Endpoint configuration */
     private final JmsSyncEndpointConfiguration endpointConfiguration;
@@ -74,7 +75,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(Message<?> message) {
+    public void send(Message message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
@@ -112,7 +113,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             log.info("Waiting for reply message on destination: '{}'", replyToDestination);
 
             javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
-            Message<?> responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration);
+            Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration);
 
             log.info("Received reply message on destination: '{}'", replyToDestination);
 
@@ -129,24 +130,24 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     }
 
     @Override
-    public Message<?> receive() {
+    public Message receive() {
         return receive("", endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(String selector) {
+    public Message receive(String selector) {
         return receive(selector, endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message<?> receive(long timeout) {
+    public Message receive(long timeout) {
         return receive("", timeout);
     }
 
     @Override
-    public Message<?> receive(String selector, long timeout) {
+    public Message receive(String selector, long timeout) {
         long timeLeft = timeout;
-        Message<?> message = findReplyMessage(selector);
+        Message message = findReplyMessage(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -261,12 +262,12 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @return the reply destination.
      * @throws JMSException
      */
-    private Destination getReplyDestination(Session session, Message<?> message) throws JMSException {
-        if (message.getHeaders().getReplyChannel() != null) {
-            if (message.getHeaders().getReplyChannel() instanceof Destination) {
-                return (Destination)message.getHeaders().getReplyChannel();
+    private Destination getReplyDestination(Session session, Message message) throws JMSException {
+        if (message.getHeaders().get(MessageHeaders.REPLY_CHANNEL) != null) {
+            if (message.getHeaders().get(MessageHeaders.REPLY_CHANNEL) instanceof Destination) {
+                return (Destination) message.getHeaders().get(MessageHeaders.REPLY_CHANNEL);
             } else {
-                return resolveDestinationName(message.getHeaders().getReplyChannel().toString(), session);
+                return resolveDestinationName(message.getHeaders().get(MessageHeaders.REPLY_CHANNEL).toString(), session);
             }
         } else if (endpointConfiguration.getReplyDestination() != null) {
             return endpointConfiguration.getReplyDestination();
@@ -312,7 +313,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param correlationKey
      * @param replyMessage the reply message.
      */
-    public void onReplyMessage(String correlationKey, Message<?> replyMessage) {
+    public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
     }
 
@@ -321,7 +322,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param requestMessage
      * @param replyMessage
      */
-    public void onReplyMessage(Message<?> requestMessage, Message<?> replyMessage) {
+    public void onReplyMessage(Message requestMessage, Message replyMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
             onReplyMessage(endpointConfiguration.getCorrelator().getCorrelationKey(requestMessage), replyMessage);
         } else {
@@ -334,7 +335,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param correlationKey
      * @return
      */
-    public Message<?> findReplyMessage(String correlationKey) {
+    public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
     }
 
@@ -342,7 +343,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * Informs message listeners if present.
      * @param receivedMessage
      */
-    protected void onInboundMessage(Message<?> receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage) {
         if (getMessageListener() != null) {
             getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
         } else {

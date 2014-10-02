@@ -16,15 +16,14 @@
 
 package com.consol.citrus.variable;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.message.Message;
+import org.springframework.util.CollectionUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.springframework.messaging.Message;
-import org.springframework.util.CollectionUtils;
-
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.UnknownElementException;
 
 /**
  * Variable extractor reading message headers and saves them to new test variables.
@@ -39,7 +38,7 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     /**
      * Reads header information and saves new test variables.
      */
-    public void extractVariables(Message<?> message, TestContext context) {
+    public void extractVariables(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(headerMappings)) { return; }
 
         for (Entry<String, String> entry : headerMappings.entrySet()) {

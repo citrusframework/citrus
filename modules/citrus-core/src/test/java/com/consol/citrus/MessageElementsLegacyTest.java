@@ -21,6 +21,8 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -31,8 +33,6 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -73,13 +73,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
+        Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>" 
-                        + "</root>").build();
+                        + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -108,13 +108,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'></sub-elementA>"
-                            + "<sub-elementB attribute='B'></sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'></sub-elementA>"
+                + "<sub-elementB attribute='B'></sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -143,13 +143,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -178,13 +178,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -214,13 +214,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -249,13 +249,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -284,13 +284,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -319,13 +319,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -363,13 +363,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'></sub-elementA>"
-                            + "<sub-elementB attribute='B'></sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'></sub-elementA>"
+                + "<sub-elementB attribute='B'></sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -407,13 +407,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -457,13 +457,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -501,13 +501,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -545,13 +545,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -589,13 +589,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -633,13 +633,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -684,13 +684,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -735,13 +735,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -784,13 +784,13 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
         
-        Message message = MessageBuilder.withPayload("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value' >"
-                            + "<sub-elementA attribute='A'>text-value</sub-elementA>"
-                            + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                            + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
-                        + "</root>").build();
+        Message message = new DefaultMessage("<root>"
+                + "<element attributeA='attribute-value' attributeB='attribute-value' >"
+                + "<sub-elementA attribute='A'>text-value</sub-elementA>"
+                + "<sub-elementB attribute='B'>text-value</sub-elementB>"
+                + "<sub-elementC attribute='C'>text-value</sub-elementC>"
+                + "</element>"
+                + "</root>");
         
         expect(consumer.receive(anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();

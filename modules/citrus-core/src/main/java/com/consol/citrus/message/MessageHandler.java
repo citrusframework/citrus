@@ -16,9 +16,6 @@
 
 package com.consol.citrus.message;
 
-import org.springframework.messaging.Message;
-
-
 /**
  * MessageHandler processes incoming request messages and provides a proper response message.
  *
@@ -31,6 +28,6 @@ public interface MessageHandler {
      * @param message the request message.
      * @return the response message.
      */
-    Message<?> handleMessage(Message<?> message);
+    Message handleMessage(Message message);
 
 }
