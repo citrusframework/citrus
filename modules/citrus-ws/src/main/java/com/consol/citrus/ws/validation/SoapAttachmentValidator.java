@@ -16,10 +16,10 @@
 
 package com.consol.citrus.ws.validation;
 
-import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapMessage;
 
-import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -34,11 +34,11 @@ import java.io.IOException;
 public interface SoapAttachmentValidator {
 
     /**
-     * Validate the attachment with a given control attachment.
+     * Validate attachments in soap message. List of control attachments should
+     * be present and get validated.
      * 
-     * @param receivedMessage
-     * @param controlAttachment
-     * @throws IOException
+     * @param soapMessage
+     * @param controlAttachments
      */
-    void validateAttachment(Message receivedMessage, SoapAttachment controlAttachment) throws IOException;
+    void validateAttachment(SoapMessage soapMessage, List<SoapAttachment> controlAttachments);
 }

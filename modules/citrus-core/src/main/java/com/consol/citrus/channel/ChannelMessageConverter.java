@@ -16,9 +16,7 @@
 
 package com.consol.citrus.channel;
 
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.*;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.LinkedHashMap;
@@ -45,7 +43,21 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
 
         Map<String, Object> messageHeaders = new LinkedHashMap<>();
         messageHeaders.putAll(externalMessage.getHeaders());
-        return new DefaultMessage(externalMessage.getPayload(), messageHeaders);
+
+        Object payload = externalMessage.getPayload();
+        if (payload instanceof Message) {
+            Message nestedMessage = (Message) payload;
+
+            for (Map.Entry<String, Object> headerEntry : messageHeaders.entrySet()) {
+                if (!headerEntry.getKey().startsWith(MessageHeaders.MESSAGE_PREFIX)) {
+                    nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                }
+            }
+
+            return nestedMessage;
+        } else {
+            return new DefaultMessage(payload, messageHeaders);
+        }
     }
 
     @Override

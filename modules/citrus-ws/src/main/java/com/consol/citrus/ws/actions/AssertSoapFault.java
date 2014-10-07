@@ -23,7 +23,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
@@ -192,8 +192,8 @@ public class AssertSoapFault extends AbstractActionContainer {
             for (int i = 0; i < faultDetails.size(); i++) {
                 String faultDetail = faultDetails.get(i);
                 
-                if (faultDetail.startsWith(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE)) {
-                    String resourcePath = faultDetail.substring(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE.length() + 1, faultDetail.length() - 1);
+                if (faultDetail.startsWith(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE)) {
+                    String resourcePath = faultDetail.substring(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE.length() + 1, faultDetail.length() - 1);
                     
                     transformer.transform(new StringSource(
                         context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(resourcePath, context)))), soapFaultDetail.getResult());

@@ -30,6 +30,9 @@ import java.util.*;
  */
 public class DefaultMessage implements Message {
 
+    /** Serial */
+    private static final long serialVersionUID = 1904510540660648952L;
+
     /** Message payload object */
     private Object payload;
 
@@ -37,7 +40,7 @@ public class DefaultMessage implements Message {
     private final Map<String, Object> headers;
 
     /**
-     * Default constructor usiong just message payload.
+     * Default constructor using just message payload.
      * @param payload
      */
     public DefaultMessage(Object payload) {

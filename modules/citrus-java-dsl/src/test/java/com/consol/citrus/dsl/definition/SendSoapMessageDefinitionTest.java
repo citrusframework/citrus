@@ -27,7 +27,7 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -132,7 +132,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusSoapMessageHeaders.SOAP_ACTION), "TestService/sayHello");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(SoapMessageHeaders.SOAP_ACTION), "TestService/sayHello");
     }
     
     @Test

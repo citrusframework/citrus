@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
@@ -49,7 +49,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
      * @return
      */
     public SendSoapMessageActionDefinition soapAction(String soapAction) {
-        header(CitrusSoapMessageHeaders.SOAP_ACTION, soapAction);
+        header(SoapMessageHeaders.SOAP_ACTION, soapAction);
         return this;
     }
     

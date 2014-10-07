@@ -19,9 +19,8 @@ package com.consol.citrus.ws;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,7 +88,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
         //delegate request processing to message handler
-        Message replyMessage = messageHandler.handleMessage(requestMessage);
+        Message replyMessage = messageHandler.handleMessage(new DefaultMessageContainer(requestMessage));
         
         if (simulateHttpStatusCode(replyMessage)) {
             return;
@@ -101,7 +100,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             SoapMessage response = (SoapMessage)messageContext.getResponse();
             
             //add soap fault or normal soap body to response
-            if (replyMessage.getHeader(CitrusSoapMessageHeaders.SOAP_FAULT) != null) {
+            if (replyMessage.getHeader(SoapMessageHeaders.SOAP_FAULT) != null) {
                 addSoapFault(response, replyMessage);
             } else {
                 addSoapBody(response, replyMessage);
@@ -128,7 +127,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         }
         
         for (Entry<String, Object> headerEntry : replyMessage.copyHeaders().entrySet()) {
-            if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.HTTP_STATUS_CODE)) {
+            if (headerEntry.getKey().equalsIgnoreCase(SoapMessageHeaders.HTTP_STATUS_CODE)) {
                 WebServiceConnection connection = TransportContextHolder.getTransportContext().getConnection();
                 
                 int statusCode = Integer.valueOf(headerEntry.getValue().toString());
@@ -147,14 +146,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
 
     /**
      * Adds mime headers outside of SOAP envelope. Header entries that go to this header section 
-     * must have internal http header prefix defined in {@link CitrusSoapMessageHeaders}.
+     * must have internal http header prefix defined in {@link com.consol.citrus.ws.message.SoapMessageHeaders}.
      * @param response the soap response message.
      * @param replyMessage the internal reply message.
      */
     private void addMimeHeaders(SoapMessage response, Message replyMessage) {
         for (Entry<String, Object> headerEntry : replyMessage.copyHeaders().entrySet()) {
-            if (headerEntry.getKey().toLowerCase().startsWith(CitrusSoapMessageHeaders.HTTP_PREFIX)) {
-                String headerName = headerEntry.getKey().substring(CitrusSoapMessageHeaders.HTTP_PREFIX.length());
+            if (headerEntry.getKey().toLowerCase().startsWith(SoapMessageHeaders.HTTP_PREFIX)) {
+                String headerName = headerEntry.getKey().substring(SoapMessageHeaders.HTTP_PREFIX.length());
                 
                 if (response instanceof SaajSoapMessage) {
                     SaajSoapMessage saajSoapMessage = (SaajSoapMessage) response;
@@ -198,7 +197,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 continue;
             }
             
-            if (headerEntry.getKey().equalsIgnoreCase(CitrusSoapMessageHeaders.SOAP_ACTION)) {
+            if (headerEntry.getKey().equalsIgnoreCase(SoapMessageHeaders.SOAP_ACTION)) {
                 response.setSoapAction(headerEntry.getValue().toString());
             } else if (headerEntry.getKey().equalsIgnoreCase(MessageHeaders.HEADER_CONTENT)) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -228,14 +227,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
 
     /**
      * Adds a SOAP fault to the SOAP response body. The SOAP fault is declared
-     * as QName string in the response message's header (see {@link CitrusSoapMessageHeaders})
+     * as QName string in the response message's header (see {@link com.consol.citrus.ws.message.SoapMessageHeaders})
      * 
      * @param response
      * @param replyMessage
      */
     private void addSoapFault(SoapMessage response, Message replyMessage) throws TransformerException {
         SoapFaultDefinitionHolder definitionHolder = SoapFaultDefinitionHolder.fromString(
-                replyMessage.getHeader(CitrusSoapMessageHeaders.SOAP_FAULT).toString());
+                replyMessage.getHeader(SoapMessageHeaders.SOAP_FAULT).toString());
         
         SoapFaultDefinition definition = definitionHolder.getSoapFaultDefinition();
         SoapBody soapBody = response.getSoapBody();
@@ -273,7 +272,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         List<String> soapFaultDetails = new ArrayList<String>();
         // add fault details
         for (Entry<String, Object> header : replyMessage.copyHeaders().entrySet()) {
-            if (header.getKey().startsWith(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL)) {
+            if (header.getKey().startsWith(SoapMessageHeaders.SOAP_FAULT_DETAIL)) {
                 soapFaultDetails.add(header.getValue().toString());
             }
         }

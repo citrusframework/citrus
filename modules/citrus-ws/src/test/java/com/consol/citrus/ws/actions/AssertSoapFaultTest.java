@@ -16,10 +16,13 @@
 
 package com.consol.citrus.ws.actions;
 
-import java.util.Locale;
-
-import javax.xml.transform.*;
-
+import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -32,13 +35,8 @@ import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
-import com.consol.citrus.ws.validation.SoapFaultValidator;
+import javax.xml.transform.*;
+import java.util.Locale;
 
 /**
  * @author Christoph Deppisch
@@ -351,7 +349,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
-        assertAction.getFaultDetails().add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail.xml)");
+        assertAction.getFaultDetails().add(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail.xml)");
         
         assertAction.execute(context);
     }
@@ -390,7 +388,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
-        assertAction.getFaultDetails().add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail-with-variables.xml)");
+        assertAction.getFaultDetails().add(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail-with-variables.xml)");
         
         assertAction.execute(context);
     }
@@ -470,7 +468,7 @@ public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
         assertAction.setFaultString("Internal server error");
         assertAction.setFaultCode("{http://citrusframework.org}ws:TEC-1001");
         assertAction.getFaultDetails().add("<ErrorDetail><Code>1001</Code></ErrorDetail>");
-        assertAction.getFaultDetails().add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail.xml)");
+        assertAction.getFaultDetails().add(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail.xml)");
         
         assertAction.execute(context);
     }

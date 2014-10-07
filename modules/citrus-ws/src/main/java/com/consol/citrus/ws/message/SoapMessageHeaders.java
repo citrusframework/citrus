@@ -21,12 +21,12 @@ import com.consol.citrus.message.MessageHeaders;
 /**
  * @author Christoph Deppisch
  */
-public abstract class CitrusSoapMessageHeaders {
+public abstract class SoapMessageHeaders {
     
     /**
      * Prevent instantiation.
      */
-    private CitrusSoapMessageHeaders() {
+    private SoapMessageHeaders() {
     }
     
     /** Citrus ws specific header prefix */
@@ -61,20 +61,5 @@ public abstract class CitrusSoapMessageHeaders {
     
     /** Soap fault detail specific header */
     public static final String SOAP_FAULT_DETAIL_RESOURCE = SOAP_FAULT_DETAIL + "_resource";
-    
-    /** Soap attachment header prefix */
-    public static final String SOAP_ATTACHMENT_PREFIX = SOAP_PREFIX + "attachment_";
-    
-    /** Content id header name*/
-    public static final String CONTENT_ID = SOAP_ATTACHMENT_PREFIX + "contentId";
-    
-    /** Content type header name*/
-    public static final String CONTENT_TYPE = SOAP_ATTACHMENT_PREFIX + "contentType";
-    
-    /** Content body header name*/
-    public static final String CONTENT = SOAP_ATTACHMENT_PREFIX + "content";
-    
-    /** Charset header name*/
-    public static final String CHARSET_NAME = SOAP_ATTACHMENT_PREFIX + "charset";
-    
+
 }

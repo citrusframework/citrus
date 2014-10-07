@@ -16,13 +16,12 @@
 
 package com.consol.citrus.ws.message.callback;
 
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.consol.citrus.message.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
-import org.springframework.ws.mime.Attachment;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
@@ -40,9 +39,6 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
     
     /** The internal message content source */
     private Message message;
-
-    /** Optional SOAP attachment */
-    private Attachment attachment;
 
     /** Endpoint configuration */
     private WebServiceEndpointConfiguration endpointConfiguration;
@@ -62,17 +58,6 @@ public class SoapRequestMessageCallback implements WebServiceMessageCallback {
      * Callback method called before request message  is sent.
      */
     public void doWithMessage(WebServiceMessage requestMessage) throws IOException, TransformerException {
-        endpointConfiguration.getMessageConverter().setAttachment(attachment);
         endpointConfiguration.getMessageConverter().convertOutbound(requestMessage, message, endpointConfiguration);
-    }
-
-    /**
-     * Sets optional SOAP attachment with builder pattern style.
-     * @param attachment
-     * @return
-     */
-    public SoapRequestMessageCallback withAttachment(Attachment attachment) {
-        this.attachment = attachment;
-        return this;
     }
 }

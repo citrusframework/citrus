@@ -16,19 +16,18 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.ws.soap.SoapMessageFactory;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.ws.soap.SoapMessageFactory;
+
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -114,7 +113,7 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      * @return
      */
     public AssertSoapFaultDefinition faultDetailResource(String filePath) {
-        action.getFaultDetails().add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
+        action.getFaultDetails().add(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
         return this;
     }
     

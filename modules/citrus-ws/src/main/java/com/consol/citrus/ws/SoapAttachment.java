@@ -16,21 +16,24 @@
 
 package com.consol.citrus.ws;
 
-import java.io.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
+import org.springframework.ws.mime.Attachment;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-
-import org.springframework.ws.mime.Attachment;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
 
 /**
  * Citrus SOAP attachment implementation.
  * 
  * @author Christoph Deppisch
  */
-public class SoapAttachment implements Attachment {
+public class SoapAttachment implements Attachment, Serializable {
+
+    /** Serial */
+    private static final long serialVersionUID = 6277464458242523954L;
+
     /** Content body as string */
     private String content;
     
@@ -47,6 +50,28 @@ public class SoapAttachment implements Attachment {
      * Default constructor
      */
     public SoapAttachment() {
+    }
+
+    /**
+     * Static construction method from Spring mime attachment.
+     * @param attachment
+     * @return
+     */
+    public static SoapAttachment from(Attachment attachment) {
+        SoapAttachment soapAttachment = new SoapAttachment();
+        soapAttachment.setContentId(attachment.getContentId());
+        soapAttachment.setContentType(attachment.getContentType());
+
+        try {
+            soapAttachment.setContent(FileUtils.readToString(attachment.getInputStream()).trim());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to read SOAP attachment content", e);
+        }
+
+        //TODO set charset name from attachment
+        soapAttachment.setCharsetName("UTF-8");
+
+        return soapAttachment;
     }
     
     /**

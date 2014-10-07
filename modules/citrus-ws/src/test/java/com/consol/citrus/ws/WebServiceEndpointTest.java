@@ -18,7 +18,8 @@ package com.consol.citrus.ws;
 
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.ws.context.MessageContext;
@@ -60,17 +61,18 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -111,28 +113,29 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -173,7 +176,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         requestHeaders.put("Operation", "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
@@ -181,24 +184,25 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
         Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
         SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
         soapRequestHeaders.add(soapRequestHeaderEntry);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -246,7 +250,7 @@ public class WebServiceEndpointTest {
         endpoint.setEndpointConfiguration(endpointConfiguration);
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         requestHeaders.put("Operation", "sayHello");
         requestHeaders.put("Host", "localhost:8080");
         requestHeaders.put("Content-Length", "236");
@@ -259,12 +263,13 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -288,8 +293,8 @@ public class WebServiceEndpointTest {
         Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
         SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
         soapRequestHeaders.add(soapRequestHeaderEntry);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -336,7 +341,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -345,21 +350,22 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         
         final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
@@ -419,7 +425,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -428,12 +434,13 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -441,11 +448,11 @@ public class WebServiceEndpointTest {
 
         endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
         endpoint.setDefaultPrefix("citrus");
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         
         final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
@@ -505,7 +512,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -514,23 +521,24 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
 
         endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         
         final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
@@ -590,7 +598,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -599,21 +607,22 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
 
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         
         final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
@@ -673,31 +682,36 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertNotNull(message.getHeader("myContentId"));
-                
-                Attachment attachment = (Attachment)message.getHeader("myContentId");
+                Assert.assertTrue(message instanceof MessageContainer);
+                Assert.assertTrue(SoapMessage.class.isInstance(((MessageContainer) message).getMessage()));
+
+                SoapMessage soapMessage = (SoapMessage) ((MessageContainer) message).getMessage();
+
+                Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+
+                Attachment attachment = soapMessage.getAttachments().get(0);
                 Assert.assertEquals(attachment.getContentId(), "myContentId");
                 Assert.assertEquals(attachment.getContentType(), "text/xml");
                 
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -730,7 +744,7 @@ public class WebServiceEndpointTest {
         expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
         
         expect(attachment.getInputStream()).andReturn(new ByteArrayInputStream("AttachmentBody".getBytes())).once();
-        
+
         replay(messageContext, soapRequest, soapRequestHeader, soapResponse, attachment);
         
         endpoint.invoke(messageContext);
@@ -745,7 +759,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -754,21 +768,22 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
         final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
@@ -822,7 +837,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -831,21 +846,22 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
         final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
@@ -899,31 +915,32 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
-        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        responseHeaders.put(SoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>", responseHeaders);
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
         final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
@@ -982,32 +999,33 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
-        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
-        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL + "_2", "<Error><text>This request was not OK!</text></Error>");
+        responseHeaders.put(SoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        responseHeaders.put(SoapMessageHeaders.SOAP_FAULT_DETAIL + "_2", "<Error><text>This request was not OK!</text></Error>");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>", responseHeaders);
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
         final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
@@ -1066,31 +1084,32 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "answerHello");
+        responseHeaders.put(SoapMessageHeaders.SOAP_ACTION, "answerHello");
         responseHeaders.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, "someCorrelator");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -1134,7 +1153,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -1143,21 +1162,22 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         Soap11Body soapResponseBody = EasyMock.createMock(Soap11Body.class);
         final Soap11Fault soapFault = EasyMock.createMock(Soap11Fault.class);
@@ -1216,7 +1236,7 @@ public class WebServiceEndpointTest {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
 
         Map<String, Object> requestHeaders = new HashMap<String, Object>();
-        requestHeaders.put(CitrusSoapMessageHeaders.SOAP_ACTION, "sayHello");
+        requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -1225,21 +1245,22 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
-                Assert.assertNotNull(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION));
-                Assert.assertEquals(message.getHeader(CitrusSoapMessageHeaders.SOAP_ACTION), "sayHello");
-                
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+                Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
+                Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
+
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         Soap12Body soapResponseBody = EasyMock.createMock(Soap12Body.class);
         final Soap12Fault soapFault = EasyMock.createMock(Soap12Fault.class);
@@ -1309,17 +1330,18 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
+                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
         });
-        
-        SoapMessage soapRequest = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        
-        SoapMessage soapResponse = EasyMock.createMock(SoapMessage.class);
+
+        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         
         StringResult soapResponsePayload = new StringResult();
         

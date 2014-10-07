@@ -16,16 +16,16 @@
 
 package com.consol.citrus.ws.validation;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.mime.Attachment;
 
-import java.io.IOException;
+import java.util.List;
 
 /**
  * Abstract SOAP attachment validator tries to find attachment within received message and compares
@@ -42,58 +42,61 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
      */
     private static Logger log = LoggerFactory.getLogger(AbstractSoapAttachmentValidator.class);
     
-    /**
-     * Validate contentId and contentType of attachment to meet control attachment.
-     * 
-     * @param receivedMessage
-     * @param controlAttachment
-     */
-    public void validateAttachment(Message receivedMessage, SoapAttachment controlAttachment) throws IOException {
+    @Override
+    public void validateAttachment(SoapMessage soapMessage, List<SoapAttachment> controlAttachments) {
         log.info("Validating SOAP attachments ...");
-        
-        if (receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_ID) != null) {
+
+        for (SoapAttachment controlAttachment : controlAttachments) {
+            SoapAttachment attachment = findAttachment(soapMessage, controlAttachment);
+
             if (log.isDebugEnabled()) {
-                log.debug("Found attachment with contentId '" + receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_ID) + "'");
+                log.debug("Found attachment with contentId '" + controlAttachment.getContentId() + "'");
             }
-            
-            SoapAttachment attachment = new SoapAttachment();
-            
-            attachment.setContentId(receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_ID).toString());
-            
-            if (receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_TYPE) != null) {
-                attachment.setContentType(receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT_TYPE).toString());
-            }
-            
-            if (receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT) != null) {
-                Object contentObject = receivedMessage.getHeader(CitrusSoapMessageHeaders.CONTENT);
-                
-                if (contentObject instanceof byte[]) {
-                    String content = new String((byte[])contentObject, controlAttachment.getCharsetName());
-                    
-                    if (content.contains("<?xml")) {
-                        //strip off possible leading prolog characters in xml content
-                        attachment.setContent(content.substring(content.indexOf('<')));
-                    } else {
-                        attachment.setContent(content);
-                    }
-                } else if (contentObject instanceof String) {
-                    attachment.setContent(contentObject.toString());
-                } else {
-                    throw new IllegalArgumentException("Unsupported attachment content object (" + contentObject.getClass() + ")." +
-                    		" Either byte[] or java.lang.String are supported.");
-                }
-            }
-            
+
             validateAttachmentContentId(attachment, controlAttachment);
             validateAttachmentContentType(attachment, controlAttachment);
             validateAttachmentContent(attachment, controlAttachment);
-            
+
             log.info("Validation of SOAP attachment finished successfully: All values OK");
-        } else {
-            throw new CitrusRuntimeException("Missing SOAP attachment with contentId '" + controlAttachment.getContentId() + "'");
         }
     }
-    
+
+    /**
+     * Finds attachment in list of soap attachments on incoming soap message. By default
+     * uses content id of control attachment as search key. If no proper attachment with this content id
+     * was found in soap message throws validation exception.
+     *
+     * @param soapMessage
+     * @param controlAttachment
+     * @return
+     */
+    protected SoapAttachment findAttachment(SoapMessage soapMessage, SoapAttachment controlAttachment) {
+        List<SoapAttachment> attachments = soapMessage.getAttachments();
+        Attachment matching = null;
+
+        if (controlAttachment.getContentId() == null) {
+            if (attachments.size() == 1) {
+                matching = attachments.get(0);
+            } else {
+                throw new ValidationException("Found more than one SOAP attachment - need control attachment content id for validation!");
+            }
+        } else {
+            // try to find attachment by its content id
+            for (Attachment attachment : attachments) {
+                if (controlAttachment.getContentId() != null &&
+                        controlAttachment.getContentId().equals(attachment.getContentId())) {
+                    matching = attachment;
+                }
+            }
+        }
+
+        if (matching != null) {
+            return SoapAttachment.from(matching);
+        } else {
+            throw new ValidationException(String.format("Unable to find SOAP attachment with content id '%s'", controlAttachment.getContentId()));
+        }
+    }
+
     /**
      * Validating SOAP attachment content id.
      * @param receivedAttachment

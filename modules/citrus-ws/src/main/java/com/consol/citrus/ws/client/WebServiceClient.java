@@ -29,7 +29,6 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
-import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.transform.StringResult;
@@ -76,16 +75,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     @Override
-    public void send(Message message) {
-        send(message, null);
-    }
-
-    /**
-     * Send message with SOAP attachment.
-     * @param message
-     * @param attachment
-     */
-    public void send(final Message message, final Attachment attachment) {
+    public void send(final Message message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String endpointUri;
@@ -106,7 +96,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                     "' Currently only 'java.lang.String' is supported as payload type.");
         }
 
-        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(message, getEndpointConfiguration()).withAttachment(attachment);
+        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(message, getEndpointConfiguration());
 
         SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback(getEndpointConfiguration());
         getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(message, endpointUri));

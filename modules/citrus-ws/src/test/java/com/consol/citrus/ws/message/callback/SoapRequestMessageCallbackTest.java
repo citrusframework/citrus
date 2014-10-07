@@ -19,12 +19,13 @@ package com.consol.citrus.ws.message.callback;
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.*;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
@@ -74,7 +75,7 @@ public class SoapRequestMessageCallbackTest {
     @Test
     public void testSoapAction() throws TransformerException, IOException {
         Message testMessage = new DefaultMessage(requestPayload)
-                                                    .setHeader(CitrusSoapMessageHeaders.SOAP_ACTION, "soapAction");
+                                                    .setHeader(SoapMessageHeaders.SOAP_ACTION, "soapAction");
 
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
@@ -192,8 +193,8 @@ public class SoapRequestMessageCallbackTest {
     @SuppressWarnings("rawtypes")
     public void testSoapMimeHeader() throws TransformerException, IOException {
         Message testMessage = new DefaultMessage(requestPayload)
-                                                    .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "operation", "unitTest")
-                                                    .setHeader(CitrusSoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789");
+                                                    .setHeader(SoapMessageHeaders.HTTP_PREFIX + "operation", "unitTest")
+                                                    .setHeader(SoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789");
 
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
@@ -229,14 +230,15 @@ public class SoapRequestMessageCallbackTest {
     
     @Test
     public void testSoapAttachment() throws TransformerException, IOException {
-        Message testMessage = new DefaultMessage(requestPayload);
-
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("attContentId");
         attachment.setContent("This is a SOAP attachment\nwith multi-line");
         attachment.setContentType("plain/text");
-        
-        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration()).withAttachment(attachment);
+
+        com.consol.citrus.ws.message.SoapMessage testMessage = new com.consol.citrus.ws.message.SoapMessage(requestPayload)
+                .addAttachment(attachment);
+
+        SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         
         reset(soapRequest, soapBody);
         

@@ -69,13 +69,11 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
 
             if (jmsMessage instanceof TextMessage) {
                 payload = ((TextMessage) jmsMessage).getText();
-            }
-            else if (jmsMessage instanceof BytesMessage) {
+            } else if (jmsMessage instanceof BytesMessage) {
                 byte[] bytes = new byte[(int) ((BytesMessage) jmsMessage).getBodyLength()];
                 ((BytesMessage) jmsMessage).readBytes(bytes);
                 payload = bytes;
-            }
-            else if (jmsMessage instanceof MapMessage) {
+            } else if (jmsMessage instanceof MapMessage) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 Enumeration en = ((MapMessage) jmsMessage).getMapNames();
                 while (en.hasMoreElements()) {
@@ -83,15 +81,25 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
                     map.put(key, ((MapMessage) jmsMessage).getObject(key));
                 }
                 payload = map;
-            }
-            else if (jmsMessage instanceof ObjectMessage) {
+            } else if (jmsMessage instanceof ObjectMessage) {
                 payload = ((ObjectMessage) jmsMessage).getObject();
-            }
-            else {
+            } else {
                 payload = jmsMessage;
             }
 
-            return new DefaultMessage(payload, headers);
+            if (payload instanceof Message) {
+                Message nestedMessage = (Message) payload;
+
+                for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
+                    if (!headerEntry.getKey().startsWith(com.consol.citrus.message.MessageHeaders.MESSAGE_PREFIX)) {
+                        nestedMessage.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                    }
+                }
+
+                return nestedMessage;
+            } else {
+                return new DefaultMessage(payload, headers);
+            }
         } catch (JMSException e) {
             throw new CitrusRuntimeException("Failed to convert jms message", e);
         }

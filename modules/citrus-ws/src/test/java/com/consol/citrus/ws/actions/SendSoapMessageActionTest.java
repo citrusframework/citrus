@@ -19,15 +19,15 @@ package com.consol.citrus.ws.actions;
 import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.ws.message.SoapMessage;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -55,10 +55,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(webServiceClient);
         
-        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -95,10 +95,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         reset(webServiceClient);
         
-        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertEquals(constructedAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -157,10 +157,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(webServiceClient);
         
-        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -196,10 +196,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(webServiceClient);
         
-        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -235,10 +235,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         reset(webServiceClient);
         
-        webServiceClient.send((Message) anyObject(), (Attachment) anyObject());
+        webServiceClient.send((Message) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");

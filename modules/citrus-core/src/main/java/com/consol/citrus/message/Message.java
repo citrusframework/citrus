@@ -16,13 +16,14 @@
 
 package com.consol.citrus.message;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
-public interface Message {
+public interface Message extends Serializable {
 
     /**
      * Gets the unique message id;

@@ -16,12 +16,11 @@
 
 package com.consol.citrus.ws.message.converter;
 
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.message.Message;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mime.Attachment;
 
 /**
  * Converter is abel to create proper WebService message from internal message representation and vice versa. Converter
@@ -43,9 +42,4 @@ public interface WebServiceMessageConverter extends MessageConverter<WebServiceM
      */
     Message convertInbound(WebServiceMessage webServiceMessage, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration);
 
-    /**
-     * Sets SOAP attachment for message creation.
-     * @param attachment
-     */
-    void setAttachment(Attachment attachment);
 }

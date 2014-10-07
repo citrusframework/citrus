@@ -19,13 +19,15 @@ package com.consol.citrus.ws.actions;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
-import com.consol.citrus.message.Message;
 
 import java.io.IOException;
+import java.util.Collections;
 
 /**
  * Message receiver for SOAP messaging.
@@ -77,8 +79,12 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
             if (controlAttachment.getContentType() != null) {
                 controlAttachment.setContentType(context.replaceDynamicContentInString(controlAttachment.getContentType()));
             }
-            
-            attachmentValidator.validateAttachment(receivedMessage, controlAttachment);
+
+            if (receivedMessage instanceof SoapMessage) {
+                attachmentValidator.validateAttachment((SoapMessage) receivedMessage, Collections.singletonList(controlAttachment));
+            } else {
+                throw new CitrusRuntimeException(String.format("Unable to perform SOAP attachment validation on message type '%s'", receivedMessage.getClass()));
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }

@@ -18,7 +18,6 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -27,6 +26,7 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -64,7 +64,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.setAttachmentData("TestAttachment!");
 
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -73,10 +73,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
         
-        attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
+        attachmentValidator.validateAttachment((SoapMessage)anyObject(), anyObject(List.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "TestAttachment!");
                 Assert.assertNull(soapAttachment.getContentId());
                 Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
@@ -112,7 +112,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setAttachmentData("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         soapMessageAction.setCharsetName("UTF-16");
         
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -121,10 +121,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
         
-        attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
+        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
@@ -160,7 +160,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentId("myAttachment");
         soapMessageAction.setAttachmentData("");
         
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -169,10 +169,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
         
-        attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
+        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
@@ -204,7 +204,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -240,7 +240,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentType("text/xml");
         soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
         
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -249,10 +249,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
         
-        attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
+        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
@@ -290,7 +290,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentType("text/xml");
         soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
         
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -299,10 +299,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
         
-        attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
+        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
@@ -340,7 +340,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setContentType("text/xml");
         soapMessageAction.setAttachmentData("<TestAttachment><Message>${myText}</Message></TestAttachment>");
         
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration, attachmentValidator);
         expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
@@ -349,10 +349,10 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
 
-        attachmentValidator.validateAttachment((Message)anyObject(), (SoapAttachment) anyObject());
+        attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment soapAttachment = (SoapAttachment)EasyMock.getCurrentArguments()[1];
+                SoapAttachment soapAttachment = ((List<SoapAttachment>)EasyMock.getCurrentArguments()[1]).get(0);
                 Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");

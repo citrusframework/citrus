@@ -21,7 +21,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.message.CitrusSoapMessageHeaders;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.BeanCreationException;
@@ -67,7 +67,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 }
                 
                 String filePath = faultDetailElement.getAttribute("file");
-                soapFaultDetails.add(CitrusSoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
+                soapFaultDetails.add(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
             } else {
                 String faultDetailData = DomUtils.getTextValue(faultDetailElement).trim();
                 if (StringUtils.hasText(faultDetailData)) {
