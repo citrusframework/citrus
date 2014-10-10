@@ -27,7 +27,7 @@
   <!-- ================ -->
 
   <!-- Our own classes-->
-  <logger name="com.consol">
+  <logger name="com.consol.citrus">
     <level value="DEBUG"/>
   </logger>
 
