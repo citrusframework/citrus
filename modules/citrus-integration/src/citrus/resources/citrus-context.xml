@@ -93,9 +93,12 @@
          message-factory="messageFactory"
          interceptors="clientInterceptors"/>
                               
-    <citrus-jms:jms-endpoint id="webServiceRequestReceiver" destination-name="${jms.ws.stub.request}"/>
+    <citrus-jms:jms-endpoint id="webServiceRequestReceiver"
+                             destination-name="${jms.ws.stub.request}"/>
     
-    <citrus-jms:jms-endpoint id="webServiceResponseSender" destination-name="${jms.ws.stub.response}"/>
+    <citrus-jms:jms-endpoint id="webServiceResponseSender"
+                             use-object-messages="true"
+                             destination-name="${jms.ws.stub.response}"/>
     
     <citrus-ws:client id="webServiceHelloClient"
          request-url="http://localhost:8071/hello"

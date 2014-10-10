@@ -119,7 +119,9 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
             Object payload = message.getPayload();
 
             javax.jms.Message jmsMessage;
-            if (payload instanceof javax.jms.Message) {
+            if (endpointConfiguration.isUseObjectMessages()) {
+                jmsMessage = session.createObjectMessage(message);
+            } else if (payload instanceof javax.jms.Message) {
                 jmsMessage = (javax.jms.Message) payload;
             } else if (payload instanceof String) {
                 jmsMessage = session.createTextMessage((String) payload);

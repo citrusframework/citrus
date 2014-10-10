@@ -11,6 +11,7 @@
                                  destination-name="serverQueue"
                                  reply-destination-name="replyQueue"
                                  connection-factory="connectionFactory"
+                                 use-object-messages="false"
                                  timeout="2500"/>
 
     <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">

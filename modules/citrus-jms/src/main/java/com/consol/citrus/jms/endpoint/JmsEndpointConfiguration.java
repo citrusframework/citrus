@@ -61,6 +61,9 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Use topics instead of queues */
     private boolean pubSubDomain = false;
 
+    /** Should always use object messages */
+    private boolean useObjectMessages = false;
+
     /**
      * Gets the destination name.
      * @return the destinationName
@@ -239,5 +242,22 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setHeaderMapper(JmsHeaderMapper headerMapper) {
         this.headerMapper = headerMapper;
+    }
+
+    /**
+     * Determines weather to convert outbound messages or not. If conversion is disabled endpoint will not convert
+     * the outbound message. Instead the raw message object will be sent over the wire using a JMS object message.
+     * @return
+     */
+    public boolean isUseObjectMessages() {
+        return useObjectMessages;
+    }
+
+    /**
+     *
+     * @param useObjectMessages
+     */
+    public void setUseObjectMessages(boolean useObjectMessages) {
+        this.useObjectMessages = useObjectMessages;
     }
 }

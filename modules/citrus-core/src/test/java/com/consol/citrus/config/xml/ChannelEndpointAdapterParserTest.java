@@ -40,5 +40,7 @@ public class ChannelEndpointAdapterParserTest extends AbstractBeanDefinitionPars
         Assert.assertEquals(adapter.getName(), "endpointAdapter");
         Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "serverChannel");
+        Assert.assertEquals(adapter.getEndpointConfiguration().isUseObjectMessages(), false);
+
     }
 }

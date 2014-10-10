@@ -53,7 +53,7 @@
         </header>
       </ws:send>
 
-      <receive endpoint="soapRequestEndpoint">
+      <ws:receive endpoint="soapRequestEndpoint">
         <message schema-validation="false">
           <data>
             <![CDATA[
@@ -87,9 +87,9 @@
         <extract>
           <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
         </extract>
-      </receive>
+      </ws:receive>
 
-      <send endpoint="soapResponseEndpoint">
+      <ws:send endpoint="soapResponseEndpoint">
         <message>
           <data>
             <![CDATA[
@@ -117,9 +117,9 @@
           <element name="citrus_http_operation" value="answerHello"/>
           <element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
         </header>
-      </send>
+      </ws:send>
 
-      <receive endpoint="helloSoapClient" timeout="5000">
+      <ws:receive endpoint="helloSoapClient" timeout="5000">
         <message schema-validation="false">
           <data>
             <![CDATA[
@@ -149,7 +149,7 @@
           <element name="Operation" value="answerHello"/>
           <element name="operation" value="answerHello"/>
         </header>
-      </receive>
+      </ws:receive>
     </actions>
   </testcase>
 </spring:beans>

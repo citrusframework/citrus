@@ -102,7 +102,7 @@ public class SoapRequestMessageCallbackTest {
                         		"</header>";
         
         Message testMessage = new DefaultMessage(requestPayload)
-                                                    .setHeader(MessageHeaders.HEADER_CONTENT, soapHeaderContent);
+                                                    .addHeaderData(soapHeaderContent);
 
         SoapRequestMessageCallback callback = new SoapRequestMessageCallback(testMessage, new WebServiceEndpointConfiguration());
         

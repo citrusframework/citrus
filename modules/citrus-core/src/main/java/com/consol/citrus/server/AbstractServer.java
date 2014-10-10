@@ -132,6 +132,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             channelEndpointConfiguration.setChannelName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
             channelEndpointConfiguration.setBeanFactory(getBeanFactory());
             channelEndpointConfiguration.setTimeout(defaultTimeout);
+            channelEndpointConfiguration.setUseObjectMessages(true);
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
         }
 

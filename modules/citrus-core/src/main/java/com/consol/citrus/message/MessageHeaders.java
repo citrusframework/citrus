@@ -40,9 +40,6 @@ public final class MessageHeaders {
     /** Time message was created */
     public static final String TIMESTAMP = MESSAGE_PREFIX + "timestamp";
 
-    /** Header content data */
-    public static final String HEADER_CONTENT = MESSAGE_PREFIX + "header_content";
-
     /** Header indicating the message type (e.g. xml, json, csv, plaintext, etc) */
     public static final String MESSAGE_TYPE = MESSAGE_PREFIX + "type";
 

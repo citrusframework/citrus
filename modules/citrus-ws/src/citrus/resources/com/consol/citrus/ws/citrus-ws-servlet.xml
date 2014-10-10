@@ -93,6 +93,7 @@
                                destination-name="SoapServer.inbound"
                                reply-destination-name="SoapServer.outbound"
                                connection-factory="jmsConnectionFactory"
+                               use-object-messages="true"
                                timeout="5000"/>
 
   <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">

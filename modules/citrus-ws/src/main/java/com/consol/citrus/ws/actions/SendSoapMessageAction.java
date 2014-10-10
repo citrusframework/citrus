@@ -20,11 +20,10 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
-import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.message.SoapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,20 +64,10 @@ public class SendSoapMessageAction extends SendMessageAction {
     @Override
     public void doExecute(final TestContext context) {
         Message message = createMessage(context, getMessageType());
-        
-        // extract variables from before sending message so we can save dynamic message ids
-        for (VariableExtractor variableExtractor : getVariableExtractors()) {
-            variableExtractor.extractVariables(message, context);
-        }
 
-        final Endpoint soapEndpoint = getOrCreateEndpoint(context);
-        if (!(soapEndpoint instanceof WebServiceClient)) {
-            throw new CitrusRuntimeException(String.format("Sending SOAP messages requires a " +
-            		"'%s' but was '%s'", WebServiceClient.class.getName(), soapEndpoint.getClass().getName()));
-        }
-
-        final WebServiceClient webServiceClient = (WebServiceClient) soapEndpoint;
+        final SoapMessage soapMessage;
         final String attachmentContent;
+
         try {
             if (StringUtils.hasText(attachmentData)) {
                 attachmentContent = context.replaceDynamicContentInString(attachmentData);
@@ -88,26 +77,38 @@ public class SendSoapMessageAction extends SendMessageAction {
                 attachmentContent = null;
             }
 
-            final SoapMessage soapMessage = new SoapMessage(message.getPayload(), message.copyHeaders());
+            soapMessage = new SoapMessage(message.getPayload(), message.copyHeaders());
+
+            for (String headerData : message.getHeaderData()) {
+                soapMessage.addHeaderData(headerData);
+            }
+
             if (attachmentContent != null) {
                 attachment.setContent(attachmentContent);
                 soapMessage.addAttachment(attachment);
             }
-        
-            if (isForkMode()) {
-                log.info("Forking send message action ...");
 
-                SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-                taskExecutor.execute(new Runnable() {
-                    public void run() {
-                        webServiceClient.send(soapMessage);
-                    }
-                });
-            } else {
-                webServiceClient.send(soapMessage);
-            }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
+        }
+
+        // extract variables from before sending message so we can save dynamic message ids
+        for (VariableExtractor variableExtractor : getVariableExtractors()) {
+            variableExtractor.extractVariables(soapMessage, context);
+        }
+
+        final Endpoint soapEndpoint = getOrCreateEndpoint(context);
+        if (isForkMode()) {
+            log.info("Forking send message action ...");
+
+            SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
+            taskExecutor.execute(new Runnable() {
+                public void run() {
+                    soapEndpoint.createProducer().send(soapMessage);
+                }
+            });
+        } else {
+            soapEndpoint.createProducer().send(soapMessage);
         }
     }
     

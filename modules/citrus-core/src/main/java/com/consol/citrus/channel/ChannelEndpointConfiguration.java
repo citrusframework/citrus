@@ -47,6 +47,9 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
     /** Message converter */
     private ChannelMessageConverter messageConverter = new ChannelMessageConverter();
 
+    /** Should always use object messages */
+    private boolean useObjectMessages = false;
+
     /**
      * Set the message channel.
      * @param channel the channel to set
@@ -141,5 +144,22 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
      */
     public void setMessageConverter(ChannelMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Determines weather to convert outbound messages or not. If conversion is disabled endpoint will not convert
+     * the outbound message. Instead the raw message object will be sent over the wire.
+     * @return
+     */
+    public boolean isUseObjectMessages() {
+        return useObjectMessages;
+    }
+
+    /**
+     *
+     * @param useObjectMessages
+     */
+    public void setUseObjectMessages(boolean useObjectMessages) {
+        this.useObjectMessages = useObjectMessages;
     }
 }

@@ -88,7 +88,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
         //delegate request processing to message handler
-        Message replyMessage = messageHandler.handleMessage(new DefaultMessageContainer(requestMessage));
+        Message replyMessage = messageHandler.handleMessage(requestMessage);
         
         if (simulateHttpStatusCode(replyMessage)) {
             return;
@@ -196,20 +196,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
                     headerEntry.getKey().startsWith(DEFAULT_JMS_HEADER_PREFIX)) {
                 continue;
             }
-            
+
             if (headerEntry.getKey().equalsIgnoreCase(SoapMessageHeaders.SOAP_ACTION)) {
                 response.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().equalsIgnoreCase(MessageHeaders.HEADER_CONTENT)) {
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                
-                transformer.transform(new StringSource(headerEntry.getValue().toString()), 
-                        response.getSoapHeader().getResult());
             } else if (!headerEntry.getKey().startsWith(MessageHeaders.PREFIX)) {
                 SoapHeaderElement headerElement;
                 if (QNameUtils.validateQName(headerEntry.getKey())) {
                     QName qname = QNameUtils.parseQNameString(headerEntry.getKey());
-                    
+
                     if (StringUtils.hasText(qname.getNamespaceURI())) {
                         headerElement = response.getSoapHeader().addHeaderElement(qname);
                     } else {
@@ -219,9 +213,17 @@ public class WebServiceEndpoint implements MessageEndpoint {
                     throw new SoapHeaderException("Failed to add SOAP header '" + headerEntry.getKey() + "', " +
                             "because of invalid QName");
                 }
-                
+
                 headerElement.setText(headerEntry.getValue().toString());
             }
+        }
+
+        for (String headerData : replyMessage.getHeaderData()) {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+
+            transformer.transform(new StringSource(headerData),
+                    response.getSoapHeader().getResult());
         }
     }
 

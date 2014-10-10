@@ -93,6 +93,7 @@
                                  destination-name="Citrus.Ws.Stub.RequestQueue"
                                  reply-destination-name="Citrus.Ws.Stub.ResponseQueue"
                                  connection-factory="jmsConnectionFactory"
+                                 use-object-messages="true"
                                  timeout="5000"/>
 
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">

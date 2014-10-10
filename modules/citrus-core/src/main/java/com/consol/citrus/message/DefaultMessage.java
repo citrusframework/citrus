@@ -18,6 +18,7 @@ package com.consol.citrus.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -35,6 +36,9 @@ public class DefaultMessage implements Message {
 
     /** Message payload object */
     private Object payload;
+
+    /** Optional list of header data */
+    private List<String> headerData = new ArrayList<String>();
 
     /** Message headers */
     private final Map<String, Object> headers;
@@ -75,7 +79,11 @@ public class DefaultMessage implements Message {
 
     @Override
     public String toString() {
-        return String.format("%s(%s) [payload: %s][headers: %s]", getClass().getSimpleName(), getId(), payload, headers);
+        if (CollectionUtils.isEmpty(headerData)) {
+            return String.format("%s [payload: %s][headers: %s]", getClass().getSimpleName().toUpperCase(), payload, headers);
+        } else {
+            return String.format("%s [payload: %s][headers: %s][header-data: %s]", getClass().getSimpleName().toUpperCase(), payload, headers, headerData);
+        }
     }
 
     @Override
@@ -100,6 +108,17 @@ public class DefaultMessage implements Message {
         }
 
         headers.remove(headerName);
+    }
+
+    @Override
+    public DefaultMessage addHeaderData(String headerData) {
+        this.headerData.add(headerData);
+        return this;
+    }
+
+    @Override
+    public List<String> getHeaderData() {
+        return headerData;
     }
 
     @Override

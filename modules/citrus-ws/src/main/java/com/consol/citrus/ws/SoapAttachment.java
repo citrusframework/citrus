@@ -137,6 +137,11 @@ public class SoapAttachment implements Attachment, Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s [contentId: %s, contentType: %s, content: %s]", getClass().getSimpleName().toUpperCase(), contentId, contentType, content);
+    }
+
     /**
      * Get the content body.
      * @return the content

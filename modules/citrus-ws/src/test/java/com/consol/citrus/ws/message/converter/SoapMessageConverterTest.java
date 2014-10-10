@@ -136,7 +136,7 @@ public class SoapMessageConverterTest {
                 "</header>";
 
         Message testMessage = new DefaultMessage(requestPayload)
-                .setHeader(MessageHeaders.HEADER_CONTENT, soapHeaderContent);
+                .addHeaderData(soapHeaderContent);
 
         SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
 
@@ -354,7 +354,7 @@ public class SoapMessageConverterTest {
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
-        Assert.assertNull(responseMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -386,7 +386,7 @@ public class SoapMessageConverterTest {
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
-        Assert.assertNull(responseMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -423,7 +423,8 @@ public class SoapMessageConverterTest {
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "");
-        Assert.assertEquals(responseMessage.getHeader(MessageHeaders.HEADER_CONTENT), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
+        Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
+        Assert.assertEquals(responseMessage.getHeaderData().get(0), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
 
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -463,7 +464,7 @@ public class SoapMessageConverterTest {
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"), "123456789");
-        Assert.assertNull(responseMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
         verify(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
     }
@@ -504,7 +505,7 @@ public class SoapMessageConverterTest {
         SoapMessage soapResponseMessage = (SoapMessage) responseMessage;
         Assert.assertEquals(soapResponseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(soapResponseMessage.getSoapAction(), "soapOperation");
-        Assert.assertNull(soapResponseMessage.getHeader(MessageHeaders.HEADER_CONTENT));
+        Assert.assertEquals(soapResponseMessage.getHeaderData().size(), 0L);
 
         List<SoapAttachment> attachments = soapResponseMessage.getAttachments();
         Assert.assertEquals(attachments.size(), 1L);

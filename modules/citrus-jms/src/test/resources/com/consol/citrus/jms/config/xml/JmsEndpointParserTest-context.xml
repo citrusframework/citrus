@@ -18,6 +18,7 @@
 
   <citrus-jms:jms-endpoint id="jmsEndpoint3"
                                pub-sub-domain="true"
+                               use-object-messages="true"
                                jms-template="jmsTemplate"/>
 
   <citrus-jms:jms-endpoint id="jmsEndpoint4"

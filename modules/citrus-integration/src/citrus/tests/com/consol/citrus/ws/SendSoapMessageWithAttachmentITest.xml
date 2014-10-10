@@ -53,7 +53,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <send with="webServiceResponseSender">
+                    <ws:send with="webServiceResponseSender">
                         <message>
                             <data>
                                 <![CDATA[
@@ -67,11 +67,11 @@
                         <header>
                             <element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                         </header>
-                      </send>
+                      </ws:send>
                 </sequential>
             </parallel>
             
-            <receive with="webServiceClient">
+            <ws:receive with="webServiceClient">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[
@@ -82,7 +82,7 @@
                         ]]>
                     </data>
                 </message>
-            </receive>
+            </ws:receive>
             
             <parallel>
                 <ws:send with="webServiceClient">
@@ -127,7 +127,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <send with="webServiceResponseSender">
+                    <ws:send with="webServiceResponseSender">
                         <message>
                             <data>
                                 <![CDATA[
@@ -141,11 +141,11 @@
                         <header>
                             <element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                         </header>
-                      </send>
+                      </ws:send>
                 </sequential>
             </parallel>
             
-            <receive with="webServiceClient">
+            <ws:receive with="webServiceClient">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[
@@ -156,7 +156,7 @@
                         ]]>
                     </data>
                 </message>
-            </receive>
+            </ws:receive>
         </actions>
     </testcase>
 </spring:beans>

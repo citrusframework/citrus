@@ -61,9 +61,8 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -120,13 +119,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -184,13 +182,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -263,13 +260,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -350,13 +346,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -434,13 +429,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -521,13 +515,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -607,13 +600,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -689,10 +681,9 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
-                Assert.assertTrue(SoapMessage.class.isInstance(((MessageContainer) message).getMessage()));
+                Assert.assertTrue(SoapMessage.class.isInstance(message));
 
-                SoapMessage soapMessage = (SoapMessage) ((MessageContainer) message).getMessage();
+                SoapMessage soapMessage = (SoapMessage) message;
 
                 Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
 
@@ -702,7 +693,7 @@ public class WebServiceEndpointTest {
                 
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -768,13 +759,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -846,13 +836,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -925,13 +914,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -1010,13 +998,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -1094,13 +1081,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -1162,13 +1148,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }
@@ -1245,13 +1230,12 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
 
                 return responseMessage;
             }
@@ -1330,9 +1314,8 @@ public class WebServiceEndpointTest {
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
-                Assert.assertTrue(message instanceof MessageContainer);
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                Assert.assertEquals(((MessageContainer) message).getMessage().getPayload(), requestMessage.getPayload());
+                Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
                 
                 return responseMessage;
             }

@@ -33,9 +33,6 @@ public class SoapMessage extends DefaultMessage {
     /** Serial */
     private static final long serialVersionUID = 3289201140229458069L;
 
-    /** Optional list of header fragments */
-    private List<String> headerFragments = new ArrayList<String>();
-
     /** Optional list of SOAP attachments */
     private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
 
@@ -81,16 +78,6 @@ public class SoapMessage extends DefaultMessage {
     }
 
     /**
-     * Adds new header fragment data.
-     * @param headerData
-     * @return
-     */
-    public SoapMessage addHeaderFragment(String headerData) {
-        this.headerFragments.add(headerData);
-        return this;
-    }
-
-    /**
      * Adds new attachment to this message.
      * @param attachment
      */
@@ -99,12 +86,9 @@ public class SoapMessage extends DefaultMessage {
         return this;
     }
 
-    /**
-     * Gets the list of header fragments in this message.
-     * @return
-     */
-    public List<String> getHeaderFragments() {
-        return headerFragments;
+    @Override
+    public String toString() {
+        return String.format(super.toString() + "[attachments: %s]", attachments);
     }
 
     /**

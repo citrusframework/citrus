@@ -44,6 +44,7 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages(), false);
 
         // 2nd message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint2");
@@ -60,6 +61,7 @@ public class JmsEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertEquals(jmsEndpoint.getEndpointConfiguration().isUseObjectMessages(), true);
 
         // 4th message receiver
         jmsEndpoint = endpoints.get("jmsEndpoint4");

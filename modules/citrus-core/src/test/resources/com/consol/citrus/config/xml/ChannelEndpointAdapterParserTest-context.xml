@@ -8,6 +8,7 @@
     <citrus:channel-endpoint-adapter id="endpointAdapter"
                                      channel-name="serverChannel"
                                      polling-interval="250"
+                                     use-object-messages="false"
                                      timeout="10000"/>
 
 </beans>

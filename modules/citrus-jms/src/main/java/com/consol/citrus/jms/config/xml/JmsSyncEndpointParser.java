@@ -17,7 +17,6 @@
 package com.consol.citrus.jms.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.xml.AbstractJmsEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;

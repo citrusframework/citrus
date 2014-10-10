@@ -134,7 +134,8 @@
                        destination-name="SoapServer.inbound"/>
 
   <citrus-jms:jms-endpoint id="soapResponseEndpoint"
-                       destination-name="SoapServer.outbound"/>
+                           use-object-messages="true"
+                           destination-name="SoapServer.outbound"/>
 
   <citrus-ws:client id="echoSoapClient"
                     request-url="http://localhost:14080/echo"

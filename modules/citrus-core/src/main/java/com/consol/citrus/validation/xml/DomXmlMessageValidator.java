@@ -103,7 +103,16 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             Message controlMessage = validationContext.getControlMessage(context);
             if (controlMessage != null) {
-                validateMessageHeader(controlMessage.copyHeaders(), receivedMessage.copyHeaders(), validationContext, context);
+
+                Assert.isTrue(controlMessage.getHeaderData().size() <= receivedMessage.getHeaderData().size(),
+                        "Failed to validate header data - missing header data in received message");
+
+                for (int i = 0; i < controlMessage.getHeaderData().size(); i++) {
+                    validateXmlHeaderFragment(receivedMessage.getHeaderData().get(i),
+                            controlMessage.getHeaderData().get(i), validationContext, context);
+                }
+
+                validateMessageHeader(controlMessage.copyHeaders(), receivedMessage.copyHeaders(), context);
             }
 
             log.info("XML message validation successful: All values OK");
@@ -128,20 +137,11 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      *
      * @param controlHeaders
      * @param receivedHeaders
-     * @param validationContext
      * @param context
      */
     protected void validateMessageHeader(Map<String, Object> controlHeaders,
             Map<String, Object> receivedHeaders,
-            XmlMessageValidationContext validationContext,
             TestContext context) {
-        
-        if (controlHeaders.containsKey(MessageHeaders.HEADER_CONTENT)) {
-            Assert.isTrue(receivedHeaders.containsKey(MessageHeaders.HEADER_CONTENT), "Missing header XML fragment in received message");
-            
-            validateXmlHeaderFragment(receivedHeaders.get(MessageHeaders.HEADER_CONTENT).toString(),
-                    controlHeaders.get(MessageHeaders.HEADER_CONTENT).toString(), validationContext, context);
-        }
         
         ControlMessageValidator validatorDelegate = new ControlMessageValidator();
         validatorDelegate.validateMessageHeader(controlHeaders, receivedHeaders, context);

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.config.xml;
+package com.consol.citrus.jms.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractEndpointParser;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
@@ -75,6 +76,7 @@ public abstract class AbstractJmsEndpointParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("pub-sub-domain"), "pubSubDomain");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("use-object-messages"), "useObjectMessages");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
     }
 

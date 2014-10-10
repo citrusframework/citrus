@@ -30,9 +30,15 @@ public class ChannelMessageConverter implements MessageConverter<org.springframe
 
     @Override
     public org.springframework.messaging.Message convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration) {
-        return MessageBuilder.withPayload(internalMessage.getPayload())
+        if (endpointConfiguration.isUseObjectMessages()) {
+            return MessageBuilder.withPayload(internalMessage)
+                    .build();
+
+        } else {
+            return MessageBuilder.withPayload(internalMessage.getPayload())
                     .copyHeaders(internalMessage.copyHeaders())
                     .build();
+        }
     }
 
     @Override

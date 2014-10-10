@@ -41,6 +41,7 @@ public class ChannelEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNull(channelEndpoint.getEndpointConfiguration().getChannel());
         Assert.assertEquals(channelEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertNotNull(channelEndpoint.getEndpointConfiguration().getChannelResolver());
+        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().isUseObjectMessages(), false);
 
         // 2nd message receiver
         channelEndpoint = endpoints.get("channelEndpoint2");
@@ -58,6 +59,7 @@ public class ChannelEndpointParserTest extends AbstractBeanDefinitionParserTest 
         // 4th message receiver
         channelEndpoint = endpoints.get("channelEndpoint4");
         Assert.assertNotNull(channelEndpoint.getActor());
+        Assert.assertEquals(channelEndpoint.getEndpointConfiguration().isUseObjectMessages(), true);
         Assert.assertEquals(channelEndpoint.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
     }
 }

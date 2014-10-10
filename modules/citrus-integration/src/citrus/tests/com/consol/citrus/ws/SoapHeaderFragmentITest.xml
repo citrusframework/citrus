@@ -52,7 +52,7 @@
                 </header>
             </ws:send>
             
-            <receive with="webServiceRequestReceiver">
+            <ws:receive with="webServiceRequestReceiver">
             	<message schema-validation="false">
             		<data>
             			<![CDATA[
@@ -86,9 +86,9 @@
               <extract>
                   <header name="citrus_jms_messageId" variable="internal_correlation_id"/>
               </extract>
-            </receive>
+            </ws:receive>
             
-            <send with="webServiceResponseSender">
+            <ws:send with="webServiceResponseSender">
             	<message>
             		<data>
             			<![CDATA[
@@ -116,9 +116,9 @@
                     <element name="citrus_http_operation" value="answerHello"/>
                     <element name="citrus_jms_correlationId" value="${internal_correlation_id}"/>
                 </header>
-            </send>
+            </ws:send>
             
-            <receive with="webServiceClient" timeout="5000">
+            <ws:receive with="webServiceClient" timeout="5000">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[
@@ -148,7 +148,7 @@
                     <element name="Operation" value="answerHello"/>
                     <element name="operation" value="answerHello"/>
                 </header>
-            </receive>
+            </ws:receive>
     	</actions>
     </testcase>
 </spring:beans>

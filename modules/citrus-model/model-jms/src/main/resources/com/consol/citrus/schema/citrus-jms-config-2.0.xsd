@@ -15,8 +15,8 @@
   ~ limitations under the License.
   -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.citrusframework.org/schema/config"
-           targetNamespace="http://www.citrusframework.org/schema/config"
+           xmlns="http://www.citrusframework.org/schema/jms/config"
+           targetNamespace="http://www.citrusframework.org/schema/jms/config"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
@@ -31,6 +31,7 @@
     <xs:attribute name="jms-template" type="xs:string"/>
     <xs:attribute name="message-converter" type="xs:string"/>
     <xs:attribute name="pub-sub-domain" type="xs:boolean"/>
+    <xs:attribute name="use-object-messages" type="xs:boolean"/>
     <xs:attribute name="actor" type="xs:string"/>
     <xs:attribute name="timeout" type="xs:string"/>
   </xs:complexType>

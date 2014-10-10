@@ -22,7 +22,6 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import com.consol.citrus.message.Message;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
@@ -59,21 +58,39 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     public Message buildMessageContent(TestContext context, String messageType) {
         Object payload = buildMessagePayload(context);
 
-        Message message = new DefaultMessage(payload, buildMessageHeaders(context));
+        try {
+            Message message = new DefaultMessage(payload, buildMessageHeaders(context));
 
-        if (payload != null) {
-            if (dataDictionary != null) {
-                message = dataDictionary.interceptMessageConstruction(message, messageType, context);
+            if (payload != null) {
+                if (dataDictionary != null) {
+                    message = dataDictionary.interceptMessageConstruction(message, messageType, context);
+                }
+
+                message = context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
+
+                for (MessageConstructionInterceptor modifyer : messageInterceptors) {
+                    message = modifyer.interceptMessageConstruction(message, messageType, context);
+                }
             }
 
-            message = context.getMessageConstructionInterceptors().interceptMessageConstruction(message, messageType, context);
-
-            for (MessageConstructionInterceptor modifyer : messageInterceptors) {
-                message = modifyer.interceptMessageConstruction(message, messageType, context);
+            String headerContent = null;
+            if (messageHeaderResourcePath != null) {
+                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(messageHeaderResourcePath, context)));
+            } else if (messageHeaderData != null){
+                headerContent = context.replaceDynamicContentInString(messageHeaderData.trim());
             }
+
+            if (StringUtils.hasText(headerContent)) {
+                message.addHeaderData(headerContent);
+            }
+
+            return message;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to build message content", e);
         }
 
-        return message;
     }
     
     protected abstract Object buildMessagePayload(TestContext context);
@@ -90,17 +107,6 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
                     Constructor<?> constr = type.getHeaderClass().getConstructor(new Class[] { String.class });
                     entry.setValue(constr.newInstance(MessageHeaderType.removeTypeDefinition(value)));
                 }
-            }
-            
-            String headerContent = null;
-            if (messageHeaderResourcePath != null) {
-                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(messageHeaderResourcePath, context)));
-            } else if (messageHeaderData != null){
-                headerContent = context.replaceDynamicContentInString(messageHeaderData.trim());
-            }
-            
-            if (StringUtils.hasText(headerContent)) {
-                headers.put(MessageHeaders.HEADER_CONTENT, headerContent);
             }
             
             MessageHeaderUtils.checkHeaderTypes(headers);

@@ -96,14 +96,6 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
 
             if (headerEntry.getKey().equalsIgnoreCase(SoapMessageHeaders.SOAP_ACTION)) {
                 soapRequest.setSoapAction(headerEntry.getValue().toString());
-            } else if (headerEntry.getKey().equalsIgnoreCase(MessageHeaders.HEADER_CONTENT)) {
-                try {
-                    Transformer transformer = transformerFactory.newTransformer();
-                    transformer.transform(new StringSource(headerEntry.getValue().toString()),
-                            soapRequest.getSoapHeader().getResult());
-                } catch (TransformerException e) {
-                    throw new CitrusRuntimeException("Failed to write SOAP header content", e);
-                }
             } else if (headerEntry.getKey().toLowerCase().startsWith(SoapMessageHeaders.HTTP_PREFIX)) {
                 handleOutboundMimeMessageHeader(soapRequest,
                         headerEntry.getKey().substring(SoapMessageHeaders.HTTP_PREFIX.length()),
@@ -118,6 +110,16 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                 }
 
                 headerElement.setText(headerEntry.getValue().toString());
+            }
+        }
+
+        for (String headerData : message.getHeaderData()) {
+            try {
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.transform(new StringSource(headerData),
+                        soapRequest.getSoapHeader().getResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException("Failed to write SOAP header content", e);
             }
         }
 
@@ -248,7 +250,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                     Transformer transformer = transformerFactory.newTransformer();
                     transformer.transform(soapHeader.getSource(), headerData);
 
-                    message.setHeader(MessageHeaders.HEADER_CONTENT, headerData.toString());
+                    message.addHeaderData(headerData.toString());
                 }
             }
 

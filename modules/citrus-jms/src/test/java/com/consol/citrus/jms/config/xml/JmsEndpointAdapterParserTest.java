@@ -42,6 +42,7 @@ public class JmsEndpointAdapterParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 2500L);
         Assert.assertEquals((adapter.getEndpointConfiguration()).getDestinationName(), "serverQueue");
         Assert.assertEquals((adapter.getEndpointConfiguration()).getReplyDestinationName(), "replyQueue");
+        Assert.assertEquals(adapter.getEndpointConfiguration().isUseObjectMessages(), false);
         Assert.assertEquals((adapter.getEndpointConfiguration()).getConnectionFactory(), beanDefinitionContext.getBean("connectionFactory", ConnectionFactory.class));
 
     }

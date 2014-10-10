@@ -17,6 +17,7 @@
 package com.consol.citrus.message;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,7 +45,7 @@ public interface Message extends Serializable {
      * @param headerValue
      * @return
      */
-    public DefaultMessage setHeader(String headerName, Object headerValue);
+    DefaultMessage setHeader(String headerName, Object headerValue);
 
     /**
      * Removes the message header if it not a reserved message header such as unique message id.
@@ -54,10 +55,23 @@ public interface Message extends Serializable {
     void removeHeader(String headerName);
 
     /**
+     * Adds new header data.
+     * @param headerData
+     * @return
+     */
+    DefaultMessage addHeaderData(String headerData);
+
+    /**
+     * Gets the list of header data in this message.
+     * @return
+     */
+    List<String> getHeaderData();
+
+    /**
      * Gets exact copy of actual message headers.
      * @return
      */
-    public Map<String, Object> copyHeaders();
+    Map<String, Object> copyHeaders();
 
     /**
      * Gets message payload with required type conversion.
@@ -65,7 +79,7 @@ public interface Message extends Serializable {
      * @param <T>
      * @return
      */
-    public <T> T getPayload(Class<T> type);
+    <T> T getPayload(Class<T> type);
 
     /**
      * Gets the message payload.
