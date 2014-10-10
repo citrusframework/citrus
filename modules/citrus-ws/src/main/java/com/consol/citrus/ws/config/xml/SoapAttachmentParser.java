@@ -16,12 +16,10 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 
 /**
  * Parser for SOAP attachment element in Citrus ws namespace.
@@ -40,9 +38,8 @@ public final class SoapAttachmentParser {
      * Parse the attachment element with all children and attributes.
      * @param builder
      * @param element
-     * @param parserContext
      */
-    public static void parseAttachment(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
+    public static void parseAttachment(BeanDefinitionBuilder builder, Element element) {
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
         if (attachmentElement == null) { return; }
         

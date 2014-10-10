@@ -34,8 +34,7 @@
             
             <ws:assert fault-code="{http://www.citrusframework.org/faults}FAULT-1004"
                        fault-string="FaultString" 
-                       fault-validator="customSoapFaultValidator" 
-                       message-factory="customMessageFactory">
+                       fault-validator="customSoapFaultValidator">
                 <ws:fault-detail file="classpath:com/consol/citrus/ws/actions/test-fault-detail.xml"/>
                 <echo>
                     <message>Foo</message>
@@ -81,7 +80,4 @@
         <spring:constructor-arg value="com.consol.citrus.ws.validation.SoapFaultValidator"/>
     </spring:bean>
     
-    <spring:bean id="customMessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
-        <spring:constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
-    </spring:bean>
 </spring:beans>

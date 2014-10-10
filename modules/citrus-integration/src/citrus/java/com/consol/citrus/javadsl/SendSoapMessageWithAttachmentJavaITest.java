@@ -29,9 +29,6 @@ public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestBuil
     
     @CitrusTest
     public void SendSoapMessageWithAttachmentJavaITest() {
-        variable("soapFaultCode", "TEC-1001");
-        variable("soapFaultString", "Invalid request");
-        
         parallel(
             send("webServiceClient")
                 .soap()

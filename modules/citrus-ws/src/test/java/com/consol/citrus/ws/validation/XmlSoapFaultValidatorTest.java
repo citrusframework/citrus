@@ -16,20 +16,12 @@
 
 package com.consol.citrus.ws.validation;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.easymock.EasyMock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.xml.transform.StringSource;
-import org.testng.annotations.Test;
-
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.ws.message.SoapFault;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -55,61 +47,46 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testFaultDetailTranslation() {
-        SoapFaultDetail receivedDetail = EasyMock.createMock(SoapFaultDetail.class);
-        SoapFaultDetail controlDetail = EasyMock.createMock(SoapFaultDetail.class);
-        
-        SoapFaultDetailElement receivedDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
-        List<SoapFaultDetailElement> receivedDetailElements = new ArrayList<SoapFaultDetailElement>();
-        receivedDetailElements.add(receivedDetailElement);
-        
-        SoapFaultDetailElement controlDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
-        List<SoapFaultDetailElement> controlDetailElements = new ArrayList<SoapFaultDetailElement>();
-        controlDetailElements.add(controlDetailElement);
-        
-        reset(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
-        
-        expect(receivedDetail.getDetailEntries()).andReturn(receivedDetailElements.iterator()).once();
-        expect(controlDetail.getDetailEntries()).andReturn(controlDetailElements.iterator()).once();
-        expect(receivedDetailElement.getSource()).andReturn(new StringSource(error)).once();
-        expect(controlDetailElement.getSource()).andReturn(new StringSource(error)).once();
-        
-        replay(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
-        
+    public void testFaultDetailValidation() {
+        SoapFault receivedDetail = new SoapFault();
+        receivedDetail.addFaultDetail(error);
+        SoapFault controlDetail = new SoapFault();
+        controlDetail.addFaultDetail(error);
+
         soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
-        
-        verify(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
+    }
+
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Validation failed: Node value not equal for element 'code', expected '1001' but was '1002'")
+    public void testFaultDetailValidationError() {
+        SoapFault receivedDetail = new SoapFault();
+        receivedDetail.addFaultDetail(error.replaceFirst("1001", "1002"));
+        SoapFault controlDetail = new SoapFault();
+        controlDetail.addFaultDetail(error);
+
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
     }
     
     @Test
-    public void testMultipleFaultDetailTranslation() {
-        SoapFaultDetail receivedDetail = EasyMock.createMock(SoapFaultDetail.class);
-        SoapFaultDetail controlDetail = EasyMock.createMock(SoapFaultDetail.class);
-        
-        SoapFaultDetailElement receivedDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
-        List<SoapFaultDetailElement> receivedDetailElements = new ArrayList<SoapFaultDetailElement>();
-        receivedDetailElements.add(receivedDetailElement);
-        receivedDetailElements.add(receivedDetailElement);
-        
-        SoapFaultDetailElement controlDetailElement = EasyMock.createMock(SoapFaultDetailElement.class);
-        List<SoapFaultDetailElement> controlDetailElements = new ArrayList<SoapFaultDetailElement>();
-        controlDetailElements.add(controlDetailElement);
-        controlDetailElements.add(controlDetailElement);
-        
-        reset(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
-        
-        expect(receivedDetail.getDetailEntries()).andReturn(receivedDetailElements.iterator()).once();
-        expect(controlDetail.getDetailEntries()).andReturn(controlDetailElements.iterator()).once();
-        expect(receivedDetailElement.getSource()).andReturn(new StringSource(error)).once();
-        expect(controlDetailElement.getSource()).andReturn(new StringSource(error)).once();
-        
-        expect(receivedDetailElement.getSource()).andReturn(new StringSource(detail)).once();
-        expect(controlDetailElement.getSource()).andReturn(new StringSource(detail)).once();
-        
-        replay(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
-        
+    public void testMultipleFaultDetailValidation() {
+        SoapFault receivedDetail = new SoapFault();
+        receivedDetail.addFaultDetail(error);
+        receivedDetail.addFaultDetail(detail);
+        SoapFault controlDetail = new SoapFault();
+        controlDetail.addFaultDetail(error);
+        controlDetail.addFaultDetail(detail);
+
         soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
-        
-        verify(receivedDetail, controlDetail, receivedDetailElement, controlDetailElement);
+    }
+
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Validation failed: Node value not equal for element 'code', expected '1002' but was '1001'")
+    public void testMultipleFaultDetailValidationError() {
+        SoapFault receivedDetail = new SoapFault();
+        receivedDetail.addFaultDetail(error);
+        receivedDetail.addFaultDetail(detail);
+        SoapFault controlDetail = new SoapFault();
+        controlDetail.addFaultDetail(error.replaceFirst("1001", "1002"));
+        controlDetail.addFaultDetail(detail);
+
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
     }
 }

@@ -16,13 +16,13 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.ws.message.builder.SoapFaultAwareMessageBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -59,20 +59,20 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
-        SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder) action.getMessageBuilder();
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getFaultActor(), "faultActor");
-        Assert.assertEquals(messageBuilder.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(messageBuilder.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultActor(), "faultActor");
+        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
+        Assert.assertEquals(action.getFaultString(), "Something went wrong");
     }
 
     @Test
@@ -95,20 +95,20 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpointUri(), "soapEndpoint");
-        Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
-        SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder) action.getMessageBuilder();
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertNull(messageBuilder.getFaultActor());
-        Assert.assertEquals(messageBuilder.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(messageBuilder.getFaultString(), "Something went wrong");
+        Assert.assertNull(action.getFaultActor());
+        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
+        Assert.assertEquals(action.getFaultString(), "Something went wrong");
 
         verify(applicationContextMock);
     }
@@ -132,21 +132,21 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
-        SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder) action.getMessageBuilder();
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getFaultDetails().size(), 1L);
-        Assert.assertEquals(messageBuilder.getFaultDetails().get(0), "someDetailData");
-        Assert.assertEquals(messageBuilder.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(messageBuilder.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultDetails().size(), 1L);
+        Assert.assertEquals(action.getFaultDetails().get(0), "someDetailData");
+        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
+        Assert.assertEquals(action.getFaultString(), "Something went wrong");
     }
 
     @Test
@@ -164,21 +164,21 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
-        SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder) action.getMessageBuilder();
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getFaultDetails().size(), 1L);
-        Assert.assertEquals(messageBuilder.getFaultDetails().get(0), "DETAIL");
-        Assert.assertEquals(messageBuilder.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(messageBuilder.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultDetails().size(), 1L);
+        Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL");
+        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
+        Assert.assertEquals(action.getFaultString(), "Something went wrong");
     }
 
     @Test
@@ -197,21 +197,21 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.execute();
 
         Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), SoapFaultAwareMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
-        SoapFaultAwareMessageBuilder messageBuilder = (SoapFaultAwareMessageBuilder) action.getMessageBuilder();
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getFaultDetails().size(), 2L);
-        Assert.assertEquals(messageBuilder.getFaultDetails().get(0), "DETAIL1");
-        Assert.assertEquals(messageBuilder.getFaultDetails().get(1), "DETAIL2");
-        Assert.assertEquals(messageBuilder.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(messageBuilder.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultDetails().size(), 2L);
+        Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL1");
+        Assert.assertEquals(action.getFaultDetails().get(1), "DETAIL2");
+        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
+        Assert.assertEquals(action.getFaultString(), "Something went wrong");
     }
 }

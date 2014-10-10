@@ -16,15 +16,13 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import com.consol.citrus.ws.message.SoapMessageHeaders;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -39,7 +37,6 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         // 1st action
         AssertSoapFault action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1001");
         Assert.assertNull(action.getFaultString());
@@ -49,7 +46,6 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1002");
         Assert.assertEquals(action.getFaultString(), "FaultString");
@@ -59,7 +55,6 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         // 3rd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
         Assert.assertEquals(action.getFaultString(), "FaultString");
@@ -71,18 +66,17 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         // 4th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("customMessageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("customSoapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1004");
         Assert.assertEquals(action.getFaultString(), "FaultString");
-        Assert.assertEquals(action.getFaultDetails().size(), 1L);
-        Assert.assertEquals(action.getFaultDetails().get(0), SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(classpath:com/consol/citrus/ws/actions/test-fault-detail.xml)");
+        Assert.assertEquals(action.getFaultDetails().size(), 0L);
+        Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
+        Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "classpath:com/consol/citrus/ws/actions/test-fault-detail.xml");
         Assert.assertEquals(((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().size(), 1L);
         
         // 5th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
         Assert.assertEquals(action.getFaultString(), "FaultString");
@@ -101,7 +95,6 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         // 6th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
         Assert.assertEquals(action.getFaultString(), "FaultString");
@@ -119,7 +112,6 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         // 7th action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getAction());
-        Assert.assertEquals(action.getMessageFactory(), beanDefinitionContext.getBean("messageFactory"));
         Assert.assertEquals(action.getValidator(), beanDefinitionContext.getBean("soapFaultValidator"));
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}FAULT-1003");
         Assert.assertEquals(action.getFaultString(), "FaultString");

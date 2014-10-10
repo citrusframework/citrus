@@ -16,11 +16,11 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.config.xml.SendMessageActionParser;
+import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.config.xml.SendMessageActionParser;
 
 /**
  * Parser for SOAP message sender component in Citrus ws namespace.
@@ -31,10 +31,15 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
 
     @Override
     public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.ws.actions.SendSoapMessageAction");
+        BeanDefinitionBuilder builder = super.parseComponent(element, parserContext);
         
-        SoapAttachmentParser.parseAttachment(builder, element, parserContext);
+        SoapAttachmentParser.parseAttachment(builder, element);
         
         return builder;
+    }
+
+    @Override
+    protected Class<?> getBeanDefinitionClass() {
+        return SendSoapMessageAction.class;
     }
 }

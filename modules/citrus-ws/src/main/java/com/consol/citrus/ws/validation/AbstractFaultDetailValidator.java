@@ -17,19 +17,16 @@
 package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.ws.message.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.SoapFaultDetail;
-import org.springframework.ws.soap.SoapFaultDetailElement;
-import org.springframework.xml.transform.StringResult;
 
-import javax.xml.transform.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract implementation of {@link SoapFaultValidator} converting soap fault detail objects to simple String content for
@@ -43,7 +40,7 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
     private static Logger log = LoggerFactory.getLogger(AbstractFaultDetailValidator.class);
     
     @Override
-    protected void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, 
+    protected void validateFaultDetail(SoapFault receivedDetail, SoapFault controlDetail,
             TestContext context, final ValidationContext validationContext) {
         if (controlDetail == null) { return; }
         
@@ -60,57 +57,20 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
             contexts.addAll(((SoapFaultDetailValidationContext) validationContext).getValidationContexts());
         }
 
-        Iterator<SoapFaultDetailElement> receivedDetailElements = receivedDetail.getDetailEntries();
-        Iterator<SoapFaultDetailElement> controlDetailElements = controlDetail.getDetailEntries();
+        List<String> receivedDetailElements = receivedDetail.getFaultDetails();
+        List<String> controlDetailElements = controlDetail.getFaultDetails();
 
-        int i = 0;
-        while (receivedDetailElements.hasNext()) {
-            if (!controlDetailElements.hasNext()) {
-                throw new ValidationException("Unexpected SOAP fault detail entry in received message");
-            }
+        if (controlDetailElements.size() > receivedDetailElements.size()) {
+            new ValidationException("Missing SOAP fault detail entry in received message");
+        }
 
-            SoapFaultDetailElement receivedDetailElement = receivedDetailElements.next();
-            SoapFaultDetailElement controlDetailElement = controlDetailElements.next();
+        for (int i = 0; i < controlDetailElements.size(); i++) {
+            String receivedDetailString = receivedDetailElements.get(i);
+            String controlDetailString = controlDetailElements.get(i);
 
-            String receivedDetailString = extractFaultDetail(receivedDetailElement);
-            String controlDetailString = extractFaultDetail(controlDetailElement);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(receivedDetailString));
-                log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(controlDetailString));
-            }
-
-            validateFaultDetailString(receivedDetailString, controlDetailString, context,
+            validateFaultDetailString(XMLUtils.omitXmlDeclaration(receivedDetailString), XMLUtils.omitXmlDeclaration(controlDetailString), context,
                     CollectionUtils.isEmpty(contexts) ? validationContext : contexts.get(i++));
         }
-
-        if (controlDetailElements.hasNext()) {
-            throw new ValidationException("Missing at least one SOAP fault detail entry in received message");
-        }
-    }
-
-    /**
-     * Extracts fault detail string from soap fault detail instance. Transforms detail source
-     * into string and takes care.
-     * 
-     * @param detail
-     * @return
-     */
-    private String extractFaultDetail(SoapFaultDetailElement detail) {
-        StringResult detailResult = new StringResult();
-        
-        try {
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            
-            transformer.transform(detail.getSource(), detailResult);
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException(e);
-        }
-        
-        return detailResult.toString();
     }
 
     /**

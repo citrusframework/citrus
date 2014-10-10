@@ -500,4 +500,16 @@ public final class XMLUtils {
         log.warn("Unable to set '" + parameterName + "' parameter on " + componentName);
     }
 
+    /**
+     * Removes leading XML declaration from xml if present.
+     * @param xml
+     * @return
+     */
+    public static String omitXmlDeclaration(String xml) {
+        if (xml.startsWith("<?xml") && xml.contains("?>")) {
+            return xml.substring(xml.indexOf("?>") + 2).trim();
+        }
+
+        return xml;
+    }
 }

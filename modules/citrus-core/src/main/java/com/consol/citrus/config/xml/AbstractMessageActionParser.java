@@ -97,7 +97,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      * @param messageElement
      */
     private PayloadTemplateMessageBuilder parsePayloadTemplateBuilder(Element messageElement) {
-        PayloadTemplateMessageBuilder messageBuilder = null;
+        PayloadTemplateMessageBuilder messageBuilder;
         
         messageBuilder = parsePayloadElement(messageElement);
         

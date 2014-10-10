@@ -17,11 +17,12 @@
 package com.consol.citrus.ws.validation;
 
 
-import org.springframework.util.StringUtils;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * Simple soap fault validator implementation just performing String equals on soap fault detail
@@ -31,13 +32,28 @@ import com.consol.citrus.validation.context.ValidationContext;
  */
 public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SimpleSoapFaultValidator.class);
+
     @Override
-    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, 
+    protected void validateFaultDetailString(String received, String control,
             TestContext context, ValidationContext validationContext) throws ValidationException {
-        if (!StringUtils.trimAllWhitespace(receivedDetailString).equals( 
-                StringUtils.trimAllWhitespace(controlDetailString))) {
-            throw new ValidationException("SOAP fault validation failed! Fault detail does not match: expected \n'" +
-                    StringUtils.trimAllWhitespace(controlDetailString) + "' \n received \n'" + StringUtils.trimAllWhitespace(receivedDetailString) + "'");
+
+        log.info("Validating SOAP fault detail ...");
+
+        String receivedDetail = StringUtils.trimAllWhitespace(received);
+        String controlDetail = StringUtils.trimAllWhitespace(control);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Received fault detail:\n" + StringUtils.trimWhitespace(received));
+            log.debug("Control fault detail:\n" + StringUtils.trimWhitespace(control));
         }
+
+        if (!receivedDetail.equals(controlDetail)) {
+            throw new ValidationException("SOAP fault validation failed! Fault detail does not match: expected \n'" +
+                    controlDetail + "' \n received \n'" + receivedDetail + "'");
+        }
+
+        log.info("SOAP fault detail validation successful");
     }
 }

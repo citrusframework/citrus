@@ -18,6 +18,7 @@ package com.consol.citrus.ws;
 
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.easymock.EasyMock;
@@ -753,9 +754,9 @@ public class WebServiceEndpointTest {
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request, because of unknown error}");
-        final Message responseMessage = new DefaultMessage("", responseHeaders);
+        final SoapFault responseMessage = new SoapFault();
+        responseMessage.setFaultCode("SERVER");
+        responseMessage.setFaultString("Invalid request, because of unknown error");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
@@ -776,7 +777,7 @@ public class WebServiceEndpointTest {
         org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
+        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -805,8 +806,8 @@ public class WebServiceEndpointTest {
         
         expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<SoapFault>() {
-            public SoapFault answer() throws Throwable {
+        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request, because of unknown error");
                 
                 return soapFault;
@@ -830,9 +831,9 @@ public class WebServiceEndpointTest {
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{CLIENT}{Invalid request}");
-        final Message responseMessage = new DefaultMessage("", responseHeaders);
+        final SoapFault responseMessage = new SoapFault();
+        responseMessage.setFaultCode("CLIENT");
+        responseMessage.setFaultString("Invalid request");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
@@ -853,7 +854,7 @@ public class WebServiceEndpointTest {
         org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
+        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
         
         StringResult soapResponsePayload = new StringResult();
         
@@ -882,8 +883,8 @@ public class WebServiceEndpointTest {
         
         expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
         
-        expect(soapResponseBody.addClientOrSenderFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<SoapFault>() {
-            public SoapFault answer() throws Throwable {
+        expect(soapResponseBody.addClientOrSenderFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
                 
                 return soapFault;
@@ -907,10 +908,11 @@ public class WebServiceEndpointTest {
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
-        responseHeaders.put(SoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
-        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>", responseHeaders);
+        final SoapFault responseMessage = new SoapFault();
+        responseMessage.setPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>");
+        responseMessage.setFaultCode("SERVER");
+        responseMessage.setFaultString("Invalid request");
+        responseMessage.addFaultDetail("<DetailMessage><text>This request was not OK!</text></DetailMessage>");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
@@ -931,7 +933,7 @@ public class WebServiceEndpointTest {
         org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
+        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
         SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
         
         StringResult soapFaultResult = new StringResult();
@@ -961,8 +963,8 @@ public class WebServiceEndpointTest {
         
         expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<SoapFault>() {
-            public SoapFault answer() throws Throwable {
+        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
                 
                 return soapFault;
@@ -990,11 +992,12 @@ public class WebServiceEndpointTest {
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{SERVER}{Invalid request}");
-        responseHeaders.put(SoapMessageHeaders.SOAP_FAULT_DETAIL + "_1", "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
-        responseHeaders.put(SoapMessageHeaders.SOAP_FAULT_DETAIL + "_2", "<Error><text>This request was not OK!</text></Error>");
-        final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>", responseHeaders);
+        final SoapFault responseMessage = new SoapFault();
+        responseMessage.setPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>");
+        responseMessage.setFaultCode("SERVER");
+        responseMessage.setFaultString("Invalid request");
+        responseMessage.addFaultDetail("<DetailMessage><text>This request was not OK!</text></DetailMessage>");
+        responseMessage.addFaultDetail("<Error><text>This request was not OK!</text></Error>");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
@@ -1015,7 +1018,7 @@ public class WebServiceEndpointTest {
         org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final SoapFault soapFault = EasyMock.createMock(SoapFault.class);
+        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
         SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
         
         StringResult soapFaultResult = new StringResult();
@@ -1045,8 +1048,8 @@ public class WebServiceEndpointTest {
         
         expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<SoapFault>() {
-            public SoapFault answer() throws Throwable {
+        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+            public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
                 
                 return soapFault;
@@ -1142,9 +1145,9 @@ public class WebServiceEndpointTest {
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{{http://www.consol.de/citrus}citrus:TEC-1000}{Invalid request}");
-        final Message responseMessage = new DefaultMessage("", responseHeaders);
+        final SoapFault responseMessage = new SoapFault();
+        responseMessage.setFaultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
+        responseMessage.setFaultString("Invalid request");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {
@@ -1224,9 +1227,9 @@ public class WebServiceEndpointTest {
         requestHeaders.put(SoapMessageHeaders.SOAP_ACTION, "sayHello");
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
-        Map<String, Object> responseHeaders = new HashMap<String, Object>();
-        responseHeaders.put("citrus_soap_fault", "{{http://www.consol.de/citrus}citrus:TEC-1000}{Invalid request}");
-        final Message responseMessage = new DefaultMessage("", responseHeaders);
+        final SoapFault responseMessage = new SoapFault();
+        responseMessage.setFaultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
+        responseMessage.setFaultString("Invalid request");
 
         endpoint.setMessageHandler(new MessageHandler() {
             public Message handleMessage(Message message) {

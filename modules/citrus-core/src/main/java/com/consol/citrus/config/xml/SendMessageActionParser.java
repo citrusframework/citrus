@@ -71,20 +71,21 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
         
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+        if (messageElement != null) {
+            String messageType = messageElement.getAttribute("type");
+            if (StringUtils.hasText(messageType)) {
+                builder.addPropertyValue("messageType", messageType);
+            }
 
-        String messageType = messageElement.getAttribute("type");
-        if (StringUtils.hasText(messageType)) {
-            builder.addPropertyValue("messageType", messageType);
-        }
-
-        String dataDictionary = messageElement.getAttribute("data-dictionary");
-        if (StringUtils.hasText(dataDictionary)) {
-            builder.addPropertyReference("dataDictionary", dataDictionary);
+            String dataDictionary = messageElement.getAttribute("data-dictionary");
+            if (StringUtils.hasText(dataDictionary)) {
+                builder.addPropertyReference("dataDictionary", dataDictionary);
+            }
         }
 
         AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
         parseHeaderElements(element, messageBuilder);
-        
+
         if (messageBuilder != null) {
             builder.addPropertyValue("messageBuilder", messageBuilder);
         }
@@ -111,6 +112,14 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      * @return
      */
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(SendMessageAction.class);
+        return BeanDefinitionBuilder.genericBeanDefinition(getBeanDefinitionClass());
+    }
+
+    /**
+     * Gets the bean definition builder class.
+     * @return
+     */
+    protected Class<?> getBeanDefinitionClass() {
+        return SendMessageAction.class;
     }
 }

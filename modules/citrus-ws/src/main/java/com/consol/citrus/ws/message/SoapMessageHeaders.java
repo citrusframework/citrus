@@ -52,14 +52,5 @@ public abstract class SoapMessageHeaders {
 
     /** SOAP action header name */
     public static final String SOAP_ACTION = SOAP_PREFIX + "action";
-    
-    /** Soap fault code specific header */
-    public static final String SOAP_FAULT = SOAP_PREFIX + "fault";
-    
-    /** Soap fault detail specific header */
-    public static final String SOAP_FAULT_DETAIL = SOAP_PREFIX + "fault_detail";
-    
-    /** Soap fault detail specific header */
-    public static final String SOAP_FAULT_DETAIL_RESOURCE = SOAP_FAULT_DETAIL + "_resource";
 
 }

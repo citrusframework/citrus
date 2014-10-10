@@ -556,11 +556,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointUri) {
-        SendMessageAction action = new SendMessageAction();
+        SendSoapFaultAction action = new SendSoapFaultAction();
         action.setEndpointUri(messageEndpointUri);
 
         testCase.addTestAction(action);
-        return new SendSoapFaultActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
+        return new SendSoapFaultActionDefinition(action, applicationContext);
     }
 
     /**
@@ -571,11 +571,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @return
      */
     public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
-        SendMessageAction action = new SendMessageAction();
+        SendSoapFaultAction action = new SendSoapFaultAction();
         action.setEndpoint(messageEndpoint);
 
         testCase.addTestAction(action);
-        return new SendSoapFaultActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
+        return new SendSoapFaultActionDefinition(action, applicationContext);
     }
 
     /**

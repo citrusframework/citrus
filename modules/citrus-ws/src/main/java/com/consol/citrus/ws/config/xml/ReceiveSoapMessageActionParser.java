@@ -16,13 +16,13 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 
 /**
  * Parser for SOAP message receiver component in Citrus ws namespace.
@@ -33,9 +33,9 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
 
     @Override
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition("com.consol.citrus.ws.actions.ReceiveSoapMessageAction");
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ReceiveSoapMessageAction.class);
         
-        SoapAttachmentParser.parseAttachment(builder, element, parserContext);
+        SoapAttachmentParser.parseAttachment(builder, element);
         
         Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
         if (attachmentElement != null) {

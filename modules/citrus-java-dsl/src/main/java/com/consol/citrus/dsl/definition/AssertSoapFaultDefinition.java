@@ -20,12 +20,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.ws.soap.SoapMessageFactory;
 
 import java.io.IOException;
 
@@ -44,7 +42,6 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
 	    super(action);
 	    this.applicationContext = ctx;
 	    
-	    action.setMessageFactory(applicationContext.getBean("messageFactory", SoapMessageFactory.class));
 	    action.setValidator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
 	    
 	    // for now support one single soap fault detail
@@ -113,7 +110,7 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      * @return
      */
     public AssertSoapFaultDefinition faultDetailResource(String filePath) {
-        action.getFaultDetails().add(SoapMessageHeaders.SOAP_FAULT_DETAIL_RESOURCE + "(" + filePath + ")");
+        action.getFaultDetailResourcePaths().add(filePath);
         return this;
     }
     
@@ -134,26 +131,6 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
      */
     public AssertSoapFaultDefinition validator(String validatorName) {
         action.setValidator(applicationContext.getBean(validatorName, SoapFaultValidator.class));
-        return this;
-    }
-    
-    /**
-     * Set explicit SOAP message factory implementation.
-     * @param messageFactory
-     * @return
-     */
-    public AssertSoapFaultDefinition messageFactory(SoapMessageFactory messageFactory) {
-        action.setMessageFactory(messageFactory);
-        return this;
-    }
-    
-    /**
-     * Set explicit SOAP message factory implementation by bean name.
-     * @param messageFactoryName
-     * @return
-     */
-    public AssertSoapFaultDefinition messageFactory(String messageFactoryName) {
-        action.setMessageFactory(applicationContext.getBean(messageFactoryName, SoapMessageFactory.class));
         return this;
     }
     

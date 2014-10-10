@@ -16,18 +16,15 @@
 
 package com.consol.citrus.ws.validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.SoapFaultDetail;
-
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import com.consol.citrus.ws.message.SoapFault;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.*;
 
 /**
  * Abstract soap fault validation implementation offering basic faultCode and faultString validation.
@@ -42,51 +39,43 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
      */
     private static Logger log = LoggerFactory.getLogger(AbstractSoapFaultValidator.class);
     
-    /**
-     * @see com.consol.citrus.ws.validation.SoapFaultValidator#validateSoapFault(org.springframework.ws.soap.SoapFault, org.springframework.ws.soap.SoapFault, com.consol.citrus.context.TestContext)
-     */
-    public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault, 
+    @Override
+    public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault,
             TestContext context, ValidationContext validationContext) throws ValidationException {
         //fault string validation
-        if (controlFault.getFaultStringOrReason() != null && 
-                !controlFault.getFaultStringOrReason().equals(receivedFault.getFaultStringOrReason())) {
-            if (controlFault.getFaultStringOrReason().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
+        if (controlFault.getFaultString() != null &&
+                !controlFault.getFaultString().equals(receivedFault.getFaultString())) {
+            if (controlFault.getFaultString().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
                 log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
-            } else if (ValidationMatcherUtils.isValidationMatcherExpression(controlFault.getFaultStringOrReason())) {
-                ValidationMatcherUtils.resolveValidationMatcher("SOAP fault string", receivedFault.getFaultStringOrReason(), controlFault.getFaultStringOrReason(), context);
+            } else if (ValidationMatcherUtils.isValidationMatcherExpression(controlFault.getFaultString())) {
+                ValidationMatcherUtils.resolveValidationMatcher("SOAP fault string", receivedFault.getFaultString(), controlFault.getFaultString(), context);
             } else {
                 throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + 
-                        controlFault.getFaultStringOrReason() + "' but was: '" + receivedFault.getFaultStringOrReason() + "'");
+                        controlFault.getFaultString() + "' but was: '" + receivedFault.getFaultString() + "'");
             }
         }
         
         //fault code validation
-        if (StringUtils.hasText(controlFault.getFaultCode().getLocalPart())) {
-            Assert.isTrue(controlFault.getFaultCode().equals(receivedFault.getFaultCode()), 
+        if (StringUtils.hasText(controlFault.getFaultCodeQName().getLocalPart())) {
+            Assert.isTrue(controlFault.getFaultCodeQName().equals(receivedFault.getFaultCodeQName()),
                     "SOAP fault validation failed! Fault code does not match - expected: '" +
-                    controlFault.getFaultCode() + "' but was: '" + receivedFault.getFaultCode() + "'");
+                    controlFault.getFaultCodeQName() + "' but was: '" + receivedFault.getFaultCodeQName() + "'");
         }
         
         //fault actor validation
-        if (StringUtils.hasText(controlFault.getFaultActorOrRole())) {
-            if (controlFault.getFaultActorOrRole().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
-                    controlFault.getFaultActorOrRole().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
-                ValidationMatcherUtils.resolveValidationMatcher("SOAP fault actor", receivedFault.getFaultActorOrRole(), controlFault.getFaultActorOrRole(), context);
+        if (StringUtils.hasText(controlFault.getFaultActor())) {
+            if (controlFault.getFaultActor().startsWith(CitrusConstants.VALIDATION_MATCHER_PREFIX) &&
+                    controlFault.getFaultActor().endsWith(CitrusConstants.VALIDATION_MATCHER_SUFFIX)) {
+                ValidationMatcherUtils.resolveValidationMatcher("SOAP fault actor", receivedFault.getFaultActor(), controlFault.getFaultActor(), context);
             } else {
-                Assert.isTrue(controlFault.getFaultActorOrRole().equals(receivedFault.getFaultActorOrRole()), 
+                Assert.isTrue(controlFault.getFaultActor().equals(receivedFault.getFaultActor()),
                         "SOAP fault validation failed! Fault actor does not match - expected: '" +
-                        controlFault.getFaultActorOrRole() + "' but was: '" + receivedFault.getFaultActorOrRole() + "'");
+                        controlFault.getFaultActor() + "' but was: '" + receivedFault.getFaultActor() + "'");
             }
         }
         
-        if (controlFault.getFaultDetail() != null) {
-            SoapFaultDetail detail = receivedFault.getFaultDetail();
-            
-            if (detail == null) {
-                throw new ValidationException("SOAP fault validation failed! Missing fault detail in received message.");
-            }
-            
-            validateFaultDetail(detail, controlFault.getFaultDetail(), context, validationContext);
+        if (!CollectionUtils.isEmpty(controlFault.getFaultDetails())) {
+            validateFaultDetail(receivedFault, controlFault, context, validationContext);
         }
     }
 
@@ -98,6 +87,6 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
      * @param context
      * @param validationContext
      */
-    protected abstract void validateFaultDetail(SoapFaultDetail receivedDetail, SoapFaultDetail controlDetail, 
+    protected abstract void validateFaultDetail(SoapFault receivedDetail, SoapFault controlDetail,
             TestContext context, ValidationContext validationContext);
 }

@@ -20,8 +20,8 @@ import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
-import com.consol.citrus.ws.util.SoapFaultDefinitionHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.*;
@@ -46,7 +46,6 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -97,11 +96,11 @@ public class WebServiceEndpoint implements MessageEndpoint {
         if (replyMessage != null && replyMessage.getPayload() != null) {
             log.info("Sending SOAP response:\n" + replyMessage.toString());
             
-            SoapMessage response = (SoapMessage)messageContext.getResponse();
+            SoapMessage response = (SoapMessage) messageContext.getResponse();
             
             //add soap fault or normal soap body to response
-            if (replyMessage.getHeader(SoapMessageHeaders.SOAP_FAULT) != null) {
-                addSoapFault(response, replyMessage);
+            if (replyMessage instanceof SoapFault) {
+                addSoapFault(response, (SoapFault) replyMessage);
             } else {
                 addSoapBody(response, replyMessage);
             }
@@ -234,51 +233,39 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param response
      * @param replyMessage
      */
-    private void addSoapFault(SoapMessage response, Message replyMessage) throws TransformerException {
-        SoapFaultDefinitionHolder definitionHolder = SoapFaultDefinitionHolder.fromString(
-                replyMessage.getHeader(SoapMessageHeaders.SOAP_FAULT).toString());
-        
-        SoapFaultDefinition definition = definitionHolder.getSoapFaultDefinition();
+    private void addSoapFault(SoapMessage response, SoapFault replyMessage) throws TransformerException {
         SoapBody soapBody = response.getSoapBody();
-        SoapFault soapFault = null;
+        org.springframework.ws.soap.SoapFault soapFault;
         
-        if (SoapFaultDefinition.SERVER.equals(definition.getFaultCode()) ||
-                SoapFaultDefinition.RECEIVER.equals(definition.getFaultCode())) {
-            soapFault = soapBody.addServerOrReceiverFault(definition.getFaultStringOrReason(), 
-                    definition.getLocale());
-        } else if (SoapFaultDefinition.CLIENT.equals(definition.getFaultCode()) ||
-                SoapFaultDefinition.SENDER.equals(definition.getFaultCode())) {
-            soapFault = soapBody.addClientOrSenderFault(definition.getFaultStringOrReason(), 
-                    definition.getLocale());
+        if (SoapFaultDefinition.SERVER.equals(replyMessage.getFaultCodeQName()) ||
+                SoapFaultDefinition.RECEIVER.equals(replyMessage.getFaultCode())) {
+            soapFault = soapBody.addServerOrReceiverFault(replyMessage.getFaultString(),
+                    replyMessage.getLocale());
+        } else if (SoapFaultDefinition.CLIENT.equals(replyMessage.getFaultCodeQName()) ||
+                SoapFaultDefinition.SENDER.equals(replyMessage.getFaultCodeQName())) {
+            soapFault = soapBody.addClientOrSenderFault(replyMessage.getFaultString(),
+                    replyMessage.getLocale());
         } else if (soapBody instanceof Soap11Body) {
             Soap11Body soap11Body = (Soap11Body) soapBody;
-            soapFault = soap11Body.addFault(definition.getFaultCode(), 
-                    definition.getFaultStringOrReason(), 
-                    definition.getLocale());
+            soapFault = soap11Body.addFault(replyMessage.getFaultCodeQName(),
+                    replyMessage.getFaultString(),
+                    replyMessage.getLocale());
         } else if (soapBody instanceof Soap12Body) {
             Soap12Body soap12Body = (Soap12Body) soapBody;
-            Soap12Fault soap12Fault =
-                    (Soap12Fault) soap12Body.addServerOrReceiverFault(definition.getFaultStringOrReason(), 
-                            definition.getLocale());
-            soap12Fault.addFaultSubcode(definition.getFaultCode());
+            Soap12Fault soap12Fault = soap12Body.addServerOrReceiverFault(replyMessage.getFaultString(),
+                            replyMessage.getLocale());
+            soap12Fault.addFaultSubcode(replyMessage.getFaultCodeQName());
             
             soapFault = soap12Fault;
         } else {
                 throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
         }
         
-        if (definitionHolder.getFaultActor() != null) {
-            soapFault.setFaultActorOrRole(definitionHolder.getFaultActor());
+        if (replyMessage.getFaultActor() != null) {
+            soapFault.setFaultActorOrRole(replyMessage.getFaultActor());
         }
         
-        List<String> soapFaultDetails = new ArrayList<String>();
-        // add fault details
-        for (Entry<String, Object> header : replyMessage.copyHeaders().entrySet()) {
-            if (header.getKey().startsWith(SoapMessageHeaders.SOAP_FAULT_DETAIL)) {
-                soapFaultDetails.add(header.getValue().toString());
-            }
-        }
-        
+        List<String> soapFaultDetails = replyMessage.getFaultDetails();
         if (!soapFaultDetails.isEmpty()) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();

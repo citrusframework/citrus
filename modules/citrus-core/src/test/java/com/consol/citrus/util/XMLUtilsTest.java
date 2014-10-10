@@ -364,4 +364,15 @@ public class XMLUtilsTest {
 
         Assert.assertEquals(XMLUtils.serialize(doc), payload + System.getProperty("line.separator"));
     }
+
+    @Test
+    public void testOmitXmlDeclaration() throws Exception {
+        String payload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                " <testRequest xmlns=\"http://www.consol.de/test-default\">Test</testRequest>";
+
+        Assert.assertEquals(XMLUtils.omitXmlDeclaration(payload), "<testRequest xmlns=\"http://www.consol.de/test-default\">Test</testRequest>");
+        Assert.assertEquals(XMLUtils.omitXmlDeclaration("<testRequest xmlns=\"http://www.consol.de/test-default\">Test</testRequest>"), "<testRequest xmlns=\"http://www.consol.de/test-default\">Test</testRequest>");
+        Assert.assertEquals(XMLUtils.omitXmlDeclaration(""), "");
+        Assert.assertEquals(XMLUtils.omitXmlDeclaration("Test"), "Test");
+    }
 }

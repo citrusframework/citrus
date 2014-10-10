@@ -18,16 +18,11 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.ws.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -51,19 +46,9 @@ public class SendSoapMessageAction extends SendMessageAction {
     /** SOAP attachment */
     private SoapAttachment attachment = new SoapAttachment();
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SendSoapMessageAction.class);
-
-    /**
-     * Default constructor.
-     */
-    public SendSoapMessageAction() {
-        setName("send");
-    }
-
     @Override
-    public void doExecute(final TestContext context) {
-        Message message = createMessage(context, getMessageType());
+    protected SoapMessage createMessage(TestContext context, String messageType) {
+        Message message = super.createMessage(context, getMessageType());
 
         final SoapMessage soapMessage;
         final String attachmentContent;
@@ -92,26 +77,9 @@ public class SendSoapMessageAction extends SendMessageAction {
             throw new CitrusRuntimeException(e);
         }
 
-        // extract variables from before sending message so we can save dynamic message ids
-        for (VariableExtractor variableExtractor : getVariableExtractors()) {
-            variableExtractor.extractVariables(soapMessage, context);
-        }
-
-        final Endpoint soapEndpoint = getOrCreateEndpoint(context);
-        if (isForkMode()) {
-            log.info("Forking send message action ...");
-
-            SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-            taskExecutor.execute(new Runnable() {
-                public void run() {
-                    soapEndpoint.createProducer().send(soapMessage);
-                }
-            });
-        } else {
-            soapEndpoint.createProducer().send(soapMessage);
-        }
+        return soapMessage;
     }
-    
+
     /**
      * Set the Attachment data file resource.
      * @param attachment the attachment to set
