@@ -203,6 +203,47 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         
         verify(resource, applicationContextMock);
     }
+
+    @Test
+    public void testFaultDetailResourcePath() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
+        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+
+        replay(applicationContextMock);
+
+        MockBuilder builder = new MockBuilder(applicationContextMock) {
+            @Override
+            public void configure() {
+                assertSoapFault(echo("${foo}"))
+                        .faultCode("SOAP-ENV:Server")
+                        .faultString("Internal server error")
+                        .faultDetailResource("com/consol/citrus/soap/fault.xml");
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
+
+        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+
+        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
+        Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
+        Assert.assertEquals(container.getFaultString(), "Internal server error");
+        Assert.assertEquals(container.getFaultDetails().size(), 0L);
+        Assert.assertEquals(container.getFaultDetailResourcePaths().size(), 1L);
+        Assert.assertEquals(container.getFaultDetailResourcePaths().get(0), "com/consol/citrus/soap/fault.xml");
+        Assert.assertEquals(((EchoAction)(container.getAction())).getMessage(), "${foo}");
+
+        verify(applicationContextMock);
+    }
     
     @Test
     public void testMultipleFaultDetailsInlineAndResource() throws IOException {

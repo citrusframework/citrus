@@ -182,6 +182,39 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testSendSoapFaultWithDetailResourcePath() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                sendSoapFault(soapEndpoint)
+                        .faultCode("CITRUS-1000")
+                        .faultDetailResource("com/consol/citrus/soap/fault.xml")
+                        .faultString("Something went wrong");
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+
+        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), soapEndpoint);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        Assert.assertEquals(action.getFaultDetails().size(), 0L);
+        Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
+        Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "com/consol/citrus/soap/fault.xml");
+        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
+        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+    }
+
+    @Test
     public void testSendSoapFaultWithMultipleDetail() {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
