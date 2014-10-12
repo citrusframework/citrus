@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -54,8 +54,8 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * @return chained definition builder
      */
     public ReceiveHttpMessageActionDefinition status(HttpStatus status) {
-        header(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, String.valueOf(status.value()));
-        header(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE, status.getReasonPhrase());
+        header(HttpMessageHeaders.HTTP_STATUS_CODE, String.valueOf(status.value()));
+        header(HttpMessageHeaders.HTTP_REASON_PHRASE, status.getReasonPhrase());
         return this;
     }
 
@@ -66,7 +66,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * @return chained definition builder
      */
     public ReceiveHttpMessageActionDefinition version(String version) {
-        header(CitrusHttpMessageHeaders.HTTP_VERSION, version);
+        header(HttpMessageHeaders.HTTP_VERSION, version);
         return this;
     }
 
@@ -77,7 +77,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * @return chained definition builder
      */
     public ReceiveHttpMessageActionDefinition method(HttpMethod method) {
-        header(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
+        header(HttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
         return this;
     }
 
@@ -88,7 +88,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * @return chained definition builder
      */
     public ReceiveHttpMessageActionDefinition uri(String uri) {
-        header(CitrusHttpMessageHeaders.HTTP_REQUEST_URI, uri);
+        header(HttpMessageHeaders.HTTP_REQUEST_URI, uri);
         return this;
     }
 
@@ -99,7 +99,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * @return chained definition builder
      */
     public ReceiveHttpMessageActionDefinition contextPath(String contextPath) {
-        header(CitrusHttpMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
+        header(HttpMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
         return this;
     }
 
@@ -111,7 +111,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      */
     public ReceiveHttpMessageActionDefinition queryParam(String name, String value) {
         if (!StringUtils.hasText(name) && !StringUtils.hasText(value)) {
-            header(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, "");
+            header(HttpMessageHeaders.HTTP_QUERY_PARAMS, "");
             return this;
         }
 
@@ -121,7 +121,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
             queryParams = name + "=" + value;
         }
 
-        header(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
+        header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
         return this;
     }
 

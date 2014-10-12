@@ -21,12 +21,12 @@ import com.consol.citrus.message.MessageHeaders;
 /**
  * @author Christoph Deppisch
  */
-public abstract class CitrusHttpMessageHeaders {
+public abstract class HttpMessageHeaders {
     
     /**
      * Prevent instantiation.
      */
-    private CitrusHttpMessageHeaders() {
+    private HttpMessageHeaders() {
     }
     
     /** Special header prefix for http transport headers in SOAP message sender */

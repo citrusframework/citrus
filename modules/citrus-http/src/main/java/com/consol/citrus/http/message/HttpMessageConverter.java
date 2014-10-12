@@ -18,9 +18,7 @@ package com.consol.citrus.http.message;
 
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.message.*;
-import com.consol.citrus.message.MessageHeaders;
 import org.springframework.http.*;
-import com.consol.citrus.message.Message;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -36,10 +34,17 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
 
     @Override
     public HttpEntity convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        endpointConfiguration.getHeaderMapper().fromHeaders(new org.springframework.messaging.MessageHeaders(message.copyHeaders()), httpHeaders);
+        HttpMessage httpMessage;
+        if (message instanceof HttpMessage) {
+            httpMessage = (HttpMessage) message;
+        } else {
+            httpMessage = new HttpMessage(message);
+        }
 
-        Map<String, ?> messageHeaders = message.copyHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        endpointConfiguration.getHeaderMapper().fromHeaders(new org.springframework.messaging.MessageHeaders(httpMessage.copyHeaders()), httpHeaders);
+
+        Map<String, ?> messageHeaders = httpMessage.copyHeaders();
         for (Map.Entry<String, ?> header : messageHeaders.entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
                     !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
@@ -53,15 +58,14 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
                     endpointConfiguration.getContentType() : endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset()));
         }
 
-        Object payload = message.getPayload();
-        if (message.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE) != null) {
-            HttpStatus status = HttpStatus.valueOf(Integer.valueOf(message.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE).toString()));
-            return new ResponseEntity(payload, httpHeaders, status);
+        Object payload = httpMessage.getPayload();
+        if (httpMessage.getStatusCode() != null) {
+            return new ResponseEntity(payload, httpHeaders, httpMessage.getStatusCode());
         }
 
         HttpMethod method = endpointConfiguration.getRequestMethod();
-        if (message.getHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD) != null) {
-            method = HttpMethod.valueOf((String)message.getHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
+        if (httpMessage.getRequestMethod() != null) {
+            method = httpMessage.getRequestMethod();
         }
 
         if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)) {
@@ -72,21 +76,21 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
     }
 
     @Override
-    public Message convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration) {
+    public HttpMessage convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration) {
         Map<String, ?> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
-        Message responseMessage = new DefaultMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders))
-                .setHeader(CitrusHttpMessageHeaders.HTTP_VERSION, "HTTP/1.1"); //TODO check if we have access to version information
+        HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders))
+                .setVersion("HTTP/1.1"); //TODO check if we have access to version information
 
         for (Map.Entry<String, String> customHeader : getCustomHeaders(message.getHeaders(), mappedHeaders).entrySet()) {
-            responseMessage.setHeader(customHeader.getKey(), customHeader.getValue());
+            httpMessage.setHeader(customHeader.getKey(), customHeader.getValue());
         }
 
         if (message instanceof ResponseEntity) {
-            responseMessage.setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, ((ResponseEntity) message).getStatusCode());
-            responseMessage.setHeader(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE, ((ResponseEntity) message).getStatusCode().name());
+            httpMessage.setStatusCode(((ResponseEntity) message).getStatusCode());
+            httpMessage.setReasonPhrase(((ResponseEntity) message).getStatusCode().name());
         }
 
-        return responseMessage;
+        return httpMessage;
     }
 
     /**

@@ -18,9 +18,11 @@ package com.consol.citrus.ws.client;
 
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
+import com.consol.citrus.ws.message.SoapMessage;
 import org.easymock.EasyMock;
 import org.springframework.ws.client.core.*;
-import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -69,7 +71,7 @@ public class WebServiceClientTest {
         ReplyMessageCorrelator correlator = EasyMock.createMock(ReplyMessageCorrelator.class);
         client.getEndpointConfiguration().setCorrelator(correlator);
 
-        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message requestMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(webServiceTemplate, correlator);
 
@@ -100,7 +102,7 @@ public class WebServiceClientTest {
         EndpointUriResolver endpointUriResolver = EasyMock.createMock(EndpointUriResolver.class);
         client.getEndpointConfiguration().setEndpointResolver(endpointUriResolver);
 
-        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message requestMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(webServiceTemplate, endpointUriResolver);
 
@@ -132,7 +134,7 @@ public class WebServiceClientTest {
 
         Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        SoapMessage soapFaultMessage = EasyMock.createMock(SoapMessage.class);
+        org.springframework.ws.soap.SoapMessage soapFaultMessage = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
         SoapBody soapBody = EasyMock.createMock(SoapBody.class);
         SoapFault soapFault = EasyMock.createMock(SoapFault.class);
 

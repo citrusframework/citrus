@@ -18,14 +18,14 @@ package com.consol.citrus.http.client;
 
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
-import com.consol.citrus.message.Message;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 
@@ -72,9 +72,16 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public void send(Message message) {
+        HttpMessage httpMessage;
+        if (message instanceof HttpMessage) {
+            httpMessage = (HttpMessage) message;
+        } else {
+            httpMessage = new HttpMessage(message);
+        }
+
         String endpointUri;
         if (getEndpointConfiguration().getEndpointUriResolver() != null) {
-            endpointUri = getEndpointConfiguration().getEndpointUriResolver().resolveEndpointUri(message, getEndpointConfiguration().getRequestUrl());
+            endpointUri = getEndpointConfiguration().getEndpointUriResolver().resolveEndpointUri(httpMessage, getEndpointConfiguration().getRequestUrl());
         } else {
             endpointUri = getEndpointConfiguration().getRequestUrl();
         }
@@ -82,22 +89,22 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         log.info("Sending HTTP message to: '" + endpointUri + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to be sent:\n" + message.getPayload().toString());
+            log.debug("Message to be sent:\n" + httpMessage.getPayload().toString());
         }
 
         HttpMethod method = getEndpointConfiguration().getRequestMethod();
-        if (message.getHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD) != null) {
-            method = HttpMethod.valueOf((String)message.getHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD));
+        if (httpMessage.getRequestMethod() != null) {
+            method = httpMessage.getRequestMethod();
         }
 
-        HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
+        HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(httpMessage, getEndpointConfiguration());
 
-        getEndpointConfiguration().getRestTemplate().setErrorHandler(new InternalResponseErrorHandler(message));
+        getEndpointConfiguration().getRestTemplate().setErrorHandler(new InternalResponseErrorHandler(httpMessage));
         ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(endpointUri, method, requestEntity, String.class);
 
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
 
-        onReplyMessage(message, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
+        onReplyMessage(httpMessage, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
     }
 
     @Override

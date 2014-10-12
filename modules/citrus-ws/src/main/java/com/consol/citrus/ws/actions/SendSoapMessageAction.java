@@ -62,11 +62,7 @@ public class SendSoapMessageAction extends SendMessageAction {
                 attachmentContent = null;
             }
 
-            soapMessage = new SoapMessage(message.getPayload(), message.copyHeaders());
-
-            for (String headerData : message.getHeaderData()) {
-                soapMessage.addHeaderData(headerData);
-            }
+            soapMessage = new SoapMessage(message);
 
             if (attachmentContent != null) {
                 attachment.setContent(attachmentContent);

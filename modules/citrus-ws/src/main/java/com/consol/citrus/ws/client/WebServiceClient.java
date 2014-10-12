@@ -21,6 +21,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.*;
+import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
@@ -29,7 +30,6 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
-import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.transform.StringResult;
 
@@ -78,9 +78,16 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     public void send(final Message message) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
+        SoapMessage soapMessage;
+        if (message instanceof SoapMessage) {
+            soapMessage = (SoapMessage) message;
+        } else {
+            soapMessage = new SoapMessage(message);
+        }
+
         String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {
-            endpointUri = getEndpointConfiguration().getEndpointResolver().resolveEndpointUri(message, getEndpointConfiguration().getDefaultUri());
+            endpointUri = getEndpointConfiguration().getEndpointResolver().resolveEndpointUri(soapMessage, getEndpointConfiguration().getDefaultUri());
         } else { // use default uri
             endpointUri = getEndpointConfiguration().getDefaultUri();
         }
@@ -88,18 +95,18 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
 
         if (log.isDebugEnabled()) {
-            log.debug("Message to send is:\n" + message.toString());
+            log.debug("Message to send is:\n" + soapMessage.toString());
         }
 
-        if (!(message.getPayload() instanceof String)) {
-            throw new CitrusRuntimeException("Unsupported payload type '" + message.getPayload().getClass() +
+        if (!(soapMessage.getPayload() instanceof String)) {
+            throw new CitrusRuntimeException("Unsupported payload type '" + soapMessage.getPayload().getClass() +
                     "' Currently only 'java.lang.String' is supported as payload type.");
         }
 
-        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(message, getEndpointConfiguration());
+        SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(soapMessage, getEndpointConfiguration());
 
         SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback(getEndpointConfiguration());
-        getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(message, endpointUri));
+        getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(soapMessage, endpointUri));
 
         log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
 
@@ -113,7 +120,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
         if (result) {
             log.info("Received SOAP response from endpoint: '" + endpointUri + "'");
-            onReplyMessage(message, responseCallback.getResponse());
+            onReplyMessage(soapMessage, responseCallback.getResponse());
         } else {
             log.info("No SOAP response from endpoint: '" + endpointUri + "'");
         }
@@ -242,12 +249,12 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
                     Message responseMessage = callback.getResponse();
 
-                    if (webServiceResponse instanceof SoapMessage) {
+                    if (webServiceResponse instanceof org.springframework.ws.soap.SoapMessage) {
                         TransformerFactory transformerFactory = TransformerFactory.newInstance();
                         Transformer transformer = transformerFactory.newTransformer();
 
                         StringResult faultPayload = new StringResult();
-                        transformer.transform(((SoapMessage)webServiceResponse).getSoapBody().getFault().getSource(), faultPayload);
+                        transformer.transform(((org.springframework.ws.soap.SoapMessage)webServiceResponse).getSoapBody().getFault().getSource(), faultPayload);
 
                         responseMessage.setPayload(faultPayload.toString());
                     }
@@ -258,7 +265,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                     throw new CitrusRuntimeException("Failed to handle fault response message", e);
                 }
             } else if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
-                if (webServiceResponse instanceof SoapMessage) {
+                if (webServiceResponse instanceof org.springframework.ws.soap.SoapMessage) {
                     new SoapFaultMessageResolver().resolveFault(webServiceResponse);
                 } else {
                     new SimpleFaultMessageResolver().resolveFault(webServiceResponse);

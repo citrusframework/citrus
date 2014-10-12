@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.message;
 
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.SoapAttachment;
 
 import java.util.*;
@@ -35,6 +36,14 @@ public class SoapMessage extends DefaultMessage {
 
     /** Optional list of SOAP attachments */
     private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
+
+    /**
+     * Constructs copy of given message.
+     * @param message
+     */
+    public SoapMessage(Message message) {
+        super(message);
+    }
 
     /**
      * Default constructor using just message payload.
@@ -58,6 +67,11 @@ public class SoapMessage extends DefaultMessage {
     @Override
     public SoapMessage setHeader(String headerName, Object headerValue) {
         return (SoapMessage) super.setHeader(headerName, headerValue);
+    }
+
+    @Override
+    public SoapMessage addHeaderData(String headerData) {
+        return (SoapMessage) super.addHeaderData(headerData);
     }
 
     /**

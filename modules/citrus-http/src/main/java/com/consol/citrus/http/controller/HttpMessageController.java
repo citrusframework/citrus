@@ -18,11 +18,11 @@ package com.consol.citrus.http.controller;
 
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
-import com.consol.citrus.message.*;
+import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHandler;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -98,30 +98,35 @@ public class HttpMessageController {
      * @return
      */
     private ResponseEntity<String> handleRequestInternal(HttpMethod method, HttpEntity<String> requestEntity) {
-        Message request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration);
+        HttpMessage request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration);
 
         HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
 
-        request.setHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_URI, pathHelper.getRequestUri(servletRequest));
-        request.setHeader(CitrusHttpMessageHeaders.HTTP_CONTEXT_PATH, pathHelper.getContextPath(servletRequest));
+        request.setRequestUri(pathHelper.getRequestUri(servletRequest));
+        request.setContextPath(pathHelper.getContextPath(servletRequest));
 
         String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
-        request.setHeader(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams != null ? queryParams : "");
+        request.setQueryParams(queryParams != null ? queryParams : "");
 
-        request.setHeader(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.toString());
+        request.setRequestMethod(method);
 
         Message response = messageHandler.handleMessage(request);
-
         if (response == null) {
             responseCache = new ResponseEntity(HttpStatus.OK);
         } else {
-            if (response.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE) == null ||
-                    !StringUtils.hasText(response.getHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE).toString())) {
-                response.setHeader(CitrusHttpMessageHeaders.HTTP_STATUS_CODE, HttpStatus.OK.value());
+            HttpMessage httpResponse;
+            if (response instanceof HttpMessage) {
+                httpResponse = (HttpMessage) response;
+            } else {
+                httpResponse = new HttpMessage(response);
             }
 
-            responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(response, endpointConfiguration);
+            if (httpResponse.getStatusCode() == null) {
+                httpResponse.setStatusCode(HttpStatus.OK);
+            }
+
+            responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration);
         }
 
         return responseCache;

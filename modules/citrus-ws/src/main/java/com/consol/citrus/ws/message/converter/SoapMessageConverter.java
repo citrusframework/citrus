@@ -78,18 +78,25 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     public void convertOutbound(WebServiceMessage webServiceMessage, Message message, WebServiceEndpointConfiguration endpointConfiguration) {
         org.springframework.ws.soap.SoapMessage soapRequest = ((org.springframework.ws.soap.SoapMessage)webServiceMessage);
 
+        SoapMessage soapMessage;
+        if (message instanceof SoapMessage) {
+            soapMessage = (SoapMessage) message;
+        } else {
+            soapMessage = new SoapMessage(message);
+        }
+
         // Copy payload into soap-body:
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
         try {
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.transform(new StringSource(message.getPayload().toString()), soapRequest.getSoapBody().getPayloadResult());
+            transformer.transform(new StringSource(soapMessage.getPayload().toString()), soapRequest.getSoapBody().getPayloadResult());
         } catch (TransformerException e) {
             throw new CitrusRuntimeException("Failed to write SOAP body payload", e);
         }
 
         // Copy headers into soap-header:
-        for (Entry<String, Object> headerEntry : message.copyHeaders().entrySet()) {
+        for (Entry<String, Object> headerEntry : soapMessage.copyHeaders().entrySet()) {
             if (MessageHeaderUtils.isSpringInternalHeader(headerEntry.getKey())) {
                 continue;
             }
@@ -113,7 +120,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
         }
 
-        for (String headerData : message.getHeaderData()) {
+        for (String headerData : soapMessage.getHeaderData()) {
             try {
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.transform(new StringSource(headerData),
@@ -123,30 +130,26 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
         }
 
-        if (SoapMessage.class.isInstance(message)) {
-            SoapMessage soapMessage = (SoapMessage) message;
-
-            for (final Attachment attachment : soapMessage.getAttachments()) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", attachment.getContentId(), attachment.getContentType()));
-                }
-
-                soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {
-                    public InputStream getInputStream() throws IOException {
-                        return attachment.getInputStream();
-                    }
-                }, attachment.getContentType());
+        for (final Attachment attachment : soapMessage.getAttachments()) {
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", attachment.getContentId(), attachment.getContentType()));
             }
+
+            soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {
+                public InputStream getInputStream() throws IOException {
+                    return attachment.getInputStream();
+                }
+            }, attachment.getContentType());
         }
     }
 
     @Override
-    public Message convertInbound(WebServiceMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
+    public SoapMessage convertInbound(WebServiceMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
         return convertInbound(message, null, endpointConfiguration);
     }
 
     @Override
-    public Message convertInbound(WebServiceMessage webServiceMessage, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration) {
+    public SoapMessage convertInbound(WebServiceMessage webServiceMessage, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration) {
         try {
             StringResult payloadResult = new StringResult();
 

@@ -21,7 +21,7 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.*;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -113,7 +113,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
     }
 
     @Test

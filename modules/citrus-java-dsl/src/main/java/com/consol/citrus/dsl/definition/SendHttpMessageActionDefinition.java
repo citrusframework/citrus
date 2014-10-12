@@ -20,7 +20,7 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
@@ -52,7 +52,7 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      * @return chained definition builder
      */
     public SendHttpMessageActionDefinition method(HttpMethod method) {
-        header(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
+        header(HttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
         return this;
     }
 

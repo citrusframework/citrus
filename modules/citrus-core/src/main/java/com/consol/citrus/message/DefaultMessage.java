@@ -44,6 +44,21 @@ public class DefaultMessage implements Message {
     private final Map<String, Object> headers;
 
     /**
+     * Constructs copy of given message.
+     * @param message
+     */
+    public DefaultMessage(Message message) {
+        this(message.getPayload(), message.copyHeaders());
+
+        this.headers.put(MessageHeaders.ID, message.getId());
+        this.headers.put(MessageHeaders.TIMESTAMP, message.getHeader(MessageHeaders.TIMESTAMP));
+
+        for (String headerData : message.getHeaderData()) {
+            addHeaderData(headerData);
+        }
+    }
+
+    /**
      * Default constructor using just message payload.
      * @param payload
      */

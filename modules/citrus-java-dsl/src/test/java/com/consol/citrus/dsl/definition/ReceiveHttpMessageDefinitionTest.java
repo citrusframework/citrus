@@ -20,7 +20,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
-import com.consol.citrus.http.message.CitrusHttpMessageHeaders;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
@@ -77,10 +77,10 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) ((XmlMessageValidationContext) action.getValidationContexts().get(0)).getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 4L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_CONTEXT_PATH), "foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_URI), "/test");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_QUERY_PARAMS), "param1=value1&param2=value2");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_CONTEXT_PATH), "foo");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/test");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "param1=value1&param2=value2");
     }
 
     @Test
@@ -112,10 +112,10 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) ((XmlMessageValidationContext) action.getValidationContexts().get(0)).getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 4L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_STATUS_CODE), "200");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get(CitrusHttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_STATUS_CODE), "200");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_REASON_PHRASE), "OK");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
