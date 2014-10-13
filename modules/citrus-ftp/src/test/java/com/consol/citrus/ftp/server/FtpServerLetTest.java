@@ -33,7 +33,7 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FtpServerFtpLetTest {
+public class FtpServerLetTest {
 
     private EndpointAdapter endpointAdapter = EasyMock.createMock(EndpointAdapter.class);
     private FtpSession ftpSession = EasyMock.createMock(FtpSession.class);
