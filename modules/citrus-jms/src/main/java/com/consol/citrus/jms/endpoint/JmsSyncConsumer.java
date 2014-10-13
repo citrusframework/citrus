@@ -17,6 +17,7 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.jms.message.CitrusJmsMessageHeaders;
+import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.ReplyProducer;
@@ -57,7 +58,15 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     @Override
     public Message receive(String selector, long timeout) {
         Message receivedMessage = super.receive(selector, timeout);
-        saveReplyDestination(receivedMessage);
+
+        JmsMessage jmsMessage;
+        if (receivedMessage instanceof JmsMessage) {
+            jmsMessage = (JmsMessage) receivedMessage;
+        } else {
+            jmsMessage = new JmsMessage(receivedMessage);
+        }
+
+        saveReplyDestination(jmsMessage);
 
         return receivedMessage;
     }
@@ -122,9 +131,9 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      *
      * @param receivedMessage
      */
-    public void saveReplyDestination(Message receivedMessage) {
+    public void saveReplyDestination(JmsMessage receivedMessage) {
         if (endpointConfiguration.getCorrelator() != null) {
-            replyDestinations.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), (Destination)receivedMessage.getHeader(CitrusJmsMessageHeaders.REPLY_TO));
+            replyDestinations.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), receivedMessage.getReplyTo());
         } else {
             replyDestinations.put("", (Destination)receivedMessage.getHeader(CitrusJmsMessageHeaders.REPLY_TO));
         }

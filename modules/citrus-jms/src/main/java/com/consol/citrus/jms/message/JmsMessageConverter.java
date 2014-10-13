@@ -98,7 +98,7 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
 
                 return nestedMessage;
             } else {
-                return new DefaultMessage(payload, headers);
+                return new JmsMessage(payload, headers);
             }
         } catch (JMSException e) {
             throw new CitrusRuntimeException("Failed to convert jms message", e);
