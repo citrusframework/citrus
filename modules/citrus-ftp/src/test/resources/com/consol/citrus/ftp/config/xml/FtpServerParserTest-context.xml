@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus-ftp="http://www.citrusframework.org/schema/ftp/config"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/ftp/config http://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <citrus-ftp:server id="ftpServer1"
+                      auto-start="false"
+                      port="22222"/>
+
+  <citrus-ftp:server id="ftpServer2"
+                      auto-start="false"
+                      port="22222"
+                      server="apacheFtpServer"/>
+
+  <citrus-ftp:server id="ftpServer3"
+                      auto-start="false"
+                      user-manager="userManager"
+                      port="22222"/>
+
+  <citrus-ftp:server id="ftpServer4"
+                      auto-start="false"
+                      user-manager-properties="classpath:ftp.server.properties"
+                      port="22222"/>
+
+  <bean id="apacheFtpServer" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.apache.ftpserver.FtpServer"/>
+  </bean>
+
+  <bean id="userManager" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.apache.ftpserver.ftplet.UserManager"/>
+  </bean>
+
+</beans>

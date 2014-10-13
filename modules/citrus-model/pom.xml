@@ -23,6 +23,7 @@
     <module>model-mail</module>
     <module>model-vertx</module>
     <module>model-camel</module>
+    <module>model-ftp</module>
   </modules>
 
   <dependencies>

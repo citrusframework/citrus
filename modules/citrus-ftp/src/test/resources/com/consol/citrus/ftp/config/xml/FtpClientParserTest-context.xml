@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-ftp="http://www.citrusframework.org/schema/ftp/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/ftp/config http://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd">
+
+  <citrus-ftp:client id="ftpClient1"
+                     host="localhost"
+                     port="22222"/>
+
+  <citrus-ftp:client id="ftpClient2"
+                     host="localhost"
+                     port="22222"
+                     username="user"
+                     password="consol"
+                     timeout="10000"/>
+
+  <citrus-ftp:client id="ftpClient3"
+                     host="localhost"
+                     port="22222"
+                     message-correlator="replyMessageCorrelator"/>
+
+  <citrus-ftp:client id="ftpClient4"
+                     host="localhost"
+                     port="22222"
+                     polling-interval="250"
+                     actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="clientInterceptors" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="java.util.List"/>
+  </bean>
+
+  <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
+  </bean>
+
+</beans>
