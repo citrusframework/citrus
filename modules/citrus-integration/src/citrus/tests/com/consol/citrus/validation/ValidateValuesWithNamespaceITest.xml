@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="ValidateValuesWithNamespaceITest">
-		<meta-info>
-			<author>Christoph Deppisch</author>
-			<creationdate>2009-06-24</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Christoph Deppisch</last-updated-by>
-			<last-updated-on>2008-06-24T00:00:00</last-updated-on>
-		</meta-info>
+        <meta-info>
+          <author>Christoph Deppisch</author>
+          <creationdate>2009-06-24</creationdate>
+          <status>FINAL</status>
+          <last-updated-by>Christoph Deppisch</last-updated-by>
+          <last-updated-on>2008-06-24T00:00:00</last-updated-on>
+        </meta-info>
 		
         <variables>
             <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
             <variable name="messageId" value="citrus:randomNumber(10)"></variable>
             <variable name="user" value="Christoph"></variable>
         </variables>
+
         <actions>
             <send with="helloRequestSender">
                 <description>
@@ -280,6 +281,57 @@
             
             <groovy>
                 assert context.getVariable('extractedText') == 'Hello ${user}'
+            </groovy>
+
+            <echo>
+              <message>Test: Validation matcher value extraction</message>
+            </echo>
+
+            <send with="helloRequestSender">
+              <description>
+                Send asynchronous hello request: TestFramework -> HelloService
+              </description>
+              <message>
+                <data>
+                  <![CDATA[
+                     <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                         <MessageId>${messageId}</MessageId>
+                         <CorrelationId>${correlationId}</CorrelationId>
+                         <User>${user}</User>
+                         <Text>Hello TestFramework</Text>
+                     </HelloRequest>
+                  ]]>
+                </data>
+              </message>
+              <header>
+                <element name="Operation" value="sayHello"/>
+                <element name="CorrelationId" value="${correlationId}"/>
+              </header>
+            </send>
+
+            <receive with="helloResponseReceiver">
+              <message>
+                <data>
+                  <![CDATA[
+                      <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                         <MessageId>${messageId}</MessageId>
+                         <CorrelationId>${correlationId}</CorrelationId>
+                         <User>@variable('serviceName')@</User>
+                         <Text>@variable('extractedText')@</Text>
+                     </HelloResponse>
+                  ]]>
+                </data>
+              </message>
+              <header>
+                <element name="Operation" value="@variable()@"/>
+                <element name="CorrelationId" value="${correlationId}"/>
+              </header>
+            </receive>
+
+            <groovy>
+              assert context.getVariable('Operation') == 'sayHello'
+              assert context.getVariable('serviceName') == 'HelloService'
+              assert context.getVariable('extractedText') == 'Hello ${user}'
             </groovy>
         </actions>
     </testcase>

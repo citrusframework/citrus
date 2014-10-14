@@ -59,6 +59,9 @@
         <entry key="isWeekday">
           <bean class="com.consol.citrus.validation.matcher.core.WeekdayValidationMatcher"/>
         </entry>
+        <entry key="variable">
+          <bean class="com.consol.citrus.validation.matcher.core.CreateVariableValidationMatcher"/>
+        </entry>
       </map>
     </property>
   </bean>

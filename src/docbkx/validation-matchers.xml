@@ -186,4 +186,21 @@
       also works with date time values. In this case you have to give a valid date time format respectively
       (e.g. FRIDAY('yyyy-MM-dd'T'hh:mm:ss')).</para>
     </section>
+
+    <section id="validation-matcher-variable">
+      <title>variable()</title>
+
+      <para>This is a very special validation matcher. Instead of performing a validation logic you can save the actual
+      value passed to the validation matcher as new test variable. This comes very handy as you can use the matcher wherever
+      you want: JSON message payloads, XML message payloads, headers and so on.</para>
+
+      <programlisting>&lt;value&gt;@variable('foo')@&lt;/value&gt;</programlisting>
+
+      <para>The validation matcher creates a new variable <emphasis>foo</emphasis> with the actual element value as variable value. When
+      leaving out the control value the field name itself is used as variable name.</para>
+
+      <programlisting>&lt;date&gt;@variable()@&lt;/date&gt;</programlisting>
+
+      <para>This creates a new variable <emphasis>date</emphasis> with the actual element value as variable value.</para>
+    </section>
 </chapter>

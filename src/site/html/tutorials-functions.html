@@ -42,7 +42,7 @@
       <p>All functions in Citrus need to implement the common function interface:</p>
 
       <pre class="prettyprint linenums">public interface Function {
-    public String execute(List&lt;String&gt; parameterList);
+    public String execute(List&lt;String&gt; parameterList, TestContext context);
 }</pre>
 
       <p>
@@ -55,11 +55,12 @@
 import java.util.Collections;
 import java.util.List;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.core.RandomNumberFunction;
 
 public class IdGeneratingFunction implements Function {
-    public String execute(List&lt;String&gt; parameterList) {
+    public String execute(List&lt;String&gt; parameterList, TestContext context) {
         StringBuffer idBuffer = new StringBuffer();
         
         idBuffer.append(&quot;Lx0x&quot;);
@@ -147,7 +148,7 @@ public class IdGeneratingFunction implements Function {
       
       <pre class="prettyprint linenums">public class GreetingFunction implements Function {
  
-    public String execute(List&lt;String&gt; parameterList) {
+    public String execute(List&lt;String&gt; parameterList, TestContext context) {
         if(parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException(&quot;Function parameters must not be empty. Specify language as parameter (US, GERMAN, SPANISH)!&quot;);
         }
