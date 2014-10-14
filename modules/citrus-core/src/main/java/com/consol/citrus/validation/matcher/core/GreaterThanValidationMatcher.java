@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.matcher.core;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 
@@ -26,7 +27,7 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
  */
 public class GreaterThanValidationMatcher implements ValidationMatcher {
 
-    public void validate(String fieldName, String value, String control) throws ValidationException {
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         
     	Double dValue;
     	Double dControl;

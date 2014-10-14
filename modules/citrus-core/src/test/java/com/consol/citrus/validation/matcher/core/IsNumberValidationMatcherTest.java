@@ -29,12 +29,12 @@ public class IsNumberValidationMatcherTest extends AbstractTestNGUnitTest {
     @Test
     public void testValidateSuccess() {
     	// control is irrelevant here
-        matcher.validate("field", "2", "3");
-        matcher.validate("field", "-1", "1");
-        matcher.validate("field", "-0.000000001", "0");
-        matcher.validate("field", "0", "aaa");
-        matcher.validate("field", "1E+07", "aaa");
-        matcher.validate("field", "1E-7", "aaa");
+        matcher.validate("field", "2", "3", context);
+        matcher.validate("field", "-1", "1", context);
+        matcher.validate("field", "-0.000000001", "0", context);
+        matcher.validate("field", "0", "aaa", context);
+        matcher.validate("field", "1E+07", "aaa", context);
+        matcher.validate("field", "1E-7", "aaa", context);
     }
     
     @Test
@@ -47,7 +47,7 @@ public class IsNumberValidationMatcherTest extends AbstractTestNGUnitTest {
 
     private void assertException(String fieldName, String value, String control) {
     	try {
-    		matcher.validate(fieldName, value, control);
+    		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));

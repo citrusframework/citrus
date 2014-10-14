@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.matcher.core;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class WeekdayValidationMatcher implements ValidationMatcher {
     private static Logger log = LoggerFactory.getLogger(WeekdayValidationMatcher.class);
 
     @Override
-    public void validate(String fieldName, String value, String control) throws ValidationException {
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         SimpleDateFormat dateFormat;
         String formatString = "dd.MM.yyyy";
         String weekday = control;

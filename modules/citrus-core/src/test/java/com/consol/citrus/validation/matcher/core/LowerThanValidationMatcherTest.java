@@ -28,10 +28,10 @@ public class LowerThanValidationMatcherTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "3", "2");
-        matcher.validate("field", "1", "-1");
-        matcher.validate("field", "0.000000001", "0");
-        matcher.validate("field", "0", "-0.000000001");
+        matcher.validate("field", "3", "2", context);
+        matcher.validate("field", "1", "-1", context);
+        matcher.validate("field", "0.000000001", "0", context);
+        matcher.validate("field", "0", "-0.000000001", context);
     }
     
     @Test
@@ -44,7 +44,7 @@ public class LowerThanValidationMatcherTest extends AbstractTestNGUnitTest {
 
     private void assertException(String fieldName, String value, String control) {
     	try {
-    		matcher.validate(fieldName, value, control);
+    		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));

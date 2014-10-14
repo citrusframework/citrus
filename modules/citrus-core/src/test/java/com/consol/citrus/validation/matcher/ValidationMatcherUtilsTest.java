@@ -16,11 +16,11 @@
 
 package com.consol.citrus.validation.matcher;
 
-import static org.easymock.EasyMock.*;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -44,10 +44,10 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
     public void testResolveCustomValidationMatcher() {
         reset(validationMatcher);
         
-        validationMatcher.validate("field", "value", "value");
+        validationMatcher.validate("field", "value", "value", context);
         expectLastCall().times(3);
         
-        validationMatcher.validate("field", "prefix:value", "prefix:value");
+        validationMatcher.validate("field", "prefix:value", "prefix:value", context);
         expectLastCall().once();
         
         replay(validationMatcher);

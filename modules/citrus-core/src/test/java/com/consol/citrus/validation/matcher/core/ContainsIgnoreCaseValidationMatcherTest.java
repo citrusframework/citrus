@@ -28,12 +28,12 @@ public class ContainsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitT
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "This is a test", "is a");
-        matcher.validate("field", "This is a test", "this");
-        matcher.validate("field", "This is a test", "TEST");
-        matcher.validate("field", "This is a 0815test", "0815");
-        matcher.validate("field", "This is a test", " ");
-        matcher.validate("field", "This is a test", " IS A ");
+        matcher.validate("field", "This is a test", "is a", context);
+        matcher.validate("field", "This is a test", "this", context);
+        matcher.validate("field", "This is a test", "TEST", context);
+        matcher.validate("field", "This is a 0815test", "0815", context);
+        matcher.validate("field", "This is a test", " ", context);
+        matcher.validate("field", "This is a test", " IS A ", context);
     }
     
     @Test
@@ -43,7 +43,7 @@ public class ContainsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitT
 
     private void assertException(String fieldName, String value, String control) {
     	try {
-    		matcher.validate(fieldName, value, control);
+    		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));

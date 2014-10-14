@@ -28,12 +28,12 @@ public class EqualsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitTes
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "VALUE", "value");
-        matcher.validate("field", "VALUE", "VALUE");
-        matcher.validate("field", "value", "VALUE");
-        matcher.validate("field", "value", "value");
-        matcher.validate("field", "$%& value 123", "$%& VALUE 123");
-        matcher.validate("field", "/() VALUE @&§", "/() VALUE @&§");
+        matcher.validate("field", "VALUE", "value", context);
+        matcher.validate("field", "VALUE", "VALUE", context);
+        matcher.validate("field", "value", "VALUE", context);
+        matcher.validate("field", "value", "value", context);
+        matcher.validate("field", "$%& value 123", "$%& VALUE 123", context);
+        matcher.validate("field", "/() VALUE @&§", "/() VALUE @&§", context);
     }
     
     @Test
@@ -43,7 +43,7 @@ public class EqualsIgnoreCaseValidationMatcherTest extends AbstractTestNGUnitTes
 
     private void assertException(String fieldName, String value, String control) {
     	try {
-    		matcher.validate(fieldName, value, control);
+    		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));

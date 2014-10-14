@@ -28,10 +28,10 @@ public class EndsWithValidationMatcherTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "This is a test", "");
-        matcher.validate("field", "This is a test", "t");
-        matcher.validate("field", "This is a test", " test");
-        matcher.validate("field", "This is a 0815test", " is a 0815test");
+        matcher.validate("field", "This is a test", "", context);
+        matcher.validate("field", "This is a test", "t", context);
+        matcher.validate("field", "This is a test", " test", context);
+        matcher.validate("field", "This is a 0815test", " is a 0815test", context);
     }
     
     @Test
@@ -42,7 +42,7 @@ public class EndsWithValidationMatcherTest extends AbstractTestNGUnitTest {
 
     private void assertException(String fieldName, String value, String control) {
     	try {
-    		matcher.validate(fieldName, value, control);
+    		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));

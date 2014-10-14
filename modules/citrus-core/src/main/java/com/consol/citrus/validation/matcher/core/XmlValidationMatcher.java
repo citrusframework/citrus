@@ -1,7 +1,6 @@
 package com.consol.citrus.validation.matcher.core;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
@@ -30,9 +29,6 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
     @Autowired(required = false)
     private DomXmlMessageValidator xmlMessageValidator;
     
-    @Autowired
-    private TestContextFactoryBean testContextFactory;
-
     /** Spring bean application context */
     private ApplicationContext applicationContext;
 
@@ -42,11 +38,10 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
     /**
       * {@inheritDoc}
       */
-    public void validate(String fieldName, String value, String control) throws ValidationException {
+    public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setControlMessage(new DefaultMessage(control));
         
-        TestContext context = testContextFactory.getObject();
         xmlMessageValidator.validateMessage(new DefaultMessage(removeCDataElements(value)), context, validationContext);
     }
 

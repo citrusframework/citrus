@@ -61,7 +61,7 @@ public final class ValidationMatcherUtils {
             matcherValue = matcherValue.substring(1, matcherValue.length() - 1);
         }
 
-        library.getValidationMatcher(matcherName).validate(fieldName, fieldValue, matcherValue);
+        library.getValidationMatcher(matcherName).validate(fieldName, fieldValue, matcherValue, context);
     }
     
     /**

@@ -28,9 +28,9 @@ public class DatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidateSuccess() {
-    	matcher.validate("field", "2011-10-10", "yyyy-MM-dd");
-        matcher.validate("field", "10.10.2011", "dd.MM.yyyy");
-        matcher.validate("field", "2011-01-01T01:02:03", "yyyy-MM-dd'T'HH:mm:ss");
+    	matcher.validate("field", "2011-10-10", "yyyy-MM-dd", context);
+        matcher.validate("field", "10.10.2011", "dd.MM.yyyy", context);
+        matcher.validate("field", "2011-01-01T01:02:03", "yyyy-MM-dd'T'HH:mm:ss", context);
     }
     
     @Test
@@ -40,7 +40,7 @@ public class DatePatternValidationMatcherTest extends AbstractTestNGUnitTest {
 
     private void assertException(String fieldName, String value, String control) {
     	try {
-    		matcher.validate(fieldName, value, control);
+    		matcher.validate(fieldName, value, control, context);
     		Assert.fail("Expected exception not thrown!");
     	} catch (ValidationException e) {
 			Assert.assertTrue(e.getMessage().contains(fieldName));
