@@ -16,6 +16,7 @@
 
 package com.consol.citrus.functions.core;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import org.slf4j.Logger;
@@ -40,10 +41,10 @@ public class ChangeDateFunction extends AbstractDateFunction {
     private static Logger log = LoggerFactory.getLogger(ChangeDateFunction.class);
 
     /**
-     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @see com.consol.citrus.functions.Function#execute(java.util.List, com.consol.citrus.context.TestContext)
      * @throws CitrusRuntimeException
      */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (CollectionUtils.isEmpty(parameterList)) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }

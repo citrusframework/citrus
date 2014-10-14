@@ -16,16 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.core.SubstringFunction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -38,12 +34,12 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add("6");
-        Assert.assertEquals(function.execute(params), "TestFramework");
+        Assert.assertEquals(function.execute(params, context), "TestFramework");
         
         params.clear();
         params.add("This is a test");
         params.add("0");
-        Assert.assertEquals(function.execute(params), "This is a test");
+        Assert.assertEquals(function.execute(params, context), "This is a test");
     }
     
     @Test
@@ -52,13 +48,13 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         params.add("Hallo,TestFramework");
         params.add("6");
         params.add("10");
-        Assert.assertEquals(function.execute(params), "Test");
+        Assert.assertEquals(function.execute(params, context), "Test");
         
         params.clear();
         params.add("This is a test");
         params.add("0");
         params.add("4");
-        Assert.assertEquals(function.execute(params), "This");
+        Assert.assertEquals(function.execute(params, context), "This");
     }
 
     @Test(expectedExceptions = {StringIndexOutOfBoundsException.class})
@@ -66,12 +62,12 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         List<String> params = new ArrayList<String>();
         params.add("Test");
         params.add("-1");
-        function.execute(params);
+        function.execute(params, context);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testMissingBeginIndex() {
-        function.execute(Collections.singletonList("This is a test"));
+        function.execute(Collections.singletonList("This is a test"), context);
     }
     
     @Test(expectedExceptions = {NumberFormatException.class})
@@ -79,11 +75,11 @@ public class SubstringFunctionTest extends AbstractTestNGUnitTest {
         List<String> params = new ArrayList<String>();
         params.add("Hallo,TestFramework");
         params.add("one");
-        function.execute(params);
+        function.execute(params, context);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
 }

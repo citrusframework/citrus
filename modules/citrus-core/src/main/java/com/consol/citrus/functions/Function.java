@@ -16,6 +16,8 @@
 
 package com.consol.citrus.functions;
 
+import com.consol.citrus.context.TestContext;
+
 import java.util.List;
 
 /**
@@ -29,7 +31,8 @@ public interface Function {
      * Method called on execution.
      * 
      * @param parameterList list of function arguments.
+     * @param context
      * @return function result as string.
      */
-    String execute(List<String> parameterList);
+    String execute(List<String> parameterList, TestContext context);
 }

@@ -16,12 +16,14 @@
 
 package com.consol.citrus.functions.core;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * Function gets the local host address. Usually some IP address (e.g. 192.168.2.100).
@@ -34,7 +36,7 @@ public class LocalHostAddressFunction implements Function {
     /**
      * {@inheritDoc}
      */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (!parameterList.isEmpty()) {
             throw new InvalidFunctionUsageException("Unexpected parameter for function.");
         }

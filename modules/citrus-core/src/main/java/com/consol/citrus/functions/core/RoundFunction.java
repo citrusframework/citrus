@@ -16,11 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * Function returns the closest integer value to a decimal argument.
@@ -30,10 +31,10 @@ import org.springframework.util.CollectionUtils;
 public class RoundFunction implements Function {
 
     /**
-     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @see com.consol.citrus.functions.Function#execute(java.util.List, com.consol.citrus.context.TestContext)
      * @throws InvalidFunctionUsageException
      */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (CollectionUtils.isEmpty(parameterList)) {
             throw new InvalidFunctionUsageException("Function parameters must not be empty");
         }

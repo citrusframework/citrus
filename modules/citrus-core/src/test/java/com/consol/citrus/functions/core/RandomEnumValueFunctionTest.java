@@ -16,17 +16,14 @@
 
 package com.consol.citrus.functions.core;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import java.util.*;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Test the {@link RandomEnumValueFunction} function.
@@ -34,7 +31,7 @@ import com.consol.citrus.exceptions.InvalidFunctionUsageException;
  * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
-public class RandomEnumValueFunctionTest {
+public class RandomEnumValueFunctionTest extends AbstractTestNGUnitTest {
 	private Random random = new Random(System.currentTimeMillis());
 	
 	private List<String> generateRandomValues() {
@@ -51,7 +48,7 @@ public class RandomEnumValueFunctionTest {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		final List<String> values = generateRandomValues();
 		for(int i=0; i<100; i++) {
-			final String value = testee.execute(values);
+			final String value = testee.execute(values, context);
 			assertNotNull(value);
 			assertTrue(values.contains(value));
 		}
@@ -64,7 +61,7 @@ public class RandomEnumValueFunctionTest {
 		final List<String> noParameters = Collections.emptyList();
 		
 		for(int i=0; i<100; i++) {
-			final String value = testee.execute(noParameters);
+			final String value = testee.execute(noParameters, context);
 			assertNotNull(value);
 			assertTrue(testee.getValues().contains(value));
 		}
@@ -75,13 +72,13 @@ public class RandomEnumValueFunctionTest {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		testee.setValues(generateRandomValues());
 		final List<String> params = generateRandomValues();
-		testee.execute(params);
+		testee.execute(params, context);
 	}
 	
 	@Test(expectedExceptions = {InvalidFunctionUsageException.class})
 	public void testWithNone() {
 		RandomEnumValueFunction testee = new RandomEnumValueFunction();
 		final List<String> noParameters = Collections.emptyList();
-		testee.execute(noParameters);
+		testee.execute(noParameters, context);
 	}
 }

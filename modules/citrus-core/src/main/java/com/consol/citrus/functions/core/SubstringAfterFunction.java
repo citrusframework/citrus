@@ -16,10 +16,11 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+
+import java.util.List;
 
 /**
  * Function implements substring after functionality.
@@ -29,10 +30,10 @@ import com.consol.citrus.functions.Function;
 public class SubstringAfterFunction implements Function {
 
     /**
-     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @see com.consol.citrus.functions.Function#execute(java.util.List, com.consol.citrus.context.TestContext)
      * @throws InvalidFunctionUsageException
      */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (parameterList == null || parameterList.size() < 2) {
             throw new InvalidFunctionUsageException("Function parameters not set correctly");
         }

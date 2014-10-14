@@ -16,12 +16,11 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.Collections;
-
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -31,7 +30,7 @@ public class RandomUUIDFunctionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testFunction() {
-        Assert.assertNotNull(function.execute(Collections.<String>emptyList()));
+        Assert.assertNotNull(function.execute(Collections.<String>emptyList(), context));
     }
     
 }

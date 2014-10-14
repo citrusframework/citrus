@@ -16,22 +16,20 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import java.util.*;
 
 /**
  * Test the {@link MapValueFunction} function.
  * @author Dimo Velev (dimo.velev@gmail.com)
  *
  */
-public class MapValueFunctionTest {
+public class MapValueFunctionTest extends AbstractTestNGUnitTest {
 	private Map<String, String> map = null;
 	
 	@BeforeTest
@@ -55,7 +53,7 @@ public class MapValueFunctionTest {
 		testee.setMap(map);
 		testee.afterPropertiesSet();
 		for(String key : map.keySet()) {
-			String result = testee.execute(Arrays.asList(key));
+			String result = testee.execute(Arrays.asList(key), context);
 			Assert.assertEquals(result, map.get(key));
 		}
 	}
@@ -66,6 +64,6 @@ public class MapValueFunctionTest {
 		testee.setMap(map);
 		testee.afterPropertiesSet();
 		Assert.assertFalse(map.containsKey("303"));
-		testee.execute(Arrays.asList("303"));
+		testee.execute(Arrays.asList("303"), context);
 	}
 }

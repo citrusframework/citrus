@@ -16,14 +16,14 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-import java.util.Map;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.Function;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.Function;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Function to map the function's argument to a corresponding value configured using a map. 
@@ -68,9 +68,9 @@ public class MapValueFunction implements Function, InitializingBean {
 	private Map<String, String> map = null;
 	
 	/**
-	 * @see Function#execute(List)
+	 * @see Function#execute(java.util.List, com.consol.citrus.context.TestContext)
 	 */
-	public String execute(List<String> params) {
+	public String execute(List<String> params, TestContext context) {
 		if (params.size() != 1) {
 			throw new InvalidFunctionUsageException("Expected exactly one argument but got " + params.size());
 		}

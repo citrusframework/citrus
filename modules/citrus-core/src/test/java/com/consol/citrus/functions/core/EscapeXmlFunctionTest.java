@@ -16,13 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.Collections;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -35,11 +34,11 @@ public class EscapeXmlFunctionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList(xmlFragment)), escapedXml);
+        Assert.assertEquals(function.execute(Collections.singletonList(xmlFragment), context), escapedXml);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
 }

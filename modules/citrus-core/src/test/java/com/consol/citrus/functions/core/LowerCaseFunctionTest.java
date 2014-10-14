@@ -16,14 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.Collections;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.core.LowerCaseFunction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -33,13 +31,13 @@ public class LowerCaseFunctionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("1000")), "1000");
-        Assert.assertEquals(function.execute(Collections.singletonList("Hallo TestFramework!")), "hallo testframework!");
-        Assert.assertEquals(function.execute(Collections.singletonList("Today is: 09.02.2009")), "today is: 09.02.2009");
+        Assert.assertEquals(function.execute(Collections.singletonList("1000"), context), "1000");
+        Assert.assertEquals(function.execute(Collections.singletonList("Hallo TestFramework!"), context), "hallo testframework!");
+        Assert.assertEquals(function.execute(Collections.singletonList("Today is: 09.02.2009"), context), "today is: 09.02.2009");
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
 }

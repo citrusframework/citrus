@@ -16,16 +16,15 @@
 
 package com.consol.citrus.functions.core;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Collections;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
@@ -35,18 +34,18 @@ public class DecodeBase64FunctionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testFunction() {
-        Assert.assertEquals(function.execute(Collections.singletonList("Zm9v")), "foo");
+        Assert.assertEquals(function.execute(Collections.singletonList("Zm9v"), context), "foo");
     }
     
     @Test
     public void testCustomCharset() {
-        Assert.assertEquals(function.execute(Arrays.asList(new String[] {"Zm9v", "UTF-8"})), "foo");
+        Assert.assertEquals(function.execute(Arrays.asList(new String[] {"Zm9v", "UTF-8"}), context), "foo");
     }
     
     @Test
     public void testUnsupportedCharset() {
         try {
-            function.execute(Arrays.asList(new String[] {"foo", "UNKNOWN"}));
+            function.execute(Arrays.asList(new String[] {"foo", "UNKNOWN"}), context);
             Assert.fail("Missing exception due to unsupported charset encoding");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause().getClass().equals(UnsupportedEncodingException.class));
@@ -55,6 +54,6 @@ public class DecodeBase64FunctionTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
 }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.functions.core;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +38,10 @@ public class CurrentDateFunction extends AbstractDateFunction {
     private static Logger log = LoggerFactory.getLogger(CurrentDateFunction.class);
 
     /**
-     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @see com.consol.citrus.functions.Function#execute(java.util.List, com.consol.citrus.context.TestContext)
      * @throws CitrusRuntimeException
      */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         Calendar calendar = Calendar.getInstance();
         
         SimpleDateFormat dateFormat;

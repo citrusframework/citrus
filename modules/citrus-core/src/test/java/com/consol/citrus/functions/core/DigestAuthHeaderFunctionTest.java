@@ -15,24 +15,24 @@
  */
 package com.consol.citrus.functions.core;
 
-import java.util.Collections;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.FunctionParameterHelper;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.FunctionParameterHelper;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
-public class DigestAuthHeaderFunctionTest {
+public class DigestAuthHeaderFunctionTest extends AbstractTestNGUnitTest {
 
     DigestAuthHeaderFunction function = new DigestAuthHeaderFunction();
     
     @Test
     public void testFunction() {
-        String digestHeader = function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5'"));
+        String digestHeader = function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5'"), context);
         
         Assert.assertTrue(digestHeader.startsWith("Digest username=username,realm=authRealm,nonce="));
         Assert.assertTrue(digestHeader.contains("uri=http://localhost:8080,response="));
@@ -41,11 +41,11 @@ public class DigestAuthHeaderFunctionTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testMissingParameters() {
-        function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'http://localhost:8080', 'citrus', 'md5'"));
+        function.execute(FunctionParameterHelper.getParameterList("'username', 'password', 'authRealm', 'http://localhost:8080', 'citrus', 'md5'"), context);
     }
 }

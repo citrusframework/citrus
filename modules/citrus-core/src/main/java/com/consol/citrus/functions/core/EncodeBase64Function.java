@@ -16,15 +16,15 @@
 
 package com.consol.citrus.functions.core;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.util.CollectionUtils;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.util.CollectionUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * Encodes a character sequence to base64 binary using given charset.
@@ -36,7 +36,7 @@ public class EncodeBase64Function implements Function {
     /**
       * {@inheritDoc}
       */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (CollectionUtils.isEmpty(parameterList) || parameterList.size() < 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameters!");
         }

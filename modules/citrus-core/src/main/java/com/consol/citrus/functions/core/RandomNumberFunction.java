@@ -16,6 +16,7 @@
 
 package com.consol.citrus.functions.core;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
@@ -34,10 +35,10 @@ public class RandomNumberFunction implements Function {
     private static Random generator = new Random(System.currentTimeMillis());
 
     /**
-     * @see com.consol.citrus.functions.Function#execute(java.util.List)
+     * @see com.consol.citrus.functions.Function#execute(java.util.List, com.consol.citrus.context.TestContext)
      * @throws InvalidFunctionUsageException
      */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         int numberLength;
         boolean paddingOn = true;
 

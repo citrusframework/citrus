@@ -16,11 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-import java.util.Random;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Function to choose one random value from a list of strings. The enumeration values to choose from
@@ -75,9 +76,9 @@ public class RandomEnumValueFunction implements Function {
 	private List<String> values = null;
 	
 	/**
-	 * @see Function#execute(List)
+	 * @see Function#execute(java.util.List, com.consol.citrus.context.TestContext)
 	 */
-	public String execute(List<String> params) {
+	public String execute(List<String> params, TestContext context) {
 		if (values == null) {
 			return randomValue(params);
 		} else {

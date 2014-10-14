@@ -16,14 +16,14 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.List;
 
 /**
  * Function creates digest authentication HTTP header with given security parameters:
@@ -46,7 +46,7 @@ public class DigestAuthHeaderFunction implements Function {
     /**
       * {@inheritDoc}
       */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (parameterList == null || parameterList.size() < 8) {
             throw new InvalidFunctionUsageException("Function parameters not set correctly - need parameters: username,password,realm,noncekey,method,uri,opaque,algorithm");
         }

@@ -16,16 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.core.ConcatFunction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,11 +36,11 @@ public class ConcatFunctionTest extends AbstractTestNGUnitTest {
         params.add("TestFramework");
         params.add("!");
         
-        Assert.assertEquals(function.execute(params), "Hallo TestFramework!");
+        Assert.assertEquals(function.execute(params, context), "Hallo TestFramework!");
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
 }

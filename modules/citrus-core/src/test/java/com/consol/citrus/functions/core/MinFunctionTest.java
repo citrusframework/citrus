@@ -16,16 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.core.MinFunction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -40,16 +36,16 @@ public class MinFunctionTest extends AbstractTestNGUnitTest {
         params.add("5.2");
         params.add("4.7");
         
-        Assert.assertEquals(function.execute(params), "3.0");
+        Assert.assertEquals(function.execute(params, context), "3.0");
     }
     
     @Test(expectedExceptions = {NumberFormatException.class})
     public void testWrongParameterUsage() {
-        function.execute(Collections.singletonList("no digit"));
+        function.execute(Collections.singletonList("no digit"), context);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
 }

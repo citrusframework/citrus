@@ -16,19 +16,19 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-
-import org.springframework.util.CollectionUtils;
-
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * Adds XML CDATA section tags to parameter value. This is extremely useful when having
- * CDATA sections in message payload. Citrus test case itself also uses CDATA sections and 
+ * CDATA sections in message payload. Citrus test case itself also uses CDATA sections and
  * nested CDATA sections are not allowed. This function adds the CDATA section tags
  * at runtime.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class CreateCDataSectionFunction implements Function {
@@ -36,15 +36,15 @@ public class CreateCDataSectionFunction implements Function {
     /** CDATA section tags */
     private static final String CDATA_START = "<![CDATA[";
     private static final String CDATA_END = "]]>";
-    
+
     /**
-      * {@inheritDoc}
-      */
-    public String execute(List<String> parameterList) {
+     * {@inheritDoc}
+     */
+    public String execute(List<String> parameterList, TestContext context) {
         if (CollectionUtils.isEmpty(parameterList) || parameterList.size() != 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage - missing parameter value!");
         }
-        
+
         return CDATA_START + parameterList.get(0) + CDATA_END;
     }
 

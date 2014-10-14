@@ -64,7 +64,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
                 Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
                 Assert.assertEquals(context.getVariable("${goodbye}"), "Goodbye Citrus!");
-                Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<String>()) + "!");
+                Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<String>(), context) + "!");
             }
         });
         

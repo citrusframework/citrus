@@ -16,13 +16,13 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.List;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.functions.Function;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.util.CollectionUtils;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.functions.Function;
+import java.util.List;
 
 /**
  * Escapes XML fragment with escaped characters for '<', '>'.
@@ -34,7 +34,7 @@ public class EscapeXmlFunction implements Function {
     /**
       * {@inheritDoc}
       */
-    public String execute(List<String> parameterList) {
+    public String execute(List<String> parameterList, TestContext context) {
         if (CollectionUtils.isEmpty(parameterList) || parameterList.size() != 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage! Missing parameter!");
         }

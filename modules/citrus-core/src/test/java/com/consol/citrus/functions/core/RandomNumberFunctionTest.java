@@ -16,13 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
-import java.util.*;
-
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.exceptions.InvalidFunctionUsageException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -35,13 +34,13 @@ public class RandomNumberFunctionTest extends AbstractTestNGUnitTest {
         List<String> params = new ArrayList<String>();
         params.add("3");
         
-        Assert.assertTrue(Integer.valueOf(function.execute(params)) < 1000);
+        Assert.assertTrue(Integer.valueOf(function.execute(params, context)) < 1000);
         
         params = new ArrayList<String>();
         params.add("3");
         params.add("false");
         
-        String generated = function.execute(params);
+        String generated = function.execute(params, context);
         Assert.assertTrue(generated.length() <= 3);
         Assert.assertTrue(generated.length() > 0);
     }
@@ -92,12 +91,12 @@ public class RandomNumberFunctionTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testWrongParameterUsage() {
-        function.execute(Collections.singletonList("-1"));
+        function.execute(Collections.singletonList("-1"), context);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
-        function.execute(Collections.<String>emptyList());
+        function.execute(Collections.<String>emptyList(), context);
     }
     
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
@@ -107,6 +106,6 @@ public class RandomNumberFunctionTest extends AbstractTestNGUnitTest {
         params.add("true");
         params.add("too much");
         
-        function.execute(params);
+        function.execute(params, context);
     }
 }
