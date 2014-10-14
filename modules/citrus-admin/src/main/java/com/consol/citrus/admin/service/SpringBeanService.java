@@ -67,10 +67,12 @@ public class SpringBeanService {
         jaxbContext = jaxbHelper.createJAXBContextByPath(
                 "com.consol.citrus.admin.spring.model",
                 "com.consol.citrus.model.config.core",
+                "com.consol.citrus.model.config.jms",
                 "com.consol.citrus.model.config.ws",
                 "com.consol.citrus.model.config.mail",
                 "com.consol.citrus.model.config.ssh",
                 "com.consol.citrus.model.config.vertx",
+                "com.consol.citrus.model.config.ftp",
                 "com.consol.citrus.model.config.http");
 
         transformerFactory.setURIResolver(new URIResolver() {
