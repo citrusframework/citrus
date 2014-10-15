@@ -21,7 +21,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

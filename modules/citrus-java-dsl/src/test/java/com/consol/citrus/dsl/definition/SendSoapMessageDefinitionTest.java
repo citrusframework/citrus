@@ -24,7 +24,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.SoapMessageHeaders;

@@ -18,7 +18,6 @@ package com.consol.citrus.ws.message;
 
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.ws.SoapAttachment;
 
 import java.util.*;
 

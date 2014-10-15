@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.validation;
 
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 
 import java.util.List;

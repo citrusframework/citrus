@@ -25,7 +25,7 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 import org.easymock.EasyMock;

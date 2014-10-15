@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

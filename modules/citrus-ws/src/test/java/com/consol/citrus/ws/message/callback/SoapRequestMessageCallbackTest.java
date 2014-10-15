@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.message.*;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.*;
 import org.easymock.EasyMock;

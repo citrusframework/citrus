@@ -21,7 +21,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;

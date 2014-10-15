@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 
 /**
  * Simple implementation of a {@link AbstractSoapAttachmentValidator}. 

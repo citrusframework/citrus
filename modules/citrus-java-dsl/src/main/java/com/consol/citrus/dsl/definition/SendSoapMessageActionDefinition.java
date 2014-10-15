@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.springframework.context.ApplicationContext;

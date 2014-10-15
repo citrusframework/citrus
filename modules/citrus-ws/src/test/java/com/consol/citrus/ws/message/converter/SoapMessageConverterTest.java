@@ -18,7 +18,7 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.SoapAttachment;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;

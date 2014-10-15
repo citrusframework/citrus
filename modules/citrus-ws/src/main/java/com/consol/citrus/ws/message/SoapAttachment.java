@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws;
+package com.consol.citrus.ws.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
