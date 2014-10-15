@@ -17,6 +17,6 @@
   <bean id="citrusEndpointInterceptor" class="com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor"/>
 
   <!-- Default endpoint for handling incoming requests messages -->
-  <bean id="citrusWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint"/>
+  <bean id="citrusWsEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint"/>
 
 </beans>

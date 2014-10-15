@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.servlet;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.ws.WebServiceEndpoint;
+import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor;
 import com.consol.citrus.ws.server.WebServiceServer;

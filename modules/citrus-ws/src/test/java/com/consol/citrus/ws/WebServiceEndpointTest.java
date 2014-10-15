@@ -21,6 +21,7 @@ import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.server.WebServiceEndpoint;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.ws.context.MessageContext;

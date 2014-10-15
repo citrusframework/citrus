@@ -1030,7 +1030,7 @@ Server: Jetty(7.0.0.pre5)
       &lt;/property&gt;
   &lt;/bean&gt;
 
-  &lt;bean id=&quot;helloServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.WebServiceEndpoint&quot;&gt;
+  &lt;bean id=&quot;helloServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.server.WebServiceEndpoint&quot;&gt;
       &lt;property name=&quot;messageHandler&quot; ref=&quot;staticResponseEndpointAdapter&quot;/&gt;
   &lt;/bean&gt;
 

@@ -19,7 +19,7 @@ package com.consol.citrus.ws.servlet;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.ws.WebServiceEndpoint;
+import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.interceptor.*;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;

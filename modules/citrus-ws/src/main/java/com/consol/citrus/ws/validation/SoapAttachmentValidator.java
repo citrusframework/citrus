@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Interface for SOAP attachment validators. 
  * 
- * The Citrus {@link com.consol.citrus.ws.WebServiceEndpoint} implementation adds the received SOAP attachments as 
+ * The Citrus {@link com.consol.citrus.ws.server.WebServiceEndpoint} implementation adds the received SOAP attachments as
  * {@link org.springframework.ws.mime.Attachment} implementations to the Spring integration message header. The header name will be the
  * attachment's contentId. The header value is the {@link org.springframework.ws.mime.Attachment} object.
  *  

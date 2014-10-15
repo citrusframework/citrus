@@ -17,7 +17,7 @@
 package com.consol.citrus.ws.interceptor;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ws.WebServiceEndpoint;
+import com.consol.citrus.ws.server.WebServiceEndpoint;
 import org.easymock.EasyMock;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;

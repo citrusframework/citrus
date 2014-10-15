@@ -20,7 +20,7 @@
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
     <bean id="citrusEndpointInterceptor" class="com.consol.citrus.ws.interceptor.DelegatingEndpointInterceptor"/>
-    <bean id="citrusWsEndpoint" class="com.consol.citrus.ws.WebServiceEndpoint"/>
+    <bean id="citrusWsEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint"/>
 
     <!-- Message Validators -->
     <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
