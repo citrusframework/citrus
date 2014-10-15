@@ -5,7 +5,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="FtpClientServerITest">
+  <testcase name="FtpDynamicEndpointITest">
     <meta-info>
       <author>Christoph Deppisch</author>
       <creationdate>2014-10-13</creationdate>
@@ -14,7 +14,7 @@
       <last-updated-on>2014-10-13T00:00:00</last-updated-on>
     </meta-info>
 
-    <description>Test sends and receives messages as Ftp client and server.</description>
+    <description>Test sends and receives messages as Ftp client and server where client is a dynamic endpoint.</description>
 
     <actions>
       <echo>
@@ -25,7 +25,24 @@
         <message>Sending PWD command to FTP server</message>
       </echo>
 
-      <send endpoint="ftpClient" fork="true">
+      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
+              message="@contains('530 Access denied')@">
+        <send endpoint="ftp://localhost:22222">
+          <message>
+            <data></data>
+          </message>
+          <header>
+            <element name="citrus_ftp_command" value="PWD"/>
+            <element name="citrus_ftp_arguments" value="test"/>
+          </header>
+        </send>
+      </assert>
+
+      <echo>
+        <message>Sending PWD command to FTP server</message>
+      </echo>
+
+      <send endpoint="ftp://localhost:22222?user=admin&amp;password=admin" fork="true">
         <message>
           <data></data>
         </message>
@@ -91,7 +108,7 @@
         </message>
       </send>
 
-      <receive endpoint="ftpClient">
+      <receive endpoint="ftp://localhost:22222?user=admin&amp;password=admin">
         <message type="plaintext">
           <data>PWD</data>
         </message>

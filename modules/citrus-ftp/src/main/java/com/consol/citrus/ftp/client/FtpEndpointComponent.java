@@ -19,6 +19,7 @@ package com.consol.citrus.ftp.client;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 import java.util.Map;
 
@@ -37,6 +38,12 @@ public class FtpEndpointComponent extends AbstractEndpointComponent {
 
         enrichEndpointConfiguration(ftpClient.getEndpointConfiguration(),
                 getEndpointConfigurationParameters(parameters, FtpEndpointConfiguration.class), context);
+
+        try {
+            ftpClient.afterPropertiesSet();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException("Failed to create dynamic endpoint", e);
+        }
 
         return ftpClient;
     }
