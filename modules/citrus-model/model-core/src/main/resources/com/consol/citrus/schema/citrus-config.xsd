@@ -165,6 +165,22 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="namespace-context">
+      <xs:annotation>
+        <xs:documentation>Global namespace definitions and mappings</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="namespace" minOccurs="1" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:attribute name="prefix" type="xs:string"/>
+              <xs:attribute name="uri" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
     <xs:element name="global-variables">
       <xs:annotation>
         <xs:documentation>Global scoped test variables - valid in all test cases</xs:documentation>

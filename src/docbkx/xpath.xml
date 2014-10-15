@@ -91,13 +91,9 @@
             <para>Instead of this namespace context on validation level you can also have a global namespace context which is valid in all test cases.
             We just add a bean in the basic citrus-context configuration which defines global namespace mappings.</para>
             
-            <programlisting>&lt;bean id=&quot;namespaceContextBuilder&quot; class=&quot;com.consol.citrus.xml.namespace.NamespaceContextBuilder&quot;&gt;
-    &lt;property name=&quot;namespaceMappings&quot;&gt;
-        &lt;props&gt;
-            &lt;prop key=&quot;def&quot;&gt;http://www.consol.de/samples/sayHello&lt;/prop&gt;            
-        &lt;/props&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+            <programlisting>&lt;namespace-context&gt;
+    &lt;namespace prefix=&quot;def&quot; uri=&quot;http://www.consol.de/samples/sayHello&quot;/&gt;
+&lt;/namespace-context&gt;</programlisting>
 
             <para>Once defined the <emphasis>def</emphasis> namespace prefix is valid in all test cases and all XPath expressions. This enables you to free
             your test cases from namespace prefix bindings that might be broken with time. You can use these global namespace mappings wherever XPath 

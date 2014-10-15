@@ -41,14 +41,10 @@
   <citrus:schema id="helloSchemaExtended" location="classpath:schemas/HelloServiceExtended.xsd" />
 
   <!-- Default namespace mappings used in XPath expression evaluations -->
-  <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
-    <property name="namespaceMappings">
-      <props>
-        <prop key="hs">http://citrusframework.org/schemas/samples/HelloService.xsd</prop>
-        <prop key="hse">http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd</prop>
-      </props>
-    </property>
-  </bean>
+  <citrus:namespace-context>
+    <citrus:namespace prefix="hs" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+    <citrus:namespace prefix="hse" uri="http://citrusframework.org/schemas/samples/HelloServiceExtended.xsd"/>
+  </citrus:namespace-context>
 
   <!-- Embedded ActiveMQ JMS broker -->
   <amq:broker useJmx="false" persistent="false">

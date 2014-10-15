@@ -27,13 +27,9 @@
   </citrus:schema-repository>
 
   <!-- Default namespace mappings used in XPath expression evaluations -->
-  <bean id="namespaceContextBuilder" class="com.consol.citrus.xml.namespace.NamespaceContextBuilder">
-    <property name="namespaceMappings">
-      <props>
-        <prop key="hs">http://citrusframework.org/schemas/samples/HelloService.xsd</prop>
-      </props>
-    </property>
-  </bean>
+  <citrus:namespace-context>
+      <citrus:namespace prefix="hs" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+  </citrus:namespace-context>
 
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
