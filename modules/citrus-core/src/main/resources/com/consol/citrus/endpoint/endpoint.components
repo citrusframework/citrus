@@ -3,6 +3,7 @@ jms=com.consol.citrus.jms.endpoint.JmsEndpointComponent
 http=com.consol.citrus.http.client.HttpEndpointComponent
 ws=com.consol.citrus.ws.client.WebServiceEndpointComponent
 soap=com.consol.citrus.ws.client.WebServiceEndpointComponent
+ftp=com.consol.citrus.ftp.client.FtpEndpointComponent
 mail=com.consol.citrus.mail.client.MailEndpointComponent
 smtp=com.consol.citrus.mail.client.MailEndpointComponent
 ssh=com.consol.citrus.ssh.client.SshEndpointComponent
