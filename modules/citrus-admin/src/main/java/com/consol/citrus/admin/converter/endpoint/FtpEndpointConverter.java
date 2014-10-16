@@ -17,32 +17,31 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.mail.Client;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.model.config.ftp.Client;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
- * @since 1.4.1
+ * @since 2.0
  */
 @Component
-public class MailClientConverter extends AbstractEndpointConverter<Client> {
+public class FtpEndpointConverter extends AbstractEndpointConverter<Client> {
 
     @Override
     public EndpointData convert(Client client) {
         EndpointData endpointData = new EndpointData(getEndpointType(), client.getId(), getModelClass());
 
         endpointData.add(property("host", client));
-        endpointData.add(property("port", client, "25"));
-        endpointData.add(property("protocol", client, JavaMailSenderImpl.DEFAULT_PROTOCOL));
-        endpointData.add(property("username", client));
+        endpointData.add(property("port", client));
+        endpointData.add(property("user", client));
         endpointData.add(property("password", client));
-        endpointData.add(property("properties", client));
-        endpointData.add(property("messageConverter", client)
-                .optionKey(MessageConverter.class.getName()));
+        endpointData.add(property("messageCorrelator", client)
+                .optionKey(ReplyMessageCorrelator.class.getName()));
 
-        endpointData.add(property("actor", "TestActor", client));
+        endpointData.add(property("pollingInterval", client));
+
+        addEndpointProperties(endpointData, client);
 
         return endpointData;
     }

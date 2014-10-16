@@ -17,8 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.*;
 import com.consol.citrus.model.config.http.Client;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -47,6 +46,8 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
         endpointData.add(property("pollingInterval", client, "500"));
         endpointData.add(property("messageCorrelator", client)
                 .optionKey(ReplyMessageCorrelator.class.getName()));
+        endpointData.add(property("messageConverter", client)
+                .optionKey(MessageConverter.class.getName()));
         endpointData.add(property("requestFactory", client)
                 .optionKey(ClientHttpRequestFactory.class.getName()));
         endpointData.add(property("restTemplate", client)
@@ -87,5 +88,10 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
     @Override
     public Class<Client> getModelClass() {
         return Client.class;
+    }
+
+    @Override
+    public String getEndpointType() {
+        return "http-client";
     }
 }

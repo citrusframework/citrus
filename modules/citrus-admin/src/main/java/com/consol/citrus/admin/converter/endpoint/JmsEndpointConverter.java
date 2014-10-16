@@ -1,6 +1,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
+import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.jms.JmsEndpoint;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,8 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint>
 
         endpointData.add(property("connectionFactory", definition)
                 .optionKey(ConnectionFactory.class.getName()));
+        endpointData.add(property("messageConverter", definition)
+                .optionKey(MessageConverter.class.getName()));
         endpointData.add(property("jmsTemplate", definition)
                 .optionKey(JmsTemplate.class.getName()));
         endpointData.add(property("pubSubDomain", definition, "false")
@@ -40,10 +43,5 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpoint>
     @Override
     public Class<JmsEndpoint> getModelClass() {
         return JmsEndpoint.class;
-    }
-
-    @Override
-    public String getEndpointType() {
-        return "jms";
     }
 }

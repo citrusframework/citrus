@@ -12,7 +12,7 @@ h3 small,
 h4 small,
 h5 small,
 h6 small {
-    color: #333333;
+    color: #404040;
 }
 
 .page-header {
@@ -24,13 +24,13 @@ a {
 }
 
 a:hover {
-    color: #fac300;
+    color: #fcc300;
     text-decoration: none;
 }
 
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
-    background-color: #ebf2f9;
+    background-color: #dceaf3;
 }
 
 .container-fluid {
@@ -38,7 +38,7 @@ a:hover {
 }
 
 .content-header {
-    background: url('../images/feature-logo-full.png') no-repeat top right #ebf2f9;
+    background: url('../images/feature-logo-full.png') no-repeat top right #dceaf3;
     border-bottom: 1px solid #d4d4d4;
     margin-bottom: 20px;
     padding-top: 15px;
@@ -65,22 +65,22 @@ a:hover {
 
 .navbar .nav .active > a, .navbar .nav .active > a:hover, .navbar .nav .active > a:focus {
     color: #ffffff;
-    background-color: #0090D4;
-    background-image: -moz-linear-gradient(top , #4bb1cf, #0090D4);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0090D4));
-    background-image: -webkit-linear-gradient(top, #4bb1cf, #0090D4);
-    background-image: -o-linear-gradient(top, #4bb1cf, #0090D4);
-    background-image: linear-gradient(to bottom, #4bb1cf, #0090D4);
+    background-color: #0096D6;
+    background-image: -moz-linear-gradient(top , #4bb1cf, #0096D6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0096D6));
+    background-image: -webkit-linear-gradient(top, #4bb1cf, #0096D6);
+    background-image: -o-linear-gradient(top, #4bb1cf, #0096D6);
+    background-image: linear-gradient(to bottom, #4bb1cf, #0096D6);
 }
 
 .navbar .nav > li > a:hover {
     color: #ffffff;
-    background-color: #0090D4;
-    background-image: -moz-linear-gradient(top , #4bb1cf, #0090D4);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0090D4));
-    background-image: -webkit-linear-gradient(top, #4bb1cf, #0090D4);
-    background-image: -o-linear-gradient(top, #4bb1cf, #0090D4);
-    background-image: linear-gradient(to bottom, #4bb1cf, #0090D4);
+    background-color: #0096D6;
+    background-image: -moz-linear-gradient(top , #4bb1cf, #0096D6);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0096D6));
+    background-image: -webkit-linear-gradient(top, #4bb1cf, #0096D6);
+    background-image: -o-linear-gradient(top, #4bb1cf, #0096D6);
+    background-image: linear-gradient(to bottom, #4bb1cf, #0096D6);
 }
 
 .box {
@@ -93,7 +93,7 @@ a:hover {
 }
 
 .box-dark {
-    background-color: #ebf2f9;
+    background-color: #dceaf3;
 }
 
 .side-nav {
@@ -119,23 +119,23 @@ a:hover {
 }
 
 .nav-tabs > li > a, .nav-tabs > li > a:hover {
-    color: #333333;
-    background-color: #ebf2f9;
+    color: #404040;
+    background-color: #dceaf3;
 }
 
 .nav-tabs > .active > a, .nav-tabs > .active > a:hover {
-    color: #333333;
+    color: #404040;
     background-color: #ffffff;
 }
 
 .nav-tabs.nav-stacked > li > a {
-    color: #333333;
+    color: #404040;
     background-color: #ffffff;
 }
 
 .nav-tabs.nav-stacked > .active > a, .nav-tabs.nav-stacked > li > a:hover {
-    color: #333333;
-    background-color: #ebf2f9;
+    color: #404040;
+    background-color: #dceaf3;
 }
 
 .nav-tabs.nav-stacked > li > a > i {
@@ -144,7 +144,7 @@ a:hover {
 }
 
 .nav-tabs.nav-stacked > .active > a > i, .nav-tabs.nav-stacked > li > a:hover > i {
-    color: #fac300;
+    color: #fcc300;
     margin-top: 3px;
 }
 
@@ -398,22 +398,22 @@ span.message-outbound {
 .dropdown-menu li > a:hover,
 .dropdown-menu li > a:focus,
 .dropdown-submenu:hover > a {
-    background-color: #fac300;
-    background-image: -moz-linear-gradient(top , #fad011, #fac300);
+    background-color: #fcc300;
+    background-image: -moz-linear-gradient(top , #fad011, #fcc300);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(fac300));
-    background-image: -webkit-linear-gradient(top, #fad011, #fac300);
-    background-image: -o-linear-gradient(top, #fad011, #fac300);
-    background-image: linear-gradient(to bottom, #fad011, #fac300);
+    background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+    background-image: -o-linear-gradient(top, #fad011, #fcc300);
+    background-image: linear-gradient(to bottom, #fad011, #fcc300);
 }
 
 .dropdown-menu .active > a,
 .dropdown-menu .active > a:hover {
-    background-color: #fac300;
-    background-image: -moz-linear-gradient(top , #fad011, #fac300);
+    background-color: #fcc300;
+    background-image: -moz-linear-gradient(top , #fad011, #fcc300);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(fac300));
-    background-image: -webkit-linear-gradient(top, #fad011, #fac300);
-    background-image: -o-linear-gradient(top, #fad011, #fac300);
-    background-image: linear-gradient(to bottom, #fad011, #fac300);
+    background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+    background-image: -o-linear-gradient(top, #fad011, #fcc300);
+    background-image: linear-gradient(to bottom, #fad011, #fcc300);
 }
 
 .dropdown-menu li > a {
@@ -507,7 +507,7 @@ span.message-outbound {
     padding-top: 5px;
     background-color: #efefef;
     border-right: 1px solid #dddddd;
-    color: #333333;
+    color: #404040;
 }
 
 .footer-task-bar i {
@@ -533,14 +533,14 @@ span.message-outbound {
 .btn-citrus {
     color: #ffffff;
     text-shadow: none;
-    background-color: #fac300;
-    background-image: -moz-linear-gradient(top , #fad011, #fac300);
+    background-color: #fcc300;
+    background-image: -moz-linear-gradient(top , #fad011, #fcc300);
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fad011), to(fac300));
-    background-image: -webkit-linear-gradient(top, #fad011, #fac300);
-    background-image: -o-linear-gradient(top, #fad011, #fac300);
-    background-image: linear-gradient(to bottom, #fad011, #fac300);
+    background-image: -webkit-linear-gradient(top, #fad011, #fcc300);
+    background-image: -o-linear-gradient(top, #fad011, #fcc300);
+    background-image: linear-gradient(to bottom, #fad011, #fcc300);
     background-repeat: repeat-x;
-    border-color: #fac300 #fac300 #fad011;
+    border-color: #fcc300 #fcc300 #fad011;
     border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffFBD06E', endColorstr='#ffF89406', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -552,7 +552,7 @@ span.message-outbound {
 .btn-citrus.disabled,
 .btn-citrus[disabled] {
     color: #ffffff;
-    background-color: #fac300;
+    background-color: #fcc300;
     *background-color: #fad011;
 }
 
@@ -580,7 +580,7 @@ input[readonly], select[readonly], textarea[readonly] {
 }
 
 .config-box:hover h5.page-header {
-    background-color: #fac300;
+    background-color: #fcc300;
 }
 
 .config-box h5.page-header {
@@ -944,15 +944,16 @@ ul.properties li {
 }
 
 .label-citrus, .badge-citrus {
-    background-color: #fac300;
+    background-color: #fcc300;
 }
 
 .label-jms, .badge-jms {
     background-color: #faac00;
 }
 
-.label-http, .badge-http {
-    background-color: #92bed2;
+.label-http-client, .badge-http-client,
+.label-http-server, .badge-http-server {
+    background-color: #428bca;
 }
 
 .label-ssh, .badge-ssh {
@@ -963,7 +964,8 @@ ul.properties li {
     background-color: #768dc1;
 }
 
-.label-ws, .badge-ws {
+.label-ws-client, .badge-ws-client,
+.label-ws-server, .badge-ws-server{
     background-color: #0480be;
 }
 
@@ -972,7 +974,7 @@ ul.properties li {
 }
 
 i.citrus {
-    color: #fac300;
+    color: #fcc300;
 }
 
 i.jms {

@@ -18,8 +18,7 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.*;
 import com.consol.citrus.model.config.ws.Client;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -51,7 +50,8 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
         endpointData.add(property("interceptors", client));
         endpointData.add(property("endpointResolver", client)
                 .optionKey(EndpointUriResolver.class.getName()));
-        endpointData.add(property("messageConverter", client));
+        endpointData.add(property("messageConverter", client)
+                .optionKey(MessageConverter.class.getName()));
         endpointData.add(property("faultStrategy", client, ErrorHandlingStrategy.THROWS_EXCEPTION.name())
                 .options(getErrorHandlingStrategyOptions()));
         endpointData.add(property("pollingInterval", client));
@@ -76,5 +76,10 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
     @Override
     public Class<Client> getModelClass() {
         return Client.class;
+    }
+
+    @Override
+    public String getEndpointType() {
+        return "ws-client";
     }
 }
