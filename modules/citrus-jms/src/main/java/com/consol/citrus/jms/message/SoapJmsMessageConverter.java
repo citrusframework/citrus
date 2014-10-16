@@ -56,8 +56,8 @@ public class SoapJmsMessageConverter extends JmsMessageConverter {
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
     /** Special SOAP action header */
-    private final static String INTERNAL_SOAP_ACTION_HEADER = MessageHeaders.PREFIX + "_soap_action";
-    private final static String SOAP_ACTION_HEADER = "SOAPAction";
+    private static final String INTERNAL_SOAP_ACTION_HEADER = MessageHeaders.PREFIX + "_soap_action";
+    private static final String SOAP_ACTION_HEADER = "SOAPAction";
 
     @Override
     public com.consol.citrus.message.Message convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration) {

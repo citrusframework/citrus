@@ -134,10 +134,10 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
         } else {
             for (Method method : ReflectionUtils.getAllDeclaredMethods(testClass)) {
                 CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-                if (citrusTestAnnotation != null && StringUtils.hasText(citrusTestAnnotation.name())) {
-                    if (citrusTestAnnotation.name().equals(methodName)) {
-                        return method.getName();
-                    }
+                if (citrusTestAnnotation != null
+                        && StringUtils.hasText(citrusTestAnnotation.name())
+                        && citrusTestAnnotation.name().equals(methodName)) {
+                    return method.getName();
                 }
             }
         }

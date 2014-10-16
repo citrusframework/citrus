@@ -30,7 +30,7 @@ public interface Message extends Serializable {
      * Gets the unique message id;
      * @return
      */
-    public String getId();
+    String getId();
 
     /**
      * Gets the message header value by its header name.

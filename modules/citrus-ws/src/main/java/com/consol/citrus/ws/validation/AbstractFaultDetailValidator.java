@@ -61,7 +61,7 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
         List<String> controlDetailElements = controlDetail.getFaultDetails();
 
         if (controlDetailElements.size() > receivedDetailElements.size()) {
-            new ValidationException("Missing SOAP fault detail entry in received message");
+            throw new ValidationException("Missing SOAP fault detail entry in received message");
         }
 
         for (int i = 0; i < controlDetailElements.size(); i++) {

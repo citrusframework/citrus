@@ -441,10 +441,8 @@ public final class XMLUtils {
             int idxSingleQuote = encoding.indexOf(singleQuote);
 
             // check which character is the first one, allowing for <encoding = 'UTF-8'> white spaces
-            if (idxSingleQuote >= 0) {
-                if (idxDoubleQuote < 0 || idxSingleQuote < idxDoubleQuote) {
-                    quoteChar = singleQuote;
-                }
+            if (idxSingleQuote >= 0 && (idxDoubleQuote < 0 || idxSingleQuote < idxDoubleQuote)) {
+                quoteChar = singleQuote;
             }
 
             // build encoding using the found character

@@ -63,10 +63,9 @@ public class DispatchingMessageSelector implements MessageSelector {
         matchingHeadersCopy.putAll(matchingHeaders);
                 
         // delegate to root QName message selector if necessary
-        if (matchingHeadersCopy.containsKey(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT)) {
-            if (!(new RootQNameMessageSelector(matchingHeadersCopy.remove(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT))).accept(message)) {
-                success = false;
-            }
+        if (matchingHeadersCopy.containsKey(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT)
+                && !(new RootQNameMessageSelector(matchingHeadersCopy.remove(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT))).accept(message)) {
+            success = false;
         }
         
         //search for xpath selector name
