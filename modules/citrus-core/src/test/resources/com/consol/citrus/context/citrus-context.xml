@@ -13,17 +13,13 @@
 
     <context:property-placeholder location="classpath:com/consol/citrus/context/citrus.properties"/>
 
-    <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
-        <property name="schemas">
-            <list>
-                <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
-                    <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
+    <citrus:schema-repository id="schemaRepository">
+        <citrus:schemas>
+          <citrus:schema id="testSchema" location="classpath:com/consol/citrus/validation/test.xsd"/>
+        </citrus:schemas>
+    </citrus:schema-repository>
     
-    <bean id="testSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+    <bean id="testSchema1" class="org.springframework.xml.xsd.SimpleXsdSchema">
         <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
     </bean>
 
@@ -33,14 +29,14 @@
     <bean id="testSchemaRepository1" class="com.consol.citrus.xml.XsdSchemaRepository">
         <property name="schemas">
             <list>
-                <ref bean="testSchema"/>
+                <ref bean="testSchema1"/>
             </list>
         </property>
     </bean>
 
     <citrus:schema-repository id="testSchemaRepository2">
         <citrus:schemas>
-            <citrus:ref schema="testSchema" />
+            <citrus:ref schema="testSchema1" />
         </citrus:schemas>
     </citrus:schema-repository>
 
@@ -74,10 +70,6 @@
       <constructor-arg value="com.consol.citrus.validation.matcher.ValidationMatcher"/>
     </bean>
     
-    <!-- Message validators -->
-    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-    <bean id="plainTextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
-
     <bean id="mockListener" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.report.TestSuiteListener"/>
     </bean>

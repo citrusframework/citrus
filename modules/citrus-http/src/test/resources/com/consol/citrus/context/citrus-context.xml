@@ -7,9 +7,6 @@
 	 
     <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository"/>
     
-    <!-- Message validators -->
-    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-
     <bean id="citrusHandlerInterceptor" class="com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor"/>
     <bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController"/>
     

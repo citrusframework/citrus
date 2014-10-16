@@ -64,7 +64,7 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("receive-timeout"), "receiveTimeout");
         
         List<String> queueNames = new ArrayList<String>();
-        ManagedList queueRefs = new ManagedList();
+        ManagedList<BeanDefinition> queueRefs = new ManagedList<BeanDefinition>();
         List<?> queueElements = DomUtils.getChildElementsByTagName(element, "queue");
         for (Iterator<?> iter = queueElements.iterator(); iter.hasNext();) {
             Element queue = (Element) iter.next();

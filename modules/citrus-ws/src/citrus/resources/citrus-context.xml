@@ -62,7 +62,6 @@
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
   <!-- Message validators -->
-  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
   <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
   <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
   <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>

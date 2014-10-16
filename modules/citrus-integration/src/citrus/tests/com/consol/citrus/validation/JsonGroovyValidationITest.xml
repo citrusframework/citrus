@@ -30,7 +30,7 @@
               
                 <sequential>
                     <receive with="httpServerRequestEndpoint">
-                        <message type="json" validator="groovyJsonMessageValidator">
+                        <message type="json" validator="defaultGroovyJsonMessageValidator">
                             <validate>
                                 <script type="groovy">
                                     <![CDATA[
@@ -74,7 +74,7 @@
             </parallel>
             
             <receive with="httpClient">
-            	<message type="json" validator="groovyJsonMessageValidator">
+            	<message type="json" validator="defaultGroovyJsonMessageValidator">
                     <validate>
                         <script type="groovy">
                             <![CDATA[

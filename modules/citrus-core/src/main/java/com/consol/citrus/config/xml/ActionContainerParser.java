@@ -16,9 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.List;
-import java.util.Map;
-
+import com.consol.citrus.config.TestActionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -26,7 +24,8 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.TestActionRegistry;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract parser implementation that is aware of several embedded test actions of a container. Bean definitions that use

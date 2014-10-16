@@ -29,6 +29,7 @@ import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,6 +42,7 @@ import static org.easymock.EasyMock.*;
  */
 public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
     @Autowired
+    @Qualifier("defaultXmlMessageValidator")
     private DomXmlMessageValidator validator;
 
     private Endpoint endpoint = EasyMock.createMock(Endpoint.class);

@@ -32,8 +32,8 @@ public abstract class ValidationUtils {
     
     /**
      * Constructs proper error message with expected value and actual value.
-     * @param message the base error message.
-     * @param expectedValue the expected value.
+     * @param baseMessage the base error message.
+     * @param controlValue the expected value.
      * @param actualValue the actual value.
      * @return
      */

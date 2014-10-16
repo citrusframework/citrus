@@ -28,9 +28,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Bean definition parser for purge-channel action in test case.
@@ -53,7 +51,7 @@ public class PurgeMessageChannelActionParser implements BeanDefinitionParser {
         }
         
         List<String> channelNames = new ArrayList<String>();
-        ManagedList channelRefs = new ManagedList();
+        ManagedList<BeanDefinition> channelRefs = new ManagedList<BeanDefinition>();
         List<?> channelElements = DomUtils.getChildElementsByTagName(element, "channel");
         for (Iterator<?> iter = channelElements.iterator(); iter.hasNext();) {
             Element channel = (Element) iter.next();

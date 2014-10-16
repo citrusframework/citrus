@@ -76,7 +76,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
     }
     
     @Override
-    public boolean supportsMessageType(String messageType) {
+    public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(XHTML_MESSAGE_TYPE);
     }
 

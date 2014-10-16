@@ -43,7 +43,7 @@ public class JsonGroovyValidationJavaITest extends TestNGCitrusTestBuilder {
             sequential(
                 receive("httpServerRequestEndpoint")
                    .messageType(MessageType.JSON)
-                   .validator("groovyJsonMessageValidator")
+                   .validator("defaultGroovyJsonMessageValidator")
                    .validateScript("assert json.type == 'read'" + NEWLINE +
                               "assert json.mbean == 'java.lang:type=Memory'" + NEWLINE +
                               "assert json.attribute == 'HeapMemoryUsage'")
@@ -70,7 +70,7 @@ public class JsonGroovyValidationJavaITest extends TestNGCitrusTestBuilder {
         
         receive("httpClient")
             .messageType(MessageType.JSON)
-            .validator("groovyJsonMessageValidator")
+            .validator("defaultGroovyJsonMessageValidator")
             .validateScript("assert json.request.type == 'read'" + NEWLINE +
                               "assert json.request.mbean == 'java.lang:type=Memory'" + NEWLINE +
                               "assert json.request.attribute == 'HeapMemoryUsage'" + NEWLINE +

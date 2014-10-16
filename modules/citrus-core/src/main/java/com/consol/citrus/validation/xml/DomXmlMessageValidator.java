@@ -931,9 +931,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         return false;
     }
 
-    /**
-     * Returns the needed validation context for this validation mechanism.
-     */
+    @Override
     public XmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (validationContext instanceof XmlMessageValidationContext) {
@@ -1026,10 +1024,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
     }
 
-    /**
-     * Checks if the message type is supported.
-     */
-    public boolean supportsMessageType(String messageType) {
+    @Override
+    public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.XML.toString());
     }
 

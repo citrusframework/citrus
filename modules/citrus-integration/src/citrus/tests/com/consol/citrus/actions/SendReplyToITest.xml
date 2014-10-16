@@ -72,7 +72,7 @@
               
               <sequential>
                 <receive with="syncGetDateRequestReceiver">
-                    <message validator="xmlMessageValidator">
+                    <message validator="defaultXmlMessageValidator">
                         <data>
                         <![CDATA[
 	                        <GetDateRequestMessage>

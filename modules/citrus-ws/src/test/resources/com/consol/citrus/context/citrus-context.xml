@@ -23,7 +23,6 @@
     <bean id="citrusWsEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint"/>
 
     <!-- Message Validators -->
-    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     <bean id="soapAttachmentValidator" class="com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator"/>
     <bean id="soapXmlFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>

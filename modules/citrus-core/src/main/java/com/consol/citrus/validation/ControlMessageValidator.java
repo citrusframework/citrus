@@ -147,11 +147,7 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
         log.info("Validation of message headers finished successfully: All properties OK");
     }
 
-    /**
-     * Construct a proper validation context for this validator. Method uses the
-     * available context builder implementations searching for an accountable builder supporting
-     * {@link ControlMessageValidationContext}.
-     */
+    @Override
     public ControlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (validationContext instanceof ControlMessageValidationContext) {
@@ -162,10 +158,8 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
         return null;
     }
     
-    /**
-     * Checks if the message type is supported.
-     */
-    public boolean supportsMessageType(String messageType) {
+    @Override
+    public boolean supportsMessageType(String messageType, Message message) {
         return true;
     }
 }

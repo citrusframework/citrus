@@ -34,9 +34,6 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-
   <!-- Http message endpoints -->
   <citrus-http:client id="helloHttpClient"
                       request-url="http://localhost:11080/hello"

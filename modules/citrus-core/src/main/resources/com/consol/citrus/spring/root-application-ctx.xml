@@ -17,10 +17,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 	 
     <aop:aspectj-autoproxy/>
@@ -48,8 +50,24 @@
     
     <bean class="com.consol.citrus.validation.matcher.ValidationMatcherRegistry"/>
     <bean class="com.consol.citrus.functions.FunctionRegistry"/>
-    
-    <bean class="com.consol.citrus.validation.MessageValidatorRegistry"/>
+
+    <!-- Default message validators -->
+    <citrus:message-validators>
+      <citrus:validator ref="defaultXmlMessageValidator"/>
+      <citrus:validator ref="defaultGroovyXmlMessageValidator"/>
+      <citrus:validator ref="defaultPlaintextMessageValidator"/>
+      <citrus:validator ref="defaultJsonMessageValidator"/>
+      <citrus:validator ref="defaultGroovyJsonMessageValidator"/>
+      <citrus:validator ref="defaultXhtmlMessageValidator"/>
+    </citrus:message-validators>
+
+    <bean id="defaultXmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
+    <bean id="defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
+    <bean id="defaultPlaintextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
+    <bean id="defaultXhtmlMessageValidator" class="com.consol.citrus.validation.xhtml.XhtmlMessageValidator"/>
+
+    <bean id="defaultGroovyXmlMessageValidator" class="com.consol.citrus.validation.script.GroovyXmlMessageValidator"/>
+    <bean id="defaultGroovyJsonMessageValidator" class="com.consol.citrus.validation.script.GroovyJsonMessageValidator"/>
 
     <bean id="citrusEndpointFactory" class="com.consol.citrus.endpoint.DefaultEndpointFactory"/>
     

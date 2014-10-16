@@ -23,6 +23,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -40,6 +41,7 @@ import java.util.*;
 public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Autowired
+    @Qualifier("defaultXmlMessageValidator")
     private DomXmlMessageValidator validator;
     
     @Test

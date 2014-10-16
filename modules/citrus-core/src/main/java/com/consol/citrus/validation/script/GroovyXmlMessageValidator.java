@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.script;
 
+import com.consol.citrus.message.Message;
 import org.springframework.core.io.ClassPathResource;
 
 import com.consol.citrus.message.MessageType;
@@ -36,10 +37,8 @@ public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
         super(new ClassPathResource("com/consol/citrus/validation/xml-validation-template.groovy"));
     }
     
-    /**
-     * Checks if the message type is supported. 
-     */
-    public boolean supportsMessageType(String messageType) {
+    @Override
+    public boolean supportsMessageType(String messageType, Message message) {
         // only support xml message type
         return messageType.equalsIgnoreCase(MessageType.XML.toString());
     }

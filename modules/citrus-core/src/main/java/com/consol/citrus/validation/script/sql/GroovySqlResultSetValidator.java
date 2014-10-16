@@ -16,12 +16,13 @@
 
 package com.consol.citrus.validation.script.sql;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.validation.script.*;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-
-import java.util.List;
-import java.util.Map;
-
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.validation.script.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Groovy script validator capable of validating SQL result sets.
@@ -59,7 +57,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
     
     /**
      * Constructor with script template.
-     * @param classPathResource
+     * @param scriptTemplateResource
      */
     public GroovySqlResultSetValidator(Resource scriptTemplateResource) {
         this.scriptTemplateResource = scriptTemplateResource;

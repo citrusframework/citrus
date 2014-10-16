@@ -31,6 +31,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -43,6 +44,7 @@ import static org.easymock.EasyMock.*;
  */
 public class HeaderValuesTest extends AbstractTestNGUnitTest {
     @Autowired
+    @Qualifier("defaultXmlMessageValidator")
     private DomXmlMessageValidator validator;
 
     private Endpoint endpoint = EasyMock.createMock(Endpoint.class);

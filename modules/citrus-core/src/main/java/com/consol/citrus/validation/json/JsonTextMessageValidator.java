@@ -198,7 +198,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
     }
     
     @Override
-    public boolean supportsMessageType(String messageType) {
+    public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.JSON.toString());
     }
 

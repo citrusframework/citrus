@@ -25,9 +25,6 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="messageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
-
   <bean id="vertxInstanceFactory" class="com.consol.citrus.vertx.factory.CachingVertxInstanceFactory"/>
 
   <!-- Vert.x message endpoints -->

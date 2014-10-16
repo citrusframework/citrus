@@ -65,7 +65,8 @@ public interface MessageValidator<T extends ValidationContext> {
      * in order to find a proper message validator for a message.
      * 
      * @param messageType the message type representation as String (e.g. xml, json, csv, plaintext).
+     * @param message the message object
      * @return true if this message validator is capable of validating the message type.
      */
-    boolean supportsMessageType(String messageType);
+    boolean supportsMessageType(String messageType, Message message);
 }

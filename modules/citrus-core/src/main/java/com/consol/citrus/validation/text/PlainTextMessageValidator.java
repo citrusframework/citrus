@@ -65,7 +65,7 @@ public class PlainTextMessageValidator extends ControlMessageValidator {
     }
 
     @Override
-    public boolean supportsMessageType(String messageType) {
+    public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
     }
 }

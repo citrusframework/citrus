@@ -105,9 +105,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
         }
     }
 
-    /**
-     * Returns the needed validation context for this validation mechanism.
-     */
+    @Override
     public ScriptValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (validationContext instanceof ScriptValidationContext && 
@@ -119,10 +117,8 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
         return null;
     }
 
-    /**
-     * Checks if the message type is supported. 
-     */
-    public boolean supportsMessageType(String messageType) {
+    @Override
+    public boolean supportsMessageType(String messageType, Message message) {
         // support all known message types other than XML
         return MessageType.knows(messageType) && !messageType.equalsIgnoreCase(MessageType.XML.toString());
     }

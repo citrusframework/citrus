@@ -165,6 +165,22 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="message-validators">
+      <xs:annotation>
+        <xs:documentation>List of available validator implementations. Mix of default and custom implementations.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+            <xs:element name="validator" minOccurs="1" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:attribute name="ref" type="xs:string"/>
+                <xs:attribute name="class" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
     <xs:element name="namespace-context">
       <xs:annotation>
         <xs:documentation>Global namespace definitions and mappings</xs:documentation>

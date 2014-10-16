@@ -25,10 +25,6 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-  <bean id="plainTextMessageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
-
   <citrus-ftp:client id="ftpClient"
                       host="localhost"
                       port="22222"

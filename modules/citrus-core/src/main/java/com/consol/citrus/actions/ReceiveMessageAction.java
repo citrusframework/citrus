@@ -180,7 +180,6 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * @param receivedMessage
      */
     protected void validateMessage(Message receivedMessage, TestContext context) throws IOException {
-	
         // extract variables from received message content
         for (VariableExtractor variableExtractor : variableExtractors) {
             variableExtractor.extractVariables(receivedMessage, context);
@@ -192,7 +191,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
             validator.validateMessage(receivedMessage, context, validationContexts);
         } else {
             List<MessageValidator<? extends ValidationContext>> validators = 
-                                context.getMessageValidatorRegistry().findMessageValidators(messageType);
+                                context.getMessageValidatorRegistry().findMessageValidators(messageType, receivedMessage, validationContexts);
             
             for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
                 messageValidator.validateMessage(receivedMessage, context, validationContexts);

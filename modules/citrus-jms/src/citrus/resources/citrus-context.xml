@@ -41,9 +41,6 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-
   <!-- JMS message endpoints -->
   <citrus-jms:jms-endpoint id="helloServiceJmsEndpoint"
                        destination-name="Citrus.HelloService.Request.Queue"

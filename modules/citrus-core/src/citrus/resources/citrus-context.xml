@@ -46,9 +46,6 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-
   <!-- Message channel endpoints -->
   <citrus:channel-endpoint id="helloServiceChannelEndpoint"
                            channel="helloRequests"

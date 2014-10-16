@@ -22,7 +22,4 @@
         <citrus:variable name="project.name" value="Citrus Integration Tests"/>
     </citrus:global-variables>
     	
-    <!-- Message Validators -->
-    <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-    
 </beans>

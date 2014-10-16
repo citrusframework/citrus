@@ -20,9 +20,6 @@
   <!-- Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="xmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-
   <!-- Citrus mail components -->
   <citrus-mail:client id="simpleMailClient"
                       host="localhost"

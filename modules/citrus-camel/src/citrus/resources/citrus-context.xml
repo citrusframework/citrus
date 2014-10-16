@@ -26,9 +26,6 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <!-- Message validators -->
-  <bean id="messageValidator" class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
-
   <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
     <route id="newsRoute">
       <from uri="direct:news"/>
