@@ -94,17 +94,9 @@ public class IdGeneratingFunction implements Function {
         done:
       </p>
       
-      <pre class="prettyprint linenums">&lt;bean id=&quot;myCustomFunctionLibrary&quot; class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
-    &lt;property name=&quot;name&quot; value=&quot;myCustomFunctionLibrary&quot;/&gt;
-    &lt;property name=&quot;prefix&quot; value=&quot;mcfl:&quot;/&gt;
-    &lt;property name=&quot;members&quot;&gt;
-        &lt;map&gt;
-            &lt;entry key=&quot;generateId&quot;&gt;
-                &lt;bean class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
-            &lt;/entry&gt;
-        &lt;/map&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;</pre>
+      <pre class="prettyprint linenums">&lt;citrus:function-library id=&quot;myCustomFunctionLibrary&quot; prefix=&quot;mcfl:&quot;&gt;
+            &lt;citrus:function name=&quot;generateId&quot;&gt; class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
+&lt;/citrus:function-library&gt;</pre>
 
       <p>
         Once you have placed the function library into the Spring
@@ -176,22 +168,16 @@ public class IdGeneratingFunction implements Function {
         checked for possible usage errors the function returns the correct
         greeting phrase according to the passed language. I bet fantastic
         function was just missing in your project, right? However lets add it
-        to the function library and use it in our test:
+        to the function library and use it in our test. This time we use a Spring bean reference
+        when including the new function in our library:
       </p>
       
-      <pre class="prettyprint linenums">&lt;bean id=&quot;myCustomFunctionLibrary&quot; class=&quot;com.consol.citrus.functions.FunctionLibrary&quot;&gt;
-    &lt;property name=&quot;name&quot; value=&quot;myCustomFunctionLibrary&quot;/&gt;
-    &lt;property name=&quot;prefix&quot; value=&quot;mcfl:&quot;/&gt;
-    &lt;property name=&quot;members&quot;&gt;
-        &lt;map&gt;
-            &lt;entry key=&quot;generateId&quot;&gt;
-                &lt;bean class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
-            &lt;/entry&gt;
-            &lt;entry key=&quot;greeting&quot;&gt;
-                &lt;bean class=&quot;com.mycompany.citrus.extension.functions.GreetingFunction&quot;/&gt;
-            &lt;/entry&gt;
-        &lt;/map&gt;
-&lt;/bean&gt;</pre>
+      <pre class="prettyprint linenums">&lt;citrus:function-library id=&quot;myCustomFunctionLibrary&quot; prefix=&quot;mcfl:&quot;&gt;
+            &lt;citrus:function name=&quot;generateId&quot;&gt; class=&quot;com.mycompany.citrus.extension.functions.IdGeneratingFunction&quot;/&gt;
+            &lt;citrus:function name=&quot;greeting&quot;&gt; ref=&quot;greetingFunction&quot;/&gt;
+&lt;/citrus:function-library&gt;
+
+&lt;bean id=&quot;greetingFunction&quot; class=&quot;com.mycompany.citrus.extension.functions.GreetingFunction&quot;/&gt;</pre>
 
       <p>
         Another member entry for the function library and the function

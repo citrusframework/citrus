@@ -16,10 +16,10 @@
 
 package com.consol.citrus.functions;
 
+import com.consol.citrus.exceptions.NoSuchFunctionException;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.consol.citrus.exceptions.NoSuchFunctionException;
 
 /**
  * Library holding a set of functions. Each library defines a function prefix as namespace, so
@@ -77,6 +77,14 @@ public class FunctionLibrary {
      */
     public void setMembers(Map<String, Function> members) {
         this.members = members;
+    }
+
+    /**
+     * Gets the function library members.
+     * @return
+     */
+    public Map<String, Function> getMembers() {
+        return members;
     }
 
     /**
