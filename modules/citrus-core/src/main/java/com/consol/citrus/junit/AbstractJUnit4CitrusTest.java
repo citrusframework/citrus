@@ -74,7 +74,7 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      */
     protected TestContext createTestContext() {
         try {
-            return (TestContext)testContextFactory.getObject();
+            return testContextFactory.getObject();
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to create test context", e);
         }

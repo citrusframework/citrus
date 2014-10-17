@@ -86,7 +86,10 @@ public class TestCaseParser implements BeanDefinitionParser {
         if (actionsContainerElement != null) {
             List<Element> actionList = DomUtils.getChildElements(actionsContainerElement);
             for (Element action : actionList) {
-                BeanDefinitionParser parser = (BeanDefinitionParser)actionRegistry.get(action.getTagName());
+                BeanDefinitionParser parser = null;
+                if (action.getNamespaceURI().equals(actionsContainerElement.getNamespaceURI())) {
+                    parser = actionRegistry.get(action.getLocalName());
+                }
                 
                 if (parser ==  null) {
                     actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));

@@ -52,12 +52,14 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
         List<Element> childElements = DomUtils.getChildElements(element);
 
         for (Element action : childElements) {
-            if (action.getTagName().equals("description")) {
-                builder.addPropertyValue("description", action.getNodeValue());
+            if (action.getLocalName().equals("description")) {
                 continue;
             }
-            
-            BeanDefinitionParser parser = (BeanDefinitionParser) actionRegistry.get(action.getTagName());
+
+            BeanDefinitionParser parser = null;
+            if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
+                parser = actionRegistry.get(action.getLocalName());
+            }
 
             if (parser ==  null) {
                 actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));

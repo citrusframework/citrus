@@ -57,7 +57,7 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
      */
     protected TestContext createTestContext() {
         try {
-            return (TestContext)testContextFactoryBean.getObject();
+            return testContextFactoryBean.getObject();
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to create test context", e);
         }

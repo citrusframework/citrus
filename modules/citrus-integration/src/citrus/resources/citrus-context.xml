@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:citrus="http://www.citrusframework.org/schema/config"
+           xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
            xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
            xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
            xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
@@ -14,6 +15,7 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
            http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd
@@ -390,22 +392,15 @@
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
     
-    <bean class="com.consol.citrus.container.SequenceBeforeSuite">
-        <property name="actions">
-            <list>
-                <bean id="initDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
-                    <property name="dataSource" ref="testDataSource"/>
-                    <property name="statements">
-                        <list>
-                            <value>CREATE TABLE ORDERS (ORDER_ID integer, REQUEST_TAG varchar(250), CONVERSATION_ID  varchar(250), CREATION_DATE  varchar(250), DESCRIPTION varchar(250)) </value>
-                            <value>CREATE TABLE CUSTOMERS (CUSTOMER_ID integer, NAME varchar(250), DESCRIPTION varchar(250))</value>
-                            <value>CREATE TABLE ERRORS (ERROR_ID integer, DESCRIPTION varchar(250))</value>
-                        </list>
-                    </property>
-                </bean>
-            </list>
-        </property>
-    </bean>
+    <citrus:before-suite id="defaultBeforeSuite">
+      <citrus:actions>
+        <citrus-test:sql datasource="testDataSource">
+          <citrus-test:statement>CREATE TABLE ORDERS (ORDER_ID integer, REQUEST_TAG varchar(250), CONVERSATION_ID  varchar(250), CREATION_DATE  varchar(250), DESCRIPTION varchar(250))</citrus-test:statement>
+          <citrus-test:statement>CREATE TABLE CUSTOMERS (CUSTOMER_ID integer, NAME varchar(250), DESCRIPTION varchar(250))</citrus-test:statement>
+          <citrus-test:statement>CREATE TABLE ERRORS (ERROR_ID integer, DESCRIPTION varchar(250))</citrus-test:statement>
+        </citrus-test:sql>
+      </citrus:actions>
+    </citrus:before-suite>
     
     <bean class="com.consol.citrus.container.SequenceBeforeTest">
         <property name="actions">
@@ -415,22 +410,14 @@
         </property>
     </bean>
     
-    <bean class="com.consol.citrus.container.SequenceAfterSuite">
-        <property name="actions">
-            <list>
-                <bean id="destroyDatabase" class="com.consol.citrus.actions.ExecuteSQLAction">
-                    <property name="dataSource" ref="testDataSource"/>
-                    <property name="ignoreErrors" value="true"/>
-                    <property name="statements">
-                        <list>
-                            <value>DROP TABLE ORDERS</value>
-                            <value>DROP TABLE CUSTOMERS</value>
-                            <value>DROP TABLE ERRORS</value>
-                        </list>
-                    </property>
-                </bean>
-            </list>
-        </property>
-    </bean>
+    <citrus:after-suite id="defaultAfterSuite">
+      <citrus:actions>
+        <citrus-test:sql datasource="testDataSource">
+          <citrus-test:statement>DROP TABLE ORDERS</citrus-test:statement>
+          <citrus-test:statement>DROP TABLE CUSTOMERS</citrus-test:statement>
+          <citrus-test:statement>DROP TABLE ERRORS</citrus-test:statement>
+        </citrus-test:sql>
+      </citrus:actions>
+    </citrus:after-suite>
     
 </beans>

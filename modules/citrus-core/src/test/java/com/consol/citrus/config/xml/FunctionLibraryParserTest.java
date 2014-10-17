@@ -37,7 +37,7 @@ public class FunctionLibraryParserTest extends AbstractBeanDefinitionParserTest 
     }
 
     @Test
-    public void testNamespaceContextParser() throws Exception {
+    public void testFunctionLibraryParser() throws Exception {
         beanDefinitionContext = createApplicationContext("context");
         Map<String, FunctionLibrary> functionLibraries = beanDefinitionContext.getBeansOfType(FunctionLibrary.class);
 

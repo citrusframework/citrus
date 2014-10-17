@@ -19,7 +19,7 @@
      targetNamespace="http://www.citrusframework.org/schema/config"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
-   
+
     <xs:element name="actor">
         <xs:annotation>
           <xs:documentation>Test actor combines one or more endpoints. When actor is disabled by configuration
@@ -232,6 +232,46 @@
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="prefix" type="xs:string" use="required"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="before-suite">
+      <xs:annotation>
+        <xs:documentation>Sequence of test actions executed before test suite run.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="actions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:any minOccurs="1" maxOccurs="unbounded" namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="suites" type="xs:string"/>
+        <xs:attribute name="groups" type="xs:string"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="after-suite">
+      <xs:annotation>
+        <xs:documentation>Sequence of test actions executed after test suite run.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="actions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:any minOccurs="1" maxOccurs="unbounded" namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="suites" type="xs:string"/>
+        <xs:attribute name="groups" type="xs:string"/>
       </xs:complexType>
     </xs:element>
 

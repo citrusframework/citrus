@@ -64,10 +64,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     private TestContextFactoryBean testContextFactory;
     
     @Autowired(required = false)
-    private SequenceBeforeSuite beforeSuite;
+    private List<SequenceBeforeSuite> beforeSuite;
     
     @Autowired(required = false)
-    private SequenceAfterSuite afterSuite;
+    private List<SequenceAfterSuite> afterSuite;
     
     /** Parameter values provided from external logic */
     private Object[][] citrusDataProviderParameters;
@@ -191,10 +191,14 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         Assert.notNull(applicationContext);
 
         if (beforeSuite != null) {
-            try {
-                beforeSuite.execute(createTestContext());
-            } catch (Exception e) {
-                org.testng.Assert.fail("Before suite failed with errors", e);
+            for (SequenceBeforeSuite sequenceBeforeSuite : beforeSuite) {
+                try {
+                    if (sequenceBeforeSuite.shouldExecute(testContext.getSuite().getName(), testContext.getIncludedGroups())) {
+                        sequenceBeforeSuite.execute(createTestContext());
+                    }
+                } catch (Exception e) {
+                    org.testng.Assert.fail("Before suite failed with errors", e);
+                }
             }
         } else {
             testSuiteListener.onStart();
@@ -311,10 +315,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected TestCase getTestCase(TestContext context, String packageName, String testName) {
         ClassPathXmlApplicationContext ctx = createApplicationContext(context, packageName, testName);
-        TestCase testCase = null;
+        TestCase testCase;
         
         try {
-            testCase = (TestCase) ctx.getBean(testName, TestCase.class);
+            testCase = ctx.getBean(testName, TestCase.class);
             testCase.setPackageName(packageName);
         } catch (NoSuchBeanDefinitionException e) {
             throw context.handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);
@@ -346,10 +350,14 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     @AfterSuite(alwaysRun = true)
     public void afterSuite(ITestContext testContext) {
         if (afterSuite != null) {
-            try {
-                afterSuite.execute(createTestContext());
-            } catch (Exception e) {
-                org.testng.Assert.fail("After suite failed with errors", e);
+            for (SequenceAfterSuite sequenceAfterSuite : afterSuite) {
+                try {
+                    if (sequenceAfterSuite.shouldExecute(testContext.getSuite().getName(), testContext.getIncludedGroups())) {
+                        sequenceAfterSuite.execute(createTestContext());
+                    }
+                } catch (Exception e) {
+                    org.testng.Assert.fail("After suite failed with errors", e);
+                }
             }
         } else {
             testSuiteListener.onFinish();

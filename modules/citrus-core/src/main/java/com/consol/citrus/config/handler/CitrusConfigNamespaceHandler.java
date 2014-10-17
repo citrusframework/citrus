@@ -39,6 +39,8 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("namespace-context", new NamespaceContextParser());
         registerBeanDefinitionParser("function-library", new FunctionLibraryParser());
         registerBeanDefinitionParser("validation-matcher-library", new ValidationMatcherLibraryParser());
+        registerBeanDefinitionParser("before-suite", new SequenceBeforeSuiteParser());
+        registerBeanDefinitionParser("after-suite", new SequenceAfterSuiteParser());
         registerBeanDefinitionParser("channel-endpoint", new ChannelEndpointParser());
         registerBeanDefinitionParser("channel-sync-endpoint", new ChannelSyncEndpointParser());
         registerBeanDefinitionParser("channel", new MessageSelectingQueueChannelParser());

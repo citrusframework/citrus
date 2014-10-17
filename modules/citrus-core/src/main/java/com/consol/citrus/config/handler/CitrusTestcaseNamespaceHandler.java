@@ -16,10 +16,12 @@
 
 package com.consol.citrus.config.handler;
 
+import com.consol.citrus.config.TestActionRegistry;
+import com.consol.citrus.config.xml.*;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
-import com.consol.citrus.config.xml.TemplateParser;
-import com.consol.citrus.config.xml.TestCaseParser;
+import java.util.Map;
 
 /**
  * Namespace handler registers bean definition parser
@@ -36,5 +38,9 @@ public class CitrusTestcaseNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("testcase", new TestCaseParser());
         registerBeanDefinitionParser("template", new TemplateParser());
+
+        for (Map.Entry<String, BeanDefinitionParser> actionParserEntry : TestActionRegistry.getRegisteredActionParser().entrySet()) {
+            registerBeanDefinitionParser(actionParserEntry.getKey(), actionParserEntry.getValue());
+        }
     }
 }

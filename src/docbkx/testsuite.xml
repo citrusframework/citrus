@@ -13,69 +13,90 @@
         <para>You can influence the behavior of a test run in the initialization phase actually before the tests are executed. 
         See the next code example to find out how it works with actions that take place before the first test is executed:</para>
         
-        <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceBeforeSuite&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;!-- list of actions before suite --&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
+        <programlisting>&lt;citrus:before-suite id=&quot;actionsBeforeSuite&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;!-- list of actions before suite --&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-suite&gt;</programlisting>
+
+        <para>The Citrus configuration component holds a list of Citrus test actions that get executed before the test suite run. You can
+        add all Citrus test actions here as you would do in a normal test case definition.</para>
   
-        <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceBeforeSuite&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
-                  &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
-                  &lt;property name=&quot;statements&quot;&gt;
-                      &lt;list&gt;
-                          &lt;value&gt;CREATE TABLE PERSON (ID integer, NAME char(250))&lt;/value&gt;
-                      &lt;/list&gt;
-                  &lt;/property&gt;
-              &lt;/bean&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
-  
-        <para>We access the database and create a table PERSON which is obviously needed in our test cases. You can think of several actions here to prepare the database for instance.</para>
-  
+        <programlisting>&lt;citrus:before-suite id=&quot;actionsBeforeSuite&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;citrus-test:sql dataSource=&quot;testDataSource&quot;/&gt;
+            &lt;citrus-test:statement&quot;&gt;CREATE TABLE PERSON (ID integer, NAME char(250))&lt;/citrus-test:statement&gt;
+        &lt;/citrus-test:sql&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-suite&gt;</programlisting>
+        <para>Note that we must use the Citrus test case namespace for the nested test action definitions. We access the database and
+          create a table PERSON which is obviously needed in our test cases. You can think of several actions here to prepare the database for instance.</para>
+
         <tip>
-            <para>Citrus offers special startup and shutdown actions that may start and stop server implementations automatically. This might 
-            be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a 
+            <para>Citrus offers special startup and shutdown actions that may start and stop server implementations automatically. This might
+            be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a
             JMS broker before a test run.</para>
         </tip>
+
+        <para>You can have many after-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name or
+          test group names that should match accordingly:</para>
+
+        <programlisting>&lt;citrus:before-suite id=&quot;actionsBeforeSuite&quot; suites=&quot;databaseSuite&quot; groups=&quot;e2e&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;citrus-test:sql dataSource=&quot;testDataSource&quot;/&gt;
+            &lt;citrus-test:statement&quot;&gt;CREATE TABLE PERSON (ID integer, NAME char(250))&lt;/citrus-test:statement&gt;
+        &lt;/citrus-test:sql&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-suite&gt;</programlisting>
+
+        <para>The above after suite container is only executed with the test suite called <empphasis>databaseSuite</empphasis> or when the test group <empphasis>e2e</empphasis> is defined. Test groups and suite names are only supported
+          when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with
+          the JUnit test framework.</para>
+
+        <para>You can define multiple suite names and test groups with comma delimited strings as attribute values.</para>
     </section>
-    
+
     <section id="testsuite-after">
         <title>After suite</title>
-        
+
         <para>A test run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations
-        or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run 
+        or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run
         in actions after the tests are finished. The Spring bean syntax here is not significantly different to those in before suite section:</para>
-        
-        <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceAfterSuite&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;!-- list of actions after suite --&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
-  
-        <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceAfterSuite&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;bean id=&quot;initDatabase&quot; class=&quot;com.consol.citrus.actions.ExecuteSQLAction&quot;&gt;
-                  &lt;property name=&quot;dataSource&quot; ref=&quot;testDataSource&quot;/&gt;
-                  &lt;property name=&quot;statements&quot;&gt;
-                      &lt;list&gt;
-                          &lt;value&gt;DELETE FROM TABLE PERSON&lt;/value&gt;
-                      &lt;/list&gt;
-                  &lt;/property&gt;
-              &lt;/bean&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
-  
-        <para>We just remove all data from the database so we do not influence follow-up tests. Quite simple isn't it!?</para>
+
+        <programlisting>&lt;citrus:after-suite id=&quot;actionsAfterSuite&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;!-- list of actions after suite --&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:after-suite&gt;</programlisting>
+
+        <para>Again we give the after suite configuration component a unique id within the configuration and put one to many test actions as nested configuration elements to the list
+        of actions executed after the test suite run.</para>
+
+        <programlisting>&lt;citrus:after-suite id=&quot;actionsAfterSuite&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;citrus-test:sql dataSource=&quot;testDataSource&quot;/&gt;
+            &lt;citrus-test:statement&quot;&gt;DELETE FROM TABLE PERSON&lt;/citrus-test:statement&gt;
+        &lt;/citrus-test:sql&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:after-suite&gt;</programlisting>
+        <para>We have to use the Citrus test case XML namespace when defining nested test actions in after suite list. We just remove all data from the database so we do not influence follow-up tests. Quite simple isn't it!?</para>
+
+        <para>You can have many after-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name or
+        test group names that should match accordingly:</para>
+
+        <programlisting>&lt;citrus:after-suite id=&quot;actionsAfterSuite&quot; suites=&quot;databaseSuite&quot; groups=&quot;e2e&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;citrus-test:sql dataSource=&quot;testDataSource&quot;/&gt;
+            &lt;citrus-test:statement&quot;&gt;DELETE FROM TABLE PERSON&lt;/citrus-test:statement&gt;
+        &lt;/citrus-test:sql&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:after-suite&gt;</programlisting>
+
+        <para>The above after suite container is only executed with the test suite called <empphasis>databaseSuite</empphasis> or when the test group <empphasis>e2e</empphasis> is defined. Test groups and suite names are only supported
+        when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with
+        the JUnit test framework.</para>
+
+        <para>You can define multiple suite names and test groups with comma delimited strings as attribute values.</para>
     </section>
     
     <section id="testsuite-before-test">

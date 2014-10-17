@@ -26,13 +26,14 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListeners;
 
 /**
+ * Sequence of Citrus test actions that get executed after a test suite run. Sequence should
+ * decide weather to execute according to given suite name and included test groups if any.
+ *
  * @author Christoph Deppisch
  */
-public class SequenceAfterSuite extends AbstractActionContainer {
+public class SequenceAfterSuite extends AbstractSuiteActionContainer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceAfterSuite.class);
     
     @Autowired

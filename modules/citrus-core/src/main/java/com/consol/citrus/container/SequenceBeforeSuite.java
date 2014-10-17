@@ -16,31 +16,33 @@
 
 package com.consol.citrus.container;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListeners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
+ * Sequence of Citrus test actions that get executed before a test suite run. Sequence should
+ * decide weather to execute according to given suite name and included test groups if any.
+ *
  * @author Christoph Deppisch
  */
-public class SequenceBeforeSuite extends AbstractActionContainer {
+public class SequenceBeforeSuite extends AbstractSuiteActionContainer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceBeforeSuite.class);
     
     @Autowired
     private TestSuiteListeners testSuiteListener = new TestSuiteListeners();
     
     @Autowired(required = false)
-    private SequenceAfterSuite afterSuiteActions;
-    
+    private List<SequenceAfterSuite> afterSuiteActions;
+
     @Override
     public void doExecute(TestContext context) {
         testSuiteListener.onStart();
@@ -60,7 +62,9 @@ public class SequenceBeforeSuite extends AbstractActionContainer {
                 testSuiteListener.onStartFailure(e);
 
                 if (afterSuiteActions != null) {
-                    afterSuiteActions.execute(context);
+                    for (SequenceAfterSuite afterSuiteSequence : afterSuiteActions) {
+                        afterSuiteSequence.execute(context);
+                    }
                 }
                 
                 throw new CitrusRuntimeException(e);
@@ -82,7 +86,8 @@ public class SequenceBeforeSuite extends AbstractActionContainer {
      * Sets the afterSuiteActions.
      * @param afterSuiteActions the afterSuiteActions to set
      */
-    public void setAfterSuiteActions(SequenceAfterSuite afterSuiteActions) {
+    public void setAfterSuiteActions(List<SequenceAfterSuite> afterSuiteActions) {
         this.afterSuiteActions = afterSuiteActions;
     }
+
 }

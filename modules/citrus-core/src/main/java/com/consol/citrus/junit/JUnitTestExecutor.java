@@ -54,9 +54,9 @@ public class JUnitTestExecutor {
      */
     protected TestCase getTestCase(TestContext context) {
         ClassPathXmlApplicationContext ctx = createApplicationContext(context);
-        TestCase testCase = null;
+        TestCase testCase;
         try {
-            testCase = (TestCase) ctx.getBean(testClass.getSimpleName(), TestCase.class);
+            testCase = ctx.getBean(testClass.getSimpleName(), TestCase.class);
             testCase.setPackageName(testClass.getPackage().getName());
         } catch (NoSuchBeanDefinitionException e) {
             throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Could not find test with name '" + testClass.getSimpleName() + "'", e);
