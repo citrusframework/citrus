@@ -216,6 +216,25 @@
       </xs:complexType>
     </xs:element>
 
+    <xs:element name="validation-matcher-library">
+      <xs:annotation>
+        <xs:documentation>Custom set of validation matchers combined in a library</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="matcher" minOccurs="1" maxOccurs="unbounded">
+            <xs:complexType>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+              <xs:attribute name="ref" type="xs:string"/>
+              <xs:attribute name="class" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="prefix" type="xs:string" use="required"/>
+      </xs:complexType>
+    </xs:element>
+
     <xs:element name="global-variables">
       <xs:annotation>
         <xs:documentation>Global scoped test variables - valid in all test cases</xs:documentation>

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.validation.matcher;
 
+import com.consol.citrus.exceptions.NoSuchValidationMatcherException;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.consol.citrus.exceptions.NoSuchValidationMatcherException;
 
 /**
  * Library holding a set of validation matchers. Each library defines a validation prefix as namespace, so
@@ -79,6 +79,14 @@ public class ValidationMatcherLibrary {
      */
     public void setMembers(Map<String, ValidationMatcher> members) {
         this.members = members;
+    }
+
+    /**
+     * Gets the matcher library members.
+     * @return
+     */
+    public Map<String, ValidationMatcher> getMembers() {
+        return members;
     }
 
     /**

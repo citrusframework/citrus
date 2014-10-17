@@ -16,7 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.functions.FunctionLibrary;
+import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -30,12 +30,12 @@ import org.w3c.dom.Element;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FunctionLibraryParser implements BeanDefinitionParser {
+public class ValidationMatcherLibraryParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(FunctionLibrary.class);
-        parseFunctionDefinitions(builder, element);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(ValidationMatcherLibrary.class);
+        parseMatcherDefinitions(builder, element);
 
         builder.addPropertyValue("prefix", element.getAttribute("prefix"));
         builder.addPropertyValue("name", element.getAttribute("id"));
@@ -51,18 +51,18 @@ public class FunctionLibraryParser implements BeanDefinitionParser {
      * @param builder the target bean definition builder.
      * @param element the source element.
      */
-    private void parseFunctionDefinitions(BeanDefinitionBuilder builder, Element element) {
-        ManagedMap<String, Object> functions = new ManagedMap<String, Object>();
-        for (Element function : DomUtils.getChildElementsByTagName(element, "function")) {
-            if (function.hasAttribute("ref")) {
-                functions.put(function.getAttribute("name"), new RuntimeBeanReference(function.getAttribute("ref")));
+    private void parseMatcherDefinitions(BeanDefinitionBuilder builder, Element element) {
+        ManagedMap<String, Object> matchers = new ManagedMap<String, Object>();
+        for (Element matcher : DomUtils.getChildElementsByTagName(element, "matcher")) {
+            if (matcher.hasAttribute("ref")) {
+                matchers.put(matcher.getAttribute("name"), new RuntimeBeanReference(matcher.getAttribute("ref")));
             } else {
-                functions.put(function.getAttribute("name"), BeanDefinitionBuilder.rootBeanDefinition(function.getAttribute("class")).getBeanDefinition());
+                matchers.put(matcher.getAttribute("name"), BeanDefinitionBuilder.rootBeanDefinition(matcher.getAttribute("class")).getBeanDefinition());
             }
         }
 
-        if (!functions.isEmpty()) {
-            builder.addPropertyValue("members", functions);
+        if (!matchers.isEmpty()) {
+            builder.addPropertyValue("members", matchers);
         }
     }
 }

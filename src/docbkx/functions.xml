@@ -14,7 +14,7 @@
     <para>The library is built in the Spring configuration and contains a set of functions that are of
     public use.</para>
     
-    <programlisting>&lt;citrus:function-library id=&quot;testLibrary&quot; prefix=&quot;citrus:&quot;&gt;
+    <programlisting>&lt;citrus:function-library id=&quot;testLibrary&quot; prefix=&quot;foo:&quot;&gt;
           &lt;citrus:function name=&quot;randomNumber&quot;&gt; class=&quot;com.consol.citrus.functions.RandomNumberFunction&quot;/&gt;
           &lt;citrus:function name=&quot;randomString&quot;&gt; class=&quot;com.consol.citrus.functions.RandomStringFunction&quot;/&gt;
           &lt;citrus:function name=&quot;customFunction&quot;&gt; ref=&quot;customFunctionBean&quot;/&gt;
@@ -24,9 +24,12 @@
     <para>As you can see the library defines one to many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus
       constructs the library and you are able to use the functions in your test case with the leading library prefix just like this:</para>
 
-    <programlisting>citrus:randomNumber()
-      citrus:randomString()
-      citrus:customFunction()</programlisting>
+    <programlisting>foo:randomNumber()
+      foo:randomString()
+      foo:customFunction()</programlisting>
+
+    <tip>You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library
+      uses the <emphasis>citrus:</emphasis> prefix.</tip>
 
     <para>In the next chapters the default functions offered by the framework will be described in detail.</para>
 

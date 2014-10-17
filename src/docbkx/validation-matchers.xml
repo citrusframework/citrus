@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="validation-matchers">
-    <title>Validation matchers</title>
+    <title>Validation matcher</title>
 
     <para>Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. 
     With test variables we are able to check for simple value equality. We ensure that message entries are equal to predefined expected values. Validation 
-    matchers add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform 
+    matcher add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform
     more complex assertions like <emphasis>contains</emphasis> or <emphasis>isNumber</emphasis> in your validation statements.</para>
     
     <para>The following sections describe the Citrus default validation matcher implementations that are ready for usage. The matcher implementations should cover the
@@ -34,10 +34,35 @@
     implementation state the expected values to match.</para>
 
     <tip>
-        <para>You can use validation matchers with all validation mechanisms - not only with XML validation. Plaintext, JSON, SQL result set validation are also supported.</para>
+        <para>You can use validation matcher with all validation mechanisms - not only with XML validation. Plaintext, JSON, SQL result set validation are also supported.</para>
     </tip>
-    
-    <para>See now the following sections describing the default validation matchers in Citrus.</para>
+
+    <para>A set of validation matcher implementations is usually combined to a validation matcher library. The library has a prefix that will identify
+      the validation matcher inside the test case. The default test framework validation matcher library uses a default prefix (citrus).
+      You can write your own validation matcher library using your own prefix in order to extend the test framework
+      functionality whenever you want.</para>
+
+    <para>The library is built in the Spring configuration and contains a set of validation matcher that are of
+      public use.</para>
+
+    <programlisting>&lt;citrus:validation matcher-library id=&quot;testMatcherLibrary&quot; prefix=&quot;foo:&quot;&gt;
+      &lt;citrus:matcher name=&quot;isNumber&quot;&gt; class=&quot;com.consol.citrus.validation.matcher.core.IsNumberValidationMatcher&quot;/&gt;
+      &lt;citrus:matcher name=&quot;contains&quot;&gt; class=&quot;com.consol.citrus.validation.matcher.core.ContainsValidationMatcher&quot;/&gt;
+      &lt;citrus:matcher name=&quot;customMatcher&quot;&gt; ref=&quot;customMatcherBean&quot;/&gt;
+      ...
+      &lt;/citrus:validation matcher-library&gt;</programlisting>
+
+    <para>As you can see the library defines one to many validation matcher members either referenced as normal Spring bean or by its implementing Java class name. Citrus
+      constructs the library and you are able to use the validation matcher in your test case with the leading library prefix just like this:</para>
+
+    <programlisting>@foo:isNumber()@
+      @foo:contains()@
+      @foo:customMatcher()@</programlisting>
+
+    <tip>You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library
+    uses no prefix.</tip>
+
+    <para>See now the following sections describing the default validation validation matcher in Citrus.</para>
     
     <section id="validation-matcher-xml">
         <title>matchesXml()</title>

@@ -44,6 +44,8 @@ public class FunctionLibraryParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(functionLibraries.size(), 2L);
 
         FunctionLibrary functionLibraryBean = functionLibraries.get("functionLib");
+        Assert.assertEquals(functionLibraryBean.getName(), "functionLib");
+        Assert.assertEquals(functionLibraryBean.getPrefix(), "foo");
         Assert.assertEquals(functionLibraryBean.getMembers().size(), 3L);
         Assert.assertEquals(functionLibraryBean.getMembers().get("randomNr").getClass(), RandomNumberFunction.class);
         Assert.assertEquals(functionLibraryBean.getMembers().get("randomStr").getClass(), RandomStringFunction.class);
@@ -52,6 +54,8 @@ public class FunctionLibraryParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(functionLibraryBean.getMembers().get("custom").execute(FunctionParameterHelper.getParameterList("Christoph"), context), "Hello Christoph!");
 
         functionLibraryBean = functionLibraries.get("functionLib2");
+        Assert.assertEquals(functionLibraryBean.getName(), "functionLib2");
+        Assert.assertEquals(functionLibraryBean.getPrefix(), "bar");
         Assert.assertEquals(functionLibraryBean.getMembers().size(), 2L);
         Assert.assertEquals(functionLibraryBean.getMembers().get("concat").getClass(), ConcatFunction.class);
         Assert.assertEquals(functionLibraryBean.getMembers().get("custom").getClass(), CustomFunction.class);

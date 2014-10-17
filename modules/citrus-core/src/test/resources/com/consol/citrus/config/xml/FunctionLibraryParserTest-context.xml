@@ -9,7 +9,6 @@
 
   <context:annotation-config/>
 
-  <!-- Default message validators -->
   <citrus:function-library id="functionLib" prefix="foo">
     <citrus:function name="randomNr" ref="randomNumber"/>
     <citrus:function name="randomStr" ref="randomString"/>

@@ -16,54 +16,24 @@
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
-  <bean id="citrusValidationMatcherLibrary" class="com.consol.citrus.validation.matcher.ValidationMatcherLibrary">
-    <property name="name" value="citrusValidationMatcherLibrary"/>
-    <property name="prefix" value=""/>
-    <property name="members">
-      <map>
-        <entry key="equalsIgnoreCase">
-          <bean class="com.consol.citrus.validation.matcher.core.EqualsIgnoreCaseValidationMatcher"/>
-        </entry>
-        <entry key="contains">
-          <bean class="com.consol.citrus.validation.matcher.core.ContainsValidationMatcher"/>
-        </entry>
-        <entry key="containsIgnoreCase">
-          <bean class="com.consol.citrus.validation.matcher.core.ContainsIgnoreCaseValidationMatcher"/>
-        </entry>
-        <entry key="greaterThan">
-          <bean class="com.consol.citrus.validation.matcher.core.GreaterThanValidationMatcher"/>
-        </entry>
-        <entry key="lowerThan">
-          <bean class="com.consol.citrus.validation.matcher.core.LowerThanValidationMatcher"/>
-        </entry>
-        <entry key="startsWith">
-          <bean class="com.consol.citrus.validation.matcher.core.StartsWithValidationMatcher"/>
-        </entry>
-        <entry key="endsWith">
-          <bean class="com.consol.citrus.validation.matcher.core.EndsWithValidationMatcher"/>
-        </entry>
-        <entry key="isNumber">
-          <bean class="com.consol.citrus.validation.matcher.core.IsNumberValidationMatcher"/>
-        </entry>
-        <entry key="matches">
-          <bean class="com.consol.citrus.validation.matcher.core.MatchesValidationMatcher"/>
-        </entry>
-        <entry key="matchesDatePattern">
-          <bean class="com.consol.citrus.validation.matcher.core.DatePatternValidationMatcher"/>
-        </entry>
-        <entry key="matchesXml">
-          <bean class="com.consol.citrus.validation.matcher.core.XmlValidationMatcher"/>
-        </entry>
-        <entry key="isWeekday">
-          <bean class="com.consol.citrus.validation.matcher.core.WeekdayValidationMatcher"/>
-        </entry>
-        <entry key="variable">
-          <bean class="com.consol.citrus.validation.matcher.core.CreateVariableValidationMatcher"/>
-        </entry>
-      </map>
-    </property>
-  </bean>
+  <citrus:validation-matcher-library id="citrusValidationMatcherLibrary" prefix="">
+    <citrus:matcher name="equalsIgnoreCase" class="com.consol.citrus.validation.matcher.core.EqualsIgnoreCaseValidationMatcher"/>
+    <citrus:matcher name="contains" class="com.consol.citrus.validation.matcher.core.ContainsValidationMatcher"/>
+    <citrus:matcher name="containsIgnoreCase" class="com.consol.citrus.validation.matcher.core.ContainsIgnoreCaseValidationMatcher"/>
+    <citrus:matcher name="greaterThan" class="com.consol.citrus.validation.matcher.core.GreaterThanValidationMatcher"/>
+    <citrus:matcher name="lowerThan" class="com.consol.citrus.validation.matcher.core.LowerThanValidationMatcher"/>
+    <citrus:matcher name="startsWith" class="com.consol.citrus.validation.matcher.core.StartsWithValidationMatcher"/>
+    <citrus:matcher name="endsWith" class="com.consol.citrus.validation.matcher.core.EndsWithValidationMatcher"/>
+    <citrus:matcher name="isNumber" class="com.consol.citrus.validation.matcher.core.IsNumberValidationMatcher"/>
+    <citrus:matcher name="matches" class="com.consol.citrus.validation.matcher.core.MatchesValidationMatcher"/>
+    <citrus:matcher name="matchesDatePattern" class="com.consol.citrus.validation.matcher.core.DatePatternValidationMatcher"/>
+    <citrus:matcher name="matchesXml" class="com.consol.citrus.validation.matcher.core.XmlValidationMatcher"/>
+    <citrus:matcher name="isWeekday" class="com.consol.citrus.validation.matcher.core.WeekdayValidationMatcher"/>
+    <citrus:matcher name="variable" class="com.consol.citrus.validation.matcher.core.CreateVariableValidationMatcher"/>
+  </citrus:validation-matcher-library>
 
 </beans>
