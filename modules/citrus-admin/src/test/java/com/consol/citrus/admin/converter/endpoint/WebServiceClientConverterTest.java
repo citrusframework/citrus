@@ -32,6 +32,6 @@ public class WebServiceClientConverterTest {
     @Test
     public void testConvert() throws Exception {
         EndpointData endpointData = endpointConverter.convert(new Client());
-        Assert.assertEquals(endpointData.getType(), "ws");
+        Assert.assertEquals(endpointData.getType(), "ws-client");
     }
 }

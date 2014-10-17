@@ -32,6 +32,6 @@ public class HttpClientConverterTest {
     @Test
     public void testConvert() throws Exception {
         EndpointData endpointData = endpointConverter.convert(new Client());
-        Assert.assertEquals(endpointData.getType(), "http");
+        Assert.assertEquals(endpointData.getType(), "http-client");
     }
 }
