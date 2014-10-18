@@ -16,7 +16,6 @@
   -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://www.citrusframework.org/schema/jms/testcase"
-           xmlns:core="http://www.citrusframework.org/schema/testcase"
            targetNamespace="http://www.citrusframework.org/schema/jms/testcase"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">

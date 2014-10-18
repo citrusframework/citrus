@@ -27,7 +27,7 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  */
-public class RepeatUntilTrue extends AbstractIteratingTestAction {
+public class RepeatUntilTrue extends AbstractIteratingActionContainer {
 
     /**
      * Default constructor.
@@ -37,7 +37,7 @@ public class RepeatUntilTrue extends AbstractIteratingTestAction {
     }
 
     /**
-     * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @see AbstractIteratingActionContainer#executeIteration(com.consol.citrus.context.TestContext)
      * @throws com.consol.citrus.exceptions.CitrusRuntimeException
      */
     @Override

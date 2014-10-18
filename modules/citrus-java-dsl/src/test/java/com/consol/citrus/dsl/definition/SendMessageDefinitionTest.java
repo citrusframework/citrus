@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -165,6 +166,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
         replay(applicationContextMock);
 
@@ -228,6 +230,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
         replay(applicationContextMock);
 
@@ -321,6 +324,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
         MockBuilder builder = new MockBuilder(applicationContextMock) {

@@ -33,7 +33,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * 
  * @author Christoph Deppisch
  */
-public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
+public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     /** Auto sleep in seconds */
     private double autoSleep = 1.0;
 
@@ -48,7 +48,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingTestAction {
     }
 
     /**
-     * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @see AbstractIteratingActionContainer#executeIteration(com.consol.citrus.context.TestContext)
      * @throws CitrusRuntimeException
      */
     @Override

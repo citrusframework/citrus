@@ -31,7 +31,7 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  */
-public class Iterate extends AbstractIteratingTestAction {
+public class Iterate extends AbstractIteratingActionContainer {
     /** Index increment step */
     private int step = 1;
 
@@ -43,7 +43,7 @@ public class Iterate extends AbstractIteratingTestAction {
     }
 
     /**
-     * @see com.consol.citrus.container.AbstractIteratingTestAction#executeIteration(com.consol.citrus.context.TestContext)
+     * @see AbstractIteratingActionContainer#executeIteration(com.consol.citrus.context.TestContext)
      * @throws com.consol.citrus.exceptions.CitrusRuntimeException
      */
     @Override

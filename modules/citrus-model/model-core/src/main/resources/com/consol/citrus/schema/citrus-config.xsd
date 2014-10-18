@@ -237,14 +237,18 @@
 
     <xs:element name="before-suite">
       <xs:annotation>
-        <xs:documentation>Sequence of test actions executed before test suite run.</xs:documentation>
+        <xs:documentation>Sequence of test actions executed before test suite run. Container execution can be restricted by suite name and test groups</xs:documentation>
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
           <xs:element name="actions">
             <xs:complexType>
               <xs:sequence>
-                <xs:any minOccurs="1" maxOccurs="unbounded" namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+                <xs:choice minOccurs="1" maxOccurs="unbounded">
+                  <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                </xs:choice>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -257,20 +261,74 @@
 
     <xs:element name="after-suite">
       <xs:annotation>
-        <xs:documentation>Sequence of test actions executed after test suite run.</xs:documentation>
+        <xs:documentation>Sequence of test actions executed after test suite run. Container execution can be restricted by suite name and test groups</xs:documentation>
       </xs:annotation>
       <xs:complexType>
         <xs:sequence>
           <xs:element name="actions">
             <xs:complexType>
               <xs:sequence>
-                <xs:any minOccurs="1" maxOccurs="unbounded" namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+                <xs:choice minOccurs="1" maxOccurs="unbounded">
+                  <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                </xs:choice>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="suites" type="xs:string"/>
+        <xs:attribute name="groups" type="xs:string"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="before-test">
+      <xs:annotation>
+        <xs:documentation>Sequence of test actions executed before a test case. Container execution can be restricted by test name, package and test groups</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="actions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="1" maxOccurs="unbounded">
+                  <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="test" type="xs:string"/>
+        <xs:attribute name="package" type="xs:string"/>
+        <xs:attribute name="groups" type="xs:string"/>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="after-test">
+      <xs:annotation>
+        <xs:documentation>Sequence of test actions executed after a test case. Container execution can be restricted by test name, package and test groups</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="actions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:choice minOccurs="1" maxOccurs="unbounded">
+                  <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                </xs:choice>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="test" type="xs:string"/>
+        <xs:attribute name="package" type="xs:string"/>
         <xs:attribute name="groups" type="xs:string"/>
       </xs:complexType>
     </xs:element>

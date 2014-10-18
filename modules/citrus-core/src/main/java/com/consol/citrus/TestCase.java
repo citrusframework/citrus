@@ -16,8 +16,7 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -65,7 +64,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private TestActionListeners testActionListeners = new TestActionListeners();
 
     @Autowired(required = false)
-    private SequenceBeforeTest beforeTest;
+    private List<SequenceBeforeTest> beforeTest;
+
+    @Autowired(required = false)
+    private List<SequenceAfterTest> afterTest;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
@@ -91,6 +93,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 testListeners.onTestFailure(this, e);
                 throw new TestCaseFailedException(e);
             } finally {
+                afterTest(context);
                 testListeners.onTestFinish(this);
                 finish(context);
             }
@@ -99,16 +102,48 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         }
     }
 
+    /**
+     * Sequence of test actions before the test case.
+     * @param context
+     */
     public void beforeTest(TestContext context) {
         if (beforeTest != null) {
-            try {
-                beforeTest.execute(context);
-            } catch (Exception e) {
-                throw new CitrusRuntimeException("Before test failed with errors", e);
+            for (SequenceBeforeTest sequenceBeforeTest : beforeTest) {
+                try {
+                    if (sequenceBeforeTest.shouldExecute(getName(), getPackageName(), null)) //TODO provide test group information
+                        sequenceBeforeTest.execute(context);
+                } catch (Exception e) {
+                    throw new CitrusRuntimeException("Before test failed with errors", e);
+                }
             }
         }
     }
 
+    /**
+     * Sequence of test actions after test case. This operation does not raise andy errors - exceptions
+     * will only be logged as warning. This is because we do not want to overwrite errors that may have occurred
+     * before in test execution.
+     *
+     * @param context
+     */
+    public void afterTest(TestContext context) {
+        if (afterTest != null) {
+            for (SequenceAfterTest sequenceAfterTest : afterTest) {
+                try {
+                    if (sequenceAfterTest.shouldExecute(getName(), getPackageName(), null)) {
+                        sequenceAfterTest.execute(context);
+                    }
+                } catch (Exception e) {
+                    log.warn("After test failed with errors", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Runs all test actions for this test case.
+     * @param context
+     */
     protected void run(TestContext context) {
         if (log.isDebugEnabled()) {
             log.debug("Initializing test case");
@@ -319,7 +354,15 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Sets the before test action sequence.
      * @param beforeTest
      */
-    public void setBeforeTest(SequenceBeforeTest beforeTest) {
+    public void setBeforeTest(List<SequenceBeforeTest> beforeTest) {
         this.beforeTest = beforeTest;
+    }
+
+    /**
+     * Sets the after test action sequence.
+     * @param afterTest
+     */
+    public void setAfterTest(List<SequenceAfterTest> afterTest) {
+        this.afterTest = afterTest;
     }
 }

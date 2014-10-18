@@ -23,7 +23,7 @@ import com.consol.citrus.util.BooleanExpressionParser;
 /**
  * @author Christoph Deppisch
  */
-public abstract class AbstractIteratingTestAction extends AbstractActionContainer {
+public abstract class AbstractIteratingActionContainer extends AbstractActionContainer {
     /** Boolean expression string */
     protected String condition;
 

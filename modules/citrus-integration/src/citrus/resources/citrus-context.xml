@@ -3,6 +3,7 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xmlns:citrus="http://www.citrusframework.org/schema/config"
            xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
+           xmlns:citrus-jms-test="http://www.citrusframework.org/schema/jms/testcase"
            xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
            xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
            xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
@@ -16,6 +17,7 @@
            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
            http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+           http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
            http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd
@@ -362,32 +364,6 @@
       </property>
     </bean>
     
-    <!-- Utility beans -->
-    <bean id="purgeJmsQueues" class="com.consol.citrus.jms.actions.PurgeJmsQueuesAction">
-        <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="queueNames">
-            <list>
-                <value>${jms.queue.http.request.forward}</value>
-                <value>${jms.queue.http.request.ack}</value>
-                <value>${jms.ws.stub.request}</value>
-                <value>${jms.ws.stub.response}</value>
-                <value>${jms.queue.test}</value>
-                <value>${jms.queue.hello.request}</value>
-                <value>${jms.queue.hello.response}</value>
-                <value>${jms.queue.hello.sync.request}</value>
-                <value>${jms.queue.date.sync.request}</value>
-            </list>
-        </property>
-        <property name="queues">
-            <list>
-                <ref bean="testQueue1"/>
-                <ref bean="testQueue2"/>
-                <ref bean="testQueue3"/>
-            </list>
-        </property>
-        <property name="receiveTimeout" value="10"/>
-    </bean>
-    
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
@@ -402,13 +378,24 @@
       </citrus:actions>
     </citrus:before-suite>
     
-    <bean class="com.consol.citrus.container.SequenceBeforeTest">
-        <property name="actions">
-            <list>
-                <ref bean="purgeJmsQueues"/>
-            </list>
-        </property>
-    </bean>
+    <citrus:before-test id="defaultBeforeTest">
+      <citrus:actions>
+        <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" receive-timeout="10">
+          <citrus-jms-test:queue name="${jms.queue.http.request.forward}"/>
+          <citrus-jms-test:queue name="${jms.queue.http.request.ack}"/>
+          <citrus-jms-test:queue name="${jms.ws.stub.request}"/>
+          <citrus-jms-test:queue name="${jms.ws.stub.response}"/>
+          <citrus-jms-test:queue name="${jms.queue.test}"/>
+          <citrus-jms-test:queue name="${jms.queue.hello.request}"/>
+          <citrus-jms-test:queue name="${jms.queue.hello.response}"/>
+          <citrus-jms-test:queue name="${jms.queue.hello.sync.request}"/>
+          <citrus-jms-test:queue name="${jms.queue.date.sync.request}"/>
+          <citrus-jms-test:queue ref="testQueue1"/>
+          <citrus-jms-test:queue ref="testQueue2"/>
+          <citrus-jms-test:queue ref="testQueue3"/>
+        </citrus-jms-test:purge-jms-queues>
+      </citrus:actions>
+    </citrus:before-test>
     
     <citrus:after-suite id="defaultAfterSuite">
       <citrus:actions>

@@ -106,20 +106,75 @@
         Also the database might be in dirty state. The follow-up test then will be confronted with these invalid messages and data. Purging all JMS destinations before a test is therefore a 
         good idea. Just like we prepared some data in actions before suite we can clean up the data before a test starts to execute.</para>
         
-        <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceBeforeTest&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;!-- list of actions before test --&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
+        <programlisting>&lt;citrus:before-test id=&quot;defaultBeforeTest&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;!-- list of actions before test --&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-test&gt;</programlisting>
+
+        <para>The before test configuration component receives a unique id and a list of test actions that get executed before a test case is started. The component receives usual test action definitions just like you would write them in
+          a normal test case definition. See the example below how to add test actions.</para>
   
-        <programlisting>&lt;bean class=&quot;com.consol.citrus.container.SequenceBeforeTest&quot;&gt;
-      &lt;property name=&quot;actions&quot;&gt;
-          &lt;list&gt;
-              &lt;ref bean=&quot;purgeJmsQueues&quot;/&gt;
-          &lt;/list&gt;
-      &lt;/property&gt;
-  &lt;/bean&gt;</programlisting>
+        <programlisting>&lt;citrus:before-test id=&quot;defaultBeforeTest&quot;&gt;
+    &lt;citrus:actions&gt;
+            &lt;citrus-test:echo&gt;
+              &lt;citrus-test:message&gt;This is executed before each test!&lt;/citrus-test:message&gt;
+            &lt;/citrus-test:echo&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-test&gt;</programlisting>
+
+        <para>Note that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed before each test in our
+          test suite run. Also notice that we can restrict the before test container execution. We can restrict execution based on the test name, package and test groups. See following example how this works:</para>
+
+        <programlisting>&lt;citrus:before-test id=&quot;defaultBeforeTest&quot; test=&quot;*_Ok_Test&quot; package=&quot;com.consol.citrus.longrunning.*&quot;&gt;
+    &lt;citrus:actions&gt;
+            &lt;citrus-test:echo&gt;
+              &lt;citrus-test:message&gt;This is executed before each test!&lt;/citrus-test:message&gt;
+            &lt;/citrus-test:echo&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-test&gt;</programlisting>
+
+        <para>The above before test component is only executed for test cases that match the name pattern <emphasis>*_Ok_Test</emphasis> and that match the package <emphasis>com.consol.citrus.longrunning.*</emphasis>. Also we could just use the test name pattern or
+        the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify before test actions in various ways. Of course you can have multiple before test configuration components
+        at the same time. Citrus will pick the right containers and put it to execution when necessary.</para>
+    </section>
+
+    <section id="testsuite-after-test">
+        <title>After test</title>
+
+        <para>The same logic that applies to the <emphasis>before-test</emphasis> configuration component can be done after each test. The <emphasis>after-test</emphasis> configuration component defines test actions executed after each test. Just like we prepared some data
+          in actions before a test we can clean up the data after a test has finished execution.</para>
+
+        <programlisting>&lt;citrus:after-test id=&quot;defaultAfterTest&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;!-- list of actions after test --&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:after-test&gt;</programlisting>
+
+        <para>The after test configuration component receives a unique id and a list of test actions that get executed after a test case is finished. Notice that the after test actions are executed no matter what result success or failure the previous test case came up to.
+          The component receives usual test action definitions just like you would write them in a normal test case definition. See the example below how to add test actions.</para>
+
+        <programlisting>&lt;citrus:after-test id=&quot;defaultAfterTest&quot;&gt;
+    &lt;citrus:actions&gt;
+            &lt;citrus-test:echo&gt;
+              &lt;citrus-test:message&gt;This is executed after each test!&lt;/citrus-test:message&gt;
+            &lt;/citrus-test:echo&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:after-test&gt;</programlisting>
+
+        <para>Please be aware of the fact that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed after each test in our
+          test suite run. Of course we can restrict the after test container execution. Supported restrictions are based on the test name, package and test groups. See following example how this works:</para>
+
+        <programlisting>&lt;citrus:after-test id=&quot;defaultAfterTest&quot; test=&quot;*_Error_Test&quot; package=&quot;com.consol.citrus.error.*&quot;&gt;
+    &lt;citrus:actions&gt;
+            &lt;citrus-test:echo&gt;
+              &lt;citrus-test:message&gt;This is executed after each test!&lt;/citrus-test:message&gt;
+            &lt;/citrus-test:echo&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:after-test&gt;</programlisting>
+
+        <para>The above after test component is obviously only executed for test cases that match the name pattern <emphasis>*_Error_Test</emphasis> and that match the package <emphasis>com.consol.citrus.error.*</emphasis>. Also we could just use the test name pattern or
+        the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components
+        at the same time. Citrus will pick the right containers and put it to execution when necessary.</para>
     </section>
 </chapter>

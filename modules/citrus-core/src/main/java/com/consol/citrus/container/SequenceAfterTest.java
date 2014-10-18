@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Sequence of test actions executed before a test case. Container execution can be restricted according to test name ,
+ * Sequence of test actions executed after a test case. Container execution can be restricted according to test name ,
  * package and test groups.
  *
  * @author Christoph Deppisch
  */
-public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer {
+public class SequenceAfterTest extends AbstractTestBoundaryActionContainer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SequenceBeforeTest.class);
+    private static Logger log = LoggerFactory.getLogger(SequenceAfterTest.class);
 
     @Override
     public void doExecute(TestContext context) {
@@ -39,7 +39,7 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer {
             return;
         }
         
-        log.info("Executing " + actions.size() + " actions before test");
+        log.info("Executing " + actions.size() + " actions after test");
         log.info("");
 
         for(TestAction action: actions)  {

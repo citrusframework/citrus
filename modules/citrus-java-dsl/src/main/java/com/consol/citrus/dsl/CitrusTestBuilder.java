@@ -36,6 +36,7 @@ import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.util.CollectionUtils;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
@@ -1098,7 +1099,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 
         if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
-            testCase.setBeforeTest(applicationContext.getBean(SequenceBeforeTest.class));
+            testCase.setBeforeTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceBeforeTest.class).values().toArray()));
+        }
+
+        if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
+            testCase.setAfterTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray()));
         }
     }
 }
