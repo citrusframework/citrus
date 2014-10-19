@@ -36,7 +36,7 @@ import org.springframework.context.ApplicationContextAware;
  * 
  * @author Christoph Deppisch
  */
-public class TestContextFactoryBean implements FactoryBean<TestContext>, ApplicationContextAware {
+public class TestContextFactory implements FactoryBean<TestContext>, ApplicationContextAware {
     
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -65,7 +65,7 @@ public class TestContextFactoryBean implements FactoryBean<TestContext>, Applica
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(TestContextFactoryBean.class);
+    private static Logger log = LoggerFactory.getLogger(TestContextFactory.class);
     
     /**
      * @see org.springframework.beans.factory.FactoryBean#getObject()

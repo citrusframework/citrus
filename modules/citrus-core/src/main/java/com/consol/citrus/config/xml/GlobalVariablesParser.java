@@ -38,10 +38,8 @@ public class GlobalVariablesParser implements BeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(GlobalVariables.class);
         parseVariableDefinitions(builder, element);
 
-        String globalVariablesBeanName = parserContext.getReaderContext().generateBeanName(builder.getBeanDefinition());
-        parserContext.getRegistry().registerBeanDefinition(globalVariablesBeanName, builder.getBeanDefinition());
+        parserContext.getRegistry().registerBeanDefinition(GlobalVariables.BEAN_NAME, builder.getBeanDefinition());
 
-        BeanDefinitionBuilder variablesPropertyLoader = BeanDefinitionBuilder.rootBeanDefinition(GlobalVariablesPropertyLoader.class);
         List<String> propertyFiles = new ArrayList<String>();
         List<Element> propertyFileElements = DomUtils.getChildElementsByTagName(element, "file");
         for (Element propertyFileElement : propertyFileElements) {
@@ -49,8 +47,9 @@ public class GlobalVariablesParser implements BeanDefinitionParser {
         }
 
         if (!propertyFiles.isEmpty()) {
+            BeanDefinitionBuilder variablesPropertyLoader = BeanDefinitionBuilder.rootBeanDefinition(GlobalVariablesPropertyLoader.class);
             variablesPropertyLoader.addPropertyValue("propertyFiles", propertyFiles);
-            parserContext.getRegistry().registerBeanDefinition(parserContext.getReaderContext().generateBeanName(variablesPropertyLoader.getBeanDefinition()), variablesPropertyLoader.getBeanDefinition());
+            parserContext.getRegistry().registerBeanDefinition(GlobalVariablesPropertyLoader.BEAN_NAME, variablesPropertyLoader.getBeanDefinition());
         }
 
         return null;

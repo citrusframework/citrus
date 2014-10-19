@@ -18,10 +18,11 @@ package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.container.SequenceAfterSuite;
 import com.consol.citrus.container.SequenceBeforeSuite;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestSuiteListeners;
 import org.slf4j.Logger;
@@ -33,8 +34,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.springframework.util.*;
 import org.springframework.util.Assert;
+import org.springframework.util.*;
 import org.testng.*;
 import org.testng.annotations.*;
 
@@ -48,10 +49,7 @@ import java.util.*;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(locations = { "classpath:com/consol/citrus/spring/root-application-ctx.xml", 
-                                    "classpath:citrus-context.xml", 
-                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
-                                    "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
+@ContextConfiguration(classes = CitrusSpringConfig.class)
 @Listeners( { CitrusMethodInterceptor.class } )
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
     /** Logger */
@@ -61,7 +59,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     private TestSuiteListeners testSuiteListener;
     
     @Autowired
-    private TestContextFactoryBean testContextFactory;
+    private TestContextFactory testContextFactory;
     
     @Autowired(required = false)
     private List<SequenceBeforeSuite> beforeSuite;

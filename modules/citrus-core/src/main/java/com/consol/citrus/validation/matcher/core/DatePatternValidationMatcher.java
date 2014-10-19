@@ -32,7 +32,6 @@ import java.util.regex.PatternSyntaxException;
 public class DatePatternValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
-        
     	SimpleDateFormat dateFormat;
     	try {
     		dateFormat = new SimpleDateFormat(control);

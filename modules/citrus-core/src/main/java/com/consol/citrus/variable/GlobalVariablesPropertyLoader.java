@@ -16,10 +16,9 @@
 
 package com.consol.citrus.variable;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.FunctionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,9 +27,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.functions.FunctionRegistry;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Loads properties from an external property file and creates global test variables.
@@ -38,6 +37,9 @@ import com.consol.citrus.functions.FunctionRegistry;
  * @author Christoph Deppisch
  */
 public class GlobalVariablesPropertyLoader implements InitializingBean {
+    /** Bean name in Spring application context */
+    public static final String BEAN_NAME = "globalVariablesPropertyLoader";
+
     @Autowired
     private GlobalVariables globalVariables;
 

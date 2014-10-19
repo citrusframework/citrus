@@ -37,7 +37,7 @@ public class MessageValidatorRegistryParser implements BeanDefinitionParser {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(MessageValidatorRegistry.class);
         parseValidators(builder, element);
 
-        parserContext.getRegistry().registerBeanDefinition(MessageValidatorRegistry.DEFAULT_BEAN_ID, builder.getBeanDefinition());
+        parserContext.getRegistry().registerBeanDefinition(MessageValidatorRegistry.BEAN_NAME, builder.getBeanDefinition());
 
         return null;
     }

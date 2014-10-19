@@ -28,7 +28,6 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
 public class EqualsIgnoreCaseValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
-        
         if (!value.equalsIgnoreCase(control)) {
             throw new ValidationException(this.getClass().getSimpleName()
                     + " failed for field '" + fieldName

@@ -16,14 +16,14 @@
 
 package com.consol.citrus.testng;
 
+import com.consol.citrus.config.CitrusSpringUnitTestConfig;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.BeforeMethod;
-
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Abstract base testng test implementation for Citrus unit testing. Provides access to
@@ -31,17 +31,14 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(locations = { "classpath:com/consol/citrus/spring/root-application-ctx.xml", 
-                                    "classpath:com/consol/citrus/context/citrus-context.xml",
-                                    "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
-                                    "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
+@ContextConfiguration(classes = CitrusSpringUnitTestConfig.class)
 public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
     /** Test context */
     protected TestContext context;
 
     /** Factory bean for test context */
     @Autowired
-    protected TestContextFactoryBean testContextFactoryBean;
+    protected TestContextFactory testContextFactory;
 
     /**
      * Setup test execution.
@@ -57,7 +54,7 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
      */
     protected TestContext createTestContext() {
         try {
-            return testContextFactoryBean.getObject();
+            return testContextFactory.getObject();
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to create test context", e);
         }

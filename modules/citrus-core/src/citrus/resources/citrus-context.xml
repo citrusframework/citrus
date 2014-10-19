@@ -17,15 +17,8 @@
   <!-- Global variables -->
   <citrus:global-variables>
     <citrus:variable name="project.name" value="Citrus Integration Testing"/>
+    <citrus:file path="classpath:citrus.variables"/>
   </citrus:global-variables>
-
-  <bean class="com.consol.citrus.variable.GlobalVariablesPropertyLoader">
-    <property name="propertyFiles">
-      <list>
-        <value>classpath:citrus.variables</value>
-      </list>
-    </property>
-  </bean>
 
   <!-- Xsd schema resources and definitions -->
   <citrus:schema id="helloSchema" location="classpath:schemas/HelloService.xsd" />

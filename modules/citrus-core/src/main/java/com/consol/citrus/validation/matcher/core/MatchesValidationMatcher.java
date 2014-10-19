@@ -30,8 +30,8 @@ import java.util.regex.PatternSyntaxException;
 public class MatchesValidationMatcher implements ValidationMatcher {
 
     public void validate(String fieldName, String value, String control, TestContext context) throws ValidationException {
-        
-    	boolean success = false;
+    	boolean success;
+
     	try {
     		success = value.matches(control);
     	} catch (PatternSyntaxException e) {

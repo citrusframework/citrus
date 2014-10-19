@@ -25,7 +25,10 @@ import java.util.Map;
  * @author Christoph Deppisch
  */
 public class GlobalVariables {
-	/** Variables name value pair map */
+    /** Bean name in Spring application context */
+    public static final String BEAN_NAME = "globalVariables";
+
+    /** Variables name value pair map */
     private Map<String, Object> variables = new LinkedHashMap<String, Object>();
 	
 	/**

@@ -16,8 +16,9 @@
 
 package com.consol.citrus.junit;
 
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,16 +34,13 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
  * @author Christoph Deppisch
  */
 @TestExecutionListeners({TestSuiteAwareExecutionListener.class})
-@ContextConfiguration(locations = {"classpath:com/consol/citrus/spring/root-application-ctx.xml", 
-                                   "classpath:citrus-context.xml", 
-                                   "classpath:com/consol/citrus/functions/citrus-function-ctx.xml",
-                                   "classpath:com/consol/citrus/validation/citrus-validationmatcher-ctx.xml"})
+@ContextConfiguration(classes = CitrusSpringConfig.class)
 public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringContextTests {
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private TestContextFactoryBean testContextFactory;
+    private TestContextFactory testContextFactory;
     
     /** Delegate test execution to this executor */
     private JUnitTestExecutor testExecutor;

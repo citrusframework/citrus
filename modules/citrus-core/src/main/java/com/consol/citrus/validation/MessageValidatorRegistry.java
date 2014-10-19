@@ -40,7 +40,7 @@ public class MessageValidatorRegistry implements InitializingBean {
     private static Logger log = LoggerFactory.getLogger(MessageValidatorRegistry.class);
 
     /** The default bean id in Spring application context*/
-    public static final String DEFAULT_BEAN_ID = "messageValidatorRegistry";
+    public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
 
     /** List of registered message validator implementations */
     private List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<MessageValidator<? extends ValidationContext>>();
