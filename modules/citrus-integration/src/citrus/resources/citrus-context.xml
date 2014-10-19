@@ -349,20 +349,17 @@
          auto-start="true"/>
 
     <!-- Sample data dictionary for hello service messages -->
-    <bean id="helloServiceDataDictionary" class="com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary">
-      <property name="globalScope" value="false"/>
-      <property name="mappings">
-        <map>
-          <entry key="HelloRequest.MessageId" value="${messageId}"/>
-          <entry key="HelloRequest.CorrelationId" value="${correlationId}"/>
-          <entry key="HelloRequest.User" value="Christoph"/>
-          <entry key="HelloResponse.MessageId" value="${messageId}"/>
-          <entry key="HelloResponse.CorrelationId" value="${correlationId}"/>
-          <entry key="HelloResponse.User" value="HelloService"/>
-          <entry key="HelloResponse.Text" value="Hello Christoph"/>
-        </map>
-      </property>
-    </bean>
+    <citrus:xml-data-dictionary id="helloServiceDataDictionary" global-scope="false">
+      <citrus:mappings>
+        <citrus:mapping path="HelloRequest.MessageId" value="${messageId}"/>
+        <citrus:mapping path="HelloRequest.CorrelationId" value="${correlationId}"/>
+        <citrus:mapping path="HelloRequest.User" value="Christoph"/>
+        <citrus:mapping path="HelloResponse.MessageId" value="${messageId}"/>
+        <citrus:mapping path="HelloResponse.CorrelationId" value="${correlationId}"/>
+        <citrus:mapping path="HelloResponse.User" value="HelloService"/>
+        <citrus:mapping path="HelloResponse.Text" value="Hello Christoph"/>
+      </citrus:mappings>
+    </citrus:xml-data-dictionary>
     
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>

@@ -40,21 +40,20 @@ public interface DataDictionary<T> extends MessageConstructionInterceptor {
     String translate(T key, String value, TestContext context);
 
     /**
-     * Sets the path mapping strategy.
-     * @param strategy
+     * Gets the data dictionary name.
+     * @return
      */
-    void setPathMappingStrategy(PathMappingStrategy strategy);
+    String getName();
+
+    /**
+     * Gets the path mapping strategy.
+     */
+    PathMappingStrategy getPathMappingStrategy();
 
     /**
      * Should dictionary be used in global scope.
      */
     boolean isGlobalScope();
-
-    /**
-     * Sets the global scope usage.
-     * @param scope
-     */
-    void setGlobalScope(boolean scope);
 
     /**
      * Possible mapping strategies for identifying matching dictionary items

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.container.SequenceAfterTest;
+import com.consol.citrus.container.*;
 
 /**
  * @author Christoph Deppisch
@@ -25,7 +25,7 @@ import com.consol.citrus.container.SequenceAfterTest;
 public class SequenceAfterTestParser extends AbstractTestBoundaryActionContainerParser {
 
     @Override
-    protected Class<?> getContainerClass() {
+    protected Class<? extends AbstractTestBoundaryActionContainer> getContainerClass() {
         return SequenceAfterTest.class;
     }
 

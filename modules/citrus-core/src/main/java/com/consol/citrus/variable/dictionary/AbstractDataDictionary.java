@@ -16,28 +16,128 @@
 
 package com.consol.citrus.variable.dictionary;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Abstract data dictionary implementation provides global scope handling.
  * @author Christoph Deppisch
  */
-public abstract class AbstractDataDictionary<T> extends AbstractMessageConstructionInterceptor implements DataDictionary<T> {
+public abstract class AbstractDataDictionary<T> extends AbstractMessageConstructionInterceptor implements DataDictionary<T>, InitializingBean {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(AbstractDataDictionary.class);
+
+    /** Data dictionary name */
+    private String name = getClass().getSimpleName();
 
     /** Scope defines where dictionary should be applied (explicit or global) */
     private boolean globalScope = true;
 
+    /** Known mappings to this dictionary */
+    protected Map<String, String> mappings = new HashMap<String, String>();
+
+    /** mapping file resource */
+    protected Resource mappingFile;
+
     /** Kind of mapping strategy how to identify dictionary item */
     private PathMappingStrategy pathMappingStrategy = PathMappingStrategy.EXACT_MATCH;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (mappingFile != null) {
+            log.info("Reading data dictionary mapping file " + mappingFile.getFilename());
+            Properties props;
+            try {
+                props = PropertiesLoaderUtils.loadProperties(mappingFile);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException(e);
+            }
+
+            for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
+                String key = iter.next().getKey().toString();
+
+                log.info("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));
+
+                if (log.isDebugEnabled() && mappings.containsKey(key)) {
+                    log.debug("Overwriting data dictionary mapping " + key + " old value:" + mappings.get(key)
+                            + " new value:" + props.getProperty(key));
+                }
+
+                mappings.put(key, props.getProperty(key));
+            }
+        }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the data dictionary name.
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public boolean isGlobalScope() {
         return globalScope;
     }
 
-    @Override
+    /**
+     * Sets the global scope property.
+     * @param scope
+     */
     public void setGlobalScope(boolean scope) {
         this.globalScope = scope;
+    }
+
+    /**
+     * Sets the mappings.
+     * @param mappings
+     */
+    public void setMappings(Map<String, String> mappings) {
+        this.mappings = mappings;
+    }
+
+    /**
+     * Gets the mappings.
+     * @return
+     */
+    public Map<String, String> getMappings() {
+        return mappings;
+    }
+
+    /**
+     * Gets the mapping file resource.
+     * @return
+     */
+    public Resource getMappingFile() {
+        return mappingFile;
+    }
+
+    /**
+     * Sets the mapping file resource.
+     * @param mappingFile
+     */
+    public void setMappingFile(Resource mappingFile) {
+        this.mappingFile = mappingFile;
+    }
+
+    @Override
+    public PathMappingStrategy getPathMappingStrategy() {
+        return pathMappingStrategy;
     }
 
     /**
@@ -48,11 +148,4 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
         this.pathMappingStrategy = pathMappingStrategy;
     }
 
-    /**
-     * Gets the path mapping strategy.
-     * @return
-     */
-    public PathMappingStrategy getPathMappingStrategy() {
-        return pathMappingStrategy;
-    }
 }

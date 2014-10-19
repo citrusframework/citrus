@@ -17,17 +17,13 @@
 package com.consol.citrus.variable.dictionary.xml;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.*;
+import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.w3c.dom.Node;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Very basic data dictionary that holds a list of mappings for message elements. Mapping key is the element path inside
@@ -37,12 +33,6 @@ import java.util.*;
  * @since 1.4
  */
 public class NodeMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
-
-    /** Known mappings to this dictionary */
-    private Map<String, String> mappings = new HashMap<String, String>();
-
-    /** mapping file resource */
-    private Resource mappingFile;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
@@ -79,55 +69,5 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
         }
 
         return value;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (mappingFile != null) {
-            log.info("Reading mapping file " + mappingFile.getFilename());
-            Properties props;
-            try {
-                props = PropertiesLoaderUtils.loadProperties(mappingFile);
-            } catch (IOException e) {
-                throw new CitrusRuntimeException(e);
-            }
-
-            for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-                String key = iter.next().getKey().toString();
-
-                log.info("Loading mapping: " + key + "=" + props.getProperty(key));
-
-                if (log.isDebugEnabled() && mappings.containsKey(key)) {
-                    log.debug("Overwriting mapping " + key + " old value:" + mappings.get(key)
-                            + " new value:" + props.getProperty(key));
-                }
-
-                mappings.put(key, props.getProperty(key));
-            }
-        }
-    }
-
-    /**
-     * Sets the mappings.
-     * @param mappings
-     */
-    public void setMappings(Map<String, String> mappings) {
-        this.mappings = mappings;
-    }
-
-    /**
-     * Gets the mapping file resource.
-     * @return
-     */
-    public Resource getMappingFile() {
-        return mappingFile;
-    }
-
-    /**
-     * Sets the mapping file resource.
-     * @param mappingFile
-     */
-    public void setMappingFile(Resource mappingFile) {
-        this.mappingFile = mappingFile;
     }
 }

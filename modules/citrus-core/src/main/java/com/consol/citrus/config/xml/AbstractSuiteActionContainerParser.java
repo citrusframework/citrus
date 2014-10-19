@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.container.AbstractSuiteActionContainer;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -60,5 +61,5 @@ public abstract class AbstractSuiteActionContainerParser implements BeanDefiniti
      * Subclasses provide suite container class.
      * @return
      */
-    protected abstract Class<?> getContainerClass();
+    protected abstract Class<? extends AbstractSuiteActionContainer> getContainerClass();
 }

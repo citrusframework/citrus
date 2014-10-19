@@ -16,18 +16,17 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.container.AbstractSuiteActionContainer;
-import com.consol.citrus.container.SequenceBeforeSuite;
+import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.consol.citrus.variable.dictionary.xml.XpathMappingDataDictionary;
 
 /**
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class SequenceBeforeSuiteParser  extends AbstractSuiteActionContainerParser {
+public class XpathDataDictionaryParser extends AbstractDataDictionaryParser {
 
     @Override
-    protected Class<? extends AbstractSuiteActionContainer> getContainerClass() {
-        return SequenceBeforeSuite.class;
+    protected Class<? extends DataDictionary> getDictionaryClass() {
+        return XpathMappingDataDictionary.class;
     }
-
 }

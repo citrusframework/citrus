@@ -16,17 +16,14 @@
     <para>XML data dictionaries do apply to XML message format payloads, of course. In general we add a dictionary to the basic
     Citrus Spring application context in order to make the dictionary visible to all test cases:</para>
 
-    <programlisting>&lt;bean id=&quot;nodeMappingDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;mappings&quot;&gt;
-    &lt;map&gt;
-      &lt;entry key=&quot;TestMessage.MessageId&quot; value=&quot;${messageId}&quot;/&gt;
-      &lt;entry key=&quot;TestMessage.CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
-      &lt;entry key=&quot;TestMessage.User&quot; value=&quot;Christoph&quot;/&gt;
-      &lt;entry key=&quot;TestMessage.TimeStamp&quot; value=&quot;citrus:currentDate()&quot;/&gt;
-    &lt;/map&gt;
-  &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:xml-data-dictionary id=&quot;nodeMappingDataDictionary&quot;&gt;
+  &lt;citrus:mappings&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.MessageId&quot; value=&quot;${messageId}&quot;/&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.User&quot; value=&quot;Christoph&quot;/&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.TimeStamp&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+  &lt;/citrus:mappings&gt;
+&lt;/citrus:xml-data-dictionary&gt;</programlisting>
 
     <para>As you can see the dictionary is nothing but a normal Spring bean definition. The <emphasis>NodeMappingDataDictionary</emphasis>
     implementation receives a map of key value pairs where the key is a message element path expression. For XML payloads
@@ -36,11 +33,9 @@
     <para>Besides defining the dictionary key value mappings as property map inside the bean definition we can extract the mapping data
     to an external file.</para>
 
-    <programlisting>&lt;bean id=&quot;nodeMappingDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;mappingFile&quot;
-      value=&quot;classpath:com/consol/citrus/sample.dictionary&quot;/&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:xml-data-dictionary id=&quot;nodeMappingDataDictionary&quot;&gt;
+  &lt;citrus:mapping-file path=&quot;classpath:com/consol/citrus/sample.dictionary&quot;/&gt;
+&lt;/citrus:xml-data-dictionary&gt;</programlisting>
 
     <para>The mapping file content just looks like a normal property file in Java:</para>
 
@@ -59,8 +54,8 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
 
     <para>With this sample XML payload given we can access the attributes in the data dictionary as follows:</para>
 
-    <programlisting>&lt;entry key=&quot;TestMessage.User.name&quot; value=&quot;${userName}&quot;/&gt;
-&lt;entry key=&quot;TestMessage.User.age&quot; value=&quot;${userAge}&quot;/&gt;</programlisting>
+    <programlisting>&lt;citrus:mapping path=&quot;TestMessage.User.name&quot; value=&quot;${userName}&quot;/&gt;
+&lt;citrus:mapping path=&quot;TestMessage.User.age&quot; value=&quot;${userAge}&quot;/&gt;</programlisting>
 
     <para>The <emphasis>NodeMappingDataDictionary</emphasis> implementation is easy to use and fits the basic needs for
     XML data dictionaries. The message element path expressions are very simple and do fit basic needs. However when more
@@ -68,18 +63,15 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
 
     <para>For more complex XML message payloads XPath data dictionaries are very effective:</para>
 
-    <programlisting>&lt;bean id=&quot;xpathMappingDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.xml.XpathMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;xPathMappings&quot;&gt;
-    &lt;map&gt;
-      &lt;entry key=&quot;//TestMessage/MessageId&quot; value=&quot;${messageId}&quot;/&gt;
-      &lt;entry key=&quot;//TestMessage/CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
-      &lt;entry key=&quot;//TestMessage/User&quot; value=&quot;Christoph&quot;/&gt;
-      &lt;entry key=&quot;//TestMessage/User/@id&quot; value=&quot;123&quot;/&gt;
-      &lt;entry key=&quot;//TestMessage/TimeStamp&quot; value=&quot;citrus:currentDate()&quot;/&gt;
-    &lt;/map&gt;
-  &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:xpath-data-dictionary id=&quot;xpathMappingDataDictionary&quot;&gt;
+  &lt;citrus:mappings&gt;
+    &lt;citrus:mapping path=&quot;//TestMessage/MessageId&quot; value=&quot;${messageId}&quot;/&gt;
+    &lt;citrus:mapping path=&quot;//TestMessage/CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+    &lt;citrus:mapping path=&quot;//TestMessage/User&quot; value=&quot;Christoph&quot;/&gt;
+    &lt;citrus:mapping path=&quot;//TestMessage/User/@id&quot; value=&quot;123&quot;/&gt;
+    &lt;citrus:mapping path=&quot;//TestMessage/TimeStamp&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+  &lt;/citrus:mappings&gt;
+&lt;/citrus:xpath-data-dictionary&gt;</programlisting>
 
     <para>As expected XPath mapping expressions are way more powerful and can also handle very complex scenarios with XML
     namespaces, attributes and node lists. Just like the node mapping dictionary the XPath mapping dictionary does also
@@ -108,17 +100,14 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
 
     <para>Let us see a simple dictionary for JSON data:</para>
 
-    <programlisting>&lt;bean id=&quot;jsonMappingDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;mappings&quot;&gt;
-    &lt;map&gt;
-      &lt;entry key=&quot;TestMessage.MessageId&quot; value=&quot;${messageId}&quot;/&gt;
-      &lt;entry key=&quot;TestMessage.CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
-      &lt;entry key=&quot;TestMessage.User&quot; value=&quot;Christoph&quot;/&gt;
-      &lt;entry key=&quot;TestMessage.TimeStamp&quot; value=&quot;citrus:currentDate()&quot;/&gt;
-    &lt;/map&gt;
-  &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:json-data-dictionary id=&quot;jsonMappingDataDictionary&quot;&gt;
+  &lt;citrus:mappings&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.MessageId&quot; value=&quot;${messageId}&quot;/&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.User&quot; value=&quot;Christoph&quot;/&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.TimeStamp&quot; value=&quot;citrus:currentDate()&quot;/&gt;
+  &lt;/citrus:mappings&gt;
+&lt;/citrus:json-data-dictionary&gt;</programlisting>
 
     <para>The message path expressions do look very similar to those used in XML data dictionaries. Here the path expression keys do
     apply to the JSON object graph. See the following sample JSON data which perfectly applies to the dictionary expressions above.</para>
@@ -136,8 +125,8 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     <para>Of course the data dictionary does also support test variables, functions. Also very interesting is the usage of JSON arrays.
     A JSON array element is referenced in a data dictionary like this:</para>
 
-    <programlisting>&lt;entry key=&quot;TestMessage.Users[0]&quot; value=&quot;Christoph&quot;/&gt;
-  &lt;entry key=&quot;TestMessage.Users[1]&quot; value=&quot;Julia&quot;/&gt;</programlisting>
+    <programlisting>&lt;citrus:mapping path=&quot;TestMessage.Users[0]&quot; value=&quot;Christoph&quot;/&gt;
+  &lt;citrus:mapping path=&quot;TestMessage.Users[1]&quot; value=&quot;Julia&quot;/&gt;</programlisting>
 
     <para>The <emphasis>Users</emphasis> element is a JSON array, so we can access the elements with index. Nesting JSON objects and arrays
     is also supported so you can also handle more complex JSON data.</para>
@@ -156,12 +145,9 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     automatically but the user has to explicitly set the data dictionary in sending or receiving test action. This way you can activate
     the dictionary to a very special set of test actions.</para>
 
-    <programlisting>&lt;bean id=&quot;specialDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;globalScope&quot; value=&quot;false&quot;/&gt;
-  &lt;property name=&quot;mappingFile&quot;
-      value=&quot;classpath:com/consol/citrus/sample.dictionary&quot;/&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:xml-data-dictionary id=&quot;specialDataDictionary&quot; global-scope=&quot;false&quot;&gt;
+  &lt;citrus:mapping-file path=&quot;classpath:com/consol/citrus/sample.dictionary&quot;/&gt;
+&lt;/citrus:xml-data-dictionary&gt;</programlisting>
 
     <para>We set the global scope property to <emphasis>false</emphasis> so the dictionary is handled in explicit scope. This means that
     you have to set the data dictionary explicitly in your test actions:</para>
@@ -189,15 +175,11 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     <para>You can set your own path mapping strategy in order to change this behavior. For instance another mapping strategy would be <emphasis>STARS_WITH</emphasis>.
     All elements are translated that start with a certain path expression. Let us clarify this with an example:</para>
 
-    <programlisting>&lt;bean id=&quot;nodeMappingDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;pathMappingStrategy&quot; value=&quot;STARTS_WITH&quot;/&gt;
-  &lt;property name=&quot;mappings&quot;&gt;
-    &lt;map&gt;
-      &lt;entry key=&quot;TestMessage.Property&quot; value=&quot;citrus:randomString()&quot;/&gt;
-    &lt;/map&gt;
-  &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:xml-data-dictionary id=&quot;nodeMappingDataDictionary&quot; mapping-strategy=&quot;STARTS_WITH&quot;&gt;
+  &lt;citrus:mappings&gt;
+    &lt;citrus:mapping path=&quot;TestMessage.Property&quot; value=&quot;citrus:randomString()&quot;/&gt;
+  &lt;/citrus:mappings&gt;
+&lt;/citrus:xml-data-dictionary&gt;</programlisting>
 
     <para>Now with the path mapping strategy set to <emphasis>STARS_WITH</emphasis> all message element path expressions starting with <emphasis>TestMessage.Property</emphasis> will
     find translation in this dictionary. Following sample message payload would be translated accordingly:</para>
@@ -214,15 +196,11 @@ TestMessage.TimeStamp=citrus:currentDate()</programlisting>
     <para>The next mapping strategy would be <emphasis>ENDS_WITH</emphasis>. No surprises here - this mapping strategy looks for message
     elements that end with a certain path expression. Again a simple example will clarify this for you.</para>
 
-    <programlisting>&lt;bean id=&quot;nodeMappingDataDictionary&quot;
-  class=&quot;com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary&quot;&gt;
-  &lt;property name=&quot;pathMappingStrategy&quot; value=&quot;ENDS_WITH&quot;/&gt;
-  &lt;property name=&quot;mappings&quot;&gt;
-    &lt;map&gt;
-      &lt;entry key=&quot;Id&quot; value=&quot;citrus:randomNumber()&quot;/&gt;
-    &lt;/map&gt;
-  &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
+    <programlisting>&lt;citrus:xml-data-dictionary id=&quot;nodeMappingDataDictionary&quot; mapping-strategy=&quot;ENDS_WITH&quot;&gt;
+  &lt;citrus:mappings&gt;
+    &lt;citrus:mapping path=&quot;Id&quot; value=&quot;citrus:randomNumber()&quot;/&gt;
+  &lt;/citrus:mappings&gt;
+&lt;/citrus:xml-data-dictionary&gt;</programlisting>
 
     <para>Again let us see some sample message payload for this dictionary usage:</para>
 

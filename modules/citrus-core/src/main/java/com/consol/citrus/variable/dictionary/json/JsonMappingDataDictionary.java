@@ -17,16 +17,11 @@
 package com.consol.citrus.variable.dictionary.json;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Simple json data dictionary implementation holds a set of mappings where keys are json path expressions to match
@@ -37,14 +32,8 @@ import java.util.*;
  */
 public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implements InitializingBean {
 
-    /** Known mappings to this dictionary */
-    private Map<String, String> mappings = new HashMap<String, String>();
-
-    /** mapping file resource */
-    private Resource mappingFile;
-
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(NodeMappingDataDictionary.class);
+    private static Logger log = LoggerFactory.getLogger(JsonMappingDataDictionary.class);
 
     @Override
     public String translate(String jsonPath, String value, TestContext context) {
@@ -78,53 +67,4 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary implem
         return value;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (mappingFile != null) {
-            log.info("Reading json mapping file " + mappingFile.getFilename());
-            Properties props;
-            try {
-                props = PropertiesLoaderUtils.loadProperties(mappingFile);
-            } catch (IOException e) {
-                throw new CitrusRuntimeException(e);
-            }
-
-            for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-                String key = iter.next().getKey().toString();
-
-                log.info("Loading json mapping: " + key + "=" + props.getProperty(key));
-
-                if (log.isDebugEnabled() && mappings.containsKey(key)) {
-                    log.debug("Overwriting json mapping " + key + " old value:" + mappings.get(key)
-                            + " new value:" + props.getProperty(key));
-                }
-
-                mappings.put(key, props.getProperty(key));
-            }
-        }
-    }
-
-    /**
-     * Sets the mappings.
-     * @param mappings
-     */
-    public void setMappings(Map<String, String> mappings) {
-        this.mappings = mappings;
-    }
-
-    /**
-     * Gets the mapping file resource.
-     * @return
-     */
-    public Resource getMappingFile() {
-        return mappingFile;
-    }
-
-    /**
-     * Sets the mapping file resource.
-     * @param mappingFile
-     */
-    public void setMappingFile(Resource mappingFile) {
-        this.mappingFile = mappingFile;
-    }
 }

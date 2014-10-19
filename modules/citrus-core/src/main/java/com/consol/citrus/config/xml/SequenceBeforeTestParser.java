@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.container.AbstractTestBoundaryActionContainer;
 import com.consol.citrus.container.SequenceBeforeTest;
 
 /**
@@ -25,7 +26,7 @@ import com.consol.citrus.container.SequenceBeforeTest;
 public class SequenceBeforeTestParser extends AbstractTestBoundaryActionContainerParser {
 
     @Override
-    protected Class<?> getContainerClass() {
+    protected Class<? extends AbstractTestBoundaryActionContainer> getContainerClass() {
         return SequenceBeforeTest.class;
     }
 

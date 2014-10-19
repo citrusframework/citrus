@@ -54,7 +54,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="messageChannelAdapterType">
+    <xs:complexType name="MessageChannelAdapterType">
         <xs:annotation>
           <xs:documentation>Basic channel endpoint properties.</xs:documentation>
         </xs:annotation>
@@ -75,7 +75,7 @@
       </xs:annotation>
       <xs:complexType>
         <xs:complexContent>
-          <xs:restriction base="messageChannelAdapterType"/>
+          <xs:restriction base="MessageChannelAdapterType"/>
         </xs:complexContent>
       </xs:complexType>
     </xs:element>
@@ -86,7 +86,7 @@
       </xs:annotation>
       <xs:complexType>
         <xs:complexContent>
-          <xs:extension base="messageChannelAdapterType">
+          <xs:extension base="MessageChannelAdapterType">
             <xs:attribute name="polling-interval" type="xs:string"/>
             <xs:attribute name="message-correlator" type="xs:string"/>
           </xs:extension>
@@ -94,7 +94,7 @@
       </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="schemaType">
+    <xs:complexType name="SchemaType">
         <xs:annotation>
           <xs:documentation>Schema resource properties.</xs:documentation>
         </xs:annotation>
@@ -124,7 +124,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="schema" type="schemaType">
+    <xs:element name="schema" type="SchemaType">
       <xs:annotation>
         <xs:documentation>Defines a schema resource used for message syntax validation.</xs:documentation>
       </xs:annotation>
@@ -144,7 +144,7 @@
                                     <xs:attribute name="schema" type="xs:string" use="required" />
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="schema" type="schemaType"/>
+                            <xs:element name="schema" type="SchemaType"/>
                         </xs:choice>
                     </xs:complexType>
                 </xs:element>
@@ -233,6 +233,60 @@
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="prefix" type="xs:string" use="required"/>
       </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DataDictionaryType">
+      <xs:annotation>
+        <xs:documentation>Data dictionary holding key value mappings for dynamic test data in messages.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="mappings" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="mapping" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="path" type="xs:string" use="required"/>
+                  <xs:attribute name="value" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="mapping-file" minOccurs="0">
+          <xs:complexType>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="global-scope" type="xs:boolean" default="true"/>
+      <xs:attribute name="mapping-strategy">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="EXACT"/>
+            <xs:enumeration value="STARTS_WITH"/>
+            <xs:enumeration value="ENDS_WITH"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+
+    <xs:element name="xml-data-dictionary" type="DataDictionaryType">
+      <xs:annotation>
+        <xs:documentation>Data dictionary holding XML dom key value mappings for dynamic XML test data in messages.</xs:documentation>
+      </xs:annotation>
+    </xs:element>
+
+    <xs:element name="xpath-data-dictionary" type="DataDictionaryType">
+      <xs:annotation>
+        <xs:documentation>Data dictionary holding XML Xpath key value mappings for dynamic XML test data in messages.</xs:documentation>
+      </xs:annotation>
+    </xs:element>
+
+    <xs:element name="json-data-dictionary" type="DataDictionaryType">
+      <xs:annotation>
+        <xs:documentation>Data dictionary holding json key value mappings for dynamic json test data in messages.</xs:documentation>
+      </xs:annotation>
     </xs:element>
 
     <xs:element name="before-suite">
@@ -362,7 +416,7 @@
       </xs:annotation>
       <xs:complexType>
         <xs:complexContent>
-          <xs:extension base="messageChannelAdapterType">
+          <xs:extension base="MessageChannelAdapterType">
             <xs:attribute name="polling-interval" type="xs:string"/>
             <xs:attribute name="message-correlator" type="xs:string"/>
           </xs:extension>

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.container.AbstractSuiteActionContainer;
 import com.consol.citrus.container.SequenceAfterSuite;
 
 /**
@@ -25,7 +26,7 @@ import com.consol.citrus.container.SequenceAfterSuite;
 public class SequenceAfterSuiteParser extends AbstractSuiteActionContainerParser {
 
     @Override
-    protected Class<?> getContainerClass() {
+    protected Class<? extends AbstractSuiteActionContainer> getContainerClass() {
         return SequenceAfterSuite.class;
     }
 }
