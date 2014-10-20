@@ -19,7 +19,7 @@
         
         &lt;trace-time id=&quot; time_line_id &quot;/&gt;
         
-        &lt;sleep milliseconds=&quot;2500&quot;/&gt;
+        &lt;sleep milliseconds=&quot;5000&quot;/&gt;
         
         &lt;trace-time/&gt;
         
@@ -43,9 +43,9 @@ public void stopTimeTest() {
     
     <programlisting>Starting TimeWatcher:
 Starting TimeWatcher: time_line_id
-TimeWatcher time_line_id after 3.5 seconds
-TimeWatcher after 8.5 seconds
-TimeWatcher time_line_id after 8.5 seconds</programlisting>
+TimeWatcher time_line_id after 3500 milliseconds
+TimeWatcher after 8500 seconds
+TimeWatcher time_line_id after 8500 milliseconds</programlisting>
     
     <note>In case no time line id is specified the framework will measure the time for a default time line.</note>
     

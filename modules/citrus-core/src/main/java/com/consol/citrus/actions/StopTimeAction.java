@@ -21,8 +21,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,23 +51,16 @@ public class StopTimeAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        DecimalFormat decFormat = new DecimalFormat("0.0");
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols();
-        symbol.setDecimalSeparator('.');
-        decFormat.setDecimalFormatSymbols(symbol);
-
         try {
             if (timeStamps.containsKey(id)) {
                 if (description != null) {
-                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - 
-                            timeStamps.get(id).longValue())/(double)1000) + " seconds (" + description + ")");
+                    log.info("TimeWatcher " + id + " after " + (System.currentTimeMillis() - timeStamps.get(id).longValue()) + " ms (" + description + ")");
                 } else {
-                    log.info("TimeWatcher " + id + " after " + decFormat.format((System.currentTimeMillis() - 
-                            timeStamps.get(id).longValue())/(double)1000) + " seconds");
+                    log.info("TimeWatcher " + id + " after " + (System.currentTimeMillis() - timeStamps.get(id).longValue()) + " ms");
                 }
             } else {
                 log.info("Starting TimeWatcher: " + id);
-                timeStamps.put(id, Long.valueOf(System.currentTimeMillis()));
+                timeStamps.put(id, System.currentTimeMillis());
             }
         } catch (Exception e) {
             throw new CitrusRuntimeException(e);
