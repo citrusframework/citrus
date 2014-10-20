@@ -72,12 +72,15 @@
   </bean>
 
   <util:list id="interceptors">
-    <bean id="interceptor1" class="org.easymock.EasyMock" factory-method="createMock">
-      <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
-    </bean>
-    <bean id="interceptor2" class="org.easymock.EasyMock" factory-method="createMock">
-      <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
-    </bean>
+    <ref bean="interceptor1"/>
+    <ref bean="interceptor2"/>
   </util:list>
+
+  <bean id="interceptor1" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+  </bean>
+  <bean id="interceptor2" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="org.springframework.ws.client.support.interceptor.ClientInterceptor"/>
+  </bean>
 
 </beans>

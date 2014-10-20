@@ -93,29 +93,22 @@
     </constructor-arg>
   </bean>
 
-  <util:list id="clientInterceptors">
-    <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
-  </util:list>
-
   <bean id="soapEndpointUriResolver"
         class="com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
 
   <!-- Soap message endpoints -->
   <citrus-ws:client id="helloSoapClient"
                     request-url="http://localhost:13080/hello"
-                    interceptors="clientInterceptors"
                     endpoint-resolver="soapEndpointUriResolver"
                     timeout="1000"/>
 
   <citrus-ws:client id="helloSoapFaultClient"
                     request-url="http://localhost:13080/hello"
-                    interceptors="clientInterceptors"
                     fault-strategy="propagateError"
                     timeout="1000"/>
 
   <citrus-ws:client id="helloWsAddressingSoapClient"
                     request-url="http://localhost:13080/hello"
-                    interceptors="clientInterceptors"
                     message-converter="wsAddressingMessageConverter"
                     timeout="1000"/>
 
@@ -134,7 +127,6 @@
 
   <citrus-ws:client id="echoSoapClient"
                     request-url="http://localhost:14080/echo"
-                    interceptors="clientInterceptors"
                     timeout="1000"/>
 
   <citrus-ws:server id="echoSoapServer"

@@ -20,6 +20,7 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
@@ -45,6 +46,8 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
+        Assert.assertNotNull(client.getEndpointConfiguration().getInterceptor());
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptor().getClass(), LoggingClientInterceptor.class);
         Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 5000L);
@@ -89,6 +92,8 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertNotNull(client.getEndpointConfiguration().getInterceptors());
         Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().size(), 2L);
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().get(0), beanDefinitionContext.getBean("interceptor1"));
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().get(1), beanDefinitionContext.getBean("interceptor2"));
         Assert.assertEquals(client.getEndpointConfiguration().getPollingInterval(), 250L);
         Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 2L);

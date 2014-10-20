@@ -203,4 +203,11 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         }
     }
 
+    /**
+     * Sets the message listener.
+     * @param messageListener
+     */
+    public void setMessageListener(MessageListeners messageListener) {
+        this.messageListener = messageListener;
+    }
 }

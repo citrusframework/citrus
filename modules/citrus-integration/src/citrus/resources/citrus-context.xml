@@ -85,8 +85,7 @@
                                                  
     <citrus-ws:client id="webServiceClient"
          request-url="http://localhost:8071"
-         message-factory="messageFactory"
-         interceptors="clientInterceptors"/>
+         message-factory="messageFactory"/>
                               
     <citrus-jms:jms-endpoint id="webServiceRequestReceiver"
                              destination-name="${jms.ws.stub.request}"/>
@@ -97,19 +96,16 @@
     
     <citrus-ws:client id="webServiceHelloClient"
          request-url="http://localhost:8071/hello"
-         message-factory="messageFactory"
-         interceptors="clientInterceptors"/>
+         message-factory="messageFactory"/>
                               
     <citrus-ws:client id="webServiceFaultClient"
          request-url="http://localhost:8071/hello"
          message-factory="messageFactory"
-         interceptors="clientInterceptors"
          fault-strategy="propagateError"/>
                               
     <citrus-ws:client id="wsAddressingHelloClient"
          request-url="http://localhost:8071/hello"
          message-factory="messageFactory"
-         interceptors="clientInterceptors"
          message-converter="wsAddressingMessageConverter"/>
 
     <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
@@ -137,10 +133,6 @@
       </constructor-arg>
     </bean>
                                   
-    <util:list id="clientInterceptors">
-        <bean class="com.consol.citrus.ws.interceptor.LoggingClientInterceptor"/>
-    </util:list>
-    
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer"
          port="8072"
@@ -160,13 +152,8 @@
          request-method="POST"
          content-type="text/xml"
          request-factory="basicAuthClientRequestFactory"
-         interceptors="httpClientInterceptors"
          actor="helloClient"/>
 
-    <util:list id="httpClientInterceptors">
-        <bean class="com.consol.citrus.http.interceptor.LoggingClientInterceptor"/>
-    </util:list>
-  
     <bean id="basicAuthClientRequestFactory" class="com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory">
       <property name="params">
         <map>
@@ -194,8 +181,7 @@
     <citrus-http:client id="httpStandaloneClient"
          request-url="http://localhost:8073/test"
          request-method="POST"
-         content-type="text/xml"
-         interceptors="httpClientInterceptors"/>
+         content-type="text/xml"/>
   
     <citrus-jms:jms-endpoint id="httpServerRequestEndpoint" destination-name="${jms.queue.http.request.forward}"/>
 

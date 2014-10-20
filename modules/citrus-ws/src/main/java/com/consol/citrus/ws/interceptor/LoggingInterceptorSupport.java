@@ -154,4 +154,12 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         return transformer;
     }
+
+    /**
+     * Sets the message listener.
+     * @param messageListener
+     */
+    public void setMessageListener(MessageListeners messageListener) {
+        this.messageListener = messageListener;
+    }
 }

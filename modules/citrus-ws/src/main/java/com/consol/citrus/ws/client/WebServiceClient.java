@@ -21,12 +21,15 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.*;
+import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
@@ -44,7 +47,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer {
+public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingBean {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WebServiceClient.class);
 
@@ -214,6 +217,16 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     @Override
     public SelectiveConsumer createConsumer() {
         return this;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (CollectionUtils.isEmpty(getEndpointConfiguration().getInterceptors()) && getEndpointConfiguration().getInterceptor() == null) {
+            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
+            loggingClientInterceptor.setMessageListener(getMessageListener());
+
+            getEndpointConfiguration().setInterceptor(loggingClientInterceptor);
+        }
     }
 
     /**

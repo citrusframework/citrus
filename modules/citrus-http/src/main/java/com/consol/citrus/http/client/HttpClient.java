@@ -18,20 +18,23 @@ package com.consol.citrus.http.client;
 
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -40,7 +43,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer {
+public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingBean {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
@@ -144,6 +147,16 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         }
 
         return message;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (CollectionUtils.isEmpty(getEndpointConfiguration().getClientInterceptors())) {
+            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
+            loggingClientInterceptor.setMessageListener(getMessageListener());
+
+            getEndpointConfiguration().setClientInterceptors(Arrays.<ClientHttpRequestInterceptor>asList(loggingClientInterceptor));
+        }
     }
 
     /**
