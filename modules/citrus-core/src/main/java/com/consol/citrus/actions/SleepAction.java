@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.util.StringUtils;
 
 /**
  * Stop the test execution for a given amount of time.
@@ -30,7 +31,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class SleepAction extends AbstractTestAction {
     /** Delay time in seconds */
-    private String delay = "5";
+    private String seconds;
+
+    /** Delay time in milliseconds */
+    private String milliseconds = "5000";
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SleepAction.class);
@@ -44,35 +48,55 @@ public class SleepAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        String value = null;
+        String value;
 
-        //check if given delay value is a variable or function
-        value = context.resolveDynamicValue(delay);
+        if (StringUtils.hasText(seconds)) {
+            value = String.valueOf((long) (Double.valueOf(context.resolveDynamicValue(seconds)) * 1000L));
+        } else {
+            //check if given delay value is a variable or function
+            value = context.resolveDynamicValue(milliseconds);
+        }
 
         try {
-            log.info("Sleeping " + value + " seconds");
+            log.info(String.format("Sleeping %s ms", value));
 
-            Thread.sleep((long) (new Double(value).doubleValue() * 1000));
+            Thread.sleep(Long.valueOf(value));
 
-            log.info("Returning after " + value + " seconds");
+            log.info(String.format("Continue after %s ms", value));
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }
     }
 
     /**
-     * Setter for delay
-     * @param delay
+     * Setter for milliseconds
+     * @param milliseconds
      */
-    public void setDelay(String delay) {
-        this.delay = delay;
+    public void setMilliseconds(String milliseconds) {
+        this.milliseconds = milliseconds;
     }
 
     /**
-     * Gets the delay.
-     * @return the delay
+     * Gets the milliseconds.
+     * @return the milliseconds
      */
-    public String getDelay() {
-        return delay;
+    public String getMilliseconds() {
+        return milliseconds;
+    }
+
+    /**
+     * Setter for seconds
+     * @param seconds
+     */
+    public void setSeconds(String seconds) {
+        this.seconds = seconds;
+    }
+
+    /**
+     * Gets the seconds.
+     * @return the seconds
+     */
+    public String getSeconds() {
+        return seconds;
     }
 }

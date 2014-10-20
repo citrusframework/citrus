@@ -331,16 +331,16 @@ public interface TestBuilder extends ApplicationContextAware {
     /**
      * Add sleep action with time in milliseconds.
      *
-     * @param time
+     * @param milliseconds
      */
-    SleepAction sleep(long time);
+    SleepAction sleep(long milliseconds);
 
     /**
      * Add sleep action with time in seconds.
      *
-     * @param time
+     * @param seconds
      */
-    SleepAction sleep(double time);
+    SleepAction sleep(double seconds);
 
     /**
      * Creates a new start server action definition

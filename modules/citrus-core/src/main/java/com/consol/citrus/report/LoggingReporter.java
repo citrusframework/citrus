@@ -16,8 +16,7 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.TestResult.RESULT;
@@ -153,7 +152,8 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     public void onStart() {
         newLine();
         separator();
-        log.info("C I T R U S   T E S T S");
+        newLine();
+        log.info("C I T R U S  T E S T S  " + Citrus.getVersion());
         newLine();
 
         separator();

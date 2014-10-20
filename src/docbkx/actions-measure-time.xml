@@ -9,17 +9,17 @@
     <para>Read the next example and you will understand the mix of different time lines:</para>
     
     <para><emphasis>XML DSL</emphasis></para>
-    <programlisting>&lt;testcase name=&quot;timeWatcherTest_new&quot;&gt;
+    <programlisting>&lt;testcase name=&quot;StopTimeTest&quot;&gt;
     &lt;actions&gt;
         &lt;trace-time/&gt;
         
         &lt;trace-time id=&quot;time_line_id&quot;/&gt;
         
-        &lt;sleep time=&quot;3.5&quot;/&gt;
+        &lt;sleep seconds=&quot;3.5&quot;/&gt;
         
         &lt;trace-time id=&quot; time_line_id &quot;/&gt;
         
-        &lt;sleep time=&quot;5.0&quot;/&gt;
+        &lt;sleep milliseconds=&quot;2500&quot;/&gt;
         
         &lt;trace-time/&gt;
         
@@ -32,9 +32,9 @@
 public void stopTimeTest() {
     stopTime();
     stopTime("time_line_id");
-    sleep(3500L); // do something
+    sleep(3.5); // do something
     stopTime("time_line_id");
-    sleep(5000L); // do something
+    sleep(5000); // do something
     stopTime();
     stopTime("time_line_id");
 }</programlisting>

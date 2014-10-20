@@ -14,7 +14,7 @@
     <actions>
 			<sequential>
 				<trace-time/>
-				<sleep time="1.0"/>
+				<sleep milliseconds="1000"/>
 				<echo>
 					<message>Hello Citrus</message>
 				</echo>

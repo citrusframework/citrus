@@ -29,7 +29,7 @@
                     </repeat-onerror-until-true>
 				</sequential>
 				<sequential>
-                    <sleep time="3"/>
+                    <sleep milliseconds="3000"/>
                     <sql datasource="testDataSource">
                         <statement>DELETE FROM CUSTOMERS</statement>
                     </sql>

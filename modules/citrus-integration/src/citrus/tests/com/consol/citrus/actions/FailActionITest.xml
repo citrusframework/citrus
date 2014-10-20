@@ -18,7 +18,7 @@
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
 	            <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-	            	<sleep time="0.5"/>
+	            	<sleep milliseconds="500"/>
 	            </assert>
             </assert>
         </actions>

@@ -89,7 +89,7 @@ public class ParallelTest extends AbstractTestNGUnitTest {
         actionList.add(new EchoAction());
         
         SleepAction sleep = new SleepAction();
-        sleep.setDelay("0.3");
+        sleep.setMilliseconds("300");
         actionList.add(sleep);
         
         parallelAction.setActions(actionList);

@@ -29,7 +29,7 @@ public class SleepActionTest extends AbstractTestNGUnitTest {
 	public void testSleep() {
 		SleepAction sleep = new SleepAction();
 		
-		sleep.setDelay("0.1");
+		sleep.setMilliseconds("100");
 		sleep.execute(context);
 	}
 	
@@ -37,9 +37,27 @@ public class SleepActionTest extends AbstractTestNGUnitTest {
     public void testSleepVariablesSupport() {
         SleepAction sleep = new SleepAction();
         
-        context.setVariable("time", "0.1");
-        sleep.setDelay("${time}");
+        context.setVariable("time", "100");
+        sleep.setMilliseconds("${time}");
         
+        sleep.execute(context);
+    }
+
+    @Test
+    public void testSleepLegacy() {
+        SleepAction sleep = new SleepAction();
+
+        sleep.setSeconds("0.1");
+        sleep.execute(context);
+    }
+
+    @Test
+    public void testSleepLegacyVariablesSupport() {
+        SleepAction sleep = new SleepAction();
+
+        context.setVariable("time", "0.1");
+        sleep.setSeconds("${time}");
+
         sleep.execute(context);
     }
 }

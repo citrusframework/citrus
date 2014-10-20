@@ -20,7 +20,7 @@
         <actions>
             <parallel>
                 <sequential>
-                    <sleep time="1"/>
+                    <sleep seconds="1"/>
                     <send with="syncJmsTopicEndpoint">
                       <description>
                         Send synchronous hello request to jms topic

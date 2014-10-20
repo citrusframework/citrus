@@ -19,8 +19,9 @@
 			In this case the default delay of 5 secinds will be used.
 		</description>
         <actions>
-            <sleep time="0.5"/>
-            <sleep/>
+            <sleep time="0.3"/>
+            <sleep seconds="1.0"/>
+            <sleep milliseconds="500"/>
         </actions>
     </testcase>
 </spring:beans>

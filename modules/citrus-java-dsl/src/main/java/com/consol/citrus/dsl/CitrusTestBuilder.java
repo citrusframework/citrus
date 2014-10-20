@@ -592,11 +592,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     /**
      * Add sleep action with time in milliseconds.
      *
-     * @param time
+     * @param milliseconds
      */
-    public SleepAction sleep(long time) {
+    public SleepAction sleep(long milliseconds) {
         SleepAction action = new SleepAction();
-        action.setDelay(String.valueOf((double) time / 1000));
+        action.setMilliseconds(String.valueOf(milliseconds));
 
         testCase.addTestAction(action);
 
@@ -606,11 +606,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     /**
      * Add sleep action with time in seconds.
      *
-     * @param time
+     * @param seconds
      */
-    public SleepAction sleep(double time) {
+    public SleepAction sleep(double seconds) {
         SleepAction action = new SleepAction();
-        action.setDelay(String.valueOf(time));
+        action.setSeconds(String.valueOf(seconds));
 
         testCase.addTestAction(action);
 

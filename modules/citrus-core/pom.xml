@@ -36,6 +36,31 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>copy-version-property</id>
+              <phase>generate-resources</phase>
+              <goals>
+                <goal>add-resource</goal>
+              </goals>
+              <configuration>
+                <resources>
+                  <resource>
+                    <directory>src/main/resources/META-INF</directory>
+                    <targetPath>${project.build.outputDirectory}/META-INF/</targetPath>
+                    <includes>
+                      <include>citrus.version</include>
+                    </includes>
+                    <filtering>true</filtering>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
     </plugins>
 
   </build>

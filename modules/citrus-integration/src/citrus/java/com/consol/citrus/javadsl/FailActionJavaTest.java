@@ -34,7 +34,7 @@ public class FailActionJavaTest extends TestNGCitrusTestBuilder {
             .message("Failing ITest");
         
         assertException(
-                assertException(sleep(0.5))
+                assertException(sleep(500))
                     .exception(CitrusRuntimeException.class)
         ).exception(CitrusRuntimeException.class).message("@startsWith('Missing asserted exception')@");
     }

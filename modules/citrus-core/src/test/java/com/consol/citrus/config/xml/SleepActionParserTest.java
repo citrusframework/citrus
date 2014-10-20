@@ -29,13 +29,23 @@ public class SleepActionParserTest extends AbstractActionParserTest<SleepAction>
 
     @Test
     public void testSleepActionParser() {
-        assertActionCount(2);
+        assertActionCount(4);
         assertActionClassAndName(SleepAction.class, "sleep");
-        
+
         SleepAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getDelay(), "5");
-        
+        Assert.assertNull(action.getSeconds());
+        Assert.assertEquals(action.getMilliseconds(), "5000");
+
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getDelay(), "1.5");
+        Assert.assertEquals(action.getSeconds(), "1.5");
+        Assert.assertEquals(action.getMilliseconds(), "5000");
+
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getSeconds(), "1.5");
+        Assert.assertEquals(action.getMilliseconds(), "5000");
+
+        action = getNextTestActionFromTest();
+        Assert.assertNull(action.getSeconds());
+        Assert.assertEquals(action.getMilliseconds(), "1500");
     }
 }

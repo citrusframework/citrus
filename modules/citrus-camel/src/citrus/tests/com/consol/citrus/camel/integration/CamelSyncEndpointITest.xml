@@ -33,7 +33,7 @@
         </message>
       </receive>
 
-      <sleep time="1"/>
+      <sleep milliseconds="1000"/>
 
       <send endpoint="camelHelloEndpoint">
         <message type="plaintext">

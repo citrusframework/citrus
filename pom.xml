@@ -779,6 +779,11 @@
           <artifactId>jaxb2-maven-plugin</artifactId>
           <version>1.5</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.9.1</version>
+        </plugin>
         
         <plugin>
           <groupId>com.agilejava.docbkx</groupId>

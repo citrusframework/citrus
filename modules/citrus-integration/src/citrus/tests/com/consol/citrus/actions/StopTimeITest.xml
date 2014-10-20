@@ -21,9 +21,9 @@
         <actions>
             <trace-time/>
             <trace-time id="FirstTimeLineID"/>
-            <sleep time="1.0"/>
+            <sleep milliseconds="1000"/>
             <trace-time id="FirstTimeLineID"/>
-            <sleep time="2.0"/>
+            <sleep milliseconds="2000"/>
             <trace-time/>
             <trace-time id="FirstTimeLineID"/>
         </actions>

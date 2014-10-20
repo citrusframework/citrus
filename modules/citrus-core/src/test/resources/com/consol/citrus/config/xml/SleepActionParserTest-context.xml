@@ -9,6 +9,8 @@
             <sleep/>
             
             <sleep time="1.5"/>
+            <sleep seconds="1.5"/>
+            <sleep milliseconds="1500"/>
         </actions>
     </testcase>
     

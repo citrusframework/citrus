@@ -16,17 +16,17 @@
 
 package com.consol.citrus;
 
-import java.io.*;
-import java.util.*;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.TestEngineFailedException;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.TestNG;
 import org.testng.xml.*;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestEngineFailedException;
+import java.io.*;
+import java.util.*;
 
 /**
  * Citrus command line application.
@@ -35,19 +35,34 @@ import com.consol.citrus.exceptions.TestEngineFailedException;
  * @since 2008
  */
 public final class Citrus {
-    /**
-     * Logger
-     */
+
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(Citrus.class);
     
     /** XML file extension */
     private static final String XML_FILE_EXTENSION = ".xml";
+
+    /** Citrus version */
+    private static String version;
 
     /** Command line arguments */
     private CommandLine cmdArgs;
     
     /** TestNG */
     private TestNG testng = new TestNG(true);
+
+    /** Load Citrus version */
+    static {
+        Properties versionProperties = new Properties();
+
+        try (final InputStream in = new ClassPathResource("META-INF/citrus.version").getInputStream()) {
+            versionProperties.load(in);
+        } catch (IOException e) {
+            version = "";
+        }
+
+        version = versionProperties.get("citrus.version").toString();
+    }
     
     /**
      * Default constructor.
@@ -85,7 +100,7 @@ public final class Citrus {
      * Runs all tests using TestNG.
      */
     public void run() {
-        log.info("CITRUS TESTFRAMEWORK ");
+        log.info("CITRUS " + getVersion());
         log.info("");
         
         String testDirectory = cmdArgs.getOptionValue("testdir", CitrusConstants.DEFAULT_TEST_DIRECTORY);
@@ -239,6 +254,14 @@ public final class Citrus {
             /* Only allowing XML files as spring configuration files */
             return (name.endsWith(XML_FILE_EXTENSION) || tmp.isDirectory()) && !name.startsWith("CVS") && !name.startsWith(".svn");
         }
+    }
+
+    /**
+     * Gets the Citrus version from classpath resource properties.
+     * @return
+     */
+    public static String getVersion() {
+        return version;
     }
 
     /**

@@ -32,7 +32,7 @@ public class SequentialJavaITest extends TestNGCitrusTestBuilder {
     public void SequentialJavaITest() {
         sequential(
             stopTime(),
-            sleep(1.0),
+            sleep(1000),
             echo("Hello Citrus"),
             stopTime()
         );
@@ -45,7 +45,7 @@ public class SequentialJavaITest extends TestNGCitrusTestBuilder {
                     context.setVariable("anonymous", "anonymous");
                 }
             },
-            sleep(1.0),
+            sleep(1000),
             new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {

@@ -31,7 +31,7 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                sequential(echo("${var}"), sleep(5.0));
+                sequential(echo("${var}"), sleep(5000L));
             }
         };
         
@@ -59,7 +59,7 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
                                 context.setVariable("anonymous", "anonymous");
                             }
                         },
-                        sleep(5.0),
+                        sleep(5000L),
                         new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {

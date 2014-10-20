@@ -29,7 +29,7 @@ public class RepeatUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                repeat(echo("${var}"), sleep(3.0), echo("${var}"))
+                repeat(echo("${var}"), sleep(3000), echo("${var}"))
                     .index("i")
                     .startsWith(2)
                     .until("i lt 5");

@@ -29,7 +29,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override
             public void configure() {
-                repeatOnError(echo("${var}"), sleep(3.0), echo("${var}"))
+                repeatOnError(echo("${var}"), sleep(3000), echo("${var}"))
                     .autoSleep(2)
                     .until("i gt 5");
 

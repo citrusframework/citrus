@@ -28,7 +28,7 @@ public class SleepActionJavaITest extends TestNGCitrusTestBuilder {
     
     @CitrusTest
     public void SleepActionJavaITest() {
-        sleep(0.5);
+        sleep(500);
         sleep();
     }
 }

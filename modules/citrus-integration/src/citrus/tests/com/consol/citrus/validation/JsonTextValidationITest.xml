@@ -110,7 +110,7 @@
                 </message>
             </send>
             
-            <sleep time="2"/>
+            <sleep seconds="2"/>
             
             <receive with="httpClient">
                 <message type="json">

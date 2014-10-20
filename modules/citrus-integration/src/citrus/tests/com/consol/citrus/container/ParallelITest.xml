@@ -13,9 +13,9 @@
 
     <actions>
       <parallel>
-        <sleep  time="1.5"/>
+        <sleep seconds="1.5"/>
         <sequential>
-          <sleep time="1.0"/>
+          <sleep milliseconds="1000"/>
           <echo>
             <message>1</message>
           </echo>
@@ -35,9 +35,9 @@
 
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
         <parallel>
-          <sleep  time="1.5"/>
+          <sleep seconds="1.5"/>
           <sequential>
-            <sleep time="1.0"/>
+            <sleep milliseconds="1000"/>
             <fail message="This went wrong too"/>
             <echo>
               <message>1</message>

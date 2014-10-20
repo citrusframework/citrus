@@ -392,18 +392,18 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
 
     /**
      * Add sleep action with time in milliseconds.
-     * @param time
+     * @param milliseconds
      */
-    public SleepAction sleep(long time) {
-        return testBuilder.sleep(time);
+    public SleepAction sleep(long milliseconds) {
+        return testBuilder.sleep(milliseconds);
     }
 
     /**
      * Add sleep action with time in seconds.
-     * @param time
+     * @param seconds
      */
-    public SleepAction sleep(double time) {
-        return testBuilder.sleep(time);
+    public SleepAction sleep(double seconds) {
+        return testBuilder.sleep(seconds);
     }
 
     /**

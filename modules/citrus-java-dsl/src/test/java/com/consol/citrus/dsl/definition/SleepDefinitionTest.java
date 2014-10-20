@@ -45,7 +45,12 @@ public class SleepDefinitionTest extends AbstractTestNGUnitTest {
         
         SleepAction action = (SleepAction)builder.testCase().getActions().get(0);
         Assert.assertEquals(action.getName(), "sleep");
-        Assert.assertEquals(action.getDelay(), "0.5");
-        Assert.assertEquals(action.getDelay(), "0.5");
+        Assert.assertEquals(action.getSeconds(), "0.5");
+        Assert.assertEquals(action.getMilliseconds(), "5000");
+
+        action = (SleepAction)builder.testCase().getActions().get(1);
+        Assert.assertEquals(action.getName(), "sleep");
+        Assert.assertNull(action.getSeconds());
+        Assert.assertEquals(action.getMilliseconds(), "500");
     }
 }

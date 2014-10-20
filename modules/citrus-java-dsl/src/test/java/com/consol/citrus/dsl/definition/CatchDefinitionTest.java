@@ -33,7 +33,7 @@ public class CatchDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 catchException("com.consol.citrus.exceptions.CitrusRuntimeException", echo("${var}"));
                 
-                catchException(CitrusRuntimeException.class, echo("${var}"), sleep(1.0D));
+                catchException(CitrusRuntimeException.class, echo("${var}"), sleep(100L));
             }
         };
         
@@ -54,6 +54,6 @@ public class CatchDefinitionTest extends AbstractTestNGUnitTest {
         assertEquals(container.getActions().size(), 2);
         assertEquals(container.getException(), "com.consol.citrus.exceptions.CitrusRuntimeException");
         assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");
-        assertEquals(((SleepAction)(container.getActions().get(1))).getDelay(), "1.0");
+        assertEquals(((SleepAction)(container.getActions().get(1))).getMilliseconds(), "100");
     }
 }

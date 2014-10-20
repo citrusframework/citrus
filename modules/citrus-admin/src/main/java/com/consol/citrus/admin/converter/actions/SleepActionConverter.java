@@ -31,7 +31,7 @@ public class SleepActionConverter implements ObjectConverter<Sleep, SleepAction>
         Sleep action = new ObjectFactory().createSleep();
 
         action.setDescription(definition.getDescription());
-        action.setTime(definition.getDelay());
+        action.setTime(definition.getSeconds());
 
         return action;
     }

@@ -383,6 +383,8 @@
             <xs:element ref="description" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute name="time" type="xs:string"/>
+        <xs:attribute name="seconds" type="xs:string"/>
+        <xs:attribute name="milliseconds" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="EchoActionType">

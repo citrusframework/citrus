@@ -16,11 +16,11 @@
 
     &lt;actions&gt;
         &lt;conditional expression=&quot;${index} = 5&quot;&gt;
-            &lt;sleep time=&quot;10&quot;/&gt;
+            &lt;sleep seconds=&quot;10&quot;/&gt;
         &lt;/conditional&gt;
 
         &lt;conditional expression=&quot;${shouldSleep}&quot;&gt;
-            &lt;sleep time=&quot;10&quot;/&gt;
+            &lt;sleep seconds=&quot;10&quot;/&gt;
         &lt;/conditional&gt;
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>

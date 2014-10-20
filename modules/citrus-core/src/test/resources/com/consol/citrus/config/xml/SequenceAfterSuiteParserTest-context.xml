@@ -25,7 +25,7 @@
 
   <citrus:after-suite id="afterSuite2" suites="suiteA,suiteB" groups="unit,e2e">
     <citrus:actions>
-      <action:sleep time="1"/>
+      <action:sleep milliseconds="1000"/>
     </citrus:actions>
   </citrus:after-suite>
 

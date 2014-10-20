@@ -30,7 +30,7 @@ public class ParallelDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 parallel(echo("${var}"), 
-                        sleep(2.0), 
+                        sleep(2000),
                         echo("ASDF"));
             }
         };

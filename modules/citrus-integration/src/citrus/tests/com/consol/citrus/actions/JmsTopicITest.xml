@@ -61,7 +61,7 @@
               </receive>
               
               <sequential>
-                  <sleep time="1"/>
+                  <sleep milliseconds="1000"/>
                   
                   <send with="helloTopicRequestSender">
                     <description>
