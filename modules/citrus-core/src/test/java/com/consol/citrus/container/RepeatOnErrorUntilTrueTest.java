@@ -74,7 +74,7 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         
         repeat.setIndexName("i");
         repeat.setCondition("i = 5");
-        repeat.setAutoSleep(0);
+        repeat.setAutoSleep(0L);
         
         repeat.execute(context);
     }

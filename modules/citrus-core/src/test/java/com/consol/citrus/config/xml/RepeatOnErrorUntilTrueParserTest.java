@@ -36,28 +36,28 @@ public class RepeatOnErrorUntilTrueParserTest extends AbstractActionParserTest<R
         Assert.assertEquals(action.getCondition(), "i gt 3");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 1.0);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
         Assert.assertEquals(action.getActionCount(), 1);
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "index gt= 2");
         Assert.assertEquals(action.getIndexName(), "index");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 1.0);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(1000L));
         Assert.assertEquals(action.getActionCount(), 1);
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i gt= 10");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 5.0);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(500L));
         Assert.assertEquals(action.getActionCount(), 2);
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i gt= 5");
         Assert.assertEquals(action.getIndexName(), "i");
         Assert.assertEquals(action.getIndex(), 1);
-        Assert.assertEquals(action.getAutoSleep(), 0.25);
+        Assert.assertEquals(action.getAutoSleep(), Long.valueOf(250L));
         Assert.assertEquals(action.getActionCount(), 1);
     }
 }

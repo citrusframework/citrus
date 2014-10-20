@@ -14,12 +14,12 @@
                 <echo><message>Hello Citrus!</message></echo>
             </repeat-onerror-until-true>
             
-            <repeat-onerror-until-true condition="i gt= 10" index="i" auto-sleep="5">
+            <repeat-onerror-until-true condition="i gt= 10" index="i" auto-sleep="500">
                 <echo><message>Hello Citrus!</message></echo>
                 <echo><message>Hello You!</message></echo>
             </repeat-onerror-until-true>
 
-            <repeat-onerror-until-true condition="i gt= 5" auto-sleep="0.25">
+            <repeat-onerror-until-true condition="i gt= 5" auto-sleep="250">
                 <echo><message>Hello Citrus!</message></echo>
             </repeat-onerror-until-true>
         </actions>

@@ -30,11 +30,11 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
             @Override
             public void configure() {
                 repeatOnError(echo("${var}"), sleep(3000), echo("${var}"))
-                    .autoSleep(2)
+                    .autoSleep(2000)
                     .until("i gt 5");
 
                 repeatOnError(echo("${var}"))
-                    .autoSleep(0.2)
+                    .autoSleep(200)
                     .index("k")
                     .startsWith(2)
                     .until("k gt= 5");
@@ -49,7 +49,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         
         RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 3);
-        assertEquals(container.getAutoSleep(), 2.0);
+        assertEquals(container.getAutoSleep(), Long.valueOf(2000L));
         assertEquals(container.getCondition(), "i gt 5");
         assertEquals(container.getIndex(), 1);
         assertEquals(container.getIndexName(), "i");
@@ -57,7 +57,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
 
         container = (RepeatOnErrorUntilTrue)builder.testCase().getActions().get(1);
         assertEquals(container.getActions().size(), 1);
-        assertEquals(container.getAutoSleep(), 0.2);
+        assertEquals(container.getAutoSleep(), Long.valueOf(200L));
         assertEquals(container.getCondition(), "k gt= 5");
         assertEquals(container.getIndex(), 2);
         assertEquals(container.getIndexName(), "k");

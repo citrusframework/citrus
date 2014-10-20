@@ -33,13 +33,13 @@ public class RepeatOnErrorJavaITest extends TestNGCitrusTestBuilder {
         
         repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i");
         
-        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i").autoSleep(0.5);
+        repeatOnError(echo("${i}. Versuch: ${message}")).until("i = 5").index("i").autoSleep(500);
         
         assertException( 
             repeatOnError(
                     echo("${i}. Versuch: ${message}"), 
                     fail("")
-            ).until("i = 3").index("i").autoSleep(0.2)
+            ).until("i = 3").index("i").autoSleep(200)
         ).exception(CitrusRuntimeException.class);
         
     }

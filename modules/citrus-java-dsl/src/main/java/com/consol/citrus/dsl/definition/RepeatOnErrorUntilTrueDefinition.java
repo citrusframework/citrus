@@ -63,11 +63,11 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionDefinition<R
 	}
 	
 	/**
-	 * Sets the auto sleep time in between repeats.
+	 * Sets the auto sleep time in between repeats in milliseconds.
 	 * @param autoSleep
 	 * @return
 	 */
-	public RepeatOnErrorUntilTrueDefinition autoSleep(double autoSleep) {
+	public RepeatOnErrorUntilTrueDefinition autoSleep(long autoSleep) {
 		action.setAutoSleep(autoSleep);
 		return this;
 	}

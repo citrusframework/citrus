@@ -32,6 +32,7 @@ public class RepeatOnErrorContainerConverter implements ObjectConverter<RepeatOn
 
         action.setDescription(definition.getDescription());
         action.setCondition(definition.getCondition());
+        action.setAutoSleep(definition.getAutoSleep().toString());
 
         return action;
     }
