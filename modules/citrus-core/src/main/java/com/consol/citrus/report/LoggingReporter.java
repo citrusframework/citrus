@@ -19,6 +19,7 @@ package com.consol.citrus.report;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.report.TestResult.RESULT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,11 +206,10 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
      */
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
         newLine();
-        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
-        log.info("Test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + ">");
+        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
 
         if (testAction instanceof TestActionContainer) {
-            log.info("Action container with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
+            log.info("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
         }
 
         if (log.isDebugEnabled() && StringUtils.hasText(testAction.getDescription())) {
@@ -223,8 +223,8 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
      * @see com.consol.citrus.report.TestActionListener#onTestActionFinish(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
      */
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
-        log.info("Test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + "> done");
-        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " done");
+        newLine();
+        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
     }
 
     /**
@@ -232,22 +232,18 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
      */
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         newLine();
-        log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
-        log.info("Skipping test action <" + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + ">");
+        log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+        log.info("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
     }
 
-    /**
-     * @see MessageListener#onInboundMessage(String)
-     */
-    public void onInboundMessage(String message) {
-        inboundMsgLogger.info(message);
+    @Override
+    public void onInboundMessage(Message message) {
+        inboundMsgLogger.info(message.toString());
     }
 
-    /**
-     * @see MessageListener#onOutboundMessage(String)
-     */
-    public void onOutboundMessage(String message) {
-        outboundMsgLogger.info(message);
+    @Override
+    public void onOutboundMessage(Message message) {
+        outboundMsgLogger.info(message.toString());
     }
 
     /**

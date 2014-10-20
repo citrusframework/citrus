@@ -55,8 +55,8 @@ public class WebSocketProcessListener implements ProcessListener {
             loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.TEST_SUCCESS, output));
         } else if (output.contains("TEST FAILED")) {
             loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.TEST_FAILED, output));
-        } else if (output.contains("TEST STEP") && output.contains("done")) {
-            String[] progress = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("done") - 1)).split("/");
+        } else if (output.contains("TEST STEP") && output.contains("SUCCESS")) {
+            String[] progress = output.substring(output.indexOf("TEST STEP") + 9, (output.indexOf("SUCCESS") - 1)).split("/");
             long progressValue = Math.round((Double.valueOf(progress[0]) / Double.valueOf(progress[1])) * 100);
 
             JSONObject event = SocketEvent.createEvent(processId, SocketEvent.TEST_ACTION_FINISH,

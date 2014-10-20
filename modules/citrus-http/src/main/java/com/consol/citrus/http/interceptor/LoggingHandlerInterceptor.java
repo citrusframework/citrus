@@ -17,6 +17,7 @@
 package com.consol.citrus.http.interceptor;
 
 import com.consol.citrus.http.controller.HttpMessageController;
+import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
@@ -83,7 +84,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     public void handleRequest(String request) {
         if (messageListener != null) {
             log.info("Received Http request");
-            messageListener.onInboundMessage(request);
+            messageListener.onInboundMessage(new RawMessage(request));
         } else {
             log.info("Received Http request:" + NEWLINE + request);
         }
@@ -96,7 +97,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     public void handleResponse(String response) {
         if (messageListener != null) {
             log.info("Sending Http response");
-            messageListener.onOutboundMessage(response);
+            messageListener.onOutboundMessage(new RawMessage(response));
         } else {
             log.info("Sending Http response:" + NEWLINE + response);
         }

@@ -89,7 +89,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      */
     protected void onInboundMessage(Message receivedMessage) {
         if (messageListener != null) {
-            messageListener.onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+            messageListener.onInboundMessage(receivedMessage);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

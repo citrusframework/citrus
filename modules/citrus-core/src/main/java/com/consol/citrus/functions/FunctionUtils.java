@@ -32,9 +32,7 @@ import org.springframework.util.StringUtils;
  */
 public final class FunctionUtils {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(FunctionUtils.class);
 
     /**
@@ -53,7 +51,7 @@ public final class FunctionUtils {
 
     /**
      * Search for functions in string and replace with respective function result.
-     * @param str to parse.
+     * @param stringValue to parse.
      * @param enableQuoting enables quoting of function results.
      * @return parsed string result.
      */
@@ -65,8 +63,6 @@ public final class FunctionUtils {
             // it is not a function, as it is defined as 'prefix:methodName(arguments)'
             return stringValue;
         }
-        
-        log.debug("Resolving functions in expression [ {} ]", stringValue);
         
         String newString = stringValue;
         StringBuffer strBuffer = new StringBuffer();

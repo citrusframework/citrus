@@ -148,7 +148,7 @@ public class VertxSyncEndpointTest {
 
         expect(vertx.eventBus()).andReturn(eventBus).once();
         expect(eventBus.send(eq(eventBusAddress), eq(requestMessage.getPayload()), anyObject(Handler.class))).andReturn(eventBus).once();
-        messageListeners.onOutboundMessage(requestMessage.toString());
+        messageListeners.onOutboundMessage(requestMessage);
         expectLastCall().once();
 
         replay(vertx, eventBus, messageListeners);

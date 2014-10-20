@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.interceptor;
 
+import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
     @Autowired(required = false)
     private MessageListeners messageListener;
     
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, 
         ClientHttpRequestExecution execution) throws IOException {
         handleRequest(getRequestContent(request, new String(body)));
@@ -68,7 +67,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
     public void handleRequest(String request) {
         if (messageListener != null) {
             log.info("Sending Http request message");
-            messageListener.onOutboundMessage(request);
+            messageListener.onOutboundMessage(new RawMessage(request));
         } else {
             log.info("Sending Http request message:" + NEWLINE + request);
         }
@@ -81,7 +80,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
     public void handleResponse(String response) {
         if (messageListener != null) {
             log.info("Received Http response message");
-            messageListener.onInboundMessage(response);
+            messageListener.onInboundMessage(new RawMessage(response));
         } else {
             log.info("Received Http response message:" + NEWLINE + response);
         }
@@ -119,7 +118,7 @@ public class LoggingClientInterceptor implements ClientHttpRequestInterceptor {
         if (response != null) {
             StringBuilder builder = new StringBuilder();
             
-            builder.append("HTTP/1.1 ");
+            builder.append("HTTP/1.1 "); // TODO get Http version from message
             builder.append(response.getStatusCode());
             builder.append(" ");
             builder.append(response.getStatusText());

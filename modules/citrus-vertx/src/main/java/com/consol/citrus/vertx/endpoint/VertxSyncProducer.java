@@ -74,7 +74,11 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
                 @Override
                 public void handle(org.vertx.java.core.eventbus.Message event) {
                     log.info("Received synchronous response message on event bus reply address");
-                    onReplyMessage(message, endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration));
+
+                    Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration);
+
+                    onInboundMessage(responseMessage);
+                    onReplyMessage(message, responseMessage);
                 }
             });
     }
@@ -147,5 +151,17 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
      */
     public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
+    }
+
+    /**
+     * Informs message listeners if present.
+     * @param receivedMessage
+     */
+    protected void onInboundMessage(Message receivedMessage) {
+        if (getMessageListener() != null) {
+            getMessageListener().onInboundMessage(receivedMessage);
+        } else {
+            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
+        }
     }
 }

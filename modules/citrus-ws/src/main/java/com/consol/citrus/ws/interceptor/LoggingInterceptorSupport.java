@@ -16,12 +16,9 @@
 
 package com.consol.citrus.ws.interceptor;
 
-import java.io.*;
-
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-
+import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +27,9 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
-import com.consol.citrus.util.XMLUtils;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
 
 /**
  * Abstract logging support class offers basic log methods for SOAP messages.
@@ -134,9 +133,9 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             log.info(logMessage);
 
             if (incoming) {
-                messageListener.onInboundMessage(message);
+                messageListener.onInboundMessage(new RawMessage(message));
             } else {
-                messageListener.onOutboundMessage(message);
+                messageListener.onOutboundMessage(new RawMessage(message));
             }
         } else {
             log.info(logMessage + ":" + System.getProperty("line.separator") + message);

@@ -18,6 +18,7 @@ package com.consol.citrus.mail.client;
 
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
@@ -68,14 +69,14 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
         getEndpointConfiguration().getJavaMailSender().send(mimeMessage.getMimeMessage());
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        String mailMessageContent;
+        Message mailMessage;
         try {
             mimeMessage.getMimeMessage().writeTo(bos);
-            mailMessageContent = bos.toString(); //TODO use message charset encoding
+            mailMessage = new RawMessage(bos.toString()); //TODO use message charset encoding
         } catch (IOException e) {
-            mailMessageContent = message.toString();
+            mailMessage = message;
         } catch (MessagingException e) {
-            mailMessageContent = message.toString();
+            mailMessage = message;
         } finally {
             try {
                 bos.close();
@@ -85,9 +86,9 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
         }
 
         if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(mailMessageContent);
+            getMessageListener().onOutboundMessage(mailMessage);
         } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + mailMessageContent);
+            log.info("Sent message is:" + System.getProperty("line.separator") + mailMessage.toString());
         }
 
         log.info(String.format("Message was successfully sent to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));

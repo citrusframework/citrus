@@ -345,7 +345,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      */
     protected void onInboundMessage(Message receivedMessage) {
         if (getMessageListener() != null) {
-            getMessageListener().onInboundMessage((receivedMessage != null ? receivedMessage.toString() : ""));
+            getMessageListener().onInboundMessage(receivedMessage);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

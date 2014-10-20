@@ -93,7 +93,7 @@ public class VertxProducer implements Producer {
      */
     protected void onOutboundMessage(Message message) {
         if (messageListener != null) {
-            messageListener.onOutboundMessage(message.toString());
+            messageListener.onOutboundMessage(message);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

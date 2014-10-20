@@ -148,13 +148,13 @@ public class CamelEndpointTest {
         expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
         expect(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).andReturn(exchange).once();
 
-        messageListeners.onOutboundMessage(requestMessage.toString());
-        messageListeners.onInboundMessage(anyObject(String.class));
+        messageListeners.onOutboundMessage(requestMessage);
+        messageListeners.onInboundMessage(anyObject(Message.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             @Override
             public Object answer() throws Throwable {
-                String inboundMessage = (String) getCurrentArguments()[0];
-                Assert.assertTrue(inboundMessage.contains("Hello from Camel!"));
+                Message inboundMessage = (Message) getCurrentArguments()[0];
+                Assert.assertTrue(inboundMessage.getPayload(String.class).contains("Hello from Camel!"));
                 return null;
             }
         }).once();

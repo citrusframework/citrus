@@ -52,7 +52,7 @@ public class WebSocketProcessListenerTest {
         WebSocketProcessListener listener = new WebSocketProcessListener();
         listener.setLoggingWebSocket(loggingWebSocket);
 
-        listener.onProcessActivity("test", "INFO: TEST STEP 1/2 done");
+        listener.onProcessActivity("test", "INFO: TEST STEP 1/2 SUCCESS");
 
         verify(loggingWebSocket);
     }
@@ -76,7 +76,7 @@ public class WebSocketProcessListenerTest {
         WebSocketProcessListener listener = new WebSocketProcessListener();
         listener.setLoggingWebSocket(loggingWebSocket);
 
-        listener.onProcessActivity("test", "INFO: TEST STEP 20/229 done");
+        listener.onProcessActivity("test", "INFO: TEST STEP 20/229 SUCCESS");
 
         verify(loggingWebSocket);
     }

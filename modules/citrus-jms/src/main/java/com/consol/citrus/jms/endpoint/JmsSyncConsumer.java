@@ -145,7 +145,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      */
     protected void onOutboundMessage(Message message) {
         if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(message.toString());
+            getMessageListener().onOutboundMessage(message);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

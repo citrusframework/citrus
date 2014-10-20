@@ -16,6 +16,8 @@
 
 package com.consol.citrus.report;
 
+import com.consol.citrus.message.Message;
+
 /**
  * @author Christoph Deppisch
  */
@@ -27,7 +29,7 @@ public interface MessageListener {
      * still part of this message content.
      * @param message
      */
-    void onInboundMessage(String message);
+    void onInboundMessage(Message message);
 
     /**
      * Invoked on outbound message event. Raw message data is passed to this listener
@@ -35,5 +37,5 @@ public interface MessageListener {
      * instance is already part of this message content.
      * @param message
      */
-    void onOutboundMessage(String message);
+    void onOutboundMessage(Message message);
 }

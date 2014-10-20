@@ -18,6 +18,8 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -104,33 +106,21 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
         }
     }
     
-    /**
-     * Adds the inbound message to the current message stack for this test execution.
-     * @param message the message content.
-     */
-    public void onInboundMessage(String message) {
-        synchronized (lockObject) {
-            messages.add("INBOUND_MESSAGE:" + newLine() + newLine() + message);
+    @Override
+    public void onInboundMessage(Message message) {
+        if (message instanceof RawMessage) {
+            synchronized (lockObject) {
+                messages.add("INBOUND_MESSAGE:" + newLine() + newLine() + message);
+            }
         }
     }
 
-    /**
-     * Adds the outbound message to the current message stack for this test execution.
-     * @param message
-     */
-    public void onOutboundMessage(String message) {
-        synchronized (lockObject) {
-            messages.add("OUTBOUND_MESSAGE:" + newLine() + newLine() + message);
-        }
-    }
-
-    /**
-     * Adds a message to the current message stack for this test execution.
-     * @param message the message content.
-     */
-    public void traceMessage(String message) {
-        synchronized (lockObject) {
-            messages.add(message);
+    @Override
+    public void onOutboundMessage(Message message) {
+        if (message instanceof RawMessage) {
+            synchronized (lockObject) {
+                messages.add("OUTBOUND_MESSAGE:" + newLine() + newLine() + message);
+            }
         }
     }
 
