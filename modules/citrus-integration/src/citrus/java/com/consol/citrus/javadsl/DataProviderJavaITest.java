@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.testng.CitrusParameters;
 import org.testng.annotations.Test;
 
 /**
@@ -27,9 +28,13 @@ public class DataProviderJavaITest extends TestNGCitrusTestBuilder {
 
     @Test(dataProvider = "citrusDataProvider")
     @CitrusTest
+    @CitrusParameters( {"message", "delay"} )
     public void DataProviderJavaITest(String message, Long sleep) {
         echo(message);
         sleep(sleep);
+
+        echo("${message}");
+        echo("${delay}");
     }
 
     @Override

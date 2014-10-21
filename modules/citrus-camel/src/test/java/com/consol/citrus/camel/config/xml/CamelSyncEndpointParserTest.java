@@ -18,6 +18,7 @@ package com.consol.citrus.camel.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.camel.endpoint.CamelSyncEndpoint;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,7 +40,7 @@ public class CamelSyncEndpointParserTest extends AbstractBeanDefinitionParserTes
         // 1st message receiver
         CamelSyncEndpoint camelEndpoint = endpoints.get("camelSyncEndpoint1");
         Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getCamelContext(), beanDefinitionContext.getBean("camelContext"));
-        Assert.assertNull(camelEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getEndpointUri(), "direct:news-feed1");
         Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getPollingInterval(), 500L);
         Assert.assertEquals(camelEndpoint.getEndpointConfiguration().getTimeout(), 5000L);

@@ -19,8 +19,7 @@ package com.consol.citrus.ws.client;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.SoapMessage;
@@ -39,8 +38,7 @@ import org.springframework.xml.transform.StringResult;
 
 import javax.xml.transform.*;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Client sends SOAP WebService messages to some server endpoint via Http protocol. Client waits for synchronous
@@ -79,7 +77,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     @Override
-    public void send(final Message message, TestContext context) {
+    public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         SoapMessage soapMessage;
@@ -88,6 +86,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         } else {
             soapMessage = new SoapMessage(message);
         }
+
+        String correlationKey = createCorrelationKey(soapMessage, context);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {
@@ -110,7 +110,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         SoapRequestMessageCallback requestCallback = new SoapRequestMessageCallback(soapMessage, getEndpointConfiguration());
 
         SoapResponseMessageCallback responseCallback = new SoapResponseMessageCallback(getEndpointConfiguration());
-        getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(soapMessage, endpointUri));
+        getEndpointConfiguration().getWebServiceTemplate().setFaultMessageResolver(new InternalFaultMessageResolver(correlationKey, endpointUri));
 
         log.info("Sending SOAP message to endpoint: '" + endpointUri + "'");
 
@@ -124,7 +124,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
         if (result) {
             log.info("Received SOAP response from endpoint: '" + endpointUri + "'");
-            onReplyMessage(soapMessage, responseCallback.getResponse());
+            onReplyMessage(correlationKey, responseCallback.getResponse());
         } else {
             log.info("No SOAP response from endpoint: '" + endpointUri + "'");
         }
@@ -132,7 +132,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context) {
-        return receive("", context);
+        return receive(getDefaultCorrelationId(context), context);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive("", context, timeout);
+        return receive(getDefaultCorrelationId(context), context, timeout);
     }
 
     @Override
@@ -179,25 +179,44 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     /**
-     * Saves reply message to local store for later processing. Constructs correlation key from initial request.
-     * @param requestMessage
-     * @param replyMessage
-     */
-    public void onReplyMessage(Message requestMessage, Message replyMessage) {
-        if (getEndpointConfiguration().getCorrelator() != null) {
-            onReplyMessage(getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
-        } else {
-            onReplyMessage("", replyMessage);
-        }
-    }
-
-    /**
      * Tries to find reply message for correlation key from local store.
      * @param correlationKey
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
+    }
+
+    /**
+     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
+     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    private String createCorrelationKey(Message message, TestContext context) {
+        String correlationKey;
+        if (getEndpointConfiguration().getCorrelator() != null) {
+            correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
+        } else {
+            correlationKey = UUID.randomUUID().toString();
+        }
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
+        return correlationKey;
+    }
+
+    /**
+     * Looks for default correlation id in test context. If not present constructs default correlation key.
+     * @param context
+     * @return
+     */
+    private String getDefaultCorrelationId(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+        }
+
+        return "";
     }
 
     /**
@@ -238,7 +257,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     private class InternalFaultMessageResolver implements FaultMessageResolver {
 
         /** Request message associated with this response error handler */
-        private Message requestMessage;
+        private String correlationKey;
 
         /** The endpoint that was initially invoked */
         private String endpointUri;
@@ -247,8 +266,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
          * Default constructor provided with request message
          * associated with this fault resolver and endpoint uri.
          */
-        public InternalFaultMessageResolver(Message requestMessage, String endpointUri) {
-            this.requestMessage = requestMessage;
+        public InternalFaultMessageResolver(String correlationKey, String endpointUri) {
+            this.correlationKey = correlationKey;
             this.endpointUri = endpointUri;
         }
 
@@ -274,7 +293,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                     }
 
                     log.info("Received SOAP fault response from endpoint: '" + endpointUri + "'");
-                    onReplyMessage(requestMessage, responseMessage);
+                    onReplyMessage(correlationKey, responseMessage);
                 } catch (TransformerException e) {
                     throw new CitrusRuntimeException("Failed to handle fault response message", e);
                 }

@@ -66,7 +66,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
             if (getParameterValues() != null && getParameterValues().length > 0) {
                 Object[] parameterValues = getParameterValues()[testResult.getMethod().getCurrentInvocationCount() % getParameterValues().length];
-                testBuilder.getTestCase().setParameters(convertParameterValues(parameterValues));
+                testBuilder.getTestCase().setParameters(getParameterNames(testResult.getMethod()), parameterValues);
                 ReflectionUtils.invokeMethod(method, this, parameterValues);
             } else {
                 ReflectionUtils.invokeMethod(method, this);

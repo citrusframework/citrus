@@ -16,9 +16,9 @@
 
 package com.consol.citrus.report;
 
-import java.util.Arrays;
-
 import org.springframework.util.StringUtils;
+
+import java.util.*;
 
 
 /**
@@ -38,17 +38,27 @@ public class TestResult {
     private String testName;
     
     /** Optional test parameters */
-    private String[] parameters;
+    private Map<String, Object> parameters;
     
     /** Failure cause */
     private Throwable cause;
-    
+
     /**
      * Constructor using fields.
      * @param name
      * @param result
      */
-    public TestResult(String name, RESULT result, String ... parameters) {
+    public TestResult(String name, RESULT result) {
+        this(name, result, new HashMap<String, Object>());
+    }
+    
+    /**
+     * Constructor using fields.
+     * @param name
+     * @param result
+     * @param parameters
+     */
+    public TestResult(String name, RESULT result, Map<String, Object> parameters) {
         this(name, result, null, parameters);
     }
 
@@ -58,19 +68,29 @@ public class TestResult {
      * @param result
      * @param cause
      */
-    public TestResult(String name, RESULT result, Throwable cause, String ... parameters) {
+    public TestResult(String name, RESULT result, Throwable cause) {
+        this(name, result, cause, new HashMap<String, Object>());
+    }
+
+    /**
+     * Constructor using fields.
+     * @param name
+     * @param result
+     * @param cause
+     */
+    public TestResult(String name, RESULT result, Throwable cause, Map<String, Object> parameters) {
         this.testName = name;
         this.result = result;
         this.cause = cause;
-        this.parameters = Arrays.copyOf(parameters, parameters.length);
+        this.parameters = parameters;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        if (parameters != null && parameters.length > 0) {
-            builder.append(" " + testName + "(" + StringUtils.collectionToCommaDelimitedString(Arrays.asList(parameters)) + ") ");
+        if (parameters != null && parameters.size() > 0) {
+            builder.append(" " + testName + "(" + StringUtils.collectionToCommaDelimitedString(Arrays.asList(parameters.values())) + ") ");
         } else {
             builder.append(" " + testName + " ");
         }
@@ -161,15 +181,15 @@ public class TestResult {
      * Sets the parameters.
      * @param parameters the parameters to set
      */
-    public void setParameters(String[] parameters) {
-        this.parameters = Arrays.copyOf(parameters, parameters.length);
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
     }
 
     /**
      * Gets the parameters.
      * @return the parameters
      */
-    public String[] getParameters() {
-        return Arrays.copyOf(parameters, parameters.length);
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 }

@@ -1080,7 +1080,7 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put(SoapMessageHeaders.SOAP_ACTION, "answerHello");
-        responseHeaders.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, "someCorrelator");
+        responseHeaders.put(MessageHeaders.MESSAGE_CORRELATION_KEY, "someCorrelator");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
         endpoint.setMessageHandler(new MessageHandler() {

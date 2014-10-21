@@ -17,6 +17,7 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 
 /**
  * Abstract test runner executes Citrus test case instance at runtime.
@@ -24,19 +25,19 @@ import com.consol.citrus.context.TestContext;
  */
 public abstract class AbstractTestRunner implements TestRunner {
 
-    /** This runners test case and context */
-    private final TestContext testContext;
+    /** This runners test context factory */
+    private final TestContextFactory testContextFactory;
 
     /**
-     * Default constructor using the test context field.
-     * @param testContext
+     * Default constructor using the test context factory.
+     * @param testContextFactory
      */
-    public AbstractTestRunner(TestContext testContext) {
-        this.testContext = testContext;
+    public AbstractTestRunner(TestContextFactory testContextFactory) {
+        this.testContextFactory = testContextFactory;
     }
 
     public void run() {
-        getTestCase().execute(testContext);
+        getTestCase().execute(getTestContext());
     }
 
     /**
@@ -44,6 +45,6 @@ public abstract class AbstractTestRunner implements TestRunner {
      * @return
      */
     public TestContext getTestContext() {
-        return testContext;
+        return testContextFactory.getObject();
     }
 }

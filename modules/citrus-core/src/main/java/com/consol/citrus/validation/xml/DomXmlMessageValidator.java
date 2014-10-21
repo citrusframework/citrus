@@ -80,6 +80,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     /** Root application context this validator is defined in */
     private ApplicationContext applicationContext;
 
+    /** Transformer factory */
+    private TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
     /**
      * Validates the message with test context and xml validation context.
      * @param receivedMessage the message to validate
@@ -293,14 +296,15 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             schemas.add(resource);
                         }
                     } else {
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        try {
-                            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                            transformerFactory.newTransformer().transform(xsdSchema.getSource(), new StreamResult(bos));
-                        } catch (TransformerException e) {
-                            throw new CitrusRuntimeException("Failed to read schema " + xsdSchema.getTargetNamespace(), e);
+                        synchronized (transformerFactory) {
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            try {
+                                transformerFactory.newTransformer().transform(xsdSchema.getSource(), new StreamResult(bos));
+                            } catch (TransformerException e) {
+                                throw new CitrusRuntimeException("Failed to read schema " + xsdSchema.getTargetNamespace(), e);
+                            }
+                            schemas.add(new ByteArrayResource(bos.toByteArray()));
                         }
-                        schemas.add(new ByteArrayResource(bos.toByteArray())); 
                     }
                 }
                 

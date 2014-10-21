@@ -19,6 +19,7 @@ package com.consol.citrus.http.config.xml;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.http.HttpMethod;
@@ -47,7 +48,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getClientInterceptors());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
-        Assert.assertNull(httpClient.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 5000L);
 
 
@@ -57,7 +58,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.GET);
-        Assert.assertNull(httpClient.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getContentType(), "text/xml");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCharset(), "ISO-8859-1");
         Assert.assertEquals(httpClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));

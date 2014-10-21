@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.config.xml;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -45,7 +46,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         WebServiceClient client = messageSenders.get("soapClient1");
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
-        Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(client.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertNotNull(client.getEndpointConfiguration().getInterceptor());
         Assert.assertEquals(client.getEndpointConfiguration().getInterceptor().getClass(), LoggingClientInterceptor.class);
         Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
@@ -57,7 +58,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         client = messageSenders.get("soapClient2");
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertEquals(client.getEndpointConfiguration().getMessageFactory(), beanDefinitionContext.getBean("soapMessageFactory"));
-        Assert.assertNull(client.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(client.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(client.getEndpointConfiguration().getEndpointResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 10000L);

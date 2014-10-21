@@ -17,7 +17,6 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.jms.message.CitrusJmsMessageHeaders;
 import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
@@ -29,8 +28,8 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.util.Assert;
 
 import javax.jms.*;
-import java.util.HashMap;
-import java.util.Map;
+import javax.jms.Queue;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -67,31 +66,18 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
             jmsMessage = new JmsMessage(receivedMessage);
         }
 
-        saveReplyDestination(jmsMessage);
+        saveReplyDestination(jmsMessage, context);
 
-        return receivedMessage;
+        return jmsMessage;
     }
 
     @Override
     public void send(final Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        Destination replyDestination;
-
-        if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
-                    "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
-
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
-            replyDestination = replyDestinations.remove(correlationKey);
-            Assert.notNull(replyDestination, "Unable to locate JMS reply destination with correlation key: '" + correlationKey + "'");
-
-            //remove citrus specific header from message
-            message.removeHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR);
-        } else {
-            replyDestination = replyDestinations.remove("");
-            Assert.notNull(replyDestination, "Unable to locate JMS reply destination");
-        }
+        String correlationKey = getDefaultCorrelationId(message, context);
+        Destination replyDestination = findReplyDestination(correlationKey);
+        Assert.notNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
         log.info("Sending JMS message to destination: '" + getDestinationName(replyDestination) + "'");
 
@@ -110,14 +96,6 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     }
 
     /**
-     * Finds reply destination by default correlation key in destination store.
-     * @return
-     */
-    public Destination findReplyDestination() {
-        return replyDestinations.remove("");
-    }
-
-    /**
      * Finds reply destination by correlation key in destination store.
      * @param correlationKey
      * @return
@@ -130,13 +108,15 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      * Store the reply destination either straight forward or with a given
      * message correlation key.
      *
-     * @param receivedMessage
+     * @param jmsMessage
+     * @param context
      */
-    public void saveReplyDestination(JmsMessage receivedMessage) {
-        if (endpointConfiguration.getCorrelator() != null) {
-            replyDestinations.put(endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage), receivedMessage.getReplyTo());
-        } else {
-            replyDestinations.put("", (Destination)receivedMessage.getHeader(CitrusJmsMessageHeaders.REPLY_TO));
+    public void saveReplyDestination(JmsMessage jmsMessage, TestContext context) {
+        if (jmsMessage.getReplyTo() != null) {
+            replyDestinations.put(createCorrelationKey(jmsMessage, context), jmsMessage.getReplyTo());
+        }  else {
+            log.warn("Unable to retrieve reply to destination for message \n" +
+                    jmsMessage + "\n - no reply to destination found in message headers!");
         }
     }
 
@@ -173,5 +153,50 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
             log.error("Error while getting destination name", e);
             return "";
         }
+    }
+
+    /**
+     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
+     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    private String createCorrelationKey(Message message, TestContext context) {
+        String correlationKey;
+        if (endpointConfiguration.getCorrelator() != null) {
+            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
+        } else {
+            correlationKey = UUID.randomUUID().toString();
+        }
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
+        return correlationKey;
+    }
+
+    /**
+     * Looks for default correlation id in message header and test context. If not present constructs default correlation key.
+     * @param message
+     * @param context
+     * @return
+     */
+    private String getDefaultCorrelationId(Message message, TestContext context) {
+        if (message.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY) != null) {
+            String correlationKey = message.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY).toString();
+
+            if (endpointConfiguration.getCorrelator() != null) {
+                correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(correlationKey);
+            }
+
+            //remove citrus specific header from message
+            message.removeHeader(MessageHeaders.MESSAGE_CORRELATION_KEY);
+            return correlationKey;
+        }
+
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+        }
+
+        return "";
     }
 }

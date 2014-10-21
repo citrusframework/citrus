@@ -28,8 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -72,11 +71,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration);
         onInboundMessage(message);
 
-        if (endpointConfiguration.getCorrelator() != null) {
-            exchanges.put(endpointConfiguration.getCorrelator().getCorrelationKey(message), exchange);
-        } else {
-            exchanges.put("", exchange);
-        }
+        exchanges.put(createCorrelationKey(message, context), exchange);
 
         return message;
     }
@@ -85,18 +80,9 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        Exchange exchange;
-        if (endpointConfiguration.getCorrelator() != null) {
-            Assert.notNull(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR), "Can not correlate reply destination - " +
-                    "you need to set " + MessageHeaders.SYNC_MESSAGE_CORRELATOR + " in message header");
-
-            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message.getHeader(MessageHeaders.SYNC_MESSAGE_CORRELATOR).toString());
-            exchange = exchanges.remove(correlationKey);
-            Assert.notNull(exchange, "Unable to locate camel exchange with correlation key: '" + correlationKey + "'");
-        } else {
-            exchange = exchanges.remove("");
-            Assert.notNull(exchange, "Unable to locate camel exchange");
-        }
+        String correlationKey = getDefaultCorrelationId(message, context);
+        Exchange exchange = exchanges.remove(correlationKey);
+        Assert.notNull(exchange, "Failed to find camel exchange for message correlation key: '" + correlationKey + "'");
 
         buildOutMessage(exchange, message);
 
@@ -158,5 +144,50 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
+    }
+
+    /**
+     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
+     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    private String createCorrelationKey(Message message, TestContext context) {
+        String correlationKey;
+        if (endpointConfiguration.getCorrelator() != null) {
+            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
+        } else {
+            correlationKey = UUID.randomUUID().toString();
+        }
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
+        return correlationKey;
+    }
+
+    /**
+     * Looks for default correlation id in message header and test context. If not present constructs default correlation key.
+     * @param message
+     * @param context
+     * @return
+     */
+    private String getDefaultCorrelationId(Message message, TestContext context) {
+        if (message.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY) != null) {
+            String correlationKey = message.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY).toString();
+
+            if (endpointConfiguration.getCorrelator() != null) {
+                correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(correlationKey);
+            }
+
+            //remove citrus specific header from message
+            message.removeHeader(MessageHeaders.MESSAGE_CORRELATION_KEY);
+            return correlationKey;
+        }
+
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+        }
+
+        return "";
     }
 }

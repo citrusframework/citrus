@@ -16,6 +16,7 @@
 
 package com.consol.citrus.vertx.endpoint;
 
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 
 /**
@@ -25,7 +26,7 @@ import com.consol.citrus.message.MessageCorrelator;
 public class VertxSyncEndpointConfiguration extends VertxEndpointConfiguration {
 
     /** Reply message correlator */
-    private MessageCorrelator correlator;
+    private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
     /**
      * Set the reply message correlator.

@@ -18,6 +18,7 @@ package com.consol.citrus.ftp.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.ftp.client.FtpClient;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,14 +41,14 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
         FtpClient ftpClient = clients.get("ftpClient1");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
-        Assert.assertNull(ftpClient.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 5000L);
 
         // 2nd ftp client
         ftpClient = clients.get("ftpClient2");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
-        Assert.assertNull(ftpClient.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPassword(), "consol");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 10000L);

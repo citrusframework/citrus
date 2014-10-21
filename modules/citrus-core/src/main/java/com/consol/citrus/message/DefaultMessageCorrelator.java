@@ -29,9 +29,7 @@ public class DefaultMessageCorrelator implements MessageCorrelator {
         return MessageHeaders.ID + " = '" + request.getHeader(MessageHeaders.ID).toString() + "'";
     }
 
-    /**
-     * @see MessageCorrelator#getCorrelationKey(java.lang.String)
-     */
+    @Override
     public String getCorrelationKey(String id) {
         return MessageHeaders.ID + " = '" + id + "'";
     }

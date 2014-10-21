@@ -17,7 +17,7 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 
 /**
  * Simple test runner to be executed by TestNG {@link org.testng.annotations.Factory} factory methods that create Citrus tests
@@ -33,10 +33,10 @@ public class CitrusTestRunner extends AbstractTestRunner {
     /**
      * Constructor using final fields for testCase and testContext.
      * @param testCase
-     * @param testContext
+     * @param testContextFactory
      */
-    public CitrusTestRunner(TestCase testCase, TestContext testContext) {
-        super(testContext);
+    public CitrusTestRunner(TestCase testCase, TestContextFactory testContextFactory) {
+        super(testContextFactory);
         this.testCase = testCase;
     }
 

@@ -130,7 +130,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message, context);
 
-        Message replyMessage = channelSyncProducer.findReplyMessage("");
+        Message replyMessage = channelSyncProducer.findReplyMessage(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message));
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
         
@@ -165,7 +165,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message, context);
 
-        Message replyMessage = channelSyncProducer.findReplyMessage("");
+        Message replyMessage = channelSyncProducer.findReplyMessage(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message));
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
 

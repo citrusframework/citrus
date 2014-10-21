@@ -21,6 +21,7 @@ import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.*;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
@@ -31,8 +32,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -83,6 +83,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             ftpMessage = new FtpMessage(message);
         }
 
+        String correlationKey = createCorrelationKey(ftpMessage, context);
+
         log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
         if (log.isDebugEnabled()) {
@@ -100,7 +102,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             log.info(String.format("FTP message was successfully sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
-            onReplyMessage(ftpMessage, new FtpMessage(ftpMessage.getCommand(), ftpMessage.getArguments())
+            onReplyMessage(correlationKey, new FtpMessage(ftpMessage.getCommand(), ftpMessage.getArguments())
                                                         .setReplyCode(reply)
                                                         .setReplyString(ftpClient.getReplyString()));
         } catch (IOException e) {
@@ -140,7 +142,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive("", context);
+        return receive(getDefaultCorrelationId(context), context);
     }
 
     @Override
@@ -150,7 +152,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive("", context, timeout);
+        return receive(getDefaultCorrelationId(context), context, timeout);
     }
 
     @Override
@@ -184,19 +186,6 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public void onReplyMessage(String correlationKey, Message replyMessage) {
         replyMessages.put(correlationKey, replyMessage);
-    }
-
-    /**
-     * Saves reply message to local store for later processing. Constructs correlation key from initial request.
-     * @param requestMessage
-     * @param replyMessage
-     */
-    public void onReplyMessage(Message requestMessage, Message replyMessage) {
-        if (getEndpointConfiguration().getCorrelator() != null) {
-            onReplyMessage(getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
-        } else {
-            onReplyMessage("", replyMessage);
-        }
     }
 
     @Override
@@ -242,6 +231,38 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
+    }
+
+    /**
+     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
+     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    private String createCorrelationKey(Message message, TestContext context) {
+        String correlationKey;
+        if (getEndpointConfiguration().getCorrelator() != null) {
+            correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
+        } else {
+            correlationKey = UUID.randomUUID().toString();
+        }
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
+        return correlationKey;
+    }
+
+    /**
+     * Looks for default correlation id in test context. If not present constructs default correlation key.
+     * @param context
+     * @return
+     */
+    private String getDefaultCorrelationId(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+        }
+
+        return "";
     }
 
     /**

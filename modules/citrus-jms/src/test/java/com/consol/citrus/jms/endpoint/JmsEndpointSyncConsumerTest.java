@@ -82,7 +82,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Message receivedMessage = jmsSyncConsumer.receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
-        Assert.assertEquals(jmsSyncConsumer.findReplyDestination(), replyDestination);
+        Assert.assertEquals(jmsSyncConsumer.findReplyDestination(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage)), replyDestination);
         
         verify(connectionFactory, destination, connection, session, messageConsumer);
     }
@@ -148,7 +148,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination));
+        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination), context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer);
@@ -178,7 +178,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination));
+        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination), context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -196,7 +196,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 .setReplyTo(replyDestination);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, requestMessage.getHeader(MessageHeaders.ID));
+        headers.put(MessageHeaders.MESSAGE_CORRELATION_KEY, requestMessage.getId());
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -216,19 +216,18 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(requestMessage);
+        jmsSyncConsumer.saveReplyDestination(requestMessage, context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
     }
 
     @Test
-    public void testSendMessageWithMissingCorrelatorKey() throws JMSException {
+    public void testSendMessageWithMissingReplyTo() throws JMSException {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        JmsMessage requestMessage = new JmsMessage("")
-                .setReplyTo(replyDestination);
+        JmsMessage requestMessage = new JmsMessage("");
 
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
@@ -237,10 +236,10 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-            jmsSyncConsumer.saveReplyDestination(requestMessage);
+            jmsSyncConsumer.saveReplyDestination(requestMessage, context);
             jmsSyncConsumer.send(message, context);
         } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Can not correlate reply destination"));
+            Assert.assertTrue(e.getMessage().startsWith("Failed to find JMS reply destination"), e.getMessage());
             return;
         }
 
@@ -256,14 +255,14 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(MessageHeaders.SYNC_MESSAGE_CORRELATOR, "123456789");
+        headers.put(MessageHeaders.MESSAGE_CORRELATION_KEY, "123456789");
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
             jmsSyncConsumer.send(message, context);
         } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Unable to locate JMS reply destination with correlation key"));
+            Assert.assertTrue(e.getMessage().startsWith("Failed to find JMS reply destination for message correlation key"));
             return;
         }
 

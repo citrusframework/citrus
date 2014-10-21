@@ -60,7 +60,13 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
 
         TestContext context = getTestContext();
         producer.send(request, context);
-        Message replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
+        Message replyMessage;
+
+        if (endpointConfiguration.getCorrelator() != null) {
+            replyMessage = producer.receive(endpointConfiguration.getCorrelator().getCorrelationKey(request), context, endpointConfiguration.getTimeout());
+        } else {
+            replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
+        }
 
         return replyMessage;
     }

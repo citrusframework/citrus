@@ -17,6 +17,7 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
@@ -25,8 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -63,9 +63,10 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(final Message message, TestContext context) {
+    public void send(Message message, TestContext context) {
         log.info("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
+        final String correlationKey = createCorrelationKey(message, context);
         onOutboundMessage(message);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
@@ -79,14 +80,14 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
                     Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration);
 
                     onInboundMessage(responseMessage);
-                    onReplyMessage(message, responseMessage);
+                    onReplyMessage(correlationKey, responseMessage);
                 }
             });
     }
 
     @Override
     public Message receive(TestContext context) {
-        return receive("", context);
+        return receive(getDefaultCorrelationId(context), context);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive("", context, timeout);
+        return receive(getDefaultCorrelationId(context), context, timeout);
     }
 
     @Override
@@ -133,25 +134,44 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     }
 
     /**
-     * Saves reply message to local store for later processing. Constructs correlation key from initial request.
-     * @param requestMessage
-     * @param replyMessage
-     */
-    public void onReplyMessage(Message requestMessage, Message replyMessage) {
-        if (endpointConfiguration.getCorrelator() != null) {
-            onReplyMessage(endpointConfiguration.getCorrelator().getCorrelationKey(requestMessage), replyMessage);
-        } else {
-            onReplyMessage("", replyMessage);
-        }
-    }
-
-    /**
      * Tries to find reply message for correlation key from local store.
      * @param correlationKey
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
+    }
+
+    /**
+     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
+     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    private String createCorrelationKey(Message message, TestContext context) {
+        String correlationKey;
+        if (endpointConfiguration.getCorrelator() != null) {
+            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
+        } else {
+            correlationKey = UUID.randomUUID().toString();
+        }
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
+        return correlationKey;
+    }
+
+    /**
+     * Looks for default correlation id in test context. If not present constructs default correlation key.
+     * @param context
+     * @return
+     */
+    private String getDefaultCorrelationId(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+        }
+
+        return "";
     }
 
     /**

@@ -17,7 +17,7 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -43,10 +43,10 @@ public class CitrusXmlTestRunner extends AbstractTestRunner {
      * @param beanName
      * @param packageName
      * @param parentContext
-     * @param testContext
+     * @param testContextFactory
      */
-    public CitrusXmlTestRunner(String beanName, String packageName, ApplicationContext parentContext, TestContext testContext) {
-        super(testContext);
+    public CitrusXmlTestRunner(String beanName, String packageName, ApplicationContext parentContext, TestContextFactory testContextFactory) {
+        super(testContextFactory);
         this.beanName = beanName;
         this.packageName = packageName;
         this.parentContext = parentContext;

@@ -18,6 +18,8 @@ package com.consol.citrus.jms.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -42,7 +44,7 @@ public class JmsSyncEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
 
         // 2nd message receiver
         jmsSyncEndpoint = endpoints.get("jmsSyncEndpoint2");
@@ -51,14 +53,14 @@ public class JmsSyncEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class));
 
         // 3rd message receiver
         jmsSyncEndpoint = endpoints.get("jmsSyncEndpoint3");
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getConnectionFactory());
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getDestination());
-        Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class));
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().isPubSubDomain(), true);
 
         // 4th message receiver
@@ -85,7 +87,7 @@ public class JmsSyncEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getPollingInterval(), 500L);
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getReplyDestinationName(), "JMS.Reply.Queue");
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getReplyDestination());
-        Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
 
         // 2nd message sender
         jmsSyncEndpoint = endpoints.get("jmsSyncEndpoint2");
@@ -96,7 +98,7 @@ public class JmsSyncEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getReplyDestinationName());
         Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getReplyDestination());
-        Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class));
 
         // 3rd message sender
         jmsSyncEndpoint = endpoints.get("jmsSyncEndpoint3");
@@ -104,7 +106,7 @@ public class JmsSyncEndpointParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsSyncEndpoint.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().isPubSubDomain(), true);
-        Assert.assertNotNull(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(jmsSyncEndpoint.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator", MessageCorrelator.class));
 
         // 4th message sender
         jmsSyncEndpoint = endpoints.get("jmsSyncEndpoint4");

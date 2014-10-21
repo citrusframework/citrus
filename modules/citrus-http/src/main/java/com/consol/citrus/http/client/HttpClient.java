@@ -18,11 +18,11 @@ package com.consol.citrus.http.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +83,8 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             httpMessage = new HttpMessage(message);
         }
 
+        String correlationKey = createCorrelationKey(httpMessage, context);
+
         String endpointUri;
         if (getEndpointConfiguration().getEndpointUriResolver() != null) {
             endpointUri = getEndpointConfiguration().getEndpointUriResolver().resolveEndpointUri(httpMessage, getEndpointConfiguration().getRequestUrl());
@@ -103,17 +105,17 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
         HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(httpMessage, getEndpointConfiguration());
 
-        getEndpointConfiguration().getRestTemplate().setErrorHandler(new InternalResponseErrorHandler(httpMessage));
+        getEndpointConfiguration().getRestTemplate().setErrorHandler(new InternalResponseErrorHandler(correlationKey));
         ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(endpointUri, method, requestEntity, String.class);
 
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
 
-        onReplyMessage(httpMessage, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
+        onReplyMessage(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
     }
 
     @Override
     public Message receive(TestContext context) {
-        return receive("", context);
+        return receive(getDefaultCorrelationId(context), context);
     }
 
     @Override
@@ -123,7 +125,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive("", context, timeout);
+        return receive(getDefaultCorrelationId(context), context, timeout);
     }
 
     @Override
@@ -147,6 +149,10 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             message = findReplyMessage(selector);
         }
 
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving Http response from from server");
+        }
+
         return message;
     }
 
@@ -168,14 +174,14 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     private class InternalResponseErrorHandler implements ResponseErrorHandler {
 
         /** Request message associated with this response error handler */
-        private Message requestMessage;
+        private String correlationKey;
 
         /**
          * Default constructor provided with request message
          * associated with this error handler.
          */
-        public InternalResponseErrorHandler(Message requestMessage) {
-            this.requestMessage = requestMessage;
+        public InternalResponseErrorHandler(String correlationKey) {
+            this.correlationKey = correlationKey;
         }
 
         /**
@@ -193,7 +199,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.PROPAGATE)) {
                 Message responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
                         new ResponseEntity(response.getBody(), response.getHeaders(), response.getStatusCode()), getEndpointConfiguration());
-                onReplyMessage(requestMessage, responseMessage);
+                onReplyMessage(correlationKey, responseMessage);
             } else if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
                 new DefaultResponseErrorHandler().handleError(response);
             } else {
@@ -213,25 +219,44 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     }
 
     /**
-     * Saves reply message to local store for later processing. Constructs correlation key from initial request.
-     * @param requestMessage
-     * @param replyMessage
-     */
-    public void onReplyMessage(Message requestMessage, Message replyMessage) {
-        if (getEndpointConfiguration().getCorrelator() != null) {
-            onReplyMessage(getEndpointConfiguration().getCorrelator().getCorrelationKey(requestMessage), replyMessage);
-        } else {
-            onReplyMessage("", replyMessage);
-        }
-    }
-
-    /**
      * Tries to find reply message for correlation key from local store.
      * @param correlationKey
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
         return replyMessages.remove(correlationKey);
+    }
+
+    /**
+     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
+     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
+     *
+     * @param message
+     * @param context
+     * @return
+     */
+    private String createCorrelationKey(Message message, TestContext context) {
+        String correlationKey;
+        if (getEndpointConfiguration().getCorrelator() != null) {
+            correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
+        } else {
+            correlationKey = UUID.randomUUID().toString();
+        }
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
+        return correlationKey;
+    }
+
+    /**
+     * Looks for default correlation id in test context. If not present constructs default correlation key.
+     * @param context
+     * @return
+     */
+    private String getDefaultCorrelationId(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+        }
+
+        return "";
     }
 
     /**

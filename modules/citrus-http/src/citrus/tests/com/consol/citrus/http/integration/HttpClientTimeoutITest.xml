@@ -21,8 +21,8 @@
         <message>Test: Receive Http message timeout</message>
       </echo>
 
-      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
-              message="Failed to receive message - message is not available">
+      <assert exception="com.consol.citrus.exceptions.ActionTimeoutException"
+              message="Action timeout while receiving Http response from from server">
         <receive endpoint="helloHttpClient">
           <message>
             <data>

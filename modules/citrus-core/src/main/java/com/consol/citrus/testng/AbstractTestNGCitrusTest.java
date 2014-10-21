@@ -85,7 +85,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     TestRunner testRunner = methodTestRunners.get(testResult.getMethod().getCurrentInvocationCount() % methodTestRunners.size());
 
                     if (citrusDataProviderParameters != null) {
-                        handleTestParameters(testResult.getMethod(), testRunner.getTestCase(), testRunner.getTestContext(), citrusDataProviderParameters[testResult.getMethod().getCurrentInvocationCount() % citrusDataProviderParameters.length]);
+                        handleTestParameters(testResult.getMethod(), testRunner.getTestCase(), citrusDataProviderParameters[testResult.getMethod().getCurrentInvocationCount() % citrusDataProviderParameters.length]);
                     }
                     testRunner.run();
                 } catch (RuntimeException e) {
@@ -133,9 +133,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 testRunners.put(method.getName(), methodTestRunners);
 
                 for (String testName : testNames) {
-                    TestContext testContext = prepareTestContext(createTestContext());
-
-                    methodTestRunners.add(createTestRunner(testName, testPackage, testContext));
+                    methodTestRunners.add(createTestRunner(testName, testPackage));
                 }
 
                 String[] testPackages = citrusTestAnnotation.packageScan();
@@ -144,12 +142,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                         Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
 
                         for (Resource fileResource : fileResources) {
-                            TestContext testContext = prepareTestContext(createTestContext());
-
                             String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
                             filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
 
-                            methodTestRunners.add(createTestRunner(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath, testContext));
+                            methodTestRunners.add(createTestRunner(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
                         }
                     } catch (IOException e) {
                         throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
@@ -165,11 +161,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * may overwrite this in order to provide custom test runner with custom test annotations set.
      * @param beanName
      * @param packageName
-     * @param testContext
      * @return
      */
-    protected TestRunner createTestRunner(String beanName, String packageName, TestContext testContext) {
-        return new CitrusXmlTestRunner(beanName, packageName, applicationContext, testContext);
+    protected TestRunner createTestRunner(String beanName, String packageName) {
+        return new CitrusXmlTestRunner(beanName, packageName, applicationContext, testContextFactory);
     }
 
     /**
@@ -220,7 +215,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         TestCase testCase = getTestCase(ctx);
         if (citrusDataProviderParameters != null) {
-            handleTestParameters(Reporter.getCurrentTestResult().getMethod(), testCase, ctx,
+            handleTestParameters(Reporter.getCurrentTestResult().getMethod(), testCase,
                     citrusDataProviderParameters[Reporter.getCurrentTestResult().getMethod().getCurrentInvocationCount()]);
         }
 
@@ -232,11 +227,26 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      *
      * @param method the testng method currently executed
      * @param testCase the constructed Citrus test.
-     * @param ctx the Citrus test context.
      */
-    private void handleTestParameters(ITestNGMethod method, TestCase testCase, TestContext ctx, Object[] parameterValues) {
-        String[] parameterNames;
+    private void handleTestParameters(ITestNGMethod method, TestCase testCase, Object[] parameterValues) {
+        String[] parameterNames = getParameterNames(method);
 
+        if (parameterValues.length != parameterNames.length) {
+            throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length +
+                    " parameter names defined with " + parameterValues.length + " parameter values available");
+        }
+
+
+        testCase.setParameters(parameterNames, parameterValues);
+    }
+
+    /**
+     * Read parameter names form method annotation.
+     * @param method
+     * @return
+     */
+    protected String[] getParameterNames(ITestNGMethod method) {
+        String[] parameterNames;
         CitrusParameters citrusParameters = method.getConstructorOrMethod().getMethod().getAnnotation(CitrusParameters.class);
         Parameters testNgParameters = method.getConstructorOrMethod().getMethod().getAnnotation(Parameters.class);
         if (citrusParameters != null) {
@@ -248,30 +258,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     "please provide parameter names with proper annotation when using data provider!");
         }
 
-        if (parameterValues.length != parameterNames.length) {
-            throw new CitrusRuntimeException("Parameter mismatch: " + parameterNames.length +
-                    " parameter names defined with " + parameterValues.length + " parameter values available");
-        }
-
-        for (int i = 0; i < parameterValues.length; i++) {
-            ctx.setVariable(parameterNames[i], parameterValues[i]);
-        }
-
-        testCase.setParameters(convertParameterValues(parameterValues));
-    }
-
-    /**
-     * Converts object parameter array to string array for test case.
-     * @param parameterValues
-     * @return
-     */
-    protected String[] convertParameterValues(Object[] parameterValues) {
-        String[] parameters = new String[parameterValues.length];
-        for (int i = 0; i < parameterValues.length; i++) {
-            parameters[i] = "'" + parameterValues[i] + "'";
-        }
-
-        return parameters;
+        return parameterNames;
     }
 
     /**
@@ -291,7 +278,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return the new citrus test context.
      */
     protected TestContext createTestContext() {
-        return (TestContext) testContextFactory.getObject();
+        return testContextFactory.getObject();
     }
 
     /**

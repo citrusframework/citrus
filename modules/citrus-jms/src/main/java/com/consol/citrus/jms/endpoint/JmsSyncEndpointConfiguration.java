@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 
 import javax.jms.*;
@@ -30,7 +31,7 @@ import javax.jms.*;
 public class JmsSyncEndpointConfiguration extends JmsEndpointConfiguration {
 
     /** Reply message correlator */
-    private MessageCorrelator correlator = null;
+    private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
     /** Reply destination */
     private Destination replyDestination;

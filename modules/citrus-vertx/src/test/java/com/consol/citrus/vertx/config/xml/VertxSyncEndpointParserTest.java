@@ -17,6 +17,7 @@
 package com.consol.citrus.vertx.config.xml;
 
 import com.consol.citrus.TestActor;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpoint;
 import org.testng.Assert;
@@ -40,6 +41,7 @@ public class VertxSyncEndpointParserTest extends AbstractBeanDefinitionParserTes
         VertxSyncEndpoint vertxEndpoint = endpoints.get("vertxEndpoint1");
         Assert.assertNotNull(vertxEndpoint.getVertxInstanceFactory());
         Assert.assertEquals(vertxEndpoint.getVertxInstanceFactory(), beanDefinitionContext.getBean("vertxInstanceFactory"));
+        Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getAddress(), "news-feed1");
         Assert.assertEquals(vertxEndpoint.getEndpointConfiguration().getTimeout(), 5000L);
 

@@ -52,7 +52,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private String packageName = this.getClass().getPackage().getName();
     
     /** In case test was called with parameters from outside */
-    private String[] parameters = new String[] {};
+    private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
     /** This tests context holding variables */
     private TestContext testContext;
@@ -174,6 +174,11 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         // add default variables for test
         context.setVariable(CitrusConstants.TEST_NAME_VARIABLE, getName());
         context.setVariable(CitrusConstants.TEST_PACKAGE_VARIABLE, getPackageName());
+
+        for (Entry<String, Object> paramEntry : parameters.entrySet()) {
+            log.info(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
+            context.setVariable(paramEntry.getKey(), paramEntry.getValue());
+        }
 
         /* execute the test actions */
         for (TestAction action: actions) {
@@ -312,18 +317,26 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /**
      * Sets the parameters.
-     * @param parameters the parameters to set
+     * @param parameterNames the parameter names to set
+     * @param parameterValues the parameters to set
      */
-    public void setParameters(String[] parameters) {
-        this.parameters = Arrays.copyOf(parameters, parameters.length);
+    public void setParameters(String[] parameterNames, Object[] parameterValues) {
+        if (parameterNames.length != parameterValues.length) {
+            throw new CitrusRuntimeException(String.format("Invalid test parameter usage - received '%s' parameters with '%s' values",
+                    parameterNames.length, parameterValues.length));
+        }
+
+        for (int i = 0; i < parameterNames.length; i++) {
+            this.parameters.put(parameterNames[i], parameterValues[i]);
+        }
     }
 
     /**
-     * Gets the parameters.
+     * Gets the test parameters.
      * @return the parameters
      */
-    public String[] getParameters() {
-        return Arrays.copyOf(parameters, parameters.length);
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 
     /**
