@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.actions;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
@@ -54,7 +55,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
@@ -95,7 +96,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
@@ -131,7 +132,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().once();
         
         expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
@@ -159,7 +160,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
@@ -199,7 +200,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
@@ -239,7 +240,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
@@ -277,7 +278,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -315,7 +316,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -355,7 +356,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
@@ -395,7 +396,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         reset(webServiceEndpoint, producer);
 
         expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
-        producer.send((Message) anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];

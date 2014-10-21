@@ -80,7 +80,7 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         replay(vertx, eventBus, messageMock);
 
-        vertxEndpoint.createProducer().send(requestMessage);
+        vertxEndpoint.createProducer().send(requestMessage, context);
         Message reply = vertxEndpoint.createConsumer().receive(context, 5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Vertx!");
@@ -128,7 +128,7 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
         Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");
 
-        vertxEndpoint.createProducer().send(replyMessage);
+        vertxEndpoint.createProducer().send(replyMessage, context);
 
         verify(vertx, eventBus, messageMock);
     }
@@ -154,7 +154,7 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         replay(vertx, eventBus, messageListeners);
 
-        vertxEndpoint.createProducer().send(requestMessage);
+        vertxEndpoint.createProducer().send(requestMessage, context);
 
         verify(vertx, eventBus, messageListeners);
     }

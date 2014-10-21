@@ -16,6 +16,7 @@
 
 package com.consol.citrus.vertx.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
@@ -53,7 +54,7 @@ public class VertxProducer implements Producer {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         try {
             sendOrPublishMessage(message);
         } catch (IllegalStateException e) {

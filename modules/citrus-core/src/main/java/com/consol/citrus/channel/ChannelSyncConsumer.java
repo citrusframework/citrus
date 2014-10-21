@@ -62,7 +62,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         Assert.notNull(message, "Can not send empty message");
 
         MessageChannel replyChannel;

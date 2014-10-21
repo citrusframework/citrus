@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
 /**
@@ -27,7 +28,8 @@ public interface Producer {
     /**
      * Sends the message.
      * @param message the message object to send.
+     * @param context
      */
-    void send(Message message);
+    void send(Message message, TestContext context);
 
 }

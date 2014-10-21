@@ -54,7 +54,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         String destinationChannelName = getDestinationChannelName();
 
         log.info("Sending message to channel: '" + destinationChannelName + "'");

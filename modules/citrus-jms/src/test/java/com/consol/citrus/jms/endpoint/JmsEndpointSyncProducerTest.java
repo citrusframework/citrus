@@ -80,7 +80,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
     }
@@ -121,7 +121,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
     }
@@ -162,7 +162,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer, tempReplyQueue);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer, tempReplyQueue);
     }
@@ -200,7 +200,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
 
         verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
     }
@@ -241,7 +241,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(connectionFactory, destination, connection, session, messageConsumer, messageProducer);
     }
@@ -254,7 +254,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         
         try {
-            endpoint.createProducer().send(null);
+            endpoint.createProducer().send(null, context);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;

@@ -67,7 +67,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(messagingTemplate, channel);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(messagingTemplate, channel);
     }
@@ -99,7 +99,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         
         replay(messagingTemplate, channel, channelResolver);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(messagingTemplate, channel, channelResolver);
     }
@@ -128,7 +128,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         replay(messagingTemplate, channel);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        channelSyncProducer.send(message);
+        channelSyncProducer.send(message, context);
 
         Message replyMessage = channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
@@ -163,7 +163,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         replay(messagingTemplate, channel);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        channelSyncProducer.send(message);
+        channelSyncProducer.send(message, context);
 
         Message replyMessage = channelSyncProducer.findReplyMessage("");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
@@ -200,7 +200,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         replay(messagingTemplate, channel, replyMessageCorrelator);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        channelSyncProducer.send(message);
+        channelSyncProducer.send(message, context);
 
         Message replyMessage = channelSyncProducer.findReplyMessage(MessageHeaders.ID + " = '123456789'");
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
@@ -227,7 +227,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         replay(messagingTemplate, channel);
 
         try {
-            endpoint.createProducer().send(message);
+            endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on reply channel");
             verify(messagingTemplate, channel);

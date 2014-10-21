@@ -70,7 +70,7 @@ public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
                 Assert.assertNotNull(receivedMessage);
                 Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
 
-                endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"));
+                endpointAdapter.getEndpoint().createProducer().send(new DefaultMessage("OK"), context);
             }
         });
 

@@ -18,6 +18,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -72,7 +73,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-		producer.send((Message)anyObject());
+		producer.send(anyObject(Message.class), anyObject(TestContext.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -110,7 +111,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -152,7 +153,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
 		expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -196,7 +197,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -234,7 +235,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -274,7 +275,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -314,7 +315,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -352,7 +353,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -396,7 +397,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -440,7 +441,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -485,7 +486,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -531,7 +532,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -576,7 +577,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -622,7 +623,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -735,7 +736,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -769,7 +770,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -807,7 +808,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -845,7 +846,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -883,7 +884,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();
@@ -919,7 +920,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().once();
 
         expect(endpoint.getActor()).andReturn(null).anyTimes();
@@ -952,7 +953,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.createProducer()).andReturn(producer).anyTimes();
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
 
-        producer.send((Message)anyObject());
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 DomXmlMessageValidator validator = new DomXmlMessageValidator();

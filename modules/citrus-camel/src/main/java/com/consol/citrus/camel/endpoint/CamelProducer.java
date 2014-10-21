@@ -16,6 +16,7 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
@@ -50,7 +51,7 @@ public class CamelProducer implements Producer {
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Message message, TestContext context) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         Exchange camelExchange = endpointConfiguration.getCamelContext().createProducerTemplate()

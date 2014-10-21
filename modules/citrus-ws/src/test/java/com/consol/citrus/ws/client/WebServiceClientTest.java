@@ -18,6 +18,7 @@ package com.consol.citrus.ws.client;
 
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.SoapMessage;
 import org.easymock.EasyMock;
 import org.springframework.ws.client.core.*;
@@ -32,7 +33,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class WebServiceClientTest {
+public class WebServiceClientTest extends AbstractTestNGUnitTest {
 
     private WebServiceTemplate webServiceTemplate = EasyMock.createMock(WebServiceTemplate.class);
 
@@ -57,7 +58,7 @@ public class WebServiceClientTest {
         replay(webServiceTemplate);
 
         client.getEndpointConfiguration().setDefaultUri("http://localhost:8081/request");
-        client.send(requestMessage);
+        client.send(requestMessage, context);
 
         verify(webServiceTemplate);
     }
@@ -89,7 +90,7 @@ public class WebServiceClientTest {
         replay(webServiceTemplate, correlator);
 
         client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
-        client.send(requestMessage);
+        client.send(requestMessage, context);
 
         verify(webServiceTemplate, correlator);
     }
@@ -120,7 +121,7 @@ public class WebServiceClientTest {
         replay(webServiceTemplate, endpointUriResolver);
 
         client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
-        client.send(requestMessage);
+        client.send(requestMessage, context);
 
         verify(webServiceTemplate, endpointUriResolver);
     }
@@ -159,7 +160,7 @@ public class WebServiceClientTest {
 
         try {
             client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
-            client.send(requestMessage);
+            client.send(requestMessage, context);
             Assert.fail("Missing exception due to soap fault");
         } catch (SoapFaultClientException e) {
             verify(webServiceTemplate, soapFaultMessage, soapBody, soapFault);

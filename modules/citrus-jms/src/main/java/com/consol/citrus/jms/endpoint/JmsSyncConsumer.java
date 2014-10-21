@@ -73,7 +73,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         Destination replyDestination;

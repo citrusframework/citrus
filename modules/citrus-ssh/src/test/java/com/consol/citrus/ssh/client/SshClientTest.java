@@ -21,6 +21,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ssh.SshRequest;
 import com.consol.citrus.ssh.XmlMapper;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.jcraft.jsch.*;
 import org.easymock.IArgumentMatcher;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -37,7 +38,7 @@ import static org.testng.Assert.assertNull;
  * @author Roland Huss
  * @since 12.09.12
  */
-public class SshClientTest {
+public class SshClientTest extends AbstractTestNGUnitTest {
 
     private static final String COMMAND = "ls";
     private static final String STDIN = "Hello world";
@@ -165,7 +166,7 @@ public class SshClientTest {
     }
 
     private void send() {
-        client.send(createMessage(COMMAND, STDIN));
+        client.send(createMessage(COMMAND, STDIN), context);
     }
 
     private void disconnect() throws JSchException {

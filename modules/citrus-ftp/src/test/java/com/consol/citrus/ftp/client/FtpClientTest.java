@@ -92,7 +92,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         replay(apacheFtpClient);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null));
+        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
         Message reply = ftpClient.receive(context);
 
@@ -136,7 +136,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         replay(apacheFtpClient);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null));
+        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
         Message reply = ftpClient.receive(context);
 
@@ -149,7 +149,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpReply.getReplyCode(), new Integer(200));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
-        ftpClient.send(new FtpMessage(FTPCmd.MKD, "testDir"));
+        ftpClient.send(new FtpMessage(FTPCmd.MKD, "testDir"), context);
 
         reply = ftpClient.receive(context);
 
@@ -188,7 +188,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         replay(apacheFtpClient);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null));
+        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
         verify(apacheFtpClient);
     }
@@ -212,7 +212,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         replay(apacheFtpClient);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null));
+        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
 
         verify(apacheFtpClient);
     }

@@ -67,7 +67,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String replyAddress;

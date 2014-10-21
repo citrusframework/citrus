@@ -20,6 +20,7 @@ import com.consol.citrus.mail.model.MailMessage;
 import com.consol.citrus.mail.model.MailMessageMapper;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.ClassPathResource;
@@ -39,7 +40,7 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailClientTest {
+public class MailClientTest extends AbstractTestNGUnitTest {
 
     private JavaMailSenderImpl javaMailSender = EasyMock.createMock(JavaMailSenderImpl.class);
 
@@ -79,7 +80,7 @@ public class MailClientTest {
 
         replay(javaMailSender);
 
-        mailClient.send(new DefaultMessage(mailMessage));
+        mailClient.send(new DefaultMessage(mailMessage), context);
 
         verify(javaMailSender);
     }
@@ -123,7 +124,7 @@ public class MailClientTest {
 
         replay(javaMailSender);
 
-        mailClient.send(new DefaultMessage(mailMessage));
+        mailClient.send(new DefaultMessage(mailMessage), context);
 
         verify(javaMailSender);
     }

@@ -75,7 +75,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         FtpMessage ftpMessage;
         if (message instanceof FtpMessage) {
             ftpMessage = (FtpMessage) message;

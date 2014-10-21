@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
@@ -53,7 +54,7 @@ public class JmsProducer implements Producer {
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();

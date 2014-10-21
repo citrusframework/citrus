@@ -81,7 +81,7 @@ public class SendMessageAction extends AbstractTestAction {
      * {@link com.consol.citrus.endpoint.Endpoint} instance.
      */
     @Override
-    public void doExecute(TestContext context) {
+    public void doExecute(final TestContext context) {
         final Message message = createMessage(context, messageType);
         
         // extract variables from before sending message so we can save dynamic message ids
@@ -96,11 +96,11 @@ public class SendMessageAction extends AbstractTestAction {
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
             taskExecutor.execute(new Runnable() {
                 public void run() {
-                    messageEndpoint.createProducer().send(message);
+                    messageEndpoint.createProducer().send(message, context);
                 }
             });
         } else {
-            messageEndpoint.createProducer().send(message);
+            messageEndpoint.createProducer().send(message, context);
         }
     }
     

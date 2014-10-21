@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
@@ -45,7 +46,7 @@ public class ChannelProducer implements Producer {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         String destinationChannelName = getDestinationChannelName();
 
         log.info("Sending message to channel: '" + destinationChannelName + "'");

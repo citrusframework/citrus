@@ -58,7 +58,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Message message, TestContext context) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         onOutboundMessage(message);

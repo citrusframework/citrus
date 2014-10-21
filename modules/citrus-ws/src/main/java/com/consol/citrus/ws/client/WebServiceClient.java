@@ -79,7 +79,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         SoapMessage soapMessage;

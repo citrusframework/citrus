@@ -62,7 +62,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
         replay(camelContext, producerTemplate, exchange);
 
-        camelEndpoint.createProducer().send(requestMessage);
+        camelEndpoint.createProducer().send(requestMessage, context);
 
         verify(camelContext, producerTemplate, exchange);
     }
@@ -86,7 +86,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
         replay(camelContext, producerTemplate, exchange);
 
-        camelEndpoint.createProducer().send(requestMessage);
+        camelEndpoint.createProducer().send(requestMessage, context);
 
         verify(camelContext, producerTemplate, exchange);
     }
@@ -162,7 +162,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
         replay(camelContext, producerTemplate, consumerTemplate, messageListeners);
 
-        camelEndpoint.createProducer().send(requestMessage);
+        camelEndpoint.createProducer().send(requestMessage, context);
         camelEndpoint.createConsumer().receive(context, 5000L);
 
         verify(camelContext, producerTemplate, consumerTemplate, messageListeners);

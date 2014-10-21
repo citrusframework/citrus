@@ -65,7 +65,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         replay(camelContext, producerTemplate);
 
-        camelEndpoint.createProducer().send(requestMessage);
+        camelEndpoint.createProducer().send(requestMessage, context);
         Message reply = camelEndpoint.createConsumer().receive(context, 5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Camel!");
@@ -112,7 +112,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_PATTERN));
         Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_FAILED));
 
-        camelEndpoint.createProducer().send(replyMessage);
+        camelEndpoint.createProducer().send(replyMessage, context);
 
         Assert.assertEquals(exchange.getOut().getBody().toString(), replyMessage.getPayload());
         Assert.assertEquals(exchange.getOut().getHeaders().get("operation"), "hello");
@@ -155,7 +155,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         replay(camelContext, producerTemplate, messageListeners);
 
-        camelEndpoint.createProducer().send(requestMessage);
+        camelEndpoint.createProducer().send(requestMessage, context);
         camelEndpoint.createConsumer().receive(context, 5000L);
 
         verify(camelContext, producerTemplate, messageListeners);

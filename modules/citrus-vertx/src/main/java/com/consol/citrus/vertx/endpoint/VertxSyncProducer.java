@@ -63,7 +63,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(final Message message) {
+    public void send(final Message message, TestContext context) {
         log.info("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         onOutboundMessage(message);

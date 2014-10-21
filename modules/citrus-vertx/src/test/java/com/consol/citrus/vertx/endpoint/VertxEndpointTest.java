@@ -69,7 +69,7 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
         replay(vertx, eventBus);
 
-        vertxEndpoint.createProducer().send(requestMessage);
+        vertxEndpoint.createProducer().send(requestMessage, context);
 
         verify(vertx, eventBus);
     }
@@ -93,7 +93,7 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
         replay(vertx, eventBus);
 
-        vertxEndpoint.createProducer().send(requestMessage);
+        vertxEndpoint.createProducer().send(requestMessage, context);
 
         verify(vertx, eventBus);
     }
@@ -156,7 +156,7 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
         replay(vertx, eventBus, messageListeners);
 
-        vertxEndpoint.createProducer().send(requestMessage);
+        vertxEndpoint.createProducer().send(requestMessage, context);
 
         verify(vertx, eventBus, messageListeners);
     }

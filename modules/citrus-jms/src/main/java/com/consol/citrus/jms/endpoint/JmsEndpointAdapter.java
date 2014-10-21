@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
@@ -57,8 +58,9 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
     protected Message handleMessageInternal(Message request) {
         log.info("Forwarding request to jms destination ...");
 
-        producer.send(request);
-        Message replyMessage = producer.receive(getTestContext(), endpointConfiguration.getTimeout());
+        TestContext context = getTestContext();
+        producer.send(request, context);
+        Message replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
 
         return replyMessage;
     }

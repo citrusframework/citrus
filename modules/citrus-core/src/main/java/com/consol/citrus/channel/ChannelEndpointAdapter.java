@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.Message;
@@ -60,10 +61,11 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements B
     public Message handleMessageInternal(Message request) {
         log.info("Forwarding request to message channel ...");
 
+        TestContext context = getTestContext();
         Message replyMessage = null;
         try {
-            producer.send(request);
-            replyMessage = producer.receive(getTestContext(), endpointConfiguration.getTimeout());
+            producer.send(request, context);
+            replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
         } catch (ActionTimeoutException e) {
             log.warn(e.getMessage());
         }

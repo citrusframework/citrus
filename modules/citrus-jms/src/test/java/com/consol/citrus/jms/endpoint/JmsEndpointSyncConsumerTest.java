@@ -149,7 +149,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
         jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination));
-        jmsSyncConsumer.send(message);
+        jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer);
     }
@@ -179,7 +179,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
         jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination));
-        jmsSyncConsumer.send(message);
+        jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
     }
@@ -217,7 +217,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
         jmsSyncConsumer.saveReplyDestination(requestMessage);
-        jmsSyncConsumer.send(message);
+        jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
     }
@@ -238,7 +238,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
             jmsSyncConsumer.saveReplyDestination(requestMessage);
-            jmsSyncConsumer.send(message);
+            jmsSyncConsumer.send(message, context);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Can not correlate reply destination"));
             return;
@@ -261,7 +261,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-            jmsSyncConsumer.send(message);
+            jmsSyncConsumer.send(message, context);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to locate JMS reply destination with correlation key"));
             return;
@@ -277,7 +277,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-            jmsSyncConsumer.send(null);
+            jmsSyncConsumer.send(null, context);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;

@@ -82,7 +82,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         Exchange exchange;

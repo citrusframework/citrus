@@ -16,6 +16,7 @@
 
 package com.consol.citrus.mail.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.RawMessage;
@@ -62,7 +63,7 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         log.info(String.format("Sending mail message to host: '%s://%s:%s'", getEndpointConfiguration().getProtocol(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
         MimeMailMessage mimeMessage = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());

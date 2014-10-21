@@ -19,6 +19,7 @@ package com.consol.citrus.channel;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
@@ -32,7 +33,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class ChannelEndpointProducerTest {
+public class ChannelEndpointProducerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     private MessageChannel channel = EasyMock.createMock(MessageChannel.class);
@@ -55,7 +56,7 @@ public class ChannelEndpointProducerTest {
         
         replay(messagingTemplate, channel);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(messagingTemplate, channel);
     }
@@ -81,7 +82,7 @@ public class ChannelEndpointProducerTest {
         
         replay(messagingTemplate, channel, channelResolver);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(messagingTemplate, channel, channelResolver);
     }
@@ -104,7 +105,7 @@ public class ChannelEndpointProducerTest {
         replay(messagingTemplate, channel);
 
         try {
-            endpoint.createProducer().send(message);
+            endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Failed to send message to channel: "));
             Assert.assertNotNull(e.getCause());

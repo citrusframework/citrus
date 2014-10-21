@@ -19,6 +19,7 @@ package com.consol.citrus.jms.endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -33,7 +34,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class JmsEndpointProducerTest {
+public class JmsEndpointProducerTest extends AbstractTestNGUnitTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -60,7 +61,7 @@ public class JmsEndpointProducerTest {
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(jmsTemplate, connectionFactory, destination, messageProducer);
     }
@@ -90,7 +91,7 @@ public class JmsEndpointProducerTest {
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
     }
@@ -122,7 +123,7 @@ public class JmsEndpointProducerTest {
         
         replay(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
 
-        endpoint.createProducer().send(message);
+        endpoint.createProducer().send(message, context);
         
         verify(jmsTemplate, connectionFactory, destination, messageProducer, connection, session);
     }
@@ -135,7 +136,7 @@ public class JmsEndpointProducerTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         
         try {
-            endpoint.createProducer().send(null);
+            endpoint.createProducer().send(null, context);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;

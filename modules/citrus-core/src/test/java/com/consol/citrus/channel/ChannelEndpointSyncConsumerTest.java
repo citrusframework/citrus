@@ -329,7 +329,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         channelSyncConsumer.saveReplyMessageChannel(new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel));
-        channelSyncConsumer.send(message);
+        channelSyncConsumer.send(message, context);
 
         verify(messagingTemplate, replyChannel);
     }
@@ -362,7 +362,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         channelSyncConsumer.saveReplyMessageChannel(request);
-        channelSyncConsumer.send(message);
+        channelSyncConsumer.send(message, context);
 
         verify(messagingTemplate, replyChannel);
     }
@@ -379,7 +379,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(message);
+            channelSyncConsumer.send(message, context);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Can not correlate reply destination"));
             return;
@@ -402,7 +402,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(message);
+            channelSyncConsumer.send(message, context);
         } catch(IllegalArgumentException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to locate reply channel"));
             return;
@@ -418,7 +418,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.send(null);
+            channelSyncConsumer.send(null, context);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "Can not send empty message");
             return;
@@ -444,7 +444,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.saveReplyMessageChannel(new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel));
-            channelSyncConsumer.send(message);
+            channelSyncConsumer.send(message, context);
         } catch(CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Failed to send message to channel: "));
             Assert.assertNotNull(e.getCause());

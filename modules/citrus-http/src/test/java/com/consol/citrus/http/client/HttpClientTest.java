@@ -72,7 +72,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -122,7 +122,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -173,7 +173,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -220,7 +220,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -266,7 +266,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -312,7 +312,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -352,7 +352,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate, correlator);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive("correlationKey", context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -392,7 +392,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate, endpointUriResolver);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
@@ -429,7 +429,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         replay(restTemplate);
 
-        httpClient.send(requestMessage);
+        httpClient.send(requestMessage, context);
 
         HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, 1000L);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.FORBIDDEN);
@@ -464,7 +464,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         replay(restTemplate);
 
         try {
-            httpClient.send(requestMessage);
+            httpClient.send(requestMessage, context);
 
             Assert.fail("Missing exception due to http error status code");
         } catch (HttpClientErrorException e) {

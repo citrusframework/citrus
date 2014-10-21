@@ -81,8 +81,9 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * {@link com.consol.citrus.ssh.server.SshServer}.
      *
      * @param message the message object to send.
+     * @param context
      */
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         String payload = (String) message.getPayload();
         SshRequest request = (SshRequest) getEndpointConfiguration().getXmlMapper().fromXML(payload);
 

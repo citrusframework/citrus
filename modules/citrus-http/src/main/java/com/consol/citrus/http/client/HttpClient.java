@@ -75,7 +75,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message, TestContext context) {
         HttpMessage httpMessage;
         if (message instanceof HttpMessage) {
             httpMessage = (HttpMessage) message;
