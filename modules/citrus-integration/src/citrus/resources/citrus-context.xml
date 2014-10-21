@@ -63,7 +63,7 @@
     <!-- Listeners -->
     <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
     
-    <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultReplyMessageCorrelator"/>
+    <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultMessageCorrelator"/>
     
     <!-- Default namespace mappings used in XPath expression evaluations -->
     <citrus:namespace-context>

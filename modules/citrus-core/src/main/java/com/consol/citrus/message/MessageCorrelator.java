@@ -22,7 +22,7 @@ package com.consol.citrus.message;
  * 
  * @author Christoph Deppisch
  */
-public interface ReplyMessageCorrelator {
+public interface MessageCorrelator {
     /**
      * Constructs the correlation key from the message header.
      * @param request

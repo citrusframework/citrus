@@ -17,7 +17,7 @@
 package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.ssh.XmlMapper;
 
 /**
@@ -59,7 +59,7 @@ public class SshEndpointConfiguration extends AbstractEndpointConfiguration {
     private XmlMapper xmlMapper = new XmlMapper();
 
     /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
+    private MessageCorrelator correlator = null;
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
@@ -152,11 +152,11 @@ public class SshEndpointConfiguration extends AbstractEndpointConfiguration {
         this.xmlMapper = xmlMapper;
     }
 
-    public ReplyMessageCorrelator getCorrelator() {
+    public MessageCorrelator getCorrelator() {
         return correlator;
     }
 
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
+    public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
     }
 

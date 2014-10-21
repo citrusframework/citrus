@@ -45,7 +45,7 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
                 .options(getErrorHandlingStrategyOptions()));
         endpointData.add(property("pollingInterval", client, "500"));
         endpointData.add(property("messageCorrelator", client)
-                .optionKey(ReplyMessageCorrelator.class.getName()));
+                .optionKey(MessageCorrelator.class.getName()));
         endpointData.add(property("messageConverter", client)
                 .optionKey(MessageConverter.class.getName()));
         endpointData.add(property("requestFactory", client)

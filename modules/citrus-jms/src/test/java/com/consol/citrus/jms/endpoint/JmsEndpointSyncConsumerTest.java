@@ -94,7 +94,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
         
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -189,7 +189,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         JmsMessage requestMessage = new JmsMessage("")
@@ -230,7 +230,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsMessage requestMessage = new JmsMessage("")
                 .setReplyTo(replyDestination);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -252,7 +252,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Map<String, Object> headers = new HashMap<String, Object>();

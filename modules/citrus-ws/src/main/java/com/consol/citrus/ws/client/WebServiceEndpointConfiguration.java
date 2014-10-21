@@ -20,7 +20,7 @@ import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -59,7 +59,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     private String defaultUri;
 
     /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
+    private MessageCorrelator correlator = null;
 
     /** Resolves dynamic endpoint uri */
     private EndpointUriResolver endpointResolver = new DynamicEndpointUriResolver();
@@ -85,7 +85,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * Set reply message correlator.
      * @param correlator the correlator to set
      */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
+    public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
     }
 
@@ -117,7 +117,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
      * Gets the correlator.
      * @return the correlator the correlator to get.
      */
-    public ReplyMessageCorrelator getCorrelator() {
+    public MessageCorrelator getCorrelator() {
         return correlator;
     }
 

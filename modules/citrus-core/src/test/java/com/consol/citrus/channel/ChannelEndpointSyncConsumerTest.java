@@ -51,7 +51,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
     private PollableChannel channel = EasyMock.createMock(PollableChannel.class);
     private MessageChannel replyChannel = EasyMock.createMock(MessageChannel.class);
 
-    private ReplyMessageCorrelator replyMessageCorrelator = EasyMock.createMock(ReplyMessageCorrelator.class);
+    private MessageCorrelator messageCorrelator = EasyMock.createMock(MessageCorrelator.class);
     
     private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
     
@@ -218,7 +218,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
 
-        endpoint.getEndpointConfiguration().setCorrelator(replyMessageCorrelator);
+        endpoint.getEndpointConfiguration().setCorrelator(messageCorrelator);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
@@ -226,16 +226,16 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                                 .setReplyChannel(replyChannel)
                                 .build();
 
-        reset(messagingTemplate, channel, replyChannel, replyMessageCorrelator);
+        reset(messagingTemplate, channel, replyChannel, messageCorrelator);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
-        expect(replyMessageCorrelator.getCorrelationKey(anyObject(Message.class))).andReturn(MessageHeaders.ID + " = '123456789'").once();
+        expect(messageCorrelator.getCorrelationKey(anyObject(Message.class))).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
-        replay(messagingTemplate, channel, replyChannel, replyMessageCorrelator);
+        replay(messagingTemplate, channel, replyChannel, messageCorrelator);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
@@ -250,7 +250,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
         
-        verify(messagingTemplate, channel, replyChannel, replyMessageCorrelator);
+        verify(messagingTemplate, channel, replyChannel, messageCorrelator);
     }
     
     @Test
@@ -339,7 +339,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Message request = new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel);
@@ -372,7 +372,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -393,7 +393,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         Map<String, Object> headers = new HashMap<String, Object>();

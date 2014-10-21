@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.model.config.ftp.Client;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +37,7 @@ public class FtpEndpointConverter extends AbstractEndpointConverter<Client> {
         endpointData.add(property("user", client));
         endpointData.add(property("password", client));
         endpointData.add(property("messageCorrelator", client)
-                .optionKey(ReplyMessageCorrelator.class.getName()));
+                .optionKey(MessageCorrelator.class.getName()));
 
         endpointData.add(property("pollingInterval", client));
 

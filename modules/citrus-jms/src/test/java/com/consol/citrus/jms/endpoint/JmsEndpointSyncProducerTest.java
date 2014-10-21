@@ -214,7 +214,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setReplyDestination(replyDestinationQueue);
 
-        ReplyMessageCorrelator correlator = new DefaultReplyMessageCorrelator();
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -282,9 +282,9 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
-        jmsSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);
+        jmsSyncProducer.onReplyMessage(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(jmsSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message), context), message);
+        Assert.assertEquals(jmsSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }
 
     @Test

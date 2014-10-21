@@ -333,7 +333,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setRequestMethod(HttpMethod.GET);
         endpointConfiguration.setRequestUrl(requestUrl);
 
-        ReplyMessageCorrelator correlator = EasyMock.createMock(ReplyMessageCorrelator.class);
+        MessageCorrelator correlator = EasyMock.createMock(MessageCorrelator.class);
         endpointConfiguration.setCorrelator(correlator);
 
         Message requestMessage = new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");

@@ -22,7 +22,7 @@ package com.consol.citrus.message;
  * 
  * @author Christoph Deppisch
  */
-public class DefaultReplyMessageCorrelator implements ReplyMessageCorrelator {
+public class DefaultMessageCorrelator implements MessageCorrelator {
 
     @Override
     public String getCorrelationKey(Message request) {
@@ -30,7 +30,7 @@ public class DefaultReplyMessageCorrelator implements ReplyMessageCorrelator {
     }
 
     /**
-     * @see com.consol.citrus.message.ReplyMessageCorrelator#getCorrelationKey(java.lang.String)
+     * @see MessageCorrelator#getCorrelationKey(java.lang.String)
      */
     public String getCorrelationKey(String id) {
         return MessageHeaders.ID + " = '" + id + "'";

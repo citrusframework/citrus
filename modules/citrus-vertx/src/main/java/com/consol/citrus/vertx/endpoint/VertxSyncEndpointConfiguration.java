@@ -16,7 +16,7 @@
 
 package com.consol.citrus.vertx.endpoint;
 
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 
 /**
  * @author Christoph Deppisch
@@ -25,13 +25,13 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
 public class VertxSyncEndpointConfiguration extends VertxEndpointConfiguration {
 
     /** Reply message correlator */
-    private ReplyMessageCorrelator correlator;
+    private MessageCorrelator correlator;
 
     /**
      * Set the reply message correlator.
      * @param correlator the correlator to set
      */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
+    public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
     }
 
@@ -39,7 +39,7 @@ public class VertxSyncEndpointConfiguration extends VertxEndpointConfiguration {
      * Gets the correlator.
      * @return the correlator
      */
-    public ReplyMessageCorrelator getCorrelator() {
+    public MessageCorrelator getCorrelator() {
         return correlator;
     }
 

@@ -46,7 +46,7 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
         endpointData.add(property("messageSender", client));
         endpointData.add(property("messageSenders", client));
         endpointData.add(property("messageCorrelator", client)
-                .optionKey(ReplyMessageCorrelator.class.getName()));
+                .optionKey(MessageCorrelator.class.getName()));
         endpointData.add(property("interceptors", client));
         endpointData.add(property("endpointResolver", client)
                 .optionKey(EndpointUriResolver.class.getName()));

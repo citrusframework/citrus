@@ -17,7 +17,7 @@
 package com.consol.citrus.ftp.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 
 /**
  * @author Christoph Deppisch
@@ -38,7 +38,7 @@ public class FtpEndpointConfiguration extends AbstractEndpointConfiguration {
     private String password;
 
     /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
+    private MessageCorrelator correlator = null;
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
@@ -79,7 +79,7 @@ public class FtpEndpointConfiguration extends AbstractEndpointConfiguration {
      * Set the reply message correlator.
      * @param correlator the correlator to set
      */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
+    public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
     }
 
@@ -87,7 +87,7 @@ public class FtpEndpointConfiguration extends AbstractEndpointConfiguration {
      * Gets the correlator.
      * @return the correlator
      */
-    public ReplyMessageCorrelator getCorrelator() {
+    public MessageCorrelator getCorrelator() {
         return correlator;
     }
 

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.camel.endpoint;
 
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 
 /**
  * @author Christoph Deppisch
@@ -25,7 +25,7 @@ import com.consol.citrus.message.ReplyMessageCorrelator;
 public class CamelSyncEndpointConfiguration extends CamelEndpointConfiguration {
 
     /** Reply message correlator */
-    private ReplyMessageCorrelator correlator;
+    private MessageCorrelator correlator;
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
@@ -34,7 +34,7 @@ public class CamelSyncEndpointConfiguration extends CamelEndpointConfiguration {
      * Set the reply message correlator.
      * @param correlator the correlator to set
      */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
+    public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
     }
 
@@ -42,7 +42,7 @@ public class CamelSyncEndpointConfiguration extends CamelEndpointConfiguration {
      * Gets the correlator.
      * @return the correlator
      */
-    public ReplyMessageCorrelator getCorrelator() {
+    public MessageCorrelator getCorrelator() {
         return correlator;
     }
 

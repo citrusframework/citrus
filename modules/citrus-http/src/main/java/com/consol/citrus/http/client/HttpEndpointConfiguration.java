@@ -21,7 +21,7 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.ErrorHandlingStrategy;
-import com.consol.citrus.message.ReplyMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.*;
@@ -71,7 +71,7 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
 
     /** Reply message correlator */
-    private ReplyMessageCorrelator correlator = null;
+    private MessageCorrelator correlator = null;
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
@@ -230,7 +230,7 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
      * Set the reply message correlator.
      * @param correlator the correlator to set
      */
-    public void setCorrelator(ReplyMessageCorrelator correlator) {
+    public void setCorrelator(MessageCorrelator correlator) {
         this.correlator = correlator;
     }
 
@@ -238,7 +238,7 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
      * Gets the correlator.
      * @return the correlator
      */
-    public ReplyMessageCorrelator getCorrelator() {
+    public MessageCorrelator getCorrelator() {
         return correlator;
     }
 

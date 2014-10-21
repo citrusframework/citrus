@@ -41,7 +41,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     private MessageChannel channel = org.easymock.EasyMock.createMock(MessageChannel.class);
-    private ReplyMessageCorrelator replyMessageCorrelator = org.easymock.EasyMock.createMock(ReplyMessageCorrelator.class);
+    private MessageCorrelator messageCorrelator = org.easymock.EasyMock.createMock(MessageCorrelator.class);
     private DestinationResolver channelResolver = EasyMock.createMock(DestinationResolver.class);
     
     @Test
@@ -186,18 +186,18 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                                 .copyHeaders(responseHeaders)
                                 .build();
 
-        endpoint.getEndpointConfiguration().setCorrelator(replyMessageCorrelator);
+        endpoint.getEndpointConfiguration().setCorrelator(messageCorrelator);
         
-        reset(messagingTemplate, channel, replyMessageCorrelator);
+        reset(messagingTemplate, channel, messageCorrelator);
         
         messagingTemplate.setReceiveTimeout(5000L);
         expectLastCall().once();
         
         expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
-        expect(replyMessageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
+        expect(messageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
         
-        replay(messagingTemplate, channel, replyMessageCorrelator);
+        replay(messagingTemplate, channel, messageCorrelator);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message, context);
@@ -206,7 +206,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
 
-        verify(messagingTemplate, channel, replyMessageCorrelator);
+        verify(messagingTemplate, channel, messageCorrelator);
     }
     
     @Test
@@ -256,9 +256,9 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        channelSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);
+        channelSyncProducer.onReplyMessage(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(channelSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message), context), message);
+        Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }
     
 }

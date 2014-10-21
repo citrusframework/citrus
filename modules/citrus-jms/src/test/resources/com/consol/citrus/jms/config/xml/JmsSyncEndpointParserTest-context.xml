@@ -28,7 +28,7 @@
   <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
 
   <bean id="replyMessageCorrelator" class="org.easymock.EasyMock" factory-method="createMock">
-    <constructor-arg value="com.consol.citrus.message.ReplyMessageCorrelator"/>
+    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
   </bean>
 
   <!-- JMS connection factories -->

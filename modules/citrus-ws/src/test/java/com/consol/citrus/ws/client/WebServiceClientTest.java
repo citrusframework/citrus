@@ -69,7 +69,7 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
 
         client.getEndpointConfiguration().setWebServiceTemplate(webServiceTemplate);
 
-        ReplyMessageCorrelator correlator = EasyMock.createMock(ReplyMessageCorrelator.class);
+        MessageCorrelator correlator = EasyMock.createMock(MessageCorrelator.class);
         client.getEndpointConfiguration().setCorrelator(correlator);
 
         Message requestMessage = new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
