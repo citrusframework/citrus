@@ -20,6 +20,7 @@ import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
@@ -33,7 +34,7 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CamelEndpointTest {
+public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
     private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
     private ProducerTemplate producerTemplate = EasyMock.createMock(ProducerTemplate.class);
@@ -112,7 +113,7 @@ public class CamelEndpointTest {
 
         replay(camelContext, consumerTemplate);
 
-        Message receivedMessage = camelEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
+        Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
         Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
         Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID));
@@ -162,7 +163,7 @@ public class CamelEndpointTest {
         replay(camelContext, producerTemplate, consumerTemplate, messageListeners);
 
         camelEndpoint.createProducer().send(requestMessage);
-        camelEndpoint.createConsumer().receive(5000L);
+        camelEndpoint.createConsumer().receive(context, 5000L);
 
         verify(camelContext, producerTemplate, consumerTemplate, messageListeners);
     }

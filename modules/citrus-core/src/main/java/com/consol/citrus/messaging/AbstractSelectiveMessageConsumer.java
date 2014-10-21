@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.Message;
 
@@ -39,12 +40,12 @@ public abstract class AbstractSelectiveMessageConsumer extends AbstractMessageCo
     }
 
     @Override
-    public Message receive(String selector) {
-        return receive(selector, endpointConfiguration.getTimeout());
+    public Message receive(String selector, TestContext context) {
+        return receive(selector, context, endpointConfiguration.getTimeout());
     }
 
     @Override
-    public Message receive(long timeout) {
-        return receive(null, timeout);
+    public Message receive(TestContext context, long timeout) {
+        return receive(null, context, timeout);
     }
 }

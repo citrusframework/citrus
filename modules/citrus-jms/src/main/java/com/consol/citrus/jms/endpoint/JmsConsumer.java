@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import com.consol.citrus.message.Message;
@@ -51,7 +52,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     }
 
     @Override
-    public Message receive(String selector, long timeout) {
+    public Message receive(String selector, TestContext context, long timeout) {
         String destinationName;
 
         if (StringUtils.hasText(selector)) {

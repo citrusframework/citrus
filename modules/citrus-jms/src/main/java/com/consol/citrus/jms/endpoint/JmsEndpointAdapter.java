@@ -58,7 +58,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
         log.info("Forwarding request to jms destination ...");
 
         producer.send(request);
-        Message replyMessage = producer.receive(endpointConfiguration.getTimeout());
+        Message replyMessage = producer.receive(getTestContext(), endpointConfiguration.getTimeout());
 
         return replyMessage;
     }

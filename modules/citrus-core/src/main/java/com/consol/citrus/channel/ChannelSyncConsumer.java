@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.Message;
@@ -53,8 +54,8 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     }
 
     @Override
-    public Message receive(String selector, long timeout) {
-        Message receivedMessage = super.receive(selector, timeout);
+    public Message receive(String selector, TestContext context, long timeout) {
+        Message receivedMessage = super.receive(selector, context, timeout);
         saveReplyMessageChannel(receivedMessage);
 
         return receivedMessage;

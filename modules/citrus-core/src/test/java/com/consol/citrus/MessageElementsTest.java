@@ -17,6 +17,7 @@
 package com.consol.citrus;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -82,7 +83,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -118,7 +119,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -154,7 +155,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -191,7 +192,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -227,7 +228,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -263,7 +264,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -299,7 +300,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -335,7 +336,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -371,7 +372,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -407,7 +408,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -452,7 +453,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -497,7 +498,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -548,7 +549,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -593,7 +594,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -638,7 +639,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -683,7 +684,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -728,7 +729,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -781,7 +782,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -834,7 +835,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -885,7 +886,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
                         + "</element>" 
                         + "</root>");
         
-        expect(consumer.receive(anyLong())).andReturn(message);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         

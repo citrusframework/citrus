@@ -139,8 +139,8 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      */
     private Message receive(TestContext context) {
         Endpoint messageEndpoint = getOrCreateEndpoint(context);
-        return receiveTimeout > 0 ? messageEndpoint.createConsumer().receive(receiveTimeout) :
-                messageEndpoint.createConsumer().receive(messageEndpoint.getEndpointConfiguration().getTimeout());
+        return receiveTimeout > 0 ? messageEndpoint.createConsumer().receive(context, receiveTimeout) :
+                messageEndpoint.createConsumer().receive(context, messageEndpoint.getEndpointConfiguration().getTimeout());
     }
 
     /**
@@ -161,11 +161,11 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
             if (receiveTimeout > 0) {
                 return ((SelectiveConsumer) messageEndpoint.createConsumer()).receive(
                         context.replaceDynamicContentInString(selectorString),
-                        receiveTimeout);
+                        context, receiveTimeout);
             } else {
                 return ((SelectiveConsumer) messageEndpoint.createConsumer()).receive(
                         context.replaceDynamicContentInString(selectorString),
-                        messageEndpoint.getEndpointConfiguration().getTimeout());
+                        context, messageEndpoint.getEndpointConfiguration().getTimeout());
             }
         } else {
             log.warn(String.format("Unable to receive selective with consumer implementation: '%s'", consumer.getClass()));

@@ -64,9 +64,9 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
             Consumer consumer = getOrCreateEndpoint(context).createConsumer();
 
             if (StringUtils.hasText(messageSelector) && consumer instanceof SelectiveConsumer) {
-                receivedMessage = ((SelectiveConsumer)consumer).receive(messageSelector, timeout);
+                receivedMessage = ((SelectiveConsumer)consumer).receive(messageSelector, context, timeout);
             } else {
-                receivedMessage = consumer.receive(timeout);
+                receivedMessage = consumer.receive(context, timeout);
             }
 
             if (receivedMessage != null) {

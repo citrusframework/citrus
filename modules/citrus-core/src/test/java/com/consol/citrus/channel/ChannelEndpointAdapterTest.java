@@ -16,8 +16,11 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
@@ -27,11 +30,14 @@ import org.testng.annotations.*;
 /**
  * @author Christoph Deppisch
  */
-public class ChannelEndpointAdapterTest {
+public class ChannelEndpointAdapterTest extends AbstractTestNGUnitTest {
 
     private QueueChannel channel = new QueueChannel();
     private ChannelEndpointAdapter endpointAdapter;
     private ChannelSyncEndpointConfiguration endpointConfiguration;
+
+    @Autowired
+    private TestContextFactory testContextFactory;
 
     @BeforeClass
     public void setup() {
@@ -40,6 +46,7 @@ public class ChannelEndpointAdapterTest {
         endpointConfiguration.setTimeout(250L);
 
         endpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
+        endpointAdapter.setTestContextFactory(testContextFactory);
     }
 
     @BeforeMethod
@@ -59,7 +66,7 @@ public class ChannelEndpointAdapterTest {
         new SimpleAsyncTaskExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(endpointConfiguration.getTimeout());
+                Message receivedMessage = endpointAdapter.getEndpoint().createConsumer().receive(context, endpointConfiguration.getTimeout());
                 Assert.assertNotNull(receivedMessage);
                 Assert.assertEquals(receivedMessage.getPayload(), request.getPayload());
 

@@ -78,7 +78,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 		
@@ -109,7 +109,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -146,7 +146,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -185,7 +185,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -217,7 +217,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -250,7 +250,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -284,7 +284,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -316,7 +316,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -353,7 +353,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -390,7 +390,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -430,7 +430,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -472,7 +472,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -513,7 +513,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -552,7 +552,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -591,7 +591,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -628,7 +628,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -664,7 +664,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -711,7 +711,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -749,7 +749,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -785,7 +785,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -823,7 +823,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -861,7 +861,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -903,7 +903,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -944,7 +944,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -989,7 +989,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1036,7 +1036,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1083,7 +1083,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1134,7 +1134,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1172,7 +1172,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(3000L)).andReturn(controlMessage).once();
+        expect(consumer.receive(context, 3000L)).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1208,7 +1208,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(messageSelectorString, 5000L)).andReturn(controlMessage).once();
+        expect(consumer.receive(messageSelectorString, context, 5000L)).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1246,7 +1246,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(messageSelectorString, 5000L)).andReturn(controlMessage).once();
+        expect(consumer.receive(messageSelectorString, context, 5000L)).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1283,7 +1283,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive("Operation = 'sayHello'", 5000L)).andReturn(controlMessage).once();
+        expect(consumer.receive("Operation = 'sayHello'", context, 5000L)).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1322,7 +1322,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive("Operation = 'sayHello'", 5000L)).andReturn(controlMessage).once();
+        expect(consumer.receive("Operation = 'sayHello'", context, 5000L)).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1350,7 +1350,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(null).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(null).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 
@@ -1387,7 +1387,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1418,7 +1418,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1455,7 +1455,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1484,7 +1484,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -1514,7 +1514,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).times(2);
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).times(2);
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         

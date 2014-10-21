@@ -19,6 +19,7 @@ package com.consol.citrus.jms.endpoint;
 import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -34,7 +35,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class JmsEndpointSyncConsumerTest {
+public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -78,7 +79,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(connectionFactory, destination, connection, session, messageConsumer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = jmsSyncConsumer.receive();
+        Message receivedMessage = jmsSyncConsumer.receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         Assert.assertEquals(jmsSyncConsumer.findReplyDestination(), replyDestination);
@@ -121,7 +122,7 @@ public class JmsEndpointSyncConsumerTest {
         replay(connectionFactory, destination, connection, session, messageConsumer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = jmsSyncConsumer.receive();
+        Message receivedMessage = jmsSyncConsumer.receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         Assert.assertNull(jmsSyncConsumer.findReplyDestination(

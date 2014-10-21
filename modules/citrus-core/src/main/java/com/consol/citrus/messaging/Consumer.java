@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
 /**
@@ -27,13 +28,16 @@ public interface Consumer {
     /**
      * Receive message with default timeout.
      * @return
+     * @param context
      */
-    Message receive();
+    Message receive(TestContext context);
 
     /**
      * Receive message with a given timeout.
+     *
+     * @param context
      * @param timeout
      * @return
      */
-    Message receive(long timeout);
+    Message receive(TestContext context, long timeout);
 }

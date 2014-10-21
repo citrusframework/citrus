@@ -19,6 +19,7 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.vertx.factory.SingleVertxInstanceFactory;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.easymock.EasyMock;
@@ -36,7 +37,7 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class VertxEndpointTest {
+public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
     private Vertx vertx = EasyMock.createMock(Vertx.class);
     private EventBus eventBus = EasyMock.createMock(EventBus.class);
@@ -126,7 +127,7 @@ public class VertxEndpointTest {
 
         replay(vertx, eventBus, messageMock);
 
-        Message receivedMessage = vertxEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
+        Message receivedMessage = vertxEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Vertx!");
         Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_ADDRESS), eventBusAddress);
         Assert.assertEquals(receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS), "replyAddress");

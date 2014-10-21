@@ -18,12 +18,14 @@ package com.consol.citrus.server;
 
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.channel.ChannelEndpointAdapter;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,9 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
 
     /** Timeout delegated to default endpoint adapter if not set explicitly */
     private long defaultTimeout = 1000;
+
+    @Autowired
+    private TestContextFactory testContextFactory;
     
     /** Logger */
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -134,6 +139,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             channelEndpointConfiguration.setTimeout(defaultTimeout);
             channelEndpointConfiguration.setUseObjectMessages(true);
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
+            ((AbstractEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
         }
 
         if (autoStart) {

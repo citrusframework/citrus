@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.actions;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.Message;
@@ -71,7 +72,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         
         attachmentValidator.validateAttachment((SoapMessage)anyObject(), anyObject(List.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -119,7 +120,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         
         attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List)anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -167,7 +168,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         
         attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -211,7 +212,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
 
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration, attachmentValidator);
@@ -247,7 +248,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         
         attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -297,7 +298,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
         
         attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -347,7 +348,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(anyLong())).andReturn(controlMessage).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
 
         attachmentValidator.validateAttachment((SoapMessage)anyObject(), (List) anyObject());
         expectLastCall().andAnswer(new IAnswer<Object>() {

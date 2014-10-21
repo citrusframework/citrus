@@ -20,13 +20,15 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -50,6 +52,9 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     /** Spring bean application context holding all available test builders and basic Citrus config */
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private TestContextFactory testContextFactory;
+
     /** First request message is handled by this message handler */
     private MessageHandler responseMessageHandler;
 
@@ -62,8 +67,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         final TestContext testContext;
 
         try {
-            testContext = applicationContext.getBean(TestContext.class);
-            testContext.setApplicationContext(applicationContext);
+            testContext = testContextFactory.getObject();
             test = getTestCase(testContext, mappingName);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +
@@ -135,6 +139,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
             endpointConfiguration.setBeanFactory(applicationContext);
 
             ChannelEndpointAdapter channelConnectingMessageHandler = new ChannelEndpointAdapter(endpointConfiguration);
+            channelConnectingMessageHandler.setTestContextFactory(testContextFactory);
             responseMessageHandler = channelConnectingMessageHandler;
         }
 

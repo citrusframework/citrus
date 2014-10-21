@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
@@ -34,7 +35,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class JmsEndpointConsumerTest {
+public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -64,7 +65,7 @@ public class JmsEndpointConsumerTest {
 
         replay(jmsTemplate, connectionFactory, destination);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
 
         verify(jmsTemplate, connectionFactory, destination);
@@ -97,7 +98,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -132,7 +133,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -162,7 +163,7 @@ public class JmsEndpointConsumerTest {
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
         try {
-            endpoint.createConsumer().receive();
+            endpoint.createConsumer().receive(context);
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving JMS message on"));
             return;
@@ -200,7 +201,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -236,7 +237,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         Assert.assertNotNull(receivedMessage.getHeader("Operation"));
         Assert.assertTrue(receivedMessage.getHeader("Operation").equals("sayHello"));
@@ -271,7 +272,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
@@ -305,7 +306,7 @@ public class JmsEndpointConsumerTest {
         
         replay(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
         
-        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
         verify(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);

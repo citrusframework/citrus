@@ -19,6 +19,7 @@ package com.consol.citrus.http.client;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.*;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.http.*;
@@ -31,7 +32,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class HttpClientTest {
+public class HttpClientTest extends AbstractTestNGUnitTest {
 
     private RestTemplate restTemplate = EasyMock.createMock(RestTemplate.class);
 
@@ -73,7 +74,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -123,7 +124,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -174,7 +175,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -221,7 +222,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -267,7 +268,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -313,7 +314,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -353,7 +354,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive("correlationKey", endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive("correlationKey", context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -393,7 +394,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(endpointConfiguration.getTimeout());
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(responseMessage.getPayload(), responseBody);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
@@ -430,7 +431,7 @@ public class HttpClientTest {
 
         httpClient.send(requestMessage);
 
-        HttpMessage responseMessage = (HttpMessage) httpClient.receive(1000L);
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, 1000L);
         Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.FORBIDDEN);
         Assert.assertEquals(responseMessage.getReasonPhrase(), "FORBIDDEN");
 

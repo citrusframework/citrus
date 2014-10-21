@@ -16,9 +16,12 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -31,7 +34,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class JmsEndpointAdapterTest {
+public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -44,6 +47,9 @@ public class JmsEndpointAdapterTest {
     private JmsEndpointAdapter endpointAdapter;
     private JmsSyncEndpointConfiguration endpointConfiguration;
 
+    @Autowired
+    private TestContextFactory testContextFactory;
+
     @BeforeMethod
     public void setup() {
         endpointConfiguration = new JmsSyncEndpointConfiguration();
@@ -52,6 +58,7 @@ public class JmsEndpointAdapterTest {
         endpointConfiguration.setTimeout(250L);
 
         endpointAdapter = new JmsEndpointAdapter(endpointConfiguration);
+        endpointAdapter.setTestContextFactory(testContextFactory);
     }
 
     @Test

@@ -17,6 +17,7 @@
 package com.consol.citrus;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
@@ -82,7 +83,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                             + "<search-element>search-for</search-element>"
                         + "</ns1:root>");
 
-        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -125,7 +126,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                             + "<search-element>search-for</search-element>"
                         + "</root>");
 
-        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -168,7 +169,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                             + "<search-element>search-for</search-element>"
                         + "</root>");
 
-        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -207,7 +208,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                             + "<search-element>search-for</search-element>"
                         + "</root>");
 
-        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -251,7 +252,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                             + "<search-element>search-for</search-element>"
                         + "</ns1:root>");
 
-        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -301,7 +302,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
                             + "<search-element>search-for</search-element>"
                         + "</ns1:root>");
 
-        expect(consumer.receive(anyLong())).andReturn(message).once();
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
 

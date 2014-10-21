@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ftp.client;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
@@ -138,22 +139,22 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
     }
 
     @Override
-    public Message receive() {
-        return receive("", getEndpointConfiguration().getTimeout());
+    public Message receive(TestContext context) {
+        return receive("", context);
     }
 
     @Override
-    public Message receive(String selector) {
-        return receive(selector, getEndpointConfiguration().getTimeout());
+    public Message receive(String selector, TestContext context) {
+        return receive(selector, context, getEndpointConfiguration().getTimeout());
     }
 
     @Override
-    public Message receive(long timeout) {
-        return receive("", timeout);
+    public Message receive(TestContext context, long timeout) {
+        return receive("", context, timeout);
     }
 
     @Override
-    public Message receive(String selector, long timeout) {
+    public Message receive(String selector, TestContext context, long timeout) {
         long timeLeft = timeout;
         Message message = findReplyMessage(selector);
 

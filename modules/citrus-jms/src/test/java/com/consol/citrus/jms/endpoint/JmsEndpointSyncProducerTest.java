@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.SelectiveConsumer;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,7 +34,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class JmsEndpointSyncProducerTest {
+public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
     private ConnectionFactory connectionFactory = org.easymock.EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
@@ -271,7 +272,7 @@ public class JmsEndpointSyncProducerTest {
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
         jmsSyncProducer.onReplyMessage("", message);
 
-        Assert.assertEquals(jmsSyncProducer.receive(), message);
+        Assert.assertEquals(jmsSyncProducer.receive(context), message);
     }
 
     @Test
@@ -283,7 +284,7 @@ public class JmsEndpointSyncProducerTest {
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
         jmsSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(jmsSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message)), message);
+        Assert.assertEquals(jmsSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message), context), message);
     }
 
     @Test
@@ -311,7 +312,7 @@ public class JmsEndpointSyncProducerTest {
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         Assert.assertEquals(retryCount, 0);
-        Assert.assertEquals(jmsSyncProducer.receive(2500), message);
+        Assert.assertEquals(jmsSyncProducer.receive(context, 2500), message);
         Assert.assertEquals(retryCount, 5);
     }
 
@@ -336,7 +337,7 @@ public class JmsEndpointSyncProducerTest {
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(jmsSyncProducer.receive(800));
+        Assert.assertNull(jmsSyncProducer.receive(context, 800));
         Assert.assertEquals(retryCount, 4);
     }
 
@@ -361,7 +362,7 @@ public class JmsEndpointSyncProducerTest {
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(jmsSyncProducer.receive(250));
+        Assert.assertNull(jmsSyncProducer.receive(context, 250));
         Assert.assertEquals(retryCount, 2);
     }
 
@@ -386,7 +387,7 @@ public class JmsEndpointSyncProducerTest {
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(jmsSyncProducer.receive(0));
+        Assert.assertNull(jmsSyncProducer.receive(context, 0));
         Assert.assertEquals(retryCount, 1);
     }
 }

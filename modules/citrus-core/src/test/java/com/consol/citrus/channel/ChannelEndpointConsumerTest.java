@@ -20,6 +20,7 @@ import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.messaging.*;
 import org.springframework.integration.core.MessagingTemplate;
@@ -36,7 +37,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class ChannelEndpointConsumerTest {
+public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
@@ -66,7 +67,7 @@ public class ChannelEndpointConsumerTest {
         
         replay(messagingTemplate, channel);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
@@ -99,7 +100,7 @@ public class ChannelEndpointConsumerTest {
         
         replay(messagingTemplate, channel, channelResolver);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
@@ -130,7 +131,7 @@ public class ChannelEndpointConsumerTest {
         
         replay(messagingTemplate, channel);
         
-        Message receivedMessage = endpoint.createConsumer().receive();
+        Message receivedMessage = endpoint.createConsumer().receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
@@ -161,7 +162,7 @@ public class ChannelEndpointConsumerTest {
         
         replay(messagingTemplate, channel);
         
-        Message receivedMessage = endpoint.createConsumer().receive(25000L);
+        Message receivedMessage = endpoint.createConsumer().receive(context, 25000L);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
@@ -186,7 +187,7 @@ public class ChannelEndpointConsumerTest {
         replay(messagingTemplate, channel);
         
         try {
-            endpoint.createConsumer().receive();
+            endpoint.createConsumer().receive(context);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
@@ -205,7 +206,7 @@ public class ChannelEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setTimeout(0L);
 
         try {
-            endpoint.createConsumer().receive("Operation = 'sayHello'");
+            endpoint.createConsumer().receive("Operation = 'sayHello'", context);
             Assert.fail("Missing exception due to unsupported operation");
         } catch (CitrusRuntimeException e) {
             Assert.assertNotNull(e.getMessage());
@@ -221,7 +222,7 @@ public class ChannelEndpointConsumerTest {
         replay(queueChannel);
 
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
-        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'");
+        Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
@@ -247,7 +248,7 @@ public class ChannelEndpointConsumerTest {
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
         
         try {
-            endpoint.createConsumer().receive("Operation = 'sayHello'", 1500L);
+            endpoint.createConsumer().receive("Operation = 'sayHello'", context, 1500L);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));

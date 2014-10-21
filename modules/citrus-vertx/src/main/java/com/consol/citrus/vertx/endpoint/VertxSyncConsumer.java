@@ -16,6 +16,7 @@
 
 package com.consol.citrus.vertx.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.ReplyProducer;
@@ -58,8 +59,8 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     }
 
     @Override
-    public Message receive(long timeout) {
-        Message receivedMessage = super.receive(timeout);
+    public Message receive(TestContext context, long timeout) {
+        Message receivedMessage = super.receive(context, timeout);
         saveReplyDestination(receivedMessage);
 
         return receivedMessage;

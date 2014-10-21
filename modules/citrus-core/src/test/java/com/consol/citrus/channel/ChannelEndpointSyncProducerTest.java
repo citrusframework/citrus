@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
@@ -36,7 +37,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class ChannelEndpointSyncProducerTest {
+public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     private MessageChannel channel = org.easymock.EasyMock.createMock(MessageChannel.class);
@@ -245,7 +246,7 @@ public class ChannelEndpointSyncProducerTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.onReplyMessage("", message);
 
-        Assert.assertEquals(channelSyncProducer.receive(), message);
+        Assert.assertEquals(channelSyncProducer.receive(context), message);
     }
 
     @Test
@@ -257,7 +258,7 @@ public class ChannelEndpointSyncProducerTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.onReplyMessage(new DefaultReplyMessageCorrelator().getCorrelationKey(message), message);
 
-        Assert.assertEquals(channelSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message)), message);
+        Assert.assertEquals(channelSyncProducer.receive(new DefaultReplyMessageCorrelator().getCorrelationKey(message), context), message);
     }
     
 }

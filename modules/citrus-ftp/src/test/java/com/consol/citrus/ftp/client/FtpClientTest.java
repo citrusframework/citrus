@@ -19,6 +19,7 @@ package com.consol.citrus.ftp.client;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.*;
 import org.easymock.EasyMock;
@@ -31,7 +32,7 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FtpClientTest {
+public class FtpClientTest extends AbstractTestNGUnitTest {
 
     private FTPClient apacheFtpClient = EasyMock.createMock(FTPClient.class);
 
@@ -93,7 +94,7 @@ public class FtpClientTest {
 
         ftpClient.send(new FtpMessage(FTPCmd.PWD, null));
 
-        Message reply = ftpClient.receive();
+        Message reply = ftpClient.receive(context);
 
         Assert.assertTrue(reply instanceof FtpMessage);
 
@@ -137,7 +138,7 @@ public class FtpClientTest {
 
         ftpClient.send(new FtpMessage(FTPCmd.PWD, null));
 
-        Message reply = ftpClient.receive();
+        Message reply = ftpClient.receive(context);
 
         Assert.assertTrue(reply instanceof FtpMessage);
 
@@ -150,7 +151,7 @@ public class FtpClientTest {
 
         ftpClient.send(new FtpMessage(FTPCmd.MKD, "testDir"));
 
-        reply = ftpClient.receive();
+        reply = ftpClient.receive(context);
 
         Assert.assertTrue(reply instanceof FtpMessage);
 

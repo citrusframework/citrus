@@ -16,11 +16,17 @@
 
 package com.consol.citrus.endpoint;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
-import com.consol.citrus.message.Message;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Abstract endpoint adapter adds fallback message handler in case no response was provided.
@@ -28,13 +34,19 @@ import com.consol.citrus.message.Message;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNameAware {
+public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNameAware, InitializingBean, ApplicationContextAware {
 
     /** Fallback message handler */
     private MessageHandler fallbackMessageHandler = null;
 
     /** Endpoint adapter name */
     private String name = getClass().getSimpleName();
+
+    /** The Spring bean application context */
+    private ApplicationContext applicationContext;
+
+    @Autowired(required = false)
+    private TestContextFactory testContextFactory;
 
     /** Logger */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -66,6 +78,22 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
     protected abstract Message handleMessageInternal(Message message);
 
     @Override
+    public void afterPropertiesSet() throws Exception {
+        if (testContextFactory == null) {
+            log.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
+                    "This restricts test context capabilities to an absolute minimum! You could do better when enabling the root application context for this server instance.");
+
+            testContextFactory = new TestContextFactory();
+            testContextFactory.setApplicationContext(applicationContext);
+        }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
     public void setBeanName(String name) {
         this.name = name;
     }
@@ -92,5 +120,29 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
      */
     public void setFallbackMessageHandler(MessageHandler fallbackMessageHandler) {
         this.fallbackMessageHandler = fallbackMessageHandler;
+    }
+
+    /**
+     * Sets the test context factory.
+     * @param testContextFactory
+     */
+    public void setTestContextFactory(TestContextFactory testContextFactory) {
+        this.testContextFactory = testContextFactory;
+    }
+
+    /**
+     * Gets the test context factory.
+     * @return
+     */
+    public TestContextFactory getTestContextFactory() {
+        return testContextFactory;
+    }
+
+    /**
+     * Gets new test context from factory.
+     * @return
+     */
+    protected TestContext getTestContext() {
+        return testContextFactory.getObject();
     }
 }

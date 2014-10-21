@@ -17,6 +17,7 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.channel.selector.DispatchingMessageSelector;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
@@ -51,7 +52,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
     }
 
     @Override
-    public Message receive(String selector, long timeout) {
+    public Message receive(String selector, TestContext context, long timeout) {
         String destinationChannelName;
         MessageChannel destinationChannel = getDestinationChannel();
 

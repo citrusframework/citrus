@@ -19,6 +19,7 @@ package com.consol.citrus.camel.endpoint;
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.*;
 import org.apache.camel.impl.*;
 import org.easymock.EasyMock;
@@ -32,7 +33,7 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CamelSyncEndpointTest {
+public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
     private CamelContext camelContext = EasyMock.createMock(CamelContext.class);
     private ProducerTemplate producerTemplate = EasyMock.createMock(ProducerTemplate.class);
@@ -65,7 +66,7 @@ public class CamelSyncEndpointTest {
         replay(camelContext, producerTemplate);
 
         camelEndpoint.createProducer().send(requestMessage);
-        Message reply = camelEndpoint.createConsumer().receive(5000L);
+        Message reply = camelEndpoint.createConsumer().receive(context, 5000L);
 
         Assert.assertEquals(reply.getPayload(), "Hello from Camel!");
         Assert.assertEquals(reply.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID), exchange.getExchangeId());
@@ -104,7 +105,7 @@ public class CamelSyncEndpointTest {
 
         replay(camelContext, consumerTemplate);
 
-        Message receivedMessage = camelEndpoint.createConsumer().receive(endpointConfiguration.getTimeout());
+        Message receivedMessage = camelEndpoint.createConsumer().receive(context, endpointConfiguration.getTimeout());
         Assert.assertEquals(receivedMessage.getPayload(), "Hello from Camel!");
         Assert.assertEquals(receivedMessage.getHeader("operation"), "newsFeed");
         Assert.assertNotNull(receivedMessage.getHeader(CitrusCamelMessageHeaders.EXCHANGE_ID));
@@ -155,7 +156,7 @@ public class CamelSyncEndpointTest {
         replay(camelContext, producerTemplate, messageListeners);
 
         camelEndpoint.createProducer().send(requestMessage);
-        camelEndpoint.createConsumer().receive(5000L);
+        camelEndpoint.createConsumer().receive(context, 5000L);
 
         verify(camelContext, producerTemplate, messageListeners);
     }

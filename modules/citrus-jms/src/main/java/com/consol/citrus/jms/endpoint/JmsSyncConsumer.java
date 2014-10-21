@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.jms.message.CitrusJmsMessageHeaders;
 import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.Message;
@@ -56,8 +57,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     }
 
     @Override
-    public Message receive(String selector, long timeout) {
-        Message receivedMessage = super.receive(selector, timeout);
+    public Message receive(String selector, TestContext context, long timeout) {
+        Message receivedMessage = super.receive(selector, context, timeout);
 
         JmsMessage jmsMessage;
         if (receivedMessage instanceof JmsMessage) {

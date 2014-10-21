@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.Message;
 
@@ -36,7 +37,7 @@ public abstract class AbstractMessageConsumer implements Consumer {
         this.endpointConfiguration = endpointConfiguration;
     }
 
-    public Message receive() {
-        return receive(endpointConfiguration.getTimeout());
+    public Message receive(TestContext context) {
+        return receive(context, endpointConfiguration.getTimeout());
     }
 }

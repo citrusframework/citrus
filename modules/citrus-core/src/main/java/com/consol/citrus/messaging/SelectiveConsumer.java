@@ -16,6 +16,7 @@
 
 package com.consol.citrus.messaging;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
 /**
@@ -26,16 +27,19 @@ public interface SelectiveConsumer extends Consumer {
 
     /**
      * Receive message with a message selector and default timeout.
+     *
      * @param selector
+     * @param context
      * @return
      */
-    Message receive(String selector);
+    Message receive(String selector, TestContext context);
 
     /**
      * Receive message with a message selector and a receive timeout.
+     *
      * @param selector
-     * @param timeout
-     * @return
+     * @param context
+     *@param timeout  @return
      */
-    Message receive(String selector, long timeout);
+    Message receive(String selector, TestContext context, long timeout);
 }

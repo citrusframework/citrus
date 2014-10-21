@@ -48,7 +48,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(1000L)).andReturn(null).once();
+        expect(consumer.receive(context, 1000L)).andReturn(null).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -69,7 +69,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(500L)).andReturn(null).once();
+        expect(consumer.receive(context, 500L)).andReturn(null).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -91,7 +91,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive(1000L)).andReturn(message).once();
+        expect(consumer.receive(context, 1000L)).andReturn(message).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         
@@ -116,7 +116,7 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
         expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
 
-        expect(consumer.receive("Operation = 'sayHello'", 1000L)).andReturn(null).once();
+        expect(consumer.receive("Operation = 'sayHello'", context, 1000L)).andReturn(null).once();
         expect(endpoint.getActor()).andReturn(null).anyTimes();
         replay(endpoint, consumer, endpointConfiguration);
         

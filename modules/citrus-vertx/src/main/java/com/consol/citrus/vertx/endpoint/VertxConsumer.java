@@ -16,6 +16,7 @@
 
 package com.consol.citrus.vertx.endpoint;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.messaging.AbstractMessageConsumer;
 import com.consol.citrus.message.Message;
@@ -60,7 +61,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
     }
 
     @Override
-    public Message receive(long timeout) {
+    public Message receive(TestContext context, long timeout) {
         log.info("Receiving message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         VertxSingleMessageHandler vertxMessageHandler = new VertxSingleMessageHandler();

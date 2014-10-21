@@ -21,6 +21,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.beans.factory.BeanFactory;
@@ -43,7 +44,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class ChannelEndpointSyncConsumerTest {
+public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = EasyMock.createMock(MessagingTemplate.class);
     
@@ -77,7 +78,7 @@ public class ChannelEndpointSyncConsumerTest {
         replay(messagingTemplate, channel, replyChannel);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = channelSyncConsumer.receive();
+        Message receivedMessage = channelSyncConsumer.receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
@@ -117,7 +118,7 @@ public class ChannelEndpointSyncConsumerTest {
         replay(messagingTemplate, channel, replyChannel, channelResolver);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = channelSyncConsumer.receive();
+        Message receivedMessage = channelSyncConsumer.receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
@@ -160,7 +161,7 @@ public class ChannelEndpointSyncConsumerTest {
         replay(messagingTemplate, channel, replyChannel, factory);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = channelSyncConsumer.receive();
+        Message receivedMessage = channelSyncConsumer.receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
@@ -198,7 +199,7 @@ public class ChannelEndpointSyncConsumerTest {
         replay(messagingTemplate, channel, replyChannel);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = channelSyncConsumer.receive();
+        Message receivedMessage = channelSyncConsumer.receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
@@ -237,7 +238,7 @@ public class ChannelEndpointSyncConsumerTest {
         replay(messagingTemplate, channel, replyChannel, replyMessageCorrelator);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = channelSyncConsumer.receive();
+        Message receivedMessage = channelSyncConsumer.receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
@@ -269,7 +270,7 @@ public class ChannelEndpointSyncConsumerTest {
         
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-            channelSyncConsumer.receive();
+            channelSyncConsumer.receive(context);
         } catch(ActionTimeoutException e) {
             Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
             verify(messagingTemplate, channel, replyChannel);
@@ -301,7 +302,7 @@ public class ChannelEndpointSyncConsumerTest {
         replay(messagingTemplate, channel, replyChannel);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
-        Message receivedMessage = channelSyncConsumer.receive();
+        Message receivedMessage = channelSyncConsumer.receive(context);
         
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());

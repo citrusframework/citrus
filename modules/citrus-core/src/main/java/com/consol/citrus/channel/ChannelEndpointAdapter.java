@@ -63,7 +63,7 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements B
         Message replyMessage = null;
         try {
             producer.send(request);
-            replyMessage = producer.receive(endpointConfiguration.getTimeout());
+            replyMessage = producer.receive(getTestContext(), endpointConfiguration.getTimeout());
         } catch (ActionTimeoutException e) {
             log.warn(e.getMessage());
         }
