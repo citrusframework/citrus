@@ -40,4 +40,10 @@ public interface Consumer {
      * @return
      */
     Message receive(TestContext context, long timeout);
+
+    /**
+     * Gets the consumer name.
+     * @return
+     */
+    String getName();
 }

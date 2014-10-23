@@ -29,12 +29,22 @@ public abstract class AbstractMessageConsumer implements Consumer {
     /** Endpoint configuration */
     private final EndpointConfiguration endpointConfiguration;
 
+    /** The consumer name */
+    private final String name;
+
     /**
      * Default constructor using receive timeout setting.
+     * @param name
      * @param endpointConfiguration
      */
-    public AbstractMessageConsumer(EndpointConfiguration endpointConfiguration) {
+    public AbstractMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
+        this.name = name;
         this.endpointConfiguration = endpointConfiguration;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public Message receive(TestContext context) {

@@ -46,10 +46,12 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
+     * @param messageListeners
      */
-    public JmsSyncConsumer(JmsSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
-        super(endpointConfiguration, messageListeners);
+    public JmsSyncConsumer(String name, JmsSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
+        super(name, endpointConfiguration, messageListeners);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -73,7 +75,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     public void send(final Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = getCorrelationKey(context);
+        String correlationKey = context.getCorrelationKey(this);
         Destination replyDestination = findReplyDestination(correlationKey);
         Assert.notNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
@@ -112,7 +114,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     public void saveReplyDestination(JmsMessage jmsMessage, TestContext context) {
         if (jmsMessage.getReplyTo() != null) {
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(jmsMessage);
-            context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+            context.saveCorrelationKey(correlationKey, this);
             destinationManager.store(correlationKey, jmsMessage.getReplyTo());
         }  else {
             log.warn("Unable to retrieve reply to destination for message \n" +
@@ -155,16 +157,4 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         }
     }
 
-    /**
-     * Looks for default correlation id in message header and test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
-    }
 }

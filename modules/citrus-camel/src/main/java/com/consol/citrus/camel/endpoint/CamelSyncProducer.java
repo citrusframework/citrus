@@ -17,6 +17,7 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.report.MessageListeners;
@@ -46,11 +47,12 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     /**
      * Constructor using endpoint configuration and fields.
      *
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public CamelSyncProducer(CamelSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(endpointConfiguration, messageListener);
+    public CamelSyncProducer(String name, CamelSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(name, endpointConfiguration, messageListener);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -59,7 +61,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
 
         onOutboundMessage(message);
 
@@ -82,7 +84,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -116,6 +118,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
             message = replyManager.find(selector);
         }
 
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply on channel");
+        }
+
         return message;
     }
 
@@ -129,18 +135,5 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 }

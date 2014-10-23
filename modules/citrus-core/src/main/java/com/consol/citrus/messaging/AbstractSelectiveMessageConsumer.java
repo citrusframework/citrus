@@ -32,10 +32,11 @@ public abstract class AbstractSelectiveMessageConsumer extends AbstractMessageCo
     /**
      * Default constructor using receive timeout setting.
      *
+     * @param name
      * @param endpointConfiguration
      */
-    public AbstractSelectiveMessageConsumer(EndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration);
+    public AbstractSelectiveMessageConsumer(String name, EndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 

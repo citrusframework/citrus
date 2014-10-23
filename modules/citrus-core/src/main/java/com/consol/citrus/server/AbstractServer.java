@@ -139,6 +139,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             channelEndpointConfiguration.setTimeout(defaultTimeout);
             channelEndpointConfiguration.setUseObjectMessages(true);
             endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
+            endpointAdapter.getEndpoint().setName(getName());
             ((AbstractEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
         }
 

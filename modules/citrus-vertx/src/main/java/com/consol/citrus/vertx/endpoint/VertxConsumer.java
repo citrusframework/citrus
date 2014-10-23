@@ -49,12 +49,13 @@ public class VertxConsumer extends AbstractMessageConsumer {
 
     /**
      * Default constructor using endpoint.
+     * @param name
      * @param vertx
      * @param endpointConfiguration
      * @param messageListener
      */
-    public VertxConsumer(Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(endpointConfiguration);
+    public VertxConsumer(String name, Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(name, endpointConfiguration);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;

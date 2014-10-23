@@ -42,11 +42,12 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
 
     /**
      * Default constructor using endpoint.
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public JmsConsumer(JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(endpointConfiguration);
+    public JmsConsumer(String name, JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
     }

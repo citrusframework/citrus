@@ -32,4 +32,10 @@ public interface Producer {
      */
     void send(Message message, TestContext context);
 
+    /**
+     * Gets the producer name.
+     * @return
+     */
+    String getName();
+
 }

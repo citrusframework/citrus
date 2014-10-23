@@ -34,14 +34,19 @@ public class ChannelProducer implements Producer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ChannelProducer.class);
 
+    /** The producer name */
+    private final String name;
+
     /** Endpoint configuration*/
     private ChannelEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
      */
-    public ChannelProducer(ChannelEndpointConfiguration endpointConfiguration) {
+    public ChannelProducer(String name, ChannelEndpointConfiguration endpointConfiguration) {
+        this.name = name;
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -111,5 +116,10 @@ public class ChannelProducer implements Producer {
         }
 
         return endpointConfiguration.getChannelResolver().resolveDestination(channelName);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

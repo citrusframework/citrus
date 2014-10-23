@@ -56,7 +56,7 @@ public class ChannelSyncEndpoint extends ChannelEndpoint {
         }
 
         if (messageChannelSyncConsumer == null) {
-            messageChannelSyncConsumer = new ChannelSyncConsumer(getEndpointConfiguration());
+            messageChannelSyncConsumer = new ChannelSyncConsumer(getConsumerName(), getEndpointConfiguration());
         }
 
         return messageChannelSyncConsumer;
@@ -69,7 +69,7 @@ public class ChannelSyncEndpoint extends ChannelEndpoint {
         }
 
         if (messageChannelSyncProducer == null) {
-            messageChannelSyncProducer = new ChannelSyncProducer(getEndpointConfiguration());
+            messageChannelSyncProducer = new ChannelSyncProducer(getProducerName(), getEndpointConfiguration());
         }
 
         return messageChannelSyncProducer;

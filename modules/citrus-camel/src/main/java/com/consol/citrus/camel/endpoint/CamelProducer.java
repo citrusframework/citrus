@@ -31,6 +31,10 @@ import org.slf4j.LoggerFactory;
  * @since 1.4.1
  */
 public class CamelProducer implements Producer {
+
+    /** The producer name. */
+    private final String name;
+
     /** Endpoint configuration */
     private final CamelEndpointConfiguration endpointConfiguration;
 
@@ -42,10 +46,12 @@ public class CamelProducer implements Producer {
 
     /**
      * Constructor using endpoint configuration and fields.
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public CamelProducer(CamelEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public CamelProducer(String name, CamelEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        this.name = name;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
     }
@@ -81,6 +87,11 @@ public class CamelProducer implements Producer {
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     /**

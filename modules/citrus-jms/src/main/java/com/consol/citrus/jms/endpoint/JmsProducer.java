@@ -37,6 +37,9 @@ public class JmsProducer implements Producer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmsProducer.class);
 
+    /** The producer name. */
+    private final String name;
+
     /** Endpoint configuration */
     private final JmsEndpointConfiguration endpointConfiguration;
 
@@ -45,10 +48,12 @@ public class JmsProducer implements Producer {
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public JmsProducer(JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public JmsProducer(String name, JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        this.name = name;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
     }
@@ -85,6 +90,11 @@ public class JmsProducer implements Producer {
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     /**

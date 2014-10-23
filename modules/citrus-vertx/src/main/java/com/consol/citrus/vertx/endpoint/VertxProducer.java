@@ -33,6 +33,9 @@ public class VertxProducer implements Producer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(VertxProducer.class);
 
+    /** The producer name. */
+    private final String name;
+
     /** Vert.x instance */
     private final Vertx vertx;
 
@@ -44,10 +47,12 @@ public class VertxProducer implements Producer {
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public VertxProducer(Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public VertxProducer(String name, Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        this.name = name;
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
@@ -98,6 +103,11 @@ public class VertxProducer implements Producer {
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     /**

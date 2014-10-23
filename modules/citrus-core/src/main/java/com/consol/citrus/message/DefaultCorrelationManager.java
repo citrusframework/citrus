@@ -16,7 +16,11 @@
 
 package com.consol.citrus.message;
 
-import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Christoph Deppisch
@@ -24,16 +28,32 @@ import java.util.*;
  */
 public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(DefaultCorrelationManager.class);
+
     /** Map of managed objects */
-    private Map<String, T> objectStore = new HashMap<String, T>();
+    private Map<String, T> objectStore = new ConcurrentHashMap<String, T>();
 
     @Override
     public void store(String correlationKey, T object) {
+        if (object == null) {
+            log.warn(String.format("Ignore correlated null object for '%s'", correlationKey));
+            return;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Saving correlated object for '%s'", correlationKey));
+        }
+
         objectStore.put(correlationKey, object);
     }
 
     @Override
     public T find(String correlationKey) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Finding correlated object for '%s'", correlationKey));
+        }
+
         return objectStore.remove(correlationKey);
     }
 

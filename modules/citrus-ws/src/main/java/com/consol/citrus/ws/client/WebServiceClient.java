@@ -88,7 +88,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         }
 
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(soapMessage);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {
@@ -133,7 +133,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -190,19 +190,6 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      */
     public Message findReplyMessage(String correlationKey) {
         return replyManager.find(correlationKey);
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 
     /**

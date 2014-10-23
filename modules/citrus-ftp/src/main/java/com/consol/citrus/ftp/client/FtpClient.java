@@ -82,7 +82,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
 
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(ftpMessage);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
 
         log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
@@ -141,7 +141,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -230,19 +230,6 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public Message findReplyMessage(String correlationKey) {
         return replyManager.find(correlationKey);
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 
     /**

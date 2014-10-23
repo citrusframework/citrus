@@ -46,10 +46,12 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
+     * @param messageListeners
      */
-    public VertxSyncConsumer(Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
-        super(vertx, endpointConfiguration, messageListeners);
+    public VertxSyncConsumer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
+        super(name, vertx, endpointConfiguration, messageListeners);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -66,7 +68,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = getCorrelationKey(context);
+        String correlationKey = context.getCorrelationKey(this);
         String replyAddress = addressManager.find(correlationKey);
         Assert.notNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
 
@@ -89,7 +91,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     public void saveReplyDestination(Message receivedMessage, TestContext context) {
         if (receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS) != null) {
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
-            context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+            context.saveCorrelationKey(correlationKey, this);
             addressManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }  else {
             log.warn("Unable to retrieve reply address for message \n" +
@@ -109,16 +111,4 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         }
     }
 
-    /**
-     * Looks for default correlation id in message header and test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
-    }
 }

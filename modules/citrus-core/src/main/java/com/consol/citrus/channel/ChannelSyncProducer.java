@@ -43,17 +43,18 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     /**
      * Default constructor using endpoint configuration.
      *
+     * @param name
      * @param endpointConfiguration
      */
-    public ChannelSyncProducer(ChannelSyncEndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration);
+    public ChannelSyncProducer(String name, ChannelSyncEndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 
     @Override
     public void send(Message message, TestContext context) {
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
 
         String destinationChannelName = getDestinationChannelName();
 
@@ -82,7 +83,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -135,18 +136,5 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      */
     public Message findReplyMessage(String correlationKey) {
         return replyManager.find(correlationKey);
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 }

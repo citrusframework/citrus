@@ -22,6 +22,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
@@ -422,5 +424,35 @@ public class TestContext {
      */
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Gets special correlation key test variable for given consumer instance.
+     * @param consumer
+     * @return
+     */
+    public String getCorrelationKey(Consumer consumer) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Get correlation key for '%s'", MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName()));
+        }
+
+        if (variables.containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName())) {
+            return getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName());
+        }
+
+        throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName()));
+    }
+
+    /**
+     * Saves new correlation key for given consumer instance.
+     * @param correlationKey
+     * @param consumer
+     */
+    public void saveCorrelationKey(String correlationKey, Consumer consumer) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Saving correlation key for '%s'", MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName()));
+        }
+
+        setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName(), correlationKey);
     }
 }

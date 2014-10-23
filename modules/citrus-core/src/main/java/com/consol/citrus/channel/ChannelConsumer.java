@@ -44,10 +44,11 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
      */
-    public ChannelConsumer(ChannelEndpointConfiguration endpointConfiguration) {
-        super(endpointConfiguration);
+    public ChannelConsumer(String name, ChannelEndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 

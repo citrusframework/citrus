@@ -99,7 +99,7 @@
         <message>Test 3: Receive JMS message timeout response</message>
       </echo>
 
-      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="Failed to receive message - message is not available">
+      <assert exception="com.consol.citrus.exceptions.ActionTimeoutException" message="Action timeout while receiving synchronous reply on destination">
         <receive endpoint="helloServiceJmsSyncEndpoint" timeout="300">
           <description>Receive JMS timeout: HelloService -> Citrus</description>
           <selector>

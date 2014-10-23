@@ -19,6 +19,7 @@ package com.consol.citrus.jms.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,8 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
         this.endpointConfiguration = endpointConfiguration;
 
         endpoint = new JmsSyncEndpoint(endpointConfiguration);
-        producer = new JmsSyncProducer(endpointConfiguration, null, getName());
+        endpoint.setName(getName());
+        producer = new JmsSyncProducer(endpoint.getProducerName(), endpointConfiguration, null);
     }
 
     @Override
@@ -59,13 +61,16 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
         log.info("Forwarding request to jms destination ...");
 
         TestContext context = getTestContext();
-        producer.send(request, context);
-        Message replyMessage;
-
-        if (endpointConfiguration.getCorrelator() != null) {
-            replyMessage = producer.receive(endpointConfiguration.getCorrelator().getCorrelationKey(request), context, endpointConfiguration.getTimeout());
-        } else {
-            replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
+        Message replyMessage = null;
+        try {
+            producer.send(request, context);
+            if (endpointConfiguration.getCorrelator() != null) {
+                replyMessage = producer.receive(endpointConfiguration.getCorrelator().getCorrelationKey(request), context, endpointConfiguration.getTimeout());
+            } else {
+                replyMessage = producer.receive(context, endpointConfiguration.getTimeout());
+            }
+        } catch (ActionTimeoutException e) {
+            log.warn(e.getMessage());
         }
 
         return replyMessage;

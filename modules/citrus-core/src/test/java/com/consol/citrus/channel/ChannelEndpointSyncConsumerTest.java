@@ -344,7 +344,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         Message request = new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel);
 
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + endpoint.createConsumer().hashCode(), request.getId());
+        context.saveCorrelationKey(request.getId(), endpoint.createConsumer());
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
@@ -381,12 +381,38 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         try {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.send(message, context);
-        } catch(IllegalArgumentException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to find reply channel for message correlation key"), e.getMessage());
+        } catch(CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Failed to get correlation key for"), e.getMessage());
             return;
         }
 
         Assert.fail("Missing " + IllegalArgumentException.class + " because of missing correlation key");
+    }
+
+    @Test
+    public void testNoCorrelationKeyFound() {
+        ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
+        endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
+        endpoint.getEndpointConfiguration().setCorrelator(correlator);
+
+        ChannelSyncEndpoint dummyEndpoint = new ChannelSyncEndpoint();
+        dummyEndpoint.setName("dummyEndpoint");
+        context.saveCorrelationKey("123456789", dummyEndpoint.createConsumer());
+
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
+
+        try {
+            ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
+            channelSyncConsumer.send(message, context);
+        } catch(CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Failed to get correlation key"));
+            return;
+        }
+
+        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
     }
 
     @Test
@@ -397,7 +423,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + endpoint.createConsumer().hashCode(), "123456789");
+        context.saveCorrelationKey("123456789", endpoint.createConsumer());
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);

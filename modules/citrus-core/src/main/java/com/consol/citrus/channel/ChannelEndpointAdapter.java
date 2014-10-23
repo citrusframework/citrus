@@ -54,7 +54,8 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements B
         this.endpointConfiguration = endpointConfiguration;
 
         endpoint = new ChannelSyncEndpoint(endpointConfiguration);
-        producer = new ChannelSyncProducer(endpointConfiguration);
+        endpoint.setName(getName());
+        producer = new ChannelSyncProducer(endpoint.getProducerName(), endpointConfiguration);
     }
 
     @Override

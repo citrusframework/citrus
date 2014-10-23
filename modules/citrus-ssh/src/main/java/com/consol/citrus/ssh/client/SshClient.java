@@ -82,7 +82,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public void send(Message message, TestContext context) {
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
 
         String payload = (String) message.getPayload();
         SshRequest request = (SshRequest) getEndpointConfiguration().getXmlMapper().fromXML(payload);
@@ -122,7 +122,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -175,19 +175,6 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public Message findReplyMessage(String correlationKey) {
         return replyManager.find(correlationKey);
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 
     @Override

@@ -55,7 +55,7 @@ public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAwar
     @Override
     public SelectiveConsumer createConsumer() {
         if (channelConsumer == null) {
-            channelConsumer = new ChannelConsumer(getEndpointConfiguration());
+            channelConsumer = new ChannelConsumer(getConsumerName(), getEndpointConfiguration());
         }
 
         return channelConsumer;
@@ -64,7 +64,7 @@ public class ChannelEndpoint extends AbstractEndpoint implements BeanFactoryAwar
     @Override
     public Producer createProducer() {
         if (channelProducer == null) {
-            channelProducer = new ChannelProducer(getEndpointConfiguration());
+            channelProducer = new ChannelProducer(getProducerName(), getEndpointConfiguration());
         }
 
         return channelProducer;

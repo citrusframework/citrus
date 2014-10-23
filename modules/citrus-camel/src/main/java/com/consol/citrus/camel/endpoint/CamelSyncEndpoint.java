@@ -56,7 +56,7 @@ public class CamelSyncEndpoint extends CamelEndpoint {
         }
 
         if (camelSyncMessageConsumer == null) {
-            camelSyncMessageConsumer = new CamelSyncConsumer(getEndpointConfiguration(), getMessageListener());
+            camelSyncMessageConsumer = new CamelSyncConsumer(getConsumerName(), getEndpointConfiguration(), getMessageListener());
         }
 
         return camelSyncMessageConsumer;
@@ -69,7 +69,7 @@ public class CamelSyncEndpoint extends CamelEndpoint {
         }
 
         if (camelSyncMessageProducer == null) {
-            camelSyncMessageProducer = new CamelSyncProducer(getEndpointConfiguration(), getMessageListener());
+            camelSyncMessageProducer = new CamelSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener());
         }
 
         return camelSyncMessageProducer;

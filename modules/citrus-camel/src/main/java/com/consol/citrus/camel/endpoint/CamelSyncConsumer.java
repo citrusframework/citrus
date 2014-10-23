@@ -46,12 +46,12 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
     /**
      * Constructor using endpoint configuration and fields.
-     *
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public CamelSyncConsumer(CamelSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(endpointConfiguration, messageListener);
+    public CamelSyncConsumer(String name, CamelSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(name, endpointConfiguration, messageListener);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -71,7 +71,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         onInboundMessage(message);
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
         exchangeManager.store(correlationKey, exchange);
 
         return message;
@@ -81,7 +81,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = getCorrelationKey(context);
+        String correlationKey = context.getCorrelationKey(this);
         Exchange exchange = exchangeManager.find(correlationKey);
         Assert.notNull(exchange, "Failed to find camel exchange for message correlation key: '" + correlationKey + "'");
 
@@ -147,16 +147,4 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         }
     }
 
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
-    }
 }

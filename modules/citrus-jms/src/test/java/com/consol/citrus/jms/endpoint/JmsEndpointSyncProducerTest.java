@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
@@ -270,7 +271,8 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
-        jmsSyncProducer.onReplyMessage("", message);
+        context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
+        jmsSyncProducer.onReplyMessage(jmsSyncProducer.toString(), message);
 
         Assert.assertEquals(jmsSyncProducer.receive(context), message);
     }
@@ -296,7 +298,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -311,6 +313,8 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         };
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
+        context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
+
         Assert.assertEquals(retryCount, 0);
         Assert.assertEquals(jmsSyncProducer.receive(context, 2500), message);
         Assert.assertEquals(retryCount, 5);
@@ -323,7 +327,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -336,9 +340,15 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setPollingInterval(300L);
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
+        context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
+
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(jmsSyncProducer.receive(context, 800));
-        Assert.assertEquals(retryCount, 4);
+        try {
+            jmsSyncProducer.receive(context, 800);
+            Assert.fail("Missing action timeout exception");
+        } catch (ActionTimeoutException e) {
+            Assert.assertEquals(retryCount, 4);
+        }
     }
 
     @Test
@@ -348,7 +358,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -361,9 +371,15 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setPollingInterval(1000L);
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
+        context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
+
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(jmsSyncProducer.receive(context, 250));
-        Assert.assertEquals(retryCount, 2);
+        try {
+            jmsSyncProducer.receive(context, 250);
+            Assert.fail("Missing action timeout exception");
+        } catch (ActionTimeoutException e) {
+            Assert.assertEquals(retryCount, 2);
+        }
     }
 
     @Test
@@ -373,7 +389,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getEndpointConfiguration(), getMessageListener(), getName()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -386,8 +402,14 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setPollingInterval(1000L);
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
+        context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
+
         Assert.assertEquals(retryCount, 0);
-        Assert.assertNull(jmsSyncProducer.receive(context, 0));
-        Assert.assertEquals(retryCount, 1);
+        try {
+            jmsSyncProducer.receive(context, 0);
+            Assert.fail("Missing action timeout exception");
+        } catch (ActionTimeoutException e) {
+            Assert.assertEquals(retryCount, 1);
+        }
     }
 }

@@ -17,6 +17,7 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
@@ -44,9 +45,6 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     /** JMS session */
     private Session session = null;
 
-    /** This producer's name used for durable subscriptions and as topic client id*/
-    private final String name;
-
     /** Store of reply messages */
     private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
@@ -61,16 +59,13 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     /**
      * Default constructor using endpoint configuration.
+     * @param name
      * @param endpointConfiguration
      * @param messageListeners
-     * @param name
      */
-    public JmsSyncProducer(JmsSyncEndpointConfiguration endpointConfiguration,
-                           MessageListeners messageListeners,
-                           String name) {
-        super(endpointConfiguration, messageListeners);
+    public JmsSyncProducer(String name, JmsSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
+        super(name, endpointConfiguration, messageListeners);
         this.endpointConfiguration = endpointConfiguration;
-        this.name = name;
     }
 
     @Override
@@ -78,7 +73,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
@@ -114,6 +109,12 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             log.info("Waiting for reply message on destination: '{}'", replyToDestination);
 
             javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
+
+            if (jmsReplyMessage == null) {
+                throw new ActionTimeoutException("Reply timed out after " +
+                        endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply destination");
+            }
+
             Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration);
 
             log.info("Received reply message on destination: '{}'", replyToDestination);
@@ -132,7 +133,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -142,7 +143,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -166,6 +167,10 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             message = findReplyMessage(selector);
         }
 
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply on destination");
+        }
+
         return message;
     }
 
@@ -180,7 +185,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
                 connection = ((QueueConnectionFactory) endpointConfiguration.getConnectionFactory()).createQueueConnection();
             } else if (endpointConfiguration.isPubSubDomain() && endpointConfiguration.getConnectionFactory() instanceof TopicConnectionFactory) {
                 connection = ((TopicConnectionFactory) endpointConfiguration.getConnectionFactory()).createTopicConnection();
-                connection.setClientID(name);
+                connection.setClientID(getName());
             } else {
                 log.warn("Not able to create a connection with connection factory '" + endpointConfiguration.getConnectionFactory() + "'" +
                         " when using setting 'publish-subscribe-domain' (=" + endpointConfiguration.isPubSubDomain() + ")");
@@ -229,7 +234,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             messageConsumer = session.createConsumer(replyToDestination,
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'");
         } else {
-            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, name,
+            messageConsumer = session.createDurableSubscriber((Topic)replyToDestination, getName(),
                     "JMSCorrelationID = '" + messageId.replaceAll("'", "''") + "'", false);
         }
 
@@ -325,19 +330,6 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      */
     public Message findReplyMessage(String correlationKey) {
         return replyManager.find(correlationKey);
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 
     /**

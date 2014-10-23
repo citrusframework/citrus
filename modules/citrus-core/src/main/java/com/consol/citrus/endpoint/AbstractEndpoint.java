@@ -54,6 +54,22 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
     }
 
     /**
+     * Gets the endpoints consumer name.
+     * @return
+     */
+    public String getConsumerName() {
+        return name + ":consumer";
+    }
+
+    /**
+     * Gets the endpoints producer name.
+     * @return
+     */
+    public String getProducerName() {
+        return name + ":producer";
+    }
+
+    /**
      * Gets the actor.
      * @return the actor the actor to get.
      */

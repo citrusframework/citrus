@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
@@ -195,7 +196,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsMessage requestMessage = new JmsMessage("")
                 .setReplyTo(replyDestination);
 
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + endpoint.createConsumer().hashCode(), requestMessage.getId());
+        context.saveCorrelationKey(requestMessage.getId(), endpoint.createConsumer());
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
@@ -224,6 +225,35 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testNoCorrelationKeyFound() {
+        JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
+        endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
+
+        JmsMessage requestMessage = new JmsMessage("");
+
+        MessageCorrelator correlator = new DefaultMessageCorrelator();
+        endpoint.getEndpointConfiguration().setCorrelator(correlator);
+
+        JmsSyncEndpoint dummyEndpoint = new JmsSyncEndpoint();
+        dummyEndpoint.setName("dummyEndpoint");
+        context.saveCorrelationKey("123456789", dummyEndpoint.createConsumer());
+
+        Map<String, Object> headers = new HashMap<String, Object>();
+        final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
+
+        try {
+            JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer) endpoint.createConsumer();
+            jmsSyncConsumer.saveReplyDestination(requestMessage, context);
+            jmsSyncConsumer.send(message, context);
+        } catch(CitrusRuntimeException e) {
+            Assert.assertTrue(e.getMessage().startsWith("Failed to get correlation key"));
+            return;
+        }
+
+        Assert.fail("Missing " + IllegalArgumentException.class + " because no reply destination found");
+    }
+
+    @Test
     public void testSendMessageWithMissingReplyTo() throws JMSException {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
@@ -232,6 +262,8 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
+
+        context.saveCorrelationKey("123456789", endpoint.createConsumer());
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -255,7 +287,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + endpoint.createConsumer().hashCode(), "123456789");
+        context.saveCorrelationKey("123456789", endpoint.createConsumer());
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);

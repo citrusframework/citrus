@@ -49,12 +49,13 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     /**
      * Default constructor using endpoint configuration.
      *
+     * @param name
      * @param vertx
      * @param endpointConfiguration
      * @param messageListener
      */
-    public VertxSyncProducer(Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(vertx, endpointConfiguration, messageListener);
+    public VertxSyncProducer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        super(name, vertx, endpointConfiguration, messageListener);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -64,7 +65,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
         log.info("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         final String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+        context.saveCorrelationKey(correlationKey, this);
         onOutboundMessage(message);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
@@ -85,7 +86,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getCorrelationKey(context), context);
+        return receive(context.getCorrelationKey(this), context);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getCorrelationKey(context), context, timeout);
+        return receive(context.getCorrelationKey(this), context, timeout);
     }
 
     @Override
@@ -138,19 +139,6 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
      */
     public Message findReplyMessage(String correlationKey) {
         return replyManager.find(correlationKey);
-    }
-
-    /**
-     * Looks for default correlation id in test context. If not present constructs default correlation key.
-     * @param context
-     * @return
-     */
-    private String getCorrelationKey(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
-        }
-
-        return "";
     }
 
     /**

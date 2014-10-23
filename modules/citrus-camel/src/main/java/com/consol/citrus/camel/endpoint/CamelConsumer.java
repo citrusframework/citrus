@@ -36,15 +36,20 @@ public class CamelConsumer implements Consumer {
     /** Message listener  */
     private final MessageListeners messageListener;
 
+    /** The consumer name */
+    private final String name;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CamelConsumer.class);
 
     /**
      * Constructor using endpoint configuration and fields.
+     * @param name
      * @param endpointConfiguration
      * @param messageListener
      */
-    public CamelConsumer(CamelEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public CamelConsumer(String name, CamelEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+        this.name = name;
         this.endpointConfiguration = endpointConfiguration;
         this.messageListener = messageListener;
     }
@@ -82,6 +87,11 @@ public class CamelConsumer implements Consumer {
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     /**
