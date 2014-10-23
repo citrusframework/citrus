@@ -195,8 +195,9 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsMessage requestMessage = new JmsMessage("")
                 .setReplyTo(replyDestination);
 
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + endpoint.createConsumer().hashCode(), requestMessage.getId());
+
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(MessageHeaders.MESSAGE_CORRELATION_KEY, requestMessage.getId());
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         reset(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -254,8 +255,9 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + endpoint.createConsumer().hashCode(), "123456789");
+
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put(MessageHeaders.MESSAGE_CORRELATION_KEY, "123456789");
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
 
         try {

@@ -18,8 +18,8 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
@@ -31,8 +31,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.jms.*;
-import javax.jms.Queue;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -50,7 +48,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     private final String name;
 
     /** Store of reply messages */
-    private Map<String, Message> replyMessages = new HashMap<String, Message>();
+    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
     /** Endpoint configuration */
     private final JmsSyncEndpointConfiguration endpointConfiguration;
@@ -79,7 +77,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = createCorrelationKey(message, context);
+        String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
@@ -133,7 +132,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getDefaultCorrelationId(context), context);
+        return receive(getCorrelationKey(context), context);
     }
 
     @Override
@@ -143,7 +142,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getDefaultCorrelationId(context), context, timeout);
+        return receive(getCorrelationKey(context), context, timeout);
     }
 
     @Override
@@ -316,7 +315,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param replyMessage the reply message.
      */
     public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyMessages.put(correlationKey, replyMessage);
+        replyManager.store(correlationKey, replyMessage);
     }
 
     /**
@@ -325,7 +324,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
+        return replyManager.find(correlationKey);
     }
 
     /**
@@ -333,31 +332,12 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";
-    }
-
-    /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (endpointConfiguration.getCorrelator() != null) {
-            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
     }
 
     /**

@@ -30,7 +30,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * Ssh client connects to ssh server and sends commands to that server.
@@ -43,7 +42,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
     public static final String CLASSPATH_PREFIX = "classpath:";
 
     /** Store of reply messages */
-    private Map<String, Message> replyMessages = new HashMap<String, Message>();
+    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -82,7 +81,9 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param context
      */
     public void send(Message message, TestContext context) {
-        String correlationKey = createCorrelationKey(message, context);
+        String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+
         String payload = (String) message.getPayload();
         SshRequest request = (SshRequest) getEndpointConfiguration().getXmlMapper().fromXML(payload);
 
@@ -121,7 +122,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getDefaultCorrelationId(context), context);
+        return receive(getCorrelationKey(context), context);
     }
 
     @Override
@@ -131,7 +132,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getDefaultCorrelationId(context), context, timeout);
+        return receive(getCorrelationKey(context), context, timeout);
     }
 
     @Override
@@ -164,7 +165,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param replyMessage the reply message.
      */
     public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyMessages.put(correlationKey, replyMessage);
+        replyManager.store(correlationKey, replyMessage);
     }
 
     /**
@@ -173,26 +174,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
-    }
-
-    /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (getEndpointConfiguration().getCorrelator() != null) {
-            correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
+        return replyManager.find(correlationKey);
     }
 
     /**
@@ -200,9 +182,9 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";

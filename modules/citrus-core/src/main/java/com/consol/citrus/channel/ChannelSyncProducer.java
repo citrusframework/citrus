@@ -18,13 +18,10 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.consol.citrus.message.Message;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +32,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     private static Logger log = LoggerFactory.getLogger(ChannelSyncProducer.class);
 
     /** Store of reply messages */
-    private Map<String, Message> replyMessages = new HashMap<String, Message>();
+    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
     /** Endpoint configuration */
     private final ChannelSyncEndpointConfiguration endpointConfiguration;
@@ -55,7 +52,8 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public void send(Message message, TestContext context) {
-        String correlationKey = createCorrelationKey(message, context);
+        String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
 
         String destinationChannelName = getDestinationChannelName();
 
@@ -84,7 +82,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getDefaultCorrelationId(context), context);
+        return receive(getCorrelationKey(context), context);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getDefaultCorrelationId(context), context, timeout);
+        return receive(getCorrelationKey(context), context, timeout);
     }
 
     @Override
@@ -127,7 +125,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      * @param replyMessage the reply message.
      */
     public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyMessages.put(correlationKey, replyMessage);
+        replyManager.store(correlationKey, replyMessage);
     }
 
     /**
@@ -136,26 +134,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
-    }
-
-    /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (endpointConfiguration.getCorrelator() != null) {
-            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
+        return replyManager.find(correlationKey);
     }
 
     /**
@@ -163,9 +142,9 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";

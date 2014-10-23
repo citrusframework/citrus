@@ -17,16 +17,13 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyConsumer;
 import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -38,7 +35,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     private static Logger log = LoggerFactory.getLogger(CamelSyncProducer.class);
 
     /** Store of reply messages */
-    private Map<String, Message> replyMessages = new HashMap<String, Message>();
+    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
     /** Endpoint configuration */
     private final CamelSyncEndpointConfiguration endpointConfiguration;
@@ -61,7 +58,8 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     public void send(final Message message, TestContext context) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        String correlationKey = createCorrelationKey(message, context);
+        String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
 
         onOutboundMessage(message);
 
@@ -79,12 +77,12 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
         onInboundMessage(replyMessage);
-        onReplyMessage(correlationKey, replyMessage);
+        replyManager.store(correlationKey, replyMessage);
     }
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getDefaultCorrelationId(context), context);
+        return receive(getCorrelationKey(context), context);
     }
 
     @Override
@@ -94,13 +92,13 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getDefaultCorrelationId(context), context, timeout);
+        return receive(getCorrelationKey(context), context, timeout);
     }
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
         long timeLeft = timeout;
-        Message message = findReplyMessage(selector);
+        Message message = replyManager.find(selector);
 
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
@@ -115,19 +113,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
                 RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
             }
 
-            message = findReplyMessage(selector);
+            message = replyManager.find(selector);
         }
 
         return message;
-    }
-
-    /**
-     * Saves reply message with correlation key to local store for later processing.
-     * @param correlationKey
-     * @param replyMessage the reply message.
-     */
-    public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyMessages.put(correlationKey, replyMessage);
     }
 
     /**
@@ -143,41 +132,13 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     }
 
     /**
-     * Tries to find reply message for correlation key from local store.
-     * @param correlationKey
-     * @return
-     */
-    public Message findReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
-    }
-
-    /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (endpointConfiguration.getCorrelator() != null) {
-            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
-    }
-
-    /**
      * Looks for default correlation id in test context. If not present constructs default correlation key.
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";

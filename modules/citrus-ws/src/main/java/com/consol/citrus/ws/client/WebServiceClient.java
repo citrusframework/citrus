@@ -18,6 +18,7 @@ package com.consol.citrus.ws.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.*;
@@ -38,7 +39,6 @@ import org.springframework.xml.transform.StringResult;
 
 import javax.xml.transform.*;
 import java.io.IOException;
-import java.util.*;
 
 /**
  * Client sends SOAP WebService messages to some server endpoint via Http protocol. Client waits for synchronous
@@ -51,7 +51,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     private static Logger log = LoggerFactory.getLogger(WebServiceClient.class);
 
     /** Store of reply messages */
-    private Map<String, Message> replyMessages = new HashMap<String, Message>();
+    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -87,7 +87,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
             soapMessage = new SoapMessage(message);
         }
 
-        String correlationKey = createCorrelationKey(soapMessage, context);
+        String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(soapMessage);
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {
@@ -132,7 +133,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getDefaultCorrelationId(context), context);
+        return receive(getCorrelationKey(context), context);
     }
 
     @Override
@@ -142,7 +143,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getDefaultCorrelationId(context), context, timeout);
+        return receive(getCorrelationKey(context), context, timeout);
     }
 
     @Override
@@ -166,6 +167,10 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
             message = findReplyMessage(selector);
         }
 
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving WebService response from from server");
+        }
+
         return message;
     }
 
@@ -175,7 +180,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @param replyMessage the reply message.
      */
     public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyMessages.put(correlationKey, replyMessage);
+        replyManager.store(correlationKey, replyMessage);
     }
 
     /**
@@ -184,26 +189,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
-    }
-
-    /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (getEndpointConfiguration().getCorrelator() != null) {
-            correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
+        return replyManager.find(correlationKey);
     }
 
     /**
@@ -211,9 +197,9 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";

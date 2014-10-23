@@ -20,8 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.*;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
@@ -32,7 +31,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.IOException;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -49,7 +47,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
     private FTPClientConfig config = new FTPClientConfig();
 
     /** Store of reply messages */
-    private Map<String, Message> replyMessages = new HashMap<String, Message>();
+    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
 
     /** Retry logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
@@ -83,7 +81,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             ftpMessage = new FtpMessage(message);
         }
 
-        String correlationKey = createCorrelationKey(ftpMessage, context);
+        String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(ftpMessage);
+        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
 
         log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
@@ -142,7 +141,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive(getDefaultCorrelationId(context), context);
+        return receive(getCorrelationKey(context), context);
     }
 
     @Override
@@ -152,7 +151,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(getDefaultCorrelationId(context), context, timeout);
+        return receive(getCorrelationKey(context), context, timeout);
     }
 
     @Override
@@ -185,7 +184,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param replyMessage the reply message.
      */
     public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyMessages.put(correlationKey, replyMessage);
+        replyManager.store(correlationKey, replyMessage);
     }
 
     @Override
@@ -230,26 +229,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @return
      */
     public Message findReplyMessage(String correlationKey) {
-        return replyMessages.remove(correlationKey);
-    }
-
-    /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (getEndpointConfiguration().getCorrelator() != null) {
-            correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
+        return replyManager.find(correlationKey);
     }
 
     /**
@@ -257,9 +237,9 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(TestContext context) {
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";

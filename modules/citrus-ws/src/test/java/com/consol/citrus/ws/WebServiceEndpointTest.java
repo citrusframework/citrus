@@ -20,7 +20,7 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessage;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.message.*;
 import com.consol.citrus.ws.server.WebServiceEndpoint;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -1080,7 +1080,6 @@ public class WebServiceEndpointTest {
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         responseHeaders.put(SoapMessageHeaders.SOAP_ACTION, "answerHello");
-        responseHeaders.put(MessageHeaders.MESSAGE_CORRELATION_KEY, "someCorrelator");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
         endpoint.setMessageHandler(new MessageHandler() {

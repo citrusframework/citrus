@@ -17,8 +17,7 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyProducer;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
@@ -26,8 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.vertx.java.core.Vertx;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -39,7 +36,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     private static Logger log = LoggerFactory.getLogger(VertxSyncConsumer.class);
 
     /** Map of reply destinations */
-    private Map<String, String> replyAddressMap = new HashMap<String, String>();
+    private CorrelationManager<String> addressManager = new DefaultCorrelationManager<String>();
 
     /** Vert.x instance */
     private final Vertx vertx;
@@ -69,8 +66,8 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = getDefaultCorrelationId(message, context);
-        String replyAddress = replyAddressMap.remove(correlationKey);
+        String correlationKey = getCorrelationKey(context);
+        String replyAddress = addressManager.find(correlationKey);
         Assert.notNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
 
         log.info("Sending Vert.x message to event bus address: '" + replyAddress + "'");
@@ -91,7 +88,9 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      */
     public void saveReplyDestination(Message receivedMessage, TestContext context) {
         if (receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS) != null) {
-            replyAddressMap.put(createCorrelationKey(receivedMessage, context), receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
+            String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
+            context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode(), correlationKey);
+            addressManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }  else {
             log.warn("Unable to retrieve reply address for message \n" +
                     receivedMessage + "\n - no reply address found in message headers!");
@@ -111,45 +110,13 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     }
 
     /**
-     * Creates new correlation key either from correlator implementation in endpoint configuration or with default uuid generation.
-     * Also saves created correlation key as test variable so according reply message polling can use the correlation key.
-     *
-     * @param message
-     * @param context
-     * @return
-     */
-    private String createCorrelationKey(Message message, TestContext context) {
-        String correlationKey;
-        if (endpointConfiguration.getCorrelator() != null) {
-            correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        } else {
-            correlationKey = UUID.randomUUID().toString();
-        }
-        context.setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode(), correlationKey);
-        return correlationKey;
-    }
-
-    /**
      * Looks for default correlation id in message header and test context. If not present constructs default correlation key.
-     * @param message
      * @param context
      * @return
      */
-    private String getDefaultCorrelationId(Message message, TestContext context) {
-        if (message.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY) != null) {
-            String correlationKey = message.getHeader(MessageHeaders.MESSAGE_CORRELATION_KEY).toString();
-
-            if (endpointConfiguration.getCorrelator() != null) {
-                correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(correlationKey);
-            }
-
-            //remove citrus specific header from message
-            message.removeHeader(MessageHeaders.MESSAGE_CORRELATION_KEY);
-            return correlationKey;
-        }
-
-        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode())) {
-            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + this.hashCode());
+    private String getCorrelationKey(TestContext context) {
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode())) {
+            return context.getVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + hashCode());
         }
 
         return "";
