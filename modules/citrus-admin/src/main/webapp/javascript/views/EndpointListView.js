@@ -73,7 +73,7 @@
                     async: false
                 });
 
-                this.closeForm(_.bind(function() {
+                this.closeForm(undefined, _.bind(function() {
                     this.getEndpoints();
                     this.render();
                 }, this));
@@ -105,7 +105,7 @@
                     async: false
                 });
 
-                this.closeForm(_.bind(function() {
+                this.closeForm(undefined, _.bind(function() {
                     this.getEndpoints();
                     this.render();
                 }, this));
@@ -113,7 +113,7 @@
                 return false;
             },
 
-            closeForm: function(callback) {
+            closeForm: function(event, callback) {
                 $('#endpoint-edit').hide('slide', function() {
                     $('#endpoint-list').show('slide', function() {
                         if (callback) {

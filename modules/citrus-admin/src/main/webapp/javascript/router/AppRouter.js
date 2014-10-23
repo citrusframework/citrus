@@ -8,6 +8,7 @@
           configView: undefined,
           testListView: undefined,
           statsView: undefined,
+          settingsView: undefined,
           aboutView: undefined,
 
           routes: {
@@ -18,6 +19,7 @@
             "tests": "tests", // #tests
             "tests/:testName": "testDetails", // #tests/EchoActionITest
             "stats": "stats", // #stats
+            "settings": "settings", // #settings
             "about": "about" // #about
           },
         
@@ -78,6 +80,16 @@
               $('#stats-content').show();
 
           },
+
+          settings: function() {
+                if (!this.statsView) {
+                    $('#settings-content').html('<div class="container-fluid"><h1 class="page-header">Settings <small>Administration settings</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+                }
+
+                $('#content').children().hide();
+                $('#settings-content').show();
+
+            },
 
           about: function() {
               if (!this.statsView) {

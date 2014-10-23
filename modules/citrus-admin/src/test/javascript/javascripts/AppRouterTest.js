@@ -6,6 +6,7 @@ define([], function() {
           expect(CitrusAdmin.routes['config']).toEqual('config');
           expect(CitrusAdmin.routes['tests']).toEqual('tests');
           expect(CitrusAdmin.routes['stats']).toEqual('stats');
+          expect(CitrusAdmin.routes['settings']).toEqual('settings');
           expect(CitrusAdmin.routes['about']).toEqual('about');
       });
       
