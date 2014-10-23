@@ -44,6 +44,6 @@ public final class MessageHeaders {
     public static final String MESSAGE_TYPE = MESSAGE_PREFIX + "type";
 
     /** Synchronous message correlation */
-    public static final String MESSAGE_CORRELATION_KEY = PREFIX + "sync_message_correlator";
+    public static final String MESSAGE_CORRELATION_KEY = PREFIX + "message_correlator";
 
 }

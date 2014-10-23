@@ -66,9 +66,6 @@
                                 <element name="Operation" value="sayHello"/>
                                 <element name="CorrelationId" value="${correlationId}"/>
                             </header>
-                            <extract>
-                                <header name="citrus_message_id" variable="syncMessageCorrelatorId"></header>
-                            </extract>
                         </receive>
                         
                         <receive with="syncJmsTopicSubscriberEndpoint">
@@ -113,7 +110,6 @@
                         <header>
                             <element name="Operation" value="sayHello"/>
                             <element name="CorrelationId" value="${correlationId}"/>
-                            <element name="citrus_sync_message_correlator" value="${syncMessageCorrelatorId}"/>
                         </header>
                     </send> 
                 </sequential>

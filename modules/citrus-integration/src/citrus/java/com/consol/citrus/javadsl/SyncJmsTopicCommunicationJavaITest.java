@@ -18,7 +18,6 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
-import com.consol.citrus.message.MessageHeaders;
 import org.testng.annotations.Test;
 
 /**
@@ -56,8 +55,7 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
                                    "<Text>Hello TestFramework</Text>" +
                                "</HelloRequest>")
                         .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}")
-                        .extractFromHeader(MessageHeaders.ID, "syncMessageCorrelatorId"),
+                        .header("CorrelationId", "${correlationId}"),
                     receive("syncJmsTopicSubscriberEndpoint")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
@@ -77,7 +75,6 @@ public class SyncJmsTopicCommunicationJavaITest extends TestNGCitrusTestBuilder 
                                 "</HelloResponse>")
                     .header("Operation", "sayHello")
                     .header("CorrelationId", "${correlationId}")
-                    .header("citrus_sync_message_correlator", "${syncMessageCorrelatorId}")
             )
         );
         
