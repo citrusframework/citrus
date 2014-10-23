@@ -68,9 +68,16 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
     @Override
     public boolean accept(Message<?> message) {
         Document doc;
-        
+
         try {
-            doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
+            String payload;
+            if (message.getPayload() instanceof com.consol.citrus.message.Message) {
+                payload = ((com.consol.citrus.message.Message) message.getPayload()).getPayload(String.class);
+            } else {
+                payload = message.getPayload().toString();
+            }
+
+            doc = XMLUtils.parseMessagePayload(payload);
         } catch (LSException e) {
             log.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
             return false; // non XML message - not accepted

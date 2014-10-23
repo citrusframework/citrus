@@ -15,11 +15,11 @@
  */
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
@@ -39,6 +39,15 @@ public class RootQNameMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo><text>foobar</text></Foo>").build()));
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Bar><text>foobar</text></Bar>").build()));
+    }
+
+    @Test
+    public void testQNameSelectorWithMessageObjectPayload() {
+        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector("Foo");
+
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Foo><text>foobar</text></Foo>")).build()));
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>")).build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Bar><text>foobar</text></Bar>")).build()));
     }
     
     @Test

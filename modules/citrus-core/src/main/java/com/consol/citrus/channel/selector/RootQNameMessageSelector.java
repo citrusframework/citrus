@@ -60,7 +60,14 @@ public class RootQNameMessageSelector implements MessageSelector {
         Document doc;
         
         try {
-            doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
+            String payload;
+            if (message.getPayload() instanceof com.consol.citrus.message.Message) {
+                payload = ((com.consol.citrus.message.Message) message.getPayload()).getPayload(String.class);
+            } else {
+                payload = message.getPayload().toString();
+            }
+
+            doc = XMLUtils.parseMessagePayload(payload);
         } catch (LSException e) {
             log.warn("Root QName message selector ignoring not well-formed XML message payload", e);
             return false; // non XML message - not accepted

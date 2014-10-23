@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.message.DefaultMessage;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -59,5 +60,15 @@ public class XPathEvaluatingMessageSelectorTest {
         messageSelector = new XPathEvaluatingMessageSelector("xpath://ns:Foos/ns:Foo[ns:key='KEY-X']/ns:value", "foo", nsContextBuilder);
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<ns:Foos xmlns:ns=\"http://citrusframework.org/schema\"><ns:Foo><ns:key>KEY-X</ns:key><ns:value>foo</ns:value></ns:Foo><ns:Foo><ns:key>KEY-Y</ns:key><ns:value>bar</ns:value></ns:Foo></ns:Foos>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<ns:Foos xmlns:ns=\"http://citrusframework.org/schema\"><ns:Foo><ns:key>KEY-Z</ns:key><ns:value>foo</ns:value></ns:Foo><ns:Foo><ns:key>KEY-Y</ns:key><ns:value>bar</ns:value></ns:Foo></ns:Foos>").build()));
+    }
+
+    @Test
+    public void testXPathEvaluationWithMessageObjectPayload() {
+        XPathEvaluatingMessageSelector messageSelector = new XPathEvaluatingMessageSelector("xpath://Foo/text", "foobar", nsContextBuilder);
+
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Foo><text>foobar</text></Foo>")).build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>")).build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Bar><text>foobar</text></Bar>")).build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("This is plain text!")).build()));
     }
 }

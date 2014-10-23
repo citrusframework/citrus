@@ -19,6 +19,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.integration.core.MessageSelector;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,15 +45,22 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
     @Override
     public boolean accept(Message<?> message) {
         MessageHeaders messageHeaders = message.getHeaders();
-        
+
+        Map<String, Object> citrusMessageHeaders = new HashMap<String, Object>();
+        if (message.getPayload() instanceof com.consol.citrus.message.Message) {
+            citrusMessageHeaders = ((com.consol.citrus.message.Message) message.getPayload()).copyHeaders();
+        }
+
         for (Entry<String, String> matchEntry : matchingHeaders.entrySet()) {
             String namePart = matchEntry.getKey();
             
-            if (!messageHeaders.containsKey(namePart)) {
+            if (!messageHeaders.containsKey(namePart) && !citrusMessageHeaders.containsKey(namePart)) {
                 return false;
             }
-            
-            if (!messageHeaders.get(namePart).equals(matchEntry.getValue())) {
+
+            if (citrusMessageHeaders.containsKey(namePart) && !citrusMessageHeaders.get(namePart).equals(matchEntry.getValue())) {
+                return false;
+            } else if (messageHeaders.containsKey(namePart) && !messageHeaders.get(namePart).toString().equals(matchEntry.getValue())) {
                 return false;
             }
         }

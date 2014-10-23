@@ -15,8 +15,10 @@
  */
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.message.DefaultMessage;
 import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.MessageHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -47,7 +49,7 @@ public class HeaderMatchingMessageSelectorTest {
     }
     
     @Test
-    public void testHeaderMatchingSelectorAndOperation() {
+    public void testHeaderMatchingSelectorMultipleValues() {
         Map<String, String> headerMatchers = new HashMap<String, String>();
         headerMatchers.put("foo", "bar");
         headerMatchers.put("operation", "foo");
@@ -65,5 +67,45 @@ public class HeaderMatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
     }
-    
+
+    @Test
+    public void testHeaderMatchingSelectorMissingHeader() {
+        Map<String, String> headerMatchers = new HashMap<String, String>();
+        headerMatchers.put("operation", "foo");
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
+
+        Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
+                .setHeader("operation", "foo")
+                .build();
+
+        Message<String> declineMessage = MessageBuilder.withPayload("FooTest")
+                .build();
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+
+    @Test
+    public void testHeaderMatchingSelectorWithMessageObjectPayload() {
+        Map<String, String> headerMatchers = new HashMap<String, String>();
+        headerMatchers.put("operation", "foo");
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
+
+        Message<DefaultMessage> acceptMessage = MessageBuilder.withPayload(new DefaultMessage("FooTest")
+                .setHeader("operation", "foo"))
+                .build();
+
+        Message<DefaultMessage> declineMessage = MessageBuilder.withPayload(new DefaultMessage("FooTest")
+                .setHeader("operation", "foobar"))
+                .build();
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+
+        headerMatchers.put(MessageHeaders.ID, acceptMessage.getHeaders().getId().toString());
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+
 }
