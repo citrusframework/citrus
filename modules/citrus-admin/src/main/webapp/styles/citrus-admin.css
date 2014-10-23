@@ -30,7 +30,7 @@ a:hover {
 
 .table-hover tbody tr:hover td,
 .table-hover tbody tr:hover th {
-    background-color: #dceaf3;
+    background-color: #eff6fb;
 }
 
 .container-fluid {
@@ -38,10 +38,17 @@ a:hover {
 }
 
 .content-header {
-    background: url('../images/feature-logo-full.png') no-repeat top right #dceaf3;
-    border-bottom: 1px solid #d4d4d4;
+    background: url('../images/feature-logo-full.png') no-repeat top right #ffffff;
+    padding-top: 20px;
+    padding-bottom: 25px;
+}
+
+.content-nav {
+    background-color: #eff6fb;
+    padding-top: 5px;
+    border-top: 1px solid #e7e7e7;
+    border-bottom: 1px solid #e7e7e7;
     margin-bottom: 20px;
-    padding-top: 15px;
 }
 
 .row-fluid .navigation {
@@ -50,37 +57,34 @@ a:hover {
 }
 
 .navbar .brand {
+    color: #ffffff;
     padding: 6px 10px 5px;
+    text-shadow: none;
 }
 
 .navbar .brand span {
     vertical-align: middle;
 }
 
+.navbar-inner {
+    background: #0096D6;
+    border: none;
+}
+
 .navbar .nav > li > a {
+    color: #ffffff;
     font-size: 13px;
-    border-right: 1px solid #d4d4d4;
     text-shadow: none;
 }
 
 .navbar .nav .active > a, .navbar .nav .active > a:hover, .navbar .nav .active > a:focus {
     color: #ffffff;
-    background-color: #0096D6;
-    background-image: -moz-linear-gradient(top , #4bb1cf, #0096D6);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0096D6));
-    background-image: -webkit-linear-gradient(top, #4bb1cf, #0096D6);
-    background-image: -o-linear-gradient(top, #4bb1cf, #0096D6);
-    background-image: linear-gradient(to bottom, #4bb1cf, #0096D6);
+    background-color: rgba(255,255,255,0.2);
 }
 
 .navbar .nav > li > a:hover {
     color: #ffffff;
-    background-color: #0096D6;
-    background-image: -moz-linear-gradient(top , #4bb1cf, #0096D6);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#4bb1cf), to(#0096D6));
-    background-image: -webkit-linear-gradient(top, #4bb1cf, #0096D6);
-    background-image: -o-linear-gradient(top, #4bb1cf, #0096D6);
-    background-image: linear-gradient(to bottom, #4bb1cf, #0096D6);
+    background-color: rgba(255,255,255,0.2);
 }
 
 .box {
@@ -93,7 +97,7 @@ a:hover {
 }
 
 .box-dark {
-    background-color: #dceaf3;
+    background-color: #eff6fb;
 }
 
 .side-nav {
@@ -120,7 +124,7 @@ a:hover {
 
 .nav-tabs > li > a, .nav-tabs > li > a:hover {
     color: #404040;
-    background-color: #dceaf3;
+    background-color: #eff6fb;
 }
 
 .nav-tabs > .active > a, .nav-tabs > .active > a:hover {
@@ -135,7 +139,7 @@ a:hover {
 
 .nav-tabs.nav-stacked > .active > a, .nav-tabs.nav-stacked > li > a:hover {
     color: #404040;
-    background-color: #dceaf3;
+    background-color: #eff6fb;
 }
 
 .nav-tabs.nav-stacked > li > a > i {
@@ -281,7 +285,7 @@ code.template {
 }
 
 pre.logger {
-    height: 175px;
+    height: 575px;
     overflow-y: auto;
     overflow-x: hidden;
     font-size: 10px;
@@ -341,7 +345,7 @@ div.file-tree {
 }
 
 #content {
-  padding-bottom: 210px;
+  padding-bottom: 610px;
 }
 
 span.message-data {
@@ -361,7 +365,7 @@ span.message-outbound {
 }
 
 #footer {
-  height: 210px;
+  height: 610px;
   background-color: #ffffff;
 }
 
@@ -379,7 +383,9 @@ span.message-outbound {
 }
 
 #footer .navbar-inner {
+    background: rgba(80, 80, 80, 1);
     min-height: 10px;
+    color: #ffffff;
 }
 
 .navbar-fixed-bottom .navbar-inner {
@@ -453,24 +459,24 @@ span.message-outbound {
 }
 
 #footer .tab-content {
-	min-height: 600px;
+	min-height: 1000px;
     background-color: #ffffff;
 }
 
 #footer.maximized {
-	height: 600px;
+	height: 1000px;
 }
 
 #footer.minimized {
-    height: 27px;
+    height: 25px;
 }
 
 .footer-tab {
-    height: 175px;
+    height: 575px;
 }
 
 .footer-tab .maximized, pre.logger .maximized, .footer-task-bar .maximized {
-    height: 575px;
+    height: 975px;
 }
 
 .footer-tab .minimized, pre.logger .minimized, .footer-task-bar .minimized {
@@ -497,12 +503,15 @@ span.message-outbound {
     text-align: center;
     padding: 3px;
     margin: 0 1px;
-    border: 1px solid #eeeeee;
+}
+
+.footer-bar i:hover {
+    color: #fcc300;
 }
 
 .footer-task-bar {
     width: 35px;
-    height: 175px;
+    height: 575px;
     float: left;
     padding-top: 5px;
     background-color: #efefef;
@@ -518,7 +527,7 @@ span.message-outbound {
     border: 1px solid #eeeeee;
 }
 
-.footer-task-bar i:hover, .footer-bar i:hover {
+.footer-task-bar i:hover {
     border: 1px solid #cccccc;
 }
 

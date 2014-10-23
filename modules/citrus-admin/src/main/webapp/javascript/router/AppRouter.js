@@ -73,7 +73,7 @@
           
           stats: function() {
               if (!this.statsView) {
-                  $('#stats-content').html('<div class="container-fluid"><h1 class="page-header">Statistics <small>Manage project statistics</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+                  $('#stats-content').html('<div class="container-fluid content-header"><h1>Statistics <small>Manage project statistics</small></h1></div><div class="container-fluid content-nav"><div><p>Not implemented yet! Coming soon!</p></div></div>');
               }
 
               $('#content').children().hide();
@@ -83,7 +83,7 @@
 
           settings: function() {
                 if (!this.statsView) {
-                    $('#settings-content').html('<div class="container-fluid"><h1 class="page-header">Settings <small>Administration settings</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+                    $('#settings-content').html('<div class="container-fluid content-header"><h1>Settings <small>Administration settings</small></h1></div><div class="container-fluid content-nav"><div><p>Not implemented yet! Coming soon!</p></div></div>');
                 }
 
                 $('#content').children().hide();
@@ -93,7 +93,7 @@
 
           about: function() {
               if (!this.statsView) {
-                  $('#about-content').html('<div class="container-fluid"><h1 class="page-header">About <small>Behind the scenes</small></h1><br/><p>Not implemented yet! Coming soon!</p></div>');
+                  $('#about-content').html('<div class="container-fluid content-header"><h1>About <small>Behind the scenes</small></h1></div><div class="container-fluid content-nav"><div><p>Not implemented yet! Coming soon!</p></div></div>');
               }
 
               $('#content').children().hide();

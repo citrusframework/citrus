@@ -9,8 +9,8 @@
                     view: EndpointListView
                 },
                 {
-                    idSuffix: "xsd-schemas",
-                    displayName: "XSD Schemas",
+                    idSuffix: "schemas",
+                    displayName: "Schema Definitions",
                     view: SchemaListView
                 },
                 {

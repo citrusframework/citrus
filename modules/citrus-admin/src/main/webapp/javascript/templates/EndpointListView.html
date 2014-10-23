@@ -12,9 +12,9 @@
 
   {{#each endpointTypes}}
 
-    <h3>
-      <span><i class="fa fa-share-alt-square"></i> {{capitalize type}} Endpoints</span> <div class="pull-right"><a name="{{type}}" class="btn btn-new" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></div>
-    </h3>
+    <h2>
+      <span><i class="fa fa-share-alt-square"></i> {{capitalize type}} Endpoints</span>
+    </h2>
 
     <table class="table table-hover table-condensed config-table">
       <thead>
@@ -49,6 +49,11 @@
       </tr>
       {{/each}}
       </tbody>
+      <tfoot>
+      <tr>
+        <td colspan="3">&nbsp;<a name="{{type}}" class="btn-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></td>
+      </tr>
+      </tfoot>
     </table>
   {{/each}}
 </div>
