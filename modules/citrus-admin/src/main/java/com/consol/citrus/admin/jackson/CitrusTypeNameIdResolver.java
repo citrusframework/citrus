@@ -59,6 +59,7 @@ public class CitrusTypeNameIdResolver implements TypeIdResolver {
         try {
             List<Class<?>> types = findTestActionTypes(ObjectFactory.class.getPackage().getName());
             for (Class<?> type : types) {
+                log.info(String.format("Adding type mapping %s:%s", getTestActionTypeId(type), type.getName()));
                 typeMappings.put(getTestActionTypeId(type), TypeFactory.type(type.getClass()));
             }
 
@@ -71,7 +72,9 @@ public class CitrusTypeNameIdResolver implements TypeIdResolver {
 
     @Override
     public String idFromValue(Object value) {
-        return getTestActionTypeId(value.getClass());
+        String typeId = getTestActionTypeId(value.getClass());
+        log.info(String.format("Resolved '%s' typeId for class: %s", typeId, value.getClass()));
+        return typeId;
     }
 
     @Override
@@ -82,9 +85,12 @@ public class CitrusTypeNameIdResolver implements TypeIdResolver {
     @Override
     public JavaType typeFromId(String id) {
         if (typeMappings.containsKey(id)) {
-            return typeMappings.get(id);
+            JavaType type = typeMappings.get(id);
+            log.info(String.format("Resolved '%s' class for typeId: %s", type , id));
+            return type;
         }
 
+        log.info(String.format("Resolved '%s' class for typeId: %s", Action.class , id));
         return TypeFactory.type(Action.class);
     }
 
@@ -160,6 +166,6 @@ public class CitrusTypeNameIdResolver implements TypeIdResolver {
             return beanTypeAnnotation.name();
         }
 
-        return type.getClass().getName();
+        return "unknown";
     }
 }

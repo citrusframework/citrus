@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Configuration controller handles project choosing requests and project configuration setup
@@ -88,6 +88,20 @@ public class ConfigurationController {
     @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepository xsdSchemaRepository) {
+        List<SchemaRepository.Schemas.Ref> schemaRefs = new ArrayList<SchemaRepository.Schemas.Ref>();
+        for (Object schema: xsdSchemaRepository.getSchemas().getRevesAndSchemas()) {
+            if (schema instanceof String) {
+                SchemaRepository.Schemas.Ref ref = new SchemaRepository.Schemas.Ref();
+                ref.setSchema((String) schema);
+                schemaRefs.add(ref);
+            } else if (schema instanceof SchemaRepository.Schemas.Ref) {
+                schemaRefs.add((SchemaRepository.Schemas.Ref) schema);
+            }
+        }
+
+        xsdSchemaRepository.getSchemas().getRevesAndSchemas().clear();
+        xsdSchemaRepository.getSchemas().getRevesAndSchemas().addAll(schemaRefs);
+
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchemaRepository);
     }
 

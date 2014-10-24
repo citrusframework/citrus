@@ -278,7 +278,7 @@ public class SpringBeanService {
             for (File file : configFiles) {
                 parser.parseURI(file.toURI().toString());
                 if (getBeanFilter.getBeanDefinition() != null) {
-                    xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
+                    xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(file)));
 
                     //create transformer
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);

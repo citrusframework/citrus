@@ -29,7 +29,7 @@
         <p style="text-align: right;">Available</p>
         <ul id="schemas-excluded" class="schema-list sortable box">
           {{#each schemas}}
-          <li class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;{{id}}</li>
+          <li class="sortable highlight" id="{{id}}"><i class="fa fa-file-text-o"></i>&nbsp;{{id}}</li>
           {{/each}}
         </ul>
       </div>
@@ -42,7 +42,7 @@
         <p>Included</p>
         <ul id="schemas-included" class="schema-list sortable box">
           {{#each repository.schemas.revesAndSchemas}}
-          <li class="sortable" id="{{ref}}"><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>
+          <li class="sortable" id="{{schema}}{{id}}"><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>
           {{/each}}
         </ul>
       </div>

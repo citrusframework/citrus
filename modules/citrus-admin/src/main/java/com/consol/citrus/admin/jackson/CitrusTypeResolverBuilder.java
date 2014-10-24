@@ -16,7 +16,6 @@
 
 package com.consol.citrus.admin.jackson;
 
-import com.consol.citrus.TestAction;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
@@ -42,6 +41,6 @@ public class CitrusTypeResolverBuilder extends ObjectMapper.DefaultTypeResolverB
     @Override
     public boolean useForType(JavaType t) {
         // just use this type resolver for test action instances
-        return t.getRawClass().isAssignableFrom(TestAction.class);
+        return t.getGenericSignature().contains("com/consol/citrus/actions");
     }
 }

@@ -16,10 +16,7 @@
                 "click #btn-repository-save": "updateRepository",
                 "click #btn-repository-cancel": "closeRepositoryForm",
                 "click tr.schema": "showSchemaEditForm",
-                "click tr.repository": "showRepositoryEditForm",
-                "click a.schema-select": "selectSchema",
-                "click #btn-schema-reference-add": "addSchemaReference",
-                "click input[name='schema-ref']": "showSchemaReferenceSelect"
+                "click tr.repository": "showRepositoryEditForm"
             },
 
             initialize: function () {
@@ -166,7 +163,6 @@
 
             createSchema: function() {
                 var form = $('#schema-edit-form');
-                this.closeSchemaForm();
 
                 var serializedForm = form.serializeObject();
                 var jsonForm = JSON.stringify(serializedForm);
@@ -178,17 +174,20 @@
                     contentType: "application/json",
                     data: jsonForm,
                     success: _.bind(function (response) {
-                        this.getSchemas();
-                        this.render();
                     }, this),
-                    async: true
+                    async: false
                 });
+
+                this.closeSchemaForm(undefined, _.bind(function() {
+                    this.getSchemas();
+                    this.render();
+                }, this));
+
                 return false;
             },
 
             createRepository: function() {
                 var form = $('#repository-edit-form');
-                this.closeRepositoryForm();
 
                 var serializedForm = form.serializeObject();
                 var url = "configuration/schema-repository";
@@ -199,17 +198,20 @@
                     contentType: "application/json",
                     data: this.getSchemaRepositoryJSON(serializedForm),
                     success: _.bind(function (response) {
-                        this.getSchemaRepositories();
-                        this.render();
                     }, this),
-                    async: true
+                    async: false
                 });
+
+                this.closeRepositoryForm(undefined, _.bind(function() {
+                    this.getSchemaRepositories();
+                    this.render();
+                }, this));
+
                 return false;
             },
 
             updateSchema: function() {
-                var form = $('#schema-edit-form form');
-                this.closeSchemaForm();
+                var form = $('#schema-edit-form');
 
                 var serializedForm = form.serializeObject();
                 var schemaId = serializedForm.id;
@@ -224,22 +226,25 @@
                 var url = "configuration/schema/" + schemaId;
                 $.ajax({
                     url: url,
-                    type: 'POST',
+                    type: 'PUT',
                     dataType: "json",
                     contentType: "application/json",
                     data: jsonForm,
                     success: _.bind(function (response) {
-                        this.getSchemas();
-                        this.render();
                     }, this),
-                    async: true
+                    async: false
                 });
+
+                this.closeSchemaForm(undefined, _.bind(function() {
+                    this.getSchemas();
+                    this.render();
+                }, this));
+
                 return false;
             },
 
             updateRepository: function() {
-                var form = $('#repository-edit-form form');
-                this.closeRepositoryForm();
+                var form = $('#repository-edit-form');
 
                 var serializedForm = form.serializeObject();
                 var schemaRepositoryId = serializedForm.id;
@@ -253,27 +258,31 @@
                 var url = "configuration/schema-repository/" + schemaRepositoryId;
                 $.ajax({
                     url: url,
-                    type: 'POST',
+                    type: 'PUT',
                     dataType: "json",
                     contentType: "application/json",
                     data: this.getSchemaRepositoryJSON(serializedForm),
                     success: _.bind(function (response) {
-                        this.getSchemaRepositories();
-                        this.render();
                     }, this),
-                    async: true
+                    async: false
                 });
+
+                this.closeRepositoryForm(undefined, _.bind(function() {
+                    this.getSchemaRepositories();
+                    this.render();
+                }, this));
+
                 return false;
             },
 
             getSchemaRepositoryJSON: function(serializedForm) {
                 var schemas = [];
 
-                $('ul#schema-refs').children('li').each(function(index) {
-                    schemas.push({ ref: $(this).attr('id') });
+                $('ul#schemas-included').children('li').each(function(index) {
+                    schemas.push( $(this).attr('id') );
                 });
 
-                var schemaRepository = { id: serializedForm.id, schemas: { schemas: schemas } };
+                var schemaRepository = { id: serializedForm.id, schemas: { revesAndSchemas: schemas } };
 
                 return JSON.stringify(schemaRepository);
             },
@@ -301,30 +310,6 @@
             extractId: function(encodedId) {
                 var splitString = encodedId.split('-');
                 return splitString[splitString.length-1];
-            },
-
-            selectSchema: function(event) {
-                $('input[name="schema-ref"]').val(event.currentTarget.innerText);
-                $('#schema-ref-dropdown').removeClass('open');
-                return false;
-            },
-
-            addSchemaReference: function() {
-                var schemaId = $('input[name="schema-ref"]').val();
-                if (schemaId.length) {
-                    if ($('ul#schema-refs').children('li#' + schemaId).size() == 0) {
-                        $('ul#schema-refs').append('<li id="' + schemaId + '"><i class="icon-file-text-alt"></i>&nbsp;' + schemaId + '</li>');
-                    }
-
-                    $('input[name="schema-ref"]').val('');
-                }
-
-                return false;
-            },
-
-            showSchemaReferenceSelect: function(event) {
-                $('#schema-ref-dropdown').addClass('open');
-                event.stopPropagation();
             }
 
         });
