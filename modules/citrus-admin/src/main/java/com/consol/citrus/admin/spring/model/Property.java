@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.*;
     "description",
     "any",
     "list",
+    "map",
     "propertyTypeValue",
     "propertyTypeRef",
     "bean"
@@ -22,6 +23,8 @@ public class Property {
     protected Object any;
     @XmlElement(name = "list")
     protected List list;
+    @XmlElement(name = "map")
+    protected Map map;
     @XmlElement(name = "value")
     protected Value propertyTypeValue;
     @XmlElement(name = "ref")
@@ -248,6 +251,30 @@ public class Property {
      */
     public void setList(List value) {
         this.list = value;
+    }
+
+    /**
+     * Gets the value of the map property.
+     *
+     * @return
+     *     possible object is
+     *     {@link Map }
+     *
+     */
+    public Map getMap() {
+        return map;
+    }
+
+    /**
+     * Sets the value of the map property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link Map }
+     *
+     */
+    public void setMap(Map value) {
+        this.map = value;
     }
 
 }

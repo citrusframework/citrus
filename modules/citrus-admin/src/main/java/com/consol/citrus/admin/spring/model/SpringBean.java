@@ -2,6 +2,7 @@ package com.consol.citrus.admin.spring.model;
 
 import java.util.*;
 
+import java.util.Map;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;

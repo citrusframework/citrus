@@ -1,5 +1,5 @@
 (function () {
-    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView"], function (TemplateManager, SchemaListView, EndpointListView) {
+    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
@@ -27,7 +27,8 @@
                 },
                 {
                     idSuffix: "namespace-context",
-                    displayName: "Namespace Context"
+                    displayName: "Namespace Context",
+                    view: NamespaceContextView
                 },
                 {
                     idSuffix: "message-validators",

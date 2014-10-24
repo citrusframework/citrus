@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Element;
@@ -35,6 +36,8 @@ import org.w3c.dom.ls.LSSerializer;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
@@ -253,12 +256,53 @@ public class SpringBeanService {
             throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
         }
     }
+
+    /**
+     * Method removes all Spring bean definitions of given type from the XML application context file.
+     * @param configFile
+     * @param type
+     */
+    public void removeBeanDefinitions(File configFile, Class<?> type) {
+        Source xsltSource;
+        Source xmlSource;
+        try {
+            xsltSource = new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/delete-bean-type.xsl").getInputStream());
+            xsltSource.setSystemId("delete-bean");
+
+            List<File> configFiles = new ArrayList<File>();
+            configFiles.add(configFile);
+            configFiles.addAll(getConfigImports(configFile));
+
+            for (File file : configFiles) {
+                xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(configFile)));
+
+                String beanElement = type.getAnnotation(XmlRootElement.class).name();
+                String beanNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
+
+                //create transformer
+                Transformer transformer = transformerFactory.newTransformer(xsltSource);
+                transformer.setParameter("bean_element", beanElement);
+                transformer.setParameter("bean_namespace", beanNamespace);
+
+                //transform
+                StringResult result = new StringResult();
+                transformer.transform(xmlSource, result);
+                FileUtils.writeToFile(result.toString(), file);
+                return;
+            }
+        } catch (IOException e) {
+            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+        } catch (TransformerException e) {
+            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+        }
+    }
     
     /**
      * Method updates an existing Spring bean definition in a XML application context file. Bean definition is 
      * identified by its id or bean name.
      * @param configFile
      * @param id
+     * @param jaxbElement
      */
     public void updateBeanDefinition(File configFile, String id, Object jaxbElement) {
         Source xsltSource;
@@ -283,6 +327,57 @@ public class SpringBeanService {
                     //create transformer
                     Transformer transformer = transformerFactory.newTransformer(xsltSource);
                     transformer.setParameter("bean_id", id);
+                    transformer.setParameter("bean_content", getXmlContent(jaxbElement));
+
+                    //transform
+                    StringResult result = new StringResult();
+                    transformer.transform(xmlSource, result);
+                    FileUtils.writeToFile(result.toString(), file);
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+        } catch (TransformerException e) {
+            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+        }
+    }
+
+    /**
+     * Method updates existing Spring bean definitions in a XML application context file. Bean definition is
+     * identified by its type defining class.
+     *
+     * @param configFile
+     * @param type
+     * @param jaxbElement
+     */
+    public void updateBeanDefinitions(File configFile, Class<?> type, Object jaxbElement) {
+        Source xsltSource;
+        Source xmlSource;
+        try {
+            xsltSource = new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/update-bean-type.xsl").getInputStream());
+            xsltSource.setSystemId("update-bean");
+
+            List<File> configFiles = new ArrayList<File>();
+            configFiles.add(configFile);
+            configFiles.addAll(getConfigImports(configFile));
+
+            LSParser parser = XMLUtils.createLSParser();
+            GetSpringBeansFilter getBeanFilter = new GetSpringBeansFilter(type, null);
+            parser.setFilter(getBeanFilter);
+
+            for (File file : configFiles) {
+                parser.parseURI(file.toURI().toString());
+                if (!CollectionUtils.isEmpty(getBeanFilter.getBeanDefinitions())) {
+                    xmlSource = new StringSource(FileUtils.readToString(new FileInputStream(file)));
+
+                    String beanElement = type.getAnnotation(XmlRootElement.class).name();
+                    String beanNamespace = type.getPackage().getAnnotation(XmlSchema.class).namespace();
+
+                    //create transformer
+                    Transformer transformer = transformerFactory.newTransformer(xsltSource);
+                    transformer.setParameter("bean_element", beanElement);
+                    transformer.setParameter("bean_namespace", beanNamespace);
                     transformer.setParameter("bean_content", getXmlContent(jaxbElement));
 
                     //transform

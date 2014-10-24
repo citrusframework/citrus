@@ -1,0 +1,41 @@
+<div id="namespace-context">
+  <h1 class="page-header">
+    <span><i class="fa fa-share-alt-square"></i> Namespace Context</span>
+  </h1>
+
+  <p>Citrus works with XML messages and XPath expressions. When using XSD schema rules your XML messages do follow some namespace declaration rules. The namespaces and the according prefixes
+  can be managed in a central namespace context component. All XPath expressions will use the context for namespace resolving.</p>
+
+  <p>Your project defines the following namespaces in central context:</p>
+
+  <br/>
+
+  <form id="namespace-edit-form" class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label">Namespaces</label>
+      <div class="controls">
+        <ul class="schema-list sortable box">
+          {{#each namespaces}}
+          <li class="sortable highlight" id="{{prefix}}"><i class="fa fa-file-text-o"></i>&nbsp;{{prefix}}={{uri}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove namespace"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Namespace <em>*</em></label>
+      <div class="controls">
+        <input name="prefix" placeholder="Prefix" type="text" class="span3"/>
+        <input name="uri" placeholder="Uri" type="text" class="span9"/>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+         <a href="#config" id="btn-add" class="btn btn-citrus">Add namespace</a>
+      </div>
+    </div>
+
+  </form>
+
+</div>
