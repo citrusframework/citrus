@@ -136,12 +136,31 @@
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        $('#repository-edit').html(TemplateManager.template('SchemaRepositoryEditView', {repository: response, schemas: this.schemas}));
+                        $('#repository-edit').html(TemplateManager.template('SchemaRepositoryEditView', {repository: response, schemas: this.filterSchemas(response.schemas.revesAndSchemas)}));
+
+                        $( "#schemas-included, #schemas-excluded" ).sortable({
+                          connectWith: ".schema-list"
+                        }).disableSelection();
+
                         $('#schema-list').hide('slide', function() {
                             $('#repository-edit').show('slide');
                         });
                     }, this),
                     async: true
+                });
+            },
+
+            filterSchemas: function(schemaRefs) {
+                return _.reject(this.schemas, function(schema) {
+                    var found = _.find(schemaRefs, function(candidate) {
+                        if (candidate.schema) {
+                            return candidate.schema === schema.id;
+                        } else {
+                            return candidate.id === schema.id;
+                        }
+                    })
+
+                    return found;
                 });
             },
 

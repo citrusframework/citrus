@@ -25,29 +25,28 @@
   <div class="control-group">
     <label class="control-label">Schemas</label>
     <div class="controls">
-      <div class="input-prepend input-append span12">
-        <div id="schema-ref-dropdown" class="btn-group">
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            {{#each repository.schemas}}
-            <li><a class="schema-select" href="#config">{{repository.id}}</a></li>
-            {{/each}}
-          </ul>
-        </div>
-        <input name="schema-ref" placeholder="Select schema" class="span10" readonly="readonly" type="text"/>
-        <a href="#config" id="btn-schema-reference-add" class="btn"><i class="fa fa-plus"></i></a>
+      <div class="connected-horizontal">
+        <p style="text-align: right;">Available</p>
+        <ul id="schemas-excluded" class="schema-list sortable box">
+          {{#each schemas}}
+          <li class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;{{id}}</li>
+          {{/each}}
+        </ul>
+      </div>
+
+      <div class="connected-horizontal">
+        <span>&lt;--&gt;</span>
+      </div>
+
+      <div class="connected-horizontal">
+        <p>Included</p>
+        <ul id="schemas-included" class="schema-list sortable box">
+          {{#each repository.schemas.revesAndSchemas}}
+          <li class="sortable" id="{{ref}}"><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>
+          {{/each}}
+        </ul>
       </div>
     </div>
-  </div>
-
-  <div class="controls">
-    <ul id="schema-refs" class="schema-list">
-      {{#each schemas.revesAndSchemas}}
-      <li id="{{ref}}"><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>
-      {{/each}}
-    </ul>
   </div>
 
   <div class="control-group">

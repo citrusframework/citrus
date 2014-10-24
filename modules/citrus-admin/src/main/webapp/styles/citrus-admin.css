@@ -850,9 +850,32 @@ td.test-variable {
     background: url("icons/large/schema.png") no-repeat;
 }
 
-ul.schema-list {
+.connected-horizontal {
+    float: left;
+    margin-right: 20px;
+}
+
+ul.sortable {
     list-style: none;
     margin: 0px 0px;
+    padding: 5px 0 0 0;
+    min-width: 310px;
+    min-height: 150px;
+}
+
+ul.sortable li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    min-width: 300px;
+}
+
+li.sortable {
+    border: 1px solid #d4d4d4;
+    cursor: move;
+}
+
+li.sortable.highlight {
+    background: #eff6fb;
 }
 
 .config-panel {
