@@ -29,7 +29,7 @@
       {{/unless}}
 
       {{#each repositories}}
-      <tr class="schema clickable" id="{{id}}">
+      <tr class="repository clickable" id="{{id}}">
         <td><i class="fa fa-copy"></i></td>
         <td>{{id}}</td>
         <td>
@@ -64,7 +64,7 @@
       {{/unless}}
 
       {{#each schemas}}
-      <tr class="repository clickable" id="{{id}}">
+      <tr class="schema clickable" id="{{id}}">
         <td><i class="fa fa-file-code-o"></i></td>
         <td>{{id}}</td>
         <td>{{location}}</td>
@@ -82,6 +82,6 @@
     </table>
 </div>
 
-<div id="schema-edit-dialog"></div>
-<div id="repository-edit-dialog"></div>
+<div id="schema-edit" style="display: none;"></div>
+<div id="repository-edit" style="display: none;"></div>
 

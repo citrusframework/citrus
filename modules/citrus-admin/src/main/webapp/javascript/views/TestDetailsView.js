@@ -20,7 +20,7 @@
                 CitrusWebSocket.on('change:onmessage', this.onSocketMessage, this);
 
                 $.ajax({
-                    url: "config/run",
+                    url: "configuration/run",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function(runConfigurations) {

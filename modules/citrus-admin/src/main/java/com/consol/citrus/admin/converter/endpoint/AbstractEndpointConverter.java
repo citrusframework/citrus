@@ -16,6 +16,7 @@
 
 package com.consol.citrus.admin.converter.endpoint;
 
+import com.consol.citrus.TestActor;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.admin.model.EndpointProperty;
@@ -48,7 +49,7 @@ public abstract class AbstractEndpointConverter<T> implements EndpointConverter<
      */
     protected void addEndpointProperties(EndpointData endpointData, T definition) {
         endpointData.add(property("timeout", definition, "5000"));
-        endpointData.add(property("actor", "TestActor", definition));
+        endpointData.add(property("actor", "TestActor", definition).optionKey(TestActor.class.getName()));
     }
 
     /**

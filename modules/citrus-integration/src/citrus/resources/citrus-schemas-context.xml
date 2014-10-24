@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
@@ -11,7 +10,7 @@
   <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
     <property name="schemas">
       <list>
-        <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+        <bean id="sayHelloSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
           <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
         </bean>
       </list>

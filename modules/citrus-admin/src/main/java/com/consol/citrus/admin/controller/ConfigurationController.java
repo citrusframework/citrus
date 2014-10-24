@@ -34,7 +34,7 @@ import java.util.List;
  * @author Christoph Deppisch
  */
 @Controller
-@RequestMapping("/config")
+@RequestMapping("/configuration")
 public class ConfigurationController {
 
     @Autowired
@@ -67,61 +67,61 @@ public class ConfigurationController {
         return configService.getRootDirectory();
     }
 
-    @RequestMapping(value = "/xsd-schema-repository", method = {RequestMethod.GET})
+    @RequestMapping(value = "/schema-repository", method = {RequestMethod.GET})
     @ResponseBody
     public List<SchemaRepository> listSchemaRepositories() {
         return schemaRepositoryService.listSchemaRepositories(projectService.getProjectContextConfigFile());
     }
 
-    @RequestMapping(value = "/xsd-schema-repository/{id}", method = {RequestMethod.GET})
+    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public SchemaRepository getSchemaRepository(@PathVariable("id") String id) {
         return schemaRepositoryService.getSchemaRepository(projectService.getProjectContextConfigFile(), id);
     }
 
-    @RequestMapping(value="/xsd-schema-repository", method = {RequestMethod.POST})
+    @RequestMapping(value="/schema-repository", method = {RequestMethod.POST})
     @ResponseBody
     public void createSchemaRepository(@RequestBody SchemaRepository xsdSchemaRepository) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchemaRepository);
     }
 
-    @RequestMapping(value = "/xsd-schema-repository/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepository xsdSchemaRepository) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchemaRepository);
     }
 
-    @RequestMapping(value = "/xsd-schema-repository/{id}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteSchemaRepository(@PathVariable("id") String id) {
         springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 
-    @RequestMapping(value = "/xsd-schema", method = {RequestMethod.GET})
+    @RequestMapping(value = "/schema", method = {RequestMethod.GET})
     @ResponseBody
     public List<Schema> listXsdSchemas() {
         return schemaRepositoryService.listSchemas(projectService.getProjectContextConfigFile());
     }
 
-    @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.GET})
+    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.GET})
     @ResponseBody
     public Schema getXsdSchema(@PathVariable("id") String id) {
         return schemaRepositoryService.getSchema(projectService.getProjectContextConfigFile(), id);
     }
 
-    @RequestMapping(value="/xsd-schema", method = {RequestMethod.POST})
+    @RequestMapping(value="/schema", method = {RequestMethod.POST})
     @ResponseBody
     public void createXsdSchema(@RequestBody Schema xsdSchema) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchema);
     }
 
-    @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.PUT})
     @ResponseBody
     public void updateXsdSchema(@PathVariable("id") String id, @RequestBody Schema xsdSchema) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchema);
     }
 
-    @RequestMapping(value = "/xsd-schema/{id}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.DELETE})
     @ResponseBody
     public void deleteXsdSchema(@PathVariable("id") String id) {
         springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);

@@ -26,14 +26,14 @@
            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
     <import resource="com/consol/citrus/demo/hello-demo-ctx.xml"/>
-    <import resource="citrus-admin-context.xml"/>
+    <import resource="citrus-schemas-context.xml"/>
 
     <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
 
     <!-- Embedded ActiveMQ JMS broker -->
     <amq:broker useJmx="false" persistent="false">
       <amq:transportConnectors>
-        <amq:transportConnector uri="tcp://localhost:61616" />
+        <amq:transportConnector uri="tcp://localhost:61616"/>
       </amq:transportConnectors>
     </amq:broker>
 
@@ -91,8 +91,8 @@
                              destination-name="${jms.ws.stub.request}"/>
     
     <citrus-jms:jms-endpoint id="webServiceResponseSender"
-                             use-object-messages="true"
-                             destination-name="${jms.ws.stub.response}"/>
+         use-object-messages="true"
+         destination-name="${jms.ws.stub.response}"/>
     
     <citrus-ws:client id="webServiceHelloClient"
          request-url="http://localhost:8071/hello"
@@ -382,5 +382,5 @@
         </citrus-test:sql>
       </citrus:actions>
     </citrus:after-suite>
-    
+
 </beans>

@@ -1,47 +1,42 @@
-<div class="modal hide fade">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        {{#if schema.id}}
-        <h3>Edit XSD Schema</h3>
-        {{else}}
-        <h3>New XSD Schema</h3>
-        {{/if}}
-    </div>
+{{#if id}}
+<h3>Edit Schema</h3>
+{{else}}
+<h3>New Schema</h3>
+{{/if}}
 
-    <div id="schema-edit-form" class="modal-body">
-        <form class="form-horizontal">
-            {{#if schema.id}}
-            <input name="id" type="hidden" value="{{schema.id}}"/>
-            <div class="control-group">
-              <label class="control-label">Id <em>*</em></label>
-              <div class="controls">
-                <input name="newId" value="{{schema.id}}" placeholder="Unique Id" type="text" class="span8"/>
-              </div>
-            </div>
-            {{else}}
-            <div class="control-group">
-                <label class="control-label">Id <em>*</em></label>
-                <div class="controls">
-                    <input name="id" value="{{schema.id}}" placeholder="Unique Id" type="text" class="span8"/>
-                </div>
-            </div>
-            {{/if}}
-
-            <div class="control-group">
-                <label class="control-label">Location <em>*</em></label>
-                <div class="controls">
-                    <input name="location" value="{{schema.location}}" placeholder="Location" type="text" class="span12"/>
-                </div>
-            </div>
-        </form>
+<form id="schema-edit-form" class="form-horizontal">
+  {{#if id}}
+  <input name="id" type="hidden" value="{{id}}"/>
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="newId" value="{{id}}" placeholder="Unique Id" type="text" class="span8"/>
     </div>
-
-    <div class="modal-footer">
-        {{#if schema.id}}
-        <a href="#config" id="btn-schema-update" class="btn btn-citrus">Save</a>
-        {{else}}
-        <a href="#config" id="btn-schema-save" class="btn btn-citrus">Save</a>
-        {{/if}}
-        <a href="#config" id="btn-schema-cancel" class="btn">Close</a>
+  </div>
+  {{else}}
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+        <input name="id" value="{{id}}" placeholder="Unique Id" type="text" class="span8"/>
     </div>
-</div>
+  </div>
+  {{/if}}
+
+  <div class="control-group">
+    <label class="control-label">Location <em>*</em></label>
+    <div class="controls">
+        <input name="location" value="{{location}}" placeholder="Location" type="text" class="span12"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      {{#if id}}
+      <a href="#config" id="btn-schema-save" class="btn btn-citrus">Save</a>
+      {{else}}
+      <a href="#config" id="btn-schema-add" class="btn btn-citrus">Add</a>
+      {{/if}}
+      <a href="#config" id="btn-schema-cancel" class="btn">Close</a>
+    </div>
+  </div>
+</form>

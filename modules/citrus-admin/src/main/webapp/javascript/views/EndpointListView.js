@@ -198,7 +198,7 @@
 
             searchOptions: function(event) {
                 $.ajax({
-                    url: "config/search",
+                    url: "configuration/search",
                     type: 'POST',
                     dataType: "json",
                     contentType: "text/plain",
