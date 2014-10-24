@@ -18,13 +18,11 @@ package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.configuration.RunConfiguration;
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.Schema;
-import com.consol.citrus.model.config.core.SchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Configuration controller handles project choosing requests and project configuration setup
@@ -46,9 +44,6 @@ public class ConfigurationController {
     @Autowired
     private SpringBeanService springBeanService;
 
-    @Autowired
-    private SchemaRepositoryService schemaRepositoryService;
-
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
     public List<String> search(@RequestBody String key) {
@@ -65,79 +60,5 @@ public class ConfigurationController {
     @ResponseBody
     public String getRootDirectory() {
         return configService.getRootDirectory();
-    }
-
-    @RequestMapping(value = "/schema-repository", method = {RequestMethod.GET})
-    @ResponseBody
-    public List<SchemaRepository> listSchemaRepositories() {
-        return schemaRepositoryService.listSchemaRepositories(projectService.getProjectContextConfigFile());
-    }
-
-    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.GET})
-    @ResponseBody
-    public SchemaRepository getSchemaRepository(@PathVariable("id") String id) {
-        return schemaRepositoryService.getSchemaRepository(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value="/schema-repository", method = {RequestMethod.POST})
-    @ResponseBody
-    public void createSchemaRepository(@RequestBody SchemaRepository xsdSchemaRepository) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchemaRepository);
-    }
-
-    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.PUT})
-    @ResponseBody
-    public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepository xsdSchemaRepository) {
-        List<SchemaRepository.Schemas.Ref> schemaRefs = new ArrayList<SchemaRepository.Schemas.Ref>();
-        for (Object schema: xsdSchemaRepository.getSchemas().getRevesAndSchemas()) {
-            if (schema instanceof String) {
-                SchemaRepository.Schemas.Ref ref = new SchemaRepository.Schemas.Ref();
-                ref.setSchema((String) schema);
-                schemaRefs.add(ref);
-            } else if (schema instanceof SchemaRepository.Schemas.Ref) {
-                schemaRefs.add((SchemaRepository.Schemas.Ref) schema);
-            }
-        }
-
-        xsdSchemaRepository.getSchemas().getRevesAndSchemas().clear();
-        xsdSchemaRepository.getSchemas().getRevesAndSchemas().addAll(schemaRefs);
-
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchemaRepository);
-    }
-
-    @RequestMapping(value = "/schema-repository/{id}", method = {RequestMethod.DELETE})
-    @ResponseBody
-    public void deleteSchemaRepository(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value = "/schema", method = {RequestMethod.GET})
-    @ResponseBody
-    public List<Schema> listXsdSchemas() {
-        return schemaRepositoryService.listSchemas(projectService.getProjectContextConfigFile());
-    }
-
-    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.GET})
-    @ResponseBody
-    public Schema getXsdSchema(@PathVariable("id") String id) {
-        return schemaRepositoryService.getSchema(projectService.getProjectContextConfigFile(), id);
-    }
-
-    @RequestMapping(value="/schema", method = {RequestMethod.POST})
-    @ResponseBody
-    public void createXsdSchema(@RequestBody Schema xsdSchema) {
-        springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchema);
-    }
-
-    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.PUT})
-    @ResponseBody
-    public void updateXsdSchema(@PathVariable("id") String id, @RequestBody Schema xsdSchema) {
-        springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchema);
-    }
-
-    @RequestMapping(value = "/schema/{id}", method = {RequestMethod.DELETE})
-    @ResponseBody
-    public void deleteXsdSchema(@PathVariable("id") String id) {
-        springBeanService.removeBeanDefinition(projectService.getProjectContextConfigFile(), id);
     }
 }

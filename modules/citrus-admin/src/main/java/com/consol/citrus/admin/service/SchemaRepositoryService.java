@@ -17,19 +17,14 @@
 package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.converter.spring.SchemaRepositorySpringBeanConverter;
-import com.consol.citrus.admin.converter.spring.SchemaSpringBeanConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.model.config.core.Schema;
 import com.consol.citrus.model.config.core.SchemaRepository;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.xml.xsd.SimpleXsdSchema;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service manages spring application context bean access for schema repositories.
@@ -45,7 +40,6 @@ public class SchemaRepositoryService {
 
     /** Converter for legacy spring bean definitions */
     private SchemaRepositorySpringBeanConverter schemaRepositorySpringBeanConverter = new SchemaRepositorySpringBeanConverter();
-    private SchemaSpringBeanConverter schemaSpringBeanConverter = new SchemaSpringBeanConverter();
 
     /**
      * Lists all schema repository spring beans available in application context. This includes
@@ -84,45 +78,5 @@ public class SchemaRepositoryService {
         }
 
         return repository;
-    }
-
-    /**
-     * Gets all available xsd schema bean definitions from application context file. Also
-     * reads legacy bean definitions of class SimpleXsdSchema.
-     *
-     * @param projectConfigFile
-     * @return
-     */
-    public List<Schema> listSchemas(File projectConfigFile) {
-        List<Schema> schemas = new ArrayList<Schema>();
-
-        schemas.addAll(springBeanService.getBeanDefinitions(projectConfigFile, Schema.class));
-
-        List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectConfigFile, SpringBean.class, Collections.singletonMap("class", SimpleXsdSchema.class.getName()));
-        for (SpringBean springBean : springBeans) {
-            schemas.add(schemaSpringBeanConverter.convert(springBean));
-        }
-
-        return schemas;
-    }
-
-    /**
-     * Gets the schema definition from application context. In case of legacy bean definition convert
-     * and construct proper schema element.
-     * @param projectConfigFile
-     * @param id
-     * @return
-     */
-    public Schema getSchema(File projectConfigFile, String id) {
-        Schema schema = springBeanService.getBeanDefinition(projectConfigFile, id, Schema.class);
-
-        if (schema == null) {
-            SpringBean springBean = springBeanService.getBeanDefinition(projectConfigFile, id, SpringBean.class);
-            if (springBean != null) {
-                schema = schemaSpringBeanConverter.convert(springBean);
-            }
-        }
-
-        return schema;
     }
 }

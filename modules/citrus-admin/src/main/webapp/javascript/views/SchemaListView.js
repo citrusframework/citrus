@@ -34,7 +34,7 @@
 
             getSchemas: function () {
                 $.ajax({
-                    url: "configuration/schema",
+                    url: "schema",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
@@ -46,7 +46,7 @@
 
             getSchemaRepositories: function () {
                 $.ajax({
-                    url: "configuration/schema-repository",
+                    url: "schema-repository",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
@@ -59,7 +59,7 @@
             removeSchema: function (event) {
                 var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedSchemaId);
-                var url = "configuration/schema/" + id;
+                var url = "schema/" + id;
 
                 $.ajax({
                     url: url,
@@ -76,7 +76,7 @@
             removeSchemaRepository: function (event) {
                 var encodedId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedId);
-                var url = "configuration/schema-repository/" + id;
+                var url = "schema-repository/" + id;
 
                 $.ajax({
                     url: url,
@@ -107,7 +107,7 @@
             showSchemaEditForm: function() {
                 var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedSchemaId);
-                var url = "configuration/schema/" + id;
+                var url = "schema/" + id;
 
                 $.ajax({
                     url: url,
@@ -126,7 +126,7 @@
             showRepositoryEditForm: function() {
                 var encodedSchemaId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedSchemaId);
-                var url = "configuration/schema-repository/" + id;
+                var url = "schema-repository/" + id;
 
                 $.ajax({
                     url: url,
@@ -166,7 +166,7 @@
 
                 var serializedForm = form.serializeObject();
                 var jsonForm = JSON.stringify(serializedForm);
-                var url = "configuration/schema";
+                var url = "schema";
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -190,7 +190,7 @@
                 var form = $('#repository-edit-form');
 
                 var serializedForm = form.serializeObject();
-                var url = "configuration/schema-repository";
+                var url = "schema-repository";
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -223,7 +223,7 @@
                 serializedForm = _.omit(serializedForm, "newId");
 
                 var jsonForm = JSON.stringify(serializedForm);
-                var url = "configuration/schema/" + schemaId;
+                var url = "schema/" + schemaId;
                 $.ajax({
                     url: url,
                     type: 'PUT',
@@ -255,7 +255,7 @@
 
                 serializedForm = _.omit(serializedForm, "newId");
 
-                var url = "configuration/schema-repository/" + schemaRepositoryId;
+                var url = "schema-repository/" + schemaRepositoryId;
                 $.ajax({
                     url: url,
                     type: 'PUT',

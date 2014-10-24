@@ -46,13 +46,13 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class CitrusTypeNameIdResolver implements TypeIdResolver {
+public class CitrusTypeIdResolver implements TypeIdResolver {
 
     /** List of known id to type mappings */
     private Map<String, JavaType> typeMappings = new HashMap<String, JavaType>();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusTypeNameIdResolver.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusTypeIdResolver.class);
 
     @Override
     public void init(JavaType baseType) {
@@ -166,6 +166,6 @@ public class CitrusTypeNameIdResolver implements TypeIdResolver {
             return beanTypeAnnotation.name();
         }
 
-        return "unknown";
+        return "";
     }
 }
