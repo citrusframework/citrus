@@ -1,7 +1,7 @@
 (function () {
     define(["TemplateManager"], function (TemplateManager) {
-        var NamespaceContextView = Backbone.View.extend({
-            namespaceContext: {namespaces: {}},
+        var GlobalVariablesView = Backbone.View.extend({
+            globalVariables: {variables: {}},
 
             events: {
                 "click .btn-remove": "remove",
@@ -13,9 +13,9 @@
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('NamespaceContextView', {namespaceCount: this.namespaceContext.namespaces.length, namespaces: this.namespaceContext.namespaces}));
+                $(this.el).html(TemplateManager.template('GlobalVariablesView', {namespaceCount: this.globalVariables.variables.length, variables: this.globalVariables.variables}));
 
-                $( "#namespaces" ).sortable().disableSelection();
+                $( "#variables" ).sortable().disableSelection();
 
                 return this;
             },
@@ -25,29 +25,29 @@
 
             getNamespaces: function () {
                 $.ajax({
-                    url: "namespace-context",
+                    url: "global-variables",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        this.namespaceContext = response;
+                        this.globalVariables = response;
                     }, this),
                     async: false
                 });
             },
 
             remove: function (event) {
-                var prefix = $(event.target).closest($("[id]")).attr('id');
+                var name = $(event.target).closest($("[id]")).attr('id');
 
-                this.namespaceContext.namespaces = _.reject(this.namespaceContext.namespaces, function(namespace) {
-                    return namespace.prefix === prefix;
+                this.globalVariables.variables = _.reject(this.globalVariables.variables, function(variable) {
+                    return variable.name === name;
                 });
 
                 $.ajax({
-                    url: "namespace-context/",
+                    url: "global-variables/",
                     type: 'PUT',
                     dataType: "json",
                     contentType: "application/json",
-                    data: JSON.stringify(this.namespaceContext),
+                    data: JSON.stringify(this.globalVariables),
                     success: _.bind(function (response) {
                     }, this),
                     async: true
@@ -58,14 +58,14 @@
             },
 
             add: function() {
-                this.namespaceContext.namespaces.push({ prefix: $('input[name = "prefix"]').val(), uri: $('input[name = "uri"]').val() });
+                this.globalVariables.variables.push({ name: $('input[name = "name"]').val(), value: $('input[name = "value"]').val() });
 
                 $.ajax({
-                    url: "namespace-context/",
+                    url: "global-variables/",
                     type: 'PUT',
                     dataType: "json",
                     contentType: "application/json",
-                    data: JSON.stringify(this.namespaceContext),
+                    data: JSON.stringify(this.globalVariables),
                     success: _.bind(function (response) {
                     }, this),
                     async: true
@@ -107,6 +107,6 @@
 
         });
 
-        return NamespaceContextView;
+        return GlobalVariablesView;
     });
 }).call(this);

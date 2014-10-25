@@ -1,5 +1,5 @@
 (function () {
-    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView) {
+    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView", "views/GlobalVariablesView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView, GlobalVariablesView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
@@ -12,6 +12,11 @@
                     idSuffix: "schemas",
                     displayName: "Schema Definitions",
                     view: SchemaListView
+                },
+                {
+                    idSuffix: "global-variables",
+                    displayName: "Global Variables",
+                    view: GlobalVariablesView
                 },
                 {
                     idSuffix: "functions",
@@ -33,10 +38,6 @@
                 {
                     idSuffix: "message-validators",
                     displayName: "Message Validators"
-                },
-                {
-                    idSuffix: "global-variables",
-                    displayName: "Global Variables"
                 }
             ],
 

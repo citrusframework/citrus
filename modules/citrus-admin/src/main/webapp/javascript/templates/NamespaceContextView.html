@@ -14,7 +14,7 @@
     <div class="control-group">
       <label class="control-label">Namespaces</label>
       <div class="controls">
-        <ul class="schema-list sortable box">
+        <ul id="namespaces" class="sortable box">
           {{#each namespaces}}
           <li class="sortable highlight" id="{{prefix}}"><i class="fa fa-file-text-o"></i>&nbsp;{{prefix}}={{uri}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove namespace"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
           {{/each}}
