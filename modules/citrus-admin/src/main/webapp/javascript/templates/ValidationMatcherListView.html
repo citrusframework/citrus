@@ -1,18 +1,18 @@
-<div id="library-list">
+<div id="matcher-list">
   <h1 class="page-header">
-    <span><i class="fa fa-unlink"></i> Functions</span>
+    <span><i class="fa fa-check-square"></i> Validation Matcher</span>
   </h1>
 
-  <p>Functions are used inside a test case in order to provide more dynamic values such as the current date, timestamps, random numbers and so on. The functions
-    have a name and are grouped in a function library. Citrus provides a default function library but you can easily write your own functions and put them in a custom library in
-    order to extend the framework capabilities.</p>
+  <p>When validating incoming messages Citrus is able to consult the service of validation matcher implementations. These validation matcher bring more flexibility to a validation operation.
+  When comparing a received value with an expected control value validation matcher help to get more powerful validation capabilities. Citrus offers a default list of validation matcher implementations
+  such as equalsIgnoreCase or isNumber. Of course you can easily write your own validation matcher and put it to some custom validation matcher library.</p>
 
-  <p>Your project defines <span class="badge badge-emphasis badge-citrus">{{libraryCount}}</span> custom function libraries. See all available libraries listed below:</p>
+  <p>Your project defines <span class="badge badge-emphasis badge-citrus">{{matcherCount}}</span> custom validation matcher libraries. See all available libraries listed below:</p>
 
   <br/>
 
   <h2>
-    <span><i class="fa fa-unlink"></i> Custom Libraries</span>
+    <span><i class="fa fa-check-square"></i> Custom Libraries</span>
   </h2>
 
   <table class="table table-hover table-condensed config-table">
@@ -20,7 +20,7 @@
     <tr>
       <th style="width: 80px;"></th>
       <th style="width: 400px;">Name</th>
-      <th>Functions</th>
+      <th>Validation Matcher</th>
       <th style="width: 20px;"></th>
     </tr>
     </thead>
@@ -30,12 +30,12 @@
     {{/unless}}
 
     {{#each libraries}}
-    <tr class="library clickable" id="{{id}}">
-      <td><span class="badge badge-{{prefix}}"><i class="fa fa-unlink"></i> &nbsp;{{prefix}}</span></td>
+    <tr class="matcher clickable" id="{{id}}">
+      <td><span class="badge badge-{{prefix}}"><i class="fa fa-check-square"></i> &nbsp;{{prefix}}</span></td>
       <td>{{id}}</td>
       <td>
         <ul class="properties">
-          {{#each functions}}
+          {{#each matchers}}
           {{#if clazz}}
           <li><b>{{name}}</b>:{{clazz}}</li>
           {{/if}}
@@ -56,7 +56,7 @@
   </table>
 
   <h2>
-    <span><i class="fa fa-unlink"></i> Citrus Library</span>
+    <span><i class="fa fa-check-square"></i> Citrus Library</span>
   </h2>
 
   <form class="form-horizontal">
@@ -75,11 +75,11 @@
     </div>
 
     <div class="control-group">
-      <label class="control-label">Functions</label>
+      <label class="control-label">Validation Matcher</label>
       <div class="controls">
-        <ul id="functions" class="sortable box">
-          {{#each defaultLibrary.functions}}
-          <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{name}}()</b> class={{clazz}}</li>
+        <ul id="matcher" class="sortable box">
+          {{#each defaultLibrary.matchers}}
+          <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>@{{name}}@()</b> class={{clazz}}</li>
           {{/each}}
         </ul>
       </div>
@@ -88,4 +88,4 @@
 
 </div>
 
-<div id="library-edit" style="display: none;"></div>
+<div id="matcher-edit" style="display: none;"></div>

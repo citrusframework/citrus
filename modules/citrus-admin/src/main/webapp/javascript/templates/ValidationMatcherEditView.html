@@ -1,0 +1,68 @@
+{{#if id}}
+<h3>Edit Validation Matcher Library</h3>
+{{else}}
+<h3>New Validation Matcher Library</h3>
+{{/if}}
+
+<form id="matcher-edit-form" class="form-horizontal">
+  {{#if id}}
+  <input name="id" type="hidden" value="{{id}}"/>
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="newId" value="{{id}}" placeholder="Unique Id" type="text" class="span8"/>
+    </div>
+  </div>
+  {{else}}
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="id" value="{{id}}" placeholder="Unique Id" type="text" class="span8"/>
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="control-group">
+    <label class="control-label">Prefix <em>*</em></label>
+    <div class="controls">
+      <input name="prefix" value="{{prefix}}" placeholder="Prefix" type="text" class="span12"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validation Matcher</label>
+    <div class="controls">
+      <input name="name" placeholder="Name" type="text" class="span3"/>
+      <input name="clazz" placeholder="Implementation Class" type="text" class="span9"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+       <a href="#config" id="btn-add-matcher" class="btn btn-citrus">Add matcher</a>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Validation Matcher</label>
+    <div class="controls">
+      <ul id="matcher" class="sortable box">
+        {{#each matchers}}
+        <li class="sortable highlight" id="{{name}}" title="{{clazz}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>@{{name}}@()</b> class={{clazz}}&nbsp;<a class="btn-remove-matcher pull-right" href="#config" title="Remove matcher"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      {{#if id}}
+      <a href="#config" id="btn-save" class="btn btn-citrus">Save</a>
+      {{else}}
+      <a href="#config" id="btn-add" class="btn btn-citrus">Add</a>
+      {{/if}}
+      <a href="#config" id="btn-cancel" class="btn">Close</a>
+    </div>
+  </div>
+
+</form>

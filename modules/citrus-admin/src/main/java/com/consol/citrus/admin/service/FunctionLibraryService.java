@@ -88,7 +88,7 @@ public class FunctionLibraryService {
     }
 
     /**
-     * List all message receiver types in application context.
+     * List all function libraries in application context.
      * @return
      */
     public List<FunctionLibrary> listFunctionLibraries() {
