@@ -1,0 +1,91 @@
+<div id="library-list">
+  <h1 class="page-header">
+    <span><i class="fa fa-unlink"></i> Functions</span>
+  </h1>
+
+  <p>Functions are used inside a test case in order to provide more dynamic values such as the current date, timestamps, random numbers and so on. The functions
+    have a name and are grouped in a function library. Citrus provides a default function library but you can easily write your own functions and put them in a custom library in
+    order to extend the framework capabilities.</p>
+
+  <p>Your project defines <span class="badge badge-emphasis badge-citrus">{{libraryCount}}</span> different function libraries. See all available libraries listed below:</p>
+
+  <br/>
+
+  <h2>
+    <span><i class="fa fa-unlink"></i> Custom Function Libraries</span>
+  </h2>
+
+  <table class="table table-hover table-condensed config-table">
+    <thead>
+    <tr>
+      <th style="width: 80px;"></th>
+      <th style="width: 400px;">Name</th>
+      <th>Functions</th>
+      <th style="width: 20px;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#unless libraries.length}}
+    <tr><td colspan="4">&nbsp;<i class="fa fa-times"></i> No custom libraries defined</td></tr>
+    {{/unless}}
+
+    {{#each libraries}}
+    <tr class="library clickable" id="{{id}}">
+      <td><span class="badge badge-{{prefix}}"><i class="fa fa-unlink"></i> &nbsp;{{prefix}}</span></td>
+      <td>{{id}}</td>
+      <td>
+        <ul class="properties">
+          {{#each functions}}
+          {{#if clazz}}
+          <li><b>{{name}}</b>:{{clazz}}</li>
+          {{/if}}
+          {{/each}}
+        </ul>
+      </td>
+      <td>
+        <a class="btn-remove" href="#config" title="Remove library"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
+      </td>
+    </tr>
+    {{/each}}
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="3">&nbsp;<a class="btn-new clickable" title="Add library"><i class="fa fa-plus"></i> Add</a></td>
+    </tr>
+    </tfoot>
+  </table>
+
+  <h2>
+    <span><i class="fa fa-unlink"></i> Citrus Function Library</span>
+  </h2>
+
+  <form class="form-horizontal">
+    <div class="control-group">
+      <label class="control-label">Name</label>
+      <div class="controls">
+        <input name="id" value="{{defaultLibrary.id}}" disabled="disabled" type="text" class="span8"/>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Prefix</label>
+      <div class="controls">
+        <input name="prefix" value="{{defaultLibrary.prefix}}" disabled="disabled" type="text" class="span12"/>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">Functions</label>
+      <div class="controls">
+        <ul id="functions" class="sortable box">
+          {{#each defaultLibrary.functions}}
+          <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{name}}()</b> class={{clazz}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+<div id="library-edit" style="display: none;"></div>

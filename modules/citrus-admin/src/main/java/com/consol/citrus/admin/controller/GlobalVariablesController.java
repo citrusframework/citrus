@@ -47,7 +47,7 @@ public class GlobalVariablesController {
 
     @RequestMapping(method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateGlobalVariables(@RequestBody GlobalVariables context) {
-        globalVariablesService.updateGlobalVariables(projectService.getProjectContextConfigFile(), context);
+    public void updateGlobalVariables(@RequestBody GlobalVariables variables) {
+        globalVariablesService.updateGlobalVariables(projectService.getProjectContextConfigFile(), variables);
     }
 }

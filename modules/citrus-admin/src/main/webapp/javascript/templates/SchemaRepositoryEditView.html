@@ -26,7 +26,7 @@
     <label class="control-label">Schemas</label>
     <div class="controls">
       <div class="connected-horizontal">
-        <p style="text-align: right;">Available</p>
+        <p style="text-align: right;"><b>Not included</b></p>
         <ul id="schemas-excluded" class="schema-list sortable box">
           {{#each schemas}}
           <li class="sortable highlight" id="{{id}}"><i class="fa fa-file-text-o"></i>&nbsp;{{id}}</li>
@@ -35,11 +35,7 @@
       </div>
 
       <div class="connected-horizontal">
-        <span>&lt;--&gt;</span>
-      </div>
-
-      <div class="connected-horizontal">
-        <p>Included</p>
+        <p><b>Included</b></p>
         <ul id="schemas-included" class="schema-list sortable box">
           {{#each repository.schemas.revesAndSchemas}}
           <li class="sortable" id="{{schema}}{{id}}"><i class="fa fa-file-text-o"></i>&nbsp;{{schema}}{{id}}</li>

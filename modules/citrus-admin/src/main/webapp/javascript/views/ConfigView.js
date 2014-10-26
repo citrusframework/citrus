@@ -1,5 +1,5 @@
 (function () {
-    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView", "views/GlobalVariablesView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView, GlobalVariablesView) {
+    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView", "views/GlobalVariablesView", "views/FunctionLibraryListView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView, GlobalVariablesView, FunctionLibraryListView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
@@ -20,7 +20,8 @@
                 },
                 {
                     idSuffix: "functions",
-                    displayName: "Functions"
+                    displayName: "Functions",
+                    view: FunctionLibraryListView
                 },
                 {
                     idSuffix: "validation-matcher",
