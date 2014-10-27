@@ -16,8 +16,11 @@
 
 package com.consol.citrus.admin.service;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.admin.converter.TestcaseModelConverter;
+import com.consol.citrus.admin.converter.actions.ActionConverter;
+import com.consol.citrus.admin.converter.actions.TestActionConverter;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.ApplicationContextHolder;
 import com.consol.citrus.admin.model.*;
@@ -25,6 +28,7 @@ import com.consol.citrus.admin.spring.model.SpringBeans;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
 import com.consol.citrus.model.testcase.core.Testcase;
+import com.consol.citrus.model.testcase.core.Variables;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -33,8 +37,10 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Abstract test case service provides common implementations for filesystem and classpath service.
@@ -50,12 +56,15 @@ public abstract class AbstractTestCaseService implements TestCaseService {
     @Autowired
     private ApplicationContextHolder applicationContextHolder;
 
+    @Autowired
+    private List<TestActionConverter<?, ? extends TestAction>> actionConverter;
+
     /**
      * Gets test case details such as status, description, author.
      * @return
      */
-    public TestCaseDetail getTestDetail(Project project, String packageName, String testName, TestCaseType type) {
-        TestCaseDetail testCase = new TestCaseDetail();
+    public TestCaseData getTestDetail(Project project, String packageName, String testName, TestCaseType type) {
+        TestCaseData testCase = new TestCaseData();
         testCase.setName(testName);
         testCase.setPackageName(packageName);
         testCase.setType(type);
@@ -69,7 +78,27 @@ public abstract class AbstractTestCaseService implements TestCaseService {
             throw new CitrusAdminRuntimeException("Unsupported test case type: " + type);
         }
 
-        testCase.setDetail(testModel);
+        for (Variables.Variable variable : testModel.getVariables().getVariables()) {
+            testCase.getVariables().put(variable.getName(), variable.getValue());
+        }
+
+        testCase.setDescription(testModel.getDescription());
+        testCase.setMetaInfo(testModel.getMetaInfo());
+
+        for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {
+            boolean converterFound = false;
+            for (TestActionConverter testActionConverter : actionConverter) {
+                if (testActionConverter.getModelClass().isInstance(actionType)) {
+                    testCase.addTestAction(testActionConverter.convert(actionType));
+                    converterFound = true;
+                    break;
+                }
+            }
+
+            if (!converterFound) {
+                testCase.addTestAction(new ActionConverter(actionType.getClass().getAnnotation(XmlRootElement.class).name()).convert(actionType));
+            }
+        }
 
         return testCase;
     }

@@ -15,7 +15,8 @@
  */
 package com.consol.citrus.admin.converter.container;
 
-import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.admin.converter.actions.AbstractTestActionConverter;
+import com.consol.citrus.admin.model.TestActionData;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.RepeatOnerrorUntilTrue;
@@ -24,10 +25,22 @@ import com.consol.citrus.model.testcase.core.RepeatOnerrorUntilTrue;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class RepeatOnErrorContainerConverter implements ObjectConverter<RepeatOnerrorUntilTrue, RepeatOnErrorUntilTrue> {
+public class RepeatOnErrorContainerConverter extends AbstractTestActionConverter<RepeatOnerrorUntilTrue,RepeatOnErrorUntilTrue> {
+
+    /**
+     * Default constructor using action type reference.
+     */
+    public RepeatOnErrorContainerConverter() {
+        super("repeat-on-error");
+    }
 
     @Override
-    public RepeatOnerrorUntilTrue convert(RepeatOnErrorUntilTrue definition) {
+    public TestActionData convert(RepeatOnerrorUntilTrue definition) {
+        return null;
+    }
+
+    @Override
+    public RepeatOnerrorUntilTrue convertModel(RepeatOnErrorUntilTrue definition) {
         RepeatOnerrorUntilTrue action = new ObjectFactory().createRepeatOnerrorUntilTrue();
 
         action.setDescription(definition.getDescription());
@@ -38,7 +51,7 @@ public class RepeatOnErrorContainerConverter implements ObjectConverter<RepeatOn
     }
 
     @Override
-    public Class<RepeatOnErrorUntilTrue> getModelClass() {
-        return RepeatOnErrorUntilTrue.class;
+    public Class<RepeatOnerrorUntilTrue> getModelClass() {
+        return RepeatOnerrorUntilTrue.class;
     }
 }

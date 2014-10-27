@@ -16,18 +16,37 @@
 package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.admin.model.TestActionData;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.Receive;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ReceiveMessageActionConverter implements ObjectConverter<Receive, ReceiveMessageAction> {
+@Component
+public class ReceiveMessageActionConverter extends AbstractTestActionConverter<Receive, ReceiveMessageAction> {
+
+    /**
+     * Default constructor using action type reference.
+     */
+    public ReceiveMessageActionConverter() {
+        super("receive");
+    }
 
     @Override
-    public Receive convert(ReceiveMessageAction definition) {
+    public TestActionData convert(Receive definition) {
+        TestActionData action = new TestActionData(getActionType(), getModelClass());
+
+        action.add(property("endoint", definition));
+        action.add(property("actor", "TestActor", definition));
+
+        return action;
+    }
+
+    @Override
+    public Receive convertModel(ReceiveMessageAction definition) {
         Receive action = new ObjectFactory().createReceive();
 
         if (definition.getActor() != null) {
@@ -37,7 +56,7 @@ public class ReceiveMessageActionConverter implements ObjectConverter<Receive, R
         }
 
         action.setDescription(definition.getDescription());
-        action.setWith(definition.getEndpoint().getName());
+        action.setEndpoint(definition.getEndpoint().getName());
 
         return action;
     }
@@ -48,7 +67,7 @@ public class ReceiveMessageActionConverter implements ObjectConverter<Receive, R
      * @return
      */
     @Override
-    public Class<ReceiveMessageAction> getModelClass() {
-        return ReceiveMessageAction.class;
+    public Class<Receive> getModelClass() {
+        return Receive.class;
     }
 }

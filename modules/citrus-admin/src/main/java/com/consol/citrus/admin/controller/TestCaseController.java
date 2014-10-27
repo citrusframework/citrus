@@ -17,10 +17,8 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
-import com.consol.citrus.admin.model.FileTreeModel;
-import com.consol.citrus.admin.model.TestCaseDetail;
-import com.consol.citrus.admin.model.TestCaseInfo;
-import com.consol.citrus.admin.model.TestCaseType;
+import com.consol.citrus.admin.model.*;
+import com.consol.citrus.admin.model.TestCaseData;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
@@ -60,7 +58,7 @@ public class TestCaseController {
     
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
-    public List<TestCaseInfo> list() {
+    public List<TestCaseData> list() {
         return testCaseService.getTests(projectService.getActiveProject());
     }
 
@@ -94,7 +92,7 @@ public class TestCaseController {
 
     @RequestMapping(value="/details/{type}/{package}/{name}", method = { RequestMethod.GET })
     @ResponseBody
-    public TestCaseDetail getTestDetail(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
+    public TestCaseData getTestDetail(@PathVariable("package") String testPackage, @PathVariable("name") String testName,
                                         @PathVariable("type") String type, @RequestParam(value = "method", required = false) String method) {
         if (StringUtils.hasText(method)) {
             return testCaseService.getTestDetail(projectService.getActiveProject(), testPackage, testName + "." + method, TestCaseType.valueOf(type.toUpperCase()));

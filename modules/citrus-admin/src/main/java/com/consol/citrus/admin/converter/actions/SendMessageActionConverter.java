@@ -16,18 +16,39 @@
 package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.admin.model.TestActionData;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.Send;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class SendMessageActionConverter implements ObjectConverter<Send, SendMessageAction> {
+@Component
+public class SendMessageActionConverter extends AbstractTestActionConverter<Send, SendMessageAction> {
+
+    /**
+     * Default constructor using action type reference.
+     */
+    public SendMessageActionConverter() {
+        super("send");
+    }
 
     @Override
-    public Send convert(SendMessageAction definition) {
+    public TestActionData convert(Send definition) {
+        TestActionData action = new TestActionData(getActionType(), getModelClass());
+
+        action.add(property("endoint", definition));
+        action.add(property("actor", "TestActor", definition));
+        action.add(property("fork", definition, "false")
+                .options("true", "false"));
+
+        return action;
+    }
+
+    @Override
+    public Send convertModel(SendMessageAction definition) {
         Send action = new ObjectFactory().createSend();
 
         if (definition.getActor() != null) {
@@ -37,13 +58,13 @@ public class SendMessageActionConverter implements ObjectConverter<Send, SendMes
         }
 
         action.setDescription(definition.getDescription());
-        action.setWith(definition.getEndpoint().getName());
+        action.setEndpoint(definition.getEndpoint().getName());
 
         return action;
     }
 
     @Override
-    public Class<SendMessageAction> getModelClass() {
-        return SendMessageAction.class;
+    public Class<Send> getModelClass() {
+        return Send.class;
     }
 }

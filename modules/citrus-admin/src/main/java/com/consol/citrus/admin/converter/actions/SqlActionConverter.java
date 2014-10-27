@@ -16,18 +16,39 @@
 package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.admin.converter.ObjectConverter;
+import com.consol.citrus.admin.model.TestActionData;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 import com.consol.citrus.model.testcase.core.Sql;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ExecuteSqlActionConverter implements ObjectConverter<Sql, ExecuteSQLAction> {
+@Component
+public class SqlActionConverter extends AbstractTestActionConverter<Sql, ExecuteSQLAction> {
+
+
+    /**
+     * Default constructor using action type reference.
+     */
+    public SqlActionConverter() {
+        super("sql");
+    }
 
     @Override
-    public Sql convert(ExecuteSQLAction definition) {
+    public TestActionData convert(Sql definition) {
+        TestActionData action = new TestActionData(getActionType(), getModelClass());
+
+        action.add(property("datasource", definition));
+        action.add(property("ignoreErrors", definition, "false")
+                    .options("true", "false"));
+
+        return action;
+    }
+
+    @Override
+    public Sql convertModel(ExecuteSQLAction definition) {
         Sql action = new ObjectFactory().createSql();
 
         action.setDescription(definition.getDescription());
@@ -37,7 +58,7 @@ public class ExecuteSqlActionConverter implements ObjectConverter<Sql, ExecuteSQ
     }
 
     @Override
-    public Class<ExecuteSQLAction> getModelClass() {
-        return ExecuteSQLAction.class;
+    public Class<Sql> getModelClass() {
+        return Sql.class;
     }
 }

@@ -48,7 +48,7 @@
 
             render: function() {
                 $(this.el).html(TemplateManager.template('TestDetailsView', { test: this.test, runConfigurations: this.runConfigurations, activeConfiguration: this.activeConfiguration }));
-                $(this.el).find('div.test-design').html(TemplateManager.template('TestDesignView', { test: this.test.detail }));
+                $(this.el).find('div.test-design').html(TemplateManager.template('TestDesignView', { test: this.test }));
                 return this;
             },
 
@@ -114,7 +114,7 @@
                     }
 
                     var processId = jsMessage.processId;
-                    if (processId != this.test.detail.name) {
+                    if (processId != this.test.name) {
                        return;
                     }
 

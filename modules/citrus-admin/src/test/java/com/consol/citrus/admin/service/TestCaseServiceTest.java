@@ -47,12 +47,12 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
         expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).atLeastOnce();
         replay(project);
 
-        List<TestCaseInfo> tests = testCaseService.getTests(project);
+        List<TestCaseData> tests = testCaseService.getTests(project);
 
         Assert.assertNotNull(tests);
         Assert.assertEquals(tests.size(), 4L);
 
-        TestCaseInfo test = tests.get(0);
+        TestCaseData test = tests.get(0);
         Assert.assertEquals(test.getName(), "FooTest");
         Assert.assertEquals(test.getPackageName(), "");
 

@@ -16,10 +16,14 @@
 
 package com.consol.citrus.admin.model;
 
+import com.consol.citrus.model.testcase.core.MetaInfoType;
+
+import java.util.*;
+
 /**
  * @author Christoph Deppisch
  */
-public class TestCaseInfo {
+public class TestCaseData {
 
     private String name;
 
@@ -28,6 +32,16 @@ public class TestCaseInfo {
     private String file;
     private TestCaseType type;
     private Long lastModified;
+
+    private MetaInfoType metaInfo;
+
+    private String description;
+
+    private Map<String, Object> variables = new LinkedHashMap<String, Object>();
+
+    private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+
+    private List<TestActionData> actions = new ArrayList<TestActionData>();
 
     /**
      * @return
@@ -115,5 +129,95 @@ public class TestCaseInfo {
      */
     public void setLastModified(Long lastModified) {
         this.lastModified = lastModified;
+    }
+
+    /**
+     * Gets the meta information.
+     * @return
+     */
+    public MetaInfoType getMetaInfo() {
+        return metaInfo;
+    }
+
+    /**
+     * Sets the meta information.
+     * @param metaInfo
+     */
+    public void setMetaInfo(MetaInfoType metaInfo) {
+        this.metaInfo = metaInfo;
+    }
+
+    /**
+     * Sets the description.
+     * @param description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Gets the description.
+     * @return
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Gets the test actions.
+     * @return
+     */
+    public List<TestActionData> getActions() {
+        return actions;
+    }
+
+    /**
+     * Sets the test actions.
+     * @param actions
+     */
+    public void setActions(List<TestActionData> actions) {
+        this.actions = actions;
+    }
+
+    /**
+     * Adds new test action using builder pattern style.
+     * @param action
+     * @return
+     */
+    public TestCaseData addTestAction(TestActionData action) {
+        this.actions.add(action);
+        return this;
+    }
+
+    /**
+     * Setter for variables.
+     * @param variables
+     */
+    public void setVariables(Map<String, Object> variables) {
+        this.variables = variables;
+    }
+
+    /**
+     * Gets the variable definitions.
+     * @return
+     */
+    public Map<String, Object> getVariables() {
+        return variables;
+    }
+
+    /**
+     * Gets the test parameters.
+     * @return the parameters
+     */
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    /**
+     * Sets the test parameters.
+     * @param parameters
+     */
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
     }
 }

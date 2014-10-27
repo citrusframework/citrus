@@ -64,8 +64,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     private FileHelper fileHelper;
 
     @Override
-    public List<TestCaseInfo> getTests(Project project) {
-        List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
+    public List<TestCaseData> getTests(Project project) {
+        List<TestCaseData> tests = new ArrayList<TestCaseData>();
 
         List<File> testFiles = FileUtils.getTestFiles(getTestDirectory(project));
         for (File file : testFiles) {
@@ -77,7 +77,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                 testPackageName = testPackageName.substring(0, testPackageName.length() - 1);
             }
 
-            TestCaseInfo testCase = new TestCaseInfo();
+            TestCaseData testCase = new TestCaseData();
             testCase.setType(TestCaseType.XML);
             testCase.setName(testName);
             testCase.setPackageName(testPackageName);
@@ -135,7 +135,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     @Override
     public TestResult executeTest(Project project, String packageName, String testName, String runConfigurationId) {
         TestResult result = new TestResult();
-        TestCaseInfo testCase = new TestCaseInfo();
+        TestCaseData testCase = new TestCaseData();
         testCase.setName(testName);
         result.setTestCase(testCase);
 
@@ -343,8 +343,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * @param testName
      * @param file
      */
-    private List<TestCaseInfo> getTestCaseInfoFromFile(String testPackage, String testName, File file) {
-        List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
+    private List<TestCaseData> getTestCaseInfoFromFile(String testPackage, String testName, File file) {
+        List<TestCaseData> tests = new ArrayList<TestCaseData>();
 
         try {
             String javaContent = FileUtils.readToString(new FileInputStream(file));
@@ -355,7 +355,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                 int position = javaContent.indexOf(citrusAnnotation);
                 while (position > 0) {
                     String methodContent = javaContent.substring(position);
-                    TestCaseInfo testCase = new TestCaseInfo();
+                    TestCaseData testCase = new TestCaseData();
                     testCase.setType(TestCaseType.JAVA);
                     testCase.setPackageName(testPackage);
                     testCase.setFile(file.getParentFile().getAbsolutePath() + File.separator +  FilenameUtils.getBaseName(file.getName()));
@@ -381,7 +381,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                 }
             } else if (javaContent.contains(TestNGCitrusTestBuilder.class.getSimpleName()) ||
                        javaContent.contains(JUnit4CitrusTestBuilder.class.getSimpleName())) {
-                TestCaseInfo testCase = new TestCaseInfo();
+                TestCaseData testCase = new TestCaseData();
                 testCase.setType(TestCaseType.JAVA);
                 testCase.setName(testName);
                 testCase.setPackageName(testPackage);
@@ -406,8 +406,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      * @param testName
      * @param file
      */
-    private List<TestCaseInfo> getTestCaseInfoFromClass(String testPackage, String testName, File file) {
-        List<TestCaseInfo> tests = new ArrayList<TestCaseInfo>();
+    private List<TestCaseData> getTestCaseInfoFromClass(String testPackage, String testName, File file) {
+        List<TestCaseData> tests = new ArrayList<TestCaseData>();
 
         try {
             Class<?> testBuilderClass = Class.forName(testPackage + "." + testName);
@@ -415,7 +415,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
             if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
                 List<String> methods = getTestMethods(testBuilderClass);
                 for (String method : methods) {
-                    TestCaseInfo testCase = new TestCaseInfo();
+                    TestCaseData testCase = new TestCaseData();
                     testCase.setType(TestCaseType.JAVA);
                     testCase.setName(method);
                     testCase.setPackageName(testPackage);
@@ -427,7 +427,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
 
                 if (tests.isEmpty()) {
                     // there were no Citrus annotated methods found so lets add the class itself as test case info
-                    TestCaseInfo testCase = new TestCaseInfo();
+                    TestCaseData testCase = new TestCaseData();
                     testCase.setType(TestCaseType.JAVA);
                     testCase.setName(testName);
                     testCase.setPackageName(testPackage);

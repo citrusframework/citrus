@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,24 @@
 
 package com.consol.citrus.admin.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Basic endpoint value object holds name, type and all endpoint configuration properties.
- *
  * @author Christoph Deppisch
- * @since 1.4.1
+ * @since 2.0
  */
-public class EndpointData {
+public class TestActionData {
 
-    private final String id;
     private final String type;
     private final Class<?> modelType;
     private List<Property> properties = new ArrayList<Property>();
 
     /**
-     * Constructor using endpoint type field and identifier.
+     * Constructor using action type field and identifier.
      * @param type
-     * @param id
      */
-    public EndpointData(String type, String id, Class<?> modelType) {
-        this.id = id;
+    public TestActionData(String type, Class<?> modelType) {
         this.modelType = modelType;
         this.type = type;
     }
@@ -47,21 +43,13 @@ public class EndpointData {
      * @param property
      * @return
      */
-    public EndpointData add(Property property) {
+    public TestActionData add(Property property) {
         properties.add(property);
         return this;
     }
 
     /**
-     * Gets the identifier usually the Spring bean name.
-     * @return
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Gets the endpoint type such as http, jms, camel, etc.
+     * Gets the action type such as http, jms, camel, etc.
      * @return
      */
     public String getType() {
@@ -69,7 +57,7 @@ public class EndpointData {
     }
 
     /**
-     * Gets the model type that is logically linked to this endpoint data.
+     * Gets the model type that is logically linked to this action data.
      * @return
      */
     public Class<?> getModelType() {
@@ -77,7 +65,7 @@ public class EndpointData {
     }
 
     /**
-     * Gets the key value endpoint properties.
+     * Gets the key value action properties.
      * @return
      */
     public List<Property> getProperties() {
@@ -85,10 +73,11 @@ public class EndpointData {
     }
 
     /**
-     * Sets the endpoint properties as key value properties.
+     * Sets the action properties as key value properties.
      * @param properties
      */
     public void setProperties(List<Property> properties) {
         this.properties = properties;
     }
+
 }

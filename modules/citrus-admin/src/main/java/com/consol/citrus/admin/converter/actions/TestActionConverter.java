@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.admin.converter.ObjectConverter;
-import com.consol.citrus.model.testcase.core.Action;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.admin.model.TestActionData;
 
 /**
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 2.0
  */
-public class TestActionConverter implements ObjectConverter<Action, TestAction> {
+public interface TestActionConverter<S, T extends TestAction> extends ObjectConverter<TestActionData, S> {
+
 
     @Override
-    public Action convert(TestAction definition) {
-        Action action = new ObjectFactory().createAction();
+    TestActionData convert(S definition);
 
-        action.setReference(definition.getName());
-        action.setDescription(definition.getDescription());
+    /**
+     * Gets the action type name.
+     * @return
+     */
+    String getActionType();
 
-        return action;
-    }
-
-    @Override
-    public Class<TestAction> getModelClass() {
-        return TestAction.class;
-    }
+    /**
+     * Converts raw test action Java model to JaxB object model source.
+     * @param model
+     * @return
+     */
+    S convertModel(T model);
 }

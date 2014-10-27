@@ -34,7 +34,7 @@ public interface TestCaseService {
      * @param project
      * @return
      */
-    List<TestCaseInfo> getTests(Project project);
+    List<TestCaseData> getTests(Project project);
 
     /**
      * Gets number of test cases for the active project. This includes XML test cases as well as
@@ -52,7 +52,7 @@ public interface TestCaseService {
      * @param type
      * @return
      */
-    TestCaseDetail getTestDetail(Project project, String packageName, String testName, TestCaseType type);
+    TestCaseData getTestDetail(Project project, String packageName, String testName, TestCaseType type);
     
     /**
      * Runs a test case and returns result outcome (success or failure).

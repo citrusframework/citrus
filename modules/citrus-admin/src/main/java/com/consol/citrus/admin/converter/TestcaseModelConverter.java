@@ -59,17 +59,17 @@ public class TestcaseModelConverter implements ObjectConverter<Testcase, TestCas
         TestActionsType actions = new TestActionsType();
         for (TestAction testAction : definition.getActions()) {
             if (testAction instanceof ReceiveMessageAction) {
-                actions.getActionsAndSendsAndReceives().add(new ReceiveMessageActionConverter().convert((ReceiveMessageAction) testAction));
+                actions.getActionsAndSendsAndReceives().add(new ReceiveMessageActionConverter().convertModel((ReceiveMessageAction) testAction));
             } else if (testAction instanceof SendMessageAction) {
-                actions.getActionsAndSendsAndReceives().add(new SendMessageActionConverter().convert((SendMessageAction) testAction));
+                actions.getActionsAndSendsAndReceives().add(new SendMessageActionConverter().convertModel((SendMessageAction) testAction));
             } else if (testAction instanceof SleepAction) {
-                actions.getActionsAndSendsAndReceives().add(new SleepActionConverter().convert((SleepAction) testAction));
+                actions.getActionsAndSendsAndReceives().add(new SleepActionConverter().convertModel((SleepAction) testAction));
             } else if (testAction instanceof ExecuteSQLAction) {
-                actions.getActionsAndSendsAndReceives().add(new ExecuteSqlActionConverter().convert((ExecuteSQLAction) testAction));
+                actions.getActionsAndSendsAndReceives().add(new SqlActionConverter().convertModel((ExecuteSQLAction) testAction));
             } else if (testAction instanceof RepeatOnErrorUntilTrue) {
-                actions.getActionsAndSendsAndReceives().add(new RepeatOnErrorContainerConverter().convert((RepeatOnErrorUntilTrue) testAction));
+                actions.getActionsAndSendsAndReceives().add(new RepeatOnErrorContainerConverter().convertModel((RepeatOnErrorUntilTrue) testAction));
             } else {
-                actions.getActionsAndSendsAndReceives().add(new TestActionConverter().convert(testAction));
+                actions.getActionsAndSendsAndReceives().add(new ActionConverter(testAction.getName()).convertModel(testAction));
             }
         }
 

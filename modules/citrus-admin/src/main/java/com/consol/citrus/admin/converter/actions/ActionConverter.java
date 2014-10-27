@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,50 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.consol.citrus.admin.converter.actions;
 
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.TestAction;
 import com.consol.citrus.admin.model.TestActionData;
+import com.consol.citrus.model.testcase.core.Action;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.Sleep;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 2.0
  */
-@Component
-public class SleepActionConverter extends AbstractTestActionConverter<Sleep, SleepAction> {
+public class ActionConverter extends AbstractTestActionConverter<Object, TestAction> {
 
-    public SleepActionConverter() {
-        super("sleep");
+    /**
+     * Default constructor.
+     * @param actionType
+     */
+    public ActionConverter(String actionType) {
+        super(actionType);
     }
 
     @Override
-    public TestActionData convert(Sleep definition) {
+    public TestActionData convert(Object definition) {
         TestActionData action = new TestActionData(getActionType(), getModelClass());
 
         addActionProperties(action, definition);
 
-        action.add(property("milliseconds", definition));
-        action.add(property("seconds", definition));
+        return action;
+    }
+
+    @Override
+    public Object convertModel(TestAction model) {
+        Action action = new ObjectFactory().createAction();
+
+        action.setReference(model.getName());
+        action.setDescription(model.getDescription());
 
         return action;
     }
 
     @Override
-    public Sleep convertModel(SleepAction definition) {
-        Sleep action = new ObjectFactory().createSleep();
-
-        action.setDescription(definition.getDescription());
-        action.setMilliseconds(definition.getMilliseconds());
-        action.setSeconds(definition.getSeconds());
-
-        return action;
-    }
-
-    @Override
-    public Class<Sleep> getModelClass() {
-        return Sleep.class;
+    public Class<Object> getModelClass() {
+        return Object.class;
     }
 }

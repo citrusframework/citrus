@@ -23,7 +23,7 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class EndpointProperty {
+public class Property {
 
     private final String id;
     private final String fieldName;
@@ -40,7 +40,7 @@ public class EndpointProperty {
      * @param displayName
      * @param value
      */
-    public EndpointProperty(String id, String fieldName, String displayName, String value) {
+    public Property(String id, String fieldName, String displayName, String value) {
         this.id = id;
         this.fieldName = fieldName;
         this.displayName = displayName;
@@ -52,7 +52,7 @@ public class EndpointProperty {
      * @param key
      * @return
      */
-    public EndpointProperty optionKey(String key) {
+    public Property optionKey(String key) {
         this.optionKey = key;
         return this;
     }
@@ -62,7 +62,7 @@ public class EndpointProperty {
      * @param options
      * @return
      */
-    public EndpointProperty options(String ... options) {
+    public Property options(String ... options) {
         this.options = Arrays.asList(options);
         return this;
     }
@@ -72,7 +72,7 @@ public class EndpointProperty {
      * @param options
      * @return
      */
-    public EndpointProperty options(List<String> options) {
+    public Property options(List<String> options) {
         this.options = options;
         return this;
     }

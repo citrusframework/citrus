@@ -23,10 +23,10 @@ import com.consol.citrus.admin.model.EndpointData;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public interface EndpointConverter<K> extends ObjectConverter<EndpointData, K> {
+public interface EndpointConverter<S> extends ObjectConverter<EndpointData, S> {
 
     @Override
-    EndpointData convert(K definition);
+    EndpointData convert(S definition);
 
     /**
      * Gets the endpoint type name.
