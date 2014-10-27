@@ -161,12 +161,6 @@
                     this.addFunction(event);
                 }, this));
 
-                $('#library-edit').find('option').each(function() {
-                    if ($(this).attr('value') == $(this).parent().attr('value')) {
-                        $(this).attr('selected', 'selected');
-                    }
-                });
-
                 $('#library-list').hide('slide', function() {
                     $('#library-edit').show('slide');
                 });

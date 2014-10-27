@@ -1,5 +1,5 @@
 (function () {
-    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView", "views/GlobalVariablesView", "views/FunctionLibraryListView", "views/ValidationMatcherListView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView, GlobalVariablesView, FunctionLibraryListView, ValidationMatcherListView) {
+    define(["TemplateManager", "views/SchemaListView", "views/EndpointListView", "views/NamespaceContextView", "views/GlobalVariablesView", "views/FunctionLibraryListView", "views/ValidationMatcherListView", "views/DataDictionaryListView"], function (TemplateManager, SchemaListView, EndpointListView, NamespaceContextView, GlobalVariablesView, FunctionLibraryListView, ValidationMatcherListView, DataDictionaryListView) {
         var ConfigView = Backbone.View.extend({
             tabs:[
                 {
@@ -30,7 +30,8 @@
                 },
                 {
                     idSuffix: "data-dictionaries",
-                    displayName: "Data Dictionaries"
+                    displayName: "Data Dictionaries",
+                    view: DataDictionaryListView
                 },
                 {
                     idSuffix: "namespace-context",

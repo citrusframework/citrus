@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * @author Christoph Deppisch
- * @since 1.4.1
+ * @since 2.0
  */
 @Controller
 @RequestMapping("/validation-matcher")

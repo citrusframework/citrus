@@ -21,10 +21,10 @@ import com.consol.citrus.model.config.core.NamespaceContext;
 import com.consol.citrus.model.config.core.ObjectFactory;
 
 /**
- * Converter constructs Citrus schema representation form legacy spring bean definition.
+ * Converter constructs Citrus namespace context representation form legacy spring bean definition.
  *
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 2.0
  */
 public class NamespaceContextSpringBeanConverter implements SpringBeanConverter<NamespaceContext> {
 

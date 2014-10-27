@@ -1,11 +1,10 @@
 (function () {
     define(["TemplateManager"], function (TemplateManager) {
-        var ValidationMatcherListView = Backbone.View.extend({
-            defaultLibrary: {},
-            libraries: [],
+        var DataDictionaryListView = Backbone.View.extend({
+            dictionaries: [],
 
             events: {
-                "click tr.matcher": "showEditForm",
+                "click tr.dictionary": "showEditForm",
                 "click .btn-new": "showNewForm",
                 "click .btn-remove": "remove",
                 "click #btn-add": "create",
@@ -14,69 +13,59 @@
             },
 
             initialize: function () {
-                this.getValidationMatcher();
-
-                $.ajax({
-                    url: "validation-matcher/default",
-                    type: 'GET',
-                    dataType: "json",
-                    success: _.bind(function (response) {
-                        this.defaultLibrary = response;
-                    }, this),
-                    async: false
-                });
+                this.getLibraries();
             },
 
             render: function () {
-                $(this.el).html(TemplateManager.template('ValidationMatcherListView', {matcherCount: this.libraries.length, libraries: this.libraries, defaultLibrary: this.defaultLibrary}));
+                $(this.el).html(TemplateManager.template('DataDictionaryListView', {dictionaryCount: this.dictionaries.length, dictionaries: this.dictionaries}));
                 return this;
             },
 
             afterRender: function () {
             },
 
-            getValidationMatcher: function () {
+            getLibraries: function () {
                 $.ajax({
-                    url: "validation-matcher",
+                    url: "data-dictionary",
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        this.libraries = response;
+                        this.dictionaries = response;
                     }, this),
                     async: false
                 });
             },
 
-            removeMatcher: function (event) {
+            removeMapping: function (event) {
                 $(event.target).parent().parent().remove();
                 return false;
             },
 
-            addMatcher: function (event) {
-                var matcherName = $('#matcher-edit').find('input[name = "name"]').val();
-                var matcherClass = $('#matcher-edit').find('input[name = "clazz"]').val();
+            addMapping: function (event) {
+                var mappingKey = $('#dictionary-edit').find('input[name = "path"]').val();
+                var mappingValue = $('#dictionary-edit').find('input[name = "value"]').val();
 
-                $('#matcher-edit').find('ul#matcher').append('<li id="' + matcherName + '"' + ' title="' + matcherClass + '" class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + matcherName + '()</b> class=' + matcherClass + '&nbsp;<a class="btn-remove-matcher pull-right" href="#config" title="Remove matcher"><i class="fa fa-times" style="color: #A50000;"></i></a></li>');
+                $('#dictionary-edit').find('ul#mappings').append('<li id="' + mappingKey + '"' + ' title="' + mappingValue + '" class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + mappingKey + '</b>=' + mappingValue + '&nbsp;<a class="btn-remove-mapping pull-right" href="#config" title="Remove mapping"><i class="fa fa-times" style="color: #A50000;"></i></a></li>');
 
-                $('#matcher-edit').find('ul#matcher').find('li:last').find('a.btn-remove-matcher').click(_.bind(function(event) {
-                    this.removeMatcher(event);
+                $('#mapping-edit').find('ul#mappings').find('li:last').find('a.btn-remove-mapping').click(_.bind(function(event) {
+                    this.removeMapping(event);
                 }, this));
 
-                $('input[name = "name"]').val('');
-                $('input[name = "clazz"]').val('');
+                $('input[name = "path"]').val('');
+                $('input[name = "value"]').val('');
                 return false;
             },
 
             remove: function (event) {
                 var encodedId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedId);
-                var url = "validation-matcher/" + id;
+                var url = "data-dictionary/" + id;
 
                 $.ajax({
                     url: url,
                     type: 'DELETE',
                     success: _.bind(function (response) {
-                        this.getValidationMatcher();
+                        this.getLibraries();
                         this.render();
                     }, this),
                     async: true
@@ -86,22 +75,22 @@
             },
 
             create: function() {
-                var form = $('#matcher-edit-form');
+                var form = $('#dictionary-edit-form');
                 var serializedForm = form.serializeObject();
 
                 $.ajax({
-                    url: "validation-matcher",
+                    url: "data-dictionary",
                     type: 'POST',
                     dataType: "json",
                     contentType: "application/json",
-                    data: this.getValidationMatcherJSON(serializedForm),
+                    data: this.getDataDictionaryJSON(serializedForm),
                     success: _.bind(function (response) {
                     }, this),
                     async: false
                 });
 
                 this.closeForm(undefined, _.bind(function() {
-                    this.getValidationMatcher();
+                    this.getLibraries();
                     this.render();
                 }, this));
 
@@ -109,7 +98,7 @@
             },
 
             save: function() {
-                var form = $('#matcher-edit-form');
+                var form = $('#dictionary-edit-form');
 
                 var serializedForm = form.serializeObject();
                 var elementId = serializedForm.id;
@@ -120,20 +109,20 @@
 
                 serializedForm = _.omit(serializedForm, "newId");
 
-                var url = "validation-matcher/" + elementId;
+                var url = "data-dictionary/" + elementId;
                 $.ajax({
                     url: url,
                     type: 'POST',
                     dataType: "json",
                     contentType: "application/json",
-                    data: this.getValidationMatcherJSON(serializedForm),
+                    data: this.getDataDictionaryJSON(serializedForm),
                     success: _.bind(function (response) {
                     }, this),
                     async: false
                 });
 
                 this.closeForm(undefined, _.bind(function() {
-                    this.getValidationMatcher();
+                    this.getLibraries();
                     this.render();
                 }, this));
 
@@ -141,8 +130,8 @@
             },
 
             closeForm: function(event, callback) {
-                $('#matcher-edit').hide('slide', function() {
-                    $('#matcher-list').show('slide', function() {
+                $('#dictionary-edit').hide('slide', function() {
+                    $('#dictionary-list').show('slide', function() {
                         if (callback) {
                             callback();
                         }
@@ -151,69 +140,73 @@
             },
 
             showNewForm: function(event) {
-                $('#matcher-edit').html(TemplateManager.template('ValidationMatcherEditView', {}));
+                $('#dictionary-edit').html(TemplateManager.template('DataDictionaryEditView', {}));
 
                 $('button.btn-option-search').click(_.bind(function(event) {
                     this.searchOptions(event);
                 }, this));
 
-                $('#matcher-edit').find('#btn-add-matcher').click(_.bind(function(event) {
-                    this.addMatcher(event);
+                $('#dictionary-edit').find('#btn-add-mapping').click(_.bind(function(event) {
+                    this.addMapping(event);
                 }, this));
 
-                $('#matcher-list').hide('slide', function() {
-                    $('#matcher-edit').show('slide');
+                $('#dictionary-list').hide('slide', function() {
+                    $('#dictionary-edit').show('slide');
                 });
             },
 
             showEditForm: function() {
                 var encodedId = $(event.target).closest($("[id]")).attr('id');
                 var id = this.extractId(encodedId);
-                var url = "validation-matcher/" + id;
+                var url = "data-dictionary/" + id;
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     dataType: "json",
                     success: _.bind(function (response) {
-                        $('#matcher-edit').html(TemplateManager.template('ValidationMatcherEditView', response));
+                        $('#dictionary-edit').html(TemplateManager.template('DataDictionaryEditView', response));
 
                         $('button.btn-option-search').click(_.bind(function(event) {
                             this.searchOptions(event);
                         }, this));
 
-                        $('#matcher-edit').find('.btn-remove-matcher').click(_.bind(function(event) {
-                            this.removeMatcher(event);
+                        $('#dictionary-edit').find('.btn-remove-mapping').click(_.bind(function(event) {
+                            this.removeMapping(event);
                         }, this));
 
-                        $('#matcher-edit').find('#btn-add-matcher').click(_.bind(function(event) {
-                            this.addMatcher(event);
+                        $('#dictionary-edit').find('#btn-add-mapping').click(_.bind(function(event) {
+                            this.addMapping(event);
                         }, this));
 
-                        $('#matcher-edit').find('option').each(function() {
+                        $('#dictionary-edit').find('option').each(function() {
                             if ($(this).attr('value') == $(this).parent().attr('value')) {
                                 $(this).attr('selected', 'selected');
                             }
                         });
 
-                        $('#matcher-list').hide('slide', function() {
-                            $('#matcher-edit').show('slide');
+                        $('#dictionary-list').hide('slide', function() {
+                            $('#dictionary-edit').show('slide');
                         });
                     }, this),
                     async: true
                 });
             },
 
-            getValidationMatcherJSON: function(serializedForm) {
-                var matchers = [];
+            getDataDictionaryJSON: function(serializedForm) {
+                var mappings = [];
 
-                $('#matcher-edit').find('ul#matcher').children('li').each(function(index) {
-                    matchers.push( {name: $(this).attr('id'), clazz: $(this).attr('title')} );
+                $('#dictionary-edit').find('ul#mappings').children('li').each(function(index) {
+                    mappings.push( {path: $(this).attr('id'), value: $(this).attr('title')} );
                 });
 
-                var validationMatcherLibrary = { id: serializedForm.id, prefix: serializedForm.prefix, matchers: matchers };
+                var functionLibrary = { id: serializedForm.id,
+                                        type: serializedForm.type,
+                                        globalScope: serializedForm.globalScope,
+                                        mappingStrategy: serializedForm.mappingStrategy,
+                                        mappings: { mappings: mappings} };
 
-                return JSON.stringify(validationMatcherLibrary);
+                return JSON.stringify(functionLibrary);
             },
 
             extractId: function(encodedId) {
@@ -253,6 +246,6 @@
 
         });
 
-        return ValidationMatcherListView;
+        return DataDictionaryListView;
     });
 }).call(this);

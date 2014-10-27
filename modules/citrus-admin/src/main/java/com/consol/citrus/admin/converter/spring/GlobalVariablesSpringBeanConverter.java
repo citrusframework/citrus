@@ -21,10 +21,10 @@ import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.model.config.core.ObjectFactory;
 
 /**
- * Converter constructs Citrus schema representation form legacy spring bean definition.
+ * Converter constructs Citrus global variables representation form legacy spring bean definition.
  *
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 2.0
  */
 public class GlobalVariablesSpringBeanConverter implements SpringBeanConverter<GlobalVariables> {
 

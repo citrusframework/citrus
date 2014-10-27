@@ -22,10 +22,10 @@ import com.consol.citrus.model.config.core.ObjectFactory;
 import org.springframework.util.StringUtils;
 
 /**
- * Converter constructs Citrus schema representation form legacy spring bean definition.
+ * Converter constructs Citrus function library representation form legacy spring bean definition.
  *
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 2.0
  */
 public class FunctionLibrarySpringBeanConverter implements SpringBeanConverter<FunctionLibrary> {
 

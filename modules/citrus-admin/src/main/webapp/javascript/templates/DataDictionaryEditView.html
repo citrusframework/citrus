@@ -1,0 +1,93 @@
+{{#if id}}
+<h3>Edit Data Dictionary</h3>
+{{else}}
+<h3>New Data Dictionary</h3>
+{{/if}}
+
+<form id="dictionary-edit-form" class="form-horizontal">
+  {{#if id}}
+  <input name="id" type="hidden" value="{{id}}"/>
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="newId" value="{{id}}" placeholder="Unique Id" type="text" class="span8"/>
+    </div>
+  </div>
+  {{else}}
+  <div class="control-group">
+    <label class="control-label">Name <em>*</em></label>
+    <div class="controls">
+      <input name="id" value="{{id}}" placeholder="Unique Id" type="text" class="span8"/>
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="control-group">
+    <label class="control-label">Type <em>*</em></label>
+    <div class="controls">
+      <select id="type" class="span8" name="type" value="{{type}}">
+        <option value="xpath-data-dictionary">xpath-data-dictionary</option>
+        <option value="xml-data-dictionary">xml-data-dictionary</option>
+        <option value="json-data-dictionary">json-data-dictionary</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Global scope <em>*</em></label>
+    <div class="controls">
+      <select id="globalScope" class="span8" name="globalScope" value="{{#if globalScope}}true{{/if}}{{#unless globalScope}}false{{/unless}}">
+        <option value="true">true</option>
+        <option value="false">false</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Mapping Strategy <em>*</em></label>
+    <div class="controls">
+      <select id="mappingStrategy" class="span8" name="mappingStrategy" value="{{mappingStrategy}}">
+        <option value="EXACT_MATCH">EXACT_MATCH</option>
+        <option value="STARTS_WITH">STARTS_WITH</option>
+        <option value="ENDS_WITH">ENDS_WITH</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Mapping</label>
+    <div class="controls">
+      <input name="path" placeholder="Path expression" type="text" class="span6"/>
+      <input name="value" placeholder="Value" type="text" class="span6"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+       <a href="#config" id="btn-add-mapping" class="btn btn-citrus">Add mapping</a>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Mappings</label>
+    <div class="controls">
+      <ul id="mappings" class="sortable box">
+        {{#each mappings.mappings}}
+        <li class="sortable highlight" id="{{path}}" title="{{value}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{path}}</b>={{value}}&nbsp;<a class="btn-remove-mapping pull-right" href="#config" title="Remove mapping"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      {{#if id}}
+      <a href="#config" id="btn-save" class="btn btn-citrus">Save</a>
+      {{else}}
+      <a href="#config" id="btn-add" class="btn btn-citrus">Add</a>
+      {{/if}}
+      <a href="#config" id="btn-cancel" class="btn">Close</a>
+    </div>
+  </div>
+
+</form>

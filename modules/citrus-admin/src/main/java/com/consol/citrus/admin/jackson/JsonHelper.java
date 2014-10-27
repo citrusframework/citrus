@@ -49,9 +49,9 @@ public class JsonHelper {
         try {
             return jsonMapper.readValue(jsonObject.toJSONString(), Class.forName(modelType));
         } catch (ClassNotFoundException e) {
-            throw new CitrusAdminRuntimeException(String.format("Unknown model type '%s' for endpoint data", modelType), e);
+            throw new CitrusAdminRuntimeException(String.format("Unknown model type '%s'", modelType), e);
         } catch (Exception e) {
-            throw new CitrusAdminRuntimeException("Failed to read endpoint data", e);
+            throw new CitrusAdminRuntimeException("Failed to read json object", e);
         }
     }
 }

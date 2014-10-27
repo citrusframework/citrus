@@ -271,22 +271,37 @@
       </xs:attribute>
     </xs:complexType>
 
-    <xs:element name="xml-data-dictionary" type="DataDictionaryType">
+    <xs:element name="xml-data-dictionary">
       <xs:annotation>
         <xs:documentation>Data dictionary holding XML dom key value mappings for dynamic XML test data in messages.</xs:documentation>
       </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="DataDictionaryType"/>
+        </xs:complexContent>
+      </xs:complexType>
     </xs:element>
 
-    <xs:element name="xpath-data-dictionary" type="DataDictionaryType">
+    <xs:element name="xpath-data-dictionary">
       <xs:annotation>
         <xs:documentation>Data dictionary holding XML Xpath key value mappings for dynamic XML test data in messages.</xs:documentation>
       </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="DataDictionaryType"/>
+        </xs:complexContent>
+      </xs:complexType>
     </xs:element>
 
-    <xs:element name="json-data-dictionary" type="DataDictionaryType">
+    <xs:element name="json-data-dictionary">
       <xs:annotation>
         <xs:documentation>Data dictionary holding json key value mappings for dynamic json test data in messages.</xs:documentation>
       </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="DataDictionaryType"/>
+        </xs:complexContent>
+      </xs:complexType>
     </xs:element>
 
     <xs:element name="before-suite">

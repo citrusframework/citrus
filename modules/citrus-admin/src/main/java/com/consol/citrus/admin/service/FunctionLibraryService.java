@@ -30,7 +30,7 @@ import java.util.*;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 2.0
  */
 @Component
 public class FunctionLibraryService {
