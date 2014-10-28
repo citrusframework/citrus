@@ -26,7 +26,7 @@
             <variable name="user" value="Christoph"></variable>
         </variables>
         <actions>
-            <send with="syncJmsQueueEndpoint">
+            <send endpoint="syncJmsQueueEndpoint">
             	<description>
             		Send synchronous hello request: TestFramework -> HelloService
             	</description>
@@ -48,7 +48,7 @@
                 </header>
             </send>
             
-            <receive with="syncJmsQueueEndpoint">
+            <receive endpoint="syncJmsQueueEndpoint">
             	<description>
             		Receive sync hello response: HelloService -> TestFramework
             	</description>
@@ -70,7 +70,7 @@
                 </header>
             </receive>
 
-            <send with="syncJmsQueueEndpoint">
+            <send endpoint="syncJmsQueueEndpoint">
                 <description>
                     Send synchronous hello request: TestFramework -> HelloService
                 </description>
@@ -92,7 +92,7 @@
                 </header>
             </send>
             
-            <receive with="syncJmsQueueEndpoint">
+            <receive endpoint="syncJmsQueueEndpoint">
                 <description>
                     Receive sync hello response: HelloService -> TestFramework
                 </description>

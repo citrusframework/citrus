@@ -10,7 +10,7 @@
 		</meta-info>
 		
         <actions>
-            <send with="webServiceHelloClient">
+            <send endpoint="webServiceHelloClient">
             	<message>
             		<data>
             			<![CDATA[

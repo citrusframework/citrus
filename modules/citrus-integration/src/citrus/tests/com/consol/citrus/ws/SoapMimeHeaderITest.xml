@@ -22,7 +22,7 @@
 		</variables>
 		
         <actions>
-            <ws:send with="webServiceClient" fork="true">
+            <ws:send endpoint="webServiceClient" fork="true">
                 <message>
                     <data>
                         <![CDATA[
@@ -42,7 +42,7 @@
                 </header>
             </ws:send>
             
-            <receive with="webServiceRequestReceiver">
+            <receive endpoint="webServiceRequestReceiver">
             	<message schema-validation="false">
             		<data>
             			<![CDATA[
@@ -65,7 +65,7 @@
               </extract>
             </receive>
             
-            <send with="webServiceResponseSender">
+            <send endpoint="webServiceResponseSender">
             	<message>
             		<data>
             			<![CDATA[
@@ -85,7 +85,7 @@
                 </header>
             </send>
             
-            <receive with="webServiceClient" timeout="5000">
+            <receive endpoint="webServiceClient" timeout="5000">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[

@@ -24,7 +24,7 @@
             </echo>
             
             <parallel>
-                <send with="httpClient">
+                <send endpoint="httpClient">
                     <message><data></data></message>
                     <header>
                         <element name="citrus_endpoint_uri" value="http://localhost:8072"/>
@@ -35,7 +35,7 @@
                 </send>
               
                 <sequential>
-                    <receive with="httpServerRequestEndpoint">
+                    <receive endpoint="httpServerRequestEndpoint">
                         <message><data></data></message>
                         <header>
                             <element name="Host" value="localhost:8072"/>
@@ -50,7 +50,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpClient" timeout="2000">
+            <receive endpoint="httpClient" timeout="2000">
                 <message/>
                 <header>
                     <element name="citrus_http_status_code" value="200"/>
@@ -64,7 +64,7 @@
             </echo>
             
             <parallel>
-                <send with="httpClient">
+                <send endpoint="httpClient">
                     <message><data></data></message>
                     <header>
                         <element name="citrus_endpoint_uri" value="http://localhost:8072/test/user/${id}"/>
@@ -75,7 +75,7 @@
                 </send>
               
                 <sequential>
-                    <receive with="httpServerRequestEndpoint">
+                    <receive endpoint="httpServerRequestEndpoint">
                         <message><data></data></message>
                         <header>
                             <element name="Host" value="localhost:8072"/>
@@ -90,7 +90,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpClient" timeout="2000">
+            <receive endpoint="httpClient" timeout="2000">
                 <message/>
                 <header>
                     <element name="citrus_http_status_code" value="200"/>
@@ -104,7 +104,7 @@
             </echo>
             
             <parallel>
-                <send with="httpClient">
+                <send endpoint="httpClient">
                     <message><data></data></message>
                     <header>
                         <element name="citrus_endpoint_uri" value="http://localhost:8072/test/user?id=${id}&amp;name=TestUser"/>
@@ -115,7 +115,7 @@
                 </send>
               
                 <sequential>
-                    <receive with="httpServerRequestEndpoint">
+                    <receive endpoint="httpServerRequestEndpoint">
                         <message><data></data></message>
                         <header>
                             <element name="Host" value="localhost:8072"/>
@@ -130,7 +130,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpClient" timeout="2000">
+            <receive endpoint="httpClient" timeout="2000">
                 <message/>
                 <header>
                     <element name="citrus_http_status_code" value="200"/>

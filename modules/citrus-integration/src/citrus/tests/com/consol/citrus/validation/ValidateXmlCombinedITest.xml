@@ -19,7 +19,7 @@
                 <message>Test: Success with multiple validation mechanisms all together</message>
             </echo>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -41,7 +41,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <data>
                         <![CDATA[
@@ -73,7 +73,7 @@
                 <message>Test: Failure because of XML template data validation</message>
             </echo>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -96,7 +96,7 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive with="helloResponseReceiver">
+              <receive endpoint="helloResponseReceiver">
                   <message>
                       <data>
                           <![CDATA[
@@ -129,7 +129,7 @@
                 <message>Test: Failure because of XML groovy script validation</message>
             </echo>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -152,7 +152,7 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-              <receive with="helloResponseReceiver">
+              <receive endpoint="helloResponseReceiver">
                   <message>
                       <data>
                           <![CDATA[
@@ -185,7 +185,7 @@
                 <message>Test: Failure because of XML xpath validation</message>
             </echo>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -208,7 +208,7 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive with="helloResponseReceiver">
+              <receive endpoint="helloResponseReceiver">
                   <message>
                       <data>
                           <![CDATA[
@@ -241,7 +241,7 @@
               <message>Test: Failure because of message header validation</message>
             </echo>
 
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
               <description>
                 Send asynchronous hello request: TestFramework -> HelloService
               </description>
@@ -264,7 +264,7 @@
             </send>
 
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive with="helloResponseReceiver">
+              <receive endpoint="helloResponseReceiver">
                 <message>
                   <data>
                     <![CDATA[

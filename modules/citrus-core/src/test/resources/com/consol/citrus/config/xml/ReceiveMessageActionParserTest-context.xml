@@ -6,7 +6,7 @@
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="ReceiveMessageActionParserTest">
         <actions>
-            <receive with="myMessageEndpoint">
+            <receive endpoint="myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[

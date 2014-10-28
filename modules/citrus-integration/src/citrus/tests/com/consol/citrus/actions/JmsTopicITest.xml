@@ -16,7 +16,7 @@
         </variables>
         <actions>
             <parallel>
-              <receive with="helloTopicRequestReceiver" timeout="5000">
+              <receive endpoint="helloTopicRequestReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
@@ -38,7 +38,7 @@
                 </header>
               </receive>
               
-              <receive with="helloTopicRequestReceiver" timeout="5000">
+              <receive endpoint="helloTopicRequestReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
@@ -63,7 +63,7 @@
               <sequential>
                   <sleep milliseconds="1000"/>
                   
-                  <send with="helloTopicRequestSender">
+                  <send endpoint="helloTopicRequestSender">
                     <description>
                         Send asynchronous hello request: TestFramework -> HelloService
                     </description>

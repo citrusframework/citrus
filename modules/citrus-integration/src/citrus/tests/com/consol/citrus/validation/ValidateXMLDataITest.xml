@@ -15,7 +15,7 @@
             <variable name="user" value="Christoph"></variable>
         </variables>
         <actions>
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -37,7 +37,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <data>
 	                    <![CDATA[
@@ -59,7 +59,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -81,7 +81,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <data>
                         <![CDATA[
@@ -104,7 +104,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -126,7 +126,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message schema="helloSchema">
                     <data>
                         <![CDATA[
@@ -145,7 +145,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -167,7 +167,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message schema-repository="helloSchemaRepository">
                     <data>
                         <![CDATA[

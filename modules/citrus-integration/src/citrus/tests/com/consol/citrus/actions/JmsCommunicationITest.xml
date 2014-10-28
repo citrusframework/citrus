@@ -15,7 +15,7 @@
             <variable name="user" value="Christoph"></variable>
         </variables>
         <actions>
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -37,7 +37,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver" timeout="5000">
+            <receive endpoint="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
@@ -59,7 +59,7 @@
                 </header>
             </receive>
 
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -72,7 +72,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
@@ -85,7 +85,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                     Use Groovy MarkupBuilder script for building the XML message
@@ -106,7 +106,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver" timeout="5000">
+            <receive endpoint="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use Groovy MarkupBuilder script for building the XML message
@@ -127,7 +127,7 @@
                 </header>
             </receive>
 
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                     Use Groovy MarkupBuilder script for building the XML message
@@ -141,7 +141,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver" timeout="5000">
+            <receive endpoint="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use Groovy MarkupBuilder script for building the XML message
@@ -155,7 +155,7 @@
                 </header>
             </receive>
                         
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
             	<description>
             		Send asynchronous hello request: TestFramework -> HelloService
             	</description>
@@ -177,7 +177,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver" timeout="5000">
+            <receive endpoint="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
             		Use Groovy XmlSlurper validation script for validating the received XML message
@@ -199,7 +199,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
             	<description>
             		Send asynchronous hello request: TestFramework -> HelloService
             	</description>
@@ -221,7 +221,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver" timeout="5000">
+            <receive endpoint="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
             		Use Groovy XmlSlurper validation script for validating the received XML message
@@ -238,7 +238,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                     Use payload instead of data element, without CDATA area
@@ -259,7 +259,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver" timeout="5000">
+            <receive endpoint="helloResponseReceiver" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use payload instead of data element, without CDATA area
@@ -280,7 +280,7 @@
                 </header>
             </receive>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <payload>
                         <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">
@@ -290,7 +290,7 @@
                 </message>
             </send>
             
-            <receive with="testMessageReceiver" timeout="5000">
+            <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
@@ -302,7 +302,7 @@
                 </message>
             </receive>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                       <![CDATA[
@@ -314,7 +314,7 @@
                 </message>
             </send>
             
-            <receive with="testMessageReceiver" timeout="5000">
+            <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <payload>
                         <trq:TestRequest xmlns:trq="http://www.consol.de/schemas/test.xsd">

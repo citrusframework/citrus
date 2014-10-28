@@ -44,7 +44,7 @@
         </variables>
         <actions>
             <parallel>
-              <send with="syncGetDateRequestSender">
+              <send endpoint="syncGetDateRequestSender">
                   <message>
                       <data>
                       <![CDATA[
@@ -71,7 +71,7 @@
               </send>
               
               <sequential>
-                <receive with="syncGetDateRequestReceiver">
+                <receive endpoint="syncGetDateRequestReceiver">
                     <message validator="defaultXmlMessageValidator">
                         <data>
                         <![CDATA[
@@ -93,7 +93,7 @@
                     </header>
                 </receive>
 
-                <send with="syncGetDateRequestReceiver">
+                <send endpoint="syncGetDateRequestReceiver">
                     <message>
                         <data>
                         <![CDATA[
@@ -116,7 +116,7 @@
                     </header>
                 </send>
                 
-                <receive with="syncGetDateRequestSender" timeout="5000">
+                <receive endpoint="syncGetDateRequestSender" timeout="5000">
                     <selector>
                         <element name="citrus_message_id" value="${syncRequestCorrelatorId}"/>
                     </selector>

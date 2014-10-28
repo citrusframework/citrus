@@ -29,7 +29,7 @@
                 <message>Test 1: Send JMS request and receive sync JMS response (inline CDATA payload)</message>
             </echo>
         
-            <send with="helloSyncJmsEndpoint">
+            <send endpoint="helloSyncJmsEndpoint">
             	<description>
             		Send synchronous JMS request: Citrus -> HelloService JmsDemo
             	</description>
@@ -51,7 +51,7 @@
                 </header>
             </send>
             
-            <receive with="helloSyncJmsEndpoint">
+            <receive endpoint="helloSyncJmsEndpoint">
             	<description>
             		Receive synchronous JMS response: HelloService JmsDemo -> Citrus
             	</description>
@@ -77,7 +77,7 @@
                 <message>Test 2: Send JMS request and receive sync JMS response (file resource payload)</message>
             </echo>
             
-            <send with="helloSyncJmsEndpoint">
+            <send endpoint="helloSyncJmsEndpoint">
                 <description>
                     Send synchronous JMS request: Citrus -> HelloService JmsDemo
                 </description>
@@ -90,7 +90,7 @@
                 </header>
             </send>
             
-            <receive with="helloSyncJmsEndpoint">
+            <receive endpoint="helloSyncJmsEndpoint">
                 <description>
                     Receive synchronous JMS response: HelloService JmsDemo -> Citrus
                 </description>

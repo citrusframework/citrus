@@ -22,7 +22,7 @@
       </echo>
 
       <parallel>
-        <send with="sshClientWithWrongPrivateKey">
+        <send endpoint="sshClientWithWrongPrivateKey">
           <message>
             <data>
               <![CDATA[
@@ -36,7 +36,7 @@
         </send>
 
         <sequential>
-          <receive with="sshRequestReceiver">
+          <receive endpoint="sshRequestReceiver">
             <message>
               <data>
                 <![CDATA[
@@ -52,7 +52,7 @@
             </extract>
           </receive>
 
-          <send with="sshResponseSender">
+          <send endpoint="sshResponseSender">
             <message>
               <data>
                 <![CDATA[
@@ -70,7 +70,7 @@
         </sequential>
       </parallel>
 
-      <receive with="sshClient">
+      <receive endpoint="sshClient">
         <message>
           <data>
             <![CDATA[

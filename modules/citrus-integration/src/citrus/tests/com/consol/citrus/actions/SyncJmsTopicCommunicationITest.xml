@@ -21,7 +21,7 @@
             <parallel>
                 <sequential>
                     <sleep seconds="1"/>
-                    <send with="syncJmsTopicEndpoint">
+                    <send endpoint="syncJmsTopicEndpoint">
                       <description>
                         Send synchronous hello request to jms topic
                       </description>
@@ -46,7 +46,7 @@
                 
                 <sequential>
                     <parallel>
-                        <receive with="syncJmsTopicSubscriberEndpoint">
+                        <receive endpoint="syncJmsTopicSubscriberEndpoint">
                             <description>
                                 Receive sync hello request from jms topic
                             </description>
@@ -68,7 +68,7 @@
                             </header>
                         </receive>
                         
-                        <receive with="syncJmsTopicSubscriberEndpoint">
+                        <receive endpoint="syncJmsTopicSubscriberEndpoint">
                             <description>
                                 Receive sync hello request from jms topic
                             </description>
@@ -91,7 +91,7 @@
                         </receive>
                     </parallel>
                     
-                    <send with="syncJmsTopicSubscriberEndpoint">
+                    <send endpoint="syncJmsTopicSubscriberEndpoint">
                         <description>
                             Send synchronous hello response to jms reply destination
                         </description>
@@ -115,7 +115,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="syncJmsTopicEndpoint">
+            <receive endpoint="syncJmsTopicEndpoint">
               <description>
                 Receive sync hello response from jms reply destination
               </description>

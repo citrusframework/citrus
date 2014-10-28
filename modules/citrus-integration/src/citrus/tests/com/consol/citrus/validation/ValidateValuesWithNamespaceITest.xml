@@ -16,7 +16,7 @@
         </variables>
 
         <actions>
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -38,7 +38,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate path="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
                     <validate path="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
@@ -51,7 +51,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -73,7 +73,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate path="//ns1:HelloResponse/ns1:MessageId" value="${messageId}"/>
                     <validate path="//ns1:HelloResponse/ns1:CorrelationId" value="${correlationId}"/>
@@ -86,7 +86,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -108,7 +108,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate path="//:HelloResponse/:MessageId" value="${messageId}"/>
                     <validate path="//:HelloResponse/:CorrelationId" value="${correlationId}"/>
@@ -125,7 +125,7 @@
                 <message>Now using xpath validation elements</message>
             </echo>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -147,7 +147,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate>
                         <xpath expression="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
@@ -162,7 +162,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -184,7 +184,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate>
                         <xpath expression="//ns1:HelloResponse/ns1:MessageId" value="${messageId}"/>
@@ -199,7 +199,7 @@
                 </header>
             </receive>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -221,7 +221,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate>
                         <xpath expression="//:HelloResponse/:MessageId" value="${messageId}"/>
@@ -240,7 +240,7 @@
                 <message>Test: Default namespace mapping</message>
             </echo>
             
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -262,7 +262,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
                 <message>
                     <validate>
                         <xpath expression="/def:HelloResponse/def:MessageId" value="${messageId}"/>
@@ -287,7 +287,7 @@
               <message>Test: Validation matcher value extraction</message>
             </echo>
 
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
               <description>
                 Send asynchronous hello request: TestFramework -> HelloService
               </description>
@@ -309,7 +309,7 @@
               </header>
             </send>
 
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
               <message>
                 <data>
                   <![CDATA[

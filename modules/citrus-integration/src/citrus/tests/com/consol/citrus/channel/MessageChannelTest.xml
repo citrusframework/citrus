@@ -13,7 +13,7 @@
         message selectors in reverse order.</description>
 		
         <actions>
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <data>Hello Citrus</data>
                 </message>
@@ -22,7 +22,7 @@
                 </header>
             </send>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <data>Goodbye Citrus</data>
                 </message>
@@ -31,7 +31,7 @@
                 </header>
             </send>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="Operation" value="sayGoodbye"/>
                 </selector>
@@ -43,7 +43,7 @@
                 </header>
             </receive>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="Operation" value="sayHello"/>
                 </selector>
@@ -59,7 +59,7 @@
                 <message>Test root qname message selector</message>
             </echo>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <HelloMessage xmlns="http://citrusframework.org/schema">Hello Citrus</HelloMessage>
@@ -70,7 +70,7 @@
                 </header>
             </send>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <GoodbyeMessage xmlns="http://citrusframework.org/schema">Goodbye Citrus</GoodbyeMessage>
@@ -81,7 +81,7 @@
                 </header>
             </send>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="root-qname" value="GoodbyeMessage"/>
                 </selector>
@@ -95,7 +95,7 @@
                 </header>
             </receive>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="root-qname" value="HelloMessage"/>
                 </selector>
@@ -113,7 +113,7 @@
                 <message>Test root qname message selector with namespaces</message>
             </echo>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <HelloMessage xmlns="http://citrusframework.org/helloschema">Hello Citrus</HelloMessage>
@@ -124,7 +124,7 @@
                 </header>
             </send>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <GoodbyeMessage xmlns="http://citrusframework.org/goodbyeschema">Goodbye Citrus</GoodbyeMessage>
@@ -135,7 +135,7 @@
                 </header>
             </send>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="root-qname" value="{http://citrusframework.org/goodbyeschema}GoodbyeMessage"/>
                 </selector>
@@ -149,7 +149,7 @@
                 </header>
             </receive>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="root-qname" value="{http://citrusframework.org/helloschema}HelloMessage"/>
                 </selector>
@@ -167,7 +167,7 @@
                 <message>Test xpath message selector</message>
             </echo>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
@@ -188,7 +188,7 @@
                 </header>
             </send>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
@@ -209,7 +209,7 @@
                 </header>
             </send>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value" value="Goodbye Citrus"/>
                 </selector>
@@ -233,7 +233,7 @@
                 </header>
             </receive>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <element name="xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value" value="Hello Citrus"/>
                     <element name="xpath://ns:HelloMessage/ns:text[@language='de']/ns:value" value="Hallo Citrus"/>
@@ -259,7 +259,7 @@
                 </header>
             </receive>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <ns:HelloMessage xmlns:ns="http://citrusframework.org/helloschema">
@@ -280,7 +280,7 @@
                 </header>
             </send>
             
-            <send with="channelRequestSender">
+            <send endpoint="channelRequestSender">
                 <message>
                     <payload>
                         <ns:GoodbyeMessage xmlns:ns="http://citrusframework.org/goodbyeschema">
@@ -301,7 +301,7 @@
                 </header>
             </send>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <value>
                         xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value='Goodbye Citrus'
@@ -327,7 +327,7 @@
                 </header>
             </receive>
             
-            <receive with="channelResponseReceiver">
+            <receive endpoint="channelResponseReceiver">
                 <selector>
                     <value>
                       xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value='Hello Citrus' AND

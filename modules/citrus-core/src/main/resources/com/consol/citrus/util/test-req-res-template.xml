@@ -24,7 +24,7 @@
                 <message>TODO: Code the test @test.name@</message>
             </echo>
 
-			<send with="TODO:request-sender">
+			<send endpoint="TODO:request-sender">
 				<message>
 					<data>
 					 <![CDATA[
@@ -34,7 +34,7 @@
 				</message>
 			</send>
 			
-			<receive with="TODO:response-handler">
+			<receive endpoint="TODO:response-handler">
 				<message>
 					<data>
 					 <![CDATA[

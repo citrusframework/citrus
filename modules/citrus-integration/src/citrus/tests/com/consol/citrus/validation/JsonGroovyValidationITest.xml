@@ -15,7 +15,7 @@
 		
         <actions>
             <parallel>
-	            <send with="httpClient">
+	            <send endpoint="httpClient">
 	            	<message>
 	            		<data>
                           {
@@ -29,7 +29,7 @@
 	            </send>
               
                 <sequential>
-                    <receive with="httpServerRequestEndpoint">
+                    <receive endpoint="httpServerRequestEndpoint">
                         <message type="json" validator="defaultGroovyJsonMessageValidator">
                             <validate>
                                 <script type="groovy">
@@ -46,7 +46,7 @@
                         </extract>
                     </receive>
     	            
-    	            <send with="httpServerResponseEndpoint">
+    	            <send endpoint="httpServerResponseEndpoint">
     	            	<message>
     	            		<data>
                               {
@@ -73,7 +73,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpClient">
+            <receive endpoint="httpClient">
             	<message type="json" validator="defaultGroovyJsonMessageValidator">
                     <validate>
                         <script type="groovy">

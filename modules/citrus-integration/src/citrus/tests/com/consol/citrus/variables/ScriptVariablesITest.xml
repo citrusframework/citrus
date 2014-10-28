@@ -46,7 +46,7 @@
         </variables>
         
         <actions>
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -64,7 +64,7 @@
                 </header>
             </send>
             
-            <receive with="testMessageReceiver">
+            <receive endpoint="testMessageReceiver">
                 <message>
                     <data>
                         <![CDATA[                            

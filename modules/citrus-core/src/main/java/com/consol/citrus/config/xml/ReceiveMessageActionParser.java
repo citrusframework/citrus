@@ -47,14 +47,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
      */
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        String endpointUri;
-        if (element.hasAttribute("with")) {
-            endpointUri = element.getAttribute("with");
-        } else if (element.hasAttribute("endpoint")) {
-            endpointUri = element.getAttribute("endpoint");
-        } else {
-            throw new BeanCreationException("Missing proper message endpoint reference for receiving action - 'endpoint' attribute is required and should not be empty");
-        }
+        String endpointUri = element.getAttribute("endpoint");
 
         if (!StringUtils.hasText(endpointUri)) {
             throw new BeanCreationException("Endpoint reference must not be empty");

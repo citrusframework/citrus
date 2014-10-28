@@ -19,7 +19,7 @@
         
         <actions>
             <parallel>
-            	<ws:send with="webServiceClient">
+            	<ws:send endpoint="webServiceClient">
                     <message>
                         <data>
                             <![CDATA[
@@ -35,7 +35,7 @@
                 </ws:send>
                 
                 <sequential>
-                    <ws:receive with="webServiceRequestReceiver">
+                    <ws:receive endpoint="webServiceRequestReceiver">
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
@@ -53,7 +53,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send with="webServiceResponseSender">
+                    <ws:send endpoint="webServiceResponseSender">
                         <message>
                             <data>
                                 <![CDATA[
@@ -71,7 +71,7 @@
                 </sequential>
             </parallel>
             
-            <ws:receive with="webServiceClient">
+            <ws:receive endpoint="webServiceClient">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[
@@ -85,7 +85,7 @@
             </ws:receive>
             
             <parallel>
-                <ws:send with="webServiceClient">
+                <ws:send endpoint="webServiceClient">
                     <message>
                         <data>
                             <![CDATA[
@@ -105,7 +105,7 @@
                 </ws:send>
                 
                 <sequential>
-                    <ws:receive with="webServiceRequestReceiver">
+                    <ws:receive endpoint="webServiceRequestReceiver">
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
@@ -127,7 +127,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send with="webServiceResponseSender">
+                    <ws:send endpoint="webServiceResponseSender">
                         <message>
                             <data>
                                 <![CDATA[
@@ -145,7 +145,7 @@
                 </sequential>
             </parallel>
             
-            <ws:receive with="webServiceClient">
+            <ws:receive endpoint="webServiceClient">
                 <message schema-validation="false">
                     <data>
                         <![CDATA[

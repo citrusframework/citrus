@@ -15,7 +15,7 @@
         
         <actions>
             <parallel>
-                <send with="httpClient">
+                <send endpoint="httpClient">
                     <message>
                         <data>
                             <![CDATA[
@@ -36,7 +36,7 @@
                 </send>
               
                 <sequential>
-                    <receive with="httpServerRequestEndpoint">
+                    <receive endpoint="httpServerRequestEndpoint">
                         <message>
                             <data>
                                 <![CDATA[
@@ -61,7 +61,7 @@
                         </extract>
                     </receive>
                     
-                    <send with="httpServerResponseEndpoint">
+                    <send endpoint="httpServerResponseEndpoint">
                         <message>
                             <data>
                                 <![CDATA[
@@ -82,7 +82,7 @@
                 </sequential>
             </parallel>
             
-            <receive with="httpClient">
+            <receive endpoint="httpClient">
                 <message>
                     <data>
                         <![CDATA[

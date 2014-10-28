@@ -40,7 +40,7 @@
         </variables>
 
         <actions>
-            <send with="helloRequestSender">
+            <send endpoint="helloRequestSender">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
@@ -62,7 +62,7 @@
                 </header>
             </send>
             
-            <receive with="helloResponseReceiver">
+            <receive endpoint="helloResponseReceiver">
               <message>
                 <validate path="HelloResponse.CorrelationId" value="${correlationId}"/>
               </message>

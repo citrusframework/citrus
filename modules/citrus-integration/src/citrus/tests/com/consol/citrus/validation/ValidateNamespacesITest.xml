@@ -15,7 +15,7 @@
                 <message>Test: Success with single namespace validation</message>
             </echo>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -27,7 +27,7 @@
                 </message>
             </send>
             
-            <receive with="testMessageReceiver" timeout="5000">
+            <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
@@ -46,7 +46,7 @@
                 <message>Test: Success with multiple namespace validations</message>
             </echo>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -59,7 +59,7 @@
                 </message>
             </send>
             
-            <receive with="testMessageReceiver" timeout="5000">
+            <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
@@ -80,7 +80,7 @@
                 <message>Test: Success with multiple nested namespace validations</message>
             </echo>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -92,7 +92,7 @@
                 </message>
             </send>
             
-            <receive with="testMessageReceiver" timeout="5000">
+            <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <data>
                       <![CDATA[
@@ -112,7 +112,7 @@
                 <message>Test: Failure because of missing namespace</message>
             </echo>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -125,7 +125,7 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive with="testMessageReceiver" timeout="5000">
+              <receive endpoint="testMessageReceiver" timeout="5000">
                   <message schema-validation="false">
                       <validate>
                           <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
@@ -139,7 +139,7 @@
                 <message>Test: Failure because of wrong namespace prefix</message>
             </echo>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -152,7 +152,7 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive with="testMessageReceiver" timeout="5000">
+              <receive endpoint="testMessageReceiver" timeout="5000">
                   <message schema-validation="false">
                       <validate>
                           <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>
@@ -165,7 +165,7 @@
                 <message>Test: Failure because of wrong namespace uri</message>
             </echo>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -178,7 +178,7 @@
             </send>
             
             <assert exception="com.consol.citrus.exceptions.ValidationException">
-              <receive with="testMessageReceiver" timeout="5000">
+              <receive endpoint="testMessageReceiver" timeout="5000">
                   <message schema-validation="false">
                       <validate>
                           <namespace prefix="trq" value="http://www.consol.de/schemas/test"/>

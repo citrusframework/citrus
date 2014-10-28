@@ -108,7 +108,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="with" type="xs:string"/>
         <xs:attribute name="endpoint" type="xs:string"/>
     </xs:complexType>
 

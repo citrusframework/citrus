@@ -25,7 +25,7 @@
             <parallel>
               <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000" 
                          fault-string="Invalid request">
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -42,7 +42,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                   	<message schema-validation="false">
                   		<data>
                   			<![CDATA[
@@ -60,7 +60,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                   	<ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -90,7 +90,7 @@
               <ws:assert fault-code="{http://www.citrusframework.org/faults}TEC-1000" 
                          fault-string="Invalid request"
                          fault-actor="SERVER">
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -107,7 +107,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -125,7 +125,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -166,7 +166,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -183,7 +183,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -201,7 +201,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -242,7 +242,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -259,7 +259,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -277,7 +277,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -319,7 +319,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -336,7 +336,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -354,7 +354,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -396,7 +396,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -413,7 +413,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -431,7 +431,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -478,7 +478,7 @@
                         </MessageDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -495,7 +495,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -513,7 +513,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>
@@ -576,7 +576,7 @@
                         </ns0:FaultDetail>
                     ]]>
                   </ws:fault-detail>
-                  <send with="webServiceClient">
+                  <send endpoint="webServiceClient">
                       <message>
                           <data>
                               <![CDATA[
@@ -593,7 +593,7 @@
               </ws:assert>
               
               <sequential>
-                  <receive with="webServiceRequestReceiver">
+                  <receive endpoint="webServiceRequestReceiver">
                     <message schema-validation="false">
                         <data>
                             <![CDATA[
@@ -611,7 +611,7 @@
                     </extract>
                   </receive>
                   
-                  <ws:send-fault with="webServiceResponseSender">
+                  <ws:send-fault endpoint="webServiceResponseSender">
                     <ws:fault>
                         <ws:fault-code>{http://www.citrusframework.org/faults}citrus-ns:TEC-1000</ws:fault-code>
                         <ws:fault-string>Invalid request</ws:fault-string>

@@ -33,7 +33,7 @@
         <message>Test 1: Send JMS request and receive async JMS response (inline CDATA payload)</message>
       </echo>
 
-      <send with="helloRequestJmsMessageSender">
+      <send endpoint="helloRequestJmsMessageSender">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
@@ -55,7 +55,7 @@
         </header>
       </send>
 
-      <receive with="helloResponseJmsMessageReceiver">
+      <receive endpoint="helloResponseJmsMessageReceiver">
         <description>
           Receive asynchronous JMS response: HelloService JmsDemo -> Citrus
         </description>
@@ -81,7 +81,7 @@
         <message>Test 2: Send JMS request and receive async JMS response (file resource payload)</message>
       </echo>
 
-      <send with="helloRequestJmsMessageSender">
+      <send endpoint="helloRequestJmsMessageSender">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
@@ -94,7 +94,7 @@
         </header>
       </send>
 
-      <receive with="helloResponseJmsMessageReceiver">
+      <receive endpoint="helloResponseJmsMessageReceiver">
         <description>
           Receive asynchronous JMS response: HelloService JmsDemo -> Citrus
         </description>
@@ -111,7 +111,7 @@
         <message>Test 3: Send JMS request and receive async JMS response (JMS message selector)</message>
       </echo>
 
-      <send with="helloRequestJmsMessageSender">
+      <send endpoint="helloRequestJmsMessageSender">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
@@ -133,7 +133,7 @@
         </header>
       </send>
 
-      <send with="helloRequestJmsMessageSender">
+      <send endpoint="helloRequestJmsMessageSender">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
@@ -155,7 +155,7 @@
         </header>
       </send>
 
-      <receive with="helloResponseJmsMessageReceiver" timeout="500">
+      <receive endpoint="helloResponseJmsMessageReceiver" timeout="500">
         <description>
           Receive second JMS response first: HelloService JmsDemo -> Citrus
         </description>
@@ -180,7 +180,7 @@
         </header>
       </receive>
 
-      <receive with="helloResponseJmsMessageReceiver" timeout="500">
+      <receive endpoint="helloResponseJmsMessageReceiver" timeout="500">
         <description>
           Receive first JMS response: HelloService JmsDemo -> Citrus
         </description>
@@ -210,7 +210,7 @@
       </echo>
 
       <assert exception="com.consol.citrus.exceptions.ActionTimeoutException">
-        <receive with="helloResponseJmsMessageReceiver" timeout="300">
+        <receive endpoint="helloResponseJmsMessageReceiver" timeout="300">
           <description>
             Receive second JMS response first: HelloService JmsDemo -> Citrus
           </description>

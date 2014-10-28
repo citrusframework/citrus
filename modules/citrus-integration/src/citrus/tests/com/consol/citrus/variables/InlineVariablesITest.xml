@@ -20,7 +20,7 @@
             <variable name="text2" value="Test Framework"/>
         </variables>
         <actions>
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                     	<![CDATA[
@@ -40,7 +40,7 @@
                 </header>
             </send>
             
-            <receive with="testMessageReceiver">
+            <receive endpoint="testMessageReceiver">
                 <message>
                     <data>
 						<![CDATA[							
@@ -60,7 +60,7 @@
                 </header>
             </receive>
             
-            <send with="testMessageSender">
+            <send endpoint="testMessageSender">
                 <message>
                     <data>
                         <![CDATA[
@@ -80,7 +80,7 @@
                 </header>
             </send>
             
-            <receive with="testMessageReceiver">
+            <receive endpoint="testMessageReceiver">
                 <message>
                     <data>
                         <![CDATA[                           

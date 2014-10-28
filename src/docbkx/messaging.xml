@@ -119,7 +119,7 @@
     cases can reference the message endpoint definition for better reuse. Secondly test cases are independent of message transport details.
     So connection factories, user credentials, endpoint uri values and so on are not present in the test case.</para>
     
-    <para>In other words the <emphasis>&quot;with&quot;</emphasis> attribute of the <emphasis>&lt;send&gt;</emphasis> element specifies
+    <para>In other words the <emphasis>&quot;endpoint&quot;</emphasis> attribute of the <emphasis>&lt;send&gt;</emphasis> element specifies
     which message endpoint definition to use and therefore where the message should go to. Once again all available message endpoints are
     configured in a separate Citrus configuration file. We will come to this later on. Be sure to always pick the right message endpoint type
     in order to publish your message to the right destination.</para>

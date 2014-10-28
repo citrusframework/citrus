@@ -7,7 +7,7 @@
 
     <testcase name="SendMessageActionParserTest">
         <actions>
-            <send with="myMessageEndpoint">
+            <send endpoint="myMessageEndpoint">
                 <message>
                     <data>
                         <![CDATA[

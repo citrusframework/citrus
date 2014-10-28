@@ -8,7 +8,7 @@
                                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
     <testcase name="SendSoapMessageActionParserTest">
         <actions>
-            <ws:send with="mySoapClient">
+            <ws:send endpoint="mySoapClient">
                 <message>
                     <data>
                         <![CDATA[
