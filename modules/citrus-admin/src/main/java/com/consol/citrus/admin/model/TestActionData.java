@@ -44,7 +44,9 @@ public class TestActionData {
      * @return
      */
     public TestActionData add(Property property) {
-        properties.add(property);
+        if (property != null) {
+            properties.add(property);
+        }
         return this;
     }
 

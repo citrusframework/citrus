@@ -48,12 +48,19 @@ a:hover {
     padding-top: 5px;
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
-    margin-bottom: 20px;
 }
 
-.row-fluid .navigation {
+.content {
+    margin-top: 20px;
+}
+
+.span .navigation {
     width: 15%;
     min-width: 235px;
+}
+
+.separated {
+    border-left: 1px solid #dddddd;
 }
 
 .navbar .brand {
@@ -205,6 +212,7 @@ div.test-details-open {
     margin: 0px;
     padding: 15px 20px;
     background-color: #ffffff;
+    border-top: 1px solid #dddddd;
 }
 
 .test-details-header small {
@@ -229,6 +237,7 @@ div.test-details-open {
 }
 
 #test-tabs {
+    border-bottom: none;
     margin-bottom: 0px;
 }
 
@@ -241,17 +250,17 @@ div.test-details-open {
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
-    border-color: #DDDDDD #DDDDDD transparent;
     border-image: none;
-    border-style: solid;
-    border-width: 1px;
-    padding-right: 22px;
-}
-
-#test-tab-content {
-    border-left: 1px solid #dddddd;
     border-right: 1px solid #dddddd;
     border-bottom: 1px solid #dddddd;
+    border-left: none;
+    border-top: none;
+    padding-right: 25px;
+    margin-right: 0px;
+}
+
+#test-tabs > li.active > a {
+    border-bottom: none;
 }
 
 blockquote {
@@ -304,7 +313,7 @@ ul.jqueryFileTree a {
 }
 
 ul.jqueryFileTree a:hover {
-    background: #efefef;
+    background: #eff6fb;
 }
 
 ul.jqueryFileTree li.ext_java_class {
@@ -316,8 +325,6 @@ ul.jqueryFileTree li.ext_java_method {
 }
 
 div.file-tree {
-    border: 1px solid #dddddd;
-    height: 750px;
     overflow: auto;
     padding: 5px;
 }
@@ -342,10 +349,6 @@ div.file-tree {
 
 .form-horizontal .controls {
     margin-left: 200px;
-}
-
-#content {
-  padding-bottom: 610px;
 }
 
 span.message-data {

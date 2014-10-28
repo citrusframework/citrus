@@ -7,24 +7,21 @@
   </div>
 </div>
 <div class="container-fluid content-nav">
-  <div>
-    <p>On this page you see all <b>102</b> test cases in this project. Select a test and execute it with a run configuration.</p>
-  </div>
+    <span>On this page you see all <b>102</b> test cases in this project. Select a test and execute it with a run configuration.</span>
+    <form id="search-form" class="form-horizontal pull-right" method="GET" action="#">
+      <div class="input-append">
+        <input id="test-name" type="text" autocomplete="off" class="input-large" data-provide="typeahead" placeholder="TestCase"/>
+        <button id="button-search" type="submit" class="btn btn-citrus"><i class="fa fa-search fa-white"></i></button>
+      </div>
+    </form>
 </div>
 
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3 navigation">
-        <form id="search-form" class="form-horizontal" method="GET" action="#">
-          <div class="input-append">
-	          <input id="test-name" type="text" autocomplete="off" class="input-large" data-provide="typeahead" placeholder="TestCase"/>
-	          <button id="button-search" type="submit" class="btn btn-citrus"><i class="fa fa-search fa-white"></i></button>
-          </div>
-        </form>
-
         <div id="test-file-tree" class="file-tree"></div>
     </div>
-    <div class="span9">
+    <div class="span9 separated">
 	    <ul id="test-tabs" class="nav nav-tabs">
             <li style="display: none;" class="active">
                 <a href="#open-tab" data-toggle="tab">Open</a>

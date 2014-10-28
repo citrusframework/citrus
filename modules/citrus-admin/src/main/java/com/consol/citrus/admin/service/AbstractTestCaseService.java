@@ -78,8 +78,10 @@ public abstract class AbstractTestCaseService implements TestCaseService {
             throw new CitrusAdminRuntimeException("Unsupported test case type: " + type);
         }
 
-        for (Variables.Variable variable : testModel.getVariables().getVariables()) {
-            testCase.getVariables().put(variable.getName(), variable.getValue());
+        if (testModel.getVariables() != null) {
+            for (Variables.Variable variable : testModel.getVariables().getVariables()) {
+                testCase.getVariables().put(variable.getName(), variable.getValue());
+            }
         }
 
         testCase.setDescription(testModel.getDescription());

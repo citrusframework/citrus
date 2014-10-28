@@ -16,10 +16,11 @@
 
 package com.consol.citrus.admin.converter;
 
-import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.model.Property;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.variable.VariableUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -33,6 +34,9 @@ import java.lang.reflect.Method;
  * @since 2.0
  */
 public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T, S> {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(AbstractObjectConverter.class);
 
     @Autowired
     private ProjectService projectService;
@@ -97,7 +101,8 @@ public abstract class AbstractObjectConverter<T, S> implements ObjectConverter<T
                 return new Property(fieldName, fieldName, displayName, null);
             }
         } else {
-            throw new CitrusAdminRuntimeException(String.format("Unknown field %s on endpoint type %s", fieldName, definition.getClass()));
+            log.warn(String.format("Unknown field %s on endpoint type %s", fieldName, definition.getClass()));
+            return null;
         }
     }
 
