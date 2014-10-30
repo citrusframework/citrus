@@ -29,30 +29,45 @@ public class SendSoapMessageActionParserTest extends AbstractActionParserTest<Se
 
     @Test
     public void testSendMessageActionParser() {
-        assertActionCount(3);
+        assertActionCount(4);
         assertActionClassAndName(SendSoapMessageAction.class, "send");
         
         // 1st action
         SendSoapMessageAction action = getNextTestActionFromTest();
         Assert.assertFalse(action.isForkMode());
-        Assert.assertEquals(action.getAttachmentData().trim(), "This is an attachment!");
-        Assert.assertNull(action.getAttachmentResourcePath());
-        Assert.assertEquals(action.getAttachment().getContentId(), "MySoapAttachment");
-        Assert.assertEquals(action.getAttachment().getContentType(), "text/plain");
+        Assert.assertEquals(action.getAttachments().size(), 1L);
+        Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
 
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertFalse(action.isForkMode());
-        Assert.assertNull(action.getAttachmentData());
-        Assert.assertNotNull(action.getAttachmentResourcePath());
-        Assert.assertEquals(action.getAttachment().getContentId(), "MySoapAttachment");
-        Assert.assertEquals(action.getAttachment().getContentType(), "application/xml");
-        Assert.assertEquals(action.getAttachment().getCharsetName(), "UTF-8");
-        
+        Assert.assertEquals(action.getAttachments().size(), 1L);
+        Assert.assertNull(action.getAttachments().get(0).getContent());
+        Assert.assertNotNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "application/xml");
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), "UTF-8");
+
         // 3rd action
         action = getNextTestActionFromTest();
+        Assert.assertFalse(action.isForkMode());
+        Assert.assertEquals(action.getAttachments().size(), 2L);
+        Assert.assertEquals(action.getAttachments().get(0).getContent().trim(), "This is an attachment!");
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), "FirstSoapAttachment");
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
+        Assert.assertNull(action.getAttachments().get(1).getContent());
+        Assert.assertNotNull(action.getAttachments().get(1).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(1).getContentId(), "SecondSoapAttachment");
+        Assert.assertEquals(action.getAttachments().get(1).getContentType(), "application/xml");
+        Assert.assertEquals(action.getAttachments().get(1).getCharsetName(), "UTF-8");
+
+        // 4th action
+        action = getNextTestActionFromTest();
         Assert.assertTrue(action.isForkMode());
-        Assert.assertNull(action.getAttachmentData());
-        Assert.assertNull(action.getAttachmentResourcePath());
+        Assert.assertEquals(action.getAttachments().size(), 0L);
     }
 }

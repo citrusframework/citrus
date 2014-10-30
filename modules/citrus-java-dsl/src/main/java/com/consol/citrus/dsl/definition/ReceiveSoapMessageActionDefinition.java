@@ -50,10 +50,13 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @return
      */
     public ReceiveSoapMessageActionDefinition attachment(String contentId, String contentType, String content) {
-        getAction().setContentId(contentId);
-        getAction().setContentType(contentType);
-        getAction().setAttachmentData(content);
-        
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentId(contentId);
+        attachment.setContentType(contentType);
+        attachment.setContent(content);
+
+        getAction().getAttachments().add(attachment);
+
         return this;
     }
     
@@ -65,14 +68,17 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @return
      */
     public ReceiveSoapMessageActionDefinition attachment(String contentId, String contentType, Resource contentResource) {
-        getAction().setContentId(contentId);
-        getAction().setContentType(contentType);
-        
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentId(contentId);
+        attachment.setContentType(contentType);
+
         try {
-            getAction().setAttachmentData(FileUtils.readToString(contentResource));
+            attachment.setContent(FileUtils.readToString(contentResource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read attachment content resource", e);
         }
+
+        getAction().getAttachments().add(attachment);
         
         return this;
     }
@@ -83,7 +89,9 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @return
      */
     public ReceiveSoapMessageActionDefinition charset(String charsetName) {
-        getAction().setCharsetName(charsetName);
+        if (!getAction().getAttachments().isEmpty()) {
+            getAction().getAttachments().get(getAction().getAttachments().size() - 1).setCharsetName(charsetName);
+        }
         return this;
     }
     
@@ -93,12 +101,14 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @return
      */
     public ReceiveSoapMessageActionDefinition attachment(SoapAttachment attachment) {
-        getAction().setContentId(attachment.getContentId());
-        getAction().setContentType(attachment.getContentType());
-        getAction().setAttachmentData(attachment.getContent());
+        SoapAttachment soapAttachment = new SoapAttachment();
+        attachment.setContentId(attachment.getContentId());
+        attachment.setContentType(attachment.getContentType());
+        attachment.setContent(attachment.getContent());
         
-        getAction().setCharsetName(attachment.getCharsetName());
-        
+        attachment.setCharsetName(attachment.getCharsetName());
+
+        getAction().getAttachments().add(attachment);
         return this;
     }
 

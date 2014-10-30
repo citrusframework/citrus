@@ -18,9 +18,14 @@ package com.consol.citrus.ws.config.xml;
 
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
+import com.consol.citrus.ws.message.SoapAttachment;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parser for SOAP message sender component in Citrus ws namespace.
@@ -32,9 +37,15 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
     @Override
     public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = super.parseComponent(element, parserContext);
-        
-        SoapAttachmentParser.parseAttachment(builder, element);
-        
+
+        List<Element> attachmentElements = DomUtils.getChildElementsByTagName(element, "attachment");
+        List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
+        for (Element attachment : attachmentElements) {
+            attachments.add(SoapAttachmentParser.parseAttachment(attachment));
+        }
+
+        builder.addPropertyValue("attachments", attachments);
+
         return builder;
     }
 

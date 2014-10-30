@@ -161,12 +161,13 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        
-        Assert.assertNull(action.getAttachmentResourcePath());
-        Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachment().getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachment().getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachment().getCharsetName(), testAttachment.getCharsetName());
+
+        Assert.assertEquals(action.getAttachments().size(), 1L);
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
     }
     
     @Test
@@ -194,12 +195,53 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        
-        Assert.assertNull(action.getAttachmentResourcePath());
-        Assert.assertEquals(action.getAttachmentData(), testAttachment.getContent());
-        Assert.assertEquals(action.getAttachment().getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachment().getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachment().getCharsetName(), testAttachment.getCharsetName());
+
+        Assert.assertEquals(action.getAttachments().size(), 1L);
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent());
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+    }
+
+    @Test
+    public void testMultipleSoapAttachmentData() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                send(soapClient)
+                        .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .attachment(testAttachment.getContentId() + 1, testAttachment.getContentType(), testAttachment.getContent() + 1)
+                        .attachment(testAttachment.getContentId() + 2, testAttachment.getContentType(), testAttachment.getContent() + 2);
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), soapClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+
+        PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+
+        Assert.assertEquals(action.getAttachments().size(), 2L);
+        Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(0).getContent(), testAttachment.getContent() + 1);
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId() + 1);
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
+        Assert.assertNull(action.getAttachments().get(1).getContentResourcePath());
+        Assert.assertEquals(action.getAttachments().get(1).getContent(), testAttachment.getContent() + 2);
+        Assert.assertEquals(action.getAttachments().get(1).getContentId(), testAttachment.getContentId() + 2);
+        Assert.assertEquals(action.getAttachments().get(1).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(1).getCharsetName(), testAttachment.getCharsetName());
     }
     
     @Test
@@ -232,10 +274,10 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         
-        Assert.assertEquals(action.getAttachmentData(), "someAttachmentData");
-        Assert.assertEquals(action.getAttachment().getContentId(), testAttachment.getContentId());
-        Assert.assertEquals(action.getAttachment().getContentType(), testAttachment.getContentType());
-        Assert.assertEquals(action.getAttachment().getCharsetName(), testAttachment.getCharsetName());
+        Assert.assertEquals(action.getAttachments().get(0).getContent(), "someAttachmentData");
+        Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
+        Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
+        Assert.assertEquals(action.getAttachments().get(0).getCharsetName(), testAttachment.getCharsetName());
         
         verify(resource);
     }

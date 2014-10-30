@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.message;
 
+import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.ws.mime.Attachment;
@@ -23,6 +24,7 @@ import org.springframework.ws.mime.Attachment;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * Citrus SOAP attachment implementation.
@@ -36,7 +38,10 @@ public class SoapAttachment implements Attachment, Serializable {
 
     /** Content body as string */
     private String content;
-    
+
+    /** Content body as file resource path  */
+    private String contentResourcePath;
+
     /** Content type */
     private String contentType = "text/plain";
     
@@ -68,8 +73,8 @@ public class SoapAttachment implements Attachment, Serializable {
             throw new CitrusRuntimeException("Failed to read SOAP attachment content", e);
         }
 
-        //TODO set charset name from attachment
-        soapAttachment.setCharsetName("UTF-8");
+        soapAttachment.setCharsetName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
+                Charset.defaultCharset().displayName()));
 
         return soapAttachment;
     }
@@ -156,6 +161,22 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public void setContent(String content) {
         this.content = content;
+    }
+
+    /**
+     * Get the content file resource path.
+     * @return the content resource path
+     */
+    public String getContentResourcePath() {
+        return contentResourcePath;
+    }
+
+    /**
+     * Set the content file resource path.
+     * @param path the content resource path to set
+     */
+    public void setContentResourcePath(String path) {
+        this.contentResourcePath = path;
     }
 
     /**

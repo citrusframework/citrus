@@ -29,6 +29,8 @@ import org.easymock.IAnswer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.*;
+
 import static org.easymock.EasyMock.*;
 
 /**
@@ -47,8 +49,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
-        soapMessageAction.setAttachmentData("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -58,7 +62,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -87,11 +92,13 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
-        
-        soapMessageAction.setContentId("myAttachment");
-        soapMessageAction.setContentType("text/xml");
-        soapMessageAction.setAttachmentData("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-        soapMessageAction.setCharsetName("UTF-16");
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentId("myAttachment");
+        attachment.setContentType("text/xml");
+        attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+        attachment.setCharsetName("UTF-16");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -99,7 +106,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertEquals(constructedAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -115,6 +123,66 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         soapMessageAction.execute(context);
         
+        verify(webServiceEndpoint, producer);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMultipleAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentId("1stAttachment");
+        attachment.setContentType("text/xml");
+        attachment.setContent("<TestAttachment><Message>Hello World1!</Message></TestAttachment>");
+        attachment.setCharsetName("UTF-8");
+        attachments.add(attachment);
+
+        SoapAttachment attachment2 = new SoapAttachment();
+        attachment2.setContentId("2ndAttachment");
+        attachment2.setContentType("text/xml");
+        attachment2.setContent("<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
+        attachment2.setCharsetName("UTF-16");
+        attachments.add(attachment2);
+
+        soapMessageAction.setAttachments(attachments);
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Assert.assertEquals(((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().size(), 2L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(constructedAttachment.getContentId(), "1stAttachment");
+                Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
+                Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World1!</Message></TestAttachment>");
+                Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+
+                constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(1);
+                Assert.assertEquals(constructedAttachment.getContentId(), "2ndAttachment");
+                Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
+                Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
+                Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-16");
+
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
         verify(webServiceEndpoint, producer);
     }
     
@@ -152,8 +220,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
-        soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -163,7 +233,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -192,8 +263,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
-        
-        soapMessageAction.setAttachmentData("<TestAttachment><Message>${myText}</Message></TestAttachment>");
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContent("<TestAttachment><Message>${myText}</Message></TestAttachment>");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -203,7 +276,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
@@ -232,8 +306,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
         context.setVariable("myText", "Hello World!");
-        
-        soapMessageAction.setAttachmentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -243,7 +319,8 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         producer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
-                SoapAttachment constructedAttachment = (SoapAttachment)((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
                 Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");

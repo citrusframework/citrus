@@ -26,46 +26,33 @@ import com.consol.citrus.ws.message.SoapMessage;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Message sender implementation sending SOAP messages.
- * 
- *  This special implementation adds SOAP attachment support to normal
- *  message sender.
+ * Message send action able to add SOAP attachment support to normal message sending action.
  *  
  * @author Christoph Deppisch
  */
 public class SendSoapMessageAction extends SendMessageAction {
 
-    /** SOAP attachment data */
-    private String attachmentData;
-    
-    /** SOAP attachment data as external file resource path */
-    private String attachmentResourcePath;
-    
     /** SOAP attachment */
-    private SoapAttachment attachment = new SoapAttachment();
+    private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
 
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {
         Message message = super.createMessage(context, getMessageType());
 
-        final SoapMessage soapMessage;
-        final String attachmentContent;
+        final SoapMessage soapMessage = new SoapMessage(message);
 
         try {
-            if (StringUtils.hasText(attachmentData)) {
-                attachmentContent = context.replaceDynamicContentInString(attachmentData);
-            } else if (attachmentResourcePath != null) {
-                attachmentContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachmentResourcePath, context)));
-            } else {
-                attachmentContent = null;
-            }
+            for (SoapAttachment attachment : attachments) {
+                if (StringUtils.hasText(attachment.getContent())) {
+                    attachment.setContent(context.replaceDynamicContentInString(attachment.getContent()));
+                } else if (attachment.getContentResourcePath() != null) {
+                    attachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachment.getContentResourcePath(), context))));
+                }
 
-            soapMessage = new SoapMessage(message);
-
-            if (attachmentContent != null) {
-                attachment.setContent(attachmentContent);
                 soapMessage.addAttachment(attachment);
             }
 
@@ -77,66 +64,18 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
-     * Set the Attachment data file resource.
-     * @param attachment the attachment to set
+     * Gets the attachments.
+     * @return the attachments
      */
-    public void setAttachmentResourcePath(String attachment) {
-        this.attachmentResourcePath = attachment;
+    public List<SoapAttachment> getAttachments() {
+        return attachments;
     }
 
     /**
-     * Set the content type, delegates to soap attachment.
-     * @param contentType the contentType to set
+     * Sets the control attachments.
+     * @param attachments the control attachments
      */
-    public void setContentType(String contentType) {
-        attachment.setContentType(contentType);
-    }
-
-    /**
-     * Set the content id, delegates to soap attachment.
-     * @param contentId the contentId to set
-     */
-    public void setContentId(String contentId) {
-        attachment.setContentId(contentId);
-    }
-    
-    /**
-     * Set the charset name, delegates to soap attachment.
-     * @param charsetName the charsetName to set
-     */
-    public void setCharsetName(String charsetName) {
-        attachment.setCharsetName(charsetName);
-    }
-
-    /**
-     * Set the attachment data as string value.
-     * @param attachmentData the attachmentData to set
-     */
-    public void setAttachmentData(String attachmentData) {
-        this.attachmentData = attachmentData;
-    }
-
-    /**
-     * Gets the attachmentData.
-     * @return the attachmentData
-     */
-    public String getAttachmentData() {
-        return attachmentData;
-    }
-
-    /**
-     * Gets the attachmentResource.
-     * @return the attachmentResource
-     */
-    public String getAttachmentResourcePath() {
-        return attachmentResourcePath;
-    }
-
-    /**
-     * Gets the attachment.
-     * @return the attachment
-     */
-    public SoapAttachment getAttachment() {
-        return attachment;
+    public void setAttachments(List<SoapAttachment> attachments) {
+        this.attachments = attachments;
     }
 }

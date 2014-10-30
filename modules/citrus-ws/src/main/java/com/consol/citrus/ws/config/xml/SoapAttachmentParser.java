@@ -16,8 +16,7 @@
 
 package com.consol.citrus.ws.config.xml;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import com.consol.citrus.ws.message.SoapAttachment;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
@@ -36,25 +35,33 @@ public final class SoapAttachmentParser {
     
     /**
      * Parse the attachment element with all children and attributes.
-     * @param builder
-     * @param element
+     * @param attachmentElement
      */
-    public static void parseAttachment(BeanDefinitionBuilder builder, Element element) {
-        Element attachmentElement = DomUtils.getChildElementByTagName(element, "attachment");
-        if (attachmentElement == null) { return; }
-        
-        BeanDefinitionParserUtils.setPropertyValue(builder, attachmentElement.getAttribute("content-id"), "contentId");
-        BeanDefinitionParserUtils.setPropertyValue(builder, attachmentElement.getAttribute("content-type"), "contentType");
-        BeanDefinitionParserUtils.setPropertyValue(builder, attachmentElement.getAttribute("charset-name"), "charsetName");
-        
+    public static SoapAttachment parseAttachment(Element attachmentElement) {
+        SoapAttachment soapAttachment = new SoapAttachment();
+
+        if (attachmentElement.hasAttribute("content-id")) {
+            soapAttachment.setContentId(attachmentElement.getAttribute("content-id"));
+        }
+
+        if (attachmentElement.hasAttribute("content-type")) {
+            soapAttachment.setContentType(attachmentElement.getAttribute("content-type"));
+        }
+
+        if (attachmentElement.hasAttribute("charset-name")) {
+            soapAttachment.setCharsetName(attachmentElement.getAttribute("charset-name"));
+        }
+
         Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
         if (attachmentDataElement != null) {
-            builder.addPropertyValue("attachmentData", DomUtils.getTextValue(attachmentDataElement));
+            soapAttachment.setContent(DomUtils.getTextValue(attachmentDataElement));
         }
         
         Element attachmentResourceElement = DomUtils.getChildElementByTagName(attachmentElement, "resource");
         if (attachmentResourceElement != null) {
-            builder.addPropertyValue("attachmentResourcePath", attachmentResourceElement.getAttribute("file"));
+            soapAttachment.setContentResourcePath(attachmentResourceElement.getAttribute("file"));
         }
+
+        return soapAttachment;
     }
 }

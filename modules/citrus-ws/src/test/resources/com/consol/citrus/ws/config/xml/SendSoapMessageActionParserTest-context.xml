@@ -36,7 +36,7 @@
                 </ws:attachment>
             </ws:send>
             
-            <ws:send endpoint="mySoapClient" fork="true">
+            <ws:send endpoint="mySoapClient">
                 <message>
                     <data>
                         <![CDATA[
@@ -44,6 +44,24 @@
                         ]]>
                     </data>
                 </message>
+                <ws:attachment content-id="FirstSoapAttachment" content-type="text/plain">
+                  <ws:data>
+                    <![CDATA[This is an attachment!]]>
+                  </ws:data>
+                </ws:attachment>
+                <ws:attachment content-id="SecondSoapAttachment" content-type="application/xml" charset-name="UTF-8">
+                  <ws:resource file="classpath:com/consol/citrus/ws/actions/test-attachment.txt"/>
+                </ws:attachment>
+            </ws:send>
+
+            <ws:send endpoint="mySoapClient" fork="true">
+              <message>
+                <data>
+                  <![CDATA[
+                      <TestMessage>Hello Citrus</TestMessage>
+                  ]]>
+                </data>
+              </message>
             </ws:send>
         </actions>
     </testcase>
