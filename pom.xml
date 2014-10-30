@@ -856,14 +856,6 @@
   </repositories>
   
   <profiles>
-    <profile>
-      <id>tools</id>
-      <modules>
-        <module>modules/citrus-ant-tasks</module>
-        <module>modules/citrus-maven</module>
-      </modules>
-    </profile>
-    
     <!-- Distribution Management -->
     <profile>
       <id>release-inhouse</id>
