@@ -62,7 +62,9 @@ public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
         }
 
         for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
-            if (!headerEntry.getKey().startsWith(CitrusJmsMessageHeaders.JMS_PREFIX)) {
+            if (!headerEntry.getKey().startsWith(CitrusJmsMessageHeaders.JMS_PREFIX)
+                    && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
+                    && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
                 integrationHeaders.put(headerEntry.getKey(), headerEntry.getValue());
             }
         }
