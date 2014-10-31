@@ -18,6 +18,7 @@ package com.consol.citrus.admin.websocket;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.*;
 import org.json.simple.JSONObject;
@@ -89,12 +90,12 @@ public class WebSocketTestListener implements TestListener, TestActionListener, 
     }
 
     @Override
-    public void onInboundMessage(Message message) {
+    public void onInboundMessage(Message message, TestContext context) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.INBOUND_MESSAGE, message.toString()));
     }
 
     @Override
-    public void onOutboundMessage(Message message) {
+    public void onOutboundMessage(Message message, TestContext context) {
         loggingWebSocket.push(SocketEvent.createEvent(processId, SocketEvent.OUTBOUND_MESSAGE, message.toString()));
     }
 

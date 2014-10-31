@@ -76,7 +76,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
 
         vertx.eventBus().send(replyAddress, message.getPayload());
 
-        onOutboundMessage(message);
+        onOutboundMessage(message, context);
 
         log.info("Message was successfully sent to event bus address: '" + replyAddress + "'");
     }
@@ -102,10 +102,11 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     /**
      * Informs message listeners if present.
      * @param message
+     * @param context
      */
-    protected void onOutboundMessage(Message message) {
+    protected void onOutboundMessage(Message message, TestContext context) {
         if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(message);
+            getMessageListener().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

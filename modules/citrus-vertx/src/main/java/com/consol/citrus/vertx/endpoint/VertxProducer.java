@@ -78,7 +78,7 @@ public class VertxProducer implements Producer {
             }
         }
 
-        onOutboundMessage(message);
+        onOutboundMessage(message, context);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
     }
@@ -96,10 +96,11 @@ public class VertxProducer implements Producer {
     /**
      * Informs message listeners if present.
      * @param message
+     * @param context
      */
-    protected void onOutboundMessage(Message message) {
+    protected void onOutboundMessage(Message message, TestContext context) {
         if (messageListener != null) {
-            messageListener.onOutboundMessage(message);
+            messageListener.onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

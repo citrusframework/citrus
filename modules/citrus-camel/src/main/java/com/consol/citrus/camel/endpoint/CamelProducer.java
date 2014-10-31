@@ -72,7 +72,7 @@ public class CamelProducer implements Producer {
             throw new CitrusRuntimeException("Sending message to camel endpoint resulted in exception", camelExchange.getException());
         }
 
-        onOutboundMessage(message);
+        onOutboundMessage(message, context);
 
         log.info("Message was successfully sent to camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
     }
@@ -80,10 +80,11 @@ public class CamelProducer implements Producer {
     /**
      * Informs message listeners if present.
      * @param message
+     * @param context
      */
-    protected void onOutboundMessage(Message message) {
+    protected void onOutboundMessage(Message message, TestContext context) {
         if (messageListener != null) {
-            messageListener.onOutboundMessage(message);
+            messageListener.onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

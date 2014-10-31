@@ -84,7 +84,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     public void handleRequest(String request) {
         if (messageListener != null) {
             log.info("Received Http request");
-            messageListener.onInboundMessage(new RawMessage(request));
+            messageListener.onInboundMessage(new RawMessage(request), null);
         } else {
             log.info("Received Http request:" + NEWLINE + request);
         }
@@ -97,7 +97,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
     public void handleResponse(String response) {
         if (messageListener != null) {
             log.info("Sending Http response");
-            messageListener.onOutboundMessage(new RawMessage(response));
+            messageListener.onOutboundMessage(new RawMessage(response), null);
         } else {
             log.info("Sending Http response:" + NEWLINE + response);
         }

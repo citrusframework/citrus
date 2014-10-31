@@ -16,6 +16,7 @@
 
 package com.consol.citrus.report;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,11 +35,12 @@ public class MessageListeners implements MessageListener {
     /**
      * Delegate to all known message listener instances.
      * @param message
+     * @param context
      */
-    public void onInboundMessage(Message message) {
+    public void onInboundMessage(Message message, TestContext context) {
         if (message != null) {
             for (MessageListener listener : messageListener) {
-                listener.onInboundMessage(message);
+                listener.onInboundMessage(message, context);
             }
         }
     }
@@ -46,11 +48,12 @@ public class MessageListeners implements MessageListener {
     /**
      * Delegate to all known message listener instances.
      * @param message
+     * @param context
      */
-    public void onOutboundMessage(Message message) {
+    public void onOutboundMessage(Message message, TestContext context) {
         if (message != null) {
             for (MessageListener listener : messageListener) {
-                listener.onOutboundMessage(message);
+                listener.onOutboundMessage(message, context);
             }
         }
     }

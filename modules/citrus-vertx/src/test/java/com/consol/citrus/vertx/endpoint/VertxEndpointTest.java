@@ -151,7 +151,7 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
         expect(vertx.eventBus()).andReturn(eventBus).once();
         expect(eventBus.send(eventBusAddress, requestMessage.getPayload())).andReturn(eventBus).once();
-        messageListeners.onOutboundMessage(requestMessage);
+        messageListeners.onOutboundMessage(requestMessage, context);
         expectLastCall().once();
 
         replay(vertx, eventBus, messageListeners);

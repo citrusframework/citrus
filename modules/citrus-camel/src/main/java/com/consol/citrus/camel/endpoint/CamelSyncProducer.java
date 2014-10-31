@@ -63,7 +63,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         context.saveCorrelationKey(correlationKey, this);
 
-        onOutboundMessage(message);
+        onOutboundMessage(message, context);
 
         log.info("Message was successfully sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
@@ -78,7 +78,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
-        onInboundMessage(replyMessage);
+        onInboundMessage(replyMessage, context);
         replyManager.store(correlationKey, replyMessage);
     }
 
@@ -128,10 +128,11 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     /**
      * Informs message listeners if present.
      * @param receivedMessage
+     * @param context
      */
-    protected void onInboundMessage(Message receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage, TestContext context) {
         if (getMessageListener() != null) {
-            getMessageListener().onInboundMessage(receivedMessage);
+            getMessageListener().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

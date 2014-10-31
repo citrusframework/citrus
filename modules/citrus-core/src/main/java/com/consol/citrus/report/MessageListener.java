@@ -16,6 +16,7 @@
 
 package com.consol.citrus.report;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
 /**
@@ -28,14 +29,16 @@ public interface MessageListener {
      * in a very early state of message processing. SOAP envelope for instance is
      * still part of this message content.
      * @param message
+     * @param context
      */
-    void onInboundMessage(Message message);
+    void onInboundMessage(Message message, TestContext context);
 
     /**
      * Invoked on outbound message event. Raw message data is passed to this listener
      * in a very late state of message processing. This means that a SOAP envelope for
      * instance is already part of this message content.
      * @param message
+     * @param context
      */
-    void onOutboundMessage(Message message);
+    void onOutboundMessage(Message message, TestContext context);
 }

@@ -133,9 +133,9 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             log.info(logMessage);
 
             if (incoming) {
-                messageListener.onInboundMessage(new RawMessage(message));
+                messageListener.onInboundMessage(new RawMessage(message), null);
             } else {
-                messageListener.onOutboundMessage(new RawMessage(message));
+                messageListener.onOutboundMessage(new RawMessage(message), null);
             }
         } else {
             log.info(logMessage + ":" + System.getProperty("line.separator") + message);

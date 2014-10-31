@@ -18,6 +18,7 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.*;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.TestResult.RESULT;
 import org.slf4j.Logger;
@@ -237,12 +238,12 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     }
 
     @Override
-    public void onInboundMessage(Message message) {
+    public void onInboundMessage(Message message, TestContext context) {
         inboundMsgLogger.info(message.toString());
     }
 
     @Override
-    public void onOutboundMessage(Message message) {
+    public void onOutboundMessage(Message message, TestContext context) {
         outboundMsgLogger.info(message.toString());
     }
 

@@ -61,12 +61,12 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     }
 
     @Override
-    public void send(Message message, TestContext context) {
+    public void send(Message message, final TestContext context) {
         log.info("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
         final String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         context.saveCorrelationKey(correlationKey, this);
-        onOutboundMessage(message);
+        onOutboundMessage(message, context);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
@@ -78,7 +78,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
                     Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration);
 
-                    onInboundMessage(responseMessage);
+                    onInboundMessage(responseMessage, context);
                     onReplyMessage(correlationKey, responseMessage);
                 }
             });
@@ -144,10 +144,11 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     /**
      * Informs message listeners if present.
      * @param receivedMessage
+     * @param context
      */
-    protected void onInboundMessage(Message receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage, TestContext context) {
         if (getMessageListener() != null) {
-            getMessageListener().onInboundMessage(receivedMessage);
+            getMessageListener().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

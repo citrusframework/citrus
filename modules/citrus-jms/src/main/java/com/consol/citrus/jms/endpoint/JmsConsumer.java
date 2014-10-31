@@ -80,7 +80,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(receivedJmsMessage, endpointConfiguration);
 
         log.info("Received JMS message on destination: '" + destinationName + "'");
-        onInboundMessage(receivedMessage);
+        onInboundMessage(receivedMessage, context);
 
         return receivedMessage;
     }
@@ -88,10 +88,11 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Informs message listeners if present.
      * @param receivedMessage
+     * @param context
      */
-    protected void onInboundMessage(Message receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage, TestContext context) {
         if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage);
+            messageListener.onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

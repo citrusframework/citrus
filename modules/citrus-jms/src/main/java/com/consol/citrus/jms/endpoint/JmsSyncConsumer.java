@@ -90,7 +90,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
             }
         });
 
-        onOutboundMessage(message);
+        onOutboundMessage(message, context);
 
         log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
     }
@@ -125,10 +125,11 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     /**
      * Informs message listeners if present.
      * @param message
+     * @param context
      */
-    protected void onOutboundMessage(Message message) {
+    protected void onOutboundMessage(Message message, TestContext context) {
         if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(message);
+            getMessageListener().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

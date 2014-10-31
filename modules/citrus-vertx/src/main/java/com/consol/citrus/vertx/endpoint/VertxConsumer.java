@@ -95,7 +95,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
 
         log.info("Received message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
-        onInboundMessage(message);
+        onInboundMessage(message, context);
 
         return message;
     }
@@ -103,10 +103,11 @@ public class VertxConsumer extends AbstractMessageConsumer {
     /**
      * Informs message listeners if present.
      * @param receivedMessage
+     * @param context
      */
-    protected void onInboundMessage(Message receivedMessage) {
+    protected void onInboundMessage(Message receivedMessage, TestContext context) {
         if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage);
+            messageListener.onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
