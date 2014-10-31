@@ -61,14 +61,18 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.getMessageValidators().add(new DomXmlMessageValidator());
         messageValidatorRegistry.getMessageValidators().add(new GroovyScriptMessageValidator());
 
-        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""), Collections.<ValidationContext>singletonList(new XmlMessageValidationContext()));
-
-        Assert.assertNotNull(matchingValidators);
-        Assert.assertEquals(matchingValidators.size(), 1L);
-        Assert.assertEquals(matchingValidators.get(0).getClass(), PlainTextMessageValidator.class);
-
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(new XmlMessageValidationContext());
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""), validationContexts);
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 2L);
+        Assert.assertEquals(matchingValidators.get(0).getClass(), PlainTextMessageValidator.class);
+        Assert.assertEquals(matchingValidators.get(1).getClass(), GroovyScriptMessageValidator.class);
+
+        Assert.assertNotNull(matchingValidators.get(0).findValidationContext(validationContexts));
+        Assert.assertNull(matchingValidators.get(1).findValidationContext(validationContexts));
+
         validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""), validationContexts);
 
@@ -76,6 +80,9 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.size(), 2L);
         Assert.assertEquals(matchingValidators.get(0).getClass(), PlainTextMessageValidator.class);
         Assert.assertEquals(matchingValidators.get(1).getClass(), GroovyScriptMessageValidator.class);
+
+        Assert.assertNotNull(matchingValidators.get(0).findValidationContext(validationContexts));
+        Assert.assertNotNull(matchingValidators.get(1).findValidationContext(validationContexts));
 
         validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(new XmlMessageValidationContext());

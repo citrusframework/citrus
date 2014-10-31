@@ -67,4 +67,34 @@ public class JmsCommunicationJavaITest extends TestNGCitrusTestBuilder {
             .header("Operation", operation)
             .header("CorrelationId", "${correlationId}");
     }
+
+    @CitrusTest
+    public void JmsCommunicationEmptyReceiveITest() {
+        String operation = "sayHello";
+
+        variable("correlationId", "citrus:randomNumber(10)");
+        variable("messageId", "citrus:randomNumber(10)");
+        variable("user", "Christoph");
+
+        send("helloRequestSender")
+                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                        "<MessageId>${messageId}</MessageId>" +
+                        "<CorrelationId>${correlationId}</CorrelationId>" +
+                        "<User>${user}</User>" +
+                        "<Text>Hello TestFramework</Text>" +
+                        "</HelloRequest>")
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}")
+                .description("Send asynchronous hello request: TestFramework -> HelloService");
+
+        receive("helloResponseReceiver")
+                .description("Receive asynchronous hello response: HelloService -> TestFramework");
+
+        send("helloRequestSender")
+                .payload(new ClassPathResource("com/consol/citrus/actions/helloRequest.xml"))
+                .header("Operation", operation)
+                .header("CorrelationId", "${correlationId}");
+
+        receive("helloResponseReceiver");
+    }
 }

@@ -57,10 +57,7 @@ public class MessageValidatorRegistry implements InitializingBean {
         
         for (MessageValidator<? extends ValidationContext> validator : messageValidators) {
             if (validator.supportsMessageType(messageType, message)) {
-
-                if (validator.findValidationContext(validationContexts) != null) {
-                    matchingValidators.add(validator);
-                }
+                matchingValidators.add(validator);
             }
         }
         

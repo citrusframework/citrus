@@ -69,6 +69,28 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testReceiveEmpty() {
+        MockBuilder builder = new MockBuilder(applicationContext) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint);
+            }
+        };
+
+        builder.execute();
+
+        Assert.assertEquals(builder.testCase().getActions().size(), 1);
+        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 0);
+    }
+
+    @Test
     public void testReceiveBuilder() {
         MockBuilder builder = new MockBuilder(applicationContext) {
             @Override

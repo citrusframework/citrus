@@ -46,9 +46,7 @@ import java.util.List;
  */
 public class GroovyScriptMessageValidator extends AbstractMessageValidator<ScriptValidationContext> {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(GroovyScriptMessageValidator.class);
     
     /** Static code snippet for groovy script validation */
