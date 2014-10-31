@@ -15,7 +15,97 @@
   </properties>
   
   <body>
-    <release version="2.0" date="01.09.2014" description="2.0 release">
+    <release version="2.0" date="01.11.2014" description="2.0 release">
+        <action dev="christophd" type="update">
+          CITRUS-234 Remove deprecated classes
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-233 Separate citrus-jms module
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-232 Use message converter pattern
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-231 Schema validation on xs:any
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-230 Upgrade to Spring 4.x
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-229 Update dependency and Maven plugin versions
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-228 TestNG parameters in Java DSL
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-227 Use TestContext in validation matcher interface
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-226 Use TestContext in function interface
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-225 Create variable validation matcher
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-224 Namespace context configuration component
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-223 Correlate messages by default
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-222 Multiple SOAP attachments
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-221 Multiple SOAP header fragments
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-220 Data dictionary schema component
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-219 Auto sleep in milliseconds
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-218 Sleep action in milliseconds
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-217 Rework MessageListener interface
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-216 Log Citrus version
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-215 Rework root application context
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-214 ValidationMatcher XML schema component
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-213 Function library component
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-212 Sequence after test component
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-211 Sequence before/after suite components
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-210 Rework sample applications
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-209 Rework Maven plugin
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-188 Fail fast when validator is missing
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-171 Ftp server adapter
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-191 JMS Soap message converter
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-90 Citrus Jms header mapper
+        </action>
     </release>
 
     <release version="1.4.1" date="11.07.2014" description="1.4.1 release">
