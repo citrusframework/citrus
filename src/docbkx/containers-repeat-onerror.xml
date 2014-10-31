@@ -77,6 +77,11 @@ public void repeatOnErrorTest() {
     up to five seconds time to store the new entry to the database. The test case is very stable and just fits to the hardware environment. On slow
     test environments the test may need several iterations to successfully read the database entry. On very fast environments the test may succeed
     right on the first try.</para>
+
+    <important>
+      <para>We changed auto sleep time from seconds to milliseconds with Citrus 2.0 release. So if you are coming from previous Citrus versions
+      be sure to now use proper millisecond values.</para>
+    </important>
     
     <para>So fast environments are not slowed down by static sleep operations and slower environments are still able to execute this test case
     with high stability.</para>

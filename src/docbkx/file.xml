@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="file">
+  <title>File support</title>
+
+  <para>In chapter <xref linkend="message-channel"/> we discussed the native Spring Integration channel support which enables Citrus to interact
+  with all Spring Integration messaging adapter implementations. This is a fantastic way to extend Citrus for additional transports. This interaction
+  now comes handy when writing and reading files from the file system in Citrus.</para>
+
+  <section id="file-send">
+    <title>Write files</title>
+
+    <para>We want to use the Spring Integration file adapter for both reading and writing files with a local directory.
+    Citrus can easily connect to this file adapter implementation with its message channel support. Citrus message sender and receiver speak to
+    message channels that are connected to the Spring Integration file adapters.</para>
+
+    <programlisting>&lt;citrus:channel-endpoint id=&quot;fileEndpoint&quot; channel=&quot;fileChannel&quot;/&gt;
+
+&lt;file:outbound-channel-adapter id=&quot;fileOutboundAdapter&quot;
+      channel=&quot;fileChannel&quot;
+      directory=&quot;file:${some.directory.property}&quot;/>
+
+&lt;si:channel id=&quot;fileChannel&quot;/&gt;</programlisting>
+
+    <para>The configuration above describes a Citrus message channel endpoint connected to a Spring Integration outbound file adapter
+    that writes messages to a storage directory. With this combination you are able to write files to a directory in your Citrus test case. The
+    test case uses the channel endpoint in its send action and the endpoint interacts with the Spring Integration file adapter so sending out the file.</para>
+
+    <note>
+      <para>The Spring Integration file adapter configuration components add a new namespace to our
+        Spring application context. See this template which holds all necessary namespaces and schema locations:</para>
+
+      <programlisting>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+        &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xmlns:citrus=&quot;http://www.citrusframework.org/schema/config&quot;
+        xmlns:si=&quot;http://www.springframework.org/schema/integration&quot;
+        xmlns:file=&quot;http://www.springframework.org/schema/integration/file&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/config
+        http://www.citrusframework.org/schema/config/citrus-config.xsd
+        http://www.springframework.org/schema/integration
+        http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/integration/file
+        http://www.springframework.org/schema/integration/file/spring-integration-file.xsd&quot;&gt;
+        &lt;/beans&gt;</programlisting>
+    </note>
+  </section>
+
+  <section id="file-receive">
+    <title>Read files</title>
+
+    <para>The next program listing shows a possible inbound file communication. So the Spring Integration file inbound adapter will read files from a
+    storage directory and publish the file contents to a message channel. Citrus can then receive those files as messages in a test case via the channel endpoint
+    and validate the file contents for instance.</para>
+
+    <programlisting>&lt;file:inbound-channel-adapter  id=&quot;fileInboundAdapter&quot;
+        channel=&quot;fileChannel&quot;
+        directory=&quot;file:${some.directory.property}&quot;&gt;
+    &lt;si:poller fixed-rate=&quot;100&quot;/&gt;
+&lt;/file:inbound-channel-adapter&gt;
+
+&lt;si:channel id=&quot;fileChannel&quot;&gt;
+    &lt;si:queue capacity=&quot;25&quot;/&gt;
+    &lt;si:interceptors&gt;
+        &lt;bean class=&quot;org.springframework.integration.transformer.MessageTransformingChannelInterceptor&quot;&gt;
+            &lt;constructor-arg&gt;
+                &lt;bean class=&quot;org.springframework.integration.file.transformer.FileToStringTransformer&quot;/&gt;
+            &lt;/constructor-arg&gt;
+        &lt;/bean&gt;
+    &lt;/si:interceptors&gt;
+&lt;/si:channel&gt;
+
+&lt;citrus:channel-endpoint id=&quot;fileEndpoint&quot; channel=&quot;fileChannel&quot;/&gt;</programlisting>
+
+    <important>
+      <para>The file inbound adapter constructs Java file objects as the message payload by default. Citrus can only work on String
+        message payloads. So we need a file transformer that converts the file objects to String payloads representing the file's content.</para>
+    </important>
+
+    <para>This file adapter example shows how easy Citrus can work hand in hand with Spring Integration adapter implementations. The message
+    channel support is a fantastic way to extend the transport and protocol support in Citrus by connecting with the very good Spring Integration
+    adapter implementations. Have a closer look at the Spring Integration project for more details and other adapter implementations that you
+    can use with Citrus integration testing.</para>
+  </section>
+</chapter>

@@ -1,131 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="changes-new">
-  <title>What's new in Citrus 1.4?!</title>
+  <title>What's new in Citrus 2.0?!</title>
 
-  <para>In the following sections we shortly describe the Citrus evolution. We want you to get a
-  quick overview of what has happened and all the new things in Citrus. So hopefully you can spot your favorite new
-  feature.</para>
+  <para>Citrus 2.0 is a major version upgrade and therefore big things should be happening. In the following sections
+    we shortly describe the Citrus evolution. We want you to get a quick overview of what has happened and all the new
+    things in Citrus. So hopefully you can spot your favorite new feature.</para>
 
-  <section id="new-1-4-refactoring">
+  <section id="new-2-0-refactoring">
     <title>Refactoring</title>
 
-    <para>It was time for us to do some code refactoring in Citrus. Many users struggled with the configuration
-    of the Citrus components and project setup was too verbose in some areas. This is why we tried to improve things
-    with working over the basic concepts and components in Citrus.</para>
+    <para>In Citrus 1.4 we began to refactor the configuration components in Citrus. This refactoring was finalized in Citrus 2.0 which means that all deprecated
+    classes and api are no longer supported. The classes were removed so you get compilation errors when using those old stuff. If you still use the old configuration see
+    this <ulink url="http://citrusframework.org/migration-sheet.html">migration-sheet</ulink> in order to learn how to upgrade to the new configuration. It is worth to do so!
+    In addition to that we did refactoring in following fields:</para>
 
-    <para>The outcome is a new Citrus 1.4 which has new configuration components for sending and receiving messages. Also the
-      client and server components for HTTP and SOAP have changed in terms of simplification. Unfortunately
-      refactoring comes along with code deprecation. This is why you have to also change your project code and configuration in the future.
-      This is especially when you have made code adjustments and extensions to the Citrus API.</para>
-
-    <para>The good news now is that with Citrus 1.4 both old and new configuration works fine, so you do not have to change your
-      existing project configuration when coming from Citrus 1.3.x and earlier versions. But there is a lot of code marked as deprecated in Citrus 1.4.
-      Have a look at what has been marked as deprecated and update your code to use the new API.</para>
-
-    <para>We have set up a migration sheet for users coming from Citrus 1.3.x and earlier versions in order to find a quick overview
-      of what has changed and how to use the new configuration components: <ulink url="http://citrusframework.org/migration-sheet.html">Citrus 1.4 migration-sheet</ulink></para>
+    <itemizedlist>
+      <listitem>
+        <para><emphasis>Reply message correlation</emphasis> In synchronous communication scenarios Citrus optionally correlated messages across send and receive test actions.
+        In default setting the message correlation was disabled. With 2.0 release we changed this behavior to the opposite. Now message correlation is done by default with a
+        default correlation algorithm. So in case you used the DefaultReplyMessageCorrelator in Citrus before you will not have to do so in future as this is done by default.
+        The message correlation gives us more robust tests especially when executing tests in parallel. In the test case you do not have to do anything for proper message correlation.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Citrus message API</emphasis> We have refactored the Citrus message API to use custom message objects in endpoints, consumers and producers. This has no affect on your tests
+        or configuration unless you have written endpoint extensions or custom endpoints on your own. You might have to refector your code accordingly. Have a look at the Citrus endpoint implementations
+        in order to see how the new message API works for you.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Sleep time in milliseconds</emphasis> This is something that we definitely carry around since the beginning of Citrus. The time values in sleep
+        test action were done in seconds, which is inconvenient when using time periods below one second or non natural numbers. Now you can choose to use milliseconds which
+        is more likely how you should configure time periods anyway. See <xref linkend="actions-sleep"/> for details</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Auto sleep time in milliseconds</emphasis> We used seconds when using auto sleep in repeat on error container. This led to the fact that we were not able to
+          sleep time periods below one second. Also it was not possible to specify non natural numbers such as 1.5 seconds auto sleep time. We changed to milliseconds which
+          is more likely how you are used to configure time periods anyway. See <xref linkend="containers-repeat-onerror"/> for details</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>XML endpoint reference attribute</emphasis> In a XML test case you reference the message endpoint in the send and receive actions with a special attribute called <emphasis>with</emphasis>.
+        This attribute is no longer supported and was removed. Instead you should use the <emphasis>endpoint</emphasis> attribute which was introduced in Citrus 1.4 and has the exact same functionality.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Removed citrus-adapter module</emphasis> The Maven module <emphasis>citrus-adapter</emphasis> was removed. Classes and API moved to <emphasis>citrus-core</emphasis> module. For endpoint adapters
+        do use the new configuration components that were introduced in Citrus 1.4. See <xref linkend="endpoint-adapter"/> for details.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>WebServiceEndpoint class renamed</emphasis> In terms of package refactoring the <emphasis>com.consol.citrus.ws.WebServiceEndpoint</emphasis> was renamed to <emphasis>com.consol.citrus.ws.server.WebServiceEndpoint</emphasis></para>
+      </listitem>
+    </itemizedlist>
   </section>
 
-  <section id="new-1-4-data-dictionary">
-    <title>Data dictionaries</title>
+  <section id="new-2-0-spring-4">
+    <title>Spring framework 4.x</title>
 
-    <para>Data dictionaries define dynamic placeholders for message payload element values in general manner. In terms of
-      setting the same message element across all test cases and all test actions the dictionary provides an easy key-value
-      approach.</para>
-
-    <para>When dealing with any kind of message payload Citrus will ask the data dictionary for possible translation of
-      the message elements contained. The dictionary keys do match to a specific message element defined by XPath expression
-      or document path expression for instance. The respective value is then set on all messages in Citrus (inbound and outbound).</para>
-
-    <para>Dictionaries do apply to XML or JSON message data and can be defined in global or specific scope. Find out more detailed
-    information about this topic in <xref linkend="data-dictionary"/></para>
+    <para>In terms of upgrading the Citrus API dependencies we introduced Spring 4.x versions. This includes the core Spring framework libraries as well as the Spring Integration and Spring WebService project artifacts. So with the major version upgrade lots of
+    API changes were also done in Citrus code in order to meet the new Spring 4.x API. So we recommend for you to also use Spring 4.x version in your Citrus projects.</para>
   </section>
 
-  <section id="new-1-4-mail">
-    <title>Mail adapter</title>
+  <section id="new-2-0-ftp">
+    <title>FTP support</title>
 
-    <para>With the new mail adapter you are able to both send and receive mail messages within a test case. The new Citrus
-      mail client produces a mail mime part message with usual mail headers and a text body part. Optional attachment parts are
-      supported, too.</para>
-
-    <para>On the server side Citrus provides a SMTP server to accept client mail messages. The incoming mail messages can have
-      multiple text parts and attachment parts. As usual you can validate the incoming mail messages regarding headers and payload
-      with the well known validation capabilities in Citrus.</para>
-
-    <para>Read more about the new mail module in <xref linkend="mail"/></para>
+    <para>New member of the Citrus family deals with FTP connectivity. The new <emphasis>citrus-ftp</emphasis> module provides a neat ftp server and client implementation so you can send and receive messages vie FTP message transport.
+    <xref linkend="ftp"/> describes the new functionality in detail.</para>
   </section>
 
-  <section id="new-1-4-endpoint-adapter">
-    <title>Endpoint adapter</title>
+  <section id="new-2-0-functions-refactoring">
+    <title>Functions with test context access</title>
 
-    <para>Endpoint adapters help to customize the behavior of a Citrus server such as HTTP or SOAP web servers. The endpoint adapter
-      is responsible of creating an endpoint that responds to inbound requests. You can customize the behavior so the Citrus server
-      handles incoming requests as you like.</para>
-
-    <para>By default the Citrus server uses a channel endpoint adapter so incoming messages get forwarded to an in memory message channel.
-      There are several other implementations available as endpoint adapter. Read more about that in <xref linkend="endpoint-adapter"/></para>
+    <para>Functions are now able to access the test context. This enables you to access all test variables and other central test related components
+    in a function implementation. Therefore the function Java interface has now an additional test context parameter. Refactor your custom written functions accordingly to meet the new interface rules.
+    See <ulink url="http://www.citrusframework.org/tutorials-functions.html">how to write custom functions</ulink> for details.</para>
   </section>
 
-  <section id="new-1-4-global-variables">
-    <title>Global variables component</title>
+  <section id="new-2-0-matcher-refactoring">
+    <title>Validation matcher with test context access</title>
 
-    <para>We added a global variables XML configuration component for more comfortable usage in basic Spring application context
-      configuration. The component is able to create new global variables that are valid across all Citrus test cases. This can also
-      be done by loading a property file from an external file resource. Find out how to us it in <xref linkend="testcase-global-variables"/></para>
+    <para>Just like functions now validation matchers are able to access the test context. This enables you to access all test variables and other central test related components
+    in a validation matcher implementation. The validation matcher Java interface has changed accordingly with an additional test context parameter. Refactor your custom written matcher implementation accordingly to meet the new interface rules.</para>
   </section>
 
-  <section id="new-1-4-json-validator-mode">
-    <title>Json text validator mode</title>
+  <section id="new-2-0-message-listener-refactoring">
+    <title>Message listener with test context access</title>
 
-    <para>The Json text validator is now able to operate in two different modes. The <emphasis>strict</emphasis> mode is the default mode and validation includes
-      also a strict check on all sub-objects and JSON array elements. So if there is an object missing the validation will fail immediately. Sometimes it may be
-      accurate to only validate a subset of all JSON objects in the data structure. Therefore the non-strict mode does not check on object attribute counts.
-      See more description in <xref linkend="validation-json"/></para>
+    <para>Message listeners do now also have access to the test context. This is more powerful as you can access test variables and other central components within the test context.</para>
   </section>
 
-  <section id="new-1-4-http-options">
-    <title>HTTP REST specific Java DSL options</title>
+  <section id="new-2-0-soap-jms">
+    <title>SOAP over JMS</title>
 
-    <para>When sending and receiving HTTP messages on REST APIs you can now use interface specific options in the Java DSL. This refers to
-      request uri, context path, query parameters and HTTP status codes for instance. With this enhancement you are now more comfortable in handling REST API calls in Citrus.
-      Find out how to us it in <xref linkend="http"/></para>
+    <para>SOAP over JMS was supported in Citrus from the very beginning. Unfortunately you had to always specify the whole SOAP envelope in your test case. SOAP envelope handling is now done automatically by Citrus when using the new <emphasis>SoapJmsMessageConverter</emphasis>.
+    The converter takes care on constructing a proper SOAP envelope message. See <xref linkend="jms-soap"/> for details.</para>
   </section>
 
-  <section id="new-1-4-soap-http-uri">
-    <title>SOAP HTTP validation</title>
+  <section id="new-2-0-soap-attachments">
+    <title>Multiple SOAP attachments</title>
 
-    <para>While receiving SOAP messages over HTTP we are now able to also verify the used HTTP uri, context-path and query parameters. You can expect clients to
-      use those values in your receive action as you would do in normal HTTP communication within Citrus. This completes the HTTP server
-      validation when using SOAP over HTTP. Read more about it in <xref linkend="soap-webservices"/></para>
+    <para>When sending and receiving SOAP messages with Citrus as client or server you can add one to many attachments to the message. Before it was only possible to have one single attachment in a message. Now you have no limits in defining SOAP attachments.
+    See <xref linkend="soap-webservices"/> for details.</para>
   </section>
 
-  <section id="new-1-4-camel">
-    <title>Apache Camel integration</title>
+  <section id="new-2-0-soap-header">
+    <title>Multiple SOAP XML header fragments</title>
 
-    <para>Apache Camel is a great enterprise integration platform that implements the enterprise integration patterns for building powerful mediation and routing rules for
-      message based integration applications. With the new support for camel endpoints in Citrus you can interact with Apache Camel components for sending and receiving messages.
-      Apache Camel offers a fine support for different message transports that now can be used in Citrus also. In addition to that you can put your Camel application to the test with
-      loading of the Apache Camel context with all your route definitions. Citrus is able to interact with these routes in asynchronous and synchronous communication scenarios.
-      Read about it in <xref linkend="camel"/>.</para>
+    <para>The SOAP header can hold multiple XML header fragments with different namespaces and content. With Citrus 2.0 you are able to construct such a SOAP message with multiple header contents.
+    See <xref linkend="soap-webservices"/> for details.</para>
   </section>
 
-  <section id="new-1-4-vertx">
-    <title>Vert.x integration</title>
+  <section id="new-2-0-variable-matcher">
+    <title>Create variable validation matcher</title>
 
-    <para>Vert.x is a very powerful application platform that provides scalable messaging for several message transports such as HTTP, WebSockets, TCP and more. Vert.x also has a
-      distributed event bus that connects multiple Vert.x instances across the network. With Citrus 1.4 the Vert.x platform is integrated with Citrus event bus endpoints. So you can participate
-      in communicating to the Vert.x event bus from Citrus test case. This enables you to add automated integration tests to the Vert.x platform. Read about that in <xref linkend="vertx"/>.</para>
+    <para>A new validation matcher implementation is able to create a new variable on the fly. The actual field name is used as variable name and the element value as variable value. The variable name can slo be customized with optional
+    validation matcher parameter. This is a great alternative to the XPath expression evaluating variable extraction. Also very handsome to use this validation matcher in Json message payloads. See <xref linkend="validation-matcher-variable"/> for details.</para>
   </section>
 
-  <section id="new-1-4-dynamic-endpoints">
-    <title>Dynamic endpoint components</title>
+  <section id="new-2-0-configuration-components">
+    <title>New configuration components</title>
 
-    <para>Endpoints represent the base component in Citrus for sending and receiving messages. The endpoint usually is defined inside the Citrus Spring application context as Spring bean component. Now
-      it is also possible to create dynamic endpoint definitions at test runtime. This comes in very handy when you just want to send or receive a message with Citrus as is. You do not need
-      to add the complete endpoint configuration but only use a special endpoint uri pattern. Citrus will create the endpoint at runtime automatically. Learn how to use the dynamic endpoint pattern in <xref linkend="endpoint-components"/>.</para>
+    <para>A major part of the Citrus configuration is done in a Spring bean application context. Central Citrus components and features are added as Spring beans to the application context. Now with Citrus 2.0 we have added special configuration components
+    for almost all features. This means that you can easily add configuration using the new XML schema components. See which components are available:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis>Function library</emphasis> Custom function libraries with custom function implementations are now configured with the <emphasis>function-library</emphasis> XML schema components in
+        the Spring application context configuration. See <xref linkend="functions"/> for details.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Validation matcher library</emphasis> Custom validation matcher implementations are now configured with the <emphasis>validation-matcher-library</emphasis> XML schema components in
+        the Spring application context configuration. See <xref linkend="validation-matchers"/> for details.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Data dictionary</emphasis> Data dictionaries apply to all messages send and received in test cases. You can define multiple dictionaries using the <emphasis>data-dictionary</emphasis> XML schema components in
+        the Spring application context configuration. See <xref linkend="data-dictionary"/> for details.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis>Namespace context</emphasis> Configuration of a global namespace context is necessary for XML message payloads and XPath expressions used in the test cases. The <emphasis>namespace-context</emphasis> XML schema component is used in
+        the Spring application context configuration and simplifies the configuration. See <xref linkend="xpath"/> for details.</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
-  <section id="new-1-4-bugfixes">
+  <section id="new-2-0-before-after-suite">
+    <title>Before/after suite components</title>
+
+    <para>When executing test actions before the actual test run you can use the sequence before suite components. We have improved these components to use a special XML schema. This enables easy configuration of both before and after suite actions. In addition
+      to that you can bind the suite actions to special packages, test names or suite names. So you can now have more than one sequence before suite at the same time. According to the environment settings the before suite actions are executed or left out.
+      Last not least we have done the same improvement to the before test actions and we have introduced a after test sequence component for execution after each test. See how this is done in <xref linkend="testsuite"/>.</para>
+  </section>
+
+  <section id="new-2-0-jms-module">
+    <title>Citrus JMS module</title>
+
+    <para>JMS support has been a major part of Citrus from the very beginning. Up to now the JMS features were located in <emphasis>citrus-core</emphasis> Maven module. With Citrus 2.0 we introduced a separate <emphasis>citrus-jms</emphasis>
+    Maven module. This means that you might have to add proper Maven dependency of this new module in your existing project when using JMS. See how this is done in <xref linkend="jms"/>.</para>
+  </section>
+
+  <section id="new-2-0-bugfixes">
     <title>Bugfixes</title>
 
     <para>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues

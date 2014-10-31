@@ -40,8 +40,9 @@
     <xi:include href='jms.xml'/>
     <xi:include href='http.xml'/>
     <xi:include href='soap.xml'/>
-    <xi:include href='message-channel.xml'/>
     <xi:include href='ftp.xml'/>
+    <xi:include href='message-channel.xml'/>
+    <xi:include href='file.xml'/>
     <xi:include href='camel.xml'/>
     <xi:include href='vertx.xml'/>
     <xi:include href='mail.xml'/>
@@ -76,7 +77,8 @@
 
         <para>In the following sections we you will find out what has happened in the past Citrus releases.</para>
 
-        <xi:include href='changes-1-2.xml'/>
+        <xi:include href='changes-1-4.xml'/>
         <xi:include href='changes-1-3.xml'/>
+        <xi:include href='changes-1-2.xml'/>
     </appendix>
 </book>

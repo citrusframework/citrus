@@ -41,6 +41,8 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
+  <bean id="soapMessageConverter" class="com.consol.citrus.jms.message.SoapJmsMessageConverter"/>
+
   <!-- JMS message endpoints -->
   <citrus-jms:jms-endpoint id="helloServiceJmsEndpoint"
                        destination-name="Citrus.HelloService.Request.Queue"
@@ -49,6 +51,16 @@
   <citrus-jms:jms-endpoint id="helloServiceResponseJmsEndpoint"
                        destination-name="Citrus.HelloService.Response.Queue"
                        timeout="${default.timeout}"/>
+
+  <citrus-jms:jms-endpoint id="helloServiceSoapJmsEndpoint"
+                           destination-name="Citrus.HelloSoapService.Request.Queue"
+                           message-converter="soapMessageConverter"
+                           timeout="${default.timeout}"/>
+
+  <citrus-jms:jms-endpoint id="helloServiceResponseSoapJmsEndpoint"
+                           destination-name="Citrus.HelloSoapService.Response.Queue"
+                           message-converter="soapMessageConverter"
+                           timeout="${default.timeout}"/>
 
   <citrus-jms:jms-endpoint id="helloSoapServiceJmsEndpoint"
                        destination-name="Citrus.HelloSoapService.Request.Queue"

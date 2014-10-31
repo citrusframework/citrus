@@ -259,4 +259,20 @@
     &lt;element name=&quot;amount&quot; value=&quot;19.75&quot; type=&quot;double&quot;/&gt;
 &lt;/header&gt;</programlisting>
     </section>
+
+    <section id="jms-soap">
+        <title>SOAP over JMS</title>
+
+        <para>When sending SOAP messages you have to deal with proper envelope, body and header construction. In Citrus you can add a special message converter that performs the heavy lift for you.
+        Just add the message converter to the JMS endpoint as shown in the next program listing:</para>
+
+      <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceSoapJmsEndpoint&quot;
+        destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
+        message-converter=&quot;soapJmsMessageConverter&quot;/&gt;
+
+&lt;bean id=&quot;soapJmsMessageConverter&quot; class=&quot;com.consol.citrus.jms.message.SoapJmsMessageConverter&quot;/&gt;</programlisting>
+
+        <para>With this message converter you can skip the SOAP envelope completely in your test case. You just deal with the message body payload and the header entries. The rest is done by the message converter.
+        So you get proper SOAP messages on the producer and consumer side.</para>
+    </section>
 </chapter>
