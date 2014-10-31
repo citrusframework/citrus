@@ -146,7 +146,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderData() {
-        messageBuilder.setMessageHeaderData("MessageHeaderData");
+        messageBuilder.getHeaderData().add("MessageHeaderData");
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
@@ -154,10 +154,23 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(resultingMessage.getHeaderData().size(), 1L);
         Assert.assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData");
     }
+
+    @Test
+    public void testMessageBuilderWithMultipleHeaderData() {
+        messageBuilder.getHeaderData().add("MessageHeaderData1");
+        messageBuilder.getHeaderData().add("MessageHeaderData2");
+
+        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
+
+        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        Assert.assertEquals(resultingMessage.getHeaderData().size(), 2L);
+        Assert.assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData1");
+        Assert.assertEquals(resultingMessage.getHeaderData().get(1), "MessageHeaderData2");
+    }
     
     @Test
     public void testMessageBuilderWithHeaderDataVariableSupport() {
-        messageBuilder.setMessageHeaderData("This ${placeholder} contains variables!");
+        messageBuilder.getHeaderData().add("This ${placeholder} contains variables!");
         context.setVariable("placeholder", "header data");
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
@@ -169,7 +182,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderResource() {
-        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/validation/builder/header-data-resource.txt");
+        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/validation/builder/header-data-resource.txt");
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);
         
@@ -180,7 +193,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testMessageBuilderWithHeaderResourceVariableSupport() {
-        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
+        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
         context.setVariable("placeholder", "header data");
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusConstants.DEFAULT_MESSAGE_TYPE);

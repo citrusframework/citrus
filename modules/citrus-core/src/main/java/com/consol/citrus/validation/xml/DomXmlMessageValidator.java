@@ -106,9 +106,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             Message controlMessage = validationContext.getControlMessage(context);
             if (controlMessage != null) {
-
                 Assert.isTrue(controlMessage.getHeaderData().size() <= receivedMessage.getHeaderData().size(),
-                        "Failed to validate header data - missing header data in received message");
+                        "Failed to validate header data XML fragments - found " +
+                                receivedMessage.getHeaderData().size() + " header fragments, expected " + controlMessage.getHeaderData().size());
 
                 for (int i = 0; i < controlMessage.getHeaderData().size(); i++) {
                     validateXmlHeaderFragment(receivedMessage.getHeaderData().get(i),

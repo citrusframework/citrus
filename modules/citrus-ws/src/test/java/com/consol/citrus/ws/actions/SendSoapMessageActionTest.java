@@ -348,7 +348,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        messageBuilder.setMessageHeaderData("<TestHeader><operation>soapOperation</operation></TestHeader>");
+        messageBuilder.getHeaderData().add("<TestHeader><operation>soapOperation</operation></TestHeader>");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 
@@ -376,6 +376,47 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         verify(webServiceEndpoint, producer);
     }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMultipleHeaderContentTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        messageBuilder.getHeaderData().add("<TestHeader><operation>soapOperation1</operation></TestHeader>");
+        messageBuilder.getHeaderData().add("<TestHeader><operation>soapOperation2</operation></TestHeader>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                Message constructedMessage = (Message)EasyMock.getCurrentArguments()[0];
+
+                Assert.assertEquals(constructedMessage.getHeaderData().size(), 2L);
+                Assert.assertEquals(constructedMessage.getHeaderData().get(0),
+                        "<TestHeader><operation>soapOperation1</operation></TestHeader>");
+                Assert.assertEquals(constructedMessage.getHeaderData().get(1),
+                        "<TestHeader><operation>soapOperation2</operation></TestHeader>");
+
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
+        verify(webServiceEndpoint, producer);
+    }
     
     @Test
     @SuppressWarnings("rawtypes")
@@ -386,7 +427,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/ws/actions/test-header-resource.xml");
+        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/ws/actions/test-header-resource.xml");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
         
@@ -426,7 +467,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("operation", "soapOperation");
         
-        messageBuilder.setMessageHeaderData("<TestHeader><operation>${operation}</operation></TestHeader>");
+        messageBuilder.getHeaderData().add("<TestHeader><operation>${operation}</operation></TestHeader>");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 
@@ -466,7 +507,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         
         context.setVariable("operation", "soapOperation");
         
-        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/ws/actions/test-header-resource-with-variables.xml");
+        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/ws/actions/test-header-resource-with-variables.xml");
         
         soapMessageAction.setMessageBuilder(messageBuilder);
 

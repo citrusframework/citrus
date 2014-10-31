@@ -22,7 +22,6 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -39,10 +38,10 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     private Map<String, Object> messageHeaders = new HashMap<String, Object>();
 
     /** The message header as a file resource path */
-    private String messageHeaderResourcePath;
+    private List<String> headerResources = new ArrayList<String>();
 
     /** The message header as inline data */
-    private String messageHeaderData;
+    private List<String> headerData = new ArrayList<String>();
 
     /** Optional data dictionary that explicitly modifies control message content before construction */
     private DataDictionary dataDictionary;
@@ -73,15 +72,12 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
                 }
             }
 
-            String headerContent = null;
-            if (messageHeaderResourcePath != null) {
-                headerContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(messageHeaderResourcePath, context)));
-            } else if (messageHeaderData != null){
-                headerContent = context.replaceDynamicContentInString(messageHeaderData.trim());
+            for (String headerResourcePath : headerResources) {
+                message.addHeaderData(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(headerResourcePath, context))));
             }
 
-            if (StringUtils.hasText(headerContent)) {
-                message.addHeaderData(headerContent);
+            for (String data : headerData){
+                message.addHeaderData(context.replaceDynamicContentInString(data.trim()));
             }
 
             return message;
@@ -141,19 +137,19 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     }
 
     /**
-     * Sets the message header resource.
-     * @param messageHeaderResource the messageHeaderResource to set
+     * Sets the message header resource paths.
+     * @param headerResources the messageHeaderResource to set
      */
-    public void setMessageHeaderResourcePath(String messageHeaderResource) {
-        this.messageHeaderResourcePath = messageHeaderResource;
+    public void setHeaderResources(List<String> headerResources) {
+        this.headerResources = headerResources;
     }
 
     /**
      * Sets the message header data.
-     * @param messageHeaderData the messageHeaderData to set
+     * @param headerData
      */
-    public void setMessageHeaderData(String messageHeaderData) {
-        this.messageHeaderData = messageHeaderData;
+    public void setHeaderData(List<String> headerData) {
+        this.headerData = headerData;
     }
 
     /**
@@ -165,19 +161,19 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     }
 
     /**
-     * Gets the messageHeaderResource.
-     * @return the messageHeaderResource the messageHeaderResource to get.
+     * Gets the message header resource paths.
+     * @return the header resources.
      */
-    public String getMessageHeaderResourcePath() {
-        return messageHeaderResourcePath;
+    public List<String> getHeaderResources() {
+        return headerResources;
     }
 
     /**
-     * Gets the messageHeaderData.
-     * @return the messageHeaderData the messageHeaderData to get.
+     * Gets the message header data.
+     * @return the headerData.
      */
-    public String getMessageHeaderData() {
-        return messageHeaderData;
+    public List<String> getHeaderData() {
+        return headerData;
     }
 
     /**

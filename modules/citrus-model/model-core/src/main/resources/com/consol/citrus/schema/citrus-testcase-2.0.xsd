@@ -86,14 +86,12 @@
             <xs:element name="header" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:choice minOccurs="0">
-                            <xs:element name="data" type="xs:string"/>
-                            <xs:element name="resource">
-                                <xs:complexType>
-                                    <xs:attribute name="file" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:choice>
+                        <xs:element name="data" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="resource" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="file" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:attribute name="name" type="xs:string" use="required"/>
@@ -242,14 +240,12 @@
             <xs:element name="header" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:choice minOccurs="0">
-                            <xs:element name="data" type="xs:string"/>
-                            <xs:element name="resource">
-                                <xs:complexType>
-                                    <xs:attribute name="file" type="xs:string" use="required"/>
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:choice>
+                        <xs:element name="data" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="resource" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="file" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
                         <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
                             <xs:complexType>
                                 <xs:attribute name="name" type="xs:string" use="required"/>

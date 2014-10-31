@@ -154,7 +154,39 @@ public class SoapMessageConverterTest {
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration());
 
-        Assert.assertEquals(soapHeaderResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
+        Assert.assertEquals(soapHeaderResult.toString(), soapHeaderContent);
+
+        verify(soapRequest, soapBody, soapHeader);
+    }
+
+    @Test
+    public void testMultipleOutboundSoapHeaderContent() throws TransformerException, IOException {
+        String soapHeaderContent = "<header>" +
+                "<operation>unitTest</operation>" +
+                "<messageId>123456789</messageId>" +
+                "</header>";
+
+        Message testMessage = new DefaultMessage(requestPayload)
+                .addHeaderData(soapHeaderContent)
+                .addHeaderData("<AppInfo><appId>123456789</appId></AppInfo>");
+
+        SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
+
+        StringResult soapHeaderResult = new StringResult();
+
+        reset(soapRequest, soapBody, soapHeader);
+
+        expect(soapRequest.getSoapBody()).andReturn(soapBody).once();
+        expect(soapBody.getPayloadResult()).andReturn(new StringResult()).once();
+
+        expect(soapRequest.getSoapHeader()).andReturn(soapHeader).times(2);
+        expect(soapHeader.getResult()).andReturn(soapHeaderResult).times(2);
+
+        replay(soapRequest, soapBody, soapHeader);
+
+        soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration());
+
+        Assert.assertEquals(soapHeaderResult.toString(), soapHeaderContent + "<AppInfo><appId>123456789</appId></AppInfo>");
 
         verify(soapRequest, soapBody, soapHeader);
     }

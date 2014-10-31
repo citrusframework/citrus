@@ -174,14 +174,14 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 messageHeaders.put(name, value);
             }
             
-            Element headerDataElement = DomUtils.getChildElementByTagName(headerElement, "data");
-            if (headerDataElement != null) {
-                messageBuilder.setMessageHeaderData(DomUtils.getTextValue(headerDataElement));
+            List<Element> headerDataElements = DomUtils.getChildElementsByTagName(headerElement, "data");
+            for (Element headerDataElement : headerDataElements) {
+                messageBuilder.getHeaderData().add(DomUtils.getTextValue(headerDataElement));
             }
 
-            Element headerResourceElement = DomUtils.getChildElementByTagName(headerElement, "resource");
-            if (headerResourceElement != null) {
-                messageBuilder.setMessageHeaderResourcePath(headerResourceElement.getAttribute("file"));
+            List<Element> headerResourceElements = DomUtils.getChildElementsByTagName(headerElement, "resource");
+            for (Element headerResourceElement : headerResourceElements) {
+                messageBuilder.getHeaderResources().add(headerResourceElement.getAttribute("file"));
             }
             
             messageBuilder.setMessageHeaders(messageHeaders);

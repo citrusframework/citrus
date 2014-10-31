@@ -18,7 +18,7 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 
@@ -44,8 +44,8 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     public Message buildMessageContent(TestContext context, String messageType) {
         if (getMessageHeaders().isEmpty()
-                && !StringUtils.hasText(getMessageHeaderData())
-                && !StringUtils.hasText(getMessageHeaderResourcePath())
+                && CollectionUtils.isEmpty(getHeaderData())
+                && CollectionUtils.isEmpty(getHeaderResources())
                 && getMessageInterceptors().isEmpty()
                 && getDataDictionary() == null) {
             return message;

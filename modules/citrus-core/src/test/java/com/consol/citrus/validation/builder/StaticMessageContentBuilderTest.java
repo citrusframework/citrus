@@ -64,7 +64,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
                 .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
-        messageBuilder.setMessageHeaderData("TestMessageData");
+        messageBuilder.getHeaderData().add("TestMessageData");
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());
@@ -74,12 +74,29 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testBuildMessageContentWithMultipleHeaderData() throws Exception {
+        Message testMessage = new DefaultMessage("TestMessage")
+                .setHeader("header1", "value1");
+
+        messageBuilder = new StaticMessageContentBuilder(testMessage);
+        messageBuilder.getHeaderData().add("TestMessageData1");
+        messageBuilder.getHeaderData().add("TestMessageData2");
+
+        Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
+        Assert.assertEquals(message.getPayload(), testMessage.getPayload());
+        Assert.assertNotEquals(message.getHeader(MessageHeaders.ID), testMessage.getHeader(MessageHeaders.ID));
+        Assert.assertEquals(message.getHeaderData().size(), 2L);
+        Assert.assertEquals(message.getHeaderData().get(0), "TestMessageData1");
+        Assert.assertEquals(message.getHeaderData().get(1), "TestMessageData2");
+    }
+
+    @Test
     public void testBuildMessageContentWithAdditionalHeaderResource() throws Exception {
         Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
-        messageBuilder.setMessageHeaderResourcePath("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
+        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
 
         Message message = messageBuilder.buildMessageContent(context, MessageType.PLAINTEXT.name());
         Assert.assertEquals(message.getPayload(), testMessage.getPayload());

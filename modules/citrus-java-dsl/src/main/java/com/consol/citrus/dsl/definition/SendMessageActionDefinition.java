@@ -211,7 +211,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @param data
      */
     public T header(String data) {
-        getMessageContentBuilder().setMessageHeaderData(data);
+        getMessageContentBuilder().getHeaderData().add(data);
         return self;
     }
 
@@ -222,7 +222,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      */
     public T header(Resource resource) {
         try {
-            getMessageContentBuilder().setMessageHeaderData(FileUtils.readToString(resource));
+            getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read header resource", e);
         }

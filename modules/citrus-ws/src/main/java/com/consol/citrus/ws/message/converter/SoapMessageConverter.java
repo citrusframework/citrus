@@ -123,6 +123,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         for (String headerData : soapMessage.getHeaderData()) {
             try {
                 Transformer transformer = transformerFactory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
                 transformer.transform(new StringSource(headerData),
                         soapRequest.getSoapHeader().getResult());
             } catch (TransformerException e) {
