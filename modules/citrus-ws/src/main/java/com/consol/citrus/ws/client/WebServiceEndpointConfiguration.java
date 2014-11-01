@@ -63,7 +63,7 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     /** Resolves dynamic endpoint uri */
     private EndpointUriResolver endpointResolver = new DynamicEndpointUriResolver();
 
-    /** Should http errors be handled with reply message handler or simply throw exception */
+    /** Should http errors be handled within endpoint consumer or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION;
 
     /** Polling interval when waiting for synchronous reply message to arrive */

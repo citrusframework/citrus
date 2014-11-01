@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ssh;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.*;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
@@ -38,7 +39,7 @@ public class SshCommandTest {
 
     private ByteArrayOutputStream stdout, stderr;
     private SshCommand cmd;
-    private MessageHandler handler;
+    private EndpointAdapter adapter;
 
     private static String COMMAND = "shutdown";
     private XmlMapper xmlMapper;
@@ -46,8 +47,8 @@ public class SshCommandTest {
 
     @BeforeMethod
     public void setup() {
-        handler = createMock(MessageHandler.class);
-        cmd = new SshCommand(COMMAND,handler);
+        adapter = createMock(EndpointAdapter.class);
+        cmd = new SshCommand(COMMAND, adapter);
 
         stdout = new ByteArrayOutputStream();
         stderr = new ByteArrayOutputStream();
@@ -114,8 +115,8 @@ public class SshCommandTest {
         String request = xmlMapper.toXML(new SshRequest(COMMAND, pInput));
         SshResponse resp = new SshResponse(pOutput, pError, pExitCode);
         Message respMsg = new DefaultMessage(xmlMapper.toXML(resp));
-        expect(handler.handleMessage(eqMessage(request))).andReturn(respMsg);
-        replay(handler);
+        expect(adapter.handleMessage(eqMessage(request))).andReturn(respMsg);
+        replay(adapter);
 
         exitCallback.onExit(pExitCode);
         replay(exitCallback);

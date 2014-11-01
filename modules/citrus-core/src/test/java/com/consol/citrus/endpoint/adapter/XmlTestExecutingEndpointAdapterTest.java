@@ -105,7 +105,7 @@ public class XmlTestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest 
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
                     "<Test name=\"UNKNOWN_TEST\"></Test>"));
-            Assert.fail("Missing exception due to unknown message handler");
+            Assert.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Failed to load test case");
         }

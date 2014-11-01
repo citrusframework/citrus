@@ -122,7 +122,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         try {
             MimeMailMessage mimeMailMessage = new MimeMailMessage(new MimeMessage(getSession(), data));
             Message request = messageConverter.convertInbound(mimeMailMessage, getEndpointConfiguration());
-            Message response = invokeMessageHandler(request);
+            Message response = invokeEndpointAdapter(request);
 
             if (response != null && response.getPayload() != null) {
                 MailMessageResponse mailResponse = null;
@@ -142,10 +142,10 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     }
 
     /**
-     * Invokes the message handler with constructed mail message and headers.
+     * Invokes the endpoint adapter with constructed mail message and headers.
      * @param request
      */
-    protected Message invokeMessageHandler(Message request) {
+    protected Message invokeEndpointAdapter(Message request) {
         MailMessage mailMessage = (MailMessage) request.getPayload();
 
         if (splitMultipart) {
@@ -157,7 +157,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
 
     /**
      * Split mail message into several messages. Each body and each attachment results in separate message
-     * invoked on message handler. Mail message response if any should be sent only once within test case.
+     * invoked on endpoint adapter. Mail message response if any should be sent only once within test case.
      * However latest mail response sent by test case is returned, others are ignored.
      *
      * @param bodyPart

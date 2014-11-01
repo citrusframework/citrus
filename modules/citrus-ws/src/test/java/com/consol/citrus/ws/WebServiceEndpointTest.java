@@ -16,7 +16,9 @@
 
 package com.consol.citrus.ws;
 
-import com.consol.citrus.message.*;
+import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.message.SoapMessage;
@@ -61,11 +63,11 @@ public class WebServiceEndpointTest {
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -119,15 +121,15 @@ public class WebServiceEndpointTest {
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -182,15 +184,15 @@ public class WebServiceEndpointTest {
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -260,15 +262,15 @@ public class WebServiceEndpointTest {
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader("Operation"));
                 Assert.assertEquals(message.getHeader("Operation"), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -346,15 +348,15 @@ public class WebServiceEndpointTest {
         responseHeaders.put("{http://www.consol.de/citrus}citrus:Operation", "sayHello");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -429,15 +431,15 @@ public class WebServiceEndpointTest {
         responseHeaders.put("Operation", "sayHello");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -515,15 +517,15 @@ public class WebServiceEndpointTest {
         responseHeaders.put("Operation", "sayHello");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -600,15 +602,15 @@ public class WebServiceEndpointTest {
         responseHeaders.put("Operation", "sayHello");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -681,8 +683,8 @@ public class WebServiceEndpointTest {
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertTrue(SoapMessage.class.isInstance(message));
 
                 SoapMessage soapMessage = (SoapMessage) message;
@@ -692,11 +694,11 @@ public class WebServiceEndpointTest {
                 Attachment attachment = soapMessage.getAttachments().get(0);
                 Assert.assertEquals(attachment.getContentId(), "myContentId");
                 Assert.assertEquals(attachment.getContentType(), "text/xml");
-                
+
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -759,15 +761,15 @@ public class WebServiceEndpointTest {
         responseMessage.setFaultCode("SERVER");
         responseMessage.setFaultString("Invalid request, because of unknown error");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -836,15 +838,15 @@ public class WebServiceEndpointTest {
         responseMessage.setFaultCode("CLIENT");
         responseMessage.setFaultString("Invalid request");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -915,15 +917,15 @@ public class WebServiceEndpointTest {
         responseMessage.setFaultString("Invalid request");
         responseMessage.addFaultDetail("<DetailMessage><text>This request was not OK!</text></DetailMessage>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -1000,15 +1002,15 @@ public class WebServiceEndpointTest {
         responseMessage.addFaultDetail("<DetailMessage><text>This request was not OK!</text></DetailMessage>");
         responseMessage.addFaultDetail("<Error><text>This request was not OK!</text></Error>");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -1082,15 +1084,15 @@ public class WebServiceEndpointTest {
         responseHeaders.put(SoapMessageHeaders.SOAP_ACTION, "answerHello");
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>", responseHeaders);
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -1149,15 +1151,15 @@ public class WebServiceEndpointTest {
         responseMessage.setFaultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
         responseMessage.setFaultString("Invalid request");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });
@@ -1231,10 +1233,10 @@ public class WebServiceEndpointTest {
         responseMessage.setFaultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
         responseMessage.setFaultString("Invalid request");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
-                
+
                 Assert.assertNotNull(message.getHeader(SoapMessageHeaders.SOAP_ACTION));
                 Assert.assertEquals(message.getHeader(SoapMessageHeaders.SOAP_ACTION), "sayHello");
 
@@ -1315,11 +1317,11 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("");
         final Message responseMessage = new DefaultMessage("");
 
-        endpoint.setMessageHandler(new MessageHandler() {
-            public Message handleMessage(Message message) {
+        endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
+            public Message handleMessageInternal(Message message) {
                 Assert.assertEquals(message.copyHeaders().size(), requestMessage.copyHeaders().size());
                 Assert.assertEquals(message.getPayload(), requestMessage.getPayload());
-                
+
                 return responseMessage;
             }
         });

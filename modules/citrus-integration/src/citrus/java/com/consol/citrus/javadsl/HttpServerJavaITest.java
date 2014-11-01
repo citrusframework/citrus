@@ -125,7 +125,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
             .header("citrus_http_version", "HTTP/1.1")
             .header("citrus_http_reason_phrase", "NOT_FOUND");
         
-        echo("Skip response and use fallback message handler");
+        echo("Skip response and use fallback endpoint adapter");
         
         send("httpClient")
             .payload("<testRequestMessage>" +

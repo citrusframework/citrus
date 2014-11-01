@@ -522,7 +522,7 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
     }
 
     /**
-     * Enable mime headers in request message which is passed to message handler.
+     * Enable mime headers in request message which is passed to endpoint adapter.
      * @param handleMimeHeaders the handleMimeHeaders to set
      */
     public void setHandleMimeHeaders(boolean handleMimeHeaders) {

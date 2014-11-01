@@ -88,7 +88,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(handlerInterceptor.getInterceptors().get(0), interceptors.get(0));
         Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
-        Assert.assertEquals(httpMessageController.getMessageHandler().getClass(), EmptyResponseEndpointAdapter.class);
+        Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), EmptyResponseEndpointAdapter.class);
 
         verify(httpServer);
     }
@@ -106,7 +106,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
         servlet.initStrategies(applicationContext);
 
         Assert.assertEquals(handlerInterceptor.getInterceptors().size(), 0L);
-        Assert.assertEquals(httpMessageController.getMessageHandler().getClass(), TimeoutProducingEndpointAdapter.class);
+        Assert.assertEquals(httpMessageController.getEndpointAdapter().getClass(), TimeoutProducingEndpointAdapter.class);
         Assert.assertNotNull(httpMessageController.getEndpointConfiguration().getMessageConverter());
 
 

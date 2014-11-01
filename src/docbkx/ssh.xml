@@ -160,11 +160,11 @@
              user=&quot;roland&quot;
              port=&quot;9072&quot;
              auto-start=&quot;true&quot;
-             message-handler-ref=&quot;sshMessageHandler&quot;/&gt;</programlisting>
+             endpoint-adapter=&quot;sshEndpointAdapter&quot;/&gt;</programlisting>
                
-      <para><emphasis>message-handler-ref</emphasis> is the handler which receives the SSH request as messages 
-      (in the request format described above). Message handler implementations are fully described in <xref linkend="http-server"/> 
-      All message handlers described there are supported in SSH server module, too.</para>
+      <para><emphasis>endpoint-adapter</emphasis> is the handler which receives the SSH request as messages
+      (in the request format described above). Endpoint adapter implementations are fully described in <xref linkend="http-server"/>
+      All adapters described there are supported in SSH server module, too.</para>
       
       <para>The <emphasis>&lt;citrus-ssh:server&gt;</emphasis> supports the following attributes:</para>
       
@@ -210,13 +210,13 @@
         <emphasis>false</emphasis>, a test action is responsible for starting/stopping the server
         (e.g. auto-start="true")</para></listitem>
         
-        <listitem><para><emphasis>message-handler-ref:</emphasis>
-        Bean reference to a message handler which processes the incoming SSH request. The message format for the request
-        and response are described above (e.g. message-handler-ref="sshMessageHandler")</para></listitem>
+        <listitem><para><emphasis>endpoint-adapter:</emphasis>
+        Bean reference to a endpoint adapter which processes the incoming SSH request. The message format for the request
+        and response are described above (e.g. endpoint-adapter="sshEndpointAdapter")</para></listitem>
       </itemizedlist>
       
-      <para>Once the SSH server component is added to the Spring application context with a proper message handler like the MessageChannel
-      forwarding message handler we can receive incoming requests in a test case and provide a respone message for the client.</para>
+      <para>Once the SSH server component is added to the Spring application context with a proper endpoint adapter like the MessageChannel
+      forwarding adapter we can receive incoming requests in a test case and provide a respone message for the client.</para>
       
       <programlisting>&lt;receive endpoint=&quot;sshServer&quot;&gt;
   &lt;message&gt;

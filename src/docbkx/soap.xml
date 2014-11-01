@@ -538,14 +538,14 @@ Server: Jetty(7.0.0.pre5)
             <para>So far we have used assert action wrapper in order to catch SOAP fault exceptions and validate the SOAP fault content. Now we have an alternative way
             of handling SOAP faults in Citrus. With exceptions the send action aborts and we do not have a receive action for the SOAP fault. This might be inadequate if
             we need to validate the SOAP message content (SOAPHeader and SOAPBody) coming with the SOAP fault. Therefore the web service message sender component offers
-            several fault strategy options. In the following we discuss the propagation of SOAP fault as messages to the reply message handler as we would do with
+            several fault strategy options. In the following we discuss the propagation of SOAP fault as messages to the receive action as we would do with
             normal SOAP messages.</para>
 
             <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
                                request-url=&quot;http://localhost:8090/test&quot;
                                fault-strategy=&quot;propagateError&quot;/&gt;</programlisting>
 
-            <para>We have configured a fault strategy <emphasis>propagateError</emphasis> so the message sender will not raise client exceptions but inform the reply message handler
+            <para>We have configured a fault strategy <emphasis>propagateError</emphasis> so the message sender will not raise client exceptions but inform the receive action
             with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy=<emphasis>throwsException</emphasis>).</para>
 
             <para>So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault
@@ -1031,7 +1031,7 @@ Server: Jetty(7.0.0.pre5)
   &lt;/bean&gt;
 
   &lt;bean id=&quot;helloServiceEndpoint&quot; class=&quot;com.consol.citrus.ws.server.WebServiceEndpoint&quot;&gt;
-      &lt;property name=&quot;messageHandler&quot; ref=&quot;staticResponseEndpointAdapter&quot;/&gt;
+      &lt;property name=&quot;endpointAdapter&quot; ref=&quot;staticResponseEndpointAdapter&quot;/&gt;
   &lt;/bean&gt;
 
   &lt;citrus:static-response-adapter id=&quot;staticResponseEndpointAdapter&quot;&gt;
@@ -1076,7 +1076,7 @@ Server: Jetty(7.0.0.pre5)
         <para>The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various
         message endpoint adapter implementations in Citrus were already discussed in <xref linkend="endpoint-adapter"/>.</para>
 
-        <para>In this example the <literal>'helloServiceEndpoint'</literal> uses the <literal>'StaticResponseProducingMessageHandler'</literal>
+        <para>In this example the <literal>'helloServiceEndpoint'</literal> uses the <literal>'static-response-adapter'</literal>
         which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to
         respond more dynamically.</para>
 

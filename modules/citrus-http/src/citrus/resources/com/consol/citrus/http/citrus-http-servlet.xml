@@ -29,7 +29,7 @@
 
   <!-- Controller for handling rest requests -->
   <bean class="com.consol.citrus.http.controller.HttpMessageController">
-    <property name="messageHandler">
+    <property name="endpointAdapter">
       <bean class="com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter">
         <property name="messagePayload">
           <value>

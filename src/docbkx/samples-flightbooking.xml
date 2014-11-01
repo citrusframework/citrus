@@ -169,8 +169,8 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
 &lt;citrus-jms:jms-sync-endpoint id=&quot;royalAirlineBookingEndpoint&quot;
                             destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;</programlisting>
 
-        <para>We need to configure a Http server instance with a port, a request URI and a message handler. We define the
-        JMS forwarding message handler to handle request as described. In Addition to the message handler we also need synchronous JMS
+        <para>We need to configure a Http server instance with a port, a request URI and the endpoint adapter. We define the
+        JMS endpoint adapter to handle request as described. In Addition to the endpoint adapter we also need synchronous JMS
         message sender and receiver instances. That's it! We are able to receive Http request in order to simulate the RoyalAirline
         application. What is missing now? The test case definition itself.</para>
     </section>

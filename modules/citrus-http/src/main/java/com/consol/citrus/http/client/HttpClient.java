@@ -169,7 +169,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     /**
      * Handles error response messages constructing a proper response message
-     * which will be propagated to the respective reply message handler for
+     * which will be propagated to the respective reply handler for
      * further processing.
      */
     private class InternalResponseErrorHandler implements ResponseErrorHandler {

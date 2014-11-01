@@ -17,7 +17,7 @@
         <property name="xpathExpression" value="//Test/@name"/>
       </bean>
     </property>
-    <property name="responseMessageHandler" ref="channelAdapter"/>
+    <property name="responseEndpointAdapter" ref="channelAdapter"/>
   </bean>
 
   <citrus:channel-endpoint-adapter id="channelAdapter"

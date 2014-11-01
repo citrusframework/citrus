@@ -224,7 +224,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     /**
      * Handles error response messages constructing a proper response message
-     * which will be propagated to the respective reply message handler for
+     * which will be propagated to the respective endpoint consumer for
      * further processing.
      */
     private class InternalFaultMessageResolver implements FaultMessageResolver {

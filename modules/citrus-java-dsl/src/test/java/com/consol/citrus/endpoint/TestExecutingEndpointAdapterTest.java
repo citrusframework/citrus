@@ -107,7 +107,7 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
         try {
             endpointAdapter.handleMessage(new DefaultMessage(
                     "<Test name=\"UNKNOWN_TEST\"></Test>"));
-            Assert.fail("Missing exception due to unknown message handler");
+            Assert.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
         }

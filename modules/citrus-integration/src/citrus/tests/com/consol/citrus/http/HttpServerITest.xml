@@ -179,7 +179,7 @@
             </receive>
             
             <echo>
-                <message>Skip response and use fallback message handler</message>
+                <message>Skip response and use fallback endpoint adapter</message>
             </echo>
             
             <send endpoint="httpClient">

@@ -28,8 +28,8 @@ import static org.easymock.EasyMock.*;
  */
 public class AbstractEndpointAdapterTest {
 
-    /** Message handler mock */
-    private MessageHandler messageHandler = EasyMock.createMock(MessageHandler.class);
+    /** Endpoint adapter mock */
+    private EndpointAdapter endpointAdapter = EasyMock.createMock(EndpointAdapter.class);
 
     @Test
     public void testEndpointAdapter() {
@@ -54,7 +54,7 @@ public class AbstractEndpointAdapterTest {
     }
 
     @Test
-    public void testFallbackMessageHandler() {
+    public void testFallbackEndpointAdapter() {
         AbstractEndpointAdapter abstractEndpointAdapter = new AbstractEndpointAdapter() {
             @Override
             protected Message handleMessageInternal(Message message) {
@@ -74,16 +74,16 @@ public class AbstractEndpointAdapterTest {
 
         Message request = new DefaultMessage("<TestMessage><text>Hi!</text></TestMessage>");
 
-        reset(messageHandler);
-        expect(messageHandler.handleMessage(request)).andReturn((Message) new DefaultMessage("OK")).once();
-        replay(messageHandler);
+        reset(endpointAdapter);
+        expect(endpointAdapter.handleMessage(request)).andReturn(new DefaultMessage("OK")).once();
+        replay(endpointAdapter);
 
-        abstractEndpointAdapter.setFallbackMessageHandler(messageHandler);
+        abstractEndpointAdapter.setFallbackEndpointAdapter(endpointAdapter);
         Message response = abstractEndpointAdapter.handleMessage(request);
 
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload().toString(), "OK");
 
-        verify(messageHandler);
+        verify(endpointAdapter);
     }
 }

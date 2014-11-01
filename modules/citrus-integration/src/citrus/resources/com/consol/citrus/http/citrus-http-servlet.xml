@@ -39,7 +39,7 @@
 
   <!-- Controller for handling rest requests -->
   <bean class="com.consol.citrus.http.controller.HttpMessageController">
-    <property name="messageHandler" ref="jmsEndpointAdapter"/>
+    <property name="endpointAdapter" ref="jmsEndpointAdapter"/>
   </bean>
 
   <citrus-jms:jms-endpoint-adapter id="jmsEndpointAdapter"

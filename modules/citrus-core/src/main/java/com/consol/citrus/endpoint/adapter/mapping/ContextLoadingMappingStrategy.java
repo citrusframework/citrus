@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
  */
 public class ContextLoadingMappingStrategy implements EndpointAdapterMappingStrategy {
 
-    /** Application context configuration location holding available message handlers */
+    /** Application context configuration location holding available endpoint adapters */
     protected String contextConfigLocation;
 
     /** Should application context be loaded once or with every mapping call */

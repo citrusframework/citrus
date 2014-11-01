@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ws.server;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -51,14 +52,14 @@ import java.util.Map.Entry;
 
 /**
  * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to 
- * a {@link MessageHandler} implementation.
+ * a {@link EndpointAdapter} implementation.
  * 
  * @author Christoph Deppisch
  */
 public class WebServiceEndpoint implements MessageEndpoint {
 
-    /** MessageHandler handling incoming requests and providing proper responses */
-    private MessageHandler messageHandler = new EmptyResponseEndpointAdapter();
+    /** EndpointAdapter handling incoming requests and providing proper responses */
+    private EndpointAdapter endpointAdapter = new EmptyResponseEndpointAdapter();
     
     /** Default namespace for all SOAP header entries */
     private String defaultNamespaceUri;
@@ -86,8 +87,8 @@ public class WebServiceEndpoint implements MessageEndpoint {
         
         log.info("Received SOAP request:\n" + requestMessage.toString());
         
-        //delegate request processing to message handler
-        Message replyMessage = messageHandler.handleMessage(requestMessage);
+        //delegate request processing to endpoint adapter
+        Message replyMessage = endpointAdapter.handleMessage(requestMessage);
         
         if (simulateHttpStatusCode(replyMessage)) {
             return;
@@ -108,7 +109,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             addSoapHeaders(response, replyMessage);
             addMimeHeaders(response, replyMessage);
         } else {
-            log.info("No reply message from message handler '" + messageHandler + "'");
+            log.info("No reply message from endpoint adapter '" + endpointAdapter + "'");
             log.warn("No SOAP response for calling client");
         }
     }
@@ -314,19 +315,19 @@ public class WebServiceEndpoint implements MessageEndpoint {
     }
 
     /**
-     * Gets the message handler.
+     * Gets the endpoint adapter.
      * @return
      */
-    public MessageHandler getMessageHandler() {
-        return messageHandler;
+    public EndpointAdapter getEndpointAdapter() {
+        return endpointAdapter;
     }
 
     /**
-     * Set the message handler.
-     * @param messageHandler the messageHandler to set
+     * Set the endpoint adapter.
+     * @param endpointAdapter the endpointAdapter to set
      */
-    public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+    public void setEndpointAdapter(EndpointAdapter endpointAdapter) {
+        this.endpointAdapter = endpointAdapter;
     }
 
     /**

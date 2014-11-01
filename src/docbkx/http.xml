@@ -339,7 +339,7 @@ Server: Jetty(7.0.0.pre5)
         <title>HTTP error handling</title>
 
         <para>So far we have received response messages with HTTP status code <emphasis>200 OK</emphasis>. How to deal with server errors like <emphasis>404 Not Found</emphasis> or <emphasis>500 Internal server error</emphasis>?
-        The default HTTP message client error strategy is to propagate server error response messages to the reply message handler for validation. We simply check on HTTP status code and status text for error validation.</para>
+        The default HTTP message client error strategy is to propagate server error response messages to the receive action for validation. We simply check on HTTP status code and status text for error validation.</para>
 
         <programlisting>&lt;send endpoint=&quot;httpClient&quot;&gt;
     &lt;message&gt;
@@ -528,15 +528,15 @@ Content-Length: 175
 &lt;/bean&gt;
 
 &lt;bean id=&quot;citrusHttpMessageController&quot; class=&quot;com.consol.citrus.http.controller.HttpMessageController&quot;&gt;
-  &lt;property name=&quot;messageHandler&quot;&gt;
+  &lt;property name=&quot;endpointAdapter&quot;&gt;
       &lt;bean
        class=&quot;com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter&quot;/&gt;
   &lt;/property&gt;
 &lt;/bean&gt;</programlisting>
 
         <para>The beans above are responsible for proper HTTP server configuration. In general you do not need to adjust those beans, but we have the possibility to do so which gives
-        us a great customization and extension points. The important part is the message handler definition inside the HttpMessageController. Once a client request was accepted the
-        message handler is responsible for generating a proper response to the client.</para>
+        us a great customization and extension points. The important part is the endpoint adapter definition inside the HttpMessageController. Once a client request was accepted the
+        adapter is responsible for generating a proper response to the client.</para>
 
         <para>You can add the custom servlet context as file resource to the Citrus HTTP server component. Just use the <emphasis>context-config-location</emphasis> attribute as follows:</para>
 

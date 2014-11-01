@@ -23,7 +23,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Static endpoint adapter always responds with static response message. No endpoint is provided as this is a
- * static message handler. Clients trying to get endpoint for interaction will receive runtime exception.
+ * static endpoint adapter. Clients trying to get endpoint for interaction will receive runtime exception.
  *
  * @author Christoph Deppisch
  * @since 1.4
@@ -32,11 +32,11 @@ public abstract class StaticEndpointAdapter extends AbstractEndpointAdapter {
 
     @Override
     public Endpoint getEndpoint() {
-        throw new CitrusRuntimeException(String.format("Unable to create endpoint for static message handler type '%s'", getClass()));
+        throw new CitrusRuntimeException(String.format("Unable to create endpoint for static endpoint adapter type '%s'", getClass()));
     }
 
     @Override
     public ChannelSyncEndpointConfiguration getEndpointConfiguration() {
-        throw new CitrusRuntimeException(String.format("Unable to provide endpoint configuration for static message handler type '%s'", getClass()));
+        throw new CitrusRuntimeException(String.format("Unable to provide endpoint configuration for static endpoint adapter type '%s'", getClass()));
     }
 }

@@ -32,7 +32,7 @@
 
   <!-- Controller for handling rest requests -->
   <bean class="com.consol.citrus.http.controller.HttpMessageController">
-    <property name="messageHandler" ref="dispatchingEndpointAdapter"/>
+    <property name="endpointAdapter" ref="dispatchingEndpointAdapter"/>
   </bean>
 
   <citrus:dispatching-endpoint-adapter id="dispatchingEndpointAdapter"

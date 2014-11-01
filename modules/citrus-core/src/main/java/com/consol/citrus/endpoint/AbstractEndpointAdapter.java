@@ -19,7 +19,6 @@ package com.consol.citrus.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -29,15 +28,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
- * Abstract endpoint adapter adds fallback message handler in case no response was provided.
+ * Abstract endpoint adapter adds fallback endpoint adapter in case no response was provided.
  *
  * @author Christoph Deppisch
  * @since 1.4
  */
 public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNameAware, InitializingBean, ApplicationContextAware {
 
-    /** Fallback message handler */
-    private MessageHandler fallbackMessageHandler = null;
+    /** Fallback adapter */
+    private EndpointAdapter fallbackEndpointAdapter = null;
 
     /** Endpoint adapter name */
     private String name = getClass().getSimpleName();
@@ -56,11 +55,11 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
         Message replyMessage = handleMessageInternal(request);
 
         if ((replyMessage == null || replyMessage.getPayload() == null)) {
-            if (fallbackMessageHandler != null) {
+            if (fallbackEndpointAdapter != null) {
                 log.info("Did not receive reply message - "
-                        + "delegating to fallback message handler for response generation");
+                        + "delegating to fallback endpoint adapter for response generation");
 
-                replyMessage = fallbackMessageHandler.handleMessage(request);
+                replyMessage = fallbackEndpointAdapter.handleMessage(request);
             } else {
                 log.info("Did not receive reply message - no response is simulated");
             }
@@ -71,7 +70,7 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
 
     /**
      * Subclasses must implement this method in order to handle incoming request message. If
-     * this method does not return any response message fallback message handler is invoked for processing.
+     * this method does not return any response message fallback endpoint adapter is invoked for processing.
      * @param message
      * @return
      */
@@ -107,19 +106,19 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
     }
 
     /**
-     * Gets the fallback message handler.
+     * Gets the fallback endpoint adapter.
      * @return
      */
-    public MessageHandler getFallbackMessageHandler() {
-        return fallbackMessageHandler;
+    public EndpointAdapter getFallbackEndpointAdapter() {
+        return fallbackEndpointAdapter;
     }
 
     /**
-     * Sets the fallback message handler.
-     * @param fallbackMessageHandler
+     * Sets the fallback endpoint adapter.
+     * @param fallbackEndpointAdapter
      */
-    public void setFallbackMessageHandler(MessageHandler fallbackMessageHandler) {
-        this.fallbackMessageHandler = fallbackMessageHandler;
+    public void setFallbackEndpointAdapter(EndpointAdapter fallbackEndpointAdapter) {
+        this.fallbackEndpointAdapter = fallbackEndpointAdapter;
     }
 
     /**

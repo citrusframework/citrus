@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ssh;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.server.*;
@@ -26,7 +27,7 @@ import org.springframework.util.FileCopyUtils;
 import java.io.*;
 
 /**
- * A command for delegation to a message handler
+ * A command for delegation to a endpoint adapter
  *
  * @author Roland Huss
  * @since 1.3
@@ -36,8 +37,8 @@ public class SshCommand implements Command, Runnable {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SshCommand.class);
 
-    /** Message handler for creating requests/responses **/
-    private MessageHandler messageHandler;
+    /** Endpoint adapter for creating requests/responses **/
+    private EndpointAdapter endpointAdapter;
 
     /** Command to execute **/
     private String command;
@@ -53,12 +54,12 @@ public class SshCommand implements Command, Runnable {
     private String user;
 
     /**
-     * Constructor taking a command and the messagehandler as arguments
-     * @param pCommand command performend
-     * @param pMessageHandler message handler
+     * Constructor taking a command and the endpoint adapter as arguments
+     * @param pCommand command performed
+     * @param pEndpointAdapter endpoint adapter
      */
-    public SshCommand(String pCommand, MessageHandler pMessageHandler) {
-        messageHandler = pMessageHandler;
+    public SshCommand(String pCommand, EndpointAdapter pEndpointAdapter) {
+        endpointAdapter = pEndpointAdapter;
         command = pCommand;
     }
 
@@ -74,7 +75,7 @@ public class SshCommand implements Command, Runnable {
             String input = FileUtils.readToString(stdin);
             SshRequest req = new SshRequest(command, input);
 
-            SshResponse resp = sendToMessageHandler(req);
+            SshResponse resp = sendToEndpointAdapter(req);
 
             copyToStream(resp.getStderr(), stderr);
             copyToStream(resp.getStdout(), stdout);
@@ -85,13 +86,13 @@ public class SshCommand implements Command, Runnable {
     }
 
     /**
-     * Delegate to message handler implementation.
+     * Delegate to endpoint adapter implementation.
      * @param pReq
      * @return
      */
-    private SshResponse sendToMessageHandler(SshRequest pReq) {
+    private SshResponse sendToEndpointAdapter(SshRequest pReq) {
         XmlMapper mapper = new XmlMapper();
-        Message response = messageHandler.handleMessage(
+        Message response = endpointAdapter.handleMessage(
                 new DefaultMessage(mapper.toXML(pReq))
                               .setHeader("user", user));
         String msgResp = (String) response.getPayload();

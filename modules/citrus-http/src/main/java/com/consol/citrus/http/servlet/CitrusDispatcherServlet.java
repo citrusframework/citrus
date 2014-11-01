@@ -94,7 +94,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             messageController.setEndpointConfiguration(endpointConfiguration);
 
             if (endpointAdapter != null) {
-                messageController.setMessageHandler(endpointAdapter);
+                messageController.setEndpointAdapter(endpointAdapter);
             }
         }
     }

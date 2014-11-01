@@ -24,7 +24,7 @@ import com.consol.citrus.message.Message;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 /**
- * Test executing message handler specialization which executes a Java DSL test builder instead of
+ * Test executing endpoint adapter specialization which executes a Java DSL test builder instead of
  * a Xml test case.
  *
  * @author Christoph Deppisch
@@ -50,7 +50,7 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
             }
         });
 
-        return getResponseMessageHandler().handleMessage(request);
+        return getResponseEndpointAdapter().handleMessage(request);
     }
 
     @Override

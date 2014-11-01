@@ -82,7 +82,7 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
 
             EndpointAdapter endpointAdapter = webServiceServer.getEndpointAdapter();
             if (endpointAdapter != null) {
-                messageEndpoint.setMessageHandler(endpointAdapter);
+                messageEndpoint.setEndpointAdapter(endpointAdapter);
             }
 
             WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();

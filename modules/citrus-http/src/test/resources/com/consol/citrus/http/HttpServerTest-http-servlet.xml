@@ -30,7 +30,7 @@
   </bean>
    
   <bean class="com.consol.citrus.http.controller.HttpMessageController">
-    <property name="messageHandler" ref="emptyResponseEndpointAdapter"/>
+    <property name="endpointAdapter" ref="emptyResponseEndpointAdapter"/>
   </bean>
 
   <citrus:empty-response-adapter id="emptyResponseEndpointAdapter"/>

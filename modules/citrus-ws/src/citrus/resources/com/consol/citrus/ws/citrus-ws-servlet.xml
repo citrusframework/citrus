@@ -46,7 +46,7 @@
   <bean id="soapFaultGeneratingEndpoint" class="com.consol.citrus.ws.integration.SoapFaultGeneratingEndpoint"/>
 
   <bean id="probingServiceEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint">
-    <property name="messageHandler" ref="emptyHelloResponseEndpointAdapter"/>
+    <property name="endpointAdapter" ref="emptyHelloResponseEndpointAdapter"/>
   </bean>
 
   <citrus:static-response-adapter id="emptyHelloResponseEndpointAdapter">
@@ -57,7 +57,7 @@
   </citrus:static-response-adapter>
 
   <bean id="helloServiceEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint">
-    <property name="messageHandler" ref="staticHelloResponseAdapter"/>
+    <property name="endpointAdapter" ref="staticHelloResponseAdapter"/>
   </bean>
 
   <citrus:static-response-adapter id="staticHelloResponseAdapter">
@@ -81,7 +81,7 @@
   <bean id="defaultWsEndpoint" class="com.consol.citrus.ws.server.WebServiceEndpoint">
     <property name="defaultNamespaceUri" value="http://citrusframework.org/default"/>
     <property name="defaultPrefix" value="ns0"/>
-    <property name="messageHandler" ref="jmsEndpointAdapter"/>
+    <property name="endpointAdapter" ref="jmsEndpointAdapter"/>
     <property name="endpointConfiguration" ref="endpointConfiguration"/>
   </bean>
 

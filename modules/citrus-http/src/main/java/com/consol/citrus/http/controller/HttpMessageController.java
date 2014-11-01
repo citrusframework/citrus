@@ -16,11 +16,11 @@
 
 package com.consol.citrus.http.controller;
 
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHandler;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +40,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/*")
 public class HttpMessageController {
 
-    /** Message handler for incoming requests, providing proper responses */
-    private MessageHandler messageHandler = new EmptyResponseEndpointAdapter();
+    /** Endpoint adapter for incoming requests, providing proper responses */
+    private EndpointAdapter endpointAdapter = new EmptyResponseEndpointAdapter();
 
     /** Endpoint configuration */
     private HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
@@ -92,7 +92,7 @@ public class HttpMessageController {
     }
     
     /**
-     * Handles requests with message handler implementation. Previously sets Http request method as header parameter.
+     * Handles requests with endpoint adapter implementation. Previously sets Http request method as header parameter.
      * @param method
      * @param requestEntity
      * @return
@@ -111,7 +111,7 @@ public class HttpMessageController {
 
         request.setRequestMethod(method);
 
-        Message response = messageHandler.handleMessage(request);
+        Message response = endpointAdapter.handleMessage(request);
         if (response == null) {
             responseCache = new ResponseEntity(HttpStatus.OK);
         } else {
@@ -133,19 +133,19 @@ public class HttpMessageController {
     }
     
     /**
-     * Sets the messageHandler.
-     * @param messageHandler the messageHandler to set
+     * Sets the endpointAdapter.
+     * @param endpointAdapter the endpointAdapter to set
      */
-    public void setMessageHandler(MessageHandler messageHandler) {
-        this.messageHandler = messageHandler;
+    public void setEndpointAdapter(EndpointAdapter endpointAdapter) {
+        this.endpointAdapter = endpointAdapter;
     }
 
     /**
-     * Gets the message handler.
+     * Gets the endpoint adapter.
      * @return
      */
-    public MessageHandler getMessageHandler() {
-        return messageHandler;
+    public EndpointAdapter getEndpointAdapter() {
+        return endpointAdapter;
     }
 
     /**

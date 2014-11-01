@@ -66,7 +66,7 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Endpoint clientInterceptors */
     private List<ClientHttpRequestInterceptor> clientInterceptors;
 
-    /** Should http errors be handled with reply message handler or simply throw exception */
+    /** Should http errors be handled within endpoint consumer or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
 
     /** Reply message correlator */

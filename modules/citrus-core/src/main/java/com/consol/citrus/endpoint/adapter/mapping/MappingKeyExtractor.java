@@ -19,8 +19,8 @@ package com.consol.citrus.endpoint.adapter.mapping;
 import com.consol.citrus.message.Message;
 
 /**
- * Interface describes mapping extraction along message dispatching message handler processing steps. Extractor
- * is supposed to read mapping name predicate from request (e.g. via XPath, header value, etc.). Dispatching message handlers
+ * Interface describes mapping extraction along message dispatching endpoint adapter processing steps. Extractor
+ * is supposed to read mapping name predicate from request (e.g. via XPath, header value, etc.). Dispatching endpoint adapters
  * may then dispatch message processing according to this mapping name.
  *
  * @author Christoph Deppisch

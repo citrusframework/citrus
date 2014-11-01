@@ -104,7 +104,7 @@ public class SshServer extends AbstractServer {
             throw new CitrusRuntimeException("Neither 'password' nor 'allowed-key-path' is set. Please provide at least one");
         }
 
-        // Setup message handler
+        // Setup endpoint adapter
         sshd.setCommandFactory(new CommandFactory() {
             public Command createCommand(String command) {
                 return new SshCommand(command, getEndpointAdapter());

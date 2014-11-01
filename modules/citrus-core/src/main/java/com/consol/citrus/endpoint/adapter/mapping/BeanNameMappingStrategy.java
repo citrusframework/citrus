@@ -33,7 +33,7 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class BeanNameMappingStrategy implements EndpointAdapterMappingStrategy, ApplicationContextAware {
 
-    /** Application context holding available message handlers */
+    /** Application context holding available endpoint adapters */
     protected ApplicationContext applicationContext;
 
     @Override

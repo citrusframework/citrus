@@ -54,14 +54,6 @@ public class SshClientParser extends AbstractEndpointParser {
     }
 
     @Override
-    protected void parseEndpoint(BeanDefinitionBuilder endpoint, Element element, ParserContext parserContext) {
-        super.parseEndpoint(endpoint, element, parserContext);
-
-        // legacy support for reply message handler
-        BeanDefinitionParserUtils.setPropertyReference(endpoint, element.getAttribute("reply-handler"), "replyMessageHandler");
-    }
-
-    @Override
     protected Class<? extends Endpoint> getEndpointClass() {
         return SshClient.class;
     }

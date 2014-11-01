@@ -21,10 +21,10 @@ import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHandler;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
@@ -46,8 +46,8 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     /** Executor start action sequence logic in separate thread task */
     private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 
-    /** This handlers name - used for message channel generation */
-    private String name = MessageHandler.class.getSimpleName();
+    /** This adapter name - used for message channel generation */
+    private String name = EndpointAdapter.class.getSimpleName();
 
     /** Spring bean application context holding all available test builders and basic Citrus config */
     private ApplicationContext applicationContext;
@@ -55,8 +55,8 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     @Autowired
     private TestContextFactory testContextFactory;
 
-    /** First request message is handled by this message handler */
-    private MessageHandler responseMessageHandler;
+    /** First request message is handled by this endpoint adapter */
+    private EndpointAdapter endpointAdapterDelegate;
 
     /** Default package to search for Xml test case files */
     private String packageName = "com.consol.citrus.tests";
@@ -81,7 +81,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
             }
         });
 
-        return responseMessageHandler.handleMessage(request);
+        return endpointAdapterDelegate.handleMessage(request);
     }
 
     /**
@@ -128,19 +128,18 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     }
 
     /**
-     * Creates Citrus Spring bean application context with basic beans and settings for Citrus. Custom
-     * messageHandlerContext should hold various test builder beans for later dispatching and test execution.
+     * Creates Citrus Spring bean application context with basic beans and settings for Citrus.
      * @throws Exception
      */
     public void afterPropertiesSet() throws Exception {
-        if (responseMessageHandler == null) {
+        if (endpointAdapterDelegate == null) {
             ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
             endpointConfiguration.setChannelName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
             endpointConfiguration.setBeanFactory(applicationContext);
 
-            ChannelEndpointAdapter channelConnectingMessageHandler = new ChannelEndpointAdapter(endpointConfiguration);
-            channelConnectingMessageHandler.setTestContextFactory(testContextFactory);
-            responseMessageHandler = channelConnectingMessageHandler;
+            ChannelEndpointAdapter channelEndpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
+            channelEndpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapterDelegate = channelEndpointAdapter;
         }
 
         if (getMappingStrategy() == null) {
@@ -151,7 +150,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     }
 
     /**
-     * Injects this handlers bean name.
+     * Injects this adapters bean name.
      * @param name
      */
     public void setBeanName(String name) {
@@ -193,19 +192,19 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     }
 
     /**
-     * Gets the response message handler delegate.
+     * Gets the response generating endpoint adapter delegate.
      * @return
      */
-    public MessageHandler getResponseMessageHandler() {
-        return responseMessageHandler;
+    public EndpointAdapter getResponseEndpointAdapter() {
+        return endpointAdapterDelegate;
     }
 
     /**
-     * Sets the response message handler delegate.
-     * @param responseMessageHandler
+     * Sets the response generating endpoint adapter delegate.
+     * @param endpointAdapterDelegate
      */
-    public void setResponseMessageHandler(MessageHandler responseMessageHandler) {
-        this.responseMessageHandler = responseMessageHandler;
+    public void setResponseEndpointAdapter(EndpointAdapter endpointAdapterDelegate) {
+        this.endpointAdapterDelegate = endpointAdapterDelegate;
     }
 
     /**
@@ -217,7 +216,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     }
 
     /**
-     * Injects Spring bean application context this handler is managed by.
+     * Injects Spring bean application context this adapter is managed by.
      * @param applicationContext
      * @throws org.springframework.beans.BeansException
      */

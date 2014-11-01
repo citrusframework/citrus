@@ -16,17 +16,24 @@
 
 package com.consol.citrus.endpoint;
 
-import com.consol.citrus.message.MessageHandler;
+import com.consol.citrus.message.Message;
 
 /**
  * Endpoint adapter represents a special message handler that delegates incoming request messages to some message endpoint.
  * Clients can receive request messages from endpoint and provide proper response messages that will be used as
- * message handler response.
+ * adapter response.
  *
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface EndpointAdapter extends MessageHandler {
+public interface EndpointAdapter {
+
+    /**
+     * Handles a request message and returning a proper response.
+     * @param message the request message.
+     * @return the response message.
+     */
+    Message handleMessage(Message message);
 
     /**
      * Gets message endpoint to interact with tis endpoint adapter.
