@@ -52,11 +52,11 @@ public class JmsMessage extends DefaultMessage {
     public JmsMessage(Object payload, Map<String, Object> headers) {
         super(payload, headers);
 
-        if (!headers.containsKey(CitrusJmsMessageHeaders.MESSAGE_ID)) {
+        if (!headers.containsKey(JmsMessageHeaders.MESSAGE_ID)) {
             setJmsMessageId(getId());
         }
 
-        if (!headers.containsKey(CitrusJmsMessageHeaders.TIMESTAMP)) {
+        if (!headers.containsKey(JmsMessageHeaders.TIMESTAMP)) {
             setJmsTimestamp(getTimestamp());
         }
     }
@@ -66,7 +66,7 @@ public class JmsMessage extends DefaultMessage {
      * @param messageId
      */
     public JmsMessage setJmsMessageId(String messageId) {
-        setHeader(CitrusJmsMessageHeaders.MESSAGE_ID, messageId);
+        setHeader(JmsMessageHeaders.MESSAGE_ID, messageId);
         return this;
     }
 
@@ -75,7 +75,7 @@ public class JmsMessage extends DefaultMessage {
      * @return
      */
     public String getJmsMessageId() {
-        Object messageId = getHeader(CitrusJmsMessageHeaders.MESSAGE_ID);
+        Object messageId = getHeader(JmsMessageHeaders.MESSAGE_ID);
 
         if (messageId != null) {
             return messageId.toString();
@@ -89,7 +89,7 @@ public class JmsMessage extends DefaultMessage {
      * @param timestamp
      */
     public JmsMessage setJmsTimestamp(Long timestamp) {
-        setHeader(CitrusJmsMessageHeaders.TIMESTAMP, timestamp);
+        setHeader(JmsMessageHeaders.TIMESTAMP, timestamp);
         return this;
     }
 
@@ -98,7 +98,7 @@ public class JmsMessage extends DefaultMessage {
      * @return
      */
     public Long getJmsTimestamp() {
-        Object timestamp = getHeader(CitrusJmsMessageHeaders.TIMESTAMP);
+        Object timestamp = getHeader(JmsMessageHeaders.TIMESTAMP);
 
         if (timestamp != null) {
             return Long.valueOf(timestamp.toString());
@@ -112,7 +112,7 @@ public class JmsMessage extends DefaultMessage {
      * @param correlationId
      */
     public JmsMessage setCorrelationId(String correlationId) {
-        setHeader(CitrusJmsMessageHeaders.CORRELATION_ID, correlationId);
+        setHeader(JmsMessageHeaders.CORRELATION_ID, correlationId);
         return this;
     }
 
@@ -121,7 +121,7 @@ public class JmsMessage extends DefaultMessage {
      * @return
      */
     public String getCorrelationId() {
-        Object correlationId = getHeader(CitrusJmsMessageHeaders.CORRELATION_ID);
+        Object correlationId = getHeader(JmsMessageHeaders.CORRELATION_ID);
 
         if (correlationId != null) {
             return correlationId.toString();
@@ -135,7 +135,7 @@ public class JmsMessage extends DefaultMessage {
      * @param replyTo
      */
     public JmsMessage setReplyTo(Destination replyTo) {
-        setHeader(CitrusJmsMessageHeaders.REPLY_TO, replyTo);
+        setHeader(JmsMessageHeaders.REPLY_TO, replyTo);
         return this;
     }
 
@@ -144,7 +144,7 @@ public class JmsMessage extends DefaultMessage {
      * @return
      */
     public Destination getReplyTo() {
-        Object replyTo = getHeader(CitrusJmsMessageHeaders.REPLY_TO);
+        Object replyTo = getHeader(JmsMessageHeaders.REPLY_TO);
 
         if (replyTo != null) {
             return (Destination) replyTo;
@@ -158,7 +158,7 @@ public class JmsMessage extends DefaultMessage {
      * @param redelivered
      */
     public JmsMessage setRedelivered(String redelivered) {
-        setHeader(CitrusJmsMessageHeaders.REDELIVERED, redelivered);
+        setHeader(JmsMessageHeaders.REDELIVERED, redelivered);
         return this;
     }
 
@@ -167,7 +167,7 @@ public class JmsMessage extends DefaultMessage {
      * @return
      */
     public String getRedelivered() {
-        Object redelivered = getHeader(CitrusJmsMessageHeaders.REDELIVERED);
+        Object redelivered = getHeader(JmsMessageHeaders.REDELIVERED);
 
         if (redelivered != null) {
             return redelivered.toString();
@@ -181,7 +181,7 @@ public class JmsMessage extends DefaultMessage {
      * @param type
      */
     public JmsMessage setType(String type) {
-        setHeader(CitrusJmsMessageHeaders.TYPE, type);
+        setHeader(JmsMessageHeaders.TYPE, type);
         return this;
     }
 
@@ -190,7 +190,7 @@ public class JmsMessage extends DefaultMessage {
      * @return
      */
     public String getType() {
-        Object type = getHeader(CitrusJmsMessageHeaders.TYPE);
+        Object type = getHeader(JmsMessageHeaders.TYPE);
 
         if (type != null) {
             return type.toString();

@@ -37,32 +37,32 @@ public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
     public void fromHeaders(MessageHeaders headers, Message jmsMessage) {
         Map<String, Object> integrationHeaders = new HashMap<String, Object>();
 
-        if (headers.get(CitrusJmsMessageHeaders.CORRELATION_ID) != null) {
-            integrationHeaders.put(JmsHeaders.CORRELATION_ID, headers.get(CitrusJmsMessageHeaders.CORRELATION_ID));
+        if (headers.get(JmsMessageHeaders.CORRELATION_ID) != null) {
+            integrationHeaders.put(JmsHeaders.CORRELATION_ID, headers.get(JmsMessageHeaders.CORRELATION_ID));
         }
 
-        if (headers.get(CitrusJmsMessageHeaders.MESSAGE_ID) != null) {
-            integrationHeaders.put(JmsHeaders.MESSAGE_ID, headers.get(CitrusJmsMessageHeaders.MESSAGE_ID));
+        if (headers.get(JmsMessageHeaders.MESSAGE_ID) != null) {
+            integrationHeaders.put(JmsHeaders.MESSAGE_ID, headers.get(JmsMessageHeaders.MESSAGE_ID));
         }
 
-        if (headers.get(CitrusJmsMessageHeaders.REPLY_TO) != null) {
-            integrationHeaders.put(JmsHeaders.REPLY_TO, headers.get(CitrusJmsMessageHeaders.REPLY_TO));
+        if (headers.get(JmsMessageHeaders.REPLY_TO) != null) {
+            integrationHeaders.put(JmsHeaders.REPLY_TO, headers.get(JmsMessageHeaders.REPLY_TO));
         }
 
-        if (headers.get(CitrusJmsMessageHeaders.TIMESTAMP) != null) {
-            integrationHeaders.put(JmsHeaders.TIMESTAMP, headers.get(CitrusJmsMessageHeaders.TIMESTAMP));
+        if (headers.get(JmsMessageHeaders.TIMESTAMP) != null) {
+            integrationHeaders.put(JmsHeaders.TIMESTAMP, headers.get(JmsMessageHeaders.TIMESTAMP));
         }
 
-        if (headers.get(CitrusJmsMessageHeaders.TYPE) != null) {
-            integrationHeaders.put(JmsHeaders.TYPE, headers.get(CitrusJmsMessageHeaders.TYPE));
+        if (headers.get(JmsMessageHeaders.TYPE) != null) {
+            integrationHeaders.put(JmsHeaders.TYPE, headers.get(JmsMessageHeaders.TYPE));
         }
 
-        if (headers.get(CitrusJmsMessageHeaders.REDELIVERED) != null) {
-            integrationHeaders.put(JmsHeaders.REDELIVERED, headers.get(CitrusJmsMessageHeaders.REDELIVERED));
+        if (headers.get(JmsMessageHeaders.REDELIVERED) != null) {
+            integrationHeaders.put(JmsHeaders.REDELIVERED, headers.get(JmsMessageHeaders.REDELIVERED));
         }
 
         for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
-            if (!headerEntry.getKey().startsWith(CitrusJmsMessageHeaders.JMS_PREFIX)
+            if (!headerEntry.getKey().startsWith(JmsMessageHeaders.JMS_PREFIX)
                     && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
                     && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
                 integrationHeaders.put(headerEntry.getKey(), headerEntry.getValue());
@@ -78,27 +78,27 @@ public class JmsMessageHeaderMapper extends DefaultJmsHeaderMapper {
         Map<String, Object> jmsHeaders = super.toHeaders(jmsMessage);
 
         if (jmsHeaders.get(JmsHeaders.CORRELATION_ID) != null) {
-            internalHeaders.put(CitrusJmsMessageHeaders.CORRELATION_ID, jmsHeaders.get(JmsHeaders.CORRELATION_ID));
+            internalHeaders.put(JmsMessageHeaders.CORRELATION_ID, jmsHeaders.get(JmsHeaders.CORRELATION_ID));
         }
 
         if (jmsHeaders.get(JmsHeaders.MESSAGE_ID) != null) {
-            internalHeaders.put(CitrusJmsMessageHeaders.MESSAGE_ID, jmsHeaders.get(JmsHeaders.MESSAGE_ID));
+            internalHeaders.put(JmsMessageHeaders.MESSAGE_ID, jmsHeaders.get(JmsHeaders.MESSAGE_ID));
         }
 
         if (jmsHeaders.get(JmsHeaders.REPLY_TO) != null) {
-            internalHeaders.put(CitrusJmsMessageHeaders.REPLY_TO, jmsHeaders.get(JmsHeaders.REPLY_TO));
+            internalHeaders.put(JmsMessageHeaders.REPLY_TO, jmsHeaders.get(JmsHeaders.REPLY_TO));
         }
 
         if (jmsHeaders.get(JmsHeaders.TIMESTAMP) != null) {
-            internalHeaders.put(CitrusJmsMessageHeaders.TIMESTAMP, jmsHeaders.get(JmsHeaders.TIMESTAMP));
+            internalHeaders.put(JmsMessageHeaders.TIMESTAMP, jmsHeaders.get(JmsHeaders.TIMESTAMP));
         }
 
         if (jmsHeaders.get(JmsHeaders.TYPE) != null) {
-            internalHeaders.put(CitrusJmsMessageHeaders.TYPE, jmsHeaders.get(JmsHeaders.TYPE));
+            internalHeaders.put(JmsMessageHeaders.TYPE, jmsHeaders.get(JmsHeaders.TYPE));
         }
 
         if (jmsHeaders.get(JmsHeaders.REDELIVERED) != null) {
-            internalHeaders.put(CitrusJmsMessageHeaders.REDELIVERED, jmsHeaders.get(JmsHeaders.REDELIVERED));
+            internalHeaders.put(JmsMessageHeaders.REDELIVERED, jmsHeaders.get(JmsHeaders.REDELIVERED));
         }
 
         for (Map.Entry<String, Object> headerEntry : jmsHeaders.entrySet()) {
