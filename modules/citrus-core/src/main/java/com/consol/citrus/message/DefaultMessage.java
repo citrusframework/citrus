@@ -53,8 +53,8 @@ public class DefaultMessage implements Message {
         this.headers.put(MessageHeaders.ID, message.getId());
         this.headers.put(MessageHeaders.TIMESTAMP, message.getHeader(MessageHeaders.TIMESTAMP));
 
-        for (String headerData : message.getHeaderData()) {
-            addHeaderData(headerData);
+        for (String data : message.getHeaderData()) {
+            addHeaderData(data);
         }
     }
 

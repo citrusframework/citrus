@@ -17,6 +17,8 @@
 package com.consol.citrus.vertx.factory;
 
 import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
 
 /**
@@ -26,6 +28,9 @@ import org.vertx.java.core.Vertx;
  * @since 1.4.1
  */
 public class SingleVertxInstanceFactory extends AbstractVertxInstanceFactory {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SingleVertxInstanceFactory.class);
 
     /** Vert.x instance */
     private Vertx vertx;
@@ -39,7 +44,7 @@ public class SingleVertxInstanceFactory extends AbstractVertxInstanceFactory {
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.warn("Interrupted while waiting for vert.x instance to start up", e);
         }
 
         return vertx;

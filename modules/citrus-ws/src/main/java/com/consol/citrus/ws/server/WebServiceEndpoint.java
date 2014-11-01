@@ -239,7 +239,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         org.springframework.ws.soap.SoapFault soapFault;
         
         if (SoapFaultDefinition.SERVER.equals(replyMessage.getFaultCodeQName()) ||
-                SoapFaultDefinition.RECEIVER.equals(replyMessage.getFaultCode())) {
+                SoapFaultDefinition.RECEIVER.equals(replyMessage.getFaultCodeQName())) {
             soapFault = soapBody.addServerOrReceiverFault(replyMessage.getFaultString(),
                     replyMessage.getLocale());
         } else if (SoapFaultDefinition.CLIENT.equals(replyMessage.getFaultCodeQName()) ||

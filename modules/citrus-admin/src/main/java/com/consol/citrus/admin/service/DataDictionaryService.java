@@ -66,7 +66,7 @@ public class DataDictionaryService {
         }
 
         if (library == null) {
-            new CitrusAdminRuntimeException(String.format("Unable to find data dictionary definition for id '%s'", id));
+            throw new CitrusAdminRuntimeException(String.format("Unable to find data dictionary definition for id '%s'", id));
         }
 
         return library;

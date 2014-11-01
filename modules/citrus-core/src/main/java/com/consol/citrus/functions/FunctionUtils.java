@@ -16,9 +16,6 @@
 
 package com.consol.citrus.functions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.exceptions.NoSuchFunctionException;
@@ -31,9 +28,6 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  */
 public final class FunctionUtils {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(FunctionUtils.class);
 
     /**
      * Prevent class instantiation.

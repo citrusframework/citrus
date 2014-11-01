@@ -22,7 +22,7 @@ import com.consol.citrus.message.MessageHeaders;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FtpMessageHeaders {
+public final class FtpMessageHeaders {
 
     /**
      * Prevent instantiation.

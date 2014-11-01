@@ -101,13 +101,6 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      * @return
      */
     public ReceiveSoapMessageActionDefinition attachment(SoapAttachment attachment) {
-        SoapAttachment soapAttachment = new SoapAttachment();
-        attachment.setContentId(attachment.getContentId());
-        attachment.setContentType(attachment.getContentType());
-        attachment.setContent(attachment.getContent());
-        
-        attachment.setCharsetName(attachment.getCharsetName());
-
         getAction().getAttachments().add(attachment);
         return this;
     }

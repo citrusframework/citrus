@@ -34,9 +34,6 @@ public class GlobalVariablesController {
     private ProjectService projectService;
 
     @Autowired
-    private SpringBeanService springBeanService;
-
-    @Autowired
     private GlobalVariablesService globalVariablesService;
 
     @RequestMapping(method = {RequestMethod.GET})

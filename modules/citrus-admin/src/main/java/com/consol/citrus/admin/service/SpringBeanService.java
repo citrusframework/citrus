@@ -84,7 +84,7 @@ public class SpringBeanService {
                 try {
                     return new StreamSource(new ClassPathResource("com/consol/citrus/admin/transform/" + href).getInputStream());
                 } catch (IOException e) {
-                    throw new TransformerException("Failed to resolve uri: " + href);
+                    throw new TransformerException("Failed to resolve uri: " + href, e);
                 }
             }
         });

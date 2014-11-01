@@ -16,6 +16,7 @@
 
 package com.consol.citrus.jms.message;
 
+import org.springframework.jms.support.JmsUtils;
 import org.springframework.messaging.MessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
@@ -37,15 +38,19 @@ public class JmsMessageConverter implements MessageConverter<javax.jms.Message, 
 
     @Override
     public javax.jms.Message convertOutbound(Message message, JmsEndpointConfiguration endpointConfiguration) {
+        Connection connection = null;
+        Session session = null;
+
         try {
-            Connection connection = endpointConfiguration.getConnectionFactory().createConnection();
-            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            connection = endpointConfiguration.getConnectionFactory().createConnection();
+            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             return createJmsMessage(message, session, endpointConfiguration);
         } catch (JMSException e) {
-            throw new CitrusRuntimeException("Failed to create JMS message");
+            throw new CitrusRuntimeException("Failed to create JMS message", e);
+        } finally {
+            JmsUtils.closeSession(session);
+            JmsUtils.closeConnection(connection);
         }
-
-        //TODO close connection and session
     }
 
     @Override

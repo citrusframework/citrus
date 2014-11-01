@@ -18,8 +18,6 @@ package com.consol.citrus.ws.message.callback;
 
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 
@@ -34,9 +32,6 @@ import java.io.IOException;
  */
 public class SoapRequestMessageCallback implements WebServiceMessageCallback {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SoapRequestMessageCallback.class);
-    
     /** The internal message content source */
     private Message message;
 

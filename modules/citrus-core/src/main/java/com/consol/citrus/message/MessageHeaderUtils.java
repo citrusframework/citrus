@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class MessageHeaderUtils {
+public final class MessageHeaderUtils {
 
     /**
      * Private constructor prevents instantiation.

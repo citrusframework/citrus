@@ -176,7 +176,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         } catch (TransformerException e) {
             throw new CitrusRuntimeException("Failed to read web service message payload source", e);
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read web service message");
+            throw new CitrusRuntimeException("Failed to read web service message", e);
         }
     }
 

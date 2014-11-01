@@ -34,9 +34,6 @@ public class NamespaceContextController {
     private ProjectService projectService;
 
     @Autowired
-    private SpringBeanService springBeanService;
-
-    @Autowired
     private NamespaceContextService namespaceContextService;
 
     @RequestMapping(method = {RequestMethod.GET})

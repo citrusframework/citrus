@@ -18,13 +18,9 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.model.config.ws.Server;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -63,18 +59,6 @@ public class WebServiceServerConverter extends AbstractEndpointConverter<Server>
         endpointData.add(property("timeout", server, "5000"));
 
         return endpointData;
-    }
-
-    /**
-     * Gets the error handling strategy names as list.
-     * @return
-     */
-    private List<String> getErrorHandlingStrategyOptions() {
-        List<String> strategyNames = new ArrayList<String>();
-        for (ErrorHandlingStrategy errorHandlingStrategy : ErrorHandlingStrategy.values()) {
-            strategyNames.add(errorHandlingStrategy.getName());
-        }
-        return strategyNames;
     }
 
     @Override

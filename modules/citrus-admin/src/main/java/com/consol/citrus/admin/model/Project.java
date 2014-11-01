@@ -51,7 +51,7 @@ public class Project {
     private Long testCount;
 
     /** Citrus project information as Json file */
-    private final String PROJECT_INFO_FILENAME = "citrus-project.info";
+    private static final String PROJECT_INFO_FILENAME = "citrus-project.info";
 
     /** List of run configurations */
     private List<RunConfiguration> runConfigurationList = new ArrayList<RunConfiguration>();

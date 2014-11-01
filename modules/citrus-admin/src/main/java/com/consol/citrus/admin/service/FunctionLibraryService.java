@@ -81,7 +81,7 @@ public class FunctionLibraryService {
         }
 
         if (library == null) {
-            new CitrusAdminRuntimeException(String.format("Unable to find function library definition for id '%s'", id));
+            throw new CitrusAdminRuntimeException(String.format("Unable to find function library definition for id '%s'", id));
         }
 
         return library;

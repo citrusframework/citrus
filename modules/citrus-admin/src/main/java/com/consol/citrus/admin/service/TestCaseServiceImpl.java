@@ -316,7 +316,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
 
                     if (!StringUtils.hasText(methodName)) {
                         methodName = methodContent.substring(methodContent.indexOf("publicvoid") + "publicvoid".length());
-                        methodName = methodName.substring(0, methodName.indexOf("("));
+                        methodName = methodName.substring(0, methodName.indexOf('('));
                     }
 
                     methods.add(methodName);
@@ -372,7 +372,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
 
                     if (!StringUtils.hasText(testCase.getName())) {
                         String methodName = methodContent.substring(methodContent.indexOf("publicvoid") + "publicvoid".length());
-                        methodName = methodName.substring(0, methodName.indexOf("("));
+                        methodName = methodName.substring(0, methodName.indexOf('('));
                         testCase.setName(methodName);
                     }
 

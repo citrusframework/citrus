@@ -37,21 +37,19 @@ public class MessageConstructionInterceptors implements MessageConstructionInter
 
     @Override
     public Message interceptMessageConstruction(Message message, String messageType, TestContext context) {
-        if (messageConstructionInterceptors.size() > 0) {
-            for (MessageConstructionInterceptor interceptor : messageConstructionInterceptors) {
-                if (interceptor instanceof DataDictionary &&
-                        !((DataDictionary) interceptor).isGlobalScope()) {
-                    // skip explicit data dictionary to avoid duplicate dictionary usage.
-                    continue;
-                }
+        Message interceptedMessage = message;
 
-                message = interceptor.interceptMessageConstruction(message, messageType, context);
+        for (MessageConstructionInterceptor interceptor : messageConstructionInterceptors) {
+            if (interceptor instanceof DataDictionary &&
+                    !((DataDictionary) interceptor).isGlobalScope()) {
+                // skip explicit data dictionary to avoid duplicate dictionary usage.
+                continue;
             }
 
-            return message;
+            interceptedMessage = interceptor.interceptMessageConstruction(interceptedMessage, messageType, context);
         }
 
-        return message;
+        return interceptedMessage;
     }
 
     @Override

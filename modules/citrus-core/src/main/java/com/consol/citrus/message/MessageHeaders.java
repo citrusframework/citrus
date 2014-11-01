@@ -22,6 +22,7 @@ package com.consol.citrus.message;
  * @author Christoph Deppisch
  */
 public final class MessageHeaders {
+
     /**
      * Prevent instantiation.
      */

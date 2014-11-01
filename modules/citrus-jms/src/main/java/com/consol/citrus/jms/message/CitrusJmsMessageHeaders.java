@@ -22,7 +22,13 @@ import com.consol.citrus.message.MessageHeaders;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class CitrusJmsMessageHeaders {
+public final class CitrusJmsMessageHeaders {
+
+    /**
+     * Prevent instantiation.
+     */
+    private CitrusJmsMessageHeaders() {
+    }
 
     public static final String JMS_PREFIX = MessageHeaders.PREFIX + "jms_";
 
