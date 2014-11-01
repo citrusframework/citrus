@@ -37,6 +37,10 @@
           is more likely how you are used to configure time periods anyway. See <xref linkend="containers-repeat-onerror"/> for details</para>
       </listitem>
       <listitem>
+        <para><emphasis>Message handler vs. endpoint adapter</emphasis> In previous releases prior to 1.4 we had message handlers on server side that were able to forward in coming requests to message
+        channels or jms destinations. The old message handler implementations were removed in 2.0. Instead you should use the <emphasis>endpoint-adapter</emphasis> implementations. See <xref linkend="endpoint-adapter"/> how that works.</para>
+      </listitem>
+      <listitem>
         <para><emphasis>XML endpoint reference attribute</emphasis> In a XML test case you reference the message endpoint in the send and receive actions with a special attribute called <emphasis>with</emphasis>.
         This attribute is no longer supported and was removed. Instead you should use the <emphasis>endpoint</emphasis> attribute which was introduced in Citrus 1.4 and has the exact same functionality.</para>
       </listitem>
