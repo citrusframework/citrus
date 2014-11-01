@@ -20,8 +20,8 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.MessageValidator;
@@ -33,10 +33,10 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.oxm.*;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.Assert;
 import org.springframework.xml.transform.StringResult;
 
@@ -578,10 +578,6 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     private void initializeXpathVariableExtractor() {
         if (xpathExtractor == null) {
             xpathExtractor = new XpathPayloadVariableExtractor();
-
-            if (applicationContext.getBeansOfType(NamespaceContextBuilder.class).size() > 0) {
-                xpathExtractor.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
-            }
 
             action.getVariableExtractors().add(xpathExtractor);
         }

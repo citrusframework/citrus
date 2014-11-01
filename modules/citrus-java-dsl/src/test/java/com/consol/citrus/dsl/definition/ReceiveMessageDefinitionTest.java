@@ -37,7 +37,6 @@ import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -48,7 +47,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -752,7 +752,6 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderExtractFromPayload() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -822,7 +821,6 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderExtractCombined() {
         reset(applicationContextMock);
 
-        expect(applicationContextMock.getBeansOfType(NamespaceContextBuilder.class)).andReturn(Collections.<String, NamespaceContextBuilder>emptyMap()).once();
         expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();

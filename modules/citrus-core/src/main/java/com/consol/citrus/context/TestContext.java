@@ -30,6 +30,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -75,6 +76,9 @@ public class TestContext {
 
     /** List of global message construction interceptors */
     private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
+
+    /** Central namespace context builder */
+    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     /** Spring bean application context */
     private ApplicationContext applicationContext;
@@ -408,6 +412,22 @@ public class TestContext {
      */
     public void setEndpointFactory(EndpointFactory endpointFactory) {
         this.endpointFactory = endpointFactory;
+    }
+
+    /**
+     * Sets the namespace context builder.
+     * @param namespaceContextBuilder
+     */
+    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
+        this.namespaceContextBuilder = namespaceContextBuilder;
+    }
+
+    /**
+     * Gets the namespace context builder.
+     * @return
+     */
+    public NamespaceContextBuilder getNamespaceContextBuilder() {
+        return namespaceContextBuilder;
     }
 
     /**

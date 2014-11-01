@@ -74,7 +74,7 @@ public class JUnitTestExecutor {
                     new String[] {
                             testClass.getPackage().getName().replace('.', '/')
                                     + "/" + testClass.getSimpleName() + ".xml",
-                                    "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                            "com/consol/citrus/spring/annotation-config-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {
             throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Failed to load test case", e);

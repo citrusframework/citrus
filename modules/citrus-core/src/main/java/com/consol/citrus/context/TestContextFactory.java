@@ -23,6 +23,7 @@ import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -59,6 +60,9 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     @Autowired
     private MessageConstructionInterceptors messageConstructionInterceptors;
 
+    @Autowired(required=false)
+    private NamespaceContextBuilder namespaceContextBuilder;
+
     /** Spring bean application context */
     private ApplicationContext applicationContext;
     
@@ -80,7 +84,11 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         context.setEndpointFactory(endpointFactory);
         context.setApplicationContext(applicationContext);
-        
+
+        if (namespaceContextBuilder != null) {
+            context.setNamespaceContextBuilder(namespaceContextBuilder);
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Created new test context - using global variables: '"
                     + context.getGlobalVariables() + "'");
@@ -161,6 +169,22 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
      */
     public void setEndpointFactory(EndpointFactory endpointFactory) {
         this.endpointFactory = endpointFactory;
+    }
+
+    /**
+     * Sets the namespace context builder.
+     * @param namespaceContextBuilder
+     */
+    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
+        this.namespaceContextBuilder = namespaceContextBuilder;
+    }
+
+    /**
+     * Gets the namespace context builder.
+     * @return
+     */
+    public NamespaceContextBuilder getNamespaceContextBuilder() {
+        return namespaceContextBuilder;
     }
 
     @Override

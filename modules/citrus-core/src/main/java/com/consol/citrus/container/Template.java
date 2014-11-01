@@ -83,6 +83,7 @@ public class Template extends AbstractTestAction {
             innerContext.setTestListeners(context.getTestListeners());
             innerContext.setMessageConstructionInterceptors(context.getMessageConstructionInterceptors());
             innerContext.setEndpointFactory(context.getEndpointFactory());
+            innerContext.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
             innerContext.setApplicationContext(context.getApplicationContext());
         }
         

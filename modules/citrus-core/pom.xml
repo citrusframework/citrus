@@ -136,10 +136,6 @@
         <artifactId>spring-core</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-aspects</artifactId>
-    </dependency>
-    <dependency>
     	<groupId>org.springframework</groupId>
     	<artifactId>spring-context</artifactId>
     </dependency>
@@ -165,11 +161,6 @@
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
       <optional>true</optional>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.aspectj</groupId>
-      <artifactId>aspectjweaver</artifactId>
     </dependency>
     
     <dependency>

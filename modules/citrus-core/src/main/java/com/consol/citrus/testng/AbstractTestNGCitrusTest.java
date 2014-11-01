@@ -321,7 +321,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             return new ClassPathXmlApplicationContext(
                     new String[] {
                             packageName.replace('.', '/') + "/" + testName + ".xml",
-                            "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                            "com/consol/citrus/spring/annotation-config-ctx.xml"},
                     true, applicationContext);
         } catch (Exception e) {
             throw context.handleError(getClass().getSimpleName(), getClass().getPackage().getName(), "Failed to load test case", e);

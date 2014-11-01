@@ -77,7 +77,7 @@ public class CitrusXmlTestRunner extends AbstractTestRunner {
             return new ClassPathXmlApplicationContext(
                     new String[]{
                             getContextFile(),
-                            "com/consol/citrus/spring/internal-helper-ctx.xml"},
+                            "com/consol/citrus/spring/annotation-config-ctx.xml"},
                     true, parentContext);
         } catch (Exception e) {
             throw getTestContext().handleError(beanName, packageName, "Failed to load test case", e);

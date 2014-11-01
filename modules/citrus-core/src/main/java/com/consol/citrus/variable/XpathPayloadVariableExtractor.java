@@ -21,12 +21,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -51,9 +49,6 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Namespace definitions used in xpath expressions */
     private Map<String, String> namespaces = new HashMap<String, String>();
     
-    @Autowired(required = false)
-    private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-    
     /**
      * Logger
      */
@@ -69,7 +64,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             log.debug("Reading XML elements from document");
         }
         
-        NamespaceContext nsContext = namespaceContextBuilder.buildContext(message, namespaces);
+        NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
 
         for (Entry<String, String> entry : xPathExpressions.entrySet()) {
             String pathExpression = entry.getKey();
@@ -126,14 +121,6 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      */
     public void setNamespaces(Map<String, String> namespaces) {
         this.namespaces = namespaces;
-    }
-
-    /**
-     * Sets the namespace context builder.
-     * @param namespaceContextBuilder the namespaceContextBuilder to set
-     */
-    public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
-        this.namespaceContextBuilder = namespaceContextBuilder;
     }
 
     /**

@@ -741,7 +741,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         messageElements.put("/TestRequest/Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -776,7 +775,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         messageElements.put("/:TestRequest/:Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
@@ -814,7 +812,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
@@ -852,7 +849,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
         validationContext.setPathValidationExpressions(messageElements);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
@@ -894,7 +890,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         namespaces.put("pfx", "http://citrusframework.org/unittest");
         validationContext.setNamespaces(namespaces);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
@@ -936,7 +931,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         variableExtractor.setxPathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -980,7 +974,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         variableExtractor.setxPathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
@@ -1027,7 +1020,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         variableExtractor.setxPathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
@@ -1074,7 +1066,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         variableExtractor.setxPathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
 
@@ -1125,7 +1116,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         namespaces.put("pfx", "http://citrusframework.org/unittest");
         variableExtractor.setNamespaces(namespaces);
         
-        Map<String, Object> controlHeaders = new HashMap<String, Object>();
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
 
