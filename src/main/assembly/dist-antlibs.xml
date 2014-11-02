@@ -22,6 +22,7 @@
         <include>com.consol.citrus:citrus-mail</include>
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-vertx</include>
+        <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
         <include>com.consol.citrus.model:citrus-model-jms</include>
@@ -31,6 +32,7 @@
         <include>com.consol.citrus.model:citrus-model-mail</include>
         <include>com.consol.citrus.model:citrus-model-camel</include>
         <include>com.consol.citrus.model:citrus-model-vertx</include>
+        <include>com.consol.citrus.model:citrus-model-ftp</include>
       </includes>
       <binaries>
         <outputDirectory>lib</outputDirectory>

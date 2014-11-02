@@ -18,6 +18,7 @@
         <include>com.consol.citrus:citrus-mail</include>
         <include>com.consol.citrus:citrus-camel</include>
         <include>com.consol.citrus:citrus-vertx</include>
+        <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
         <include>com.consol.citrus.model:citrus-model-jms</include>
@@ -27,8 +28,7 @@
         <include>com.consol.citrus.model:citrus-model-mail</include>
         <include>com.consol.citrus.model:citrus-model-camel</include>
         <include>com.consol.citrus.model:citrus-model-vertx</include>
-        <include>com.consol.citrus.ant:citrus-ant-tasks</include>
-        <include>com.consol.citrus.mvn:citrus-maven-plugin</include>
+        <include>com.consol.citrus.model:citrus-model-ftp</include>
       </includes>
       <binaries>
         <outputDirectory>dist</outputDirectory>
@@ -41,7 +41,7 @@
   <fileSets>
     <!-- Citrus Samples -->
     <fileSet>
-      <directory>modules/citrus-samples</directory>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples</directory>
       <outputDirectory>samples</outputDirectory>
       <useDefaultExcludes>true</useDefaultExcludes>
       <excludes>
@@ -60,12 +60,12 @@
     </fileSet>
     
     <fileSet>
-      <directory>modules/citrus-samples/src/main/script/lib</directory>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/src/main/script/lib</directory>
       <outputDirectory>samples/lib</outputDirectory>
     </fileSet>
     
     <fileSet>
-      <directory>modules/citrus-samples/src/main/script</directory>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/src/main/script</directory>
       <outputDirectory>samples/flightbooking/citrus-test</outputDirectory>
       <includes>
         <include>build.xml</include>
@@ -73,7 +73,7 @@
     </fileSet>
     
     <fileSet>
-      <directory>modules/citrus-samples/src/main/script</directory>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/src/main/script</directory>
       <outputDirectory>samples/greeting/citrus-test</outputDirectory>
       <includes>
         <include>build.xml</include>
@@ -81,13 +81,53 @@
     </fileSet>
     
     <fileSet>
-      <directory>modules/citrus-samples/src/main/script</directory>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/src/main/script</directory>
       <outputDirectory>samples/bookstore/citrus-test</outputDirectory>
       <includes>
         <include>build.xml</include>
       </includes>
     </fileSet>
     
+    <fileSet>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/src/main/script</directory>
+      <outputDirectory>samples/incident/citrus-test</outputDirectory>
+      <includes>
+        <include>build.xml</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/bookstore/citrus-test/src</directory>
+      <outputDirectory>samples/bookstore/citrus-test</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/incident/citrus-test/src</directory>
+      <outputDirectory>samples/incident/citrus-test</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/flightbooking/citrus-test/src</directory>
+      <outputDirectory>samples/flightbooking/citrus-test</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>/Users/christoph/Projekte/Citrus/citrus-samples/greeting/citrus-test/src</directory>
+      <outputDirectory>samples/greeting/citrus-test</outputDirectory>
+      <includes>
+        <include>pom.xml</include>
+      </includes>
+    </fileSet>
+
     <!-- Reference documentation -->
     <fileSet>
       <directory>target/doc/html</directory>
@@ -139,6 +179,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-model/model-vertx/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-model/model-ftp/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>
@@ -201,6 +248,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-ftp/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
         <directory>modules/citrus-java-dsl/target</directory>
         <outputDirectory>src</outputDirectory>
         <includes>
@@ -221,20 +275,6 @@
   </fileSets>
   
   <files>
-    <file>
-      <source>modules/citrus-samples/bookstore/citrus-test/src/pom.xml</source>
-      <outputDirectory>samples/bookstore/citrus-test</outputDirectory>
-    </file>
-    
-    <file>
-      <source>modules/citrus-samples/flightbooking/citrus-test/src/pom.xml</source>
-      <outputDirectory>samples/flightbooking/citrus-test</outputDirectory>
-    </file>
-    
-    <file>
-      <source>modules/citrus-samples/greeting/citrus-test/src/pom.xml</source>
-      <outputDirectory>samples/greeting/citrus-test</outputDirectory>
-    </file>
     <!-- PDF reference documentation -->
     <file>
       <source>target/doc/pdf/citrus-reference-2.0.pdf</source>

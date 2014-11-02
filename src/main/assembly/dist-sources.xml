@@ -71,6 +71,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-ftp/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
         <directory>modules/citrus-java-dsl/target</directory>
         <outputDirectory></outputDirectory>
         <includes>

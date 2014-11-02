@@ -12,11 +12,11 @@
       <table class="table table-striped table-bordered">
         <tr>
           <td>Maven</td>
-          <td>2.0</td>
+          <td>3.0</td>
         </tr>
         <tr>
           <td>JDK</td>
-          <td>1.5</td>
+          <td>1.7</td>
         </tr>
         <tr>
           <td>Memory</td>
@@ -80,31 +80,14 @@
           </td>
         </tr>
         <tr>
-          <td><a href="#create-suite-from-wsdl">citrus:create-suite-from-wsdl</a></td>
-          <td>
-            Creates new Citrus test suite from a given WSDL with XML test
-            file and executable Java class. Mojo offers an interactive mode,
-            where the plugin prompts for parameters during execution. In
-            non-interactive mode the parameters are given as command line
-            arguments.
-          </td>
-        </tr>
-        <tr>
           <td><a href="#create-test">citrus:create-test</a></td>
           <td>
             Creates new Citrus test cases with empty XML test file and
             executable Java class. Mojo offers an interactive mode, where the
             plugin prompts for parameters during execution. In non-interactive
-            mode the parameters are given as command line arguments.
-          </td>
-        </tr>
-        <tr>
-          <td><a href="#create-test-from-xsd">citrus:create-test-from-xsd</a></td>
-          <td>
-            Creates new Citrus test cases with empty XML test file and
-            executable Java class. Mojo offers an interactive mode, where the
-            plugin prompts for parameters during execution. In non-interactive
-            mode the parameters are given as command line arguments.
+            mode the parameters are given as command line arguments.<br/>
+            Also supports automatic message XML payload generation for XSD and WSDL
+            schemas.
           </td>
         </tr>
         <tr>
@@ -380,6 +363,36 @@
             <td><tt>-</tt></td>
             <td>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;<br /><b>Default value is</b>: <tt>com.consol.citrus</tt>.</td>
           </tr>
+          <tr>
+            <td><b><a href="#create-test-from-xsd-pathToXsd">xsd</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Path of the xsd from which the sample request and response are get from<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#create-test-from-xsd-xsdRequestElem">xsdRequestElem</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of the xsd-element used to create the xml-sample-request<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#create-test-from-xsd-xsdResponseElem">xsdResponseElem</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>Name of the xsd-element used to create the xml-sample-response<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#create-suite-from-wsdl-pathToWsdl">wsdl</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The path to the wsdl from which the suite is generated.<br /></td>
+          </tr>
+          <tr>
+            <td><b><a href="#create-suite-from-wsdl-nameSuffix">nameSuffix</a></b></td>
+            <td><tt>String</tt></td>
+            <td><tt>-</tt></td>
+            <td>The name-suffix of all test cases.<br /><b>Default value is</b>: <tt>_ITest</tt>.</td>
+          </tr>
         </table>
 
         <h3>Parameter Details</h3>
@@ -424,128 +437,12 @@
           <li><b>Required</b>: <tt>No</tt></li>
           <li><b>Expression</b>: <tt>${targetPackage}</tt></li>
           <li><b>Default</b>: <tt>com.consol.citrus</tt></li>
-        </ul>
-      </div>
-      
-      <div id="create-test-from-xsd">
-        <h1 class="page-header">citrus:create-test-from-xsd</h1>
-        <p><b>Full name</b>:</p>
-        <p>com.consol.citrus.mvn:citrus-maven-plugin:2.0:create-test-from-xsd</p>
-        <p><b>Description</b>:</p>
-        <div>Creates new Citrus test cases with empty XML test file and executable Java class. Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In non-interactive mode the parameters are given as command line arguments.</div>
-      
-        <h3>Optional Parameters</h3>
-        <table class="table table-striped table-bordered">
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Since</th>
-            <th>Description</th>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-author">author</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>The test author<br /><b>Default value is</b>: <tt>Unknown</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-description">description</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Describes the test case and its actions<br /><b>Default value is</b>: <tt>TODO: Description</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-framework">framework</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Which unit test framework to use for test execution (default: testng; options: testng, junit)<br /><b>Default value is</b>: <tt>testng</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-interactiveMode">interactiveMode</a></b></td>
-            <td><tt>boolean</tt></td>
-            <td><tt>-</tt></td>
-            <td>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.<br /><b>Default value is</b>: <tt>true</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-name">name</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>The name of the test case (must start with upper case letter).<br /></td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-pathToXsd">pathToXsd</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Path of the xsd from which the sample request and response are get from<br /></td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-targetPackage">targetPackage</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;<br /><b>Default value is</b>: <tt>com.consol.citrus</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-xsdRequestElem">xsdRequestElem</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Name of the xsd-element used to create the xml-sample-request<br /></td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-test-from-xsd-xsdResponseElem">xsdResponseElem</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Name of the xsd-element used to create the xml-sample-response<br /></td>
-          </tr>
-        </table>
-
-        <h3>Parameter Details</h3>
-        <p><b><a name="create-test-from-xsd-author">author</a>:</b></p>
-        <div>The test author</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${author}</tt></li>
-          <li><b>Default</b>: <tt>Unknown</tt></li>
-        </ul><hr /><p><b><a name="create-test-from-xsd-description">description</a>:</b></p>
-        <div>Describes the test case and its actions</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${description}</tt></li>
-          <li><b>Default</b>: <tt>TODO: Description</tt></li>
-        </ul><hr /><p><b><a name="create-test-from-xsd-framework">framework</a>:</b></p>
-        <div>Which unit test framework to use for test execution (default: testng; options: testng, junit)</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${framework}</tt></li>
-          <li><b>Default</b>: <tt>testng</tt></li>
-        </ul><hr /><p><b><a name="create-test-from-xsd-interactiveMode">interactiveMode</a>:</b></p>
-        <div>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.</div>
-        <ul>
-          <li><b>Type</b>: <tt>boolean</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
-          <li><b>Default</b>: <tt>true</tt></li>
-        </ul><hr /><p><b><a name="create-test-from-xsd-name">name</a>:</b></p>
-        <div>The name of the test case (must start with upper case letter).</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${name}</tt></li>
-        </ul><hr /><p><b><a name="create-test-from-xsd-pathToXsd">pathToXsd</a>:</b></p>
+        </ul><hr /><p><b><a name="create-test-from-xsd-pathToXsd">xsd</a>:</b></p>
         <div>Path of the xsd from which the sample request and response are get from</div>
         <ul>
           <li><b>Type</b>: <tt>java.lang.String</tt></li>
           <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${pathToXsd}</tt></li>
-        </ul><hr /><p><b><a name="create-test-from-xsd-targetPackage">targetPackage</a>:</b></p>
-        <div>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${targetPackage}</tt></li>
-          <li><b>Default</b>: <tt>com.consol.citrus</tt></li>
+          <li><b>Expression</b>: <tt>${xsd}</tt></li>
         </ul><hr /><p><b><a name="create-test-from-xsd-xsdRequestElem">xsdRequestElem</a>:</b></p>
         <div>Name of the xsd-element used to create the xml-sample-request</div>
         <ul>
@@ -558,109 +455,12 @@
           <li><b>Type</b>: <tt>java.lang.String</tt></li>
           <li><b>Required</b>: <tt>No</tt></li>
           <li><b>Expression</b>: <tt>${xsdResponseElem}</tt></li>
-        </ul>
-      </div>
-      
-      <div id="create-suite-from-wsdl">
-        <h1 class="page-header">citrus:create-suite-from-wsdl</h1>
-        <p><b>Full name</b>:</p>
-        <p>com.consol.citrus.mvn:citrus-maven-plugin:2.0:create-suite-from-wsdl</p>
-        <p><b>Description</b>:</p>
-        <div>Creates new Citrus test suite from a given WSDL with XML test file and executable Java class. Mojo offers an interactive mode, where the plugin prompts for parameters during execution. In non-interactive mode the parameters are given as command line arguments.</div>
-
-        <h3>Optional Parameters</h3>
-        <table class="table table-striped table-bordered">
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Since</th>
-            <th>Description</th>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-author">author</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>The test author<br /><b>Default value is</b>: <tt>Unknown</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-description">description</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Describes the test case and its actions<br /><b>Default value is</b>: <tt>TODO: Description</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-framework">framework</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Which unit test framework to use for test execution (default: testng; options: testng, junit)<br /><b>Default value is</b>: <tt>testng</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-interactiveMode">interactiveMode</a></b></td>
-            <td><tt>boolean</tt></td>
-            <td><tt>-</tt></td>
-            <td>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.<br /><b>Default value is</b>: <tt>true</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-namePrefix">namePrefix</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>The name-prefix of all test cases (must start with upper case letter).<br /></td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-nameSuffix">nameSuffix</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>The name-suffix of all test cases.<br /><b>Default value is</b>: <tt>_ITest</tt>.</td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-pathToWsdl">pathToWsdl</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>The path to the wsdl from which the suite is generated.<br /></td>
-          </tr>
-          <tr>
-            <td><b><a href="#create-suite-from-wsdl-targetPackage">targetPackage</a></b></td>
-            <td><tt>String</tt></td>
-            <td><tt>-</tt></td>
-            <td>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;<br /><b>Default value is</b>: <tt>com.consol.citrus</tt>.</td>
-          </tr>
-        </table>
-
-        <h3>Parameter Details</h3>
-        <p><b><a name="create-suite-from-wsdl-author">author</a>:</b></p>
-        <div>The test author</div>
+        </ul><hr /><p><b><a name="create-suite-from-wsdl-pathToWsdl">wsdl</a>:</b></p>
+        <div>The path to the wsdl from which the suite is generated.</div>
         <ul>
           <li><b>Type</b>: <tt>java.lang.String</tt></li>
           <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${author}</tt></li>
-          <li><b>Default</b>: <tt>Unknown</tt></li>
-        </ul><hr /><p><b><a name="create-suite-from-wsdl-description">description</a>:</b></p>
-        <div>Describes the test case and its actions</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${description}</tt></li>
-          <li><b>Default</b>: <tt>TODO: Description</tt></li>
-        </ul><hr /><p><b><a name="create-suite-from-wsdl-framework">framework</a>:</b></p>
-        <div>Which unit test framework to use for test execution (default: testng; options: testng, junit)</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${framework}</tt></li>
-          <li><b>Default</b>: <tt>testng</tt></li>
-        </ul><hr /><p><b><a name="create-suite-from-wsdl-interactiveMode">interactiveMode</a>:</b></p>
-        <div>Whether to run this command in interactive mode. Defaults to &quot;true&quot;.</div>
-        <ul>
-          <li><b>Type</b>: <tt>boolean</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${interactiveMode}</tt></li>
-          <li><b>Default</b>: <tt>true</tt></li>
-        </ul><hr /><p><b><a name="create-suite-from-wsdl-namePrefix">namePrefix</a>:</b></p>
-        <div>The name-prefix of all test cases (must start with upper case letter).</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${namePrefix}</tt></li>
+          <li><b>Expression</b>: <tt>${wsdl}</tt></li>
         </ul><hr /><p><b><a name="create-suite-from-wsdl-nameSuffix">nameSuffix</a>:</b></p>
         <div>The name-suffix of all test cases.</div>
         <ul>
@@ -668,19 +468,6 @@
           <li><b>Required</b>: <tt>No</tt></li>
           <li><b>Expression</b>: <tt>${nameSuffix}</tt></li>
           <li><b>Default</b>: <tt>_ITest</tt></li>
-        </ul><hr /><p><b><a name="create-suite-from-wsdl-pathToWsdl">pathToWsdl</a>:</b></p>
-        <div>The path to the wsdl from which the suite is generated.</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${pathToWsdl}</tt></li>
-        </ul><hr /><p><b><a name="create-suite-from-wsdl-targetPackage">targetPackage</a>:</b></p>
-        <div>Which package (folder structure) is assigned to this test. Defaults to &quot;com.consol.citrus&quot;</div>
-        <ul>
-          <li><b>Type</b>: <tt>java.lang.String</tt></li>
-          <li><b>Required</b>: <tt>No</tt></li>
-          <li><b>Expression</b>: <tt>${targetPackage}</tt></li>
-          <li><b>Default</b>: <tt>com.consol.citrus</tt></li>
         </ul>
       </div>
     </div>
