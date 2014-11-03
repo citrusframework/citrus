@@ -9,6 +9,15 @@
     accept client requests and provide proper HTTP responses with GET, PUT, DELETE or POST request method.</para>
     
     <note>
+        <para>The http components in Citrus are kept in a separate Maven module. So you should add the module
+          as Maven dependency to your project accordingly.</para>
+
+        <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-http&lt;/artifactId&gt;
+  &lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
         <para>As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level
         <emphasis>beans</emphasis> element. Simply include the http-config namespace in the configuration XML files as follows.</para>
         

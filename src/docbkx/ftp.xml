@@ -6,6 +6,15 @@
   FTP connectivity.</para>
 
   <note>
+    <para>The FTP components in Citrus are kept in a separate Maven module. So you should add the module
+      as Maven dependency to your project accordingly.</para>
+
+    <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-ftp&lt;/artifactId&gt;
+  &lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
     <para>As Citrus provides a customized FTP configuration schema for the Spring application context configuration files we have to add name to the top level
       <emphasis>beans</emphasis> element. Simply include the ftp-config namespace in the configuration XML files as follows.</para>
 

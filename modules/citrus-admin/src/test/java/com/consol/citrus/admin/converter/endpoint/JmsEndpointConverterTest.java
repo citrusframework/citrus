@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.jms.JmsEndpoint;
+import com.consol.citrus.model.config.jms.Endpoint;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ public class JmsEndpointConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        EndpointData endpointData = endpointConverter.convert(new JmsEndpoint());
+        EndpointData endpointData = endpointConverter.convert(new Endpoint());
         Assert.assertEquals(endpointData.getType(), "jms");
     }
 }

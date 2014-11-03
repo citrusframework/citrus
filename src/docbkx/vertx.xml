@@ -7,6 +7,15 @@
   test those Vert.x applications in some integration test scenario.</para>
 
   <note>
+    <para>The Vert.x components in Citrus are kept in a separate Maven module. So you should add the module
+      as Maven dependency to your project accordingly.</para>
+
+    <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-vertx&lt;/artifactId&gt;
+  &lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
     <para>Citrus provides a special Vert.x configuration schema that
       is used in our Spring configuration files. You have to include the citrus-vertx namespace in your Spring configuration XML files as follows.</para>
 

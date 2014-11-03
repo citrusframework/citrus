@@ -65,10 +65,10 @@
     &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://localhost:61616&quot; /&gt;
 &lt;/bean&gt;
 
-&lt;citrus-jms:jms-endpoint id=&quot;travelAgencyBookingRequestEndpoint&quot;
+&lt;citrus-jms:endpoint id=&quot;travelAgencyBookingRequestEndpoint&quot;
                       destination-name=&quot;${travel.agency.request.queue}&quot;/&gt;
 
-&lt;citrus-jms:jms-endpoint id=&quot;travelAgencyBookingResponseEndpoint&quot;
+&lt;citrus-jms:endpoint id=&quot;travelAgencyBookingResponseEndpoint&quot;
                       destination-name=&quot;${travel.agency.response.queue}&quot;/&gt;</programlisting>
         
         <para>This is all Citrus needs to send and receive messages over JMS in order to simulate the TravelAgency. By default all JMS message
@@ -111,20 +111,20 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
         <para>We continue with the first airline to be configured the SmartAirline. The SmartAirline is also using JMS to communicate
         with the FlightBookingService. So there is nothing new for us, we simply define additional JMS message senders and receivers.</para>
         
-        <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;smartAirlineBookingRequestEndpoint&quot;
+        <programlisting>&lt;citrus-jms:endpoint id=&quot;smartAirlineBookingRequestEndpoint&quot;
                       destination-name=&quot;${smart.airline.request.queue}&quot;/&gt;
 
-&lt;citrus-jms:jms-endpoint id=&quot;smartAirlineBookingResponseEndpoint&quot;
+&lt;citrus-jms:endpoint id=&quot;smartAirlineBookingResponseEndpoint&quot;
                       destination-name=&quot;${smart.airline.response.queue}&quot;/&gt;</programlisting>
         
         <para>We do not define a new JMS connection factory because TravelAgency and SmartAirline are using the same message broker instance.
         In case you need to handle multiple connection factories simply define the connection factory with the attribute "connection-factory".</para>
         
-        <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;smartAirlineBookingRequestEndpoint&quot;
+        <programlisting>&lt;citrus-jms:endpoint id=&quot;smartAirlineBookingRequestEndpoint&quot;
                             destination-name=&quot;${smart.airline.request.queue}&quot;
                             connection-factory=&quot;smartAirlineConnectionFactory&quot;/&gt;
 
-&lt;citrus-jms:jms-endpoint id=&quot;smartAirlineBookingResponseEndpoint&quot;
+&lt;citrus-jms:endpoint id=&quot;smartAirlineBookingResponseEndpoint&quot;
                           destination-name=&quot;${smart.airline.response.queue}&quot;
                           connection-factory=&quot;smartAirlineConnectionFactory&quot;/&gt;</programlisting>
     </section>
@@ -166,7 +166,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
       connection-factory=&quot;connectionFactory&quot; /&gt;
       timeout=&quot;2000&quot;/&gt;
 
-&lt;citrus-jms:jms-sync-endpoint id=&quot;royalAirlineBookingEndpoint&quot;
+&lt;citrus-jms:sync-endpoint id=&quot;royalAirlineBookingEndpoint&quot;
                             destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;</programlisting>
 
         <para>We need to configure a Http server instance with a port, a request URI and the endpoint adapter. We define the

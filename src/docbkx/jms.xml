@@ -5,8 +5,17 @@
     <para>Citrus provides support for sending and receiving JMS messages. We have to separate between synchronous and asynchronous
     communication. So in this chapter we explain how to setup JMS message endpoints for synchronous and asynchronous
     outbound and inbound communication</para>
-    
+
     <note>
+        <para>The JMS components in Citrus are kept in a separate Maven module. If not already done so you have to include the module
+        as Maven dependency to your project</para>
+
+        <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-jms&lt;/artifactId&gt;
+  &lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
         <para>Citrus provides a "citrus-jms" configuration namespace and schema definition for JMS related components and features. Include this namespace into your Spring
         configuration in order to use the Citrus JMS configuration elements. The namespace URI and schema location are added to the
         Spring configuration XML file as follows.</para>
@@ -37,7 +46,7 @@
         endpoint component configuration that lives in the basic Spring configuration file in Citrus. So let us have a look at a simple JMS message endpoint
         configuration in Citrus.</para>
 
-        <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+        <programlisting>&lt;citrus-jms:endpoint id=&quot;helloServiceQueueEndpoint&quot;
           destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
           timeout=&quot;10000&quot;/&gt;</programlisting>
 
@@ -66,13 +75,13 @@
             You can use the <emphasis>connection-factory</emphasis> endpoint attribute in order to use another connection factory instance with different bean
             names.</para>
             
-            <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+            <programlisting>&lt;citrus-jms:endpoint id=&quot;helloServiceQueueEndpoint&quot;
       destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
       connection-factory=&quot;myConnectionFacotry&quot;/&gt;</programlisting>
               
             <para>As an alternative to that you may want to use a special Spring jms template implementation as custom bean in your endpoint.</para>
             
-            <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+            <programlisting>&lt;citrus-jms:endpoint id=&quot;helloServiceQueueEndpoint&quot;
               destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
               jms-template=&quot;myJmsTemplate&quot;/&gt;</programlisting>
         </note>
@@ -87,7 +96,7 @@
         <note>
             <para>Besides the destination-name attribute you can also provide a reference to a destination implementation.</para>
             
-            <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+            <programlisting>&lt;citrus-jms:endpoint id=&quot;helloServiceQueueEndpoint&quot;
                                 destination=&quot;helloServiceQueue&quot;/&gt;
 
 &lt;amq:queue id=&quot;helloServiceQueue&quot; physicalName=&quot;Citrus.HelloService.Request.Queue&quot;/></programlisting>
@@ -117,7 +126,7 @@
         a reply destination behind the scenes. By default Citrus uses temporary reply destinations that get automatically deleted after the communication handshake is done. Again we need to use a
         JMS connection factory in the Spring XML configuration as the component need to connect to a JMS message broker.</para>
         
-        <programlisting>&lt;citrus-jms:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+        <programlisting>&lt;citrus-jms:sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
           destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
           timeout=&quot;10000&quot;/&gt;</programlisting>
         
@@ -154,7 +163,7 @@
         <para>If you rather want to define a static reply destination you can do so, too. The static reply destination is not deleted after communication handshake. You may need to work with message selectors then in order to pick
         the right response message that belongs to a specific communication handshake. You can define a static reply destination on the synchronous endpoint component as follows.</para>
 
-        <programlisting>&lt;citrus-jms:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+        <programlisting>&lt;citrus-jms:sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
           destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
           reply-destination-name=&quot;Citrus.HelloService.Reply.Queue&quot;
           timeout=&quot;10000&quot;/&gt;</programlisting>
@@ -183,7 +192,7 @@
         <para>In this scenario the foreign message producer has stored a dynamic JMS reply queue destination to the JMS header. So Citrus has to send the reply message to this specific reply destination, which is dynamic of course. Fortunately the heavy lift is done
         with the JMS message endpoint and we do not have to change anything in our configuration. Again we just define a synchronous message endpoint in the application context.</para>
         
-        <programlisting>&lt;citrus-jms:jms-sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
+        <programlisting>&lt;citrus-jms:sync-endpoint id=&quot;helloServiceSyncEndpoint&quot;
       destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
       timeout=&quot;10000&quot;/&gt;</programlisting>
         
@@ -221,7 +230,7 @@
         <para>The Citrus JMS endpoints offer the attribute <emphasis>'pub-sub-domain'</emphasis>. Once this attribute is set to <emphasis>true</emphasis> Citrus will use JMS topics instead of
         queue destinations. See the following example where the publish-subscribe attribute is set to true in JMS message endpoint components.</para>
         
-        <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceQueueEndpoint&quot;
+        <programlisting>&lt;citrus-jms:endpoint id=&quot;helloServiceQueueEndpoint&quot;
             destination=&quot;helloServiceQueue&quot;
             pub-sub-domain=&quot;true&quot;/&gt;</programlisting>
         
@@ -266,7 +275,7 @@
         <para>When sending SOAP messages you have to deal with proper envelope, body and header construction. In Citrus you can add a special message converter that performs the heavy lift for you.
         Just add the message converter to the JMS endpoint as shown in the next program listing:</para>
 
-      <programlisting>&lt;citrus-jms:jms-endpoint id=&quot;helloServiceSoapJmsEndpoint&quot;
+      <programlisting>&lt;citrus-jms:endpoint id=&quot;helloServiceSoapJmsEndpoint&quot;
         destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
         message-converter=&quot;soapJmsMessageConverter&quot;/&gt;
 

@@ -13,6 +13,15 @@
   Citrus offers a mail client that connects to some SMTP server for sending mails to the outside world.</para>
 
   <note>
+    <para>The mail components in Citrus are kept in a separate Maven module. So you should check that the module
+      is available as Maven dependency in your project</para>
+
+    <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-mail&lt;/artifactId&gt;
+  &lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;</programlisting>
+
     <para>As usual Citrus provides a customized mail configuration schema that
       is used in Spring configuration files. Simply include the citrus-mail namespace in the configuration XML files as follows.</para>
 

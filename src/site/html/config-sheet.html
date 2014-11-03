@@ -179,7 +179,7 @@
               and you are done. JMS endpoints are configured in the Citrus application context.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;citrus-jms:jms-endpoint id=&quot;helloQueueEndpoint&quot;
+            <pre class="prettyprint">&lt;citrus-jms:endpoint id=&quot;helloQueueEndpoint&quot;
                         destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
                         timeout=&quot;10000&quot;/&gt;</pre>
           </div>
@@ -191,7 +191,7 @@
               instance directly. This way you can resolve destinations with a JNDI lookup for instance.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;citrus-jms:jms-endpoint id=&quot;helloQueueEndpoint&quot;
+            <pre class="prettyprint">&lt;citrus-jms:endpoint id=&quot;helloQueueEndpoint&quot;
                         destination=&quot;helloServiceQueue&quot;/&gt;
 
 &lt;amq:queue id=&quot;helloServiceQueue&quot; physicalName=&quot;Citrus.HelloService.Request.Queue&quot;/></pre>
@@ -211,7 +211,7 @@
               will receive the messages simultaneously.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;citrus-jms:jms-endpoint id=&quot;helloTopicEndpoint&quot;
+            <pre class="prettyprint">&lt;citrus-jms:endpoint id=&quot;helloTopicEndpoint&quot;
                         destination-name=&quot;Citrus.HelloService.Request.Topic&quot;
                         pub-sub-domain=&quot;true&quot;/&gt;</pre>
           </div>
@@ -229,7 +229,7 @@
               on some reply destination. By default this reply destination is temporary for each message sent or received.</p>
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;citrus-jms:jms-sync-endpoint id=&quot;helloSyncEndpoint&quot;
+            <pre class="prettyprint">&lt;citrus-jms:sync-endpoint id=&quot;helloSyncEndpoint&quot;
                         destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;/&gt;</pre>
           </div>
         </div>
@@ -241,7 +241,7 @@
 
           </div>
           <div class="span7">
-            <pre class="prettyprint">&lt;citrus-jms:jms-sync-endpoint id=&quot;helloSyncEndpoint&quot;
+            <pre class="prettyprint">&lt;citrus-jms:sync-endpoint id=&quot;helloSyncEndpoint&quot;
                         destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
                         reply-destination-name=&quot;Citrus.HelloService.Reply.Queue&quot;/&gt;</pre>
           </div>

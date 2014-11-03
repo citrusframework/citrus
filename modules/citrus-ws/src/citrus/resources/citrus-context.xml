@@ -118,10 +118,10 @@
                     context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
                     resource-base="src/citrus/resources"/>
 
-  <citrus-jms:jms-endpoint id="soapRequestEndpoint"
+  <citrus-jms:endpoint id="soapRequestEndpoint"
                        destination-name="SoapServer.inbound"/>
 
-  <citrus-jms:jms-endpoint id="soapResponseEndpoint"
+  <citrus-jms:endpoint id="soapResponseEndpoint"
                            use-object-messages="true"
                            destination-name="SoapServer.outbound"/>
 

@@ -7,21 +7,21 @@
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                             http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
-  <citrus-jms:jms-endpoint id="jmsEndpoint1"
+  <citrus-jms:endpoint id="jmsEndpoint1"
                                destination-name="JMS.Queue.Test"/>
 
-  <citrus-jms:jms-endpoint id="jmsEndpoint2"
+  <citrus-jms:endpoint id="jmsEndpoint2"
                                connection-factory="jmsConnectionFactory"
                                timeout="10000"
                                message-converter="messageConverter"
                                destination="jmsQueue"/>
 
-  <citrus-jms:jms-endpoint id="jmsEndpoint3"
+  <citrus-jms:endpoint id="jmsEndpoint3"
                                pub-sub-domain="true"
                                use-object-messages="true"
                                jms-template="jmsTemplate"/>
 
-  <citrus-jms:jms-endpoint id="jmsEndpoint4"
+  <citrus-jms:endpoint id="jmsEndpoint4"
                                destination-name="JMS.Queue.Test"
                                actor="testActor"/>
 

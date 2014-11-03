@@ -36,7 +36,7 @@
     <xs:attribute name="timeout" type="xs:string"/>
   </xs:complexType>
 
-  <xs:element name="jms-endpoint">
+  <xs:element name="endpoint">
     <xs:annotation>
       <xs:documentation>JMS endpoint able to produce and consume messages on a JMS destination (queue or topic).</xs:documentation>
     </xs:annotation>
@@ -47,7 +47,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="jms-sync-endpoint">
+  <xs:element name="sync-endpoint">
     <xs:annotation>
       <xs:documentation>JMS synchronous endpoint able to produce and consume messages on a synchronous JMS
         destination with reply message handling.</xs:documentation>
@@ -63,7 +63,6 @@
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
-
 
   <xs:element name="jms-endpoint-adapter">
     <xs:annotation>

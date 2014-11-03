@@ -44,37 +44,37 @@
   <bean id="soapMessageConverter" class="com.consol.citrus.jms.message.SoapJmsMessageConverter"/>
 
   <!-- JMS message endpoints -->
-  <citrus-jms:jms-endpoint id="helloServiceJmsEndpoint"
+  <citrus-jms:endpoint id="helloServiceJmsEndpoint"
                        destination-name="Citrus.HelloService.Request.Queue"
                        timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-endpoint id="helloServiceResponseJmsEndpoint"
+  <citrus-jms:endpoint id="helloServiceResponseJmsEndpoint"
                        destination-name="Citrus.HelloService.Response.Queue"
                        timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-endpoint id="helloServiceSoapJmsEndpoint"
+  <citrus-jms:endpoint id="helloServiceSoapJmsEndpoint"
                            destination-name="Citrus.HelloSoapService.Request.Queue"
                            message-converter="soapMessageConverter"
                            timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-endpoint id="helloServiceResponseSoapJmsEndpoint"
+  <citrus-jms:endpoint id="helloServiceResponseSoapJmsEndpoint"
                            destination-name="Citrus.HelloSoapService.Response.Queue"
                            message-converter="soapMessageConverter"
                            timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-endpoint id="helloSoapServiceJmsEndpoint"
+  <citrus-jms:endpoint id="helloSoapServiceJmsEndpoint"
                        destination-name="Citrus.HelloSoapService.Request.Queue"
                        timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-endpoint id="helloSoapServiceResponseJmsEndpoint"
+  <citrus-jms:endpoint id="helloSoapServiceResponseJmsEndpoint"
                        destination-name="Citrus.HelloSoapService.Response.Queue"
                        timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-sync-endpoint id="helloServiceJmsSyncEndpoint"
+  <citrus-jms:sync-endpoint id="helloServiceJmsSyncEndpoint"
                             destination-name="Citrus.HelloService.InOut.Queue"
                             timeout="${default.timeout}"/>
 
-  <citrus-jms:jms-endpoint id="helloServiceJmsTopicEndpoint"
+  <citrus-jms:endpoint id="helloServiceJmsTopicEndpoint"
                        destination-name="Citrus.HelloService.Request.Topic"
                        timeout="${default.timeout}"
                        pub-sub-domain="true"/>
