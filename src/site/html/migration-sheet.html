@@ -201,10 +201,10 @@
         <div class="row">
           <div class="span5">
             <h5>Old: Citrus 1.x</h5>
-            <pre class="prettyprint">&lt;citrus-jms:message-sender id=&quot;helloServiceMessageSender&quot;
+            <pre class="prettyprint">&lt;citrus:jms-message-sender id=&quot;helloServiceMessageSender&quot;
           destination-name=&quot;Citrus.HelloService.Request.Queue&quot;/&gt;
 
-&lt;citrus-jms:message-receiver id=&quot;helloServiceMessageReceiver&quot;
+&lt;citrus:jms-message-receiver id=&quot;helloServiceMessageReceiver&quot;
           destination-name=&quot;Citrus.HelloService.Request.Queue&quot;
           receive-timeout=&quot;5000&quot;/&gt;</pre>
           </div>
@@ -232,23 +232,23 @@
         <div class="row">
           <div class="span5">
             <h5>Old: Citrus 1.x</h5>
-            <pre class="prettyprint">&lt;citrus-jms:sync-message-sender
+            <pre class="prettyprint">&lt;citrus:jms-sync-message-sender
             id=&quot;helloServiceMsgSender&quot;
             destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
             reply-handler=&quot;helloServiceReplyHandler&quot;
             reply-message-correlator=&quot;replyMessageCorrelator&quot;
             reply-timeout=&quot;5000&quot;/&gt;
 
-&lt;citrus-jms:reply-message-handler
+&lt;citrus:jms-reply-message-handler
             id=&quot;helloServiceReplyHandler&quot;/&gt;</pre>
 
-            <pre class="prettyprint">&lt;citrus-jms:sync-message-receiver
+            <pre class="prettyprint">&lt;citrus:jms-sync-message-receiver
             id=&quot;helloServiceMsgReceiver&quot;
             receive-timeout=&quot;5000&quot;
             destination-name=&quot;Citrus.HelloService.InOut.Queue&quot;
             reply-message-correlator=&quot;replyMessageCorrelator&quot;/&gt;
 
-&lt;citrus-jms:reply-message-sender
+&lt;citrus:jms-reply-message-sender
             id=&quot;helloServiceReplySender&quot;
             reply-destination-holder=&quot;helloServiceMsgReceiver&quot;
             reply-message-correlator=&quot;replyMessageCorrelator&quot;/&gt;</pre>
