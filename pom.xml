@@ -705,7 +705,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.4</version>
+          <version>3.2</version>
         </plugin>
         <plugin>
           <groupId>org.mortbay.jetty</groupId>
@@ -980,7 +980,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10</version>
+            <version>2.7</version>
             <configuration>
               <aggregate>true</aggregate>
               <linksource>true</linksource>
@@ -1063,6 +1063,42 @@
                       <directory>modules/citrus-model/model-jms/src/main/resources/com/consol/citrus/schema</directory>
                       <includes>
                         <include>citrus-jms-testcase*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-ftp-config-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/ftp/config</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-ftp/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-ftp-config*.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>copy-citrus-ftp-test-schemas</id>
+                <phase>post-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site/schema/ftp/testcase</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>modules/citrus-model/model-ftp/src/main/resources/com/consol/citrus/schema</directory>
+                      <includes>
+                        <include>citrus-ftp-testcase*.xsd</include>
                       </includes>
                     </resource>
                   </resources>
@@ -1232,7 +1268,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10</version>
+            <version>2.7</version>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
