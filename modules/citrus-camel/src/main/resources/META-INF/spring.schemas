@@ -1,4 +1,5 @@
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-1.4.xsd=com/consol/citrus/schema/citrus-camel-config-1.4.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-1.4.1.xsd=com/consol/citrus/schema/citrus-camel-config-1.4.1.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-2.0.xsd=com/consol/citrus/schema/citrus-camel-config-2.0.xsd
+http\://www.citrusframework.org/schema/camel/config/citrus-camel-config-2.0.1.xsd=com/consol/citrus/schema/citrus-camel-config-2.0.1.xsd
 http\://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd=com/consol/citrus/schema/citrus-camel-config.xsd

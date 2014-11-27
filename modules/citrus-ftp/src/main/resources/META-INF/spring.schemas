@@ -1,2 +1,3 @@
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.0.xsd=com/consol/citrus/schema/citrus-ftp-config-2.0.xsd
+http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config-2.0.1.xsd=com/consol/citrus/schema/citrus-ftp-config-2.0.1.xsd
 http\://www.citrusframework.org/schema/ftp/config/citrus-ftp-config.xsd=com/consol/citrus/schema/citrus-ftp-config.xsd
