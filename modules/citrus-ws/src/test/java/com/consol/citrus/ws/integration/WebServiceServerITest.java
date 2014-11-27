@@ -32,4 +32,8 @@ public class WebServiceServerITest extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest()
     public void WebServiceServer_2_ITest() {}
+
+    @Test
+    @CitrusXmlTest()
+    public void WebServiceServer_3_ITest() {}
 }

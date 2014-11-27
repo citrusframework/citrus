@@ -57,6 +57,7 @@ public class WebServiceServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("soap-header-prefix"), "soapHeaderPrefix");
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("message-factory"), "messageFactoryName");
     }
 
     @Override

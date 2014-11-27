@@ -51,6 +51,9 @@ public class CitrusMessageDispatcherServlet extends MessageDispatcherServlet {
      */
     public CitrusMessageDispatcherServlet(WebServiceServer webServiceServer) {
         this.webServiceServer = webServiceServer;
+
+        //use this message factory bean name - users can specify custom factories for SOAP 1.2 for instance
+        setMessageFactoryBeanName(webServiceServer.getMessageFactoryName());
     }
 
     @Override

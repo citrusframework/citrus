@@ -66,7 +66,15 @@
   <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
   <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
 
+  <!-- SOAP Message Factory -->
   <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+  <!-- SOAP 1.2 Message Factory -->
+  <bean id="soap12MessageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+    <property name="soapVersion">
+      <util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_12"/>
+    </property>
+  </bean>
 
   <bean id="wsAddressingMessageConverter" class="com.consol.citrus.ws.message.converter.WsAddressingMessageConverter">
     <constructor-arg>
@@ -133,6 +141,18 @@
                     port="14080"
                     auto-start="true"
                     root-parent-context="true"
+                    resource-base="src/citrus/resources"/>
+
+  <citrus-ws:client id="echoSoap12Client"
+                    request-url="http://localhost:14081/echo"
+                    message-factory="soap12MessageFactory"
+                    timeout="1000"/>
+
+  <citrus-ws:server id="echoSoap12Server"
+                    port="14081"
+                    auto-start="true"
+                    root-parent-context="true"
+                    message-factory="soap12MessageFactory"
                     resource-base="src/citrus/resources"/>
 
 </beans>

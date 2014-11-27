@@ -19,6 +19,7 @@
                       servlet-mapping-path="/foo"
                       handle-mime-headers="true"
                       message-converter="messageConverter"
+                      message-factory="soap12MessageFactory"
                       soap-header-namespace="http://citrusframework.org"
                       soap-header-prefix="CITRUS"/>
                             
@@ -74,6 +75,10 @@
 
     <bean id="messageConverter" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="com.consol.citrus.ws.message.converter.SoapMessageConverter"/>
+    </bean>
+
+    <bean id="soap12MessageFactory" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="org.springframework.ws.soap.SoapMessageFactory"/>
     </bean>
 
 </beans>

@@ -18,6 +18,7 @@ package com.consol.citrus.ws.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.server.WebServiceServer;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -50,6 +51,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertFalse(server.isHandleMimeHeaders());
         Assert.assertNull(server.getSoapHeaderNamespace());
         Assert.assertEquals(server.getSoapHeaderPrefix(), "");
+        Assert.assertEquals(server.getMessageFactoryName(), MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME);
 
         // 2nd server
         server = servers.next();
@@ -70,6 +72,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(server.getSoapHeaderNamespace(), "http://citrusframework.org");
         Assert.assertEquals(server.getSoapHeaderPrefix(), "CITRUS");
         Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
+        Assert.assertEquals(server.getMessageFactoryName(), "soap12MessageFactory");
 
         // 3rd server
         server = servers.next();
@@ -87,7 +90,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(server.getConnectors().length, 0);
         Assert.assertNotNull(server.getConnector());
         Assert.assertEquals(server.getConnector(), beanDefinitionContext.getBean("connector"));
-        
+
         // 4th server
         server = servers.next();
         Assert.assertEquals(server.getName(), "soapServer4");
@@ -104,7 +107,7 @@ public class WebServiceServerParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertNotNull(server.getConnectors());
         Assert.assertEquals(server.getConnectors().length, 2);
         Assert.assertNull(server.getConnector());
-        
+
         // 5th server
         server = servers.next();
         Assert.assertEquals(server.getName(), "soapServer5");

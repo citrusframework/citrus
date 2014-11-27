@@ -60,14 +60,22 @@
             <para>The SOAP client component uses a SoapMessageFactory implementation in order to create the SOAP messages. This is a Spring bean added to the Citrus Spring application context.
             Spring offers several reference implementations as message factories so you can choose one of them (e.g. for SOAP 1.1 or 1.2 implementations).</para>
             
-            <programlisting>&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;/&gt;</programlisting>
+            <programlisting>&lt;!-- Default SOAP Message Factory (SOAP 1.1) --&gt;
+&lt;bean id=&quot;messageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;/&gt;
+
+&lt;!-- SOAP 1.2 Message Factory --&gt;
+&lt;bean id=&quot;soap12MessageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+  &lt;property name=&quot;soapVersion&quot;&gt;
+    &lt;util:constant static-field=&quot;org.springframework.ws.soap.SoapVersion.SOAP_12&quot;/&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
             
             <para>By default Citrus will search for a bean with id <emphasis>'messageFactory'</emphasis>. In case you intend to use different identifiers you need to tell the SOAP client component
             which message factory to use:</para>
             
             <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
-             request-url=&quot;http://localhost:8090/test&quot; 
-             message-factory=&quot;mySepcialMessageFactory&quot;/&gt;</programlisting>
+         request-url=&quot;http://localhost:8090/test&quot;
+         message-factory=&quot;soap12MessageFactory&quot;/&gt;</programlisting>
         </important>
         
         <tip>
@@ -76,7 +84,7 @@
             
             <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
              endpoint-resolver=&quot;dynamicEndpointResolver&quot; 
-             message-factory=&quot;mySepcialMessageFactory&quot;/&gt;
+             message-factory=&quot;soap12MessageFactory&quot;/&gt;
              
 &lt;bean id=&quot;dynamicEndpointResolver&quot; 
        class=&quot;com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver&quot;/&gt;</programlisting>
@@ -291,6 +299,42 @@
 
       <para>The listing above defines a HTTP mime header <emphasis>operation</emphasis>. The header prefix <literal>citrus_http_</literal> is cut off before the header goes into the HTTP
       header section. With this feature we can decide where exactly our header information is located in our resulting client message.</para>
+    </section>
+
+    <section id="soap-12">
+      <title>SOAP 1.2</title>
+
+      <para>By default Citrus components use SOAP 1.1 version. Fortunately SOAP 1.2 is supported same way. As we already mentioned before the Citrus SOAP components do use a SOAP message factory
+      for creating messages in SOAP format.</para>
+
+      <programlisting>&lt;!-- SOAP 1.1 Message Factory --&gt;
+&lt;bean id=&quot;soap12MessageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+  &lt;property name=&quot;soapVersion&quot;&gt;
+    &lt;util:constant static-field=&quot;org.springframework.ws.soap.SoapVersion.SOAP_11&quot;/&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- SOAP 1.2 Message Factory --&gt;
+&lt;bean id=&quot;soap12MessageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+  &lt;property name=&quot;soapVersion&quot;&gt;
+    &lt;util:constant static-field=&quot;org.springframework.ws.soap.SoapVersion.SOAP_12&quot;/&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;</programlisting>
+
+      <para>As you can see the SOAP message factory can either create SOAP 1.1 or SOAP 1.2 messages. This is how Citrus can create both SOAP 1.1 and SOAP 1.2 messages. Of course you can have multiple message
+      factories configured in your project. Just set the message factory on a WebService client or server component in order to define which version should be used.</para>
+
+      <programlisting>&lt;citrus-ws:client id=&quot;soap12Client&quot;
+            request-url=&quot;http://localhost:8080/echo&quot;
+            message-factory=&quot;soap12MessageFactory&quot;
+            timeout=&quot;1000&quot;/&gt;
+
+&lt;citrus-ws:server id=&quot;soap12Server&quot;
+          port=&quot;8080&quot;
+          auto-start=&quot;true&quot;
+          message-factory=&quot;soap12MessageFactory&quot;/&gt;</programlisting>
+
+      <para>By default Citrus components do connect with a message factory called <emphasis>messageFactory</emphasis> no matter what SOAP version this factory is using.</para>
     </section>
 
     <section id="soap-faults">
@@ -1004,7 +1048,7 @@ Server: Jetty(7.0.0.pre5)
 
         <programlisting>&lt;citrus-ws:client id=&quot;soapClient&quot;
           context-config-location=&quot;classpath:citrus-ws-servlet.xml&quot;
-          message-factory=&quot;mySepcialMessageFactory&quot;/&gt;</programlisting>
+          message-factory=&quot;soap11MessageFactory&quot;/&gt;</programlisting>
 
         <para>Now let us have a closer look at the context-config-location attribute. This configuration defines the Spring application context file for endpoints, request mappings and other SpringWS specific information. Please see the
         official SpringWS documentation for details on this Spring based configuration. You can also just copy the following example application context which should work for you in general.</para>

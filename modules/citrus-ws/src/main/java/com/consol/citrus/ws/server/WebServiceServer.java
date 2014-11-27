@@ -35,6 +35,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
@@ -96,6 +97,9 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
 
     /** Message converter implementation */
     private WebServiceMessageConverter messageConverter = new SoapMessageConverter();
+
+    /** Web service message factory bean name */
+    private String messageFactoryName = MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME;
 
     /** Default SOAP header namespace and prefix */
     private String soapHeaderNamespace;
@@ -575,6 +579,22 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
      */
     public void setMessageConverter(WebServiceMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the message factory name.
+     * @return
+     */
+    public String getMessageFactoryName() {
+        return messageFactoryName;
+    }
+
+    /**
+     * Sets the message factory name.
+     * @param messageFactoryName
+     */
+    public void setMessageFactoryName(String messageFactoryName) {
+        this.messageFactoryName = messageFactoryName;
     }
 
 }
