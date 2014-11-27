@@ -19,15 +19,16 @@ package com.consol.citrus.ws.servlet;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.ws.addressing.WsAddressingHeaders;
 import com.consol.citrus.ws.interceptor.*;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
+import com.consol.citrus.ws.server.WebServiceEndpoint;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.easymock.EasyMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -54,6 +55,10 @@ public class CitrusMessageDispatcherServletTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setUp() {
+        reset(webServiceServer);
+        expect(webServiceServer.getMessageFactoryName()).andReturn(MessageDispatcherServlet.DEFAULT_MESSAGE_FACTORY_BEAN_NAME).once();
+        replay(webServiceServer);
+
         servlet = new CitrusMessageDispatcherServlet(webServiceServer);
     }
 
