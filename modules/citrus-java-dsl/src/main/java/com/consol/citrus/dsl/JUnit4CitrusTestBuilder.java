@@ -70,562 +70,312 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
     protected void configure() {
     }
 
-    /**
-     * Set custom test case name.
-     * @param name
-     */
+    @Override
     public void name(String name) {
         testBuilder.name(name);
     }
 
-    /**
-     * Adds description to the test case.
-     * @param description
-     */
+    @Override
     public void description(String description) {
         testBuilder.description(description);
     }
 
-    /**
-     * Adds author to the test case.
-     * @param author
-     */
+    @Override
     public void author(String author) {
         testBuilder.author(author);
     }
 
-    /**
-     * Sets custom package name for this test case.
-     * @param packageName
-     */
+    @Override
     public void packageName(String packageName) {
         testBuilder.packageName(packageName);
     }
 
-    /**
-     * Sets test case status.
-     * @param status
-     */
+    @Override
     public void status(TestCaseMetaInfo.Status status) {
         testBuilder.status(status);
     }
 
-    /**
-     * Sets the creation date.
-     * @param date
-     */
+    @Override
     public void creationDate(Date date) {
         testBuilder.creationDate(date);
     }
 
-    /**
-     * Adds a new variable definition to the set of test variables
-     * for this test case.
-     * @param name
-     * @param value
-     */
+    @Override
     public void variable(String name, Object value) {
         testBuilder.variable(name, value);
     }
 
-    /**
-     * Action creating new test variables during a test.
-     * @return
-     */
+    @Override
     public CreateVariablesActionDefinition variables() {
         return testBuilder.variables();
     }
 
-    /**
-     * Action creating a new test variable during a test.
-     * @return
-     */
+    @Override
     public CreateVariablesAction setVariable(String variableName, String value) {
         return testBuilder.setVariable(variableName, value);
     }
 
-    /**
-     * Adds a custom test action implementation.
-     * @param testAction
-     */
+    @Override
     public void action(TestAction testAction) {
         testBuilder.action(testAction);
     }
 
-    /**
-     * Applies test apply to test builder.
-     * @param behavior
-     */
+    @Override
     public void applyBehavior(TestBehavior behavior) {
         testBuilder.applyBehavior(behavior);
     }
 
-    /**
-     * Creates a new ANT run action definition
-     * for further configuration.
-     * @param buildFilePath
-     * @return
-     */
+    @Override
     public AntRunActionDefinition antrun(String buildFilePath) {
         return testBuilder.antrun(buildFilePath);
     }
 
-    /**
-     * Creates a new echo action.
-     * @param message
-     * @return
-     */
+    @Override
     public EchoAction echo(String message) {
         return testBuilder.echo(message);
     }
 
-    /**
-     * Creates a new executePLSQL action definition
-     * for further configuration.
-     * @param dataSource
-     * @return
-     */
+    @Override
     public ExecutePLSQLActionDefinition plsql(DataSource dataSource) {
         return testBuilder.plsql(dataSource);
     }
 
-    /**
-     * Creates a new executeSQL action definition
-     * for further configuration.
-     * @param dataSource
-     * @return
-     */
+    @Override
     public ExecuteSQLActionDefinition sql(DataSource dataSource) {
         return testBuilder.sql(dataSource);
     }
 
-    /**
-     * Creates a new executesqlquery action definition
-     * for further configuration.
-     * @param dataSource
-     * @return
-     */
+    @Override
     public ExecuteSQLQueryActionDefinition query(DataSource dataSource) {
         return testBuilder.query(dataSource);
     }
 
-    /**
-     * Creates a new receive timeout action definition
-     * for further configuration.
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
         return testBuilder.expectTimeout(messageEndpoint);
     }
 
-    /**
-     * Creates a new receive timeout action definition from message endpoint name as String.
-     * @param messageEndpointName
-     * @return
-     */
+    @Override
     public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName) {
         return testBuilder.expectTimeout(messageEndpointName);
     }
 
-    /**
-     * Creates a new fail action.
-     * @param message
-     * @return
-     */
+    @Override
     public FailAction fail(String message) {
         return testBuilder.fail(message);
     }
 
-    /**
-     * Creates a new input action.
-     * @return
-     */
+    @Override
     public InputActionDefinition input() {
         return testBuilder.input();
     }
 
-    /**
-     * Creates a new Java action definition from class name.
-     * @param className
-     * @return
-     */
+    @Override
     public JavaActionDefinition java(String className) {
         return testBuilder.java(className);
     }
 
-    /**
-     * Creates a new Java action definition from Java class.
-     * @param clazz
-     * @return
-     */
+    @Override
     public JavaActionDefinition java(Class<?> clazz) {
         return testBuilder.java(clazz);
     }
 
-    /**
-     * Creates a new Java action definition from Java object instance.
-     * @param instance
-     * @return
-     */
+    @Override
     public JavaActionDefinition java(Object instance) {
         return testBuilder.java(instance);
     }
 
-    /**
-     * Creates a new load properties action.
-     * @param filePath path to properties file.
-     * @return
-     */
+    @Override
     public LoadPropertiesAction load(String filePath) {
         return testBuilder.load(filePath);
     }
 
-    /**
-     * Creates a new purge jms queues action definition
-     * for further configuration.
-     * @param connectionFactory
-     * @return
-     */
+    @Override
     public PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
         return testBuilder.purgeQueues(connectionFactory);
     }
 
-    /**
-     * Purge queues using default connection factory.
-     * @return
-     */
+    @Override
     public PurgeJMSQueuesActionDefinition purgeQueues() {
         return testBuilder.purgeQueues();
     }
 
-    /**
-     * Creates a new purge message channel action definition
-     * for further configuration.
-     * @return
-     */
+    @Override
     public PurgeMessageChannelActionDefinition purgeChannels() {
         return testBuilder.purgeChannels();
     }
 
-    /**
-     * Creates special SOAP receive message action definition with web service server instance.
-     * @param server
-     * @return
-     */
+    @Override
     public ReceiveSoapMessageActionDefinition receive(WebServiceServer server) {
         return testBuilder.receive(server);
     }
 
-    /**
-     * Creates receive message action definition with message endpoint instance.
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public ReceiveMessageActionDefinition receive(Endpoint messageEndpoint) {
         return testBuilder.receive(messageEndpoint);
     }
 
-    /**
-     * Creates receive message action definition with messsage endpoint name.
-     * @param messageEndpointName
-     * @return
-     */
+    @Override
     public ReceiveMessageActionDefinition receive(String messageEndpointName) {
         return testBuilder.receive(messageEndpointName);
     }
 
-    /**
-     * Create special SOAP send message action definition with web service client instance.
-     * @param client
-     * @return
-     */
+    @Override
     public SendSoapMessageActionDefinition send(WebServiceClient client) {
         return testBuilder.send(client);
     }
 
-    /**
-     * Create send message action definition with message endpoint instance.
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public SendMessageActionDefinition send(Endpoint messageEndpoint) {
         return testBuilder.send(messageEndpoint);
     }
 
-    /**
-     * Create send message action definition with message endpoint name. According to message endpoint type
-     * we can create a SOAP specific message sending action.
-     * @param messageEndpointName
-     * @return
-     */
+    @Override
     public SendMessageActionDefinition send(String messageEndpointName) {
         return testBuilder.send(messageEndpointName);
     }
 
-    /**
-     * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     * @param messageEndpointName
-     * @return
-     */
+    @Override
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName) {
         return testBuilder.sendSoapFault(messageEndpointName);
     }
 
-    /**
-     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
         return testBuilder.sendSoapFault(messageEndpoint);
     }
 
-    /**
-     * Add sleep action with default delay time.
-     */
+    @Override
     public SleepAction sleep() {
         return testBuilder.sleep();
     }
 
-    /**
-     * Add sleep action with time in milliseconds.
-     * @param milliseconds
-     */
+    @Override
     public SleepAction sleep(long milliseconds) {
         return testBuilder.sleep(milliseconds);
     }
 
-    /**
-     * Add sleep action with time in seconds.
-     * @param seconds
-     */
+    @Override
     public SleepAction sleep(double seconds) {
         return testBuilder.sleep(seconds);
     }
 
-    /**
-     * Creates a new start server action definition
-     * for further configuration.
-     * @param servers
-     * @return
-     */
+    @Override
     public StartServerAction start(Server... servers) {
         return testBuilder.start(servers);
     }
 
-    /**
-     * Creates a new start server action definition
-     * for further configuration.
-     * @param server
-     * @return
-     */
+    @Override
     public StartServerAction start(Server server) {
         return testBuilder.start(server);
     }
 
-    /**
-     * Creates a new stop server action definition
-     * for further configuration.
-     * @param servers
-     * @return
-     */
+    @Override
     public StopServerAction stop(Server... servers) {
         return testBuilder.stop(servers);
     }
 
-    /**
-     * Creates a new stop server action definition
-     * for further configuration.
-     * @param server
-     * @return
-     */
+    @Override
     public StopServerAction stop(Server server) {
         return testBuilder.stop(server);
     }
 
-    /**
-     * Creates a new stop time action.
-     * @return
-     */
+    @Override
     public StopTimeAction stopTime() {
         return testBuilder.stopTime();
     }
 
-    /**
-     * Creates a new stop time action.
-     * @param id
-     * @return
-     */
+    @Override
     public StopTimeAction stopTime(String id) {
         return testBuilder.stopTime(id);
     }
 
-    /**
-     * Creates a new trace variables action definition
-     * that prints variable values to the console/logger.
-     * @return
-     */
+    @Override
     public TraceVariablesAction traceVariables() {
         return testBuilder.traceVariables();
     }
 
-    /**
-     * Creates a new trace variables action definition
-     * that prints variable values to the console/logger.
-     * @param variables
-     * @return
-     */
+    @Override
     public TraceVariablesAction traceVariables(String... variables) {
         return testBuilder.traceVariables(variables);
     }
 
-    /**
-     * Creates a new groovy action definition with
-     * script code.
-     * @param script
-     * @return
-     */
+    @Override
     public GroovyActionDefinition groovy(String script) {
         return testBuilder.groovy(script);
     }
 
-    /**
-     * Creates a new groovy action definition with
-     * script file resource.
-     * @param scriptResource
-     * @return
-     */
+    @Override
     public GroovyActionDefinition groovy(Resource scriptResource) {
         return testBuilder.groovy(scriptResource);
     }
 
-    /**
-     * Creates a new transform action definition
-     * for further configuration.
-     * @return
-     */
+    @Override
     public TransformActionDefinition transform() {
         return testBuilder.transform();
     }
 
-    /**
-     * Assert exception to happen in nested test action.
-     * @param testAction the nested testAction
-     * @return
-     */
+    @Override
     public AssertDefinition assertException(TestAction testAction) {
         return testBuilder.assertException(testAction);
     }
 
-    /**
-     * Action catches possible exceptions in nested test actions.
-     * @param exception the exception to be caught
-     * @param actions nested test actions
-     * @return
-     */
+    @Override
     public Catch catchException(String exception, TestAction ... actions) {
         return testBuilder.catchException(exception, actions);
     }
 
-    /**
-     * Action catches possible exceptions in nested test actions.
-     * @param exception
-     * @param actions
-     * @return
-     */
+    @Override
     public Catch catchException(Class<? extends Throwable> exception, TestAction ... actions) {
         return testBuilder.catchException(exception, actions);
     }
 
-    /**
-     * Action catches possible exceptions in nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public Catch catchException(TestAction ... actions) {
         return testBuilder.catchException(actions);
     }
 
-    /**
-     * Assert SOAP fault during action execution.
-     *
-     * @param testAction
-     * @return
-     */
+    @Override
     public AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
         return testBuilder.assertSoapFault(testAction);
     }
 
-    /**
-     * Adds conditional container with nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public ConditionalDefinition conditional(TestAction ... actions) {
         return testBuilder.conditional(actions);
     }
 
-    /**
-     * Adds iterate container with nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public IterateDefinition iterate(TestAction ... actions) {
         return testBuilder.iterate(actions);
     }
 
-    /**
-     * Adds parallel container with nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public Parallel parallel(TestAction ... actions) {
         return testBuilder.parallel(actions);
     }
 
-    /**
-     * Adds repeat on error until true container with nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions) {
         return testBuilder.repeatOnError(actions);
     }
 
-    /**
-     * Adds repeat until true container with nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public RepeatUntilTrueDefinition repeat(TestAction... actions) {
         return testBuilder.repeat(actions);
     }
 
-    /**
-     * Adds sequential container with nested test actions.
-     * @param actions
-     * @return
-     */
+    @Override
     public Sequence sequential(TestAction ... actions) {
         return testBuilder.sequential(actions);
     }
 
-    /**
-     * Adds template container with nested test actions.
-     * @param name
-     * @return
-     */
+    @Override
     public TemplateDefinition template(String name) {
         return testBuilder.template(name);
     }
 
-    /**
-     * Adds sequence of test actions to finally block.
-     * @param actions
-     */
+    @Override
     public void doFinally(TestAction ... actions) {
         testBuilder.doFinally(actions);
     }
