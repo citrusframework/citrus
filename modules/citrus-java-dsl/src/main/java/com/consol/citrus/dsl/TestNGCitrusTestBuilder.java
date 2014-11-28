@@ -78,7 +78,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
             try {
                 if (citrus == null) {
-                    citrus = Citrus.create(applicationContext);
+                    citrus = Citrus.newInstance(applicationContext);
                 }
 
                 TestContext ctx = prepareTestContext(citrus.createTestContext());

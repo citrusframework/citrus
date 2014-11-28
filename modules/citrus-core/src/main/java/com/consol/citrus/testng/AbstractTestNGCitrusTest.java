@@ -68,7 +68,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
                     if (citrus == null) {
-                        citrus = Citrus.create(applicationContext);
+                        citrus = Citrus.newInstance(applicationContext);
                     }
 
                     TestContext ctx = prepareTestContext(citrus.createTestContext());
@@ -169,7 +169,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         springTestContextPrepareTestInstance();
         Assert.notNull(applicationContext);
 
-        citrus = Citrus.create(applicationContext);
+        citrus = Citrus.newInstance(applicationContext);
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
     }
 
@@ -186,7 +186,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      */
     protected void executeTest(ITestContext testContext) {
         if (citrus == null) {
-            citrus = Citrus.create(applicationContext);
+            citrus = Citrus.newInstance(applicationContext);
         }
 
         TestContext ctx = prepareTestContext(citrus.createTestContext());

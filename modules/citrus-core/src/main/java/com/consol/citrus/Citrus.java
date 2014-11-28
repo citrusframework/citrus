@@ -16,6 +16,7 @@
 
 package com.consol.citrus;
 
+import com.consol.citrus.config.CitrusBaseConfig;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.container.SequenceAfterSuite;
 import com.consol.citrus.container.SequenceBeforeSuite;
@@ -32,7 +33,8 @@ import java.util.Collection;
 import java.util.Properties;
 
 /**
- * Citrus main class loads Spring application context and executes before/after suite actions.
+ * Citrus main class initializes a new Citrus runtime environment with a Spring application context. Provides before/after suite action execution
+ * and test execution methods.
  *
  * @author Christoph Deppisch
  * @since 2.0.1
@@ -42,9 +44,9 @@ public final class Citrus {
     /** Citrus version */
     private static String version;
 
-    private TestSuiteListeners testSuiteListener;
-
+    /** Test context factory **/
     private TestContextFactory testContextFactory;
+    private TestSuiteListeners testSuiteListener;
 
     private Collection<SequenceBeforeSuite> beforeSuite;
     private Collection<SequenceAfterSuite> afterSuite;
@@ -65,6 +67,11 @@ public final class Citrus {
         version = versionProperties.get("citrus.version").toString();
     }
 
+    /**
+     * Private constructor with Spring bean application context that holds all basic Citrus
+     * components needed to run a Citrus project.
+     * @param applicationContext
+     */
     private Citrus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
 
@@ -79,8 +86,17 @@ public final class Citrus {
      * such as test listeners and test context factory.
      * @return
      */
-    public static Citrus create() {
-        return create(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
+    public static final Citrus newInstance() {
+        return newInstance(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
+    }
+
+    /**
+     * Initializing method with Spring application context Java configuration class
+     * that gets loaded as application context.
+     * @return
+     */
+    public static final Citrus newInstance(Class<? extends CitrusBaseConfig> configClass) {
+        return newInstance(new AnnotationConfigApplicationContext(configClass));
     }
 
     /**
@@ -88,7 +104,7 @@ public final class Citrus {
      * @param applicationContext
      * @return
      */
-    public static Citrus create(ApplicationContext applicationContext) {
+    public static final Citrus newInstance(ApplicationContext applicationContext) {
         Citrus citrus = new Citrus(applicationContext);
         return citrus;
     }
@@ -138,19 +154,19 @@ public final class Citrus {
     }
 
     /**
-     * Runs a test case.
+     * Runs a test action which can also be a whole test case.
      */
-    public void run(TestCase testCase) {
-        run(testCase, createTestContext());
+    public void run(TestAction action) {
+        run(action, createTestContext());
     }
 
     /**
-     * Runs test case with given test context.
-     * @param testCase
+     * Runs test action with given test context. Test action can also be a whole test case.
+     * @param action
      * @param testContext
      */
-    public void run(TestCase testCase, TestContext testContext) {
-        testCase.execute(testContext);
+    public void run(TestAction action, TestContext testContext) {
+        action.execute(testContext);
     }
 
     /**
@@ -159,6 +175,14 @@ public final class Citrus {
      */
     public TestContext createTestContext() {
         return testContextFactory.getObject();
+    }
+
+    /**
+     * Gets the basic Citrus Spring bean application context.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     /**
