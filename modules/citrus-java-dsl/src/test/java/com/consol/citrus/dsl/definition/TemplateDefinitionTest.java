@@ -21,7 +21,6 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.*;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -49,7 +48,6 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         reset(applicationContextMock);
 
         expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
@@ -93,7 +91,6 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         reset(applicationContextMock);
 
         expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
-        expect(applicationContextMock.getBean(TestListeners.class)).andReturn(new TestListeners()).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();

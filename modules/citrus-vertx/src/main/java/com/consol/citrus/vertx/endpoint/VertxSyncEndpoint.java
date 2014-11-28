@@ -56,8 +56,9 @@ public class VertxSyncEndpoint extends VertxEndpoint {
         }
 
         if (vertxSyncMessageConsumer == null) {
-            vertxSyncMessageConsumer = new VertxSyncConsumer(getConsumerName(), getVertxInstanceFactory().newInstance(getEndpointConfiguration()),
-                    getEndpointConfiguration(), getMessageListener());
+            vertxSyncMessageConsumer = new VertxSyncConsumer(getConsumerName(),
+                    getVertxInstanceFactory().newInstance(getEndpointConfiguration()),
+                    getEndpointConfiguration());
         }
 
         return vertxSyncMessageConsumer;
@@ -70,8 +71,9 @@ public class VertxSyncEndpoint extends VertxEndpoint {
         }
 
         if (vertxSyncMessageProducer == null) {
-            vertxSyncMessageProducer = new VertxSyncProducer(getProducerName(), getVertxInstanceFactory().newInstance(getEndpointConfiguration()),
-                    getEndpointConfiguration(), getMessageListener());
+            vertxSyncMessageProducer = new VertxSyncProducer(getProducerName(),
+                    getVertxInstanceFactory().newInstance(getEndpointConfiguration()),
+                    getEndpointConfiguration());
         }
 
         return vertxSyncMessageProducer;

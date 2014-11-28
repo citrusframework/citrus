@@ -21,7 +21,6 @@ import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
@@ -47,8 +46,7 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertEquals(client.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertNotNull(client.getEndpointConfiguration().getInterceptor());
-        Assert.assertEquals(client.getEndpointConfiguration().getInterceptor().getClass(), LoggingClientInterceptor.class);
+        Assert.assertNull(client.getEndpointConfiguration().getInterceptor());
         Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 5000L);

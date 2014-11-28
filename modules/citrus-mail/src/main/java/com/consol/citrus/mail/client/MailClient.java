@@ -86,8 +86,8 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
             }
         }
 
-        if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(mailMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onOutboundMessage(mailMessage, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + mailMessage.toString());
         }

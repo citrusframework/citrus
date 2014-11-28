@@ -18,11 +18,11 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.http.client.HttpClient;
-import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,9 +44,8 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         HttpClient httpClient = clients.get("httpClient1");
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
-        Assert.assertNotNull(httpClient.getEndpointConfiguration().getClientInterceptors());
-        Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
+        Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
+        Assert.assertNull(httpClient.getEndpointConfiguration().getClientInterceptors());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 5000L);
@@ -56,7 +55,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         httpClient = clients.get("httpClient2");
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory(), beanDefinitionContext.getBean("soapRequestFactory"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.GET);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getContentType(), "text/xml");

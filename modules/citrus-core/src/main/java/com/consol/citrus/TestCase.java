@@ -21,7 +21,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.report.TestListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -58,9 +57,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private TestContext testContext;
 
     @Autowired
-    private TestListeners testListeners = new TestListeners();
-
-    @Autowired
     private TestActionListeners testActionListeners = new TestActionListeners();
 
     @Autowired(required = false)
@@ -79,26 +75,26 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         this.testContext = context;
 
         if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
-            testListeners.onTestStart(this);
+            context.getTestListeners().onTestStart(this);
 
             try {
                 beforeTest(context);
                 run(context);
 
-                testListeners.onTestSuccess(this);
+                context.getTestListeners().onTestSuccess(this);
             } catch (Exception e) {
-                testListeners.onTestFailure(this, e);
+                context.getTestListeners().onTestFailure(this, e);
                 throw new TestCaseFailedException(e);
             } catch (Error e) {
-                testListeners.onTestFailure(this, e);
+                context.getTestListeners().onTestFailure(this, e);
                 throw new TestCaseFailedException(e);
             } finally {
                 afterTest(context);
-                testListeners.onTestFinish(this);
+                context.getTestListeners().onTestFinish(this);
                 finish(context);
             }
         } else {
-            testListeners.onTestSkipped(this);
+            context.getTestListeners().onTestSkipped(this);
         }
     }
 
@@ -345,14 +341,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public TestContext getTestContext() {
         return testContext;
-    }
-
-    /**
-     * Sets the list of test listeners.
-     * @param testListeners
-     */
-    public void setTestListeners(TestListeners testListeners) {
-        this.testListeners = testListeners;
     }
 
     /**

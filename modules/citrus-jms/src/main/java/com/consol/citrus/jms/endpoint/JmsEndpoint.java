@@ -51,7 +51,7 @@ public class JmsEndpoint extends AbstractEndpoint {
     @Override
     public SelectiveConsumer createConsumer() {
         if (jmsConsumer == null) {
-            jmsConsumer = new JmsConsumer(getConsumerName(), getEndpointConfiguration(), getMessageListener());
+            jmsConsumer = new JmsConsumer(getConsumerName(), getEndpointConfiguration());
         }
 
         return jmsConsumer;
@@ -60,7 +60,7 @@ public class JmsEndpoint extends AbstractEndpoint {
     @Override
     public Producer createProducer() {
         if (jmsProducer == null) {
-            jmsProducer = new JmsProducer(getProducerName(), getEndpointConfiguration(), getMessageListener());
+            jmsProducer = new JmsProducer(getProducerName(), getEndpointConfiguration());
         }
 
         return jmsProducer;

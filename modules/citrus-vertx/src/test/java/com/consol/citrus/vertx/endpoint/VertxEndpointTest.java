@@ -143,9 +143,10 @@ public class VertxEndpointTest extends AbstractTestNGUnitTest {
 
         VertxEndpoint vertxEndpoint = new VertxEndpoint(endpointConfiguration);
         vertxEndpoint.setVertxInstanceFactory(instanceFactory);
-        vertxEndpoint.setMessageListener(messageListeners);
 
         Message requestMessage = new DefaultMessage("Hello from Citrus!");
+
+        context.setMessageListeners(messageListeners);
 
         reset(vertx, eventBus, messageListeners);
 

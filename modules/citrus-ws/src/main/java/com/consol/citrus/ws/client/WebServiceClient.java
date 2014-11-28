@@ -28,7 +28,6 @@ import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -46,7 +45,7 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingBean {
+public class WebServiceClient extends AbstractEndpoint implements Producer, ReplyConsumer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WebServiceClient.class);
 
@@ -79,6 +78,13 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     @Override
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
+
+        if (CollectionUtils.isEmpty(getEndpointConfiguration().getInterceptors()) && getEndpointConfiguration().getInterceptor() == null) {
+            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
+            loggingClientInterceptor.setMessageListener(context.getMessageListeners());
+
+            getEndpointConfiguration().setInterceptor(loggingClientInterceptor);
+        }
 
         SoapMessage soapMessage;
         if (message instanceof SoapMessage) {
@@ -210,16 +216,6 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     @Override
     public SelectiveConsumer createConsumer() {
         return this;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (CollectionUtils.isEmpty(getEndpointConfiguration().getInterceptors()) && getEndpointConfiguration().getInterceptor() == null) {
-            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
-            loggingClientInterceptor.setMessageListener(getMessageListener());
-
-            getEndpointConfiguration().setInterceptor(loggingClientInterceptor);
-        }
     }
 
     /**

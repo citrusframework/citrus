@@ -19,7 +19,6 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyConsumer;
-import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -52,10 +51,9 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
      * @param name
      * @param vertx
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public VertxSyncProducer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(name, vertx, endpointConfiguration, messageListener);
+    public VertxSyncProducer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration) {
+        super(name, vertx, endpointConfiguration);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -147,8 +145,8 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
      * @param context
      */
     protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (getMessageListener() != null) {
-            getMessageListener().onInboundMessage(receivedMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

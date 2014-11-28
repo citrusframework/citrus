@@ -298,7 +298,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -327,7 +327,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -358,7 +358,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;
@@ -389,7 +389,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
             @Override
             public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration(), getMessageListener()) {
+                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
                     @Override
                     public Message findReplyMessage(String correlationKey) {
                         retryCount++;

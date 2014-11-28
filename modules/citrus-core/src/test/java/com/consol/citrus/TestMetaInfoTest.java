@@ -29,10 +29,10 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 public class TestMetaInfoTest extends AbstractTestNGUnitTest {
     
     @Autowired
-    TestSuiteListeners testSuiteListeners;
+    private TestSuiteListeners testSuiteListeners;
     
     @Autowired
-    TestListeners testListeners;
+    private TestListeners testListeners;
     
     @Test
     public void testExcludeDraftTests() {

@@ -26,7 +26,6 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.util.FileUtils;
@@ -1095,7 +1094,6 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @throws Exception
      */
     public final void afterPropertiesSet() throws Exception {
-        testCase.setTestListeners(applicationContext.getBean(TestListeners.class));
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 
         if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {

@@ -17,9 +17,7 @@
 package com.consol.citrus.endpoint;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.report.MessageListeners;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract message endpoint handles send/receive timeout setting and test actors.
@@ -30,9 +28,6 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
 
     /** Endpoint name usually the Spring bean id */
     private String name = getClass().getSimpleName();
-
-    @Autowired(required = false)
-    private MessageListeners messageListener;
 
     /** Test actor linked to this endpoint */
     private TestActor actor;
@@ -83,22 +78,6 @@ public abstract class AbstractEndpoint implements Endpoint, BeanNameAware {
      */
     public void setActor(TestActor actor) {
         this.actor = actor;
-    }
-
-    /**
-     * Gets the message listeners.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
-    }
-
-    /**
-     * Sets the message listeners.
-     * @param messageListener
-     */
-    public void setMessageListener(MessageListeners messageListener) {
-        this.messageListener = messageListener;
     }
 
     @Override

@@ -18,9 +18,8 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.messaging.Producer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
@@ -38,9 +37,6 @@ public class CamelProducer implements Producer {
     /** Endpoint configuration */
     private final CamelEndpointConfiguration endpointConfiguration;
 
-    /** Message listener  */
-    private final MessageListeners messageListener;
-
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CamelProducer.class);
 
@@ -48,12 +44,10 @@ public class CamelProducer implements Producer {
      * Constructor using endpoint configuration and fields.
      * @param name
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public CamelProducer(String name, CamelEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public CamelProducer(String name, CamelEndpointConfiguration endpointConfiguration) {
         this.name = name;
         this.endpointConfiguration = endpointConfiguration;
-        this.messageListener = messageListener;
     }
 
     @Override
@@ -83,8 +77,8 @@ public class CamelProducer implements Producer {
      * @param context
      */
     protected void onOutboundMessage(Message message, TestContext context) {
-        if (messageListener != null) {
-            messageListener.onOutboundMessage(message, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
@@ -93,13 +87,5 @@ public class CamelProducer implements Producer {
     @Override
     public String getName() {
         return name;
-    }
-
-    /**
-     * Gets the message listeners on this producer.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
     }
 }

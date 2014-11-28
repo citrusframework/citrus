@@ -19,7 +19,6 @@ package com.consol.citrus.vertx.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyProducer;
-import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +47,9 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      * Default constructor using endpoint configuration.
      * @param name
      * @param endpointConfiguration
-     * @param messageListeners
      */
-    public VertxSyncConsumer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
-        super(name, vertx, endpointConfiguration, messageListeners);
+    public VertxSyncConsumer(String name, Vertx vertx, VertxSyncEndpointConfiguration endpointConfiguration) {
+        super(name, vertx, endpointConfiguration);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
     }
@@ -105,8 +103,8 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      * @param context
      */
     protected void onOutboundMessage(Message message, TestContext context) {
-        if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(message, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

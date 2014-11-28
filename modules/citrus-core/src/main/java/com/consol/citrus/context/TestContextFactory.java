@@ -18,6 +18,7 @@ package com.consol.citrus.context;
 
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
@@ -55,6 +56,9 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     private TestListeners testListeners;
 
     @Autowired
+    private MessageListeners messageListeners;
+
+    @Autowired
     private EndpointFactory endpointFactory;
 
     @Autowired
@@ -81,6 +85,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         context.setGlobalVariables(globalVariables);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         context.setTestListeners(testListeners);
+        context.setMessageListeners(messageListeners);
         context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         context.setEndpointFactory(endpointFactory);
         context.setApplicationContext(applicationContext);

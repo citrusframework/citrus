@@ -128,7 +128,6 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setEndpointUri(endpointUri);
 
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
-        camelEndpoint.setMessageListener(messageListeners);
 
         Message requestMessage = new com.consol.citrus.message.DefaultMessage("Hello from Citrus!");
 
@@ -136,6 +135,8 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         message.setBody("Hello from Camel!");
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.setIn(message);
+
+        context.setMessageListeners(messageListeners);
 
         reset(camelContext, producerTemplate, messageListeners);
 

@@ -18,9 +18,8 @@ package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.messaging.AbstractMessageConsumer;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.messaging.AbstractMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -38,9 +37,6 @@ public class VertxConsumer extends AbstractMessageConsumer {
     /** Endpoint configuration */
     private final VertxEndpointConfiguration endpointConfiguration;
 
-    /** Message listener  */
-    private final MessageListeners messageListener;
-
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(VertxConsumer.class);
 
@@ -52,13 +48,11 @@ public class VertxConsumer extends AbstractMessageConsumer {
      * @param name
      * @param vertx
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public VertxConsumer(String name, Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public VertxConsumer(String name, Vertx vertx, VertxEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
-        this.messageListener = messageListener;
     }
 
     @Override
@@ -106,8 +100,8 @@ public class VertxConsumer extends AbstractMessageConsumer {
      * @param context
      */
     protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
@@ -140,11 +134,4 @@ public class VertxConsumer extends AbstractMessageConsumer {
         }
     }
 
-    /**
-     * Gets the message listener.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
-    }
 }

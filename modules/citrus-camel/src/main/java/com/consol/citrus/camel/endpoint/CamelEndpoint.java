@@ -44,12 +44,12 @@ public class CamelEndpoint extends AbstractEndpoint {
 
     @Override
     public Producer createProducer() {
-        return new CamelProducer(getProducerName(), getEndpointConfiguration(), getMessageListener());
+        return new CamelProducer(getProducerName(), getEndpointConfiguration());
     }
 
     @Override
     public Consumer createConsumer() {
-        return new CamelConsumer(getConsumerName(), getEndpointConfiguration(), getMessageListener());
+        return new CamelConsumer(getConsumerName(), getEndpointConfiguration());
     }
 
     @Override

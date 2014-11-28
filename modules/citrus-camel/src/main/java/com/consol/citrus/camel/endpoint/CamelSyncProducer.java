@@ -20,7 +20,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyConsumer;
-import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
@@ -49,10 +48,9 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
      *
      * @param name
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public CamelSyncProducer(String name, CamelSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(name, endpointConfiguration, messageListener);
+    public CamelSyncProducer(String name, CamelSyncEndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -131,8 +129,8 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
      * @param context
      */
     protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (getMessageListener() != null) {
-            getMessageListener().onInboundMessage(receivedMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

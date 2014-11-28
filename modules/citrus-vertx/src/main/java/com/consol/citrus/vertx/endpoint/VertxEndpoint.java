@@ -49,15 +49,13 @@ public class VertxEndpoint extends AbstractEndpoint {
     @Override
     public Producer createProducer() {
         return new VertxProducer(getProducerName(), vertxInstanceFactory.newInstance(getEndpointConfiguration()),
-                getEndpointConfiguration(),
-                getMessageListener());
+                getEndpointConfiguration());
     }
 
     @Override
     public Consumer createConsumer() {
         return new VertxConsumer(getConsumerName(), vertxInstanceFactory.newInstance(getEndpointConfiguration()),
-                getEndpointConfiguration(),
-                getMessageListener());
+                getEndpointConfiguration());
     }
 
     @Override

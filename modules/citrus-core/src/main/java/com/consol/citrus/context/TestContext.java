@@ -24,6 +24,7 @@ import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
@@ -73,6 +74,9 @@ public class TestContext {
 
     /** List of test listeners to be informed on test events */
     private TestListeners testListeners = new TestListeners();
+
+    /** List of message listeners to be informed on inbound and outbound message exchange */
+    private MessageListeners messageListeners = new MessageListeners();
 
     /** List of global message construction interceptors */
     private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
@@ -363,6 +367,22 @@ public class TestContext {
      */
     public void setValidationMatcherRegistry(ValidationMatcherRegistry validationMatcherRegistry) {
         this.validationMatcherRegistry = validationMatcherRegistry;
+    }
+
+    /**
+     * Gets the message listeners.
+     * @return
+     */
+    public MessageListeners getMessageListeners() {
+        return messageListeners;
+    }
+
+    /**
+     * Set the message listeners.
+     * @param messageListeners
+     */
+    public void setMessageListeners(MessageListeners messageListeners) {
+        this.messageListeners = messageListeners;
     }
 
     /**

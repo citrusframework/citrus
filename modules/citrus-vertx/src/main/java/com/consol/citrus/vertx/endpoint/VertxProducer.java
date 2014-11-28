@@ -17,9 +17,8 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
@@ -42,20 +41,15 @@ public class VertxProducer implements Producer {
     /** Endpoint configuration */
     private final VertxEndpointConfiguration endpointConfiguration;
 
-    /** Message listener */
-    private final MessageListeners messageListener;
-
     /**
      * Default constructor using endpoint configuration.
      * @param name
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public VertxProducer(String name, Vertx vertx, VertxEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public VertxProducer(String name, Vertx vertx, VertxEndpointConfiguration endpointConfiguration) {
         this.name = name;
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
-        this.messageListener = messageListener;
     }
 
     @Override
@@ -99,8 +93,8 @@ public class VertxProducer implements Producer {
      * @param context
      */
     protected void onOutboundMessage(Message message, TestContext context) {
-        if (messageListener != null) {
-            messageListener.onOutboundMessage(message, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
@@ -111,11 +105,4 @@ public class VertxProducer implements Producer {
         return name;
     }
 
-    /**
-     * Gets the message listener.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
-    }
 }

@@ -18,9 +18,8 @@ package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -37,19 +36,14 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     /** Endpoint configuration */
     private final JmsEndpointConfiguration endpointConfiguration;
 
-    /** Message listener  */
-    private final MessageListeners messageListener;
-
     /**
      * Default constructor using endpoint.
      * @param name
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public JmsConsumer(String name, JmsEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public JmsConsumer(String name, JmsEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
-        this.messageListener = messageListener;
     }
 
     @Override
@@ -91,18 +85,11 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
      * @param context
      */
     protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
     }
 
-    /**
-     * Gets the message listener.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
-    }
 }

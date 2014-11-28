@@ -22,7 +22,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.ReplyConsumer;
-import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
@@ -61,10 +60,9 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * Default constructor using endpoint configuration.
      * @param name
      * @param endpointConfiguration
-     * @param messageListeners
      */
-    public JmsSyncProducer(String name, JmsSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
-        super(name, endpointConfiguration, messageListeners);
+    public JmsSyncProducer(String name, JmsSyncEndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -338,8 +336,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
      * @param context
      */
     protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (getMessageListener() != null) {
-            getMessageListener().onInboundMessage(receivedMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }

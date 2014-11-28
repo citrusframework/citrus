@@ -21,13 +21,12 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.ReplyProducer;
-import com.consol.citrus.report.MessageListeners;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -48,10 +47,9 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
      * Constructor using endpoint configuration and fields.
      * @param name
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public CamelSyncConsumer(String name, CamelSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
-        super(name, endpointConfiguration, messageListener);
+    public CamelSyncConsumer(String name, CamelSyncEndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -141,8 +139,8 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
      * @param context
      */
     protected void onOutboundMessage(Message message, TestContext context) {
-        if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(message, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

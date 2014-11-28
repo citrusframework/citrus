@@ -18,9 +18,8 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.messaging.Consumer;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +32,6 @@ public class CamelConsumer implements Consumer {
     /** Endpoint configuration */
     private final CamelEndpointConfiguration endpointConfiguration;
 
-    /** Message listener  */
-    private final MessageListeners messageListener;
-
     /** The consumer name */
     private final String name;
 
@@ -46,12 +42,10 @@ public class CamelConsumer implements Consumer {
      * Constructor using endpoint configuration and fields.
      * @param name
      * @param endpointConfiguration
-     * @param messageListener
      */
-    public CamelConsumer(String name, CamelEndpointConfiguration endpointConfiguration, MessageListeners messageListener) {
+    public CamelConsumer(String name, CamelEndpointConfiguration endpointConfiguration) {
         this.name = name;
         this.endpointConfiguration = endpointConfiguration;
-        this.messageListener = messageListener;
     }
 
     @Override
@@ -83,8 +77,8 @@ public class CamelConsumer implements Consumer {
      * @param context
      */
     protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (messageListener != null) {
-            messageListener.onInboundMessage(receivedMessage, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onInboundMessage(receivedMessage, context);
         } else {
             log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
         }
@@ -95,11 +89,4 @@ public class CamelConsumer implements Consumer {
         return name;
     }
 
-    /**
-     * Gets the message listeners.
-     * @return
-     */
-    public MessageListeners getMessageListener() {
-        return messageListener;
-    }
 }

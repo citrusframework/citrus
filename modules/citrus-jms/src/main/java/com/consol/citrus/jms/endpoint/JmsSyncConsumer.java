@@ -21,7 +21,6 @@ import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.ReplyProducer;
-import com.consol.citrus.report.MessageListeners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.MessageCreator;
@@ -48,10 +47,9 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      * Default constructor using endpoint configuration.
      * @param name
      * @param endpointConfiguration
-     * @param messageListeners
      */
-    public JmsSyncConsumer(String name, JmsSyncEndpointConfiguration endpointConfiguration, MessageListeners messageListeners) {
-        super(name, endpointConfiguration, messageListeners);
+    public JmsSyncConsumer(String name, JmsSyncEndpointConfiguration endpointConfiguration) {
+        super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
     }
 
@@ -128,8 +126,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      * @param context
      */
     protected void onOutboundMessage(Message message, TestContext context) {
-        if (getMessageListener() != null) {
-            getMessageListener().onOutboundMessage(message, context);
+        if (context.getMessageListeners() != null) {
+            context.getMessageListeners().onOutboundMessage(message, context);
         } else {
             log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }

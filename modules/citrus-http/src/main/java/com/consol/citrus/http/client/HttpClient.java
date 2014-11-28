@@ -26,7 +26,6 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
@@ -35,7 +34,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -44,7 +43,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingBean {
+public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsumer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
@@ -76,6 +75,13 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public void send(Message message, TestContext context) {
+        if (CollectionUtils.isEmpty(getEndpointConfiguration().getClientInterceptors())) {
+            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
+            loggingClientInterceptor.setMessageListener(context.getMessageListeners());
+
+            getEndpointConfiguration().setClientInterceptors(Arrays.<ClientHttpRequestInterceptor>asList(loggingClientInterceptor));
+        }
+
         HttpMessage httpMessage;
         if (message instanceof HttpMessage) {
             httpMessage = (HttpMessage) message;
@@ -155,16 +161,6 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         }
 
         return message;
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (CollectionUtils.isEmpty(getEndpointConfiguration().getClientInterceptors())) {
-            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
-            loggingClientInterceptor.setMessageListener(getMessageListener());
-
-            getEndpointConfiguration().setClientInterceptors(Arrays.<ClientHttpRequestInterceptor>asList(loggingClientInterceptor));
-        }
     }
 
     /**

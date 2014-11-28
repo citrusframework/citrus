@@ -53,7 +53,7 @@ public class JmsEndpointAdapter extends AbstractEndpointAdapter {
 
         endpoint = new JmsSyncEndpoint(endpointConfiguration);
         endpoint.setName(getName());
-        producer = new JmsSyncProducer(endpoint.getProducerName(), endpointConfiguration, null);
+        producer = new JmsSyncProducer(endpoint.getProducerName(), endpointConfiguration);
     }
 
     @Override
