@@ -27,6 +27,8 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -45,6 +47,8 @@ import java.util.Map;
  * @author Christoph Deppisch
  */
 public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements TestBuilder {
+    /** Logger */
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
     private CitrusTestBuilder testBuilder;
@@ -72,11 +76,15 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                 ReflectionUtils.invokeMethod(method, this);
             }
 
-            TestContext testContext = prepareTestContext(createTestContext());
-            TestCase testCase = testBuilder.getTestCase();
-
             try {
-                testCase.execute(testContext);
+                if (citrus == null) {
+                    citrus = Citrus.create(applicationContext);
+                }
+
+                TestContext ctx = prepareTestContext(citrus.createTestContext());
+                TestCase testCase = testBuilder.getTestCase();
+
+                citrus.run(testCase, ctx);
             } catch (RuntimeException e) {
                 testResult.setThrowable(e);
                 testResult.setStatus(ITestResult.FAILURE);
@@ -113,6 +121,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
      * basic test case properties.
      */
     protected void configure() {
+    }
+
+    @Override
+    public TestCase getTestCase() {
+        return testBuilder.getTestCase();
     }
 
     /**
@@ -681,11 +694,6 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
      */
     protected Map<String, Object> getVariables() {
         return testBuilder.getVariables();
-    }
-
-    @Override
-    public TestCase getTestCase(TestContext context) {
-        return testBuilder.getTestCase();
     }
 
 }

@@ -42,18 +42,14 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     private static Logger outboundMsgLogger = LoggerFactory.getLogger("Logger.Message_OUT");
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
+    private static Logger log = LoggerFactory.getLogger(Citrus.class);
 
-    /**
-     * @see com.consol.citrus.report.TestReporter#clearTestResults()
-     */
+    @Override
     public void clearTestResults() {
         testResults = new TestResults();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestReporter#generateTestResults()
-     */
+    @Override
     public void generateTestResults() {
         separator();
         newLine();
@@ -80,9 +76,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         separator();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestFailure(com.consol.citrus.TestCase, java.lang.Throwable)
-     */
+    @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         if (cause != null) {
             testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
@@ -96,9 +90,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestSkipped(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestSkipped(TestCase test) {
         newLine();
         separator();
@@ -109,9 +101,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
     }
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestStart(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestStart(TestCase test) {
         newLine();
         separator();
@@ -119,15 +109,11 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestFinish(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestFinish(TestCase test) {
     }
 
-    /**
-     * @see com.consol.citrus.report.TestListener#onTestSuccess(com.consol.citrus.TestCase)
-     */
+    @Override
     public void onTestSuccess(TestCase test) {
         testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
 
@@ -137,9 +123,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinish()
-     */
+    @Override
     public void onFinish() {
         newLine();
         separator();
@@ -147,9 +131,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStart()
-     */
+    @Override
     public void onStart() {
         newLine();
         separator();
@@ -162,9 +144,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishFailure(java.lang.Throwable)
-     */
+    @Override
     public void onFinishFailure(Throwable cause) {
         newLine();
         log.info("AFTER TEST SUITE: FAILED");
@@ -172,9 +152,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onFinishSuccess()
-     */
+    @Override
     public void onFinishSuccess() {
         newLine();
         log.info("AFTER TEST SUITE: SUCCESS");
@@ -182,9 +160,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartFailure(java.lang.Throwable)
-     */
+    @Override
     public void onStartFailure(Throwable cause) {
         newLine();
         log.info("BEFORE TEST SUITE: FAILED");
@@ -192,9 +168,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestSuiteListener#onStartSuccess()
-     */
+    @Override
     public void onStartSuccess() {
         newLine();
         log.info("BEFORE TEST SUITE: SUCCESS");
@@ -202,9 +176,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         newLine();
     }
 
-    /**
-     * @see com.consol.citrus.report.TestActionListener#onTestActionStart(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
-     */
+    @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
         newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
@@ -220,17 +192,13 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         }
     }
 
-    /**
-     * @see com.consol.citrus.report.TestActionListener#onTestActionFinish(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
-     */
+    @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         newLine();
         log.info("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
     }
 
-    /**
-     * @see com.consol.citrus.report.TestActionListener#onTestActionSkipped(com.consol.citrus.TestCase, com.consol.citrus.TestAction)
-     */
+    @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
         newLine();
         log.info("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());

@@ -24,13 +24,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
 
 /**
- * Test runner loads test case as Spring bean from application context. Runner holds application context file
- * for test case and a parent application context. At runtime runner loads Spring application context and gets
+ * Loads test case as Spring bean from XML application context file. Loader holds application context file
+ * for test case and a parent application context. At runtime this class loads the Spring application context and gets
  * test case bean instance from context.
  *
  * @author Christoph Deppisch
+ * @since 2.0.1
  */
-public class CitrusXmlTestRunner extends AbstractTestRunner {
+public class XmlTestLoader implements TestLoader {
 
     private TestCase testCase;
     private String beanName;
@@ -43,35 +44,35 @@ public class CitrusXmlTestRunner extends AbstractTestRunner {
      * @param beanName
      * @param packageName
      * @param parentContext
-     * @param testContextFactory
      */
-    public CitrusXmlTestRunner(String beanName, String packageName, ApplicationContext parentContext, TestContextFactory testContextFactory) {
-        super(testContextFactory);
+    public XmlTestLoader(String beanName, String packageName, ApplicationContext parentContext) {
         this.beanName = beanName;
         this.packageName = packageName;
         this.parentContext = parentContext;
     }
 
     @Override
-    public TestCase getTestCase() {
+    public TestCase load() {
         if (testCase == null) {
-            loadTestCase();
+            ApplicationContext ctx = loadApplicationContext();
+
+            try {
+                testCase = ctx.getBean(beanName, TestCase.class);
+                testCase.setPackageName(packageName);
+            } catch (NoSuchBeanDefinitionException e) {
+                throw parentContext.getBean(TestContextFactory.class).getObject()
+                        .handleError(beanName, packageName, "Could not find test with name '" + beanName + "'", e);
+            }
         }
 
         return testCase;
     }
 
-    private void loadTestCase() {
-        ApplicationContext ctx = loadApplicationContext();
-
-        try {
-            testCase = ctx.getBean(beanName, TestCase.class);
-            testCase.setPackageName(packageName);
-        } catch (NoSuchBeanDefinitionException e) {
-            throw getTestContext().handleError(beanName, packageName, "Could not find test with name '" + beanName + "'", e);
-        }
-    }
-
+    /**
+     * Create new Spring bean application context with test case XML file,
+     * helper and parent context file.
+     * @return
+     */
     private ApplicationContext loadApplicationContext() {
         try {
             return new ClassPathXmlApplicationContext(
@@ -80,7 +81,8 @@ public class CitrusXmlTestRunner extends AbstractTestRunner {
                             "com/consol/citrus/spring/annotation-config-ctx.xml"},
                     true, parentContext);
         } catch (Exception e) {
-            throw getTestContext().handleError(beanName, packageName, "Failed to load test case", e);
+            throw parentContext.getBean(TestContextFactory.class).getObject()
+                    .handleError(beanName, packageName, "Failed to load test case", e);
         }
     }
 

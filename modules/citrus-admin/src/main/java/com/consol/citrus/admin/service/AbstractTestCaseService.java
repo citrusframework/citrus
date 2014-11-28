@@ -168,7 +168,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
         builder.init();
         ReflectionUtils.invokeMethod(method, builder);
 
-        TestCase testCase = builder.getTestCase(null);
+        TestCase testCase = builder.getTestCase();
         return new TestcaseModelConverter().convert(testCase);
     }
 

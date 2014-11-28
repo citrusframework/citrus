@@ -261,7 +261,6 @@ public class TestContext {
     /**
      * Handles error creating a new CitrusRuntimeException and
      * informs test listeners.
-     *
      * @param testName
      * @param packageName
      * @param message

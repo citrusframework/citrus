@@ -17,23 +17,17 @@
 package com.consol.citrus.testng;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.context.TestContext;
 
 /**
- * Test runner interface.
+ * Test loader interface.
  * @author Christoph Deppisch
+ * @since 2.0.1
  */
-public interface TestRunner extends Runnable {
+public interface TestLoader {
 
     /**
-     * Gets the test case instance.
+     * Loads and creates new test case object..
      * @return
      */
-    TestCase getTestCase();
-
-    /**
-     * Gets the test context for this test runner.
-     * @return
-     */
-    TestContext getTestContext();
+    TestCase load();
 }
