@@ -150,6 +150,8 @@ public class VertxSyncEndpointTest extends AbstractTestNGUnitTest {
 
         expect(vertx.eventBus()).andReturn(eventBus).once();
         expect(eventBus.send(eq(eventBusAddress), eq(requestMessage.getPayload()), anyObject(Handler.class))).andReturn(eventBus).once();
+
+        expect(messageListeners.isEmpty()).andReturn(false);
         messageListeners.onOutboundMessage(requestMessage, context);
         expectLastCall().once();
 

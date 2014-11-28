@@ -88,7 +88,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
             }
         });
 
-        onOutboundMessage(message, context);
+        context.onOutboundMessage(message);
 
         log.info("Message was successfully sent to destination: '" + getDestinationName(replyDestination) + "'");
     }
@@ -117,19 +117,6 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         }  else {
             log.warn("Unable to retrieve reply to destination for message \n" +
                     jmsMessage + "\n - no reply to destination found in message headers!");
-        }
-    }
-
-    /**
-     * Informs message listeners if present.
-     * @param message
-     * @param context
-     */
-    protected void onOutboundMessage(Message message, TestContext context) {
-        if (context.getMessageListeners() != null) {
-            context.getMessageListeners().onOutboundMessage(message, context);
-        } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
     }
 

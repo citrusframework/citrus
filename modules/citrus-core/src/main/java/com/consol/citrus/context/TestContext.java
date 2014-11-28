@@ -22,6 +22,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.MessageListeners;
@@ -493,5 +494,29 @@ public class TestContext {
         }
 
         setVariable(MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName(), correlationKey);
+    }
+
+    /**
+     * Informs message listeners if present that inbound message was received.
+     * @param receivedMessage
+     */
+    public void onInboundMessage(Message receivedMessage) {
+        if (messageListeners != null && !messageListeners.isEmpty()) {
+            messageListeners.onInboundMessage(receivedMessage, this);
+        } else {
+            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
+        }
+    }
+
+    /**
+     * Informs message listeners if present that new outbound message is about to be sent.
+     * @param message
+     */
+    public void onOutboundMessage(Message message) {
+        if (messageListeners != null && !messageListeners.isEmpty()) {
+            messageListeners.onOutboundMessage(message, this);
+        } else {
+            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
+        }
     }
 }

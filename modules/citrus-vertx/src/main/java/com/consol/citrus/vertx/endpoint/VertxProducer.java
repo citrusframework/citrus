@@ -72,11 +72,15 @@ public class VertxProducer implements Producer {
             }
         }
 
-        onOutboundMessage(message, context);
+        context.onOutboundMessage(message);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
     }
 
+    /**
+     * Sends or publishes new outbound message depending on eventbus nature.
+     * @param message
+     */
     private void sendOrPublishMessage(Message message) {
         if (endpointConfiguration.isPubSubDomain()) {
             log.info("Publish Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
@@ -84,19 +88,6 @@ public class VertxProducer implements Producer {
         } else {
             log.info("Sending Vert.x event bus message to address: '" + endpointConfiguration.getAddress() + "'");
             vertx.eventBus().send(endpointConfiguration.getAddress(), message.getPayload());
-        }
-    }
-
-    /**
-     * Informs message listeners if present.
-     * @param message
-     * @param context
-     */
-    protected void onOutboundMessage(Message message, TestContext context) {
-        if (context.getMessageListeners() != null) {
-            context.getMessageListeners().onOutboundMessage(message, context);
-        } else {
-            log.info("Sent message is:" + System.getProperty("line.separator") + message.toString());
         }
     }
 

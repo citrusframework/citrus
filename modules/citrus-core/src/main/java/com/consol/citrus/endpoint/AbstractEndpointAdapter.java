@@ -82,8 +82,7 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
             log.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
                     "This restricts test context capabilities to an absolute minimum! You could do better when enabling the root application context for this server instance.");
 
-            testContextFactory = new TestContextFactory();
-            testContextFactory.setApplicationContext(applicationContext);
+            testContextFactory = TestContextFactory.newInstance(applicationContext);
         }
     }
 

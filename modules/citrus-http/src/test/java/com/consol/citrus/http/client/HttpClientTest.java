@@ -27,6 +27,8 @@ import org.springframework.web.client.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.easymock.EasyMock.*;
 
 /**
@@ -53,6 +55,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -102,6 +106,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -153,6 +159,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -201,6 +209,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -247,6 +257,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -293,6 +305,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -342,6 +356,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate, correlator);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -382,6 +398,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate, endpointUriResolver);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -421,6 +439,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 
@@ -455,6 +475,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         reset(restTemplate);
 
+        restTemplate.setInterceptors(anyObject(List.class));
+        expectLastCall().once();
         restTemplate.setErrorHandler(anyObject(ResponseErrorHandler.class));
         expectLastCall().once();
 

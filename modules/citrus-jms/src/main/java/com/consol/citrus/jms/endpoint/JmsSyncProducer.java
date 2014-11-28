@@ -76,7 +76,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
 
-        onOutboundMessage(message, context);
+        context.onOutboundMessage(message);
 
         MessageProducer messageProducer = null;
         MessageConsumer messageConsumer = null;
@@ -117,7 +117,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
             log.info("Received reply message on destination: '{}'", replyToDestination);
 
-            onInboundMessage(responseMessage, context);
+            context.onInboundMessage(responseMessage);
 
             onReplyMessage(correlationKey, responseMessage);
         } catch (JMSException e) {
@@ -331,18 +331,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     }
 
     /**
-     * Informs message listeners if present.
-     * @param receivedMessage
-     * @param context
+     * Destroy method closing JMS session and connection
      */
-    protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (context.getMessageListeners() != null) {
-            context.getMessageListeners().onInboundMessage(receivedMessage, context);
-        } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
-        }
-    }
-
     public void destroy() {
         JmsUtils.closeSession(session);
 

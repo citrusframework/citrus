@@ -66,22 +66,9 @@ public class CamelConsumer implements Consumer {
         log.info("Received message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         Message message = endpointConfiguration.getMessageConverter().convertInbound(exchange, endpointConfiguration);
-        onInboundMessage(message, context);
+        context.onInboundMessage(message);
 
         return message;
-    }
-
-    /**
-     * Informs message listeners if present.
-     * @param receivedMessage
-     * @param context
-     */
-    protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (context.getMessageListeners() != null) {
-            context.getMessageListeners().onInboundMessage(receivedMessage, context);
-        } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
-        }
     }
 
     @Override

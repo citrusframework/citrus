@@ -79,9 +79,7 @@ public class JmsSyncEndpoint extends JmsEndpoint implements DisposableBean {
         return jmsSyncMessageProducer;
     }
 
-    /**
-     * Destroy method closing JMS session and connection
-     */
+    @Override
     public void destroy() throws Exception {
         if (jmsSyncMessageProducer != null) {
             jmsSyncMessageProducer.destroy();

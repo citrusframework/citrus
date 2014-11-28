@@ -150,6 +150,7 @@ public class CamelEndpointTest extends AbstractTestNGUnitTest {
         expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
         expect(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).andReturn(exchange).once();
 
+        expect(messageListeners.isEmpty()).andReturn(false).times(2);
         messageListeners.onOutboundMessage(requestMessage, context);
         expectLastCall().once();
         messageListeners.onInboundMessage(anyObject(Message.class), eq(context));

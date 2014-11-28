@@ -143,6 +143,8 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
         expect(camelContext.createProducerTemplate()).andReturn(producerTemplate).once();
         expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
         expect(producerTemplate.request(eq(endpointUri), anyObject(Processor.class))).andReturn(exchange).once();
+
+        expect(messageListeners.isEmpty()).andReturn(false).times(2);
         messageListeners.onOutboundMessage(requestMessage, context);
         expectLastCall().once();
         messageListeners.onInboundMessage(anyObject(Message.class), eq(context));

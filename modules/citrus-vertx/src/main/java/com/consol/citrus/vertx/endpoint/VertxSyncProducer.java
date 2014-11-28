@@ -64,7 +64,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
         final String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         context.saveCorrelationKey(correlationKey, this);
-        onOutboundMessage(message, context);
+        context.onOutboundMessage(message);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
@@ -76,7 +76,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
 
                     Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(event, endpointConfiguration);
 
-                    onInboundMessage(responseMessage, context);
+                    context.onInboundMessage(responseMessage);
                     onReplyMessage(correlationKey, responseMessage);
                 }
             });
@@ -139,16 +139,4 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
         return replyManager.find(correlationKey);
     }
 
-    /**
-     * Informs message listeners if present.
-     * @param receivedMessage
-     * @param context
-     */
-    protected void onInboundMessage(Message receivedMessage, TestContext context) {
-        if (context.getMessageListeners() != null) {
-            context.getMessageListeners().onInboundMessage(receivedMessage, context);
-        } else {
-            log.debug("Received message is:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
-        }
-    }
 }

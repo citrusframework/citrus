@@ -19,6 +19,7 @@ package com.consol.citrus.report;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,14 @@ public class MessageListeners implements MessageListener {
                 listener.onOutboundMessage(message, context);
             }
         }
+    }
+
+    /**
+     * Save check if message listeners are present.
+     * @return
+     */
+    public boolean isEmpty() {
+        return CollectionUtils.isEmpty(messageListener);
     }
 
     /**
