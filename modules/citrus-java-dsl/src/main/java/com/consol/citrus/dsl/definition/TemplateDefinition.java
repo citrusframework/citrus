@@ -16,9 +16,10 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.Map;
-
 import com.consol.citrus.container.Template;
+import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
 
 /**
  * Definition defines call template action with global context and parameters.
@@ -30,6 +31,22 @@ public class TemplateDefinition extends AbstractActionDefinition<Template> {
 
 	public TemplateDefinition(Template action) {
 	    super(action);
+    }
+
+    /**
+     * Loads template definition from Spring bean application context and sets attributes.
+     * @param applicationContext
+     * @return
+     */
+    public TemplateDefinition load(ApplicationContext applicationContext) {
+        Template rootTemplate = applicationContext.getBean(getName(), Template.class);
+
+        getAction().setGlobalContext(rootTemplate.isGlobalContext());
+        getAction().setActor(rootTemplate.getActor());
+        getAction().setActions(rootTemplate.getActions());
+        getAction().setParameter(rootTemplate.getParameter());
+
+        return this;
     }
 	
 	/**
@@ -44,7 +61,7 @@ public class TemplateDefinition extends AbstractActionDefinition<Template> {
 
 	/**
      * Set parameter before execution.
-     * @param parameter the parameter to set
+     * @param parameters the parameter to set
      */
 	public TemplateDefinition parameters(Map<String, String> parameters) {
 		action.getParameter().putAll(parameters);

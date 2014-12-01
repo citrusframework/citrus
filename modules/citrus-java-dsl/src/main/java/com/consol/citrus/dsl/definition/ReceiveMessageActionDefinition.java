@@ -69,22 +69,27 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     
     /** Basic application context */
     private ApplicationContext applicationContext;
-    
+
     /** Handle for test action position in test case sequence use when switching to SOAP specific definition */
     private PositionHandle positionHandle;
     
     /**
      * Default constructor using test action, basic application context and position handle.
      * @param action
-     * @param ctx
-     * @param positionHandle
      */
-    public ReceiveMessageActionDefinition(A action, ApplicationContext ctx, PositionHandle positionHandle) {
+    public ReceiveMessageActionDefinition(A action) {
         super(action);
-        this.applicationContext = ctx;
-        this.positionHandle = positionHandle;
-
         this.self = (T) this;
+    }
+
+    /**
+     * Sets the position handle as internal marker where in test action sequence this action was set.
+     * @param positionHandle
+     * @return
+     */
+    public ReceiveMessageActionDefinition position(PositionHandle positionHandle) {
+        this.positionHandle = positionHandle;
+        return this;
     }
     
     /**
@@ -416,7 +421,6 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     @SuppressWarnings("unchecked")
     public T validator(String validatorName) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-        
         MessageValidator<? extends ValidationContext> validator = applicationContext.getBean(validatorName, MessageValidator.class);
         
         action.setValidator(validator);
@@ -461,10 +465,18 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     public T validationCallback(ValidationCallback callback) {
         callback.setApplicationContext(applicationContext);
         action.setValidationCallback(callback);
-
         return self;
     }
-    
+
+    /**
+     * Sets the Spring bean application context.
+     * @param applicationContext
+     */
+    public T withApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        return self;
+    }
+
     /**
      * Enable SOAP specific properties on this receiving message action.
      * @return
@@ -487,7 +499,8 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         
         positionHandle.switchTestAction(receiveSoapMessageAction);
         
-        ReceiveSoapMessageActionDefinition soapMessageActionDefinition = new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction, applicationContext);
+        ReceiveSoapMessageActionDefinition soapMessageActionDefinition = new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction);
+        soapMessageActionDefinition.withApplicationContext(applicationContext);
         soapMessageActionDefinition.setMessageType(messageType);
         soapMessageActionDefinition.setValidationContext(validationContext);
         soapMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
@@ -502,7 +515,9 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public ReceiveHttpMessageActionDefinition http() {
-        ReceiveHttpMessageActionDefinition httpMessageActionDefinition = new ReceiveHttpMessageActionDefinition(action, applicationContext, positionHandle);
+        ReceiveHttpMessageActionDefinition httpMessageActionDefinition = new ReceiveHttpMessageActionDefinition(action);
+        httpMessageActionDefinition.position(positionHandle);
+        httpMessageActionDefinition.withApplicationContext(applicationContext);
         httpMessageActionDefinition.setMessageType(messageType);
         httpMessageActionDefinition.setValidationContext(validationContext);
         httpMessageActionDefinition.setScriptValidationContext(scriptValidationContext);

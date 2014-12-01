@@ -24,14 +24,11 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.actions.*;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -39,7 +36,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -109,9 +105,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         getTestCase().execute(context);
     }
 
-    /**
-     * Initializing method.
-     */
+    @Override
     public final void init() {
         variables = new LinkedHashMap<String, Object>();
         testCase = new TestCase();
@@ -129,110 +123,62 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     protected void configure() {
     }
 
-    /**
-     * Set custom test case name.
-     * @param name
-     */
+    @Override
     public void name(String name) {
         testCase.setBeanName(name);
         testCase.setName(name);
     }
 
-    /**
-     * Adds description to the test case.
-     *
-     * @param description
-     */
+    @Override
     public void description(String description) {
         testCase.setDescription(description);
     }
 
-    /**
-     * Adds author to the test case.
-     *
-     * @param author
-     */
+    @Override
     public void author(String author) {
         testCase.getMetaInfo().setAuthor(author);
     }
 
-    /**
-     * Sets custom package name for this test case.
-     * @param packageName
-     */
+    @Override
     public void packageName(String packageName) {
         testCase.setPackageName(packageName);
     }
 
-    /**
-     * Sets test case status.
-     *
-     * @param status
-     */
+    @Override
     public void status(TestCaseMetaInfo.Status status) {
         testCase.getMetaInfo().setStatus(status);
     }
 
-    /**
-     * Sets the creation date.
-     *
-     * @param date
-     */
+    @Override
     public void creationDate(Date date) {
         testCase.getMetaInfo().setCreationDate(date);
     }
 
-    /**
-     * Adds a new variable definition to the set of test variables
-     * for this test case.
-     *
-     * @param name
-     * @param value
-     */
+    @Override
     public void variable(String name, Object value) {
         variables.put(name, value);
     }
 
-    /**
-     * Action creating new test variables during a test.
-     *
-     * @return
-     */
+    @Override
     public CreateVariablesActionDefinition variables() {
-        CreateVariablesAction action = new CreateVariablesAction();
-
-        testCase.addTestAction(action);
-
-        return new CreateVariablesActionDefinition(action);
+        CreateVariablesActionDefinition definition = TestActions.createVariables();
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Action creating a new test variable during a test.
-     *
-     * @return
-     */
+    @Override
     public CreateVariablesAction setVariable(String variableName, String value) {
-        CreateVariablesAction action = new CreateVariablesAction();
-        action.getVariables().put(variableName, value);
+        CreateVariablesAction action = TestActions.createVariable(variableName, value);
         testCase.addTestAction(action);
-
         return action;
     }
 
-    /**
-     * Adds a custom test action implementation.
-     *
-     * @param testAction
-     */
+    @Override
     public void action(TestAction testAction) {
         testCase.addTestAction(testAction);
     }
 
-    /**
-     * Apply test apply to this builder.
-     *
-     * @param behavior
-     */
+    @Override
     public void applyBehavior(TestBehavior behavior) {
         behavior.setApplicationContext(applicationContext);
         behavior.init();
@@ -251,571 +197,302 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         }
     }
 
-    /**
-     * Creates a new ANT run action definition
-     * for further configuration.
-     *
-     * @param buildFilePath
-     * @return
-     */
+    @Override
     public AntRunActionDefinition antrun(String buildFilePath) {
-        AntRunAction action = new AntRunAction();
-        action.setBuildFilePath(buildFilePath);
-        testCase.addTestAction(action);
-        return new AntRunActionDefinition(action);
+        AntRunActionDefinition definition = TestActions.antrun(buildFilePath);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new echo action.
-     *
-     * @param message
-     * @return
-     */
+    @Override
     public EchoAction echo(String message) {
-        EchoAction action = new EchoAction();
-        action.setMessage(message);
+        EchoAction action = TestActions.echo(message);
         testCase.addTestAction(action);
-
         return action;
     }
 
-    /**
-     * Creates a new executePLSQL action definition
-     * for further configuration.
-     *
-     * @param dataSource
-     * @return
-     */
+    @Override
     public ExecutePLSQLActionDefinition plsql(DataSource dataSource) {
-        ExecutePLSQLAction action = new ExecutePLSQLAction();
-        action.setDataSource(dataSource);
-        testCase.addTestAction(action);
-        return new ExecutePLSQLActionDefinition(action);
+        ExecutePLSQLActionDefinition definition = TestActions.plsql(dataSource);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new executeSQL action definition
-     * for further configuration.
-     *
-     * @param dataSource
-     * @return
-     */
+    @Override
     public ExecuteSQLActionDefinition sql(DataSource dataSource) {
-        ExecuteSQLAction action = new ExecuteSQLAction();
-        action.setDataSource(dataSource);
-        testCase.addTestAction(action);
-        return new ExecuteSQLActionDefinition(action);
+        ExecuteSQLActionDefinition definition = TestActions.sql(dataSource);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new executesqlquery action definition
-     * for further configuration.
-     *
-     * @param dataSource
-     * @return
-     */
+    @Override
     public ExecuteSQLQueryActionDefinition query(DataSource dataSource) {
-        ExecuteSQLQueryAction action = new ExecuteSQLQueryAction();
-        action.setDataSource(dataSource);
-        testCase.addTestAction(action);
-        return new ExecuteSQLQueryActionDefinition(action);
+        ExecuteSQLQueryActionDefinition definition = TestActions.query(dataSource);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new receive timeout action definition
-     * for further configuration.
-     *
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
-        ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setEndpoint(messageEndpoint);
-        testCase.addTestAction(action);
-        return new ReceiveTimeoutActionDefinition(action);
+        ReceiveTimeoutActionDefinition definition = TestActions.expectTimeout(messageEndpoint);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new receive timeout action definition from message endpoint name as String.
-     *
-     * @param messageEndpointUri
-     * @return
-     */
+    @Override
     public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
-        ReceiveTimeoutAction action = new ReceiveTimeoutAction();
-        action.setEndpointUri(messageEndpointUri);
-        testCase.addTestAction(action);
-        return new ReceiveTimeoutActionDefinition(action);
+        ReceiveTimeoutActionDefinition definition = TestActions.expectTimeout(messageEndpointUri);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new fail action.
-     *
-     * @param message
-     * @return
-     */
+    @Override
     public FailAction fail(String message) {
-        FailAction action = new FailAction();
-        action.setMessage(message);
+        FailAction action = TestActions.fail(message);
         testCase.addTestAction(action);
-
         return action;
     }
 
-    /**
-     * Creates a new input action.
-     *
-     * @return
-     */
+    @Override
     public InputActionDefinition input() {
-        InputAction action = new InputAction();
-        testCase.addTestAction(action);
-        return new InputActionDefinition(action);
+        InputActionDefinition definition = TestActions.input();
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new Java action definition from class name.
-     *
-     * @param className
-     * @return
-     */
+    @Override
     public JavaActionDefinition java(String className) {
-        JavaAction action = new JavaAction();
-        action.setClassName(className);
-        testCase.addTestAction(action);
-        return new JavaActionDefinition(action);
+        JavaActionDefinition definition = TestActions.java(className);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new Java action definition from Java class.
-     *
-     * @param clazz
-     * @return
-     */
+    @Override
     public JavaActionDefinition java(Class<?> clazz) {
-        JavaAction action = new JavaAction();
-        action.setClassName(clazz.getSimpleName());
-        testCase.addTestAction(action);
-        return new JavaActionDefinition(action);
+        JavaActionDefinition definition = TestActions.java(clazz);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new Java action definition from Java object instance.
-     *
-     * @param instance
-     * @return
-     */
+    @Override
     public JavaActionDefinition java(Object instance) {
-        JavaAction action = new JavaAction();
-        action.setInstance(instance);
-        testCase.addTestAction(action);
-        return new JavaActionDefinition(action);
+        JavaActionDefinition definition = TestActions.java(instance);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new load properties action.
-     *
-     * @param filePath path to properties file.
-     * @return
-     */
+    @Override
     public LoadPropertiesAction load(String filePath) {
-        LoadPropertiesAction action = new LoadPropertiesAction();
-        action.setFilePath(filePath);
+        LoadPropertiesAction action = TestActions.load(filePath);
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new purge jms queues action definition
-     * for further configuration.
-     *
-     * @param connectionFactory
-     * @return
-     */
+    @Override
     public PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
-        PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
-        action.setConnectionFactory(connectionFactory);
-        testCase.addTestAction(action);
-        return new PurgeJMSQueuesActionDefinition(action);
+        PurgeJMSQueuesActionDefinition definition = TestActions.purgeQueues(connectionFactory);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Purge queues using default connection factory.
-     *
-     * @return
-     */
+    @Override
     public PurgeJMSQueuesActionDefinition purgeQueues() {
-        PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
-        action.setConnectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
-        testCase.addTestAction(action);
-        return new PurgeJMSQueuesActionDefinition(action);
+        PurgeJMSQueuesActionDefinition definition = TestActions.purgeQueues(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new purge message channel action definition
-     * for further configuration.
-     *
-     * @return
-     */
+    @Override
     public PurgeMessageChannelActionDefinition purgeChannels() {
-        PurgeMessageChannelAction action = new PurgeMessageChannelAction();
-        testCase.addTestAction(action);
-        return new PurgeMessageChannelActionDefinition(action, applicationContext);
+        PurgeMessageChannelActionDefinition definition = TestActions.purgeChannels().channelResolver(applicationContext);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates special SOAP receive message action definition with web service server instance.
-     *
-     * @param server
-     * @return
-     */
+    @Override
     public ReceiveSoapMessageActionDefinition receive(WebServiceServer server) {
-        ReceiveSoapMessageAction action = new ReceiveSoapMessageAction();
-        action.setEndpoint(server);
-
-        testCase.addTestAction(action);
-        return new ReceiveSoapMessageActionDefinition(action, applicationContext);
+        ReceiveSoapMessageActionDefinition definition = TestActions.receive(server).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates receive message action definition with message endpoint instance.
-     *
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public ReceiveMessageActionDefinition receive(Endpoint messageEndpoint) {
-        ReceiveMessageAction action = new ReceiveMessageAction();
-        action.setEndpoint(messageEndpoint);
+        ReceiveMessageActionDefinition definition = TestActions.receive(messageEndpoint).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
 
-        testCase.addTestAction(action);
-        return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
+        definition.position(new PositionHandle(testCase.getActions()));
+        return definition;
     }
 
-    /**
-     * Creates receive message action definition with message endpoint name.
-     *
-     * @param messageEndpointUri
-     * @return
-     */
+    @Override
     public ReceiveMessageActionDefinition receive(String messageEndpointUri) {
-        ReceiveMessageAction action = new ReceiveMessageAction();
-        action.setEndpointUri(messageEndpointUri);
+        ReceiveMessageActionDefinition definition = TestActions.receive(messageEndpointUri).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
 
-        testCase.addTestAction(action);
-        return new ReceiveMessageActionDefinition(action, applicationContext, new PositionHandle(testCase.getActions()));
+        definition.position(new PositionHandle(testCase.getActions()));
+        return definition;
     }
 
-    /**
-     * Create special SOAP send message action definition with web service client instance.
-     *
-     * @param client
-     * @return
-     */
+    @Override
     public SendSoapMessageActionDefinition send(WebServiceClient client) {
-        SendSoapMessageAction action = new SendSoapMessageAction();
-        action.setEndpoint(client);
-
-        testCase.addTestAction(action);
-        return new SendSoapMessageActionDefinition(action, applicationContext);
+        SendSoapMessageActionDefinition definition = TestActions.send(client).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Create send message action definition with message endpoint instance.
-     *
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public SendMessageActionDefinition send(Endpoint messageEndpoint) {
-        SendMessageAction action = new SendMessageAction();
-        action.setEndpoint(messageEndpoint);
+        SendMessageActionDefinition definition = TestActions.send(messageEndpoint).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
 
-        testCase.addTestAction(action);
-        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, applicationContext, new PositionHandle(testCase.getActions()));
+        definition.position(new PositionHandle(testCase.getActions()));
+        return definition;
     }
 
-    /**
-     * Create send message action definition with message endpoint name. According to message endpoint type
-     * we can create a SOAP specific message sending action.
-     *
-     * @param messageEndpointUri
-     * @return
-     */
+    @Override
     public SendMessageActionDefinition send(String messageEndpointUri) {
-        SendMessageAction action = new SendMessageAction();
-        action.setEndpointUri(messageEndpointUri);
+        SendMessageActionDefinition definition = TestActions.send(messageEndpointUri).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
 
-        testCase.addTestAction(action);
-        return new SendMessageActionDefinition<SendMessageAction, SendMessageActionDefinition>(action, applicationContext, new PositionHandle(testCase.getActions()));
+        definition.position(new PositionHandle(testCase.getActions()));
+        return definition;
     }
 
-    /**
-     * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     *
-     * @param messageEndpointUri
-     * @return
-     */
+    @Override
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointUri) {
-        SendSoapFaultAction action = new SendSoapFaultAction();
-        action.setEndpointUri(messageEndpointUri);
-
-        testCase.addTestAction(action);
-        return new SendSoapFaultActionDefinition(action, applicationContext);
+        SendSoapFaultActionDefinition definition = TestActions.sendSoapFault(messageEndpointUri).withApplicationContext(applicationContext);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
-     * specific properties for SOAP fault messages.
-     *
-     * @param messageEndpoint
-     * @return
-     */
+    @Override
     public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
-        SendSoapFaultAction action = new SendSoapFaultAction();
-        action.setEndpoint(messageEndpoint);
+        SendSoapFaultActionDefinition definition = TestActions.sendSoapFault(messageEndpoint).withApplicationContext(applicationContext);
 
-        testCase.addTestAction(action);
-        return new SendSoapFaultActionDefinition(action, applicationContext);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Add sleep action with default delay time.
-     */
+    @Override
     public SleepAction sleep() {
-        SleepAction action = new SleepAction();
+        SleepAction action = TestActions.sleep();
         testCase.addTestAction(action);
-
         return action;
     }
 
-    /**
-     * Add sleep action with time in milliseconds.
-     *
-     * @param milliseconds
-     */
+    @Override
     public SleepAction sleep(long milliseconds) {
-        SleepAction action = new SleepAction();
-        action.setMilliseconds(String.valueOf(milliseconds));
-
+        SleepAction action = TestActions.sleep(milliseconds);
         testCase.addTestAction(action);
-
         return action;
     }
 
-    /**
-     * Add sleep action with time in seconds.
-     *
-     * @param seconds
-     */
+    @Override
     public SleepAction sleep(double seconds) {
-        SleepAction action = new SleepAction();
-        action.setSeconds(String.valueOf(seconds));
-
+        SleepAction action = TestActions.sleep(seconds);
         testCase.addTestAction(action);
-
         return action;
     }
 
-    /**
-     * Creates a new start server action definition
-     * for further configuration.
-     *
-     * @param servers
-     * @return
-     */
+    @Override
     public StartServerAction start(Server... servers) {
-        StartServerAction action = new StartServerAction();
-        action.getServerList().addAll(Arrays.asList(servers));
+        StartServerAction action = TestActions.start(servers);
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new start server action definition
-     * for further configuration.
-     *
-     * @param server
-     * @return
-     */
+    @Override
     public StartServerAction start(Server server) {
-        StartServerAction action = new StartServerAction();
-        action.setServer(server);
+        StartServerAction action = TestActions.start(server);
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new stop server action definition
-     * for further configuration.
-     *
-     * @param servers
-     * @return
-     */
+    @Override
     public StopServerAction stop(Server... servers) {
-        StopServerAction action = new StopServerAction();
-        action.getServerList().addAll(Arrays.asList(servers));
+        StopServerAction action = TestActions.stop(servers);
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new stop server action definition
-     * for further configuration.
-     *
-     * @param server
-     * @return
-     */
+    @Override
     public StopServerAction stop(Server server) {
-        StopServerAction action = new StopServerAction();
-        action.setServer(server);
+        StopServerAction action = TestActions.stop(server);
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new stop time action.
-     *
-     * @return
-     */
+    @Override
     public StopTimeAction stopTime() {
-        StopTimeAction action = new StopTimeAction();
+        StopTimeAction action = TestActions.stopTime();
         testCase.addTestAction(action);
-        return new StopTimeAction();
+        return action;
     }
 
-    /**
-     * Creates a new stop time action.
-     *
-     * @param id
-     * @return
-     */
+    @Override
     public StopTimeAction stopTime(String id) {
-        StopTimeAction action = new StopTimeAction();
-        action.setId(id);
+        StopTimeAction action = TestActions.stopTime(id);
         testCase.addTestAction(action);
-        return new StopTimeAction();
+        return action;
     }
 
-    /**
-     * Creates a new trace variables action definition
-     * that prints variable values to the console/logger.
-     *
-     * @return
-     */
+    @Override
     public TraceVariablesAction traceVariables() {
-        TraceVariablesAction action = new TraceVariablesAction();
-
+        TraceVariablesAction action = TestActions.traceVariables();
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new trace variables action definition
-     * that prints variable values to the console/logger.
-     *
-     * @param variables
-     * @return
-     */
+    @Override
     public TraceVariablesAction traceVariables(String... variables) {
-        TraceVariablesAction action = new TraceVariablesAction();
-        action.setVariableNames(Arrays.asList(variables));
-
+        TraceVariablesAction action = TestActions.traceVariables(variables);
         testCase.addTestAction(action);
         return action;
     }
 
-    /**
-     * Creates a new groovy action definition with
-     * script code.
-     *
-     * @param script
-     * @return
-     */
+    @Override
     public GroovyActionDefinition groovy(String script) {
-        GroovyAction action = new GroovyAction();
-        action.setScript(script);
-
-        testCase.addTestAction(action);
-
-        return new GroovyActionDefinition(action);
+        GroovyActionDefinition definition = TestActions.groovy(script);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new groovy action definition with
-     * script file resource.
-     *
-     * @param scriptResource
-     * @return
-     */
+    @Override
     public GroovyActionDefinition groovy(Resource scriptResource) {
-        GroovyAction action = new GroovyAction();
-        try {
-            action.setScript(FileUtils.readToString(scriptResource));
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read script resource", e);
-        }
-
-        testCase.addTestAction(action);
-
-        return new GroovyActionDefinition(action);
+        GroovyActionDefinition definition = TestActions.groovy(scriptResource);
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Creates a new transform action definition
-     * for further configuration.
-     *
-     * @return
-     */
+    @Override
     public TransformActionDefinition transform() {
-        TransformAction action = new TransformAction();
-        testCase.addTestAction(action);
-        return new TransformActionDefinition(action);
+        TransformActionDefinition definition = TestActions.transform();
+        testCase.addTestAction(definition.getAction());
+        return definition;
     }
 
-    /**
-     * Assert exception to happen in nested test action.
-     *
-     * @param testAction the nested testAction
-     * @return
-     */
+    @Override
     public AssertDefinition assertException(TestAction testAction) {
-        Assert action = new Assert();
-
-        if (testAction instanceof AbstractActionDefinition<?>) {
-            action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
-        } else {
-            action.setAction(testAction);
-        }
-
+        AssertDefinition definition = TestActions.assertException(testAction);
         if (!testAction.getClass().isAnonymousClass()) {
           testCase.getActions().remove((testCase.getActions().size()) - 1);
         }
 
-        testCase.addTestAction(action);
+        testCase.addTestAction(definition.getAction());
 
-        return new AssertDefinition(action);
+        return definition;
     }
 
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param exception the exception to be caught
-     * @param actions   nested test actions
-     * @return
-     */
+    @Override
     public Catch catchException(String exception, TestAction... actions) {
-        Catch container = new Catch();
-        container.setException(exception);
+        Catch container = TestActions.catchException(exception, actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
@@ -824,121 +501,76 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         return container;
     }
 
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param exception
-     * @param actions
-     * @return
-     */
+    @Override
     public Catch catchException(Class<? extends Throwable> exception, TestAction... actions) {
         return catchException(exception.getName(), actions);
     }
 
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public Catch catchException(TestAction... actions) {
         return catchException(CitrusRuntimeException.class.getName(), actions);
     }
 
-    /**
-     * Assert SOAP fault during action execution.
-     *
-     * @param testAction
-     * @return
-     */
+    @Override
     public AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
-        AssertSoapFault action = new AssertSoapFault();
+        AssertSoapFaultDefinition definition = TestActions.assertSoapFault(testAction);
 
-        if (testAction instanceof AbstractActionDefinition<?>) {
-            action.setAction(((AbstractActionDefinition<?>) testAction).getAction());
-        } else {
-            action.setAction(testAction);
+        if (applicationContext.containsBean("soapFaultValidator")) {
+            definition.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
         }
 
         if (!testAction.getClass().isAnonymousClass()) {
             testCase.getActions().remove((testCase.getActions().size()) - 1);
         }
 
-        testCase.addTestAction(action);
+        testCase.addTestAction(definition.getAction());
 
-        return new AssertSoapFaultDefinition(action, applicationContext);
+        return definition;
     }
 
-    /**
-     * Adds conditional container with nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public ConditionalDefinition conditional(TestAction... actions) {
-        Conditional container = new Conditional();
+        ConditionalDefinition container = TestActions.conditional(actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
-        testCase.getActions().add(container);
+        testCase.getActions().add(container.getAction());
 
-        return new ConditionalDefinition(container);
+        return container;
     }
 
-    /**
-     * Adds iterate container with nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public IterateDefinition iterate(TestAction... actions) {
-        Iterate container = new Iterate();
+        IterateDefinition container = TestActions.iterate(actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
-        testCase.getActions().add(container);
+        testCase.getActions().add(container.getAction());
 
-        return new IterateDefinition(container);
+        return container;
     }
 
-    /**
-     * Adds parallel container with nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public Parallel parallel(TestAction... actions) {
-        Parallel container = new Parallel();
+        Parallel container = TestActions.parallel(actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
@@ -947,74 +579,47 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         return container;
     }
 
-    /**
-     * Adds repeat on error until true container with nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions) {
-        RepeatOnErrorUntilTrue container = new RepeatOnErrorUntilTrue();
+        RepeatOnErrorUntilTrueDefinition container = TestActions.repeatOnError(actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
-        testCase.addTestAction(container);
-        return new RepeatOnErrorUntilTrueDefinition(container);
+        testCase.addTestAction(container.getAction());
+        return container;
     }
 
-    /**
-     * Adds repeat until true container with nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public RepeatUntilTrueDefinition repeat(TestAction... actions) {
-        RepeatUntilTrue container = new RepeatUntilTrue();
+        RepeatUntilTrueDefinition container = TestActions.repeat(actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
-        testCase.addTestAction(container);
-        return new RepeatUntilTrueDefinition(container);
+        testCase.addTestAction(container.getAction());
+        return container;
     }
 
-    /**
-     * Adds sequential container with nested test actions.
-     *
-     * @param actions
-     * @return
-     */
+    @Override
     public Sequence sequential(TestAction... actions) {
-        Sequence container = new Sequence();
+        Sequence container = TestActions.sequential(actions);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                container.addTestAction(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 testCase.getActions().remove(action);
-                container.addTestAction(action);
-            } else {
-                container.addTestAction(action);
             }
         }
 
@@ -1023,25 +628,11 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         return container;
     }
 
-    /**
-     * Adds template container with nested test actions.
-     *
-     * @param name
-     * @return
-     */
+    @Override
     public TemplateDefinition template(String name) {
-        Template template = new Template();
-        template.setName(name);
-
-        Template rootTemplate = applicationContext.getBean(name, Template.class);
-
-        template.setGlobalContext(rootTemplate.isGlobalContext());
-        template.setActor(rootTemplate.getActor());
-        template.setActions(rootTemplate.getActions());
-        template.setParameter(rootTemplate.getParameter());
-
-        testCase.addTestAction(template);
-        return new TemplateDefinition(template);
+        TemplateDefinition template = TestActions.template(name).load(applicationContext);
+        testCase.addTestAction(template.getAction());
+        return template;
     }
 
     /**

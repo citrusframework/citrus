@@ -18,10 +18,9 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.validation.SoapAttachmentValidator;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -36,10 +35,9 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
     /**
      * Default constructor using action and application context.
      * @param action
-     * @param ctx
      */
-    public ReceiveSoapMessageActionDefinition(ReceiveSoapMessageAction action, ApplicationContext ctx) {
-        super(action, ctx, null);
+    public ReceiveSoapMessageActionDefinition(ReceiveSoapMessageAction action) {
+        super(action);
     }
     
     /**

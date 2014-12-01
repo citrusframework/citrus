@@ -33,17 +33,11 @@ import java.io.IOException;
  */
 public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSoapFault> {
 
-    /** Citrus base application context */
-    private ApplicationContext applicationContext;
-    
     private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
     
-	public AssertSoapFaultDefinition(AssertSoapFault action, ApplicationContext ctx) {
+	public AssertSoapFaultDefinition(AssertSoapFault action) {
 	    super(action);
-	    this.applicationContext = ctx;
-	    
-	    action.setValidator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
-	    
+
 	    // for now support one single soap fault detail
 	    SoapFaultDetailValidationContext soapFaultDetailValidationContext = new SoapFaultDetailValidationContext();
 	    soapFaultDetailValidationContext.addValidationContext(validationContext);
@@ -127,9 +121,10 @@ public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSo
     /**
      * Set explicit SOAP fault validator implementation by bean name.
      * @param validatorName
+     * @param applicationContext
      * @return
      */
-    public AssertSoapFaultDefinition validator(String validatorName) {
+    public AssertSoapFaultDefinition validator(String validatorName, ApplicationContext applicationContext) {
         action.setValidator(applicationContext.getBean(validatorName, SoapFaultValidator.class));
         return this;
     }

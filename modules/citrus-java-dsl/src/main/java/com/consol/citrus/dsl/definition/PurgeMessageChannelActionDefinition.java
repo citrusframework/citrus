@@ -18,9 +18,9 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import org.springframework.context.ApplicationContext;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 
 import java.util.Arrays;
@@ -36,17 +36,12 @@ import java.util.List;
  */
 public class PurgeMessageChannelActionDefinition extends AbstractActionDefinition<PurgeMessageChannelAction> {
 
-    /** Citrus base application context */
-    private ApplicationContext applicationContext;
-    
     /**
      * Default constructor using test action and application context
      * @param action
-     * @param ctx
      */
-	public PurgeMessageChannelActionDefinition(PurgeMessageChannelAction action, ApplicationContext ctx) {
+	public PurgeMessageChannelActionDefinition(PurgeMessageChannelAction action) {
 	    super(action);
-	    this.applicationContext = ctx;
     }
 	
 	/**
@@ -57,7 +52,16 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
 		action.setMessageSelector(messageSelector);
 		return this;
 	}
-	
+
+    /**
+     * Sets the Spring bean factory channel resolver for using channel names.
+     * @param applicationContext
+     */
+    public PurgeMessageChannelActionDefinition channelResolver(ApplicationContext applicationContext) {
+        action.setChannelResolver(new BeanFactoryChannelResolver(applicationContext));
+        return this;
+    }
+
 	/**
      * Sets the channelResolver for using channel names.
      * @param channelResolver the channelResolver to set
@@ -72,8 +76,6 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
      * @param channelNames the channelNames to set
      */
 	public PurgeMessageChannelActionDefinition channelNames(List<String> channelNames) {
-	    checkChannelResolver();
-	    
 		action.getChannelNames().addAll(channelNames);
 		return this;
 	}
@@ -93,8 +95,6 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
      * @return
      */
     public PurgeMessageChannelActionDefinition channel(String name) {
-        checkChannelResolver();
-        
         action.getChannelNames().add(name);
         return this;
     }
@@ -127,13 +127,4 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
         return this;
     }
 
-    /**
-     * Checks if channel resolver is set before using channel names.
-     */
-    private void checkChannelResolver() {
-        if (action.getChannelResolver() == null) {
-            action.setChannelResolver(new BeanFactoryChannelResolver(applicationContext));
-        }
-    }
-	
 }

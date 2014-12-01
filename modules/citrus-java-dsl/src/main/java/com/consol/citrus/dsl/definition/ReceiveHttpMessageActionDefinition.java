@@ -17,10 +17,8 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageHeaders;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -40,11 +38,9 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * Default constructor using test action, basic application context and position handle.
      *
      * @param action
-     * @param ctx
-     * @param positionHandle
      */
-    public ReceiveHttpMessageActionDefinition(ReceiveMessageAction action, ApplicationContext ctx, PositionHandle positionHandle) {
-        super(action, ctx, positionHandle);
+    public ReceiveHttpMessageActionDefinition(ReceiveMessageAction action) {
+        super(action);
     }
 
     /**

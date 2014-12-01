@@ -48,6 +48,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     public void testAssertSoapFaultBuilder() {
         reset(applicationContextMock);
 
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -85,6 +86,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     public void testFaultDetail() {
         reset(applicationContextMock);
 
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -125,6 +127,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     public void testMultipleFaultDetails() {
         reset(applicationContextMock);
 
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -168,6 +171,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         reset(resource, applicationContextMock);
 
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<ErrorDetail><message>FooBar</message</ErrorDetail>".getBytes())).once();
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -208,6 +212,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     public void testFaultDetailResourcePath() {
         reset(applicationContextMock);
 
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -250,6 +255,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         reset(resource, applicationContextMock);
 
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("<MessageDetail><message>FooBar</message></MessageDetail>".getBytes())).once();
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -292,6 +298,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     public void testAssertSoapFaultBuilderWithValidator() {
         reset(applicationContextMock);
 
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -331,6 +338,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
     public void testAssertSoapFaultBuilderWithMessageFactory() {
         reset(applicationContextMock);
 
+        expect(applicationContextMock.containsBean("soapFaultValidator")).andReturn(true).once();
         expect(applicationContextMock.getBean("soapFaultValidator", SoapFaultValidator.class)).andReturn(soapFaultValidator).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();

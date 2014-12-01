@@ -69,14 +69,20 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     /**
      * Default constructor with test action.
      * @param action
-     * @param ctx
-     * @param positionHandle
      */
-    public SendMessageActionDefinition(A action, ApplicationContext ctx, PositionHandle positionHandle) {
+    public SendMessageActionDefinition(A action) {
         super(action);
-        this.applicationContext = ctx;
-        this.positionHandle = positionHandle;
         this.self = (T) this;
+    }
+
+    /**
+     * Sets the position handle as internal marker where in test action sequence this action was set.
+     * @param positionHandle
+     * @return
+     */
+    public SendMessageActionDefinition position(PositionHandle positionHandle) {
+        this.positionHandle = positionHandle;
+        return this;
     }
 
     /**
@@ -328,7 +334,16 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         xpathMessageConstructionInterceptor.getXPathExpressions().put(expression, value);
         return self;
     }
-    
+
+    /**
+     * Sets the Spring bean application context.
+     * @param applicationContext
+     */
+    public T withApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        return self;
+    }
+
     /**
      * Enable SOAP specific properties on this message sending action.
      * @return
@@ -345,7 +360,10 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
         positionHandle.switchTestAction(sendSoapMessageAction);
 
-        return new SendSoapMessageActionDefinition(sendSoapMessageAction, applicationContext);
+        SendSoapMessageActionDefinition sendSoapMessageActionDefinition = new SendSoapMessageActionDefinition(sendSoapMessageAction);
+        sendSoapMessageActionDefinition.withApplicationContext(applicationContext);
+
+        return sendSoapMessageActionDefinition;
     }
 
     /**
@@ -361,7 +379,11 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      * @return HTTP specific definition.
      */
     public SendHttpMessageActionDefinition http() {
-        return new SendHttpMessageActionDefinition(action, applicationContext, positionHandle);
+        SendHttpMessageActionDefinition sendHttpMessageActionDefinition = new SendHttpMessageActionDefinition(action);
+        sendHttpMessageActionDefinition.position(positionHandle);
+        sendHttpMessageActionDefinition.withApplicationContext(applicationContext);
+
+        return sendHttpMessageActionDefinition;
     }
 
 }

@@ -35,10 +35,9 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
     /**
      * Default constructor with test action.
      * @param action
-     * @param ctx
      */
-    public SendSoapFaultActionDefinition(SendSoapFaultAction action, ApplicationContext ctx) {
-        super(action, ctx);
+    public SendSoapFaultActionDefinition(SendSoapFaultAction action) {
+        super(action);
     }
     
     /**
@@ -103,6 +102,11 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
     public SendSoapFaultActionDefinition faultDetailResource(String filePath) {
         getAction().getFaultDetailResourcePaths().add(filePath);
         return this;
+    }
+
+    @Override
+    public SendSoapFaultActionDefinition withApplicationContext(ApplicationContext applicationContext) {
+        return (SendSoapFaultActionDefinition) super.withApplicationContext(applicationContext);
     }
 
     @Override
