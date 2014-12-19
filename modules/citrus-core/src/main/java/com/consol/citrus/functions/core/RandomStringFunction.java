@@ -50,13 +50,13 @@ public class RandomStringFunction implements Function {
     private static final char[] NUMBERS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', };
 
     /** Mode upper case */
-    private static final String UPPERCASE = "UPPERCASE";
+    public static final String UPPERCASE = "UPPERCASE";
 
     /** Mode lower case */
-    private static final String LOWERCASE = "LOWERCASE";
+    public static final String LOWERCASE = "LOWERCASE";
 
     /** Mode mixed (upper and lower case characters) */
-    private static final String MIXED = "MIXED";
+    public static final String MIXED = "MIXED";
 
     /**
      * @see com.consol.citrus.functions.Function#execute(java.util.List, com.consol.citrus.context.TestContext)
