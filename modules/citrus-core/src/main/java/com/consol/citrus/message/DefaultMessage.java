@@ -17,6 +17,9 @@
 package com.consol.citrus.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.util.CollectionUtils;
 
@@ -42,6 +45,9 @@ public class DefaultMessage implements Message {
 
     /** Message headers */
     private final Map<String, Object> headers;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(DefaultMessage.class);
 
     /**
      * Constructs copy of given message.
@@ -142,7 +148,16 @@ public class DefaultMessage implements Message {
             return type.cast(payload);
         }
 
-        return new SimpleTypeConverter().convertIfNecessary(payload, type);
+        try {
+            return new SimpleTypeConverter().convertIfNecessary(payload, type);
+        } catch (ConversionNotSupportedException e) {
+            if (String.class.equals(type)) {
+                log.warn(String.format("Using payload object toString representation: %s", e.getMessage()));
+                return (T) payload.toString();
+            }
+
+            throw e;
+        }
     }
 
     @Override
