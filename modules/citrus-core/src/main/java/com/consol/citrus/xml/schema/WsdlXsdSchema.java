@@ -135,6 +135,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
                 TransformerFactory.newInstance().newTransformer().transform(source, result);
                 Resource schemaResource = new ByteArrayResource(bos.toByteArray());
                 
+                importedSchemas.put(schema.getElement().getAttribute("targetNamespace"), null);
                 addImportedSchemas(schema, importedSchemas);
                 schemas.add(schemaResource);
                 schemaSources.add(source);
