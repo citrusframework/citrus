@@ -52,6 +52,10 @@ public final class SoapAttachmentParser {
             soapAttachment.setCharsetName(attachmentElement.getAttribute("charset-name"));
         }
 
+        if (attachmentElement.hasAttribute("mtom-inline")) {
+            soapAttachment.setMtomInline(Boolean.parseBoolean(attachmentElement.getAttribute("mtom-inline")));
+        }
+        
         Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
         if (attachmentDataElement != null) {
             soapAttachment.setContent(DomUtils.getTextValue(attachmentDataElement));

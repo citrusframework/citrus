@@ -36,6 +36,7 @@
         <xs:attribute name="content-id"/>
         <xs:attribute name="content-type"/>
         <xs:attribute name="charset-name"/>
+        <xs:attribute name="mtom-inline"/>
     </xs:complexType>
 
     <xs:complexType name="SoapAssertActionType">
@@ -70,6 +71,7 @@
                 <xs:sequence>
                     <xs:element name="attachment" type="SoapAttachmentType" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
+                <xs:attribute name="mtom-enabled"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

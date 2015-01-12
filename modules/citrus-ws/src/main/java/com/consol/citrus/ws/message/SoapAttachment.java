@@ -25,6 +25,8 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.*;
 import java.nio.charset.Charset;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Citrus SOAP attachment implementation.
@@ -37,8 +39,11 @@ public class SoapAttachment implements Attachment, Serializable {
     private static final long serialVersionUID = 6277464458242523954L;
 
     /** Content body as string */
-    private String content;
+    private String content = null;
 
+    /** Content body as binary */
+    private DataHandler binaryContent = null;
+        
     /** Content body as file resource path  */
     private String contentResourcePath;
 
@@ -50,6 +55,9 @@ public class SoapAttachment implements Attachment, Serializable {
     
     /** Chosen charset of content body */
     private String charsetName = "UTF-8";
+    
+    /** send mtom attachments inline as hex or base64 coded */
+    private Boolean mtomInline = false;
     
     /**
      * Default constructor
@@ -67,10 +75,16 @@ public class SoapAttachment implements Attachment, Serializable {
         soapAttachment.setContentId(attachment.getContentId());
         soapAttachment.setContentType(attachment.getContentType());
 
-        try {
-            soapAttachment.setContent(FileUtils.readToString(attachment.getInputStream()).trim());
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to read SOAP attachment content", e);
+        if (attachment.getContentType().startsWith("text/")) {
+            // String content
+            try {
+                soapAttachment.setContent(FileUtils.readToString(attachment.getInputStream()).trim());
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read SOAP attachment content", e);
+            }
+        } else {
+            // Binary content
+            soapAttachment.binaryContent = attachment.getDataHandler();
         }
 
         soapAttachment.setCharsetName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
@@ -105,30 +119,60 @@ public class SoapAttachment implements Attachment, Serializable {
      * @see org.springframework.ws.mime.Attachment#getDataHandler()
      */
     public DataHandler getDataHandler() {
-        return new DataHandler(new DataSource() {
-            public OutputStream getOutputStream() throws IOException {
-                throw new UnsupportedOperationException();
+        if(content != null) {
+            // Text content
+            return new DataHandler(new DataSource() {
+                public OutputStream getOutputStream() throws IOException {
+                    throw new UnsupportedOperationException();
+                }
+
+                public String getName() {
+                    return contentId;
+                }
+
+                public InputStream getInputStream() throws IOException {
+                    return new ByteArrayInputStream(content.getBytes(charsetName));
+                }
+
+                public String getContentType() {
+                    return contentType;
+                }
+            });
+        } else {
+            // Binary content
+            if (binaryContent == null) {
+                final Resource attachmentResource = new PathMatchingResourcePatternResolver().getResource(contentResourcePath);
+                binaryContent = new DataHandler(new DataSource() {
+
+                    @Override
+                    public OutputStream getOutputStream() throws IOException {
+                        throw new UnsupportedOperationException();
+                    }
+
+                    public String getName() {
+                        return attachmentResource.getFilename();
+                    }
+
+                    @Override
+                    public InputStream getInputStream() throws IOException {
+                        return attachmentResource.getInputStream();
+                    }
+
+                    @Override
+                    public String getContentType() {
+                        return contentType;
+                    }
+                });
             }
-            
-            public String getName() {
-                return contentId;
-            }
-            
-            public InputStream getInputStream() throws IOException {
-                return new ByteArrayInputStream(content.getBytes(charsetName));
-            }
-            
-            public String getContentType() {
-                return contentType;
-            }
-        });
+            return binaryContent;
+        }
     }
 
     /**
      * @see org.springframework.ws.mime.Attachment#getInputStream()
      */
     public InputStream getInputStream() throws IOException {
-        return new ByteArrayInputStream(content.getBytes(charsetName));
+        return getDataHandler().getInputStream();
     }
 
     /**
@@ -136,9 +180,15 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public long getSize() {
         try {
-            return content.getBytes(charsetName).length;
+            if (content != null) {
+                return content.getBytes(charsetName).length;
+            } else {
+                return getSizeOfContent(getDataHandler().getInputStream());
+            }
         } catch (UnsupportedEncodingException e) {
             throw new CitrusRuntimeException(e);
+        } catch (IOException ioe) {
+            throw new CitrusRuntimeException(ioe);
         }
     }
 
@@ -209,5 +259,33 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public void setContentId(String contentId) {
         this.contentId = contentId;
+    }
+
+    /**
+     * Set mtom inline
+     * @param inline
+     */
+    public void setMtomInline(Boolean inline) {
+        this.mtomInline = inline;
+    }
+
+    /**
+     * Get mtom inline
+     * @return
+     */
+    public Boolean getMtomInline() {
+        return this.mtomInline;
+    }
+    
+    /**
+     * Get size in bytes of the given input stream
+     * @param is Read all data from stream to calculate size of the stream
+     */
+    private static long getSizeOfContent(InputStream is) throws IOException {
+        long size = 0;
+        while (is.read() != -1) {
+            size++;
+        }
+        return size;
     }
 }
