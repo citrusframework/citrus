@@ -75,9 +75,11 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
                 if (StringUtils.hasText(attachment.getContent())) {
                     attachment.setContent(context.replaceDynamicContentInString(attachment.getContent()));
                 } else if (attachment.getContentResourcePath() != null) {
-                    attachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachment.getContentResourcePath(), context))));
+                    if (attachment.getContentType().startsWith("text/"))
+                        attachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachment.getContentResourcePath(), context))));
+                    else
+                        attachment.setContentResourcePath(context.replaceDynamicContentInString(attachment.getContentResourcePath()));
                 }
-
             }
 
             if (!attachments.isEmpty()) {

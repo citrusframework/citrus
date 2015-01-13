@@ -71,6 +71,9 @@ public class SendSoapMessageAction extends SendMessageAction {
     /** enable/disable mtom attachments */
     private Boolean mtomEnabled = false;
     
+    /** Explicit schema repository to use for this validation */
+    private String schemaRepository;
+    
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {
         Message message = super.createMessage(context, getMessageType());
@@ -81,6 +84,16 @@ public class SendSoapMessageAction extends SendMessageAction {
                 String messagePayload = message.getPayload().toString();
                 
                 for (SoapAttachment attachment : attachments) {
+                    // handle variables in content id
+                    if (attachment.getContentId() != null) {
+                        attachment.setContentId(context.replaceDynamicContentInString(attachment.getContentId()));
+                    }
+
+                    // handle variables in content type
+                    if (attachment.getContentType() != null) {
+                        attachment.setContentType(context.replaceDynamicContentInString(attachment.getContentType()));
+                    }
+
                     if (StringUtils.hasText(attachment.getContent())) {
                         attachment.setContent(context.replaceDynamicContentInString(attachment.getContent()));
                     } else if (attachment.getContentResourcePath() != null) {
@@ -97,10 +110,10 @@ public class SendSoapMessageAction extends SendMessageAction {
                             if (messagePayload.contains(cid) && attachment.getInputStream().available() > 0) {
                                 String xsiType = getAttachmentXsiType(context, messagePayload, cid);
 
-                                if (xsiType.equals("base64binary")) {
+                                if (xsiType.equals("base64Binary")) {
                                     messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(IOUtils.toByteArray(attachment.getInputStream())));
                                 } else if (xsiType.equals("hexBinary")) {
-                                    messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(IOUtils.toByteArray(attachment.getInputStream())));
+                                    messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(IOUtils.toByteArray(attachment.getInputStream())).toUpperCase());
                                 } else {
                                     throw new CitrusRuntimeException("Unsupported xsiType<" + xsiType + "> for attachment " + cid);
                                 }
@@ -166,6 +179,22 @@ public class SendSoapMessageAction extends SendMessageAction {
     }
 
     /**
+     * Gets the schemaRepository.
+     * @return the schemaRepository the schemaRepository to get.
+     */
+    public String getSchemaRepository() {
+        return schemaRepository;
+    }
+
+    /**
+     * Sets the schemaRepository.
+     * @param schemaRepository the schemaRepository to set
+     */
+    public void setSchemaRepository(String schemaRepository) {
+        this.schemaRepository = schemaRepository;
+    }
+    
+    /**
      * Get data type from XML node. Supported data types are "base64binary" and "hexBinary"
      * @param context
      * @param xmlMessage
@@ -173,12 +202,12 @@ public class SendSoapMessageAction extends SendMessageAction {
      * @return 
      */
     private String getAttachmentXsiType(TestContext context, String xmlMessage, String cid) {
-        String xsiType = "base64binary";
-        XsdSchemaRepository schemaRepository = context.getApplicationContext().getBean("schemaRepository", XsdSchemaRepository.class);
-        if (schemaRepository != null) {
+        String xsiType = "base64Binary";
+        XsdSchemaRepository schemaRepo = context.getApplicationContext().getBean(schemaRepository, XsdSchemaRepository.class);
+        if (schemaRepo != null) {
             XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
             XsdSchema schema = schemaMappingStrategy.getSchema(
-                    schemaRepository.getSchemas(), XMLUtils.parseMessagePayload(xmlMessage));
+                    schemaRepo.getSchemas(), XMLUtils.parseMessagePayload(xmlMessage));
             if (schema == null) {
                 log.error("No matching schema found to parse the attachment xml element for cid: " + cid);
             } else {
