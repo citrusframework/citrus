@@ -72,7 +72,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     private Boolean mtomEnabled = false;
     
     /** Explicit schema repository to use for this validation */
-    private String schemaRepository;
+    private String schemaRepository = "schemaRepository";
     
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {
