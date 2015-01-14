@@ -19,6 +19,8 @@ package com.consol.citrus.testng;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.common.TestLoader;
+import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -52,9 +54,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /** Parameter values provided from external logic */
     private Object[][] citrusDataProviderParameters;
 
-    /** Collection of test loaders for annotated methods */
-    private Map<String, List<TestLoader>> testLoaders = new HashMap<String, List<TestLoader>>();
-
     /** Citrus instance */
     protected Citrus citrus;
 
@@ -63,7 +62,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            List<TestLoader> methodTestLoaders = testLoaders.get(method.getName());
+            List<TestLoader> methodTestLoaders = createTestLoader(method);
 
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
@@ -96,67 +95,68 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     }
 
     /**
-     * Creates test loaders from @CitrusXmlTest annotated test methods and saves those to local member.
+     * Creates test loader from @CitrusXmlTest annotated test method and saves those to local member.
      * Test loaders get executed later when actual method is called by TestNG. This way user can annotate
      * multiple methods in one single class each executing several Citrus XML tests.
+     *
+     * @param method
+     * @return
      */
-    @BeforeClass(alwaysRun = true)
-    public void createTestLoaders() {
-        for (Method method : ReflectionUtils.getAllDeclaredMethods(this.getClass())) {
-            if (method.getAnnotation(CitrusXmlTest.class) != null) {
-                CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
+    private List<TestLoader> createTestLoader(Method method) {
+        List<TestLoader> methodTestLoaders = new ArrayList<TestLoader>();
 
-                String[] testNames = new String[] {};
-                if (citrusTestAnnotation.name().length > 0) {
-                    testNames = citrusTestAnnotation.name();
-                } else if (citrusTestAnnotation.packageScan().length == 0) {
-                    // only use default method name as test in case no package scan is set
-                    testNames = new String[] { method.getName() };
-                }
+        if (method.getAnnotation(CitrusXmlTest.class) != null) {
+            CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
 
-                String testPackage;
-                if (StringUtils.hasText(citrusTestAnnotation.packageName())) {
-                    testPackage = citrusTestAnnotation.packageName();
-                } else {
-                    testPackage = method.getDeclaringClass().getPackage().getName();
-                }
+            String[] testNames = new String[] {};
+            if (citrusTestAnnotation.name().length > 0) {
+                testNames = citrusTestAnnotation.name();
+            } else if (citrusTestAnnotation.packageScan().length == 0) {
+                // only use default method name as test in case no package scan is set
+                testNames = new String[] { method.getName() };
+            }
 
-                List<TestLoader> methodTestLoaders = new ArrayList<TestLoader>();
-                for (String testName : testNames) {
-                    methodTestLoaders.add(createTestLoader(testName, testPackage));
-                }
+            String testPackage;
+            if (StringUtils.hasText(citrusTestAnnotation.packageName())) {
+                testPackage = citrusTestAnnotation.packageName();
+            } else {
+                testPackage = method.getDeclaringClass().getPackage().getName();
+            }
 
-                String[] testPackages = citrusTestAnnotation.packageScan();
-                for (String packageName : testPackages) {
-                    try {
-                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
+            for (String testName : testNames) {
+                methodTestLoaders.add(createTestLoader(testName, testPackage));
+            }
 
-                        for (Resource fileResource : fileResources) {
-                            String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
-                            filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
+            String[] testPackages = citrusTestAnnotation.packageScan();
+            for (String packageName : testPackages) {
+                try {
+                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
 
-                            methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
-                        }
-                    } catch (IOException e) {
-                        throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
+                    for (Resource fileResource : fileResources) {
+                        String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                        filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
+
+                        methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
                     }
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
                 }
-
-                testLoaders.put(method.getName(), methodTestLoaders);
             }
         }
+
+        return methodTestLoaders;
     }
 
     /**
      * Creates new test loader which has TestNG test annotations set for test execution. Only
      * suitable for tests that get created at runtime through factory method. Subclasses
      * may overwrite this in order to provide custom test loader with custom test annotations set.
-     * @param beanName
+     * @param testName
      * @param packageName
      * @return
      */
-    protected TestLoader createTestLoader(String beanName, String packageName) {
-        return new XmlTestLoader(beanName, packageName, applicationContext);
+    protected TestLoader createTestLoader(String testName, String packageName) {
+        return new XmlTestLoader(testName, packageName, applicationContext);
     }
 
     /**
@@ -255,7 +255,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @return
      */
     protected TestCase getTestCase() {
-        return new XmlTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName(), applicationContext).load();
+        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
     }
 
     /**

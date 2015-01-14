@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package com.consol.citrus.common;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContextFactory;
@@ -22,6 +22,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
+
+import java.io.File;
 
 /**
  * Loads test case as Spring bean from XML application context file. Loader holds application context file
@@ -34,19 +36,19 @@ import org.springframework.util.StringUtils;
 public class XmlTestLoader implements TestLoader {
 
     private TestCase testCase;
-    private String beanName;
+    private String testName;
     private String packageName;
     private ApplicationContext parentContext;
     private String contextFile;
 
     /**
      * Default constructor with context file and parent application context field.
-     * @param beanName
+     * @param testName
      * @param packageName
      * @param parentContext
      */
-    public XmlTestLoader(String beanName, String packageName, ApplicationContext parentContext) {
-        this.beanName = beanName;
+    public XmlTestLoader(String testName, String packageName, ApplicationContext parentContext) {
+        this.testName = testName;
         this.packageName = packageName;
         this.parentContext = parentContext;
     }
@@ -57,11 +59,11 @@ public class XmlTestLoader implements TestLoader {
             ApplicationContext ctx = loadApplicationContext();
 
             try {
-                testCase = ctx.getBean(beanName, TestCase.class);
+                testCase = ctx.getBean(testName, TestCase.class);
                 testCase.setPackageName(packageName);
             } catch (NoSuchBeanDefinitionException e) {
                 throw parentContext.getBean(TestContextFactory.class).getObject()
-                        .handleError(beanName, packageName, "Could not find test with name '" + beanName + "'", e);
+                        .handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);
             }
         }
 
@@ -82,20 +84,20 @@ public class XmlTestLoader implements TestLoader {
                     true, parentContext);
         } catch (Exception e) {
             throw parentContext.getBean(TestContextFactory.class).getObject()
-                    .handleError(beanName, packageName, "Failed to load test case", e);
+                    .handleError(testName, packageName, "Failed to load test case", e);
         }
     }
 
     /**
      * Gets custom Spring application context file for the XML test case. If not set creates default
-     * context file path from beanName and packageName.
+     * context file path from testName and packageName.
      * @return
      */
     public String getContextFile() {
         if (StringUtils.hasText(contextFile)) {
             return contextFile;
         } else {
-            return packageName.replace('.', '/') + "/" + beanName + ".xml";
+            return packageName.replace('.', File.separatorChar) + File.separator + testName + ".xml";
         }
     }
 

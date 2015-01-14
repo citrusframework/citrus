@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.testng;
+package com.consol.citrus.annotation;
 
-import com.consol.citrus.TestCase;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
- * Test loader interface.
  * @author Christoph Deppisch
  * @since 2.0.1
  */
-public interface TestLoader {
+public class SampleITest extends AbstractTestNGCitrusTest {
 
-    /**
-     * Loads and creates new test case object..
-     * @return
-     */
-    TestCase load();
+    @Test
+    @CitrusXmlTest
+    public void SampleITest() {}
 }
