@@ -51,9 +51,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    /** Parameter values provided from external logic */
-    private Object[][] citrusDataProviderParameters;
-
     /** Citrus instance */
     protected Citrus citrus;
 
@@ -73,9 +70,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     TestContext ctx = prepareTestContext(citrus.createTestContext());
                     TestLoader testLoader = methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size());
                     TestCase testCase = testLoader.load();
-                    if (citrusDataProviderParameters != null) {
-                        handleTestParameters(testResult.getMethod(), testCase,
-                                citrusDataProviderParameters[testResult.getMethod().getCurrentInvocationCount() % citrusDataProviderParameters.length]);
+
+                    if (method.getAnnotation(Test.class) != null &&
+                            StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
+                        Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(
+                                ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+                        if (parameters != null) {
+                            handleTestParameters(testResult.getMethod(), testCase,
+                                parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
+                        }
                     }
 
                     citrus.run(testCase, ctx);
@@ -191,9 +194,17 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         TestContext ctx = prepareTestContext(citrus.createTestContext());
         TestCase testCase = getTestCase();
-        if (citrusDataProviderParameters != null) {
-            handleTestParameters(Reporter.getCurrentTestResult().getMethod(), testCase,
-                    citrusDataProviderParameters[Reporter.getCurrentTestResult().getMethod().getCurrentInvocationCount()]);
+
+        ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
+        Method method = testNGMethod.getConstructorOrMethod().getMethod();
+        if (method.getAnnotation(Test.class) != null &&
+                StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
+            Object[][] parameters = (Object[][]) ReflectionUtils.invokeMethod(
+                    ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+            if (parameters != null) {
+                handleTestParameters(testNGMethod, testCase,
+                        parameters[testNGMethod.getCurrentInvocationCount() % parameters.length]);
+            }
         }
 
         citrus.run(testCase, ctx);
@@ -205,7 +216,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param method the testng method currently executed
      * @param testCase the constructed Citrus test.
      */
-    private void handleTestParameters(ITestNGMethod method, TestCase testCase, Object[] parameterValues) {
+    protected void handleTestParameters(ITestNGMethod method, TestCase testCase, Object[] parameterValues) {
         String[] parameterNames = getParameterNames(method);
 
         if (parameterValues.length != parameterNames.length) {
@@ -267,25 +278,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         citrus.afterSuite(testContext.getSuite().getName());
     }
     
-    /**
-     * Default data provider automatically adding parameters 
-     * as variables to test case.
-     * @return
-     */
-    @DataProvider(name = "citrusDataProvider")
-    protected Object[][] provideTestParameters() {
-      citrusDataProviderParameters = getParameterValues();
-      return citrusDataProviderParameters;
-    }
-    
-    /**
-     * Hook for subclasses to provide individual test parameters.
-     * @return
-     */
-    protected Object[][] getParameterValues() {
-        return new Object[0][];
-    }
-
     /**
      * Class faking test execution as callback. Used in run hookable method when test case
      * was executed before and callback is needed for super class run method invocation.

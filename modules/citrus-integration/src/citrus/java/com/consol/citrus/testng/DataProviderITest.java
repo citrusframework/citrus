@@ -18,8 +18,7 @@ package com.consol.citrus.testng;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import org.testng.ITestContext;
-import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 /**
  * @author Christoph Deppisch
@@ -27,9 +26,9 @@ import org.testng.annotations.Test;
  */
 public class DataProviderITest extends AbstractTestNGCitrusTest {
     
-    @Test(dataProvider = "citrusDataProvider")
     @CitrusXmlTest
     @CitrusParameters( "message" )
+    @Test(dataProvider = "citrusDataProvider")
     public void DataProviderITest(ITestContext testContext) {
     }
 
@@ -39,8 +38,8 @@ public class DataProviderITest extends AbstractTestNGCitrusTest {
         executeTest(testContext);
     }
     
-    @Override
-    protected Object[][] getParameterValues() {
+    @DataProvider
+    public Object[][] citrusDataProvider() {
         return new Object[][] {
             { "Hello World!" },
             { "Hallo Welt!" },

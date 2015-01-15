@@ -28,7 +28,7 @@
     
     <xi:include href='testcase.xml'/>
     <xi:include href='test-actors.xml'/>
-    <xi:include href='run-config.xml'/>
+    <xi:include href='run.xml'/>
     <xi:include href='messaging.xml'/>
     <xi:include href='validation.xml'/>
     <xi:include href='schema-validation.xml'/>

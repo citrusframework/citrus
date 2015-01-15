@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="run-config">
+<chapter id="run">
     <title>Running tests</title>
 
     <para>Citrus test cases are nothing but Java classes that get executed within a Java runtime environment. Each Citrus test therefore relates 
@@ -38,7 +38,7 @@
 
     <para>So let us have a closer look at the Citrus TestNG and JUnit integration.</para>
     
-    <section id="run-config-testng">
+    <section id="run-testng">
         <title>Run with TestNG</title>
         
         <para>TestNG stands for next generation testing and has had a great influence in adding Java annotations to the unit
@@ -156,9 +156,40 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
       <para>Now what has changed is the <emphasis>@CitrusTest</emphasis> annotation. Now the Citrus test logic is placed directly as the method body with using the
       Java domain specific language features. The XML Citrus test part is not necessary anymore. If you like to learn more about the Java DSL features continue to read
       this reference guide we will deal the capabilities in more detail later on.</para>
+
+      <section id="run-testng-data-providers">
+        <title>Using TestNG DataProviders</title>
+
+        <para>TestNG as a framework comes with lots of great features such as data providers. Data providers execute a test case several times. Each test execution gets
+        a specific parameter value. With Citrus you can use those data provider parameters inside the test as variables. See the next listing
+        on how to use TestNG data providers in Citrus:</para>
+
+        <programlisting language="java">public class DataProviderITest extends AbstractTestNGCitrusTest {
+
+  @CitrusXmlTest
+  @CitrusParameters( "message" )
+  @Test(dataProvider = "messageDataProvider")
+  public void DataProviderITest(ITestContext testContext) {
+  }
+
+  @DataProvider
+  public Object[][] messageDataProvider() {
+  return new Object[][] {
+      { "Hello World!" },
+      { "Hallo Welt!" },
+      { "Hi Citrus!" },
+    };
+  }
+}</programlisting>
+
+        <para>Above test case method is annotated with TestNG data provider called <emphasis>messageDataProvider</emphasis>. In the same class you can write the data provider
+        that returns a list of parameter values. TestNG will execute the test case several times according to the provided parameter list. Each
+        execution is shipped with the respective parameter value. According to the <emphasis>@CitrusParameter</emphasis> annotation the test will have a test variable
+        called <emphasis>message</emphasis> that is accessible as usual.</para>
+      </section>
     </section> 
     
-    <section id="run-config-junit">
+    <section id="run-junit">
         <title>Run with JUnit</title>
         
         <para>First thing that has to be said clearly is the fact that we are not able to provide the same amount and quality of Citrus TestNG features for JUnit.

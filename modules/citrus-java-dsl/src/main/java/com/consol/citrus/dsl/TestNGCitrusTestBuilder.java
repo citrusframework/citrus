@@ -33,6 +33,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.*;
+import org.testng.annotations.Test;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
@@ -68,10 +69,16 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                 name(method.getName());
             }
 
-            if (getParameterValues() != null && getParameterValues().length > 0) {
-                Object[] parameterValues = getParameterValues()[testResult.getMethod().getCurrentInvocationCount() % getParameterValues().length];
-                testBuilder.getTestCase().setParameters(getParameterNames(testResult.getMethod()), parameterValues);
-                ReflectionUtils.invokeMethod(method, this, parameterValues);
+            Object[][] parameters = null;
+            if (method.getAnnotation(Test.class) != null &&
+                    StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
+                parameters = (Object[][]) ReflectionUtils.invokeMethod(
+                        ReflectionUtils.findMethod(method.getDeclaringClass(), method.getAnnotation(Test.class).dataProvider()), this);
+            }
+
+            if (parameters != null) {
+                ReflectionUtils.invokeMethod(method, this,
+                        parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
             } else {
                 ReflectionUtils.invokeMethod(method, this);
             }
@@ -83,6 +90,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
                 TestContext ctx = prepareTestContext(citrus.createTestContext());
                 TestCase testCase = testBuilder.getTestCase();
+
+                if (parameters != null) {
+                    handleTestParameters(testResult.getMethod(), testCase,
+                            parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
+                }
 
                 citrus.run(testCase, ctx);
             } catch (RuntimeException e) {
