@@ -17,6 +17,8 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.model.Project;
+import com.consol.citrus.admin.model.TestReport;
+import com.consol.citrus.admin.report.TestReportService;
 import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.util.FileHelper;
@@ -37,6 +39,9 @@ public class ProjectController {
     
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private TestReportService testReportService;
 
     @Autowired
     private ConfigurationService configurationService;
@@ -76,5 +81,11 @@ public class ProjectController {
         } else {
             return "redirect:/setup";
         }
+    }
+
+    @RequestMapping(value = "/testreport", method = RequestMethod.GET)
+    @ResponseBody
+    public TestReport getTestReport() {
+        return testReportService.loadReport(projectService.getActiveProject());
     }
 }

@@ -134,6 +134,9 @@
     <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
     <bean id="processMonitor" class="com.consol.citrus.admin.launcher.ProcessMonitorImpl" scope="singleton"/>
 
+    <!-- Services -->
+    <bean class="com.consol.citrus.admin.report.TestNGTestReportService"/>
+
     <!-- Central web socket pushes events to connected clients -->
     <bean id="loggingWebSocket" class="com.consol.citrus.admin.websocket.LoggingWebSocket" scope="singleton"/>
 

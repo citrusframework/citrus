@@ -39,13 +39,13 @@ a:hover {
 
 .content-header {
     background: url('../images/feature-logo-full.png') no-repeat top right #ffffff;
-    padding-top: 20px;
-    padding-bottom: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .content-nav {
     background-color: #eff6fb;
-    padding-top: 5px;
+    padding-top: 10px;
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
 }
@@ -80,7 +80,6 @@ a:hover {
 
 .navbar .nav > li > a {
     color: #ffffff;
-    font-size: 13px;
     text-shadow: none;
 }
 
@@ -386,7 +385,7 @@ span.message-outbound {
 }
 
 #footer .navbar-inner {
-    background: rgba(80, 80, 80, 1);
+    background: rgba(56, 56, 56, 1);
     min-height: 10px;
     color: #ffffff;
 }
@@ -488,7 +487,6 @@ span.message-outbound {
 
 #footer-tabs > li > a {
     padding-right: 25px;
-    border-right: 1px solid #888;
 }
 
 #footer-tabs button.close {

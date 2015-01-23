@@ -29,6 +29,17 @@ Handlebars.registerHelper('dateFormat', function(context, block) {
     };
 });
 
+/*
+ * Helper displays a duration of milliseconds humanized using moment.js
+ */
+Handlebars.registerHelper('duration', function(context, options) {
+    if (context == null) {
+        return '';
+    }
+
+    return moment.duration(context).humanize();
+});
+
 /**
  * If Equals
  * if_eq this compare=that
@@ -84,6 +95,20 @@ Handlebars.registerHelper('capitalize', function(message, block) {
 
     message = String(message);
     return message.charAt(0).toUpperCase() + message.slice(1);
+});
+
+/*
+ * Helper to evaluate percentage of two given numeric values. Options hash contains total
+ * which is used as division base. Options can also specify number of decimals
+ */
+Handlebars.registerHelper('percentage', function(context, options) {
+    if (context == null) {
+        return '';
+    }
+
+    var decimals = options.hash.dp || 0
+    var multiple = Math.pow(10, decimals);
+    return Math.round(((context / options.hash.total) * 100) * multiple) / multiple;
 });
 
 /*

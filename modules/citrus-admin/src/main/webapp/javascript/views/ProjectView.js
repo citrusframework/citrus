@@ -18,7 +18,7 @@
             },
 
             render: function() {
-                $(this.el).html(TemplateManager.template('ProjectView', { project: this.project, latestTests: this.getLatestTests() }));
+                $(this.el).html(TemplateManager.template('ProjectView', { project: this.project, latestTests: this.getLatestTests(), testReport: this.getTestReport() }));
                 return this;
             },
 
@@ -39,6 +39,21 @@
                 });
 
                 return _.last(latestTests, 6).reverse();
+            },
+
+            getTestReport: function() {
+                var testReport = {};
+                $.ajax({
+                    url: "project/testreport",
+                    type: 'GET',
+                    dataType: "json",
+                    success: _.bind(function(response) {
+                        testReport = response;
+                    }, this),
+                    async: false
+                });
+
+                return testReport;
             }
 
         });

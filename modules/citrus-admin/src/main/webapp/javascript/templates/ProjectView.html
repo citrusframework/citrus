@@ -46,23 +46,21 @@
 
     <div class="span3">
       <h2 class="page-header"><i class="fa fa-tasks"/> Latest results</h2>
-      <p>Latest test results: <b>01-01-2014 00:15</b></p>
-      <span>Tests executed: {{project.testCount}}</span>
-      <div class="progress progress-info test-report-bar">
-        <div class="bar" style="width: 100%"></div>
-      </div>
-      <span>Success: 75 (75.0%)</span>
+      <p>Latest test results: <b>{{dateFormat testReport.executionDate}}</b> (duration: <b>{{duration testReport.duration}})</b>)</p>
+      <p>Name: <b>{{testReport.suiteName}}</b></p>
+      <span>Passed: {{testReport.passed}} ({{percentage testReport.passed total=testReport.total dp=2}}%)</span>
       <div class="progress progress-success test-report-bar">
-        <div class="bar" style="width: 75%"></div>
+        <div class="bar" style="width: {{percentage testReport.passed total=testReport.total}}%"></div>
       </div>
-      <span>Failed: 25 (25.0%)</span>
+      <span>Failed: {{testReport.failed}} ({{percentage testReport.failed total=testReport.total dp=2}}%)</span>
       <div class="progress progress-danger test-report-bar">
-        <div class="bar" style="width: 25%"></div>
+        <div class="bar" style="width: {{percentage testReport.failed total=testReport.total}}%"></div>
       </div>
-      <span>Skipped: 0 (0.0%)</span>
+      <span>Skipped: {{testReport.skipped}} ({{percentage testReport.skipped total=testReport.total dp=2}}%)</span>
       <div class="progress progress-warning test-report-bar">
-        <div class="bar" style="width: 1%"></div>
+        <div class="bar" style="width: {{percentage testReport.skipped total=testReport.total}}%"></div>
       </div>
+      <p>Total: {{testReport.total}}</p>
       <a href="#stats" title="Show test reports"><i class="fa fa-tasks"/> Complete results</a>
     </div>
   </div>
