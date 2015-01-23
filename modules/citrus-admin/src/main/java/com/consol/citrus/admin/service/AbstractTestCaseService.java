@@ -84,7 +84,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
             }
         }
 
-        testCase.setDescription(testModel.getDescription());
+        testCase.setDescription(testModel.getDescription().trim().replaceAll(" +", " ").replaceAll("\t", ""));
         testCase.setMetaInfo(testModel.getMetaInfo());
 
         for (Object actionType : testModel.getActions().getActionsAndSendsAndReceives()) {

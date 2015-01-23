@@ -1,63 +1,35 @@
 <div class="container-fluid">
-  <div class="row-fluid">
-    <div class="test-variables-panel span3">
-      <table class="table table-hover table-condensed">
-        <thead>
-        <tr>
-          <th colspan="2">Variables</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#unless test.variables}}
-        <tr><td colspan="2">&nbsp;<i class="fa fa-times"></i> No variables defined!</td></tr>
-        {{/unless}}
+  <div>
+    <div class="test-actions">
+      <div class="start-action">
+        <i class="fa fa-play"></i>
+      </div>
 
-        {{#each test.variables}}
-        <tr id="{{id}}">
-          <td>{{@key}}</td>
-          <td class="test-variable">{{this}}</td>
-        </tr>
-        {{/each}}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="2" class="clickable clickable-hover test-variables-add"><i class="fa fa-plus"></i> New</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <div class="test-design-panel span9">
-      <div class="test-actions">
-        <div class="start-action">
-          <i class="fa fa-play"></i>
-        </div>
+      {{#each test.actions}}
+      <div class="test-transition">
+        <i class="fa fa-long-arrow-right"></i>
+      </div>
+      <div class="test-action">
+        <i class="fa icon-{{type}}">&nbsp;</i>
+        <span>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</span>
+      </div>
+      {{/each}}
 
-        {{#each test.actions}}
-        <div class="test-transition">
-          <i class="fa fa-long-arrow-down"></i>
-        </div>
-        <div class="test-action">
-          <i class="fa icon-{{type}}">&nbsp;</i>
-          <p>{{#if_eq type compare = 'action'}}{{reference}}{{/if_eq}}{{#unless_eq type compare = 'action'}}{{type}}{{/unless_eq}}</p>
-        </div>
-        {{/each}}
+      {{#unless test.actions}}
+      <div class="test-transition">
+        <i class="fa fa-long-arrow-right"></i>
+      </div>
+      <div class="test-action">
+        <i class="fa icon-{{type}}">&nbsp;</i>
+        <span></span>
+      </div>
+      {{/unless}}
+      <div class="test-transition">
+        <i class="fa fa-long-arrow-right"></i>
+      </div>
 
-        {{#unless test.actions}}
-        <div class="test-transition">
-          <i class="fa fa-long-arrow-down"></i>
-        </div>
-        <div class="test-action">
-          <i class="fa icon-{{type}}">&nbsp;</i>
-          <p></p>
-        </div>
-        {{/unless}}
-        <div class="test-transition">
-          <i class="fa fa-long-arrow-down"></i>
-        </div>
-
-        <div class="stop-action">
-          <i class="fa fa-stop"></i>
-        </div>
+      <div class="stop-action">
+        <i class="fa fa-stop"></i>
       </div>
     </div>
   </div>

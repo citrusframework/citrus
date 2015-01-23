@@ -86,6 +86,8 @@ a:hover {
 .navbar .nav .active > a, .navbar .nav .active > a:hover, .navbar .nav .active > a:focus {
     color: #ffffff;
     background-color: rgba(255,255,255,0.2);
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .navbar .nav > li > a:hover {
@@ -196,43 +198,24 @@ div.test-details-open {
 }
 
 .test-details {
-    min-height: 695px;
+    padding-left: 20px;
+    min-height: 800px;
 }
 
-.test-details-content {
-    height: 650px;
-}
-
-.test-details h4.page-header {
-    margin: 15px 0 15px;
+.test-details h3 {
+    margin: 20px 0px;
 }
 
 .test-details-header {
-    margin: 0px;
+    margin-top: 0;
     padding: 15px 20px;
-    background-color: #ffffff;
+    background-color: #0096D6;
+    color: #ffffff;
     border-top: 1px solid #dddddd;
 }
 
 .test-details-header small {
-    color: #555555;
-}
-
-.test-details-navbar {
-    margin-bottom: 0px;
-    border-top: 1px solid #dddddd;
-    border-bottom: 1px solid #dddddd;
-}
-
-.test-details-navbar .navbar-inner {
-    border: none;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    padding-left: 0px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    color: #ffffff;
 }
 
 #test-tabs {
@@ -617,30 +600,11 @@ input[readonly], select[readonly], textarea[readonly] {
     margin-bottom: 50px;
 }
 
-.test-design {
-    background: #f6f6f6;
-}
-
 .test-design .container-fluid {
     padding: 0px 0px 0px 0px;
 }
 
-.test-design .span9 {
-    min-height: 650px;
-    margin-left: 0px;
-}
-
-.test-design-panel {
-    border-left: 1px solid #dddddd;
-    border-right: 1px solid #dddddd;
-    background: #ffffff;
-}
-
-.test-variables-panel {
-    background: #ffffff;
-}
-
-.test-variables-panel table {
+.test-variables table {
     margin-top: 15px;
     margin-bottom: 0px;
     word-break: break-all;
@@ -648,29 +612,24 @@ input[readonly], select[readonly], textarea[readonly] {
     border-bottom: 1px solid #dddddd;
 }
 
-.test-variables-panel thead {
+.test-variables thead {
     font-size: 17px;
 }
 
-.test-variables-panel tbody {
+.test-variables tbody {
     font-size: 12px;
-}
-
-td.test-variable {
-    border-left: 1px solid #dddddd
 }
 
 .test-actions {
     margin-top: 20px;
-    padding-left: 45%;
 }
 
 .start-action, .stop-action {
+    float: left;
     padding: 0px 0px 0px 0px;
     width: 48px;
     height: 48px;
     text-align: center;
-    margin: 5px 15px;
     background-color: #dddddd;
     *background-color: #dddddd;
     background-image: -moz-linear-gradient(top, #ffffff, #dddddd);
@@ -692,12 +651,27 @@ td.test-variable {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+.test-transition {
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background: none;
+    width: 35px;
+    height: 48px;
+    text-align: center;
+}
+
+.test-transition i {
+    position: relative;
+    top: 14px;
+    font-size: 20px;
+}
+
 .test-action {
+    float: left;
     padding: 0px 0px 0px 0px;
     width: 78px;
     height: 48px;
     text-align: center;
-    margin: 5px 0;
     cursor: pointer;
     background-color: #dddddd;
     *background-color: #dddddd;
@@ -733,6 +707,7 @@ td.test-variable {
 }
 
 .test-container {
+    float: left;
     border: 1px solid #dddddd;
     margin-left: -45px;
     padding-left: 45px;
@@ -757,7 +732,10 @@ td.test-variable {
     width: 110px;
 }
 
-.test-action p, .start-action p, .stop-action p {
+.test-action span, .start-action span, .stop-action span {
+    position: relative;
+    top: 52px;
+    left: -10px;
     font-size: 12px;
     line-height: 20px;
     margin-bottom: 0px;
@@ -772,9 +750,9 @@ td.test-variable {
 
 .test-action i {
     position: relative;
-    top: 5px;
-    left: -20px;
-    font-size: 20px;
+    top: 2px;
+    left: -5px;
+    font-size: 22px;
 }
 
 .start-action i.fa-play {
@@ -934,19 +912,6 @@ li.sortable.highlight {
     list-style: none;
     word-break: break-all;
     word-wrap: break-word;
-}
-
-.test-transition {
-    padding: 0px 0px 0px 0px;
-    background: none;
-    width: 78px;
-    height: 20px;
-    text-align: center;
-    margin: 0px 0px;
-}
-
-.test-transition i {
-    font-size: 20px;
 }
 
 .prettycode {
