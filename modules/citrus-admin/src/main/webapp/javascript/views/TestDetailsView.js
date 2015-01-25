@@ -8,11 +8,12 @@
             messages: [],
 
             events: {
-                "click a.run-config" : "selectRunConfig",
-                "click a.run-test" : "runTest",
-                "click a.cancel-test" : "cancelTest",
-                "click a.xml-source" : "getXmlSource",
-                "click a.java-source" : "getJavaSource",
+                "click a#btn-edit" : "editRunConfig",
+                "change select#run-config" : "selectRunConfig",
+                "click a#btn-run" : "runTest",
+                "click a#btn-cancel" : "cancelTest",
+                "click a#xml-source" : "getXmlSource",
+                "click a#java-source" : "getJavaSource",
                 "click button.close" : "hideResultsTab"
             },
 
@@ -53,31 +54,19 @@
             },
 
             selectRunConfig: function(event) {
-                if (event.currentTarget.id != "New") {
-                    this.activeConfiguration = _.find(this.runConfigurations, function(i) { return i.id === event.currentTarget.id });
-                }
-
-                $(this.el).find('.test-details-header').find('.btn-group').find('ul.dropdown-menu').find('li').find('a.run-config').find('i.icon-ok').hide();
-                $(this.el).find('.test-details-header').find('.btn-group').find('ul.dropdown-menu').find('li').find('a#' + event.currentTarget.id).find('i.icon-ok').show();
-
-                $(this.el).find('.test-details-header').find('.btn-group').find('.run-test').find('span.active-configuration').html('[' + event.currentTarget.id + ']');
-                $(this.el).find('.test-details-header').find('.btn-group').find('button.dropdown-toggle').dropdown('toggle');
-
+                this.activeConfiguration = _.find(this.runConfigurations, function(i) { return i.id === event.currentTarget.id });
                 return false;
             },
           
             runTest: function() {
-                $('button.run-test').button('loading');
+                // prepare and show test results tab
+                this.messages = [];
+                $('div#test-result-' + this.test.id).html(TemplateManager.template('TestResultsView', { messages: this.messages }));
+
                 $('div#test-result-' + this.test.id).find('div.progress').find('.bar').width('0%');
                 $('div#test-result-' + this.test.id).find('div.progress').find('.bar').text('');
                 $('div#test-result-' + this.test.id).find('div.progress').addClass('progress-success');
                 $('div#test-result-' + this.test.id).find('div.progress').removeClass('progress-danger');
-
-                // prepare and show test results tab
-                this.messages = [];
-                $(this.el).find('div.test-message-flow').html(TemplateManager.template('TestMessageFlow', { messages: this.messages }));
-                $(this.el).find('ul.nav').find('li').last().show();
-                $(this.el).find('ul.nav').find('li').last().find('a').tab('show');
 
                 var testNameUrl = this.getTestNameUrl(this.test.name);
                 if (String(testNameUrl).indexOf('?') > 0) {

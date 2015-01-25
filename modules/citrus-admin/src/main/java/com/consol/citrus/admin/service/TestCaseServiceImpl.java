@@ -54,7 +54,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
 
     /** Test executor works on filesystem */
     @Autowired
-    private FileSystemTestExecutor fileSystemTestExecutor;
+    private MavenTestExecutor mavenTestExecutor;
 
     /** Test executor works on project classpath */
     @Autowired
@@ -493,7 +493,7 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
      */
     private TestExecutor getTestExecutor(RunConfiguration configuration) {
         if (configuration instanceof MavenRunConfiguration) {
-            return fileSystemTestExecutor;
+            return mavenTestExecutor;
         } else if (configuration instanceof ClasspathRunConfiguration) {
             return classpathTestExecutor;
         }

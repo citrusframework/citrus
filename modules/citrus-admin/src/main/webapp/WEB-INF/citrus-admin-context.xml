@@ -131,7 +131,7 @@
     <bean class="com.consol.citrus.admin.executor.ApplicationContextHolder" scope="singleton"/>
 
     <!-- Filesystem test case executor -->
-    <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
+    <bean class="com.consol.citrus.admin.executor.MavenTestExecutor"/>
     <bean id="processMonitor" class="com.consol.citrus.admin.launcher.ProcessMonitorImpl" scope="singleton"/>
 
     <!-- Services -->

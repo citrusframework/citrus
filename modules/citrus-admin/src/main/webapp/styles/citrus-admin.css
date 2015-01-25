@@ -350,7 +350,7 @@ span.message-outbound {
 }
 
 #footer {
-  height: 610px;
+  height: 310px;
   background-color: #ffffff;
 }
 
@@ -444,12 +444,12 @@ span.message-outbound {
 }
 
 #footer .tab-content {
-	min-height: 1000px;
+	min-height: 600px;
     background-color: #ffffff;
 }
 
 #footer.maximized {
-	height: 1000px;
+	height: 600px;
 }
 
 #footer.minimized {
@@ -457,11 +457,11 @@ span.message-outbound {
 }
 
 .footer-tab {
-    height: 575px;
+    height: 275px;
 }
 
 .footer-tab .maximized, pre.logger .maximized, .footer-task-bar .maximized {
-    height: 975px;
+    height: 575px;
 }
 
 .footer-tab .minimized, pre.logger .minimized, .footer-task-bar .minimized {

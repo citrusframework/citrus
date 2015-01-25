@@ -43,7 +43,7 @@
     <bean class="com.consol.citrus.admin.service.TestCaseServiceImpl"/>
     <bean class="com.consol.citrus.admin.service.ProjectService"/>
 
-    <bean class="com.consol.citrus.admin.executor.FileSystemTestExecutor"/>
+    <bean class="com.consol.citrus.admin.executor.MavenTestExecutor"/>
     <bean class="com.consol.citrus.admin.util.FileHelperImpl"/>
 
     <bean class="com.consol.citrus.admin.executor.ClasspathTestExecutor"/>

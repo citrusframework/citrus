@@ -30,7 +30,7 @@ import java.io.File;
  * Executes test case from file system by starting new Citrus command line instance.
  * @author Christoph Deppisch
  */
-public class FileSystemTestExecutor implements TestExecutor<MavenRunConfiguration> {
+public class MavenTestExecutor implements TestExecutor<MavenRunConfiguration> {
 
     @Autowired
     private ProcessMonitor processMonitor;
@@ -41,8 +41,8 @@ public class FileSystemTestExecutor implements TestExecutor<MavenRunConfiguratio
 
     @Override
     public void execute(String packageName, String testName, MavenRunConfiguration configuration) throws ParseException {
-        File file = new File(projectService.getActiveProject().getProjectHome());
-        ProcessBuilder processBuilder = new MavenRunSingleTestCommand(file, testName, configuration).getProcessBuilder();
+        File projectHome = new File(projectService.getActiveProject().getProjectHome());
+        ProcessBuilder processBuilder = new MavenRunSingleTestCommand(projectHome, testName, configuration).getProcessBuilder();
         ProcessLauncher processLauncher = new ProcessLauncherImpl(processMonitor, testName);
 
         processLauncher.addProcessListener(webSocketProcessListener);

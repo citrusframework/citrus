@@ -18,7 +18,6 @@ package com.consol.citrus.admin.executor;
 
 import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import com.consol.citrus.admin.service.ConfigurationService;
 import com.consol.citrus.admin.websocket.WebSocketLoggingAppender;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
@@ -42,9 +41,6 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
     @Autowired
     private ApplicationContextHolder applicationContextHolder;
     
-    @Autowired
-    private ConfigurationService configService;
-
     @Autowired
     private WebSocketLoggingAppender webSocketLoggingAppender;
 
