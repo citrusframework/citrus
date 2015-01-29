@@ -75,6 +75,7 @@
           <xs:attribute name="reply-destination-name" type="xs:string"/>
           <xs:attribute name="polling-interval" type="xs:string"/>
           <xs:attribute name="message-correlator" type="xs:string"/>
+          <xs:attribute name="fallback-adapter" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

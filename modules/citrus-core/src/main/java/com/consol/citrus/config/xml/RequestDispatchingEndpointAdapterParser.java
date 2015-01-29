@@ -38,6 +38,8 @@ public class RequestDispatchingEndpointAdapterParser extends AbstractBeanDefinit
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("mapping-key-extractor"), "mappingKeyExtractor");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("mapping-strategy"), "mappingStrategy");
 
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("fallback-adapter"), "fallbackEndpointAdapter");
+
         return builder.getBeanDefinition();
     }
 }

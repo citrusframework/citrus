@@ -33,14 +33,22 @@ public class ChannelEndpointAdapterParserTest extends AbstractBeanDefinitionPars
     public void testParseBeanDefinition() throws Exception {
         Map<String, ChannelEndpointAdapter> adapters = beanDefinitionContext.getBeansOfType(ChannelEndpointAdapter.class);
 
-        Assert.assertEquals(adapters.size(), 1);
+        Assert.assertEquals(adapters.size(), 2);
 
         // 1st endpoint adapter
-        ChannelEndpointAdapter adapter = adapters.get("endpointAdapter");
-        Assert.assertEquals(adapter.getName(), "endpointAdapter");
-        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 10000L);
+        ChannelEndpointAdapter adapter = adapters.get("endpointAdapter1");
+        Assert.assertEquals(adapter.getName(), "endpointAdapter1");
+        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(adapter.getEndpointConfiguration().getPollingInterval(), 500L);
         Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "serverChannel");
         Assert.assertEquals(adapter.getEndpointConfiguration().isUseObjectMessages(), false);
+        Assert.assertNull(adapter.getFallbackEndpointAdapter());
 
+        adapter = adapters.get("endpointAdapter2");
+        Assert.assertEquals(adapter.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(adapter.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assert.assertEquals((adapter.getEndpointConfiguration()).getChannelName(), "fooChannel");
+        Assert.assertEquals(adapter.getEndpointConfiguration().isUseObjectMessages(), true);
+        Assert.assertEquals(adapter.getFallbackEndpointAdapter(), beanDefinitionContext.getBean("mockEndpointAdapter"));
     }
 }

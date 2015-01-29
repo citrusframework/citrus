@@ -44,6 +44,8 @@ public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {
 
         builder.addConstructorArgReference(endpointConfigurationId);
 
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("fallback-adapter"), "fallbackEndpointAdapter");
+
         return builder.getBeanDefinition();
     }
 }

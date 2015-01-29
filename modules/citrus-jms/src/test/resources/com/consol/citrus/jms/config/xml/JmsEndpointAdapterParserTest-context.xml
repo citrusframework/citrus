@@ -7,15 +7,23 @@
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                             http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
-    <citrus-jms:jms-endpoint-adapter id="endpointAdapter"
-                                 destination-name="serverQueue"
-                                 reply-destination-name="replyQueue"
-                                 connection-factory="connectionFactory"
-                                 use-object-messages="false"
-                                 timeout="2500"/>
+    <citrus-jms:jms-endpoint-adapter id="endpointAdapter1"
+                                 destination-name="serverQueue"/>
+
+    <citrus-jms:jms-endpoint-adapter id="endpointAdapter2"
+                                   destination-name="fooQueue"
+                                   reply-destination-name="replyQueue"
+                                   connection-factory="connectionFactory"
+                                   fallback-adapter="mockEndpointAdapter"
+                                   use-object-messages="true"
+                                   timeout="2500"/>
 
     <bean id="connectionFactory" class="org.easymock.EasyMock" factory-method="createMock">
       <constructor-arg value="javax.jms.ConnectionFactory"/>
+    </bean>
+
+    <bean id="mockEndpointAdapter" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
     </bean>
 
 </beans>

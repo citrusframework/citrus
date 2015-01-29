@@ -308,7 +308,7 @@
       for creating messages in SOAP format.</para>
 
       <programlisting>&lt;!-- SOAP 1.1 Message Factory --&gt;
-&lt;bean id=&quot;soap12MessageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
+&lt;bean id=&quot;soapMessageFactory&quot; class=&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;&gt;
   &lt;property name=&quot;soapVersion&quot;&gt;
     &lt;util:constant static-field=&quot;org.springframework.ws.soap.SoapVersion.SOAP_11&quot;/&gt;
   &lt;/property&gt;
