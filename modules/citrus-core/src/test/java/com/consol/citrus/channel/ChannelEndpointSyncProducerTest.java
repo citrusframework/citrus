@@ -130,7 +130,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message, context);
 
-        Message replyMessage = channelSyncProducer.findReplyMessage(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message));
+        Message replyMessage = channelSyncProducer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message),
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
         
@@ -165,7 +166,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message, context);
 
-        Message replyMessage = channelSyncProducer.findReplyMessage(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message));
+        Message replyMessage = channelSyncProducer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(message),
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
 
@@ -202,7 +204,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.send(message, context);
 
-        Message replyMessage = channelSyncProducer.findReplyMessage(MessageHeaders.ID + " = '123456789'");
+        Message replyMessage = channelSyncProducer.getCorrelationManager().find(MessageHeaders.ID + " = '123456789'",
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertEquals(replyMessage.getPayload(), response.getPayload());
         Assert.assertEquals(replyMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), response.getHeaders().getId());
 
@@ -245,7 +248,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         context.saveCorrelationKey(channelSyncProducer.toString(), channelSyncProducer);
-        channelSyncProducer.onReplyMessage(channelSyncProducer.toString(), message);
+        channelSyncProducer.getCorrelationManager().store(channelSyncProducer.toString(), message);
 
         Assert.assertEquals(channelSyncProducer.receive(context), message);
     }
@@ -257,7 +260,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        channelSyncProducer.onReplyMessage(new DefaultMessageCorrelator().getCorrelationKey(message), message);
+        channelSyncProducer.getCorrelationManager().store(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
         Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }

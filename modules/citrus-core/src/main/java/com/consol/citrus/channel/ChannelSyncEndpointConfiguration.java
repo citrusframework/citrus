@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.endpoint.PollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 
@@ -23,7 +24,7 @@ import com.consol.citrus.message.MessageCorrelator;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ChannelSyncEndpointConfiguration extends ChannelEndpointConfiguration {
+public class ChannelSyncEndpointConfiguration extends ChannelEndpointConfiguration implements PollableEndpointConfiguration {
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();

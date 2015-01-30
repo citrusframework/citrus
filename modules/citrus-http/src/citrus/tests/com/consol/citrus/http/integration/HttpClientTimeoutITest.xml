@@ -26,7 +26,7 @@
       </create-variables>
 
       <assert exception="com.consol.citrus.exceptions.ActionTimeoutException"
-              message="Action timeout while receiving Http response from from server">
+              message="Action timeout while receiving synchronous reply message from http server">
         <receive endpoint="helloHttpClient">
           <message>
             <data>

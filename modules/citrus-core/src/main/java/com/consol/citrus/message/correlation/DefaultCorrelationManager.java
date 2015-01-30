@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.message;
+package com.consol.citrus.message.correlation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
+ * Default correlation manager implementation works on simple in memory map for storing objects.
+ * Correlation key is the map key. Clients can access objects in the store using the correlation key.
+ *
  * @author Christoph Deppisch
  * @since 2.0
  */
@@ -32,7 +32,7 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     private static Logger log = LoggerFactory.getLogger(DefaultCorrelationManager.class);
 
     /** Map of managed objects */
-    private Map<String, T> objectStore = new ConcurrentHashMap<String, T>();
+    private ObjectStore<T> objectStore = new DefaultObjectStore<T>();
 
     @Override
     public void store(String correlationKey, T object) {
@@ -45,16 +45,26 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
             log.debug(String.format("Saving correlated object for '%s'", correlationKey));
         }
 
-        objectStore.put(correlationKey, object);
+        objectStore.add(correlationKey, object);
     }
 
     @Override
-    public T find(String correlationKey) {
+    public T find(String correlationKey, long timeout) {
         if (log.isDebugEnabled()) {
             log.debug(String.format("Finding correlated object for '%s'", correlationKey));
         }
 
         return objectStore.remove(correlationKey);
+    }
+
+    @Override
+    public void setObjectStore(ObjectStore<T> store) {
+        this.objectStore = store;
+    }
+
+    @Override
+    public ObjectStore<T> getObjectStore() {
+        return this.objectStore;
     }
 
 }

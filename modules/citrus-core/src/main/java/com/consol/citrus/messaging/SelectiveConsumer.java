@@ -20,6 +20,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
 /**
+ * Consumer implementation able to select messages available on a message destination. Selection is done via one to many
+ * selection key-value pairs usually on the message header.
+ *
  * @author Christoph Deppisch
  * @since 1.4
  */

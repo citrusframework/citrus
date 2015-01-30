@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.messaging;
+package com.consol.citrus.message.correlation;
 
 /**
- * Consumer that explicitly receives reply messages synchronously.
+ * Interface defines add and remove object methods for storing data.
  *
  * @author Christoph Deppisch
- * @since 1.4
+ * @since 2.0.1
  */
-public interface ReplyConsumer extends SelectiveConsumer {
+public interface ObjectStore<T> {
+
+    /**
+     * Adds new object with correlation key.
+     * @param correlationKey
+     * @param object
+     */
+    void add(String correlationKey, T object);
+
+    /**
+     * Removes object with correlation key.
+     * @param correlationKey
+     * @return
+     */
+    T remove(String correlationKey);
 }

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.client;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessageConverter;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
+public class HttpEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Http url as service destination */
     private String requestUrl;
@@ -71,9 +71,6 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
-
-    /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
 
     /**
      * Get the complete request URL.
@@ -239,22 +236,6 @@ public class HttpEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public MessageCorrelator getCorrelator() {
         return correlator;
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,39 +14,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.camel.endpoint;
-
-import com.consol.citrus.endpoint.PollableEndpointConfiguration;
-import com.consol.citrus.message.DefaultMessageCorrelator;
-import com.consol.citrus.message.MessageCorrelator;
+package com.consol.citrus.endpoint;
 
 /**
+ * Abstract pollable endpoint configuration adds polling interval settings.
+ *
  * @author Christoph Deppisch
- * @since 1.4.1
+ * @since 2.0.1
  */
-public class CamelSyncEndpointConfiguration extends CamelEndpointConfiguration implements PollableEndpointConfiguration {
-
-    /** Reply message correlator */
-    private MessageCorrelator correlator = new DefaultMessageCorrelator();
+public class AbstractPollableEndpointConfiguration extends AbstractEndpointConfiguration implements PollableEndpointConfiguration {
 
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
-
-    /**
-     * Set the reply message correlator.
-     * @param correlator the correlator to set
-     */
-    public void setCorrelator(MessageCorrelator correlator) {
-        this.correlator = correlator;
-    }
-
-    /**
-     * Gets the correlator.
-     * @return the correlator
-     */
-    public MessageCorrelator getCorrelator() {
-        return correlator;
-    }
 
     /**
      * Gets the pollingInterval.

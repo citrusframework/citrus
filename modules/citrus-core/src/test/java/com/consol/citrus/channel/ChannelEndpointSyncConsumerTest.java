@@ -84,7 +84,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
         
-        MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage));
+        MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
         
@@ -124,7 +125,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), message.getHeaders().getReplyChannel());
         
-        MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage));
+        MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
         
@@ -167,7 +169,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL), "replyChannel");
         
-        MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage));
+        MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
         
@@ -204,7 +207,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
-        MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage));
+        MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
         
@@ -219,6 +223,9 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
 
         endpoint.getEndpointConfiguration().setCorrelator(messageCorrelator);
+
+        endpoint.getEndpointConfiguration().setTimeout(500L);
+        endpoint.getEndpointConfiguration().setPollingInterval(100);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
@@ -228,7 +235,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, channel, replyChannel, messageCorrelator);
         
-        messagingTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(500L);
         expectLastCall().once();
         
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
@@ -243,10 +250,12 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
-        Assert.assertNull(channelSyncConsumer.findReplyChannel(""));
-        Assert.assertNull(channelSyncConsumer.findReplyChannel(MessageHeaders.ID + " = 'totally_wrong'"));
+        Assert.assertNull(channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout()));
+        Assert.assertNull(channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = 'totally_wrong'",
+                endpoint.getEndpointConfiguration().getTimeout()));
         
-        MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel(MessageHeaders.ID + " = '123456789'");
+        MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find(MessageHeaders.ID + " = '123456789'",
+                endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNotNull(savedReplyChannel);
         Assert.assertEquals(savedReplyChannel, replyChannel);
         
@@ -286,6 +295,9 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
+
+        endpoint.getEndpointConfiguration().setTimeout(500L);
+        endpoint.getEndpointConfiguration().setPollingInterval(150L);
         
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
@@ -294,7 +306,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         reset(messagingTemplate, channel, replyChannel);
         
-        messagingTemplate.setReceiveTimeout(5000L);
+        messagingTemplate.setReceiveTimeout(500L);
         expectLastCall().once();
         
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
@@ -307,7 +319,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.ID), message.getHeaders().getId());
         
-        MessageChannel savedReplyChannel = channelSyncConsumer.findReplyChannel("");
+        MessageChannel savedReplyChannel = channelSyncConsumer.getCorrelationManager().find("", endpoint.getEndpointConfiguration().getTimeout());
         Assert.assertNull(savedReplyChannel);
         
         verify(messagingTemplate, channel, replyChannel);
@@ -419,6 +431,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
     public void testNoReplyDestinationFound() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
+
+        endpoint.getEndpointConfiguration().setTimeout(1000L);
 
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);

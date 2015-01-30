@@ -16,14 +16,14 @@
 
 package com.consol.citrus.vertx.endpoint;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.vertx.message.VertxMessageConverter;
 
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
+public class VertxEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Vert.x cluster hostname */
     private String host = "localhost";
@@ -36,9 +36,6 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Should use publish subscribe */
     private boolean pubSubDomain = false;
-
-    /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
 
     /** Message converter */
     private VertxMessageConverter messageConverter = new VertxMessageConverter();
@@ -57,22 +54,6 @@ public class VertxEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
     }
 
     /**

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ssh.client;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.ssh.XmlMapper;
@@ -25,7 +25,7 @@ import com.consol.citrus.ssh.XmlMapper;
  * @author Roland Huss, Christoph Deppisch
  * @since 1.4
  */
-public class SshEndpointConfiguration extends AbstractEndpointConfiguration {
+public class SshEndpointConfiguration extends AbstractPollableEndpointConfiguration {
     // Host to connect to. Default: localhost
     private String host = "localhost";
 
@@ -61,9 +61,6 @@ public class SshEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
-
-    /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
 
     public String getHost() {
         return host;
@@ -161,11 +158,4 @@ public class SshEndpointConfiguration extends AbstractEndpointConfiguration {
         this.correlator = correlator;
     }
 
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
-    }
 }

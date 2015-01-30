@@ -18,12 +18,18 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Synchronous producer sends message to in memory message channel and receives synchronous reply.
+ * Reply message is correlated and stored in correlation manager. This way test cases are able to receive synchronous
+ * message asynchronously at later time.
+ *
  * @author Christoph Deppisch
  * @since 1.4
  */
@@ -32,13 +38,10 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     private static Logger log = LoggerFactory.getLogger(ChannelSyncProducer.class);
 
     /** Store of reply messages */
-    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
+    private CorrelationManager<Message> correlationManager;
 
     /** Endpoint configuration */
     private final ChannelSyncEndpointConfiguration endpointConfiguration;
-
-    /** Retry logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
 
     /**
      * Default constructor using endpoint configuration.
@@ -49,6 +52,8 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     public ChannelSyncProducer(String name, ChannelSyncEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -78,7 +83,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
             log.info("Received synchronous response message from reply channel");
         }
 
-        onReplyMessage(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration));
+        correlationManager.store(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration));
     }
 
     @Override
@@ -98,43 +103,29 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        long timeLeft = timeout;
-        Message message = findReplyMessage(selector);
+        Message message = correlationManager.find(selector, timeout);
 
-        while (message == null && timeLeft > 0) {
-            timeLeft -= endpointConfiguration.getPollingInterval();
-
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft) + "ms");
-            }
-
-            try {
-                Thread.sleep(timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-
-            message = findReplyMessage(selector);
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on message channel");
         }
 
         return message;
     }
 
     /**
-     * Saves reply message with correlation key to local store for later processing.
-     * @param correlationKey
-     * @param replyMessage the reply message.
+     * Gets the correlation manager.
+     * @return
      */
-    public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyManager.store(correlationKey, replyMessage);
+    public CorrelationManager<Message> getCorrelationManager() {
+        return correlationManager;
     }
 
     /**
-     * Tries to find reply message for correlation key from local store.
-     * @param correlationKey
-     * @return
+     * Sets the correlation manager.
+     * @param correlationManager
      */
-    public Message findReplyMessage(String correlationKey) {
-        return replyManager.find(correlationKey);
+    public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
+        this.correlationManager = correlationManager;
     }
+
 }

@@ -17,7 +17,9 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyProducer;
 import com.consol.citrus.vertx.message.CitrusVertxMessageHeaders;
 import org.slf4j.Logger;
@@ -35,7 +37,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     private static Logger log = LoggerFactory.getLogger(VertxSyncConsumer.class);
 
     /** Map of reply destinations */
-    private CorrelationManager<String> addressManager = new DefaultCorrelationManager<String>();
+    private CorrelationManager<String> correlationManager;
 
     /** Vert.x instance */
     private final Vertx vertx;
@@ -52,6 +54,8 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         super(name, vertx, endpointConfiguration);
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply Vert.x address not set up yet");
     }
 
     @Override
@@ -67,7 +71,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String correlationKey = context.getCorrelationKey(this);
-        String replyAddress = addressManager.find(correlationKey);
+        String replyAddress = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
 
         log.info("Sending Vert.x message to event bus address: '" + replyAddress + "'");
@@ -90,11 +94,19 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         if (receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS) != null) {
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
             context.saveCorrelationKey(correlationKey, this);
-            addressManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
+            correlationManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }  else {
             log.warn("Unable to retrieve reply address for message \n" +
                     receivedMessage + "\n - no reply address found in message headers!");
         }
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<String> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 
 }

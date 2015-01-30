@@ -18,7 +18,9 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     private static Logger log = LoggerFactory.getLogger(ChannelSyncConsumer.class);
 
     /** Reply channel store */
-    private CorrelationManager<MessageChannel> channelManager = new DefaultCorrelationManager<MessageChannel>();
+    private CorrelationManager<MessageChannel> correlationManager;
 
     /** Endpoint configuration */
     private final ChannelSyncEndpointConfiguration endpointConfiguration;
@@ -49,6 +51,8 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     public ChannelSyncConsumer(String name, ChannelSyncEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply channel not set up yet");
     }
 
     @Override
@@ -64,7 +68,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         Assert.notNull(message, "Can not send empty message");
 
         String correlationKey = context.getCorrelationKey(this);
-        MessageChannel replyChannel = findReplyChannel(correlationKey);
+        MessageChannel replyChannel = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyChannel, "Failed to find reply channel for message correlation key: " + correlationKey);
 
         log.info("Sending message to reply channel: '" + replyChannel + "'");
@@ -99,7 +103,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         if (replyChannel != null) {
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
             context.saveCorrelationKey(correlationKey, this);
-            channelManager.store(correlationKey, replyChannel);
+            correlationManager.store(correlationKey, replyChannel);
         } else {
             log.warn("Unable to retrieve reply message channel for message \n" +
                     receivedMessage + "\n - no reply channel found in message headers!");
@@ -107,10 +111,19 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
     }
 
     /**
-     * Get the reply message channel with given correlation key.
+     * Gets the correlation manager.
+     * @return
      */
-    public MessageChannel findReplyChannel(String correlationKey) {
-        return channelManager.find(correlationKey);
+    public CorrelationManager<MessageChannel> getCorrelationManager() {
+        return correlationManager;
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<MessageChannel> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 
 }

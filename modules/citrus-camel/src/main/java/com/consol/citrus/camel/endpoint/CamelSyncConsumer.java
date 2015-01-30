@@ -19,7 +19,10 @@ package com.consol.citrus.camel.endpoint;
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyProducer;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
@@ -38,7 +41,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     private static Logger log = LoggerFactory.getLogger(CamelSyncConsumer.class);
 
     /** Storage for in flight exchanges */
-    private CorrelationManager<Exchange> exchangeManager = new DefaultCorrelationManager<Exchange>();
+    private CorrelationManager<Exchange> correlationManager;
 
     /** Endpoint configuration */
     private final CamelSyncEndpointConfiguration endpointConfiguration;
@@ -51,6 +54,8 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     public CamelSyncConsumer(String name, CamelSyncEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Camel exchange not set up yet");
     }
 
     @Override
@@ -70,7 +75,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         context.saveCorrelationKey(correlationKey, this);
-        exchangeManager.store(correlationKey, exchange);
+        correlationManager.store(correlationKey, exchange);
 
         return message;
     }
@@ -80,7 +85,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String correlationKey = context.getCorrelationKey(this);
-        Exchange exchange = exchangeManager.find(correlationKey);
+        Exchange exchange = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(exchange, "Failed to find camel exchange for message correlation key: '" + correlationKey + "'");
 
         buildOutMessage(exchange, message);
@@ -131,6 +136,14 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         }
 
         reply.setBody(message.getPayload());
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<Exchange> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 
 }

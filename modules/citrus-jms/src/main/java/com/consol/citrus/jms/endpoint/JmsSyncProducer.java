@@ -19,8 +19,9 @@ package com.consol.citrus.jms.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +46,13 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     private Session session = null;
 
     /** Store of reply messages */
-    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
+    private CorrelationManager<Message> correlationManager;
 
     /** Endpoint configuration */
     private final JmsSyncEndpointConfiguration endpointConfiguration;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmsSyncProducer.class);
-
-    /** Retry logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
 
     /**
      * Default constructor using endpoint configuration.
@@ -64,6 +62,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     public JmsSyncProducer(String name, JmsSyncEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -119,7 +119,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
             context.onInboundMessage(responseMessage);
 
-            onReplyMessage(correlationKey, responseMessage);
+            correlationManager.store(correlationKey, responseMessage);
         } catch (JMSException e) {
             throw new CitrusRuntimeException(e);
         } finally {
@@ -146,27 +146,10 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        long timeLeft = timeout;
-        Message message = findReplyMessage(selector);
-
-        while (message == null && timeLeft > 0) {
-            timeLeft -= endpointConfiguration.getPollingInterval();
-
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft) + "ms");
-            }
-
-            try {
-                Thread.sleep(timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-
-            message = findReplyMessage(selector);
-        }
+        Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply on destination");
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on jms destination");
         }
 
         return message;
@@ -313,24 +296,6 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     }
 
     /**
-     * Saves reply message with correlation key to local store for later processing.
-     * @param correlationKey
-     * @param replyMessage the reply message.
-     */
-    public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyManager.store(correlationKey, replyMessage);
-    }
-
-    /**
-     * Tries to find reply message for correlation key from local store.
-     * @param correlationKey
-     * @return
-     */
-    public Message findReplyMessage(String correlationKey) {
-        return replyManager.find(correlationKey);
-    }
-
-    /**
      * Destroy method closing JMS session and connection
      */
     public void destroy() {
@@ -339,5 +304,21 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
         if (connection != null) {
             ConnectionFactoryUtils.releaseConnection(connection, endpointConfiguration.getConnectionFactory(), true);
         }
+    }
+
+    /**
+     * Gets the correlation manager.
+     * @return
+     */
+    public CorrelationManager<Message> getCorrelationManager() {
+        return correlationManager;
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 }

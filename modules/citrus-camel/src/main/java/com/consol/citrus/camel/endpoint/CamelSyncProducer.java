@@ -19,6 +19,7 @@ package com.consol.citrus.camel.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.correlation.*;
 import com.consol.citrus.messaging.ReplyConsumer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -26,6 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Synchronous producer creates synchronous Camel exchange for sending message and receiving synchronous reply.
+ * Reply message is correlated and stored in correlation manager. This way test cases are able to receive synchronous
+ * message asynchronously at later time.
+ *
  * @author Christoph Deppisch
  * @since 1.4.1
  */
@@ -35,13 +40,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     private static Logger log = LoggerFactory.getLogger(CamelSyncProducer.class);
 
     /** Store of reply messages */
-    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
+    private CorrelationManager<Message> correlationManager;
 
     /** Endpoint configuration */
     private final CamelSyncEndpointConfiguration endpointConfiguration;
-
-    /** Retry logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
 
     /**
      * Constructor using endpoint configuration and fields.
@@ -52,6 +54,8 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
     public CamelSyncProducer(String name, CamelSyncEndpointConfiguration endpointConfiguration) {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -77,7 +81,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration);
         context.onInboundMessage(replyMessage);
-        replyManager.store(correlationKey, replyMessage);
+        correlationManager.store(correlationKey, replyMessage);
     }
 
     @Override
@@ -97,30 +101,20 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        long timeLeft = timeout;
-        Message message = replyManager.find(selector);
-
-        while (message == null && timeLeft > 0) {
-            timeLeft -= endpointConfiguration.getPollingInterval();
-
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft) + "ms");
-            }
-
-            try {
-                Thread.sleep(timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-
-            message = replyManager.find(selector);
-        }
+        Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply on channel");
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on camel exchange");
         }
 
         return message;
     }
 
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
+        this.correlationManager = correlationManager;
+    }
 }

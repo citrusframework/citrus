@@ -32,7 +32,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class MessageSelectingQueueChannel extends QueueChannel {
     /** Logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.RetryLogger");
     
     /** Blocking in memory message store */
     private final BlockingQueue<Message<?>> queue;

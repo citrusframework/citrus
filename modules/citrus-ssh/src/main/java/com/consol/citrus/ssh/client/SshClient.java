@@ -18,14 +18,16 @@ package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ssh.SshRequest;
 import com.consol.citrus.ssh.SshResponse;
 import com.jcraft.jsch.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
@@ -42,10 +44,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
     public static final String CLASSPATH_PREFIX = "classpath:";
 
     /** Store of reply messages */
-    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
-
-    /** Retry logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+    private CorrelationManager<Message> correlationManager;
 
     // Session for the SSH communication
     private Session session;
@@ -57,7 +56,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      * Default constructor initializing endpoint configuration.
      */
     public SshClient() {
-        super(new SshEndpointConfiguration());
+        this(new SshEndpointConfiguration());
     }
 
     /**
@@ -66,6 +65,8 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     protected SshClient(SshEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -117,7 +118,8 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
         Message response = new DefaultMessage(getEndpointConfiguration().getXmlMapper().toXML(sshResp))
                 .setHeader("user", rUser);
-        onReplyMessage(correlationKey, response);
+
+        correlationManager.store(correlationKey, response);
     }
 
     @Override
@@ -137,44 +139,13 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        long timeLeft = timeout;
-        Message message = findReplyMessage(selector);
+        Message message = correlationManager.find(selector, timeout);
 
-        while (message == null && timeLeft > 0) {
-            timeLeft -= getEndpointConfiguration().getPollingInterval();
-
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? getEndpointConfiguration().getPollingInterval() : getEndpointConfiguration().getPollingInterval() + timeLeft) + "ms");
-            }
-
-            try {
-                Thread.sleep(timeLeft > 0 ? getEndpointConfiguration().getPollingInterval() : getEndpointConfiguration().getPollingInterval() + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-
-            message = findReplyMessage(selector);
+        if (message == null) {
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from ssh server");
         }
 
         return message;
-    }
-
-    /**
-     * Saves reply message with correlation key to local store for later processing.
-     * @param correlationKey
-     * @param replyMessage the reply message.
-     */
-    public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyManager.store(correlationKey, replyMessage);
-    }
-
-    /**
-     * Tries to find reply message for correlation key from local store.
-     * @param correlationKey
-     * @return
-     */
-    public Message findReplyMessage(String correlationKey) {
-        return replyManager.find(correlationKey);
     }
 
     @Override
@@ -373,6 +344,14 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public void setJsch(JSch jsch) {
         this.jsch = jsch;
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 
 }

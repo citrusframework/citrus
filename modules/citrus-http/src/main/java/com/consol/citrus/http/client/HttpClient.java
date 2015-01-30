@@ -23,6 +23,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,16 +50,13 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     private static Logger log = LoggerFactory.getLogger(HttpClient.class);
 
     /** Store of reply messages */
-    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
-
-    /** Retry logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+    private CorrelationManager<Message> correlationManager;
 
     /**
      * Default constructor initializing endpoint configuration.
      */
     public HttpClient() {
-        super(new HttpEndpointConfiguration());
+        this(new HttpEndpointConfiguration());
     }
 
     /**
@@ -66,6 +65,8 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
      */
     protected HttpClient(HttpEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -117,7 +118,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
         log.info("HTTP message was successfully sent to endpoint: '" + endpointUri + "'");
 
-        onReplyMessage(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
+        correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration()));
     }
 
     @Override
@@ -137,27 +138,10 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        long timeLeft = timeout;
-        Message message = findReplyMessage(selector);
-
-        while (message == null && timeLeft > 0) {
-            timeLeft -= getEndpointConfiguration().getPollingInterval();
-
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? getEndpointConfiguration().getPollingInterval() : getEndpointConfiguration().getPollingInterval() + timeLeft) + "ms");
-            }
-
-            try {
-                Thread.sleep(timeLeft > 0 ? getEndpointConfiguration().getPollingInterval() : getEndpointConfiguration().getPollingInterval() + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-
-            message = findReplyMessage(selector);
-        }
+        Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving Http response from from server");
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from http server");
         }
 
         return message;
@@ -196,7 +180,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.PROPAGATE)) {
                 Message responseMessage = getEndpointConfiguration().getMessageConverter().convertInbound(
                         new ResponseEntity(response.getBody(), response.getHeaders(), response.getStatusCode()), getEndpointConfiguration());
-                onReplyMessage(correlationKey, responseMessage);
+                correlationManager.store(correlationKey, responseMessage);
             } else if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
                 new DefaultResponseErrorHandler().handleError(response);
             } else {
@@ -204,24 +188,6 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             }
         }
 
-    }
-
-    /**
-     * Saves reply message with correlation key to local store for later processing.
-     * @param correlationKey
-     * @param replyMessage the reply message.
-     */
-    public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyManager.store(correlationKey, replyMessage);
-    }
-
-    /**
-     * Tries to find reply message for correlation key from local store.
-     * @param correlationKey
-     * @return
-     */
-    public Message findReplyMessage(String correlationKey) {
-        return replyManager.find(correlationKey);
     }
 
     /**
@@ -242,6 +208,14 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     @Override
     public SelectiveConsumer createConsumer() {
         return this;
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 
 }

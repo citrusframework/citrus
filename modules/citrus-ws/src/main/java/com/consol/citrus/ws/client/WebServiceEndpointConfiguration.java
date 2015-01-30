@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.client;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class WebServiceEndpointConfiguration extends AbstractEndpointConfiguration {
+public class WebServiceEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Web service tempalte */
     private WebServiceTemplate webServiceTemplate;
@@ -65,9 +65,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
 
     /** Should http errors be handled within endpoint consumer or simply throw exception */
     private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION;
-
-    /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
 
     /** Should handle mime headers */
     private boolean handleMimeHeaders = true;
@@ -214,22 +211,6 @@ public class WebServiceEndpointConfiguration extends AbstractEndpointConfigurati
     public void setInterceptors(List<ClientInterceptor> interceptors) {
         this.interceptors = interceptors;
         getWebServiceTemplate().setInterceptors(interceptors.toArray(new ClientInterceptor[interceptors.size()]));
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
     }
 
     /**

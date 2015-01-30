@@ -21,6 +21,8 @@ import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.SoapMessage;
@@ -50,16 +52,13 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     private static Logger log = LoggerFactory.getLogger(WebServiceClient.class);
 
     /** Store of reply messages */
-    private CorrelationManager<Message> replyManager = new DefaultCorrelationManager<Message>();
-
-    /** Retry logger */
-    private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.MessageRetryLogger");
+    private CorrelationManager<Message> correlationManager;
 
     /**
      * Default constructor initializing endpoint configuration.
      */
     public WebServiceClient() {
-        super(new WebServiceEndpointConfiguration());
+        this(new WebServiceEndpointConfiguration());
     }
 
     /**
@@ -68,6 +67,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
      */
     public WebServiceClient(WebServiceEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
+
+        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -131,7 +132,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
         if (result) {
             log.info("Received SOAP response from endpoint: '" + endpointUri + "'");
-            onReplyMessage(correlationKey, responseCallback.getResponse());
+            correlationManager.store(correlationKey, responseCallback.getResponse());
         } else {
             log.info("No SOAP response from endpoint: '" + endpointUri + "'");
         }
@@ -154,48 +155,13 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        long timeLeft = timeout;
-        Message message = findReplyMessage(selector);
-
-        while (message == null && timeLeft > 0) {
-            timeLeft -= getEndpointConfiguration().getPollingInterval();
-
-            if (RETRY_LOG.isDebugEnabled()) {
-                RETRY_LOG.debug("Reply message did not arrive yet - retrying in " + (timeLeft > 0 ? getEndpointConfiguration().getPollingInterval() : getEndpointConfiguration().getPollingInterval() + timeLeft) + "ms");
-            }
-
-            try {
-                Thread.sleep(timeLeft > 0 ? getEndpointConfiguration().getPollingInterval() : getEndpointConfiguration().getPollingInterval() + timeLeft);
-            } catch (InterruptedException e) {
-                RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
-            }
-
-            message = findReplyMessage(selector);
-        }
+        Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving WebService response from from server");
+            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from soap web server");
         }
 
         return message;
-    }
-
-    /**
-     * Saves reply message with correlation key to local store for later processing.
-     * @param correlationKey
-     * @param replyMessage the reply message.
-     */
-    public void onReplyMessage(String correlationKey, Message replyMessage) {
-        replyManager.store(correlationKey, replyMessage);
-    }
-
-    /**
-     * Tries to find reply message for correlation key from local store.
-     * @param correlationKey
-     * @return
-     */
-    public Message findReplyMessage(String correlationKey) {
-        return replyManager.find(correlationKey);
     }
 
     /**
@@ -262,7 +228,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
                     }
 
                     log.info("Received SOAP fault response from endpoint: '" + endpointUri + "'");
-                    onReplyMessage(correlationKey, responseMessage);
+                    correlationManager.store(correlationKey, responseMessage);
                 } catch (TransformerException e) {
                     throw new CitrusRuntimeException("Failed to handle fault response message", e);
                 }
@@ -277,6 +243,14 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
             }
         }
 
+    }
+
+    /**
+     * Sets the correlation manager.
+     * @param correlationManager
+     */
+    public void setCorrelationManager(CorrelationManager<Message> correlationManager) {
+        this.correlationManager = correlationManager;
     }
 
 }

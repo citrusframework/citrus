@@ -83,7 +83,8 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Message receivedMessage = jmsSyncConsumer.receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
-        Assert.assertEquals(jmsSyncConsumer.findReplyDestination(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage)), replyDestination);
+        Assert.assertEquals(jmsSyncConsumer.getCorrelationManager().find(endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKey(receivedMessage),
+                endpoint.getEndpointConfiguration().getTimeout()), replyDestination);
         
         verify(connectionFactory, destination, connection, session, messageConsumer);
     }
@@ -126,10 +127,10 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Message receivedMessage = jmsSyncConsumer.receive(context);
         Assert.assertEquals(receivedMessage.getPayload(), controlMessage.getPayload());
         
-        Assert.assertNull(jmsSyncConsumer.findReplyDestination(
-                correlator.getCorrelationKey("wrongIdKey")));
-        Assert.assertEquals(jmsSyncConsumer.findReplyDestination(
-                correlator.getCorrelationKey(receivedMessage)), replyDestination);
+        Assert.assertNull(jmsSyncConsumer.getCorrelationManager().find(
+                correlator.getCorrelationKey("wrongIdKey"), endpoint.getEndpointConfiguration().getTimeout()));
+        Assert.assertEquals(jmsSyncConsumer.getCorrelationManager().find(
+                correlator.getCorrelationKey(receivedMessage), endpoint.getEndpointConfiguration().getTimeout()), replyDestination);
         
         verify(connectionFactory, destination, connection, session, messageConsumer);
     }

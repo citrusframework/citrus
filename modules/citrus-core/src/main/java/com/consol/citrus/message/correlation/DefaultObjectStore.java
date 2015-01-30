@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.message;
+package com.consol.citrus.message.correlation;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Default object store implementation works on simple in memory hash map.
+ *
  * @author Christoph Deppisch
- * @since 2.0
+ * @since 2.0.1
  */
-public interface CorrelationManager<T> {
+public class DefaultObjectStore<T> extends ConcurrentHashMap<String, T> implements ObjectStore<T> {
 
-    /**
-     * Store object to correlation storage using the given correlation key.
-     * @param correlationKey
-     * @param object
-     */
-    void store(String correlationKey, T object);
+    @Override
+    public void add(String correlationKey, T object) {
+        super.put(correlationKey, object);
+    }
 
-    /**
-     * Finds stored object by its correlation key.
-     * @param correlationKey
-     * @return
-     */
-    T find(String correlationKey);
-
+    @Override
+    public T remove(String correlationKey) {
+        return super.remove(correlationKey);
+    }
 }

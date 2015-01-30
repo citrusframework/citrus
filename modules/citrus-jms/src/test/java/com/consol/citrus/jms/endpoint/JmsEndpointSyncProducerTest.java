@@ -20,7 +20,7 @@ import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.messaging.SelectiveConsumer;
+import com.consol.citrus.message.correlation.ObjectStore;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
@@ -272,7 +272,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
         context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
-        jmsSyncProducer.onReplyMessage(jmsSyncProducer.toString(), message);
+        jmsSyncProducer.getCorrelationManager().store(jmsSyncProducer.toString(), message);
 
         Assert.assertEquals(jmsSyncProducer.receive(context), message);
     }
@@ -284,7 +284,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
-        jmsSyncProducer.onReplyMessage(new DefaultMessageCorrelator().getCorrelationKey(message), message);
+        jmsSyncProducer.getCorrelationManager().store(new DefaultMessageCorrelator().getCorrelationKey(message), message);
 
         Assert.assertEquals(jmsSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }
@@ -295,22 +295,23 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
+        JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
+
+        ((JmsSyncProducer)endpoint.createProducer()).getCorrelationManager().setObjectStore(new ObjectStore<Message>() {
             @Override
-            public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
-                    @Override
-                    public Message findReplyMessage(String correlationKey) {
-                        retryCount++;
-                        if (retryCount == 5) {
-                            return message;
-                        } else {
-                            return null;
-                        }
-                    }
-                };
+            public void add(String correlationKey, Message object) {
             }
-        };
+
+            @Override
+            public Message remove(String correlationKey) {
+                retryCount++;
+                if (retryCount == 5) {
+                    return message;
+                } else {
+                    return null;
+                }
+            }
+        });
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
@@ -324,20 +325,21 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
     public void testReplyMessageRetriesExceeded() {
         retryCount = 0;
 
-        JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
-            @Override
-            public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
-                    @Override
-                    public Message findReplyMessage(String correlationKey) {
-                        retryCount++;
-                        return null;
-                    }
-                };
-            }
-        };
-
+        JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setPollingInterval(300L);
+
+        ((JmsSyncProducer)endpoint.createProducer()).getCorrelationManager().setObjectStore(new ObjectStore<Message>() {
+            @Override
+            public void add(String correlationKey, Message object) {
+            }
+
+            @Override
+            public Message remove(String correlationKey) {
+                retryCount++;
+                return null;
+            }
+        });
+
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
@@ -355,20 +357,21 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
     public void testIntervalGreaterThanTimeout() {
         retryCount = 0;
 
-        JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
-            @Override
-            public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
-                    @Override
-                    public Message findReplyMessage(String correlationKey) {
-                        retryCount++;
-                        return null;
-                    }
-                };
-            }
-        };
-
+        JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setPollingInterval(1000L);
+
+        ((JmsSyncProducer)endpoint.createProducer()).getCorrelationManager().setObjectStore(new ObjectStore<Message>() {
+            @Override
+            public void add(String correlationKey, Message object) {
+            }
+
+            @Override
+            public Message remove(String correlationKey) {
+                retryCount++;
+                return null;
+            }
+        });
+
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);
@@ -386,20 +389,21 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
     public void testZeroTimeout() {
         retryCount = 0;
 
-        JmsSyncEndpoint endpoint = new JmsSyncEndpoint() {
-            @Override
-            public SelectiveConsumer createConsumer() {
-                return new JmsSyncProducer(getProducerName(), getEndpointConfiguration()) {
-                    @Override
-                    public Message findReplyMessage(String correlationKey) {
-                        retryCount++;
-                        return null;
-                    }
-                };
-            }
-        };
-
+        JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setPollingInterval(1000L);
+
+        ((JmsSyncProducer)endpoint.createProducer()).getCorrelationManager().setObjectStore(new ObjectStore<Message>() {
+            @Override
+            public void add(String correlationKey, Message object) {
+            }
+
+            @Override
+            public Message remove(String correlationKey) {
+                retryCount++;
+                return null;
+            }
+        });
+
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
         context.saveCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer);

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ftp.client;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 
@@ -24,7 +24,7 @@ import com.consol.citrus.message.MessageCorrelator;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FtpEndpointConfiguration extends AbstractEndpointConfiguration {
+public class FtpEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Ftp host to connect to */
     private String host = "localhost";
@@ -40,9 +40,6 @@ public class FtpEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
-
-    /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
 
     /**
      * Gets the ftp host.
@@ -90,22 +87,6 @@ public class FtpEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public MessageCorrelator getCorrelator() {
         return correlator;
-    }
-
-    /**
-     * Gets the pollingInterval.
-     * @return the pollingInterval the pollingInterval to get.
-     */
-    public long getPollingInterval() {
-        return pollingInterval;
-    }
-
-    /**
-     * Sets the pollingInterval.
-     * @param pollingInterval the pollingInterval to set
-     */
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
     }
 
     /**
