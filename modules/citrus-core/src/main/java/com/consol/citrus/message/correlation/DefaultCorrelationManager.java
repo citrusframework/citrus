@@ -16,6 +16,10 @@
 
 package com.consol.citrus.message.correlation;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.messaging.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +37,28 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
 
     /** Map of managed objects */
     private ObjectStore<T> objectStore = new DefaultObjectStore<T>();
+
+    @Override
+    public void createCorrelationKey(String correlationKey, Consumer consumer, TestContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Saving correlation key for '%s'", getCorrelationKeyName(consumer)));
+        }
+
+        context.setVariable(getCorrelationKeyName(consumer), correlationKey);
+    }
+
+    @Override
+    public String getCorrelationKey(Consumer consumer, TestContext context) {
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Get correlation key for '%s'", getCorrelationKeyName(consumer)));
+        }
+
+        if (context.getVariables().containsKey(getCorrelationKeyName(consumer))) {
+            return context.getVariable(getCorrelationKeyName(consumer));
+        }
+
+        throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", getCorrelationKeyName(consumer)));
+    }
 
     @Override
     public void store(String correlationKey, T object) {
@@ -55,6 +81,15 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
         }
 
         return objectStore.remove(correlationKey);
+    }
+
+    /**
+     * Constructs unique correlation key name for given consumer.
+     * @param consumer
+     * @return
+     */
+    protected String getCorrelationKeyName(Consumer consumer) {
+        return MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName();
     }
 
     @Override

@@ -16,6 +16,9 @@
 
 package com.consol.citrus.message.correlation;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.messaging.Consumer;
+
 /**
  * Correlation manager stores objects with a correlation key. Clients can access the same objects
  * some time later with same correlation key. This mechanism is used in synchronous communication where
@@ -25,6 +28,26 @@ package com.consol.citrus.message.correlation;
  * @since 2.0
  */
 public interface CorrelationManager<T> {
+
+    /**
+     * Creates new correlation key in test context by saving as test variable. Method is called when
+     * synchronous communication is initialized.
+     *
+     * @param correlationKey
+     * @param consumer
+     * @param context
+     */
+    void createCorrelationKey(String correlationKey, Consumer consumer, TestContext context);
+
+    /**
+     * Gets correlation key for given consumer. Consults test context with test variables
+     * for retrieving stored correlation key.
+     *
+     * @param consumer
+     * @param context
+     * @return
+     */
+    String getCorrelationKey(Consumer consumer, TestContext context);
 
     /**
      * Store object to correlation storage using the given correlation key.

@@ -63,7 +63,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.saveCorrelationKey(correlationKey, this);
+        correlationManager.createCorrelationKey(correlationKey, this, context);
 
         context.onOutboundMessage(message);
 
@@ -86,7 +86,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context) {
-        return receive(context.getCorrelationKey(this), context);
+        return receive(correlationManager.getCorrelationKey(this, context), context);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(context.getCorrelationKey(this), context, timeout);
+        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
     }
 
     @Override

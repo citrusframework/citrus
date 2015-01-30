@@ -91,7 +91,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         }
 
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(httpMessage);
-        context.saveCorrelationKey(correlationKey, this);
+        correlationManager.createCorrelationKey(correlationKey, this, context);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointUriResolver() != null) {
@@ -123,7 +123,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public Message receive(TestContext context) {
-        return receive(context.getCorrelationKey(this), context);
+        return receive(correlationManager.getCorrelationKey(this, context), context);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(context.getCorrelationKey(this), context, timeout);
+        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
     }
 
     @Override

@@ -247,7 +247,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        context.saveCorrelationKey(channelSyncProducer.toString(), channelSyncProducer);
+        channelSyncProducer.getCorrelationManager().createCorrelationKey(channelSyncProducer.toString(), channelSyncProducer, context);
         channelSyncProducer.getCorrelationManager().store(channelSyncProducer.toString(), message);
 
         Assert.assertEquals(channelSyncProducer.receive(context), message);

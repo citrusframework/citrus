@@ -74,7 +74,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         context.onInboundMessage(message);
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        context.saveCorrelationKey(correlationKey, this);
+        correlationManager.createCorrelationKey(correlationKey, this, context);
         correlationManager.store(correlationKey, exchange);
 
         return message;
@@ -84,7 +84,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = context.getCorrelationKey(this);
+        String correlationKey = correlationManager.getCorrelationKey(this, context);
         Exchange exchange = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(exchange, "Failed to find camel exchange for message correlation key: '" + correlationKey + "'");
 

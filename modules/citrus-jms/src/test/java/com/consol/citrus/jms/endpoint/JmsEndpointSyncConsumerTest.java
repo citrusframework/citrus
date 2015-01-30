@@ -197,7 +197,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsMessage requestMessage = new JmsMessage("")
                 .setReplyTo(replyDestination);
 
-        context.saveCorrelationKey(requestMessage.getId(), endpoint.createConsumer());
+        ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(requestMessage.getId(), endpoint.createConsumer(), context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
@@ -237,7 +237,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         JmsSyncEndpoint dummyEndpoint = new JmsSyncEndpoint();
         dummyEndpoint.setName("dummyEndpoint");
-        context.saveCorrelationKey("123456789", dummyEndpoint.createConsumer());
+        ((JmsSyncConsumer)dummyEndpoint.createConsumer()).getCorrelationManager().createCorrelationKey("123456789", dummyEndpoint.createConsumer(), context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
@@ -264,7 +264,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        context.saveCorrelationKey("123456789", endpoint.createConsumer());
+        ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey("123456789", endpoint.createConsumer(), context);
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -288,7 +288,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        context.saveCorrelationKey("123456789", endpoint.createConsumer());
+        ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey("123456789", endpoint.createConsumer(), context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
