@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.message;
 
 import com.consol.citrus.CitrusConstants;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.ws.mime.Attachment;
@@ -27,6 +28,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.StringUtils;
 
 /**
  * Citrus SOAP attachment implementation.
@@ -41,9 +43,6 @@ public class SoapAttachment implements Attachment, Serializable {
     /** Content body as string */
     private String content = null;
 
-    /** Content body as binary */
-    private DataHandler binaryContent = null;
-        
     /** Content body as file resource path  */
     private String contentResourcePath;
 
@@ -58,6 +57,13 @@ public class SoapAttachment implements Attachment, Serializable {
     
     /** send mtom attachments inline as hex or base64 coded */
     private Boolean mtomInline = false;
+    
+    /** Resolved content data handler */
+    private DataHandler dataHandler = null;
+    
+    /** Resolved content string */
+    private String resolvedContent = null;
+    
     
     /**
      * Default constructor
@@ -84,7 +90,7 @@ public class SoapAttachment implements Attachment, Serializable {
             }
         } else {
             // Binary content
-            soapAttachment.binaryContent = attachment.getDataHandler();
+            soapAttachment.dataHandler = attachment.getDataHandler();
         }
 
         soapAttachment.setCharsetName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
@@ -105,6 +111,9 @@ public class SoapAttachment implements Attachment, Serializable {
      * @see org.springframework.ws.mime.Attachment#getContentId()
      */
     public String getContentId() {
+        if (dataHandler != null && dataHandler.getName() != null) {
+            return dataHandler.getName();
+        }
         return contentId;
     }
 
@@ -112,6 +121,9 @@ public class SoapAttachment implements Attachment, Serializable {
      * @see org.springframework.ws.mime.Attachment#getContentType()
      */
     public String getContentType() {
+        if (dataHandler != null && dataHandler.getContentType() != null) {
+            return dataHandler.getContentType();
+        }
         return contentType;
     }
 
@@ -119,36 +131,40 @@ public class SoapAttachment implements Attachment, Serializable {
      * @see org.springframework.ws.mime.Attachment#getDataHandler()
      */
     public DataHandler getDataHandler() {
-        if(content != null) {
-            // Text content
-            return new DataHandler(new DataSource() {
-                public OutputStream getOutputStream() throws IOException {
-                    throw new UnsupportedOperationException();
-                }
-
-                public String getName() {
-                    return contentId;
-                }
-
-                public InputStream getInputStream() throws IOException {
-                    return new ByteArrayInputStream(content.getBytes(charsetName));
-                }
-
-                public String getContentType() {
-                    return contentType;
-                }
-            });
-        } else {
-            // Binary content
-            if (binaryContent == null) {
-                final Resource attachmentResource = new PathMatchingResourcePatternResolver().getResource(contentResourcePath);
-                binaryContent = new DataHandler(new DataSource() {
-
+        if (dataHandler == null) {
+            if(content != null) {
+                // Text content
+                dataHandler = new DataHandler(new DataSource() {
                     @Override
                     public OutputStream getOutputStream() throws IOException {
                         throw new UnsupportedOperationException();
                     }
 
+                    @Override
+                    public String getName() {
+                        return contentId;
+                    }
+
+                    @Override
+                    public InputStream getInputStream() throws IOException {
+                        return new ByteArrayInputStream(content.getBytes(charsetName));
+                    }
+
+                    @Override
+                    public String getContentType() {
+                        return contentType;
+                    }
+                });
+            } else {
+                // Binary content
+                final Resource attachmentResource = new PathMatchingResourcePatternResolver().getResource(contentResourcePath);
+                dataHandler = new DataHandler(new DataSource() {
+                    @Override
+                    public OutputStream getOutputStream() throws IOException {
+                        throw new UnsupportedOperationException();
+                    }
+
+                    @Override
                     public String getName() {
                         return attachmentResource.getFilename();
                     }
@@ -163,9 +179,9 @@ public class SoapAttachment implements Attachment, Serializable {
                         return contentType;
                     }
                 });
-            }
-            return binaryContent;
+            }            
         }
+        return dataHandler;
     }
 
     /**
@@ -180,7 +196,9 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public long getSize() {
         try {
-            if (content != null) {
+            if (resolvedContent != null) {
+                return resolvedContent.getBytes(charsetName).length;
+            } else if (content != null) {
                 return content.getBytes(charsetName).length;
             } else {
                 return getSizeOfContent(getDataHandler().getInputStream());
@@ -194,7 +212,7 @@ public class SoapAttachment implements Attachment, Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [contentId: %s, contentType: %s, content: %s]", getClass().getSimpleName().toUpperCase(), contentId, contentType, content);
+        return String.format("%s [contentId: %s, contentType: %s, content: %s]", getClass().getSimpleName().toUpperCase(), getContentId(), getContentType(), getContent());
     }
 
     /**
@@ -202,6 +220,9 @@ public class SoapAttachment implements Attachment, Serializable {
      * @return the content
      */
     public String getContent() {
+        if (resolvedContent != null) {
+            return resolvedContent;
+        }
         return content;
     }
 
@@ -212,7 +233,7 @@ public class SoapAttachment implements Attachment, Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-
+    
     /**
      * Get the content file resource path.
      * @return the content resource path
@@ -275,6 +296,78 @@ public class SoapAttachment implements Attachment, Serializable {
      */
     public Boolean getMtomInline() {
         return this.mtomInline;
+    }
+    
+    /**
+     * Resolve dynamic string content in attachment
+     * @param context Test context used to resolve dynamic content
+     */
+    public void resolveDynamicContent(TestContext context) {
+        resolvedContent = null;
+        final String resolvedContentId = (contentId != null ? context.replaceDynamicContentInString(contentId) : null);
+        final String resolvedContentType = (contentType != null ? context.replaceDynamicContentInString(contentType) : null);
+        final String resolvedCharsetName = (charsetName != null ? context.replaceDynamicContentInString(charsetName) : null);
+        if (StringUtils.hasText(content)) {
+            resolvedContent = context.replaceDynamicContentInString(content);            
+        } else if (contentResourcePath != null) {
+            try {
+                if (resolvedContentType.startsWith("text/"))
+                    resolvedContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(contentResourcePath, context)));
+                else {
+                    final String resolvedContentResourcePath = context.replaceDynamicContentInString(contentResourcePath);                    
+                    final Resource attachmentResource = new PathMatchingResourcePatternResolver().getResource(resolvedContentResourcePath);
+                    dataHandler = new DataHandler(new DataSource() {
+                        @Override
+                        public OutputStream getOutputStream() throws IOException {
+                            throw new UnsupportedOperationException();
+                        }
+
+                        @Override
+                        public String getName() {
+                            return resolvedContentId;
+                        }
+
+                        @Override
+                        public InputStream getInputStream() throws IOException {
+                            return attachmentResource.getInputStream();
+                        }
+
+                        @Override
+                        public String getContentType() {
+                            return resolvedContentType;
+                        }
+                    });
+                    
+                }
+            } catch (IOException e) {
+                throw new CitrusRuntimeException(e);
+            }            
+        }
+        
+        if (resolvedContent != null) {
+            // Text content
+            dataHandler = new DataHandler(new DataSource() {
+                @Override
+                public OutputStream getOutputStream() throws IOException {
+                    throw new UnsupportedOperationException();
+                }
+
+                @Override
+                public String getName() {
+                    return resolvedContentId;
+                }
+
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return new ByteArrayInputStream(resolvedContent.getBytes(resolvedCharsetName));
+                }
+
+                @Override
+                public String getContentType() {
+                    return resolvedContentType;
+                }
+            });            
+        }
     }
     
     /**

@@ -62,24 +62,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction {
             }
 
             for (SoapAttachment attachment : attachments) {
-                // handle variables in content id
-                if (attachment.getContentId() != null) {
-                    attachment.setContentId(context.replaceDynamicContentInString(attachment.getContentId()));
-                }
-
-                // handle variables in content type
-                if (attachment.getContentType() != null) {
-                    attachment.setContentType(context.replaceDynamicContentInString(attachment.getContentType()));
-                }
-
-                if (StringUtils.hasText(attachment.getContent())) {
-                    attachment.setContent(context.replaceDynamicContentInString(attachment.getContent()));
-                } else if (attachment.getContentResourcePath() != null) {
-                    if (attachment.getContentType().startsWith("text/"))
-                        attachment.setContent(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(attachment.getContentResourcePath(), context))));
-                    else
-                        attachment.setContentResourcePath(context.replaceDynamicContentInString(attachment.getContentResourcePath()));
-                }
+                attachment.resolveDynamicContent(context);
             }
 
             if (!attachments.isEmpty()) {
