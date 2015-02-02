@@ -16,6 +16,8 @@
 
 package com.consol.citrus.mail.model;
 
+import javax.xml.bind.annotation.*;
+
 /**
  * Accept request is raised for each mail communication in prior to processing the mail message. If
  * accepted with positive accept outcome mail message is processed. If not the mail message is declined with
@@ -27,11 +29,30 @@ package com.consol.citrus.mail.model;
  * @author Christoph Deppisch
  * @since 1.4
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "from",
+        "to"
+})
+@XmlRootElement(name = "accept-request")
 public class AcceptRequest {
 
-    private String from;
-    private String to;
+    @XmlElement(required = true)
+    protected String from;
+    @XmlElement(required = true)
+    protected String to;
 
+    /**
+     * Default constructor.
+     */
+    public AcceptRequest() {
+    }
+
+    /**
+     * Constructor using fields.
+     * @param from
+     * @param to
+     */
     public AcceptRequest(String from, String to) {
         this.from = from;
         this.to = to;

@@ -13,6 +13,9 @@
         <bean id="sayHelloSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
           <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
         </bean>
+        <bean id="mailMessageSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
+          <property name="xsd" value="classpath:com/consol/citrus/schema/citrus-mail-message.xsd"/>
+        </bean>
       </list>
     </property>
   </bean>

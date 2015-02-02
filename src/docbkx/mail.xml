@@ -77,7 +77,7 @@
     <programlisting>&lt;send endpoint=&quot;simpleMailClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;mail-message&gt;
+            &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
                 &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
                 &lt;cc&gt;&lt;/cc&gt;
@@ -104,7 +104,7 @@
     <programlisting>&lt;send endpoint=&quot;simpleMailClient&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;mail-message&gt;
+            &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
                 &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
                 &lt;cc&gt;&lt;/cc&gt;
@@ -136,7 +136,7 @@
     &lt;send endpoint=&quot;simpleMailClient&quot;&gt;
         &lt;message&gt;
             &lt;payload&gt;
-                &lt;mail-message&gt;
+                &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                     [...]
                 &lt;/mail-message&gt;
             &lt;/payload&gt;
@@ -183,7 +183,7 @@
     <programlisting>&lt;receive endpoint=&quot;simpleMailServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;mail-message&gt;
+            &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
                 &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
                 &lt;cc&gt;&lt;/cc&gt;
@@ -246,7 +246,7 @@
     <programlisting>&lt;receive endpoint=&quot;advancedMailServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;accept-request&gt;
+            &lt;accept-request xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
                 &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
             &lt;/accept-request&gt;
@@ -261,7 +261,7 @@
     <programlisting>&lt;send endpoint=&quot;advancedMailServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;accept-response&gt;
+            &lt;accept-response xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;accept&gt;true&lt;/accept&gt;
             &lt;/accept-response&gt;
         &lt;/payload&gt;
@@ -277,7 +277,7 @@
     <programlisting>&lt;receive endpoint=&quot;advancedMailServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;mail-message&gt;
+            &lt;mail-message xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;from&gt;christoph@citrusframework.com&lt;/from&gt;
                 &lt;to&gt;dev@citrusframework.com&lt;/to&gt;
                 &lt;cc&gt;&lt;/cc&gt;
@@ -295,7 +295,7 @@
 &lt;send endpoint=&quot;advancedMailServer&quot;&gt;
     &lt;message&gt;
         &lt;payload&gt;
-            &lt;mail-response&gt;
+            &lt;mail-response xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;&gt;
                 &lt;code&gt;443&lt;/code&gt;
                 &lt;message&gt;Failed!&lt;/message&gt;
             &lt;/mail-response&gt;

@@ -17,7 +17,7 @@
 package com.consol.citrus.mail.client;
 
 import com.consol.citrus.mail.model.MailMessage;
-import com.consol.citrus.mail.model.MailMessageMapper;
+import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.xml.transform.stream.StreamSource;
 import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
@@ -53,8 +54,8 @@ public class MailClientTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendMailMessageObject() throws Exception {
-        MailMessage mailMessage = (MailMessage) new MailMessageMapper().fromXML(
-                new ClassPathResource("text_mail.xml", MailServer.class).getInputStream());
+        MailMessage mailMessage = (MailMessage) new MailMarshaller().unmarshal(new StreamSource(
+            new ClassPathResource("text_mail.xml", MailServer.class).getInputStream()));
 
         reset(javaMailSender);
         expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();
@@ -87,8 +88,8 @@ public class MailClientTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendMultipartMailMessageObject() throws Exception {
-        MailMessage mailMessage = (MailMessage) new MailMessageMapper().fromXML(
-                new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream());
+        MailMessage mailMessage = (MailMessage) new MailMarshaller().unmarshal(new StreamSource(
+                new ClassPathResource("multipart_mail.xml", MailServer.class).getInputStream()));
 
         reset(javaMailSender);
         expect(javaMailSender.createMimeMessage()).andReturn(new MimeMessage(Session.getDefaultInstance(new Properties()))).once();

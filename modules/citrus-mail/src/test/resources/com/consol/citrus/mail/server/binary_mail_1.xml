@@ -1,11 +1,12 @@
-<mail-message>
-  <from>Foo <foo@mail.com></from>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
+  <from>Foo &lt;foo@mail.com&gt;</from>
   <to>bar@mail.com</to>
-  <cc>FooBar <foobar@mail.com></cc>
+  <cc>FooBar &lt;foobar@mail.com&gt;</cc>
   <bcc></bcc>
   <subject>This is brand_logo.png</subject>
   <body>
     <contentType>text/plain; charset=ISO-8859-15; format=flowed</contentType>
-    <content><![CDATA[Test: brand_logo.png]]></content>
+    <content>Test: brand_logo.png</content>
   </body>
 </mail-message>

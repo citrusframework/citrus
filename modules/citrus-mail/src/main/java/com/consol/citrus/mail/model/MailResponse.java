@@ -16,6 +16,8 @@
 
 package com.consol.citrus.mail.model;
 
+import javax.xml.bind.annotation.*;
+
 /**
  * Custom mail message response used to respond to SMTP command with a specific code and
  * message. By default SMTP command is responded with success OK. User can also specify reject message and code
@@ -24,14 +26,22 @@ package com.consol.citrus.mail.model;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailMessageResponse {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "code",
+        "message"
+})
+@XmlRootElement(name = "mail-response")
+public class MailResponse {
 
     /** Default ok code */
     public static final int OK_CODE = 250;
     public static final String OK_MESSAGE = "Ok";
 
-    private int code = OK_CODE;
-    private String message = OK_MESSAGE;
+    @XmlElement(required = true, defaultValue = "250")
+    protected int code = OK_CODE;
+    @XmlElement(required = true, defaultValue = "Ok")
+    protected String message = OK_MESSAGE;
 
     /**
      * Gets the response code.

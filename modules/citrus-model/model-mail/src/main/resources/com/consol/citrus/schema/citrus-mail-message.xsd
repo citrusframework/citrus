@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2006-2015 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.citrusframework.org/schema/mail/message"
+           targetNamespace="http://www.citrusframework.org/schema/mail/message"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+    <xs:element name="mail-message">
+      <xs:annotation>
+        <xs:documentation>Mail message with body part and one to many attachment parts.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="from" type="xs:string"/>
+          <xs:element name="to" type="xs:string"/>
+          <xs:element name="cc" type="xs:string" minOccurs="0"/>
+          <xs:element name="bcc" type="xs:string" minOccurs="0"/>
+          <xs:element name="subject" type="xs:string"/>
+          <xs:element name="replyTo" type="xs:string" minOccurs="0"/>
+          <xs:element name="body" type="BodyPart"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="mail-response">
+      <xs:annotation>
+        <xs:documentation>Mail response marks success or failure when processing the mail message.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="code" type="xs:int" default="250"/>
+          <xs:element name="message" type="xs:string" default="OK"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="accept-request">
+      <xs:annotation>
+        <xs:documentation>Accept request used for incoming mail requests.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="from" type="xs:string"/>
+          <xs:element name="to" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:element name="accept-response">
+      <xs:annotation>
+        <xs:documentation>Accept or decline the incoming mail message as a server.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="accept" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="BodyPart">
+      <xs:sequence>
+        <xs:element name="contentType" type="xs:string"/>
+        <xs:element name="content" type="xs:string"/>
+        <xs:element name="attachments" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name ="attachment" type="AttachmentPart" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AttachmentPart">
+      <xs:complexContent>
+        <xs:extension base="BodyPart">
+          <xs:sequence>
+            <xs:element name="fileName" type="xs:string"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

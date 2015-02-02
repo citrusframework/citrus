@@ -1,4 +1,5 @@
-<accept-request>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<accept-request xmlns="http://www.citrusframework.org/schema/mail/message">
   <from>foo@mail.com</from>
   <to>bar@mail.com</to>
 </accept-request>

@@ -38,7 +38,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <mail-message>
+                  <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                     <from>${from}</from>
                     <to>${to}</to>
                     <cc></cc>
@@ -66,7 +66,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <accept-request>
+                  <accept-request xmlns="http://www.citrusframework.org/schema/mail/message">
                     <from>${from}</from>
                     <to>${to}</to>
                   </accept-request>
@@ -82,7 +82,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <accept-response>
+                  <accept-response xmlns="http://www.citrusframework.org/schema/mail/message">
                     <accept>true</accept>
                   </accept-response>
                 ]]>
@@ -97,7 +97,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <mail-message>
+                  <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                     <from>${from}</from>
                     <to>${to}</to>
                     <cc></cc>
@@ -126,7 +126,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <mail-response>
+                  <mail-response xmlns="http://www.citrusframework.org/schema/mail/message">
                     <code>443</code>
                     <message>Failed!</message>
                   </mail-response>

@@ -16,14 +16,27 @@
 
 package com.consol.citrus.mail.model;
 
+import javax.xml.bind.annotation.*;
+
 /**
  * Attachment part adds file name.
  * @author Christoph Deppisch
  * @since 1.4
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "AttachmentPartType", propOrder = {
+        "fileName"
+})
 public class AttachmentPart extends BodyPart {
 
-    private String fileName;
+    @XmlElement(required = true)
+    protected String fileName;
+
+    /**
+     * Default constructor.
+     */
+    public AttachmentPart() {
+    }
 
     /**
      * Default constructor using fields.

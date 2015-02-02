@@ -33,6 +33,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
+import javax.xml.transform.Source;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -88,7 +89,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
             mimeMailMessage.setText(mailMessage.getBody().getContent());
 
             if (mailMessage.getBody().hasAttachments()) {
-                for (AttachmentPart attachmentPart : mailMessage.getBody().getAttachments()) {
+                for (AttachmentPart attachmentPart : mailMessage.getBody().getAttachments().getAttachments()) {
                     mimeMailMessage.getMimeMessageHelper().addAttachment(attachmentPart.getFileName(),
                             new ByteArrayResource(attachmentPart.getContent().getBytes(Charset.forName(attachmentPart.getCharsetName()))),
                             attachmentPart.getContentType());
@@ -340,8 +341,9 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
         if (payload != null) {
             if (payload instanceof MailMessage) {
                 mailMessage = (MailMessage) payload;
-            } else if (payload instanceof String) {
-                mailMessage = (MailMessage) endpointConfiguration.getMailMessageMapper().fromXML(payload.toString());
+            } else {
+                mailMessage = (MailMessage) endpointConfiguration.getMailMarshaller()
+                        .unmarshal(message.getPayload(Source.class));
             }
         }
 

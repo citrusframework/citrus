@@ -1,4 +1,5 @@
-<mail-message>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
   <from>foo@mail.com</from>
   <to>bar@mail.com</to>
   <cc></cc>
@@ -6,12 +7,12 @@
   <subject>Multipart Testmail</subject>
   <body>
     <contentType>text/html; charset=utf-8</contentType>
-    <content><![CDATA[<html>
-<head>
-</head>
-<body>
-<h1>HTML Attachment</h1>
-</body>
-</html>]]></content>
+    <content>&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;HTML Attachment&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</content>
   </body>
 </mail-message>

@@ -18,7 +18,7 @@ package com.consol.citrus.mail.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import com.consol.citrus.mail.message.MailMessageConverter;
-import com.consol.citrus.mail.model.MailMessageMapper;
+import com.consol.citrus.mail.model.MailMarshaller;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
@@ -50,8 +50,8 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     /** Mail sender implementation */
     private JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
-    /** Mail message mapper converts from XML to mail message object */
-    private MailMessageMapper mailMessageMapper = new MailMessageMapper();
+    /** Mail message marshaller converts from XML to mail message object */
+    private MailMarshaller mailMarshaller = new MailMarshaller();
 
     /** Mail message converter */
     private MailMessageConverter messageConverter = new MailMessageConverter();
@@ -165,19 +165,19 @@ public class MailEndpointConfiguration extends AbstractEndpointConfiguration {
     }
 
     /**
-     * Gets the mail message mapper implementation.
+     * Gets the mail message marshaller implementation.
      * @return
      */
-    public MailMessageMapper getMailMessageMapper() {
-        return mailMessageMapper;
+    public MailMarshaller getMailMarshaller() {
+        return mailMarshaller;
     }
 
     /**
-     * Sets the mail message mapper implementation.
-     * @param mailMessageMapper
+     * Sets the mail message marshaller implementation.
+     * @param mailMarshaller
      */
-    public void setMailMessageMapper(MailMessageMapper mailMessageMapper) {
-        this.mailMessageMapper = mailMessageMapper;
+    public void setMailMarshaller(MailMarshaller mailMarshaller) {
+        this.mailMarshaller = mailMarshaller;
     }
 
     /**

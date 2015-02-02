@@ -26,6 +26,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.xml.transform.StringResult;
 import org.subethamail.smtp.RejectException;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
@@ -34,6 +35,7 @@ import org.subethamail.smtp.server.SMTPServer;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
+import javax.xml.transform.Source;
 import java.io.InputStream;
 import java.util.*;
 
@@ -57,7 +59,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     private int port = 25;
 
     /** XML message mapper */
-    private MailMessageMapper mailMessageMapper = new MailMessageMapper();
+    private MailMarshaller marshaller = new MailMarshaller();
 
     /** Mail message converter */
     private MailMessageConverter messageConverter = new MailMessageConverter();
@@ -96,8 +98,10 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             return true;
         }
 
+        StringResult result = new StringResult();
+        marshaller.marshal(createAcceptRequest(from, recipient), result);
         Message response = getEndpointAdapter().handleMessage(
-                new DefaultMessage(mailMessageMapper.toXML(createAcceptRequest(from, recipient))));
+                new DefaultMessage(result.toString()));
 
         if (response == null || response.getPayload() == null) {
             throw new CitrusRuntimeException("Did not receive accept response. Missing accept response because autoAccept is disabled.");
@@ -107,7 +111,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         if (response.getPayload() instanceof AcceptResponse) {
             acceptResponse = (AcceptResponse) response.getPayload();
         } else if (response.getPayload() instanceof String) {
-            acceptResponse = (AcceptResponse) mailMessageMapper.fromXML(response.getPayload().toString());
+            acceptResponse = (AcceptResponse) marshaller.unmarshal(response.getPayload(Source.class));
         }
 
         if (acceptResponse == null) {
@@ -125,14 +129,14 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
             Message response = invokeEndpointAdapter(request);
 
             if (response != null && response.getPayload() != null) {
-                MailMessageResponse mailResponse = null;
-                if (response.getPayload() instanceof MailMessageResponse) {
-                    mailResponse = (MailMessageResponse) response.getPayload();
+                MailResponse mailResponse = null;
+                if (response.getPayload() instanceof MailResponse) {
+                    mailResponse = (MailResponse) response.getPayload();
                 } else if (response.getPayload() instanceof String) {
-                    mailResponse = (MailMessageResponse) mailMessageMapper.fromXML(response.getPayload().toString());
+                    mailResponse = (MailResponse) marshaller.unmarshal(response.getPayload(Source.class));
                 }
 
-                if (mailResponse != null && mailResponse.getCode() != MailMessageResponse.OK_CODE) {
+                if (mailResponse != null && mailResponse.getCode() != MailResponse.OK_CODE) {
                     throw new RejectException(mailResponse.getCode(), mailResponse.getMessage());
                 }
             }
@@ -151,7 +155,9 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         if (splitMultipart) {
             return split(mailMessage.getBody(), request.copyHeaders());
         } else {
-            return getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), request.copyHeaders()));
+            StringResult result = new StringResult();
+            marshaller.marshal(mailMessage, result);
+            return getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), request.copyHeaders()));
         }
     }
 
@@ -167,18 +173,21 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
         MailMessage mailMessage = createMailMessage(messageHeaders);
         mailMessage.setBody(new BodyPart(bodyPart.getContent(), bodyPart.getContentType()));
 
+        StringResult result = new StringResult();
         Stack<Message> responseStack = new Stack<Message>();
         if (bodyPart instanceof AttachmentPart) {
-            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), messageHeaders)
+            marshaller.marshal(mailMessage, result);
+            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())
                     .setHeader(CitrusMailMessageHeaders.MAIL_FILENAME, ((AttachmentPart) bodyPart).getFileName())), responseStack);
         } else {
-            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(mailMessageMapper.toXML(mailMessage), messageHeaders)
+            marshaller.marshal(mailMessage, result);
+            fillStack(getEndpointAdapter().handleMessage(new DefaultMessage(result.toString(), messageHeaders)
                     .setHeader(CitrusMailMessageHeaders.MAIL_CONTENT_TYPE, bodyPart.getContentType())), responseStack);
         }
 
         if (bodyPart.hasAttachments()) {
-            for (AttachmentPart attachmentPart : bodyPart.getAttachments()) {
+            for (AttachmentPart attachmentPart : bodyPart.getAttachments().getAttachments()) {
                 fillStack(split(attachmentPart, messageHeaders), responseStack);
             }
         }
@@ -215,7 +224,7 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     public MailEndpointConfiguration getEndpointConfiguration() {
         MailEndpointConfiguration endpointConfiguration = new MailEndpointConfiguration();
         endpointConfiguration.setMessageConverter(messageConverter);
-        endpointConfiguration.setMailMessageMapper(mailMessageMapper);
+        endpointConfiguration.setMailMarshaller(marshaller);
         endpointConfiguration.setJavaMailProperties(javaMailProperties);
 
         return endpointConfiguration;
@@ -249,19 +258,19 @@ public class MailServer extends AbstractServer implements SimpleMessageListener,
     }
 
     /**
-     * Gets the mail message mapper.
+     * Gets the mail message marshaller.
      * @return
      */
-    public MailMessageMapper getMailMessageMapper() {
-        return mailMessageMapper;
+    public MailMarshaller getMailMarshaller() {
+        return marshaller;
     }
 
     /**
-     * Sets the mail message mapper.
-     * @param mailMessageMapper
+     * Sets the mail message marshaller.
+     * @param marshaller
      */
-    public void setMailMessageMapper(MailMessageMapper mailMessageMapper) {
-        this.mailMessageMapper = mailMessageMapper;
+    public void setMailMarshaller(MailMarshaller marshaller) {
+        this.marshaller = marshaller;
     }
 
     /**

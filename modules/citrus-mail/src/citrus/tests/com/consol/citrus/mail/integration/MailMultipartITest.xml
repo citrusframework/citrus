@@ -36,7 +36,7 @@
         <message>
           <data>
             <![CDATA[
-              <mail-message>
+              <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                 <from>${from}</from>
                 <to>${to}</to>
                 <cc></cc>
@@ -69,7 +69,7 @@
         <message>
           <data>
             <![CDATA[
-              <mail-message>
+              <mail-message xmlns="http://www.citrusframework.org/schema/mail/message">
                 <from>${from}</from>
                 <to>${to}</to>
                 <cc></cc>

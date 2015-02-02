@@ -20,6 +20,7 @@ import com.consol.citrus.CitrusConstants;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +29,28 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.4
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "BodyPart", propOrder = {
+        "contentType",
+        "content",
+        "attachments"
+})
+@XmlSeeAlso({
+        AttachmentPart.class
+})
 public class BodyPart {
 
-    private String contentType;
+    @XmlElement(required = true)
+    protected String contentType;
+    @XmlElement(required = true)
+    protected String content;
+    protected BodyPart.Attachments attachments;
 
-    private String content;
-    private List<AttachmentPart> attachments;
+    /**
+     * Default constructor.
+     */
+    public BodyPart() {
+    }
 
     /**
      * Default constructor using content and contentType.
@@ -51,7 +68,7 @@ public class BodyPart {
      */
     public void addPart(AttachmentPart part) {
         if (attachments == null) {
-            attachments = new ArrayList<AttachmentPart>();
+            attachments = new BodyPart.Attachments();
         }
 
         this.attachments.add(part);
@@ -109,10 +126,10 @@ public class BodyPart {
     }
 
     /**
-     * Gets the attachent list.
+     * Gets the attachment list.
      * @return
      */
-    public List<AttachmentPart> getAttachments() {
+    public Attachments getAttachments() {
         return attachments;
     }
 
@@ -120,7 +137,7 @@ public class BodyPart {
      * Sets the attachment list.
      * @param attachments
      */
-    public void setAttachments(List<AttachmentPart> attachments) {
+    public void setAttachments(Attachments attachments) {
         this.attachments = attachments;
     }
 
@@ -129,6 +146,23 @@ public class BodyPart {
      * @return
      */
     public boolean hasAttachments() {
-        return !CollectionUtils.isEmpty(attachments);
+        return attachments != null && !CollectionUtils.isEmpty(attachments.getAttachments());
+    }
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+            "attachments"
+    })
+    public static class Attachments {
+        @XmlElement(name = "attachment", required = true)
+        protected List<AttachmentPart> attachments = new ArrayList<AttachmentPart>();
+
+        public List<AttachmentPart> getAttachments() {
+            return this.attachments;
+        }
+
+        public void add(AttachmentPart attachmentPart) {
+            this.attachments.add(attachmentPart);
+        }
     }
 }

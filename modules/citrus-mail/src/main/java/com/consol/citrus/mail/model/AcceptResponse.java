@@ -16,6 +16,8 @@
 
 package com.consol.citrus.mail.model;
 
+import javax.xml.bind.annotation.*;
+
 /**
  * Response outcome for accept requests. Just says whether accept request is accepted or declined according
  * to boolean response outcome.
@@ -23,6 +25,11 @@ package com.consol.citrus.mail.model;
  * @author Christoph Deppisch
  * @since 1.4
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "accept"
+})
+@XmlRootElement(name = "accept-response")
 public class AcceptResponse {
 
     /** Accept request outcome yes/no */

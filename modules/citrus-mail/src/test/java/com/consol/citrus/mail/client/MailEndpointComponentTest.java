@@ -18,7 +18,7 @@ package com.consol.citrus.mail.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.mail.model.MailMessageMapper;
+import com.consol.citrus.mail.model.MailMarshaller;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
@@ -33,7 +33,7 @@ import static org.easymock.EasyMock.*;
 public class MailEndpointComponentTest {
 
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);
-    private MailMessageMapper mapper = EasyMock.createMock(MailMessageMapper.class);
+    private MailMarshaller marshaller = EasyMock.createMock(MailMarshaller.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
@@ -75,11 +75,11 @@ public class MailEndpointComponentTest {
         MailEndpointComponent component = new MailEndpointComponent();
 
         reset(applicationContext);
-        expect(applicationContext.containsBean("myMapper")).andReturn(true).once();
-        expect(applicationContext.getBean("myMapper")).andReturn(mapper).once();
+        expect(applicationContext.containsBean("myMarshaller")).andReturn(true).once();
+        expect(applicationContext.getBean("myMarshaller")).andReturn(marshaller).once();
         replay(applicationContext);
 
-        Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&mailMessageMapper=myMapper", context);
+        Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&mailMarshaller=myMarshaller", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);
 
@@ -87,7 +87,7 @@ public class MailEndpointComponentTest {
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPort(), -1);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getUsername(), "foo");
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getPassword(), "1234");
-        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMailMessageMapper(), mapper);
+        Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMailMarshaller(), marshaller);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
         verify(applicationContext);

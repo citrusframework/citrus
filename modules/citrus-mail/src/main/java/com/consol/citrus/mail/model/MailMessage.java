@@ -15,6 +15,8 @@
  */
 package com.consol.citrus.mail.model;
 
+import javax.xml.bind.annotation.*;
+
 /**
  * Mail message model object representing mail content with sender and recipient information. Body can be text, binary
  * or multipart nature.
@@ -22,15 +24,33 @@ package com.consol.citrus.mail.model;
  * @author Christoph Deppisch
  * @since 1.4
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "from",
+        "to",
+        "cc",
+        "bcc",
+        "subject",
+        "replyTo",
+        "body"
+})
+@XmlRootElement(name = "mail-message")
 public class MailMessage {
 
-    private String from;
-    private String to;
-    private String cc;
-    private String bcc;
-    private String replyTo;
-    private String subject;
-    private BodyPart body;
+    @XmlElement(required = true)
+    protected String from;
+    @XmlElement(required = true)
+    protected String to;
+    @XmlElement(required = false)
+    protected String cc;
+    @XmlElement(required = false)
+    protected String bcc;
+    @XmlElement(required = true)
+    protected String subject;
+    @XmlElement(required = false)
+    protected String replyTo;
+    @XmlElement(required = true)
+    protected BodyPart body;
 
     /**
      * Gets the sender mail address.

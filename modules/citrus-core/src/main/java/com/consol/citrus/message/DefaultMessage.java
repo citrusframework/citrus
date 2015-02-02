@@ -21,8 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.CollectionUtils;
+import org.springframework.xml.transform.StringSource;
+import org.w3c.dom.Node;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -146,6 +153,20 @@ public class DefaultMessage implements Message {
     public <T> T getPayload(Class<T> type) {
         if (type.isInstance(payload)) {
             return type.cast(payload);
+        }
+
+        if (type.isAssignableFrom(Source.class)) {
+            if (getPayload().getClass().isAssignableFrom(String.class)) {
+                return (T) new StringSource(getPayload().toString());
+            } else if (getPayload().getClass().isAssignableFrom(Node.class)) {
+                return (T) new DOMSource((Node) getPayload());
+            } else if (getPayload().getClass().isAssignableFrom(InputStreamSource.class)) {
+                try {
+                    return (T) new StreamSource(((InputStreamSource)getPayload()).getInputStream());
+                } catch (IOException e) {
+                    log.warn("Failed to create stream source from message payload", e);
+                }
+            }
         }
 
         try {
