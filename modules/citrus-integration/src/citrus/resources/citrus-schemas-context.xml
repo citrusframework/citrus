@@ -29,5 +29,13 @@
       <citrus:ref schema="helloSchemaExtended" />
     </citrus:schemas>
   </citrus:schema-repository>
+  
+  <citrus:schema id="bookStoreSchemaExtended" location="classpath:com/consol/citrus/demo/BookStoreExtened.wsdl" />
+  
+  <citrus:schema-repository id="bookStoreSchemaRepository">
+    <citrus:schemas>
+      <citrus:ref schema="bookStoreSchemaExtended" />
+    </citrus:schemas>
+  </citrus:schema-repository>
 
 </beans>

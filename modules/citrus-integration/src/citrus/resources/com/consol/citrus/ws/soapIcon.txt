@@ -1,0 +1,2 @@
+This is a binary icon attachment!
+Variables %{test} should not be replaced!

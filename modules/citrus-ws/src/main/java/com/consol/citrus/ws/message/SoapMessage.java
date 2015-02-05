@@ -36,6 +36,9 @@ public class SoapMessage extends DefaultMessage {
     /** Optional list of SOAP attachments */
     private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
 
+    /** enable/disable mtom attachments */
+    private Boolean mtomEnabled = false;
+    
     /**
      * Constructs copy of given message.
      * @param message
@@ -110,5 +113,21 @@ public class SoapMessage extends DefaultMessage {
      */
     public List<SoapAttachment> getAttachments() {
         return attachments;
+    }
+    
+    /**
+     * Enable or disable mtom attachments
+     * @param mtomEnabled
+     */
+    public void setMtomEnabled(Boolean enable) {
+        this.mtomEnabled = enable;
+    }
+
+    /**
+     * Gets mtom attachments enabled
+     * @return 
+     */
+    public Boolean getMtomEnabled() {
+        return this.mtomEnabled;
     }
 }

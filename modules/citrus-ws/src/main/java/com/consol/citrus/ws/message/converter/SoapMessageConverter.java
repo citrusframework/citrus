@@ -62,7 +62,7 @@ import java.util.Map.Entry;
 public class SoapMessageConverter implements WebServiceMessageConverter {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SoapResponseMessageCallback.class);
+    private static Logger log = LoggerFactory.getLogger(SoapMessageConverter.class);
     
     /** Should keep soap envelope when creating internal message */
     private boolean keepSoapEnvelope = false;
@@ -131,9 +131,20 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
         }
 
+        boolean convertedToXOP = false;
         for (final Attachment attachment : soapMessage.getAttachments()) {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", attachment.getContentId(), attachment.getContentType()));
+            }
+
+            if (soapMessage.getMtomEnabled() && !convertedToXOP) {
+                if (soapRequest instanceof SaajSoapMessage) {
+                    log.debug("Converting SaajSoapMessage to XOP package");
+                    ((SaajSoapMessage) soapRequest).convertToXopPackage();
+                    convertedToXOP = true;
+                } else if (soapRequest instanceof AxiomSoapMessage) {
+                    log.warn("AxiomSoapMessage cannot be converted to XOP package");
+                }
             }
 
             soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {

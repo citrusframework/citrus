@@ -86,7 +86,17 @@
     <citrus-ws:client id="webServiceClient"
          request-url="http://localhost:8071"
          message-factory="messageFactory"/>
-                              
+
+    <!-- SOAP test client -->
+    <citrus-ws:client id="SampleSoapClient"
+                      request-url="http://localhost:8091"/>
+
+    <!-- SOAP test server -->
+    <citrus-ws:server id="SampleSoapServer"
+                      port="8091" 
+                      auto-start="true"
+                      resource-base="src/citrus/resources"/>    
+    
     <citrus-jms:endpoint id="webServiceRequestReceiver"
                              destination-name="${jms.ws.stub.request}"/>
     
