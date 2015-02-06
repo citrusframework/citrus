@@ -55,6 +55,10 @@ public final class SoapAttachmentParser {
         if (attachmentElement.hasAttribute("mtom-inline")) {
             soapAttachment.setMtomInline(Boolean.parseBoolean(attachmentElement.getAttribute("mtom-inline")));
         }
+
+        if (attachmentElement.hasAttribute("encoding-type")) {
+            soapAttachment.setEncodingType(attachmentElement.getAttribute("encoding-type"));
+        }
         
         Element attachmentDataElement = DomUtils.getChildElementByTagName(attachmentElement, "data");
         if (attachmentDataElement != null) {

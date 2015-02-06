@@ -21,40 +21,17 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
-import com.consol.citrus.xml.XsdSchemaRepository;
-import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
-import com.consol.citrus.xml.schema.WsdlXsdSchema;
-import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.xsd.XsdSchema;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Message send action able to add SOAP attachment support to normal message sending action.
@@ -65,14 +42,11 @@ public class SendSoapMessageAction extends SendMessageAction {
 
     private static Logger log = LoggerFactory.getLogger(SendSoapMessageAction.class);
     
-    /** SOAP attachment */
+    /** SOAP attachments */
     private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
 
     /** enable/disable mtom attachments */
-    private Boolean mtomEnabled = false;
-    
-    /** Explicit schema repository to use for this validation */
-    private String schemaRepository = "schemaRepository";
+    private boolean mtomEnabled = false;
     
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {
@@ -80,48 +54,38 @@ public class SendSoapMessageAction extends SendMessageAction {
         List<SoapAttachment> soapAttachments = new ArrayList<SoapAttachment>();
 
         try {
-            if (!attachments.isEmpty()) {
-                String messagePayload = message.getPayload().toString();
-                
-                for (SoapAttachment attachment : attachments) {
-                    attachment.resolveDynamicContent(context);
+            for (SoapAttachment attachment : attachments) {
+                attachment.resolveDynamicContent(context);
 
-                    if (mtomEnabled) {
-                        String cid = "cid:" + attachment.getContentId();
+                if (mtomEnabled) {
+                    String messagePayload = message.getPayload().toString();
+                    String cid = "cid:" + attachment.getContentId();
 
-                        if (attachment.getMtomInline()) {
-                            if (messagePayload.contains(cid) && attachment.getInputStream().available() > 0) {
-                                String xsiType = getAttachmentXsiType(context, messagePayload, cid);
-
-                                if (xsiType.equals("base64Binary")) {
-                                    messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(IOUtils.toByteArray(attachment.getInputStream())));
-                                } else if (xsiType.equals("hexBinary")) {
-                                    messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(IOUtils.toByteArray(attachment.getInputStream())).toUpperCase());
-                                } else {
-                                    throw new CitrusRuntimeException("Unsupported xsiType<" + xsiType + "> for attachment " + cid);
-                                }
-                                attachment = null;
-                            }
+                    if (attachment.getMtomInline() && messagePayload.contains(cid)) {
+                        byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
+                        if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
+                            messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(attachmentBinaryData));
+                        } else if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_HEX_BINARY)) {
+                            messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(attachmentBinaryData).toUpperCase());
                         } else {
-                            messagePayload = messagePayload.replaceAll(cid, "<xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"" + cid + "\"/>");
-                            soapAttachments.add(attachment);
+                            throw new CitrusRuntimeException(String.format("Unsupported encoding type '%s' for attachment: %s - choose one of %s or %s",
+                                    attachment.getEncodingType(), cid, SoapAttachment.ENCODING_BASE64_BINARY, SoapAttachment.ENCODING_HEX_BINARY));
                         }
                     } else {
+                        messagePayload = messagePayload.replaceAll(cid, String.format("<xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"%s\"/>", cid));
                         soapAttachments.add(attachment);
                     }
-                }
-                
-                if (mtomEnabled)
-                    message.setPayload(messagePayload);
-            }
 
+                    message.setPayload(messagePayload);
+                } else {
+                    soapAttachments.add(attachment);
+                }
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
         }
 
-        final SoapMessage soapMessage = new SoapMessage(message);
-        soapMessage.setMtomEnabled(mtomEnabled);
-        
+        final SoapMessage soapMessage = new SoapMessage(message).setMtomEnabled(mtomEnabled);
         for (SoapAttachment attachment : soapAttachments) {
             soapMessage.addAttachment(attachment);
         }
@@ -149,81 +113,15 @@ public class SendSoapMessageAction extends SendMessageAction {
      * Enable or disable mtom attachments
      * @param mtomEnabled
      */
-    public void setMtomEnabled(Boolean enable) {
-        this.mtomEnabled = enable;
+    public void setMtomEnabled(boolean mtomEnabled) {
+        this.mtomEnabled = mtomEnabled;
     }
 
     /**
      * Gets mtom attachments enabled
      * @return 
      */
-    public Boolean getMtomEnabled() {
+    public boolean getMtomEnabled() {
         return this.mtomEnabled;
-    }
-
-    /**
-     * Gets the schemaRepository.
-     * @return the schemaRepository the schemaRepository to get.
-     */
-    public String getSchemaRepository() {
-        return schemaRepository;
-    }
-
-    /**
-     * Sets the schemaRepository.
-     * @param schemaRepository the schemaRepository to set
-     */
-    public void setSchemaRepository(String schemaRepository) {
-        this.schemaRepository = schemaRepository;
-    }
-    
-    /**
-     * Get data type from XML node. Supported data types are "base64binary" and "hexBinary"
-     * @param context
-     * @param xmlMessage
-     * @param cid
-     * @return 
-     */
-    private String getAttachmentXsiType(TestContext context, String xmlMessage, String cid) {
-        String xsiType = "base64Binary";
-        XsdSchemaRepository schemaRepo = context.getApplicationContext().getBean(schemaRepository, XsdSchemaRepository.class);
-        if (schemaRepo != null) {
-            XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
-            XsdSchema schema = schemaMappingStrategy.getSchema(
-                    schemaRepo.getSchemas(), XMLUtils.parseMessagePayload(xmlMessage));
-            if (schema == null) {
-                log.error("No matching schema found to parse the attachment xml element for cid: " + cid);
-            } else {
-                try {
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    dbf.setNamespaceAware(true);
-                    dbf.setValidating(false);
-
-                    if (schema instanceof WsdlXsdSchema) {
-                        dbf.setSchema(((WsdlXsdSchema)schema).getCombinedSchema());
-                    } else {
-                        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                        dbf.setSchema(sf.newSchema(schema.getSource()));
-                    }
-
-                    DocumentBuilder db = dbf.newDocumentBuilder();
-                    Document doc = db.parse(new InputSource(new StringReader(xmlMessage)));
-                    doc.getDocumentElement().normalize();
-
-                    XPath xPath = XPathFactory.newInstance().newXPath();
-                    String expression = "//*[contains(normalize-space(text()), '" + cid + "')]";
-                    Node node = (Node) xPath.compile(expression).evaluate(doc, XPathConstants.NODE);
-                    if (node instanceof Element) {
-                        xsiType = ((Element) node).getSchemaTypeInfo().getTypeName();
-                    } else {
-                        log.warn("parent element of cid: " + cid + " not found in xml payload.");
-                    }
-                } catch (SAXException | ParserConfigurationException | IOException | XPathExpressionException e) {
-                    log.warn(e.getLocalizedMessage(), e);
-                }
-            }
-        }
-
-        return xsiType;
     }
 }

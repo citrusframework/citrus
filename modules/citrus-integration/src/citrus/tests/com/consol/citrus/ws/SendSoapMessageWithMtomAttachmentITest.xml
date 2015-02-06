@@ -25,7 +25,7 @@
             
             <!-- Test sending one mtom attachment -->
             <parallel>
-            	<ws:send endpoint="SampleSoapClient" schema-repository="bookStoreSchemaRepository" mtom-enabled="true">
+            	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
@@ -44,7 +44,7 @@
                                 
                 <sequential>
                     <ws:receive endpoint="SampleSoapServer">
-                        <message schema-validation="false" schema-repository="bookStoreSchemaRepository">
+                        <message schema-validation="false">
                             <data>
                                 <![CDATA[
                                     <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
@@ -60,7 +60,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send endpoint="SampleSoapServer" schema-repository="bookStoreSchemaRepository">
+                    <ws:send endpoint="SampleSoapServer">
                         <message>
                             <data>
                                 <![CDATA[
@@ -75,7 +75,7 @@
             </parallel>
             
             <ws:receive endpoint="SampleSoapClient">
-                <message schema-validation="true" schema-repository="bookStoreSchemaRepository">
+                <message schema-repository="bookStoreSchemaRepository">
                     <data>
                         <![CDATA[
                             <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
@@ -89,7 +89,7 @@
             
             <!-- Test sending two mtom attachments -->
             <parallel>
-            	<ws:send endpoint="SampleSoapClient" schema-repository="bookStoreSchemaRepository" mtom-enabled="true">
+            	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
@@ -111,7 +111,7 @@
                                 
                 <sequential>
                     <ws:receive endpoint="SampleSoapServer">
-                        <message schema-validation="false" schema-repository="bookStoreSchemaRepository">
+                        <message schema-validation="false">
                             <data>
                                 <![CDATA[
                                     <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
@@ -130,7 +130,7 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send endpoint="SampleSoapServer" schema-repository="bookStoreSchemaRepository">
+                    <ws:send endpoint="SampleSoapServer">
                         <message>
                             <data>
                                 <![CDATA[
@@ -145,7 +145,7 @@
             </parallel>
             
             <ws:receive endpoint="SampleSoapClient">
-                <message schema-validation="true" schema-repository="bookStoreSchemaRepository">
+                <message schema-repository="bookStoreSchemaRepository">
                     <data>
                         <![CDATA[
                             <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
@@ -159,7 +159,7 @@
             
             <!-- Test sending two mtom inline attachments -->
             <parallel>
-            	<ws:send endpoint="SampleSoapClient" schema-repository="bookStoreSchemaRepository" mtom-enabled="true">
+            	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
@@ -171,30 +171,30 @@
                             ]]>
                         </data>
                     </message>
-                    <ws:attachment content-id="IMAGE" content-type="application/octet-stream" mtom-inline="true">
+                    <ws:attachment content-id="IMAGE" content-type="application/octet-stream" mtom-inline="true" encoding-type="base64Binary">
                         <ws:resource file="${imageFile}"/>
                     </ws:attachment>
-                    <ws:attachment content-id="ICON" content-type="application/octet-stream" mtom-inline="true">
+                    <ws:attachment content-id="ICON" content-type="application/octet-stream" mtom-inline="true" encoding-type="hexBinary">
                         <ws:resource file="${iconFile}"/>
                     </ws:attachment>
                 </ws:send>
                 
                 <sequential>
                     <ws:receive endpoint="SampleSoapServer">
-                        <message schema-validation="true" schema-repository="bookStoreSchemaRepository">
+                        <message schema-repository="bookStoreSchemaRepository">
                             <data>
                                 <![CDATA[
                                     <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
                                         <isbn>1234</isbn>
-                                        <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQ0KVmFyaWFibGVzICV7dGVzdH0gc2hvdWxkIG5vdCBiZSByZXBsYWNlZCE=</image>
-                                        <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E74210D0A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
+                                        <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQpWYXJpYWJsZXMgJXt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
+                                        <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E74210A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
                                     </bookStore:addBookImage>
                                 ]]>
                             </data>
                         </message>
                     </ws:receive>
                     
-                    <ws:send endpoint="SampleSoapServer" schema-repository="bookStoreSchemaRepository">
+                    <ws:send endpoint="SampleSoapServer">
                         <message>
                             <data>
                                 <![CDATA[
@@ -209,7 +209,7 @@
             </parallel>
             
             <ws:receive endpoint="SampleSoapClient">
-                <message schema-validation="true" schema-repository="bookStoreSchemaRepository">
+                <message schema-repository="bookStoreSchemaRepository">
                     <data>
                         <![CDATA[
                             <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">

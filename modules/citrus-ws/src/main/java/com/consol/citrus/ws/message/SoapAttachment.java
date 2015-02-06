@@ -20,15 +20,15 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import java.io.*;
 import java.nio.charset.Charset;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.StringUtils;
 
 /**
  * Citrus SOAP attachment implementation.
@@ -39,6 +39,9 @@ public class SoapAttachment implements Attachment, Serializable {
 
     /** Serial */
     private static final long serialVersionUID = 6277464458242523954L;
+
+    public static final String ENCODING_BASE64_BINARY = "base64Binary";
+    public static final String ENCODING_HEX_BINARY = "hexBinary";
 
     /** Content body as string */
     private String content = null;
@@ -56,15 +59,17 @@ public class SoapAttachment implements Attachment, Serializable {
     private String charsetName = "UTF-8";
     
     /** send mtom attachments inline as hex or base64 coded */
-    private Boolean mtomInline = false;
+    private boolean mtomInline = false;
     
     /** Resolved content data handler */
     private DataHandler dataHandler = null;
     
     /** Resolved content string */
     private String resolvedContent = null;
-    
-    
+
+    /** Optional MTOM encoding */
+    private String encodingType = ENCODING_BASE64_BINARY;
+
     /**
      * Default constructor
      */
@@ -286,7 +291,7 @@ public class SoapAttachment implements Attachment, Serializable {
      * Set mtom inline
      * @param inline
      */
-    public void setMtomInline(Boolean inline) {
+    public void setMtomInline(boolean inline) {
         this.mtomInline = inline;
     }
 
@@ -294,8 +299,24 @@ public class SoapAttachment implements Attachment, Serializable {
      * Get mtom inline
      * @return
      */
-    public Boolean getMtomInline() {
+    public boolean getMtomInline() {
         return this.mtomInline;
+    }
+
+    /**
+     * Gets the attachment encoding type.
+     * @return
+     */
+    public String getEncodingType() {
+        return encodingType;
+    }
+
+    /**
+     * Sets the attachment encoding type.
+     * @param encodingType
+     */
+    public void setEncodingType(String encodingType) {
+        this.encodingType = encodingType;
     }
     
     /**

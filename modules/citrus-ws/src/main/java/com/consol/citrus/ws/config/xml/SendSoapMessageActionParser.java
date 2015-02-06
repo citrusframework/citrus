@@ -50,10 +50,6 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
             builder.addPropertyValue("mtomEnabled", element.getAttribute("mtom-enabled"));
         }
 
-        if (element.hasAttribute("schema-repository")) {
-            builder.addPropertyValue("schemaRepository", element.getAttribute("schema-repository"));
-        }
-        
         return builder;
     }
 

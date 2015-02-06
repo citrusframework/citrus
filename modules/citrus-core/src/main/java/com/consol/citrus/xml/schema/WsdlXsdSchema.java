@@ -33,6 +33,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.wsdl.*;
+import javax.wsdl.extensions.schema.Schema;
+import javax.wsdl.extensions.schema.SchemaImport;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
@@ -42,10 +44,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
-import javax.wsdl.extensions.schema.Schema;
-import javax.wsdl.extensions.schema.SchemaImport;
-import javax.xml.XMLConstants;
-import javax.xml.validation.SchemaFactory;
 
 /**
  * Wrapper implementation takes care of nested WSDL schema types. Exposes those WSDL schema types as
@@ -65,9 +63,6 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
     
     /** List of schema sources */
     private List<Source> schemaSources = new ArrayList<Source>();
-    
-    /** Combined WSDL schema */
-    private javax.xml.validation.Schema combinedSchema = null;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WsdlXsdSchema.class);
@@ -109,7 +104,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
      * @throws TransformerException
      */
     private void loadSchemas() throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
-        Definition definition = null;
+        Definition definition;
         if (wsdl.getURI().toString().startsWith("jar:")) {
             // Locate WSDL imports in Jar files
             definition = WSDLFactory.newInstance().newWSDLReader().readWSDL(new JarWSDLLocator(wsdl));
@@ -157,7 +152,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
      * Recursively add all imported schemas as schema resource.
      * This is necessary when schema import are located in jar files. If they are not added immediately the reference to them is lost.
      */
-    void addImportedSchemas(Schema schema, Map<String, Object> importedSchemas) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
+    private void addImportedSchemas(Schema schema, Map<String, Object> importedSchemas) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
         Map imports = schema.getImports();
         for (Object schemaObjects : imports.values()) {
             Vector<SchemaImport> schemaObjectsVector = (Vector<SchemaImport>)schemaObjects;
@@ -244,23 +239,5 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
     public List<Resource> getSchemas() {
         return schemas;
     }
-    
-    /**
-     * Get a single schema combining all WSDL schemas and import schemas
-     * @return the WSDL schema
-     */
-    public javax.xml.validation.Schema getCombinedSchema()
-    {
-        if (combinedSchema == null) {
-            Source[] sources = schemaSources.toArray(new Source[schemaSources.size()]);
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            try {
-                combinedSchema = sf.newSchema(sources);
-            }
-            catch(SAXException e) {
-                throw new CitrusRuntimeException("Failed to combine schema", e);
-            }
-        }
-        return combinedSchema;
-    }
+
 }
