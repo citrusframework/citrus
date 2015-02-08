@@ -20,6 +20,8 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
@@ -61,12 +63,9 @@ public class SoapAttachment implements Attachment, Serializable {
     /** send mtom attachments inline as hex or base64 coded */
     private boolean mtomInline = false;
     
-    /** Resolved content data handler */
+    /** Content data handler */
     private DataHandler dataHandler = null;
     
-    /** Resolved content string */
-    private String resolvedContent = null;
-
     /** Optional MTOM encoding */
     private String encodingType = ENCODING_BASE64_BINARY;
 
@@ -86,8 +85,7 @@ public class SoapAttachment implements Attachment, Serializable {
         soapAttachment.setContentId(attachment.getContentId());
         soapAttachment.setContentType(attachment.getContentType());
 
-        if (attachment.getContentType().startsWith("text/")) {
-            // String content
+        if (attachment.getContentType().startsWith("text")) {
             try {
                 soapAttachment.setContent(FileUtils.readToString(attachment.getInputStream()).trim());
             } catch (IOException e) {
@@ -95,7 +93,7 @@ public class SoapAttachment implements Attachment, Serializable {
             }
         } else {
             // Binary content
-            soapAttachment.dataHandler = attachment.getDataHandler();
+            soapAttachment.setDataHandler(attachment.getDataHandler());
         }
 
         soapAttachment.setCharsetName(System.getProperty(CitrusConstants.CITRUS_FILE_ENCODING,
@@ -103,7 +101,7 @@ public class SoapAttachment implements Attachment, Serializable {
 
         return soapAttachment;
     }
-    
+
     /**
      * Constructor using fields.
      * @param content
@@ -111,99 +109,47 @@ public class SoapAttachment implements Attachment, Serializable {
     public SoapAttachment(String content) {
         this.content = content;
     }
-    
-    /**
-     * @see org.springframework.ws.mime.Attachment#getContentId()
-     */
+
+    @Override
     public String getContentId() {
-        if (dataHandler != null && dataHandler.getName() != null) {
-            return dataHandler.getName();
-        }
         return contentId;
     }
 
-    /**
-     * @see org.springframework.ws.mime.Attachment#getContentType()
-     */
+    @Override
     public String getContentType() {
-        if (dataHandler != null && dataHandler.getContentType() != null) {
-            return dataHandler.getContentType();
-        }
         return contentType;
     }
 
-    /**
-     * @see org.springframework.ws.mime.Attachment#getDataHandler()
-     */
+    @Override
     public DataHandler getDataHandler() {
         if (dataHandler == null) {
-            if(content != null) {
-                // Text content
-                dataHandler = new DataHandler(new DataSource() {
-                    @Override
-                    public OutputStream getOutputStream() throws IOException {
-                        throw new UnsupportedOperationException();
-                    }
-
-                    @Override
-                    public String getName() {
-                        return contentId;
-                    }
-
-                    @Override
-                    public InputStream getInputStream() throws IOException {
-                        return new ByteArrayInputStream(content.getBytes(charsetName));
-                    }
-
-                    @Override
-                    public String getContentType() {
-                        return contentType;
-                    }
-                });
+            if (StringUtils.hasText(contentResourcePath)) {
+                dataHandler = new DataHandler(new FileResourceDataSource());
             } else {
-                // Binary content
-                final Resource attachmentResource = new PathMatchingResourcePatternResolver().getResource(contentResourcePath);
-                dataHandler = new DataHandler(new DataSource() {
-                    @Override
-                    public OutputStream getOutputStream() throws IOException {
-                        throw new UnsupportedOperationException();
-                    }
-
-                    @Override
-                    public String getName() {
-                        return attachmentResource.getFilename();
-                    }
-
-                    @Override
-                    public InputStream getInputStream() throws IOException {
-                        return attachmentResource.getInputStream();
-                    }
-
-                    @Override
-                    public String getContentType() {
-                        return contentType;
-                    }
-                });
-            }            
+                dataHandler = new DataHandler(new ContentDataSource());
+            }
         }
+
         return dataHandler;
     }
 
     /**
-     * @see org.springframework.ws.mime.Attachment#getInputStream()
+     * Sets the data handler.
+     * @param dataHandler
      */
+    public void setDataHandler(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
+    }
+
+    @Override
     public InputStream getInputStream() throws IOException {
         return getDataHandler().getInputStream();
     }
 
-    /**
-     * @see org.springframework.ws.mime.Attachment#getSize()
-     */
+    @Override
     public long getSize() {
         try {
-            if (resolvedContent != null) {
-                return resolvedContent.getBytes(charsetName).length;
-            } else if (content != null) {
+            if (content != null) {
                 return content.getBytes(charsetName).length;
             } else {
                 return getSizeOfContent(getDataHandler().getInputStream());
@@ -217,7 +163,7 @@ public class SoapAttachment implements Attachment, Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s [contentId: %s, contentType: %s, content: %s]", getClass().getSimpleName().toUpperCase(), getContentId(), getContentType(), getContent());
+        return String.format("%s [contentId: %s, contentType: %s, content: %s]", getClass().getSimpleName().toUpperCase(), contentId, contentType, getContent());
     }
 
     /**
@@ -225,10 +171,29 @@ public class SoapAttachment implements Attachment, Serializable {
      * @return the content
      */
     public String getContent() {
-        if (resolvedContent != null) {
-            return resolvedContent;
+        if (StringUtils.hasText(content)) {
+            return content;
+        } else if (StringUtils.hasText(contentResourcePath) && contentType.startsWith("text")) {
+            try {
+                return FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(contentResourcePath).getInputStream(), Charset.forName(charsetName));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read SOAP attachment file resource", e);
+            }
+        } else {
+            try {
+                byte[] binaryData = FileUtils.readToString(getDataHandler().getInputStream(), Charset.forName(charsetName)).getBytes(Charset.forName(charsetName));
+                if (encodingType.equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
+                    return Base64.encodeBase64String(binaryData);
+                } else if (encodingType.equals(SoapAttachment.ENCODING_HEX_BINARY)) {
+                    return Hex.encodeHexString(binaryData).toUpperCase();
+                } else {
+                    throw new CitrusRuntimeException(String.format("Unsupported encoding type '%s' for SOAP attachment - choose one of %s or %s",
+                            encodingType, SoapAttachment.ENCODING_BASE64_BINARY, SoapAttachment.ENCODING_HEX_BINARY));
+                }
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read SOAP attachment data input stream", e);
+            }
         }
-        return content;
     }
 
     /**
@@ -238,7 +203,7 @@ public class SoapAttachment implements Attachment, Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-    
+
     /**
      * Get the content file resource path.
      * @return the content resource path
@@ -324,70 +289,28 @@ public class SoapAttachment implements Attachment, Serializable {
      * @param context Test context used to resolve dynamic content
      */
     public void resolveDynamicContent(TestContext context) {
-        resolvedContent = null;
-        final String resolvedContentId = (contentId != null ? context.replaceDynamicContentInString(contentId) : null);
-        final String resolvedContentType = (contentType != null ? context.replaceDynamicContentInString(contentType) : null);
-        final String resolvedCharsetName = (charsetName != null ? context.replaceDynamicContentInString(charsetName) : null);
-        if (StringUtils.hasText(content)) {
-            resolvedContent = context.replaceDynamicContentInString(content);            
-        } else if (contentResourcePath != null) {
-            try {
-                if (resolvedContentType.startsWith("text/"))
-                    resolvedContent = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(contentResourcePath, context)));
-                else {
-                    final String resolvedContentResourcePath = context.replaceDynamicContentInString(contentResourcePath);                    
-                    final Resource attachmentResource = new PathMatchingResourcePatternResolver().getResource(resolvedContentResourcePath);
-                    dataHandler = new DataHandler(new DataSource() {
-                        @Override
-                        public OutputStream getOutputStream() throws IOException {
-                            throw new UnsupportedOperationException();
-                        }
-
-                        @Override
-                        public String getName() {
-                            return resolvedContentId;
-                        }
-
-                        @Override
-                        public InputStream getInputStream() throws IOException {
-                            return attachmentResource.getInputStream();
-                        }
-
-                        @Override
-                        public String getContentType() {
-                            return resolvedContentType;
-                        }
-                    });
-                    
-                }
-            } catch (IOException e) {
-                throw new CitrusRuntimeException(e);
-            }            
+        // handle variables in content id
+        if (contentId != null) {
+            contentId = context.replaceDynamicContentInString(contentId);
         }
-        
-        if (resolvedContent != null) {
-            // Text content
-            dataHandler = new DataHandler(new DataSource() {
-                @Override
-                public OutputStream getOutputStream() throws IOException {
-                    throw new UnsupportedOperationException();
-                }
 
-                @Override
-                public String getName() {
-                    return resolvedContentId;
-                }
+        // handle variables in content type
+        if (contentType != null) {
+            contentType = context.replaceDynamicContentInString(contentType);
+        }
 
-                @Override
-                public InputStream getInputStream() throws IOException {
-                    return new ByteArrayInputStream(resolvedContent.getBytes(resolvedCharsetName));
-                }
+        if (StringUtils.hasText(content)) {
+            content = context.replaceDynamicContentInString(content);
+        } else if (contentResourcePath != null) {
+            contentResourcePath = context.replaceDynamicContentInString(contentResourcePath);
 
-                @Override
-                public String getContentType() {
-                    return resolvedContentType;
+            if (contentType.startsWith("text")) {
+                try {
+                    content = context.replaceDynamicContentInString(FileUtils.readToString(new PathMatchingResourcePatternResolver().getResource(contentResourcePath).getInputStream(), Charset.forName(charsetName)));
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to read SOAP attachment file resource", e);
                 }
-            });            
+            }
         }
     }
     
@@ -401,5 +324,60 @@ public class SoapAttachment implements Attachment, Serializable {
             size++;
         }
         return size;
+    }
+
+    /**
+     * Data source working on this attachments text content data.
+     */
+    private class ContentDataSource implements DataSource {
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return new ByteArrayInputStream(content.getBytes(charsetName));
+        }
+
+        @Override
+        public String getContentType() {
+            return contentType;
+        }
+
+        @Override
+        public String getName() {
+            return contentId;
+        }
+
+        @Override
+        public OutputStream getOutputStream() throws IOException {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * Data source working on this attachments file resource.
+     */
+    private class FileResourceDataSource implements DataSource {
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return getFileResource().getInputStream();
+        }
+
+        @Override
+        public String getContentType() {
+            return contentType;
+        }
+
+        @Override
+        public String getName() {
+            return getFileResource().getFilename();
+        }
+
+        @Override
+        public OutputStream getOutputStream() throws IOException {
+            throw new UnsupportedOperationException();
+        }
+
+        private Resource getFileResource() {
+            return new PathMatchingResourcePatternResolver().getResource(contentResourcePath);
+        }
     }
 }

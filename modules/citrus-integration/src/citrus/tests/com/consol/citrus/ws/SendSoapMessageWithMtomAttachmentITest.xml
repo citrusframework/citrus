@@ -22,8 +22,11 @@
         </variables>
         
         <actions>
-            
-            <!-- Test sending one mtom attachment -->
+
+            <echo>
+                <message>Test: sending single mtom attachment</message>
+            </echo>
+
             <parallel>
             	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
                     <message>
@@ -86,8 +89,10 @@
                 </message>
             </ws:receive>
                         
-            
-            <!-- Test sending two mtom attachments -->
+            <echo>
+                <message>Test: sending two mtom attachments</message>
+            </echo>
+
             <parallel>
             	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
                     <message>
@@ -155,9 +160,11 @@
                     </data>
                 </message>
             </ws:receive>
-            
-            
-            <!-- Test sending two mtom inline attachments -->
+
+            <echo>
+                <message>Test: sending two mtom inline attachments</message>
+            </echo>
+
             <parallel>
             	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
                     <message>

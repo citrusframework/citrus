@@ -60,10 +60,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
     
     /** List of schemas that are loaded as single schema instance */
     private List<Resource> schemas = new ArrayList<Resource>();
-    
-    /** List of schema sources */
-    private List<Source> schemaSources = new ArrayList<Source>();
-    
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WsdlXsdSchema.class);
 
@@ -114,57 +111,54 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
         
         Types types = definition.getTypes();
         List<?> schemaTypes = types.getExtensibilityElements();
-        Resource thisSchemaResource = null;
-
-        Map<String, Object> importedSchemas = new HashMap<String, Object>();
+        boolean xsdSet = false;
+        List<String> importedSchemas = new ArrayList<>();
         for (Object schemaObject : schemaTypes) {
             if (schemaObject instanceof SchemaImpl) {
                 SchemaImpl schema = (SchemaImpl) schemaObject;
 
                 inheritNamespaces(schema, definition);
-                
+
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 Source source = new DOMSource(schema.getElement());
                 Result result = new StreamResult(bos);
-                
+
                 TransformerFactory.newInstance().newTransformer().transform(source, result);
                 Resource schemaResource = new ByteArrayResource(bos.toByteArray());
-                
-                importedSchemas.put(schema.getElement().getAttribute("targetNamespace"), null);
+
+                importedSchemas.add(schema.getElement().getAttribute("targetNamespace"));
                 addImportedSchemas(schema, importedSchemas);
                 schemas.add(schemaResource);
-                schemaSources.add(source);
-                
-                // Use either the targetNamespace matching schema resource or if there is no matching target, use the first schema resource
+
                 if (definition.getTargetNamespace().equals(schema.getElement().getAttribute("targetNamespace"))) {
-                    thisSchemaResource = schemaResource;
-                } else if (thisSchemaResource == null) {
-                    thisSchemaResource = schemaResource;
+                    setXsd(schemaResource);
+                    xsdSet = true;
                 }
             } else {
                 log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
             }
         }
-        setXsd(thisSchemaResource);
+
+        if (!xsdSet && schemas.size() > 0) {
+            // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
+            setXsd(schemas.get(0));
+        }
     }
-    
+
     /**
      * Recursively add all imported schemas as schema resource.
      * This is necessary when schema import are located in jar files. If they are not added immediately the reference to them is lost.
      */
-    private void addImportedSchemas(Schema schema, Map<String, Object> importedSchemas) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
+    private void addImportedSchemas(Schema schema, List<String> importedSchemas) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
         Map imports = schema.getImports();
         for (Object schemaObjects : imports.values()) {
-            Vector<SchemaImport> schemaObjectsVector = (Vector<SchemaImport>)schemaObjects;
-            for (SchemaImport schemaObject : schemaObjectsVector) {
-                if (schemaObject instanceof SchemaImport) {
-                    SchemaImport schemaImport = (SchemaImport)schemaObject;
-                    
-                    // Prevent duplicate imports
-                    if (!importedSchemas.containsKey(schemaImport.getNamespaceURI())) {
-                        importedSchemas.put(schemaImport.getNamespaceURI(), null);
-                        Schema referencedSchema = schemaImport.getReferencedSchema();
+            for (SchemaImport schemaImport : (Vector<SchemaImport>)schemaObjects) {
+                // Prevent duplicate imports
+                if (!importedSchemas.contains(schemaImport.getNamespaceURI())) {
+                    importedSchemas.add(schemaImport.getNamespaceURI());
+                    Schema referencedSchema = schemaImport.getReferencedSchema();
 
+                    if (referencedSchema != null) {
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         Source source = new DOMSource(referencedSchema.getElement());
                         Result result = new StreamResult(bos);
@@ -174,7 +168,6 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
 
                         addImportedSchemas(referencedSchema, importedSchemas);
                         schemas.add(schemaResource);
-                        schemaSources.add(source);
                     }
                 }
             }

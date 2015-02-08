@@ -40,54 +40,55 @@ import java.util.List;
  */
 public class SendSoapMessageAction extends SendMessageAction {
 
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SendSoapMessageAction.class);
-    
+
     /** SOAP attachments */
     private List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
 
     /** enable/disable mtom attachments */
     private boolean mtomEnabled = false;
-    
+
+    /** Marker for inline mtom binary data */
+    public static final String CID_MARKER = "cid:";
+
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {
         Message message = super.createMessage(context, getMessageType());
-        List<SoapAttachment> soapAttachments = new ArrayList<SoapAttachment>();
 
+        SoapMessage soapMessage = new SoapMessage(message).setMtomEnabled(mtomEnabled);
         try {
             for (SoapAttachment attachment : attachments) {
                 attachment.resolveDynamicContent(context);
 
                 if (mtomEnabled) {
-                    String messagePayload = message.getPayload().toString();
-                    String cid = "cid:" + attachment.getContentId();
+                    String messagePayload = soapMessage.getPayload().toString();
+                    String cid = CID_MARKER + attachment.getContentId();
 
                     if (attachment.getMtomInline() && messagePayload.contains(cid)) {
                         byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
                         if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
+                            log.info("Adding inline base64Binary data for attachment: %s", cid);
                             messagePayload = messagePayload.replaceAll(cid, Base64.encodeBase64String(attachmentBinaryData));
                         } else if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_HEX_BINARY)) {
+                            log.info("Adding inline hexBinary data for attachment: %s", cid);
                             messagePayload = messagePayload.replaceAll(cid, Hex.encodeHexString(attachmentBinaryData).toUpperCase());
                         } else {
-                            throw new CitrusRuntimeException(String.format("Unsupported encoding type '%s' for attachment: %s - choose one of %s or %s",
+                            throw new CitrusRuntimeException(String.format("Unsupported encoding type '%s' for SOAP attachment: %s - choose one of %s or %s",
                                     attachment.getEncodingType(), cid, SoapAttachment.ENCODING_BASE64_BINARY, SoapAttachment.ENCODING_HEX_BINARY));
                         }
                     } else {
                         messagePayload = messagePayload.replaceAll(cid, String.format("<xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"%s\"/>", cid));
-                        soapAttachments.add(attachment);
+                        soapMessage.addAttachment(attachment);
                     }
 
-                    message.setPayload(messagePayload);
+                    soapMessage.setPayload(messagePayload);
                 } else {
-                    soapAttachments.add(attachment);
+                    soapMessage.addAttachment(attachment);
                 }
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException(e);
-        }
-
-        final SoapMessage soapMessage = new SoapMessage(message).setMtomEnabled(mtomEnabled);
-        for (SoapAttachment attachment : soapAttachments) {
-            soapMessage.addAttachment(attachment);
         }
 
         return soapMessage;

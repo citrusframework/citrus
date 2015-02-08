@@ -18,11 +18,8 @@ package com.consol.citrus.ws.message.converter;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
-import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.SoapMessage;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
-import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
+import com.consol.citrus.ws.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -131,20 +128,14 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
         }
 
-        boolean convertedToXOP = false;
+        if (soapMessage.getMtomEnabled() && soapMessage.getAttachments().size() > 0) {
+            log.debug("Converting SOAP request to XOP package");
+            soapRequest.convertToXopPackage();
+        }
+
         for (final Attachment attachment : soapMessage.getAttachments()) {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Adding attachment to SOAP message: '%s' ('%s')", attachment.getContentId(), attachment.getContentType()));
-            }
-
-            if (soapMessage.getMtomEnabled() && !convertedToXOP) {
-                if (soapRequest instanceof SaajSoapMessage) {
-                    log.debug("Converting SaajSoapMessage to XOP package");
-                    ((SaajSoapMessage) soapRequest).convertToXopPackage();
-                    convertedToXOP = true;
-                } else if (soapRequest instanceof AxiomSoapMessage) {
-                    log.warn("AxiomSoapMessage cannot be converted to XOP package");
-                }
             }
 
             soapRequest.addAttachment(attachment.getContentId(), new InputStreamSource() {

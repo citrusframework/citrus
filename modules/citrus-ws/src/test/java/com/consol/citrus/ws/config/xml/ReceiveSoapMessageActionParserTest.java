@@ -45,7 +45,6 @@ public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getAttachmentValidator(), beanDefinitionContext.getBean("mySoapAttachmentValidator"));
         Assert.assertEquals(action.getAttachments().size(), 1L);
-        Assert.assertNull(action.getAttachments().get(0).getContent());
         Assert.assertNotNull(action.getAttachments().get(0).getContentResourcePath());
         Assert.assertEquals(action.getAttachments().get(0).getContentId(), "MySoapAttachment");
         Assert.assertEquals(action.getAttachments().get(0).getContentType(), "application/xml");
@@ -59,7 +58,6 @@ public class ReceiveSoapMessageActionParserTest extends AbstractActionParserTest
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
         Assert.assertEquals(action.getAttachments().get(0).getContentId(), "FirstSoapAttachment");
         Assert.assertEquals(action.getAttachments().get(0).getContentType(), "text/plain");
-        Assert.assertNull(action.getAttachments().get(1).getContent());
         Assert.assertNotNull(action.getAttachments().get(1).getContentResourcePath());
         Assert.assertEquals(action.getAttachments().get(1).getContentId(), "SecondSoapAttachment");
         Assert.assertEquals(action.getAttachments().get(1).getContentType(), "application/xml");
