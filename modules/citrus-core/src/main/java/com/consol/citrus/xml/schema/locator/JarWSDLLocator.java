@@ -1,16 +1,22 @@
-package com.consol.citrus.xml.schema;
+package com.consol.citrus.xml.schema.locator;
 
-import java.io.IOException;
-import java.net.URI;
-import javax.wsdl.xml.WSDLLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.xml.sax.InputSource;
+
+import javax.wsdl.xml.WSDLLocator;
+import java.io.IOException;
+import java.net.URI;
 
 /**
  * Locates WSDL import sources in Jar files
  */
 public class JarWSDLLocator implements WSDLLocator {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(JarWSDLLocator.class);
 
     private Resource wsdl;
     private Resource importResource = null;
@@ -35,13 +41,14 @@ public class JarWSDLLocator implements WSDLLocator {
         if (importURI.isAbsolute()) {
             resolvedImportLocation = importLocation;
         } else {
-            resolvedImportLocation = parentLocation.substring(0, parentLocation.lastIndexOf("/") + 1) + importLocation;
+            resolvedImportLocation = parentLocation.substring(0, parentLocation.lastIndexOf('/') + 1) + importLocation;
         }
         
         try {
             importResource = new PathMatchingResourcePatternResolver().getResource(resolvedImportLocation);
             return new InputSource(importResource.getInputStream());
         } catch (IOException e) {
+            log.warn(String.format("Failed to resolve imported WSDL schema path location '%s'", importLocation), e);
             return null;
         }
     }
@@ -57,9 +64,14 @@ public class JarWSDLLocator implements WSDLLocator {
 
     @Override
     public String getLatestImportURI() {
+        if (importResource == null) {
+            return null;
+        }
+
         try {
             return importResource.getURI().toString();
         } catch (IOException e) {
+            log.warn("Failed to resolve last imported WSDL schema resource", e);
             return null;
         }
     }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://www.citrusframework.org/SampleService/"
+                  xmlns:types="http://www.citrusframework.org/types/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  name="SampleService"
+                  targetNamespace="http://www.citrusframework.org/SampleService/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.citrusframework.org/SampleService/" targetNamespace="http://www.citrusframework.org/SampleService/">
+      <xsd:element name="sampleMessage" type="types:SampleType"/>
+    </xsd:schema>
+    
+    <xsd:schema targetNamespace="http://www.citrusframework.org/types/">
+        <xsd:complexType name="SampleType">
+            <xsd:simpleContent>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="FOO"/>
+                    <xsd:enumeration value="BAR"/>
+                </xsd:restriction>
+            </xsd:simpleContent>
+        </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  
+  <wsdl:message name="sampleMessage">
+    <wsdl:part element="tns:sampleMessage" name="parameters"/>
+  </wsdl:message>
+
+  <wsdl:portType name="SampleService">
+    <wsdl:operation name="sampleMessage">
+      <wsdl:input message="tns:sampleMessage"/>
+      <wsdl:output message="tns:sampleMessageResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:binding name="SampleServiceSOAP" type="tns:SampleService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="sampleMessage">
+      <soap:operation soapAction="http://www.citrusframework.org/sample/sampleMessage"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:service name="SampleService">
+    <wsdl:port binding="tns:SampleServiceSOAP" name="SampleServiceSOAP">
+      <soap:address location="http://www.citrusframework.org/SampleService/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

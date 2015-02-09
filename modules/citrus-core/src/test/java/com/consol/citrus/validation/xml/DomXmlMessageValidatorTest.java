@@ -46,7 +46,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void validateXMLSchema() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -68,7 +68,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void validateWithExplicitXMLSchema() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -81,7 +81,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void validateWithExplicitSpringSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -94,7 +94,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void validateWithExplicitCitrusSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -107,7 +107,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void validateWithDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -118,7 +118,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void validateNoDefaultSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -148,7 +148,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         
         validator.validateXMLSchema(message, new XmlMessageValidationContext());
 
-        message = new DefaultMessage("<message xmlns='http://citrus/sample'>"
+        message = new DefaultMessage("<message xmlns='http://citrusframework.org/sample'>"
                 + "<correlationId>Kx1R123456789</correlationId>"
                 + "<bookingId>Bx1G987654321</bookingId>"
                 + "<test>Hello TestFramework</test>"
@@ -159,7 +159,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void validateNoMatchingSchemaRepository() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus/special'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/special'>"
                 + "<correlationId>Kx1R123456789</correlationId>"
                 + "<bookingId>Bx1G987654321</bookingId>"
                 + "<test>Hello TestFramework</test>"
@@ -197,7 +197,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void validateNoMatchingSchema() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus/special'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/special'>"
                 + "<correlationId>Kx1R123456789</correlationId>"
                 + "<bookingId>Bx1G987654321</bookingId>"
                 + "<test>Hello TestFramework</test>"
@@ -229,7 +229,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void validateNoSchemaRepositoryAtAll() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                 + "<correlationId>Kx1R123456789</correlationId>"
                 + "<bookingId>Bx1G987654321</bookingId>"
                 + "<test>Hello TestFramework</test>"
@@ -241,7 +241,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void validateXMLSchemaError() throws SAXException, IOException, ParserConfigurationException {
-        Message message = new DefaultMessage("<message xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<message xmlns='http://citrusframework.org/test'>"
                         + "<correlationId>Kx1R123456789</correlationId>"
                         + "<bookingId>Bx1G987654321</bookingId>"
                         + "<test>Hello TestFramework</test>"
@@ -264,14 +264,14 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExpectDefaultNamespace() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/test'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus");
+        expectedNamespaces.put("", "http://citrusframework.org/test");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -279,14 +279,14 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExpectNamespace() {
-    	Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
+    	Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrusframework.org/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -294,15 +294,15 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExpectMixedNamespaces() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -310,16 +310,16 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExpectMultipleNamespaces() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -327,14 +327,14 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectDefaultNamespaceError() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/wrong");
+        expectedNamespaces.put("", "http://citrusframework.org/wrong");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -342,14 +342,14 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceError() {
-    	Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
+    	Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrusframework.org/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>" 
                     + "</ns1:root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1/wrong");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -357,15 +357,15 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectMixedNamespacesError() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default/wrong");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
+        expectedNamespaces.put("", "http://citrusframework.org/default/wrong");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -373,16 +373,16 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectMultipleNamespacesError() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1/wrong");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
      
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -390,16 +390,16 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectWrongNamespacePrefix() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("nswrong", "http://citrus/ns1");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("nswrong", "http://citrusframework.org/ns1");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -407,16 +407,16 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectDefaultNamespaceButNamespace() {
-    	Message message = new DefaultMessage("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+    	Message message = new DefaultMessage("<ns0:root xmlns:ns0='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
                         + "</ns0:element>" 
                     + "</ns0:root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -424,16 +424,16 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceButDefaultNamespace() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("ns0", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("ns0", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -441,17 +441,17 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectAdditionalNamespace() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
-        expectedNamespaces.put("ns4", "http://citrus/ns4");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
+        expectedNamespaces.put("ns4", "http://citrusframework.org/ns4");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -459,16 +459,16 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     
     @Test(expectedExceptions = {ValidationException.class})
     public void testExpectNamespaceButNamespaceMissing() {
-    	Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
+    	Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:ns4='http://citrusframework.org/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>" 
                     + "</root>");
         
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
-        expectedNamespaces.put("", "http://citrus/default");
-        expectedNamespaces.put("ns1", "http://citrus/ns1");
-        expectedNamespaces.put("ns2", "http://citrus/ns2");
+        expectedNamespaces.put("", "http://citrusframework.org/default");
+        expectedNamespaces.put("ns1", "http://citrusframework.org/ns1");
+        expectedNamespaces.put("ns2", "http://citrusframework.org/ns2");
         
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateNamespaces(expectedNamespaces, message);
@@ -754,13 +754,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNamespaceQualifiedAttributeValue() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                         + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                         + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                         + "</element>"
                     + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                         + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                         + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                         + "</element>"
@@ -775,13 +775,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNamespaceQualifiedAttributeValueParentDeclaration() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
-                + "<element xmlns:ns1='http://citrus/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xmlns:ns1='http://citrusframework.org/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
@@ -796,14 +796,14 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNamespaceQualifiedAttributeValueParentDeclarationInSource() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
-                + "<element xmlns:ns1='http://citrus/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xmlns:ns1='http://citrusframework.org/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
-                + "<element xmlns:ns1='http://citrus/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+                + "<element xmlns:ns1='http://citrusframework.org/ns1' xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
@@ -817,13 +817,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNamespaceQualifiedAttributeValueDifferentPrefix() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:cit='http://citrus/ns1' xmlns:cit2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:cit='http://citrusframework.org/ns1' xmlns:cit2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='cit2:AType'>text-value</sub-element>"
                 + "</element>"
@@ -838,13 +838,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNamespaceQualifiedLikeAttributeValues() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element credentials='username:password' attributeB='attribute-value'>"
                 + "<sub-element>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element credentials='username:password' attributeB='attribute-value'>"
                 + "<sub-element>text-value</sub-element>"
                 + "</element>"
@@ -859,13 +859,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {IllegalArgumentException.class})
     public void testNamespaceQualifiedAttributeValueFails() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:wrong-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
@@ -880,13 +880,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {IllegalArgumentException.class})
     public void testNamespaceQualifiedAttributeValueUriMismatch() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:cit='http://citrus/cit' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:cit='http://citrusframework.org/cit' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
@@ -901,13 +901,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {IllegalArgumentException.class})
     public void testNamespaceQualifiedAttributeMissingPrefix() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/cit' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/cit' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
@@ -922,13 +922,13 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {ValidationException.class})
     public void testNamespaceQualifiedAttributeValueMissingDeclaration() {
-        Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"
                 + "</root>");
 
-        Message controlMessage = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns2='http://citrus/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
+        Message controlMessage = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='cit:attribute-value' attributeB='attribute-value'>"
                 + "<sub-element xsi:type='ns2:AType'>text-value</sub-element>"
                 + "</element>"

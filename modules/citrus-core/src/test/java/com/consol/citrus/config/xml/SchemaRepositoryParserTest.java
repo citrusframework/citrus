@@ -55,9 +55,14 @@ public class SchemaRepositoryParserTest extends AbstractBeanDefinitionParserTest
         // 2nd schema repository
         schemaRepository = schemaRepositories.get("schemaRepository2");
         Assert.assertNotNull(schemaRepository.getSchemas());
-        Assert.assertEquals(schemaRepository.getSchemas().size(), 2);
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 7);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
-        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), SimpleXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(1).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(2).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(3).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(4).getClass(), WsdlXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(5).getClass(), SimpleXsdSchema.class);
+        Assert.assertEquals(schemaRepository.getSchemas().get(6).getClass(), SimpleXsdSchema.class);
         Assert.assertNotNull(schemaRepository.getLocations());
         Assert.assertEquals(schemaRepository.getLocations().size(), 1);
         Assert.assertEquals(schemaRepository.getLocations().get(0), "classpath:com/consol/citrus/validation/*");

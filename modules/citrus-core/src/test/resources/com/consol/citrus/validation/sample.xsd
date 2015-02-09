@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-     xmlns="http://citrus"
-     targetNamespace="http://citrus/sample"
+     xmlns="http://citrusframework.org/sample"
+     targetNamespace="http://citrusframework.org/sample"
      elementFormDefault="qualified"
      attributeFormDefault="unqualified">
      

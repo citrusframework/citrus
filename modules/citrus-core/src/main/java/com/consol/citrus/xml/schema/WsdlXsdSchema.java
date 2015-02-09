@@ -17,6 +17,7 @@
 package com.consol.citrus.xml.schema;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.schema.locator.JarWSDLLocator;
 import com.ibm.wsdl.extensions.schema.SchemaImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,24 +117,27 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
         for (Object schemaObject : schemaTypes) {
             if (schemaObject instanceof SchemaImpl) {
                 SchemaImpl schema = (SchemaImpl) schemaObject;
-
                 inheritNamespaces(schema, definition);
 
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                Source source = new DOMSource(schema.getElement());
-                Result result = new StreamResult(bos);
+                if (!importedSchemas.contains(schema.getElement().getAttribute("targetNamespace"))) {
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    Source source = new DOMSource(schema.getElement());
+                    Result result = new StreamResult(bos);
 
-                TransformerFactory.newInstance().newTransformer().transform(source, result);
-                Resource schemaResource = new ByteArrayResource(bos.toByteArray());
+                    TransformerFactory.newInstance().newTransformer().transform(source, result);
+                    Resource schemaResource = new ByteArrayResource(bos.toByteArray());
 
-                importedSchemas.add(schema.getElement().getAttribute("targetNamespace"));
-                addImportedSchemas(schema, importedSchemas);
-                schemas.add(schemaResource);
+                    importedSchemas.add(schema.getElement().getAttribute("targetNamespace"));
+                    schemas.add(schemaResource);
 
-                if (definition.getTargetNamespace().equals(schema.getElement().getAttribute("targetNamespace"))) {
-                    setXsd(schemaResource);
-                    xsdSet = true;
+                    if (definition.getTargetNamespace().equals(schema.getElement().getAttribute("targetNamespace")) && !xsdSet) {
+                        setXsd(schemaResource);
+                        xsdSet = true;
+                    }
                 }
+
+                addImportedSchemas(schema, importedSchemas);
+
             } else {
                 log.warn("Found unsupported schema type implementation " + schemaObject.getClass());
             }

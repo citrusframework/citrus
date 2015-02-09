@@ -16,26 +16,59 @@
 
 package com.consol.citrus.xml.schema;
 
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-import com.consol.citrus.util.FileUtils;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
  */
 public class WsdlXsdSchemaTest {
-    
+
+    @Test
+    public void testWsdlSchema() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleService.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemas().size(), 2);
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
+    public void testWsdlSchemaImports() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithImports.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemas().size(), 2);
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
+    public void testWsdlSchemaDuplicateImports() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithDuplicateImports.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemas().size(), 3);
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
+    public void testWsdlSchemaNoMatchingTargetNamespace() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceNoMatchingTargetNamespace.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemas().size(), 2);
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
     @Test
     public void testNamespaceInheritance() throws ParserConfigurationException, IOException, SAXException {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/xml/BookStore.wsdl"));
-        
         wsdl.afterPropertiesSet();
         
         Assert.assertEquals(wsdl.getSchemas().size(), 2);
