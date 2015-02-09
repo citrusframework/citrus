@@ -21,13 +21,10 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.ws.message.SoapAttachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * Soap attachment validator delegating attachment content validation to a {@link MessageValidator}.
@@ -35,42 +32,24 @@ import org.springframework.util.StringUtils;
  * 
  * @author Christoph Deppisch
  */
-public class XmlSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
+public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
+
     @Autowired(required = false)
     @Qualifier("soapAttachmentValidator")
     private MessageValidator<ValidationContext> validator;
-    
+
     /** validation context holding information like expected message payload, ignored elements and so on */
     private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-    
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
 
 	@Override
-	protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
-	    if (log.isDebugEnabled()) {
-            log.debug("Validating SOAP attachment content ...");
-            log.debug("Received attachment content: " + StringUtils.trimWhitespace(receivedAttachment.getContent()));
-            log.debug("Control attachment content: " + StringUtils.trimWhitespace(controlAttachment.getContent()));
-        }
-	    
-	    if (receivedAttachment.getContent() != null) {
-	        String controlContent = controlAttachment.getContent();
-	        String receivedContent = receivedAttachment.getContent();
-	        
-	        Message controlMessage = new DefaultMessage(controlContent);
-	        validationContext.setControlMessage(controlMessage);
+    protected void validateAttachmentContentData(String receivedContent, String controlContent, String controlContentId) {
+        Message controlMessage = new DefaultMessage(controlContent);
+        validationContext.setControlMessage(controlMessage);
 
-	        Message receivedMessage = new DefaultMessage(receivedContent);
-	        validator.validateMessage(receivedMessage, null, validationContext);
-	    } else {
-            Assert.isTrue(controlAttachment.getContent() == null || controlAttachment.getContent().trim().length() == 0, 
-                    "Values not equal for attachment content '"
-                        + controlAttachment.getContentId() + "', expected '"
-                        + controlAttachment.getContent().trim() + "' but was '"
-                        + null + "'");
-        }
-	}
+        Message receivedMessage = new DefaultMessage(receivedContent);
+        validator.validateMessage(receivedMessage, null, validationContext);
+    }
 }

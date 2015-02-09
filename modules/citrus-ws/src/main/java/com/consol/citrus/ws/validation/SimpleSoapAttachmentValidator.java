@@ -15,73 +15,51 @@
  */
 package com.consol.citrus.ws.validation;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ws.message.SoapAttachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.ws.message.SoapAttachment;
-import java.io.IOException;
-import org.apache.commons.io.IOUtils;
-
 /**
  * Simple implementation of a {@link AbstractSoapAttachmentValidator}.
- *
  * Attachment content body is validated through simple string equals assertion.
  *
  * @author Christoph Deppisch
  */
 public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidator {
 
+    /** Ignores all whitespaces in attachment content */
     private boolean ignoreAllWhitespaces = false;
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(SimpleSoapAttachmentValidator.class);
 
     @Override
     protected void validateAttachmentContent(SoapAttachment receivedAttachment, SoapAttachment controlAttachment) {
+        String receivedContent = StringUtils.trimWhitespace(receivedAttachment.getContent());
+        String controlContent = StringUtils.trimWhitespace(controlAttachment.getContent());
+
         if (log.isDebugEnabled()) {
             log.debug("Validating SOAP attachment content ...");
-            log.debug("Received attachment content: " + StringUtils.trimWhitespace(receivedAttachment.getContent()));
-            log.debug("Control attachment content: " + StringUtils.trimWhitespace(controlAttachment.getContent()));
+            log.debug("Received attachment content: " + receivedContent);
+            log.debug("Control attachment content: " + controlContent);
         }
 
-        if (receivedAttachment.getContent() != null && controlAttachment.getContent() != null) {
-            Assert.isTrue(controlAttachment.getContent() != null,
+        if (receivedContent != null) {
+            Assert.isTrue(controlContent != null,
                     "Values not equal for attachment content '"
-                    + controlAttachment.getContentId() + "', expected '"
-                    + null + "' but was '"
-                    + receivedAttachment.getContent().trim() + "'");
+                        + controlAttachment.getContentId() + "', expected '"
+                        + null + "' but was '"
+                        + receivedContent + "'");
 
-            String trimmedControlAttachment;
-            String trimmedReceivedAttachment;
-
-            if (ignoreAllWhitespaces) {
-                trimmedControlAttachment = StringUtils.trimAllWhitespace(controlAttachment.getContent());
-                trimmedReceivedAttachment = StringUtils.trimAllWhitespace(receivedAttachment.getContent());
-            } else {
-                trimmedControlAttachment = StringUtils.trimWhitespace(controlAttachment.getContent());
-                trimmedReceivedAttachment = StringUtils.trimWhitespace(receivedAttachment.getContent());
-            }
-
-            Assert.isTrue(trimmedReceivedAttachment.equals(trimmedControlAttachment),
-                    "Values not equal for attachment content '"
-                    + controlAttachment.getContentId() + "', expected '"
-                    + controlAttachment.getContent().trim() + "' but was '"
-                    + receivedAttachment.getContent().trim() + "'");
+            validateAttachmentContentData(receivedContent, controlContent, controlAttachment.getContentId());
         } else {
-            // At least one of the attachments has binary data therefore do a binary validation
-            try {
-                Assert.isTrue(IOUtils.contentEquals(receivedAttachment.getInputStream(), controlAttachment.getInputStream()),
-                    "Values not equal for binary attachment content '"
-                    + controlAttachment.getContentId() + "'");
-            }
-            catch(IOException e) {
-                throw new CitrusRuntimeException("Binary attachment validation failed", e);
-            }
+            Assert.isTrue(!StringUtils.hasLength(controlContent),
+                    "Values not equal for attachment content '"
+                        + controlAttachment.getContentId() + "', expected '"
+                        + controlContent + "' but was '"
+                        + null + "'");
         }
 
         if (log.isDebugEnabled()) {
@@ -89,10 +67,37 @@ public class SimpleSoapAttachmentValidator extends AbstractSoapAttachmentValidat
         }
     }
 
+    /**
+     * Validates content data.
+     * @param receivedContent
+     * @param controlContent
+     * @param controlContentId
+     */
+    protected void validateAttachmentContentData(String receivedContent, String controlContent, String controlContentId) {
+        if (ignoreAllWhitespaces) {
+            controlContent = StringUtils.trimAllWhitespace(controlContent);
+            receivedContent = StringUtils.trimAllWhitespace(receivedContent);
+        }
+
+        Assert.isTrue(receivedContent.equals(controlContent),
+                "Values not equal for attachment content '"
+                        + controlContentId + "', expected '"
+                        + controlContent.trim() + "' but was '"
+                        + receivedContent.trim() + "'");
+    }
+
+    /**
+     * Gets flag marking that all whitespaces are ignored.
+     * @return
+     */
     public boolean isIgnoreAllWhitespaces() {
         return ignoreAllWhitespaces;
     }
 
+    /**
+     * Sets ignore all whitespaces flag.
+     * @param ignoreAllWhitespaces
+     */
     public void setIgnoreAllWhitespaces(boolean ignoreAllWhitespaces) {
         this.ignoreAllWhitespaces = ignoreAllWhitespaces;
     }
