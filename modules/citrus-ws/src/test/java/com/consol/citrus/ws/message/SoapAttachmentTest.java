@@ -30,6 +30,9 @@ import java.nio.charset.Charset;
 
 import static org.easymock.EasyMock.*;
 
+/**
+ * @author Christoph Deppisch
+ */
 public class SoapAttachmentTest {
 
     private Attachment attachment = EasyMock.createMock(Attachment.class);
@@ -49,7 +52,7 @@ public class SoapAttachmentTest {
         Assert.assertEquals(soapAttachment.getContentId(), "mail");
         Assert.assertEquals(soapAttachment.getContentType(), "text/plain");
         Assert.assertEquals(soapAttachment.getContent(), "This is mail text content!");
-        Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+        Assert.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
         Assert.assertNotNull(soapAttachment.getDataHandler());
         Assert.assertEquals(soapAttachment.getSize(), 26L);
 
@@ -72,7 +75,7 @@ public class SoapAttachmentTest {
         Assert.assertEquals(soapAttachment.getContentId(), "img");
         Assert.assertEquals(soapAttachment.getContentType(), "application/octet-stream");
         Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(Charset.forName("UTF-8"))));
-        Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
+        Assert.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
         Assert.assertNotNull(soapAttachment.getDataHandler());
         Assert.assertEquals(soapAttachment.getSize(), 25L);
 
