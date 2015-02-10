@@ -264,7 +264,7 @@ public class SoapAttachment implements Attachment, Serializable {
      * Get mtom inline
      * @return
      */
-    public boolean getMtomInline() {
+    public boolean isMtomInline() {
         return this.mtomInline;
     }
 

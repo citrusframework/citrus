@@ -65,7 +65,7 @@ public class SendSoapMessageAction extends SendMessageAction {
                     String messagePayload = soapMessage.getPayload().toString();
                     String cid = CID_MARKER + attachment.getContentId();
 
-                    if (attachment.getMtomInline() && messagePayload.contains(cid)) {
+                    if (attachment.isMtomInline() && messagePayload.contains(cid)) {
                         byte[] attachmentBinaryData = FileUtils.readToString(attachment.getInputStream(), Charset.forName(attachment.getCharsetName())).getBytes(Charset.forName(attachment.getCharsetName()));
                         if (attachment.getEncodingType().equals(SoapAttachment.ENCODING_BASE64_BINARY)) {
                             log.info("Adding inline base64Binary data for attachment: %s", cid);

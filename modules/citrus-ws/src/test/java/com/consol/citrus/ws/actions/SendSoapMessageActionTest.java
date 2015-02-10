@@ -18,6 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -40,7 +41,273 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
     
     private Endpoint webServiceEndpoint = EasyMock.createMock(Endpoint.class);
     private Producer producer = EasyMock.createMock(Producer.class);
-    
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMtomAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+        soapMessageAction.setMtomEnabled(true);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Text>cid:mtomText</Text></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentId("mtomText");
+        attachment.setContentType("text/xml");
+        attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                SoapMessage soapMessage = ((SoapMessage)EasyMock.getCurrentArguments()[0]);
+                Assert.assertTrue(soapMessage.isMtomEnabled());
+                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Text><xop:Include xmlns:xop=\"http://www.w3.org/2004/08/xop/include\" href=\"cid:mtomText\"/></Text></TestRequest>");
+
+                Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(constructedAttachment.getContentId(), "mtomText");
+                Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
+                Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
+        verify(webServiceEndpoint, producer);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMtomInlineBase64BinaryAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+        soapMessageAction.setMtomEnabled(true);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Image>cid:mtomImage</Image></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setMtomInline(true);
+        attachment.setEncodingType(SoapAttachment.ENCODING_BASE64_BINARY);
+        attachment.setContentId("mtomImage");
+        attachment.setContentType("image/png");
+        attachment.setContent("IMAGE_DATA");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                SoapMessage soapMessage = ((SoapMessage)EasyMock.getCurrentArguments()[0]);
+                Assert.assertTrue(soapMessage.isMtomEnabled());
+                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Image>SU1BR0VfREFUQQ==</Image></TestRequest>");
+
+                Assert.assertEquals(soapMessage.getAttachments().size(), 0L);
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
+        verify(webServiceEndpoint, producer);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMtomInlineHexBinaryAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+        soapMessageAction.setMtomEnabled(true);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Image>cid:mtomImage</Image></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setMtomInline(true);
+        attachment.setEncodingType(SoapAttachment.ENCODING_HEX_BINARY);
+        attachment.setContentId("mtomImage");
+        attachment.setContentType("image/png");
+        attachment.setContent("IMAGE_DATA");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                SoapMessage soapMessage = ((SoapMessage)EasyMock.getCurrentArguments()[0]);
+                Assert.assertTrue(soapMessage.isMtomEnabled());
+                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Image>494D4147455F44415441</Image></TestRequest>");
+
+                Assert.assertEquals(soapMessage.getAttachments().size(), 0L);
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
+        verify(webServiceEndpoint, producer);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMtomMissingCidAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+        soapMessageAction.setMtomEnabled(true);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Text>mtomText</Text></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setContentId("mtomText");
+        attachment.setContentType("text/xml");
+        attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                SoapMessage soapMessage = ((SoapMessage)EasyMock.getCurrentArguments()[0]);
+                Assert.assertTrue(soapMessage.isMtomEnabled());
+                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Text>mtomText</Text></TestRequest>");
+
+                Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(constructedAttachment.getContentId(), "mtomText");
+                Assert.assertEquals(constructedAttachment.getContentType(), "text/xml");
+                Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
+        verify(webServiceEndpoint, producer);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMtomInlineMissingCidAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+        soapMessageAction.setMtomEnabled(true);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Image>mtomImage</Image></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setMtomInline(true);
+        attachment.setEncodingType(SoapAttachment.ENCODING_BASE64_BINARY);
+        attachment.setContentId("mtomImage");
+        attachment.setContentType("image/png");
+        attachment.setContent("IMAGE_DATA");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
+
+        reset(webServiceEndpoint, producer);
+
+        expect(webServiceEndpoint.createProducer()).andReturn(producer).once();
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                SoapMessage soapMessage = ((SoapMessage)EasyMock.getCurrentArguments()[0]);
+                Assert.assertTrue(soapMessage.isMtomEnabled());
+                Assert.assertEquals(soapMessage.getPayload(String.class), "<TestRequest><Image>mtomImage</Image></TestRequest>");
+
+                Assert.assertEquals(soapMessage.getAttachments().size(), 1L);
+                SoapAttachment constructedAttachment = ((SoapMessage)EasyMock.getCurrentArguments()[0]).getAttachments().get(0);
+                Assert.assertEquals(constructedAttachment.getContentId(), "mtomImage");
+                Assert.assertEquals(constructedAttachment.getContentType(), "image/png");
+                Assert.assertEquals(constructedAttachment.getContent(), "IMAGE_DATA");
+                Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
+                return null;
+            }
+        }).once();
+
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(webServiceEndpoint, producer);
+
+        soapMessageAction.execute(context);
+
+        verify(webServiceEndpoint, producer);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSoapMessageWithMtomInlineInvalidEncodingTypeAttachmentDataTest() throws Exception {
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
+        soapMessageAction.setEndpoint(webServiceEndpoint);
+        soapMessageAction.setMtomEnabled(true);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Image>cid:mtomImage</Image></TestRequest>");
+
+        soapMessageAction.setMessageBuilder(messageBuilder);
+
+        SoapAttachment attachment = new SoapAttachment();
+        attachment.setMtomInline(true);
+        attachment.setEncodingType("md5");
+        attachment.setContentId("mtomImage");
+        attachment.setContentType("image/png");
+        attachment.setContent("IMAGE_DATA");
+        soapMessageAction.setAttachments(Collections.singletonList(attachment));
+
+        reset(webServiceEndpoint, producer);
+        expect(webServiceEndpoint.getActor()).andReturn(null).anyTimes();
+        replay(webServiceEndpoint, producer);
+
+        try {
+            soapMessageAction.execute(context);
+            Assert.fail("Missing exception due to invalid attachment encoding type");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Unsupported encoding type 'md5' for SOAP attachment: cid:mtomImage - choose one of base64Binary or hexBinary");
+            verify(webServiceEndpoint, producer);
+        }
+    }
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {

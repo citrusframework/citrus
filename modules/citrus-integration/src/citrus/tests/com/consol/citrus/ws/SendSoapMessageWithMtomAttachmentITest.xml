@@ -6,6 +6,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+
     <testcase name="SendSoapMessageWithMtomAttachmentITest">
         <meta-info>
             <author>Reinhard Steiner</author>
@@ -28,15 +29,15 @@
             </echo>
 
             <parallel>
-            	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
+            	<ws:send endpoint="imageServiceClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
-                                <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon></icon>
-                                </bookStore:addBookImage>
+                                </image:addImage>
                             ]]>
                         </data>
                     </message>
@@ -46,15 +47,15 @@
                 </ws:send>
                                 
                 <sequential>
-                    <ws:receive endpoint="SampleSoapServer">
+                    <ws:receive endpoint="imageSoapServer">
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
-                                    <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
                                         <icon></icon>
-                                    </bookStore:addBookImage>
+                                    </image:addImage>
                                 ]]>
                             </data>
                         </message>
@@ -63,13 +64,13 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send endpoint="SampleSoapServer">
+                    <ws:send endpoint="imageSoapServer">
                         <message>
                             <data>
                                 <![CDATA[
-                                    <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
                                         <success>true</success>
-                                    </bookStore:addBookImageResponse>
+                                    </image:addImageResponse>
                                 ]]>
                             </data>
                         </message>
@@ -77,13 +78,13 @@
                 </sequential>
             </parallel>
             
-            <ws:receive endpoint="SampleSoapClient">
-                <message schema-repository="bookStoreSchemaRepository">
+            <ws:receive endpoint="imageServiceClient">
+                <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
-                            <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                            <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
                                 <success>true</success>
-                            </bookStore:addBookImageResponse>
+                            </image:addImageResponse>
                         ]]>
                     </data>
                 </message>
@@ -94,15 +95,15 @@
             </echo>
 
             <parallel>
-            	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
+            	<ws:send endpoint="imageServiceClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
-                                <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon>cid:ICON</icon>
-                                </bookStore:addBookImage>
+                                </image:addImage>
                             ]]>
                         </data>
                     </message>
@@ -115,15 +116,15 @@
                 </ws:send>
                                 
                 <sequential>
-                    <ws:receive endpoint="SampleSoapServer">
+                    <ws:receive endpoint="imageSoapServer">
                         <message schema-validation="false">
                             <data>
                                 <![CDATA[
-                                    <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:IMAGE"/></image>
                                         <icon><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:ICON"/></icon>
-                                    </bookStore:addBookImage>
+                                    </image:addImage>
                                 ]]>
                             </data>
                         </message>
@@ -135,13 +136,13 @@
                         </ws:attachment>
                     </ws:receive>
                     
-                    <ws:send endpoint="SampleSoapServer">
+                    <ws:send endpoint="imageSoapServer">
                         <message>
                             <data>
                                 <![CDATA[
-                                    <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
                                         <success>true</success>
-                                    </bookStore:addBookImageResponse>
+                                    </image:addImageResponse>
                                 ]]>
                             </data>
                         </message>
@@ -149,13 +150,13 @@
                 </sequential>
             </parallel>
             
-            <ws:receive endpoint="SampleSoapClient">
-                <message schema-repository="bookStoreSchemaRepository">
+            <ws:receive endpoint="imageServiceClient">
+                <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
-                            <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                            <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
                                 <success>true</success>
-                            </bookStore:addBookImageResponse>
+                            </image:addImageResponse>
                         ]]>
                     </data>
                 </message>
@@ -166,15 +167,15 @@
             </echo>
 
             <parallel>
-            	<ws:send endpoint="SampleSoapClient" mtom-enabled="true">
+            	<ws:send endpoint="imageServiceClient" mtom-enabled="true">
                     <message>
                         <data>
                             <![CDATA[
-                                <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                     <isbn>1234</isbn>
                                     <image>cid:IMAGE</image>
                                     <icon>cid:ICON</icon>
-                                </bookStore:addBookImage>
+                                </image:addImage>
                             ]]>
                         </data>
                     </message>
@@ -187,27 +188,27 @@
                 </ws:send>
                 
                 <sequential>
-                    <ws:receive endpoint="SampleSoapServer">
-                        <message schema-repository="bookStoreSchemaRepository">
+                    <ws:receive endpoint="imageSoapServer">
+                        <message schema-repository="imageServiceSchemaRepository">
                             <data>
                                 <![CDATA[
-                                    <bookStore:addBookImage xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                    <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
                                         <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQpWYXJpYWJsZXMgJXt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
                                         <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E74210A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
-                                    </bookStore:addBookImage>
+                                    </image:addImage>
                                 ]]>
                             </data>
                         </message>
                     </ws:receive>
                     
-                    <ws:send endpoint="SampleSoapServer">
+                    <ws:send endpoint="imageSoapServer">
                         <message>
                             <data>
                                 <![CDATA[
-                                    <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                                    <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
                                         <success>true</success>
-                                    </bookStore:addBookImageResponse>
+                                    </image:addImageResponse>
                                 ]]>
                             </data>
                         </message>
@@ -215,13 +216,13 @@
                 </sequential>
             </parallel>
             
-            <ws:receive endpoint="SampleSoapClient">
-                <message schema-repository="bookStoreSchemaRepository">
+            <ws:receive endpoint="imageServiceClient">
+                <message schema-repository="imageServiceSchemaRepository">
                     <data>
                         <![CDATA[
-                            <bookStore:addBookImageResponse xmlns:bookStore="http://www.citrusframework.org/bookstore/">
+                            <image:addImageResponse xmlns:image="http://www.citrusframework.org/imageService/">
                                 <success>true</success>
-                            </bookStore:addBookImageResponse>
+                            </image:addImageResponse>
                         ]]>
                     </data>
                 </message>

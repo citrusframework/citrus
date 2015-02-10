@@ -128,7 +128,7 @@ public class SoapMessage extends DefaultMessage {
      * Gets mtom attachments enabled
      * @return 
      */
-    public boolean getMtomEnabled() {
+    public boolean isMtomEnabled() {
         return this.mtomEnabled;
     }
 }

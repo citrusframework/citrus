@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://www.citrusframework.org/imageService/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+                  name="ImageService"
+                  targetNamespace="http://www.citrusframework.org/imageService/">
+    <wsdl:types>
+        <xsd:schema xmlns="http://www.citrusframework.org/imageService/" targetNamespace="http://www.citrusframework.org/imageService/">
+            <xsd:element name="addImage">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="isbn" type="xsd:string"/>
+                        <xsd:element name="image" type="xsd:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+                        <xsd:element name="icon" type="xsd:hexBinary" xmime:expectedContentTypes="application/octet-stream"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="addImageResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="success" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="addImage">
+        <wsdl:part element="tns:addImage" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="addImageResponse">
+        <wsdl:part element="tns:addImageResponse" name="parameters"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ImageService">
+        <wsdl:operation name="addImage">
+            <wsdl:input message="tns:addImage"/>
+            <wsdl:output message="tns:addImageResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ImageServiceSOAP" type="tns:ImageService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="addImage">
+            <soap:operation soapAction="http://www.citrusframework.org/imageService/addImage"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ImageService">
+        <wsdl:port binding="tns:ImageServiceSOAP" name="ImageServiceSOAP">
+            <soap:address location="http://www.citrusframework.org/imageService/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

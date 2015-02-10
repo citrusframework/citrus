@@ -29,12 +29,10 @@
       <citrus:ref schema="helloSchemaExtended" />
     </citrus:schemas>
   </citrus:schema-repository>
-  
-  <citrus:schema id="bookStoreSchemaExtended" location="classpath:com/consol/citrus/demo/BookStoreExtened.wsdl" />
-  
-  <citrus:schema-repository id="bookStoreSchemaRepository">
+
+  <citrus:schema-repository id="imageServiceSchemaRepository">
     <citrus:schemas>
-      <citrus:ref schema="bookStoreSchemaExtended" />
+      <citrus:schema id="imageServiceSchema" location="classpath:com/consol/citrus/schema/ImageService.wsdl" />
     </citrus:schemas>
   </citrus:schema-repository>
 
