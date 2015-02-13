@@ -8,7 +8,7 @@
     <title>SOAP MTOM support</title>
 
     <para>SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made
-    this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See <xref linkend="soap-mtom"/> for details.</para>
+    this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See <xref linkend="soap-attachment-mtom"/> for details.</para>
   </section>
 
   <section id="new-2-0-soap-1-2">
@@ -30,6 +30,13 @@
 
     <para>The Citrus mail components enable message exchange as mail client and server. For validation purpose the components offer a XML mail message representation. We have added a target namespace <emphasis>xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;</emphasis> and a
       XSD schema for this XML mail message representation. From now on you have to use the namespace accordingly in your mail message payloads when sending and receiving mail messages in Citrus. See <xref linkend="mail"/> how to use the new XML mail message namespace.</para>
+  </section>
+
+  <section id="new-2-0-ssh-namespace">
+    <title>Ssh message namespace</title>
+
+    <para>When sending and receiving messages via ssh Citrus provides a XML representation for request and response data. These ssh messages follow a new target namespace <emphasis>xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;</emphasis> and a
+      XSD schema. This means you have to use the namespace accordingly in your ssh message payloads when sending and receiving ssh messages in Citrus. See <xref linkend="ssh"/> for further details.</para>
   </section>
 
   <section id="new-2-0-bugfixes">

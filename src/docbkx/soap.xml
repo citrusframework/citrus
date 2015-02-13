@@ -827,6 +827,105 @@ Server: Jetty(7.0.0.pre5)
                 plain text comparison. Of course you are able to add individual validator implementations, too.</para>
             </note>
         </section>
+
+        <section id="soap-attachment-mtom">
+          <title>SOAP MTOM support</title>
+
+          <para>MTOM (Message Transmission Optimization Mechanism) enables you to send and receive large SOAP message content using streamed data handlers. This optimizes the resource allocation on server and client side where
+            not all data is loaded into memory when marshalling/unmarshalling the message payload data. In detail MTOM enabled messages do have a XOP package inside the message payload replacing the actual large content data. The
+            content is then streamed aas separate attachment. Server and client can operate with a data handler providing access to the streamed content. This is very helpful when using large binary content inside a SOAP message for instance.</para>
+
+          <para>Citrus is able to both send and receive MTOM enabled SOAP messages on client and server. Just use the <emphasis>mtom-enabled</emphasis> flag when sending a SOAP message:</para>
+
+          <programlisting>&lt;ws:send endpoint=&quot;soapMtomClient&quot; mtom-enabled=&quot;true&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+          &lt;image&gt;cid:IMAGE&lt;/image&gt;
+        &lt;/image:addImage&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+  &lt;ws:attachment content-id=&quot;IMAGE&quot; content-type=&quot;application/octet-stream&quot;&gt;
+    &lt;ws:resource file=&quot;classpath:com/consol/citrus/hugeImageData.png&quot;/&gt;
+  &lt;/ws:attachment&gt;
+&lt;/ws:send&gt;</programlisting>
+
+          <para>As you can see the example above sends a SOAP message that contains a large binary image content. The actual binary image data is referenced with a content id marker <emphasis>cid:IMAGE</emphasis> inside the message payload. The actual image
+          content is added as attachment with a separate file resource. Important is here the <emphasis>content-id</emphasis> which matches the id marker in the SOAP message payload (<emphasis>IMAGE</emphasis>).</para>
+
+          <para>Citrus builds a proper SOAP MTOM enabled message automatically adding the XOP package inside the message. The binary data is sent as separate SOAP attachment accordingly. The resulting SOAP message looks like this:</para>
+
+          <programlisting>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+&lt;SOAP-ENV:Header&gt;&lt;/SOAP-ENV:Header&gt;
+  &lt;SOAP-ENV:Body&gt;
+    &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+      &lt;image&gt;&lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:IMAGE&quot;/&gt;&lt;/image&gt;
+    &lt;/image:addImage&gt;
+  &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;</programlisting>
+
+          <para>On the server side Citrus is also able to handle MTOM enabled SOAP messages. In a server receive action you can specify the MTOM SOAP attachment content as follows.</para>
+
+          <programlisting>&lt;ws:receive endpoint=&quot;soapMtomServer&quot; mtom-enabled=&quot;true&quot;&gt;
+  &lt;message schema-validation=&quot;false&quot;&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+          &lt;image&gt;&lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:IMAGE&quot;/&gt;&lt;/image&gt;
+        &lt;/image:addImage&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+  &lt;ws:attachment content-id=&quot;IMAGE&quot; content-type=&quot;application/octet-stream&quot;&gt;
+    &lt;ws:resource file=&quot;classpath:com/consol/citrus/hugeImageData.png&quot;/&gt;
+  &lt;/ws:attachment&gt;
+&lt;/ws:receive&gt;</programlisting>
+
+          <para>We define the MTOM attachment content as separate SOAP attachment. The <emphasis>content-id</emphasis> is referenced somewhere in the SOAP message payload data. At runtime
+          Citrus will add the XOP package definition automatically and perform validation on the message and its streamed MTOM attachment data.</para>
+
+          <para>Next thing that we have to talk about is inline MTOM data. This means that the content should be added as either <emphasis>base64Binary</emphasis> or <emphasis>hexBinary</emphasis> encoded
+          String data directly to the message content. See the following example that uses the <emphasis>mtom-inline</emphasis> setting:</para>
+
+          <programlisting>&lt;ws:send endpoint=&quot;soapMtomClient&quot; mtom-enabled=&quot;true&quot;&gt;
+  &lt;message&gt;
+    &lt;data&gt;
+      &lt;![CDATA[
+        &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+          &lt;image&gt;cid:IMAGE&lt;/image&gt;
+          &lt;icon&gt;cid:ICON&lt;/icon&gt;
+        &lt;/image:addImage&gt;
+      ]]&gt;
+    &lt;/data&gt;
+  &lt;/message&gt;
+  &lt;ws:attachment content-id=&quot;IMAGE&quot; content-type=&quot;application/octet-stream&quot;
+            mtom-inline=&quot;true&quot; encoding-type=&quot;base64Binary&quot;&gt;
+    &lt;ws:resource file=&quot;classpath:com/consol/citrus/image.png&quot;/&gt;
+  &lt;/ws:attachment&gt;
+  &lt;ws:attachment content-id=&quot;ICON&quot; content-type=&quot;application/octet-stream&quot;
+            mtom-inline=&quot;true&quot; encoding-type=&quot;hexBinary&quot;&gt;
+    &lt;ws:resource file=&quot;classpath:com/consol/citrus/icon.ico&quot;/&gt;
+  &lt;/ws:attachment&gt;
+&lt;/ws:send&gt;</programlisting>
+
+          <para>The listing above defines two inline MTOM attachments. The first attachment <emphasis>cid:IMAGE</emphasis> uses the encoding type <emphasis>base64Binary</emphasis> which is the default.
+            The second attachment <emphasis>cid:ICON</emphasis> uses <emphasis>hexBinary</emphasis> encoding. Both attachments are added as inline data before the message is sent. The final SOAP message looks like follows:</para>
+
+          <programlisting>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+&lt;SOAP-ENV:Header&gt;&lt;/SOAP-ENV:Header&gt;
+  &lt;SOAP-ENV:Body&gt;
+    &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+      &lt;image&gt;VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQpWYXJpYWJsZXMgJXt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==&lt;/image&gt;
+      &lt;icon&gt;5468697320697320612062696E6172792069636F6E206174746163686D656E74210A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421&lt;/icon&gt;
+    &lt;/image:addImage&gt;
+  &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;</programlisting>
+
+          <para>The image content is a base64Binary String and the icon a heyBinary String. Of course this mechanism also is supported in receive actions on the server side where the expected message content is added als inline MTOM data
+          before validation takes place.</para>
+        </section>
     </section>
 
     <section id="soap-basic-auth-client">
@@ -987,8 +1086,7 @@ Server: Jetty(7.0.0.pre5)
             &lt;cit:Text&gt;Hello Citrus!&lt;/cit:Text&gt;
         &lt;/cit:HelloRequest&gt;
     &lt;/SOAP-ENV:Body&gt;
-&lt;/SOAP-ENV:Envelope&gt;
-        </programlisting>
+&lt;/SOAP-ENV:Envelope&gt;</programlisting>
 
         <important>
             <para>The message id property is automatically generated for each request. If you need to set a static message

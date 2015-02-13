@@ -16,6 +16,12 @@
   
   <body>
     <release version="2.0.1" date="15.02.2015" description="2.0.1 release">
+        <action dev="christophd" type="update">
+          CITRUS-243 Ssh request/response XSD schema
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-242 WSDL includes not working in schema validation
+        </action>
         <action dev="christophd" type="add">
           CITRUS-241 SOAP MTOM support
         </action>
