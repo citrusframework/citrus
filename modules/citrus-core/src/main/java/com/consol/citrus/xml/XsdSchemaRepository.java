@@ -16,9 +16,7 @@
 
 package com.consol.citrus.xml;
 
-import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
-import com.consol.citrus.xml.schema.WsdlXsdSchema;
-import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
+import com.consol.citrus.xml.schema.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -30,6 +28,7 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +90,25 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
                     log.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
                 }
             }
+        }
+
+        // Add default Citrus message schemas if available on classpath
+        addCitrusSchema("citrus-mail-message");
+        addCitrusSchema("citrus-ftp-message");
+        addCitrusSchema("citrus-ssh-message");
+    }
+
+    /**
+     * Adds Citrus message schema to repository if available on classpath.
+     * @param schemaName
+     */
+    protected void addCitrusSchema(String schemaName) throws IOException, SAXException, ParserConfigurationException {
+        Resource resource = new PathMatchingResourcePatternResolver().getResource("classpath:com/consol/citrus/schema/" + schemaName + ".xsd");
+        if (resource.exists()) {
+            log.info("Loading XSD schema resource " + resource.getFilename());
+            SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+            schema.afterPropertiesSet();
+            schemas.add(schema);
         }
     }
 

@@ -116,4 +116,18 @@ public class XsdSchemaRepositoryTest {
         Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
         Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), WsdlXsdSchema.class);
     }
+
+    @Test
+    public void testDefaultCitrusSchemas() throws Exception {
+        XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
+
+        schemaRepository.addCitrusSchema("citrus-unknown-config");
+
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 0);
+
+        schemaRepository.addCitrusSchema("citrus-config");
+
+        Assert.assertEquals(schemaRepository.getSchemas().size(), 1);
+        Assert.assertEquals(schemaRepository.getSchemas().get(0).getClass(), SimpleXsdSchema.class);
+    }
 }
