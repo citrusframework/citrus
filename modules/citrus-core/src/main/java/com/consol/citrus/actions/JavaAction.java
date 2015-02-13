@@ -26,8 +26,7 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Action to enable class invocation through java reflection
@@ -83,7 +82,8 @@ public class JavaAction extends AbstractTestAction {
                     
                     methodObjects[i] = converted;
                 } else if (methodArgs.get(i).getClass().equals(String[].class)) {
-                    String[] converted = (String[])methodArgs.get(i);
+                    String[] params = (String[])methodArgs.get(i);
+                    String[] converted = Arrays.copyOf(params, params.length);
                     
                     for (int j = 0; j < converted.length; j++) {
                         converted[j] = context.replaceDynamicContentInString(converted[j]);
