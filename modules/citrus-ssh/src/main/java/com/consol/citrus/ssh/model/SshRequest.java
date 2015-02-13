@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.model;
+
+import javax.xml.bind.annotation.*;
 
 /**
  * POJO encapsulating an SSH request. It is immutable.
@@ -22,10 +24,24 @@ package com.consol.citrus.ssh;
  * @author Roland Huss
  * @since 1.3
  */
-public class SshRequest {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "command",
+        "stdin"
+})
+@XmlRootElement(name = "ssh-request")
+public class SshRequest implements SshMessage {
 
-    private String command;
-    private String stdin;
+    @XmlElement(required = true)
+    protected String command;
+    @XmlElement(required = true)
+    protected String stdin;
+
+    /**
+     * Default constructor.
+     */
+    public SshRequest() {
+    }
 
     /**
      * Constructor using fields.

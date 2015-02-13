@@ -31,41 +31,35 @@
       <parallel>
         <send endpoint="sshClient">
           <message>
-            <data>
-              <![CDATA[
-                <ssh-request>
+            <payload>
+                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
                   <command>shutdown</command>
                   <stdin>input</stdin>
                 </ssh-request>
-              ]]>
-            </data>
+            </payload>
           </message>
         </send>
 
         <sequential>
           <receive endpoint="sshServer">
             <message>
-              <data>
-                <![CDATA[
-                  <ssh-request>
+              <payload>
+                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
                     <command>shutdown</command>
                     <stdin>input</stdin>
                   </ssh-request>
-                 ]]>
-              </data>
+              </payload>
             </message>
           </receive>
 
           <send endpoint="sshServer">
             <message>
-              <data>
-                <![CDATA[
-                  <ssh-response>
+              <payload>
+                  <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
                     <stdout>Hello Citrus</stdout>
                     <exit>0</exit>
                   </ssh-response>
-                ]]>
-              </data>
+              </payload>
             </message>
           </send>
         </sequential>
@@ -73,15 +67,13 @@
 
       <receive endpoint="sshClient">
         <message>
-          <data>
-            <![CDATA[
-              <ssh-response>
+          <payload>
+              <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
                 <stdout>Hello Citrus</stdout>
                 <stderr/>
                 <exit>0</exit>
               </ssh-response>
-            ]]>
-          </data>
+          </payload>
         </message>
       </receive>
     </actions>

@@ -265,11 +265,6 @@
         <version>1.49</version>
       </dependency>
       <dependency>
-        <groupId>com.thoughtworks.xstream</groupId>
-        <artifactId>xstream</artifactId>
-        <version>1.4.3</version>
-      </dependency>
-      <dependency>
         <groupId>com.jcraft</groupId>
         <artifactId>jsch</artifactId>
         <version>0.1.51</version>
@@ -505,6 +500,11 @@
         <groupId>org.apache.activemq</groupId>
         <artifactId>activemq-spring</artifactId>
         <version>${activemq.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>1.4.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xbean</groupId>

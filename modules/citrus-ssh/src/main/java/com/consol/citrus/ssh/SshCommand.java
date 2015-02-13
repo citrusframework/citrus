@@ -17,7 +17,10 @@
 package com.consol.citrus.ssh;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.ssh.client.SshEndpointConfiguration;
+import com.consol.citrus.ssh.model.SshRequest;
+import com.consol.citrus.ssh.model.SshResponse;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.server.*;
 import org.slf4j.Logger;
@@ -38,10 +41,13 @@ public class SshCommand implements Command, Runnable {
     private static Logger log = LoggerFactory.getLogger(SshCommand.class);
 
     /** Endpoint adapter for creating requests/responses **/
-    private EndpointAdapter endpointAdapter;
+    private final EndpointAdapter endpointAdapter;
+
+    /** Ssh endpoint configuration */
+    private final SshEndpointConfiguration endpointConfiguration;
 
     /** Command to execute **/
-    private String command;
+    private final String command;
 
     /** standard input/output/error streams; **/
     private InputStream stdin;
@@ -55,12 +61,14 @@ public class SshCommand implements Command, Runnable {
 
     /**
      * Constructor taking a command and the endpoint adapter as arguments
-     * @param pCommand command performed
-     * @param pEndpointAdapter endpoint adapter
+     * @param command command performed
+     * @param endpointAdapter endpoint adapter
+     * @param endpointConfiguration
      */
-    public SshCommand(String pCommand, EndpointAdapter pEndpointAdapter) {
-        endpointAdapter = pEndpointAdapter;
-        command = pCommand;
+    public SshCommand(String command, EndpointAdapter endpointAdapter, SshEndpointConfiguration endpointConfiguration) {
+        this.endpointAdapter = endpointAdapter;
+        this.command = command;
+        this.endpointConfiguration = endpointConfiguration;
     }
 
     @Override
@@ -73,32 +81,20 @@ public class SshCommand implements Command, Runnable {
     public void run() {
         try {
             String input = FileUtils.readToString(stdin);
-            SshRequest req = new SshRequest(command, input);
+            SshRequest sshRequest = new SshRequest(command, input);
 
-            SshResponse resp = sendToEndpointAdapter(req);
+            Message response = endpointAdapter.handleMessage(endpointConfiguration.getMessageConverter().convertInbound(sshRequest, endpointConfiguration)
+                    .setHeader("user", user));
 
-            copyToStream(resp.getStderr(), stderr);
-            copyToStream(resp.getStdout(), stdout);
-            exitCallback.onExit(resp.getExit());
+            SshResponse sshResponse = (SshResponse) endpointConfiguration.getMessageConverter().convertOutbound(response, endpointConfiguration);
+
+            copyToStream(sshResponse.getStderr(), stderr);
+            copyToStream(sshResponse.getStdout(), stdout);
+            exitCallback.onExit(sshResponse.getExit());
         } catch (IOException exp) {
             exitCallback.onExit(1, exp.getMessage());
         }
     }
-
-    /**
-     * Delegate to endpoint adapter implementation.
-     * @param pReq
-     * @return
-     */
-    private SshResponse sendToEndpointAdapter(SshRequest pReq) {
-        XmlMapper mapper = new XmlMapper();
-        Message response = endpointAdapter.handleMessage(
-                new DefaultMessage(mapper.toXML(pReq))
-                              .setHeader("user", user));
-        String msgResp = (String) response.getPayload();
-        return (SshResponse) mapper.fromXML(msgResp);
-    }
-
 
     @Override
     public void destroy() {
@@ -124,8 +120,6 @@ public class SshCommand implements Command, Runnable {
     public void setExitCallback(ExitCallback callback) {
         exitCallback = callback;
     }
-
-    // ====================================================================
 
     /**
      * Copy character sequence to outbput stream.

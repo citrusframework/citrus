@@ -20,13 +20,12 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
-import com.consol.citrus.ssh.SshRequest;
-import com.consol.citrus.ssh.SshResponse;
+import com.consol.citrus.ssh.model.SshRequest;
+import com.consol.citrus.ssh.model.SshResponse;
 import com.jcraft.jsch.*;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -85,8 +84,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.createCorrelationKey(correlationKey, this, context);
 
-        String payload = (String) message.getPayload();
-        SshRequest request = (SshRequest) getEndpointConfiguration().getXmlMapper().fromXML(payload);
+        SshRequest request = (SshRequest) getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
 
         if (getEndpointConfiguration().isStrictHostChecking()) {
             setKnownHosts();
@@ -116,7 +114,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
             disconnect();
         }
         SshResponse sshResp = new SshResponse(outStream.toString(),errStream.toString(),rc);
-        Message response = new DefaultMessage(getEndpointConfiguration().getXmlMapper().toXML(sshResp))
+        Message response = getEndpointConfiguration().getMessageConverter().convertInbound(sshResp, getEndpointConfiguration())
                 .setHeader("user", rUser);
 
         correlationManager.store(correlationKey, response);
