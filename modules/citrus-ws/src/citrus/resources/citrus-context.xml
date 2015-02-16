@@ -4,6 +4,7 @@
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:amq="http://activemq.apache.org/schema/core"
@@ -12,6 +13,7 @@
                          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                          http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+                         http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
                          http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
                          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
@@ -32,12 +34,19 @@
   <!-- Xsd schema resources and definitions -->
   <citrus:schema-repository id="helloSchemaRepository">
     <citrus:schemas>
-      <citrus:ref schema="helloSchema" />
-      <citrus:ref schema="helloSchemaExtended" />
+      <citrus:schema id="soap11" location="classpath:schemas/soap-1.1.xsd"/>
+      <citrus:ref schema="helloSchema"/>
+      <citrus:ref schema="helloSchemaExtended"/>
     </citrus:schemas>
   </citrus:schema-repository>
 
-  <citrus:schema id="helloSchema" location="classpath:schemas/HelloService.xsd" />
+  <citrus:schema-collection id="helloSchema">
+    <citrus:schemas>
+      <citrus:schema location="classpath:schemas/HelloService.xsd" />
+      <citrus:schema location="classpath:schemas/types.xsd"/>
+    </citrus:schemas>
+  </citrus:schema-collection>
+
   <citrus:schema id="helloSchemaExtended" location="classpath:schemas/HelloServiceExtended.xsd" />
 
   <!-- Default namespace mappings used in XPath expression evaluations -->
@@ -132,6 +141,10 @@
   <citrus-jms:endpoint id="soapResponseEndpoint"
                            use-object-messages="true"
                            destination-name="SoapServer.outbound"/>
+
+  <citrus-http:client id="echoHttpClient"
+                    request-url="http://localhost:14080/echo"
+                    timeout="1000"/>
 
   <citrus-ws:client id="echoSoapClient"
                     request-url="http://localhost:14080/echo"

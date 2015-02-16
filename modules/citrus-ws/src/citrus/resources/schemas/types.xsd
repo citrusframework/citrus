@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://citrusframework.org/schemas/types"
+           targetNamespace="http://citrusframework.org/schemas/types"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <xs:complexType name="BaseType">
+    <xs:sequence></xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="HelloType">
+    <xs:complexContent>
+      <xs:extension base="BaseType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="GoodByeType">
+    <xs:complexContent>
+      <xs:extension base="BaseType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
