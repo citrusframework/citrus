@@ -46,7 +46,7 @@ public class SshClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(client.getEndpointConfiguration().getCommandTimeout(), 1000 * 60 * 5);
         Assert.assertEquals(client.getEndpointConfiguration().getConnectionTimeout(), 1000 * 60 * 1);
         Assert.assertFalse(client.getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertNotNull(client.getEndpointConfiguration().getXmlMapper());
+        Assert.assertNotNull(client.getEndpointConfiguration().getMessageConverter());
 
         // 2nd client
         client = clients.get("sshClient2");
@@ -60,6 +60,6 @@ public class SshClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(client.getEndpointConfiguration().getCommandTimeout(), 10000);
         Assert.assertEquals(client.getEndpointConfiguration().getConnectionTimeout(), 5000);
         Assert.assertTrue(client.getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertNotNull(client.getEndpointConfiguration().getXmlMapper());
+        Assert.assertEquals(client.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("sshMessageConverter"));
     }
 }

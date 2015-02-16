@@ -16,8 +16,13 @@
                      private-key-path="classpath:com/consol/citrus/ssh/citrus.priv"
                      private-key-password="consol"
                      strict-host-checking="true"
+                     message-converter="sshMessageConverter"
                      command-timeout="10000"
                      connection-timeout="5000"
                      known-hosts-path="classpath:com/consol/citrus/ssh/known_hosts"/>
+
+  <bean id="sshMessageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.ssh.message.SshMessageConverter"/>
+  </bean>
 
 </beans>

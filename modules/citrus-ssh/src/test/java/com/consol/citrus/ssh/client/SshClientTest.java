@@ -19,12 +19,13 @@ package com.consol.citrus.ssh.client;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.ssh.SshRequest;
-import com.consol.citrus.ssh.XmlMapper;
+import com.consol.citrus.ssh.model.SshMarshaller;
+import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.jcraft.jsch.*;
 import org.easymock.IArgumentMatcher;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -43,7 +44,6 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     private static final String COMMAND = "ls";
     private static final String STDIN = "Hello world";
 
-    private XmlMapper xstream;
     private JSch jsch;
     private SshClient client;
     private ByteArrayOutputStream outStream;
@@ -53,8 +53,6 @@ public class SshClientTest extends AbstractTestNGUnitTest {
 
     @BeforeMethod
     public void setup() throws JSchException {
-        xstream = new XmlMapper();
-
         jsch = createMock(JSch.class);
 
         SshEndpointConfiguration endpointConfiguration = new SshEndpointConfiguration();
@@ -191,7 +189,10 @@ public class SshClientTest extends AbstractTestNGUnitTest {
 
     private Message createMessage(String pCommand, String pInput) {
         SshRequest request = new SshRequest(pCommand,pInput);
-        return new DefaultMessage(xstream.toXML(request));
+
+        StringResult payload = new StringResult();
+        new SshMarshaller().marshal(request, payload);
+        return new DefaultMessage(payload.toString());
     }
 
     private void strictHostChecking(boolean flag,String knownHosts) {

@@ -38,6 +38,8 @@ public class SshServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("user"), "user");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("password"), "password");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("allowed-key-path"), "allowedKeyPath");
+
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
     }
 
     @Override

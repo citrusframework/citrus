@@ -27,14 +27,12 @@
               message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
         <send endpoint="sshClientWithWrongKey">
           <message>
-            <data>
-              <![CDATA[
-                <ssh-request>
+            <payload>
+                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
                   <command>shutdown</command>
                   <stdin>input</stdin>
                 </ssh-request>
-              ]]>
-            </data>
+            </payload>
           </message>
         </send>
       </assert>
@@ -43,14 +41,12 @@
               message="Cannot connect via SSH: com.jcraft.jsch.JSchException: Auth fail">
         <send endpoint="sshClientWithWrongUser">
           <message>
-            <data>
-              <![CDATA[
-                <ssh-request>
+            <payload>
+                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
                   <command>shutdown</command>
                   <stdin>input</stdin>
                 </ssh-request>
-              ]]>
-            </data>
+            </payload>
           </message>
         </send>
       </assert>

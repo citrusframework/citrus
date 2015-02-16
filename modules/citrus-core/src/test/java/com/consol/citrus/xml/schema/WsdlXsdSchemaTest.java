@@ -67,6 +67,15 @@ public class WsdlXsdSchemaTest {
     }
 
     @Test
+    public void testWsdlSchemaWithIncludes() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithIncludes.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemas().size(), 4);
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
     public void testNamespaceInheritance() throws ParserConfigurationException, IOException, SAXException {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/xml/BookStore.wsdl"));
         wsdl.afterPropertiesSet();

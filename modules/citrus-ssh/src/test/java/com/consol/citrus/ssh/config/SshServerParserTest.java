@@ -45,6 +45,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(server.getUser());
         Assert.assertNull(server.getPassword());
         Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertNotNull(server.getMessageConverter());
         Assert.assertNull(server.getActor());
 
         // 2nd server
@@ -57,6 +58,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getUser(), "foo");
         Assert.assertEquals(server.getPassword(), "bar");
         Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("sshMessageConverter"));
         Assert.assertNull(server.getActor());
 
         // 3rd server

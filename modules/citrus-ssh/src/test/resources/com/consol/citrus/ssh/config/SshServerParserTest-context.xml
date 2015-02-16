@@ -14,12 +14,17 @@
                      port="10022"
                      allowed-key-path="classpath:com/consol/citrus/ssh/citrus_pub.pem"
                      host-key-path="classpath:com/consol/citrus/ssh/citrus.pem"
+                     message-converter="sshMessageConverter"
                      user="foo"
                      password="bar"/>
 
   <citrus-ssh:server id="sshServer3"
                      auto-start="false"
                      endpoint-adapter="sshServerAdapter"/>
+
+  <bean id="sshMessageConverter" class="org.easymock.EasyMock" factory-method="createMock">
+    <constructor-arg value="com.consol.citrus.ssh.message.SshMessageConverter"/>
+  </bean>
 
   <bean id="sshServerAdapter" class="org.easymock.EasyMock" factory-method="createMock">
     <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh;
+package com.consol.citrus.ssh.model;
+
+import javax.xml.bind.annotation.*;
 
 /**
  * POJO encapsulate a SSH response. It is immutable.
@@ -22,11 +24,26 @@ package com.consol.citrus.ssh;
  * @author Roland Huss
  * @since 1.3
  */
-public class SshResponse {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "stdout",
+        "stderr",
+        "exit"
+})
+@XmlRootElement(name = "ssh-response")
+public class SshResponse implements SshMessage {
 
-    private String stdout;
-    private String stderr;
-    private int exit;
+    @XmlElement(required = true)
+    protected String stdout;
+    @XmlElement(required = true)
+    protected String stderr;
+    protected int exit;
+
+    /**
+     * Default constructor.
+     */
+    public SshResponse() {
+    }
 
     /**
      * Default constructor using fields.

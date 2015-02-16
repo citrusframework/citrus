@@ -19,6 +19,8 @@ package com.consol.citrus.ssh.server;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ssh.SshCommand;
+import com.consol.citrus.ssh.client.SshEndpointConfiguration;
+import com.consol.citrus.ssh.message.SshMessageConverter;
 import org.apache.sshd.common.KeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.keyprovider.ResourceKeyPairProvider;
@@ -72,6 +74,9 @@ public class SshServer extends AbstractServer {
     /** file should be PEM, a serialized {@link java.security.KeyPair}. **/
     private String hostKeyPath;
 
+    /** Ssh message converter */
+    private SshMessageConverter messageConverter = new SshMessageConverter();
+
     /** SSH server used **/
     private org.apache.sshd.SshServer sshd;
 
@@ -107,7 +112,7 @@ public class SshServer extends AbstractServer {
         // Setup endpoint adapter
         sshd.setCommandFactory(new CommandFactory() {
             public Command createCommand(String command) {
-                return new SshCommand(command, getEndpointAdapter());
+                return new SshCommand(command, getEndpointAdapter(), getEndpointConfiguration());
             }
         });
 
@@ -125,6 +130,16 @@ public class SshServer extends AbstractServer {
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException("Cannot stop SSHD: " + e,e);
         }
+    }
+
+    @Override
+    public SshEndpointConfiguration getEndpointConfiguration() {
+        SshEndpointConfiguration endpointConfiguration = new SshEndpointConfiguration();
+        endpointConfiguration.setMessageConverter(messageConverter);
+        endpointConfiguration.setPort(port);
+        endpointConfiguration.setUser(user);
+        endpointConfiguration.setPassword(password);
+        return endpointConfiguration;
     }
 
     /**
@@ -205,6 +220,22 @@ public class SshServer extends AbstractServer {
      */
     public void setHostKeyPath(String hostKeyPath) {
         this.hostKeyPath = hostKeyPath;
+    }
+
+    /**
+     * Gets the message converter.
+     * @return
+     */
+    public SshMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    /**
+     * Sets the message converter.
+     * @param messageConverter
+     */
+    public void setMessageConverter(SshMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
     }
 
 }

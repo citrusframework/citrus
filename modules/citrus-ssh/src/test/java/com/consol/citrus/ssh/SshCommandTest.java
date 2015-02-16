@@ -17,10 +17,14 @@
 package com.consol.citrus.ssh;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.ssh.client.SshEndpointConfiguration;
+import com.consol.citrus.ssh.model.*;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.easymock.IArgumentMatcher;
+import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -42,13 +46,14 @@ public class SshCommandTest {
     private EndpointAdapter adapter;
 
     private static String COMMAND = "shutdown";
-    private XmlMapper xmlMapper;
+    private SshMarshaller marshaller;
     private ExitCallback exitCallback;
 
     @BeforeMethod
     public void setup() {
         adapter = createMock(EndpointAdapter.class);
-        cmd = new SshCommand(COMMAND, adapter);
+
+        cmd = new SshCommand(COMMAND, adapter, new SshEndpointConfiguration());
 
         stdout = new ByteArrayOutputStream();
         stderr = new ByteArrayOutputStream();
@@ -58,7 +63,7 @@ public class SshCommandTest {
         exitCallback = createMock(ExitCallback.class);
         cmd.setExitCallback(exitCallback);
 
-        xmlMapper = new XmlMapper();
+        marshaller = new SshMarshaller();
     }
     
     @Test
@@ -112,10 +117,15 @@ public class SshCommandTest {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private void prepare(String pInput, String pOutput, String pError, int pExitCode) {
-        String request = xmlMapper.toXML(new SshRequest(COMMAND, pInput));
+        StringResult request = new StringResult();
+        marshaller.marshal(new SshRequest(COMMAND, pInput), request);
+
         SshResponse resp = new SshResponse(pOutput, pError, pExitCode);
-        Message respMsg = new DefaultMessage(xmlMapper.toXML(resp));
-        expect(adapter.handleMessage(eqMessage(request))).andReturn(respMsg);
+        StringResult response = new StringResult();
+        marshaller.marshal(resp, response);
+
+        Message respMsg = new DefaultMessage(response.toString());
+        expect(adapter.handleMessage(eqMessage(request.toString()))).andReturn(respMsg);
         replay(adapter);
 
         exitCallback.onExit(pExitCode);

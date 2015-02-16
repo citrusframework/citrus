@@ -12,7 +12,7 @@
     <para>Let us clarify this with a little example. Once the real SSH server daemon is fired up within Citrus we accept a SSH EXEC request
     for instance. The request is translated into a XML message of the following format:</para>
 
-    <programlisting>&lt;ssh-request&gt;
+    <programlisting>&lt;ssh-request xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;&gt;
   &lt;command&gt;cat - | sed -e 's/Hello/Hello SSH/'&lt;/command&gt;
   &lt;stdin&gt;Hello World&lt;/stdin&gt;
 &lt;/ssh-request&gt;</programlisting>
@@ -22,7 +22,7 @@
     SSH response should be provided as appropriate answer. This is done with a message sending action on a reply handler as it is known from synchronous
     http message communication in Citrus for instance. The SSH XML representation of a response message looks like this:</para>
 
-    <programlisting>&lt;ssh-response&gt;
+    <programlisting>&lt;ssh-response xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;&gt;
   &lt;stdout&gt;Hello SSH World&lt;/stdout&gt;
   &lt;stderr&gt;&lt;/stderr&gt;
   &lt;exit&gt;0&lt;/exit&gt;
@@ -122,7 +122,7 @@
       <programlisting>&lt;send endpoint=&quot;sshClient&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
-        &lt;ssh-request&gt;
+        &lt;ssh-request xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;&gt;
           &lt;command&gt;shutdown&lt;/command&gt;
           &lt;stdin&gt;input&lt;/stdin&gt;
         &lt;/ssh-request&gt;
@@ -133,7 +133,7 @@
 &lt;receive endpoint=&quot;sshClient&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
-        &lt;ssh-response&gt;
+        &lt;ssh-response xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;&gt;
             &lt;stdout&gt;Hello Citrus&lt;/stdout&gt;
             &lt;stderr/&gt;
             &lt;exit&gt;0&lt;/exit&gt;
@@ -221,7 +221,7 @@
       <programlisting>&lt;receive endpoint=&quot;sshServer&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
-        &lt;ssh-request&gt;
+        &lt;ssh-request xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;&gt;
            &lt;command&gt;shutdown&lt;/command&gt;
            &lt;stdin&gt;input&lt;/stdin&gt;
         &lt;/ssh-request&gt;
@@ -232,7 +232,7 @@
 &lt;send endpoint=&quot;sshServer&quot;&gt;
   &lt;message&gt;
     &lt;payload&gt;
-        &lt;ssh-response&gt;
+        &lt;ssh-response xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;&gt;
             &lt;stdout&gt;Hello Citrus&lt;/stdout&gt;
             &lt;exit&gt;0&lt;/exit&gt;
         &lt;/ssh-response&gt;

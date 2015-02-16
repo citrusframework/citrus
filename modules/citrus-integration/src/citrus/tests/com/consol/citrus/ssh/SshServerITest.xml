@@ -31,7 +31,7 @@
           <message>
             <data>
               <![CDATA[
-                  <ssh-request>
+                  <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
                     <command>shutdown</command>
                     <stdin>input</stdin>
                   </ssh-request>
@@ -45,7 +45,7 @@
             <message>
               <data>
                 <![CDATA[
-                    <ssh-request>
+                    <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
                        <command>shutdown</command>
                        <stdin>input</stdin>
                     </ssh-request>
@@ -61,7 +61,7 @@
             <message>
               <data>
                 <![CDATA[
-                    <ssh-response>
+                    <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
                         <stdout>Hello Citrus</stdout>
                         <exit>0</exit>
                     </ssh-response>
@@ -79,7 +79,7 @@
         <message>
           <data>
             <![CDATA[
-                <ssh-response>
+                <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
                     <stdout>Hello Citrus</stdout>
                     <stderr/>
                     <exit>0</exit>
