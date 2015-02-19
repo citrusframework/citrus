@@ -138,6 +138,20 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
             // Obviously no schema resource in WSDL did match the targetNamespace, just use the first schema resource found as main schema
             setXsd(schemas.get(0));
         }
+
+        for (Object imports : definition.getImports().values()) {
+            for (Import wsdlImport : (Vector<Import>)imports) {
+                String schemaLocation;
+                URI locationURI = URI.create(wsdlImport.getLocationURI());
+                if (locationURI.isAbsolute()) {
+                    schemaLocation = wsdlImport.getLocationURI();
+                } else {
+                    schemaLocation = definition.getDocumentBaseURI().substring(0, definition.getDocumentBaseURI().lastIndexOf('/') + 1) + wsdlImport.getLocationURI();
+                }
+
+                loadSchemas(getWsdlDefinition(new FileSystemResource(schemaLocation)));
+            }
+        }
     }
 
     /**
@@ -147,9 +161,8 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
      * @param schema
      */
     private void addImportedSchemas(Schema schema) throws WSDLException, IOException, TransformerException, TransformerFactoryConfigurationError {
-        Map imports = schema.getImports();
-        for (Object schemaObjects : imports.values()) {
-            for (SchemaImport schemaImport : (Vector<SchemaImport>)schemaObjects) {
+        for (Object imports : schema.getImports().values()) {
+            for (SchemaImport schemaImport : (Vector<SchemaImport>)imports) {
                 // Prevent duplicate imports
                 if (!importedSchemas.contains(schemaImport.getNamespaceURI())) {
                     importedSchemas.add(schemaImport.getNamespaceURI());
@@ -185,11 +198,7 @@ public class WsdlXsdSchema extends SimpleXsdSchema implements InitializingBean {
                 schemaLocation = schema.getDocumentBaseURI().substring(0, schema.getDocumentBaseURI().lastIndexOf('/') + 1) + schemaReference.getSchemaLocationURI();
             }
 
-            if (schemaLocation.endsWith(".xsd")) {
-                schemas.add(new FileSystemResource(schemaLocation));
-            } else if (schemaLocation.endsWith(".wsdl")) {
-                loadSchemas(getWsdlDefinition(new FileSystemResource(schemaLocation)));
-            }
+            schemas.add(new FileSystemResource(schemaLocation));
         }
     }
     

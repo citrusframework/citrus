@@ -49,6 +49,15 @@ public class WsdlXsdSchemaTest {
     }
 
     @Test
+    public void testWsdlSchemaWsdlImports() throws ParserConfigurationException, IOException, SAXException {
+        WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithWsdlImports.wsdl"));
+        wsdl.afterPropertiesSet();
+        Assert.assertEquals(wsdl.getSchemas().size(), 3);
+
+        Assert.assertNotNull(wsdl.getSource());
+    }
+
+    @Test
     public void testWsdlSchemaDuplicateImports() throws ParserConfigurationException, IOException, SAXException {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithDuplicateImports.wsdl"));
         wsdl.afterPropertiesSet();
@@ -70,7 +79,7 @@ public class WsdlXsdSchemaTest {
     public void testWsdlSchemaWithIncludes() throws ParserConfigurationException, IOException, SAXException {
         WsdlXsdSchema wsdl = new WsdlXsdSchema(new ClassPathResource("com/consol/citrus/validation/SampleServiceWithIncludes.wsdl"));
         wsdl.afterPropertiesSet();
-        Assert.assertEquals(wsdl.getSchemas().size(), 4);
+        Assert.assertEquals(wsdl.getSchemas().size(), 3);
 
         Assert.assertNotNull(wsdl.getSource());
     }
