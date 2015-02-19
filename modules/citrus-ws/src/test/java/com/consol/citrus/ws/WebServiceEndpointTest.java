@@ -54,7 +54,22 @@ import static org.easymock.EasyMock.*;
 public class WebServiceEndpointTest {
 
     private MessageContext messageContext = EasyMock.createMock(MessageContext.class);
-    
+    private SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
+    private SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
+    private SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
+    private org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
+    private org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
+
+    private SoapEnvelope soapEnvelope = EasyMock.createMock(SoapEnvelope.class);
+    private SoapBody soapBody = EasyMock.createMock(SoapBody.class);
+
+    private SaajSoapMessage saajSoapRequest = EasyMock.createMock(SaajSoapMessage.class);
+
+    private org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
+    private SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
+
+    private String requestPayload = "<TestRequest><Message>Hello World!</Message></TestRequest>";
+
     @Test
     public void testMessageProcessing() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -72,18 +87,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -102,15 +114,15 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
     }
-    
+
     @Test
     public void testMessageProcessingWithSoapAction() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -134,18 +146,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -164,13 +173,13 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
     }
     
     @Test
@@ -197,21 +206,18 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
         Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
-        SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
         soapRequestHeaders.add(soapRequestHeaderEntry);
 
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -232,13 +238,13 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
     }
     
     @Test
@@ -275,11 +281,6 @@ public class WebServiceEndpointTest {
             }
         });
         
-        SaajSoapMessage soapRequest = EasyMock.createMock(SaajSoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-        SoapBody soapRequestBody = EasyMock.createMock(SoapBody.class);
-        SoapEnvelope soapRequestEnvelope = EasyMock.createMock(SoapEnvelope.class);
-        
         SOAPMessage soapRequestMessage = EasyMock.createMock(SOAPMessage.class);
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Host", "localhost:8080");
@@ -291,29 +292,27 @@ public class WebServiceEndpointTest {
         mimeHeaders.addHeader("Content-Type", "text/xml");
         
         Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
-        SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
         soapRequestHeaders.add(soapRequestHeaderEntry);
 
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
+        reset(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
 
-        expect(soapRequest.getEnvelope()).andReturn(soapRequestEnvelope).times(3);
-        expect(soapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
+        expect(saajSoapRequest.getEnvelope()).andReturn(soapEnvelope).anyTimes();
+        expect(saajSoapRequest.getSoapAction()).andReturn("sayHello").anyTimes();
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
-        expect(soapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
+        expect(saajSoapRequest.getAttachments()).andReturn(emptyAttachmentSet.iterator()).once();
         
-        expect(soapRequest.getSaajMessage()).andReturn(soapRequestMessage).once();
+        expect(saajSoapRequest.getSaajMessage()).andReturn(soapRequestMessage).once();
         expect(soapRequestMessage.getMimeHeaders()).andReturn(mimeHeaders).once();
-        
-        expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
 
-        expect(soapRequestEnvelope.getBody()).andReturn(soapRequestBody).times(2);
-        expect(soapRequestBody.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(messageContext.getRequest()).andReturn(saajSoapRequest).anyTimes();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+
+        expect(soapEnvelope.getBody()).andReturn(soapBody).times(2);
+        expect(soapBody.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
-        expect(soapRequestEnvelope.getHeader()).andReturn(soapRequestHeader).once();
+        expect(soapEnvelope.getHeader()).andReturn(soapRequestHeader).once();
         expect(soapRequestHeader.getSource()).andReturn(null).once();
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
@@ -327,13 +326,13 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getPayloadResult()).andReturn(soapResponsePayload).once();
         
-        replay(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
+        replay(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequestEnvelope, soapRequestHeader, soapRequestBody, soapRequestHeaderEntry, soapResponse, soapRequest, soapRequestMessage);
+        verify(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
     }
     
     @Test
@@ -361,21 +360,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        
-        final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -410,13 +403,13 @@ public class WebServiceEndpointTest {
         soapRequestHeaderEntry.setText("sayHello");
         expectLastCall().once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
     }
     
     @Test
@@ -447,21 +440,14 @@ public class WebServiceEndpointTest {
         endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
         endpoint.setDefaultPrefix("citrus");
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        
-        final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
-        
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -496,13 +482,13 @@ public class WebServiceEndpointTest {
         soapRequestHeaderEntry.setText("sayHello");
         expectLastCall().once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
     }
     
     @Test
@@ -532,21 +518,15 @@ public class WebServiceEndpointTest {
 
         endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        
-        final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -581,13 +561,13 @@ public class WebServiceEndpointTest {
         soapRequestHeaderEntry.setText("sayHello");
         expectLastCall().once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
     }
     
     @Test(expectedExceptions = SoapHeaderException.class)
@@ -615,21 +595,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        
-        final SoapHeaderElement soapRequestHeaderEntry = EasyMock.createMock(SoapHeaderElement.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -664,13 +638,13 @@ public class WebServiceEndpointTest {
         soapRequestHeaderEntry.setText("sayHello");
         expectLastCall().once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
     }
     
     @Test
@@ -703,22 +677,20 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
 
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
         Set<Attachment> attachments = new HashSet<Attachment>();
         Attachment attachment = EasyMock.createMock(Attachment.class);
         attachments.add(attachment);
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, attachment);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -740,13 +712,13 @@ public class WebServiceEndpointTest {
         
         expect(attachment.getInputStream()).andReturn(new ByteArrayInputStream("AttachmentBody".getBytes())).once();
 
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, attachment);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, attachment);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
     }
     
     @Test
@@ -774,21 +746,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -807,23 +773,23 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
         
-        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
+        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+        expect(soapBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
             public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request, because of unknown error");
-                
+
                 return soapFault;
             }
         });
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
     }
     
     @Test
@@ -851,21 +817,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -884,23 +844,23 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
         
-        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
+        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
         
-        expect(soapResponseBody.addClientOrSenderFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+        expect(soapBody.addClientOrSenderFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
             public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
-                
+
                 return soapFault;
             }
         });
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
     }
     
     @Test
@@ -930,22 +890,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
-        SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
-        
         StringResult soapFaultResult = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -964,12 +917,12 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
         
-        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
+        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+        expect(soapBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
             public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
-                
+
                 return soapFault;
             }
         });
@@ -978,13 +931,13 @@ public class WebServiceEndpointTest {
         
         expect(soapFaultDetail.getResult()).andReturn(soapFaultResult).once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
     }
     
     @Test
@@ -1015,22 +968,15 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
-        SoapBody soapResponseBody = EasyMock.createMock(SoapBody.class);
-        final org.springframework.ws.soap.SoapFault soapFault = EasyMock.createMock(org.springframework.ws.soap.SoapFault.class);
-        SoapFaultDetail soapFaultDetail = EasyMock.createMock(SoapFaultDetail.class);
-        
         StringResult soapFaultResult = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1049,12 +995,12 @@ public class WebServiceEndpointTest {
 
         expect(soapResponse.getSoapHeader()).andReturn(soapResponseHeader).anyTimes();
         
-        expect(soapResponse.getSoapBody()).andReturn(soapResponseBody).once();
+        expect(soapResponse.getSoapBody()).andReturn(soapBody).once();
         
-        expect(soapResponseBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
+        expect(soapBody.addServerOrReceiverFault((String)anyObject(), (Locale)anyObject())).andAnswer(new IAnswer<org.springframework.ws.soap.SoapFault>() {
             public org.springframework.ws.soap.SoapFault answer() throws Throwable {
                 Assert.assertEquals(EasyMock.getCurrentArguments()[0], "Invalid request");
-                
+
                 return soapFault;
             }
         });
@@ -1063,13 +1009,13 @@ public class WebServiceEndpointTest {
         
         expect(soapFaultDetail.getResult()).andReturn(soapFaultResult).times(2);
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>");
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault, soapFaultDetail);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
     }
     
     @Test
@@ -1097,18 +1043,16 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
 
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1130,13 +1074,13 @@ public class WebServiceEndpointTest {
         soapResponse.setSoapAction("answerHello");
         expectLastCall().once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
     }
     
     @Test
@@ -1164,21 +1108,18 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         Soap11Body soapResponseBody = EasyMock.createMock(Soap11Body.class);
         final Soap11Fault soapFault = EasyMock.createMock(Soap11Fault.class);
         
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1212,13 +1153,13 @@ public class WebServiceEndpointTest {
             }
         });
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
     }
     
     @Test
@@ -1246,21 +1187,18 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
-
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapResponseHeader = EasyMock.createMock(SoapHeader.class);
         Soap12Body soapResponseBody = EasyMock.createMock(Soap12Body.class);
         final Soap12Fault soapFault = EasyMock.createMock(Soap12Fault.class);
         
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(getSoapRequestPayload())).once();
         
-        expect(soapRequest.getPayloadSource()).andReturn(new StringSource("<TestRequest><Message>Hello World!</Message></TestRequest>")).times(2);
+        expect(soapRequest.getPayloadSource()).andReturn(new StringSource(requestPayload)).times(2);
         
         expect(messageContext.getPropertyNames()).andReturn(new String[]{}).once();
         
@@ -1301,13 +1239,13 @@ public class WebServiceEndpointTest {
             }
         }).once();
         
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
     }
     
     @Test
@@ -1326,16 +1264,14 @@ public class WebServiceEndpointTest {
             }
         });
 
-        org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        SoapHeader soapRequestHeader = EasyMock.createMock(SoapHeader.class);
 
-        org.springframework.ws.soap.SoapMessage soapResponse = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
-        
         StringResult soapResponsePayload = new StringResult();
         
-        reset(messageContext, soapRequest, soapRequestHeader, soapResponse);
-        
+        reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+
         expect(messageContext.getRequest()).andReturn(soapRequest).anyTimes();
+        expect(soapRequest.getEnvelope()).andReturn(soapEnvelope).once();
+        expect(soapEnvelope.getSource()).andReturn(new StringSource("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><SOAP-ENV:Body></SOAP-ENV:Body></SOAP-ENV:Envelope>")).once();
         
         expect(soapRequest.getPayloadSource()).andReturn(null).once();
         
@@ -1354,12 +1290,21 @@ public class WebServiceEndpointTest {
         
         expect(messageContext.getResponse()).andReturn(soapResponse).once();
 
-        replay(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        replay(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
         
         endpoint.invoke(messageContext);
         
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
         
-        verify(messageContext, soapRequest, soapRequestHeader, soapResponse);
+        verify(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
+    }
+
+    private String getSoapRequestPayload() {
+        return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                    "<SOAP-ENV:Header/>\n" +
+                    "<SOAP-ENV:Body>\n" +
+                        requestPayload +
+                    "</SOAP-ENV:Body>\n" +
+                "</SOAP-ENV:Envelope>";
     }
 }

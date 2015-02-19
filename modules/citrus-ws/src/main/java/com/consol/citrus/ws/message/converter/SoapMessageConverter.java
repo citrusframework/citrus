@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.*;
+import com.consol.citrus.ws.message.SoapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -28,8 +29,7 @@ import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -39,10 +39,13 @@ import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -61,9 +64,6 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SoapMessageConverter.class);
     
-    /** Should keep soap envelope when creating internal message */
-    private boolean keepSoapEnvelope = false;
-
     @Override
     public WebServiceMessage convertOutbound(Message internalMessage, WebServiceEndpointConfiguration endpointConfiguration) {
         WebServiceMessage message = endpointConfiguration.getMessageFactory().createWebServiceMessage();
@@ -156,7 +156,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         try {
             StringResult payloadResult = new StringResult();
 
-            if (keepSoapEnvelope) {
+            if (endpointConfiguration.isKeepSoapEnvelope()) {
                 webServiceMessage.writeTo(payloadResult.getOutputStream());
             } else if (webServiceMessage.getPayloadSource() != null) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -190,11 +190,40 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
      * @param endpointConfiguration
      */
     protected void handleInboundSoapMessage(org.springframework.ws.soap.SoapMessage soapMessage, SoapMessage message, WebServiceEndpointConfiguration endpointConfiguration) {
+        handleInboundNamespaces(soapMessage, message);
         handleInboundSoapHeaders(soapMessage, message);
         handleInboundAttachments(soapMessage, message);
 
         if (endpointConfiguration.isHandleMimeHeaders()) {
             handleInboundMimeHeaders(soapMessage, message);
+        }
+    }
+
+    private void handleInboundNamespaces(org.springframework.ws.soap.SoapMessage soapMessage, SoapMessage message) {
+        Source envelopeSource = soapMessage.getEnvelope().getSource();
+        if (envelopeSource != null && envelopeSource instanceof DOMSource) {
+            Node envelopeNode = ((DOMSource) envelopeSource).getNode();
+            NamedNodeMap attributes = envelopeNode.getAttributes();
+
+            for (int i = 0; i < attributes.getLength(); i++) {
+                Node attribute = attributes.item(i);
+                if (StringUtils.hasText(attribute.getNamespaceURI()) && attribute.getNamespaceURI().equals("http://www.w3.org/2000/xmlns/")) {
+                    if (StringUtils.hasText(attribute.getNodeValue()) && !attribute.getNodeValue().equals(envelopeNode.getNamespaceURI())) {
+                        String messagePayload = message.getPayload(String.class);
+                        if (StringUtils.hasText(messagePayload)) {
+                            int xmlProcessingInstruction = messagePayload.indexOf("?>");
+                            xmlProcessingInstruction = xmlProcessingInstruction > 0 ? (xmlProcessingInstruction + 2) : 0;
+                            int rootElementEnd = messagePayload.indexOf('>', xmlProcessingInstruction);
+                            if (rootElementEnd > 0) {
+                                String namespace = attribute.getNodeName() + "=\"" + attribute.getNodeValue() + "\"";
+                                if (!messagePayload.contains(namespace)) {
+                                    message.setPayload(messagePayload.substring(0, rootElementEnd) + " " + namespace + messagePayload.substring(rootElementEnd));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -382,22 +411,6 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
 
             message.addAttachment(soapAttachment);
         }
-    }
-
-    /**
-     * Gets the keep soap envelope flag.
-     * @return
-     */
-    public boolean isKeepSoapEnvelope() {
-        return keepSoapEnvelope;
-    }
-
-    /**
-     * Sets the keep soap header flag.
-     * @param keepSoapEnvelope
-     */
-    public void setKeepSoapEnvelope(boolean keepSoapEnvelope) {
-        this.keepSoapEnvelope = keepSoapEnvelope;
     }
 
 }

@@ -95,6 +95,9 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
     /** Should handle Http mime headers */
     private boolean handleMimeHeaders = false;
 
+    /** Should keep soap envelope when creating internal message */
+    private boolean keepSoapEnvelope = false;
+
     /** Message converter implementation */
     private WebServiceMessageConverter messageConverter = new SoapMessageConverter();
 
@@ -531,6 +534,22 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
      */
     public void setHandleMimeHeaders(boolean handleMimeHeaders) {
         this.handleMimeHeaders = handleMimeHeaders;
+    }
+
+    /**
+     * Gets the keep soap envelope flag.
+     * @return
+     */
+    public boolean isKeepSoapEnvelope() {
+        return keepSoapEnvelope;
+    }
+
+    /**
+     * Sets the keep soap header flag.
+     * @param keepSoapEnvelope
+     */
+    public void setKeepSoapEnvelope(boolean keepSoapEnvelope) {
+        this.keepSoapEnvelope = keepSoapEnvelope;
     }
 
     /**

@@ -46,22 +46,28 @@ public class SoapResponseMessageCallbackTest {
     private SoapEnvelope soapEnvelope = EasyMock.createMock(SoapEnvelope.class);
     private SoapBody soapBody = EasyMock.createMock(SoapBody.class);
     private SoapHeader soapHeader = EasyMock.createMock(SoapHeader.class);
-    
+
     private String responsePayload = "<testMessage>Hello</testMessage>";
+
+    private String soapResponsePayload = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+            "<SOAP-ENV:Header/>\n" +
+            "<SOAP-ENV:Body>\n" +
+            responsePayload +
+            "</SOAP-ENV:Body>\n" +
+            "</SOAP-ENV:Envelope>";
     
     @Test
     public void testSoapBody() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
-        StringSource soapBodySource = new StringSource(responsePayload);
-        
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-        
+
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
+        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -87,15 +93,14 @@ public class SoapResponseMessageCallbackTest {
     public void testSoapAction() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
-        StringSource soapBodySource = new StringSource(responsePayload);
-        
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
         
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
+        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -126,15 +131,14 @@ public class SoapResponseMessageCallbackTest {
         
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
-        StringSource soapBodySource = new StringSource(responsePayload);
-        
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-        
+
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
+        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -161,8 +165,6 @@ public class SoapResponseMessageCallbackTest {
     public void testSoapHeader() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
-        StringSource soapBodySource = new StringSource(responsePayload);
-        
         SoapHeaderElement soapHeaderElement = EasyMock.createMock(SoapHeaderElement.class);
         
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
@@ -171,9 +173,10 @@ public class SoapResponseMessageCallbackTest {
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
-        
+
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
+        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();
@@ -208,16 +211,15 @@ public class SoapResponseMessageCallbackTest {
         
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration());
         
-        StringSource soapBodySource = new StringSource(responsePayload);
-        
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
         soapAttachments.add(attachment);
         
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-        
+
         expect(soapResponse.getEnvelope()).andReturn(soapEnvelope).anyTimes();
-        expect(soapResponse.getPayloadSource()).andReturn(soapBodySource).times(2);
+        expect(soapEnvelope.getSource()).andReturn(new StringSource(soapResponsePayload)).once();
+        expect(soapResponse.getPayloadSource()).andReturn(new StringSource(responsePayload)).times(2);
         expect(soapResponse.getSoapHeader()).andReturn(soapHeader).anyTimes();
         expect(soapEnvelope.getHeader()).andReturn(soapHeader).anyTimes();
         expect(soapHeader.examineAllHeaderElements()).andReturn(soapHeaders.iterator()).once();

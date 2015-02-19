@@ -5,7 +5,7 @@
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
-  <xs:complexType name="BaseType">
+  <xs:complexType name="BaseType" abstract="true">
     <xs:sequence></xs:sequence>
   </xs:complexType>
 

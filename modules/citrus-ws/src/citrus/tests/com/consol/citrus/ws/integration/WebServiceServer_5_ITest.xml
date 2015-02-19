@@ -33,18 +33,20 @@
             <![CDATA[
               <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
                                   xmlns:hello="http://citrusframework.org/schemas/samples/HelloService.xsd"
-                                  xmlns:header="http://citrusframework.org/header">
+                                  xmlns:header="http://citrusframework.org/header"
+                                  xmlns:types="http://citrusframework.org/schemas/types"
+                                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <SOAP-ENV:Header>
                   <header:Operation>sayHello</header:Operation>
                   <header:CorrelationId>${correlationId}</header:CorrelationId>
                 </SOAP-ENV:Header>
                 <SOAP-ENV:Body>
-                  <hello:HelloRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:types="http://citrusframework.org/types">
+                  <hello:HelloRequest>
                     <hello:MessageId>${messageId}</hello:MessageId>
                     <hello:CorrelationId>${correlationId}</hello:CorrelationId>
                     <hello:User>${user}</hello:User>
                     <hello:Text>Hello Citrus</hello:Text>
-                    <hello:Type/>
+                    <hello:Type xsi:type="types:HelloType"/>
                   </hello:HelloRequest>
                 </SOAP-ENV:Body>
               </SOAP-ENV:Envelope>
@@ -62,13 +64,13 @@
           <data>
             <![CDATA[
               <hello:HelloRequest xmlns:hello="http://citrusframework.org/schemas/samples/HelloService.xsd"
-                                  xmlns:types="http://citrusframework.org/types"
+                                  xmlns:types="http://citrusframework.org/schemas/types"
                                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
                 <hello:MessageId>${messageId}</hello:MessageId>
                 <hello:CorrelationId>${correlationId}</hello:CorrelationId>
                 <hello:User>${user}</hello:User>
                 <hello:Text>Hello Citrus</hello:Text>
-                <hello:Type/>
+                <hello:Type xsi:type="types:HelloType"/>
               </hello:HelloRequest>
             ]]>
           </data>
