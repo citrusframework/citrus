@@ -26,9 +26,11 @@ import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.StringUtils;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.*;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -49,6 +51,8 @@ import static org.easymock.EasyMock.*;
  * @since 2.0
  */
 public class SoapMessageConverterTest {
+
+    public static final String XML_PROCESSING_INSTRUCTION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
     private SoapMessageFactory soapMessageFactory = EasyMock.createMock(SoapMessageFactory.class);
     private org.springframework.ws.soap.SoapMessage soapRequest = EasyMock.createMock(org.springframework.ws.soap.SoapMessage.class);
@@ -81,7 +85,7 @@ public class SoapMessageConverterTest {
 
         soapMessageConverter.convertOutbound(testMessage, endpointConfiguration);
 
-        Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(soapBodyResult.toString(), XML_PROCESSING_INSTRUCTION + payload);
 
         verify(soapMessageFactory, soapRequest, soapBody);
     }
@@ -103,7 +107,7 @@ public class SoapMessageConverterTest {
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration());
 
-        Assert.assertEquals(soapBodyResult.toString(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(soapBodyResult.toString(), XML_PROCESSING_INSTRUCTION + payload);
 
         verify(soapRequest, soapBody);
     }
@@ -381,7 +385,7 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
@@ -414,7 +418,7 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
@@ -452,10 +456,10 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(responseMessage.getHeaderData().get(0), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
+        Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + soapHeaderContent);
 
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
     }
@@ -491,7 +495,7 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeader("{http://citrusframework.org}citrus:messageId"), "123456789");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
@@ -534,7 +538,7 @@ public class SoapMessageConverterTest {
         Assert.assertTrue(SoapMessage.class.isInstance(responseMessage));
 
         SoapMessage soapResponseMessage = (SoapMessage) responseMessage;
-        Assert.assertEquals(soapResponseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        Assert.assertEquals(soapResponseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + payload);
         Assert.assertEquals(soapResponseMessage.getSoapAction(), "soapOperation");
         Assert.assertEquals(soapResponseMessage.getHeaderData().size(), 0L);
 
@@ -573,7 +577,7 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>");
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>");
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
@@ -584,7 +588,7 @@ public class SoapMessageConverterTest {
     public void testInboundSoapBodyWithNamespaceTranslationXmlProcessingInstruction() throws TransformerException, IOException {
         SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
 
-        StringSource soapBodySource = new StringSource("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + payload);
+        StringSource soapBodySource = new StringSource(XML_PROCESSING_INSTRUCTION + payload);
 
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
@@ -606,7 +610,7 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>");
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\">Hello</testMessage>");
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
@@ -642,12 +646,28 @@ public class SoapMessageConverterTest {
         replay(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         Message responseMessage = soapMessageConverter.convertInbound(soapResponse, new WebServiceEndpointConfiguration());
-        Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
+        Assert.assertEquals(responseMessage.getPayload(), XML_PROCESSING_INSTRUCTION + "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
                 "other=\"true\" xmlns:new=\"http://citruframework.org/new\">Hello</testMessage>");
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
         verify(soapResponse, soapEnvelope, soapBody, soapHeader);
+    }
+
+    @Test
+    public void testInboundSoapKeepEnvelope() throws TransformerException, IOException {
+        SoapMessageConverter soapMessageConverter = new SoapMessageConverter();
+
+        SaajSoapMessageFactory soapMessageFactory = new SaajSoapMessageFactory();
+        soapMessageFactory.afterPropertiesSet();
+        WebServiceMessage soapMessage = soapMessageFactory.createWebServiceMessage(new ByteArrayInputStream((XML_PROCESSING_INSTRUCTION + getSoapRequestPayload()).getBytes()));
+
+        WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
+        endpointConfiguration.setKeepSoapEnvelope(true);
+        Message responseMessage = soapMessageConverter.convertInbound(soapMessage, endpointConfiguration);
+        Assert.assertEquals(StringUtils.trimAllWhitespace(responseMessage.getPayload(String.class)), StringUtils.trimAllWhitespace(XML_PROCESSING_INSTRUCTION + getSoapRequestPayload()));
+        Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
+        Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + "<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"/>");
     }
 
     private String getSoapRequestPayload() {

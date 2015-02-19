@@ -20,7 +20,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.*;
-import com.consol.citrus.ws.message.SoapMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamSource;
@@ -29,7 +28,8 @@ import org.springframework.web.util.UrlPathHelper;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -46,8 +46,7 @@ import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -154,17 +153,23 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     @Override
     public SoapMessage convertInbound(WebServiceMessage webServiceMessage, MessageContext messageContext, WebServiceEndpointConfiguration endpointConfiguration) {
         try {
-            StringResult payloadResult = new StringResult();
+            String payload = "";
 
             if (endpointConfiguration.isKeepSoapEnvelope()) {
-                webServiceMessage.writeTo(payloadResult.getOutputStream());
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                webServiceMessage.writeTo(bos);
+                payload = bos.toString();
             } else if (webServiceMessage.getPayloadSource() != null) {
+                StringResult payloadResult = new StringResult();
+
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.transform(webServiceMessage.getPayloadSource(), payloadResult);
+
+                payload = payloadResult.toString();
             }
 
-            SoapMessage message = new SoapMessage(payloadResult.toString());
+            SoapMessage message = new SoapMessage(payload);
 
             handleInboundMessageProperties(messageContext, message);
 

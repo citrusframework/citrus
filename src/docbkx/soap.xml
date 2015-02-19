@@ -111,11 +111,11 @@
         with the Spring Web Service API in order to accept SOAP request calls asa server. See how the Citrus SOAP server is configured in the Spring configuration.</para>
         
         <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
-             port=&quot;8091&quot; 
+             port=&quot;8080&quot;
              auto-start=&quot;true&quot;
              resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
         
-        <para>The server component is able to start automatically when application starts up. In the example above the server is listening for requests on port <literal>8091</literal>. This setup uses the standard
+        <para>The server component is able to start automatically when application starts up. In the example above the server is listening for requests on port <literal>8080</literal>. This setup uses the standard
         connector configuration for the Jetty server. For detailed customization the Citrus Jetty server configuration also supports explicit connector configurations (@connector and @connectors attributes).
         For more information please see the Jetty connector documentation.</para>
 
@@ -223,11 +223,13 @@
 
         <programlisting>&lt;receive endpoint=&quot;soapMessageEndpoint&quot;&gt;
     &lt;message&gt;
-        &lt;data&gt;&lt;![CDATA[
-                &lt;ResponseMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;
-                  &lt;resultCode&gt;OK&lt;/resultCode&gt;
-                &lt;/ResponseMessage&gt;
-        ]]&gt;&lt;/data&gt;
+        &lt;data&gt;
+          &lt;![CDATA[
+            &lt;ResponseMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;
+              &lt;resultCode&gt;OK&lt;/resultCode&gt;
+            &lt;/ResponseMessage&gt;
+          ]]&gt;
+        &lt;/data&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;data&gt;
@@ -261,7 +263,7 @@
       have enable this in our SOAP server configuration.</para>
 
       <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
-        port=&quot;8091&quot;
+        port=&quot;8080&quot;
         auto-start=&quot;true&quot;
         handle-mime-headers=&quot;true&quot;
         resource-base=&quot;src/citrus/resources&quot;/&gt;</programlisting>
@@ -274,13 +276,12 @@
             &lt;SoapMessageRequest xmlns=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
                 &lt;Operation&gt;Validate mime headers&lt;/Operation&gt;
             &lt;/SoapMessageRequest&gt;
-        &lt;/data&gt;
+        &lt;/payload&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;Content-Type&quot; value=&quot;text/xml; charset=utf-8&quot;/&gt;
     &lt;/header&gt;
-&lt;/ws:receive&gt;
-      </programlisting>
+&lt;/ws:receive&gt;</programlisting>
 
       <para>The validation of these HTTP mime headers is as usual now that we have enabled the mime header handling in the SOAP server. The transport HTTP headers are available in the header
       just like the normal SOAP header elements do. So you can validate the headers as usual.</para>
@@ -299,6 +300,39 @@
 
       <para>The listing above defines a HTTP mime header <emphasis>operation</emphasis>. The header prefix <literal>citrus_http_</literal> is cut off before the header goes into the HTTP
       header section. With this feature we can decide where exactly our header information is located in our resulting client message.</para>
+    </section>
+
+    <section id="soap-keep-envelope">
+      <title>SOAP Envelope handling</title>
+
+      <para>By default Citrus will remove the SOAP envelope in message converter. Following from that the Citrus test case is independent from SOAP message formats and is not bothered with handling of SOAP
+      envelope at all. This is great in most cases but sometimes it might be mandatory to also see the whole SOAP envelope inside the test case receive action. Therefore you can keep the SOAP envelope for incoming
+      messages by configuration on the SOAP server side.</para>
+
+      <programlisting>&lt;citrus-ws:server id=&quot;helloSoapServer&quot;
+        port=&quot;8080&quot;
+        auto-start=&quot;true&quot;
+        keep-soap-envelope=&quot;true&quot;/&gt;</programlisting>
+
+      <para>With this configuration Citrus will handle all available mime headers and pass those to the test case for normal header validation.</para>
+
+      <programlisting>&lt;ws:receive endpoint=&quot;helloSoapServer&quot;&gt;
+&lt;message&gt;
+  &lt;payload&gt;
+    &lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+      &lt;SOAP-ENV:Header/&gt;
+      &lt;SOAP-ENV:Body&gt;
+        &lt;SoapMessageRequest xmlns=&quot;http://www.consol.de/schemas/sample.xsd&quot;&gt;
+        &lt;Operation&gt;Validate mime headers&lt;/Operation&gt;
+        &lt;/SoapMessageRequest&gt;
+      &lt;/SOAP-ENV:Body&gt;
+    &lt;/SOAP-ENV:Envelope&gt;
+  &lt;/payload&gt;
+  &lt;/message&gt;
+&lt;/ws:receive&gt;</programlisting>
+
+      <para>So now you are able to validate the whole SOAP envelope as is. This might be of interest in very special cases. As mentioned by default the Citrus server will automatically remove the SOAP envelope and
+      translate the SOAP body to the message payload for straight forward validation inside the test cases.</para>
     </section>
 
     <section id="soap-12">
@@ -982,7 +1016,7 @@ Server: Jetty(7.0.0.pre5)
         authenticate properly when accessing the server resource.</para>
 
         <programlisting>&lt;citrus-ws:server id=&quot;simpleSoapServer&quot;
-             port=&quot;8091&quot;
+             port=&quot;8080&quot;
              auto-start=&quot;true&quot;
              resource-base=&quot;src/citrus/resources&quot;
              security-handler=&quot;basicSecurityHandler&quot;/&gt;
