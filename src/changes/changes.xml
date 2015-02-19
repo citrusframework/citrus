@@ -44,6 +44,9 @@
           CITRUS-235 SOAP 1.2 server support missing
         </action>
         <action dev="christophd" type="fix">
+          CITRUS-208 Namespaces lost in SOAP envelope
+        </action>
+        <action dev="christophd" type="fix">
           CITRUS-206 Mail message payload namespace
         </action>
         <action dev="christophd" type="fix">
