@@ -11,6 +11,13 @@
     this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See <xref linkend="soap-attachment-mtom"/> for details.</para>
   </section>
 
+  <section id="new-2-0-soap-keep-envelope">
+    <title>SOAP envelope handling</title>
+
+    <para>In its default behavior Citrus will remove the SOAP envelope for incoming SOAP requests just providing the SOAP body as message payload. This is more straight forward in a test case to perform further validation steps. However it might be mandatory to see the whole SOAP envelope
+      inside the test case for special validation. As a user you can now choose how to handle incoming SOAP envelope by definig the <emphasis>keep-soap-envelope</emphasis> setting on the Citrus SOAP server components. See <xref linkend="soap-keep-envelope"/> for details.</para>
+  </section>
+
   <section id="new-2-0-soap-1-2">
     <title>SOAP 1.2 message factory</title>
 
