@@ -35,7 +35,7 @@ import org.springframework.util.*;
 import org.testng.*;
 import org.testng.annotations.*;
 
-import java.io.IOException;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -133,15 +133,17 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             String[] testPackages = citrusTestAnnotation.packageScan();
             for (String packageName : testPackages) {
                 try {
-                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
+                    Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', File.separatorChar) + "/**/*Test.xml");
 
                     for (Resource fileResource : fileResources) {
                         String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
-                        filePath = filePath.substring(filePath.indexOf(packageName.replace('.', '/')));
+                        filePath = filePath.substring(filePath.indexOf(packageName.replace('.', File.separatorChar)));
 
                         methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
                     }
-                } catch (IOException e) {
+                } catch (RuntimeException e) {
+                    throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
+                } catch (Exception e) {
                     throw new CitrusRuntimeException("Unable to locate file resources for test package '" + packageName + "'", e);
                 }
             }
