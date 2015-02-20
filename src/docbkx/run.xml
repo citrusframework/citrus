@@ -32,9 +32,8 @@
     
     <para>Users might already know one of these frameworks and the chances are good that they are familiar with at least one of them. 
     Everything you can do with JUnit and TestNG test cases you can do with Citrus tests also. Include them into your Maven build 
-    lifecycle. Execute tests from your IDE (Eclipse, IDEA or NetBeans). Include them into a continuous build tool (e.g. Jenkins,
-    Bamboo or Hudson). Generate test execution reports and test coverage reports with Sonar, Cobertura and so on. The possibilities with JUnit and TestNG are 
-    amazing.</para>
+    lifecycle. Execute tests from your IDE (Eclipse, IDEA or NetBeans). Include them into a continuous build tool (e.g. Jenkins).
+    Generate test execution reports and test coverage reports with Sonar, Cobertura and so on. The possibilities with JUnit and TestNG are amazing.</para>
 
     <para>So let us have a closer look at the Citrus TestNG and JUnit integration.</para>
     

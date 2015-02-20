@@ -55,9 +55,9 @@ CITRUS TEST RESULTS
         reports. JUnit test reports are very popular and find support in many build management and development tools. 
         In general the Citrus test reports give you an overall picture of all tests and tell you which of them were failing.</para>
         
-        <para>Build management tools like Hudson, Bamboo or CruiseControl can easily import and display the generated JUnit 
+        <para>Build management tools like Jenkins can easily import and display the generated JUnit
         XML results. Please have a look at the TestNG and JUnit documentation for more information about this topic as well 
-        as the build management tools (Hudson, Bamboo, CruiseControl, etc.) to find out how to integrate the tests results.</para>
+        as the build management tools (e.g. Jenkins) to find out how to integrate the tests results.</para>
     </section>
     
     <section id="reporting-html">
