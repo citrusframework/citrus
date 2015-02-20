@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * is usually defined in endpoint configuration.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
 

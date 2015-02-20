@@ -20,7 +20,7 @@ package com.consol.citrus.message.correlation;
  * Interface defines add and remove object methods for storing data.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public interface ObjectStore<T> {
 

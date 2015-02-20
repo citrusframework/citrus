@@ -20,7 +20,7 @@ package com.consol.citrus.endpoint;
  * Extends endpoint configuration by adding polling interval settings.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public interface PollableEndpointConfiguration extends EndpointConfiguration {
 

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Default object store implementation works on simple in memory hash map.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public class DefaultObjectStore<T> extends ConcurrentHashMap<String, T> implements ObjectStore<T> {
 

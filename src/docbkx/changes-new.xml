@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="changes-new">
-  <title>What's new in Citrus 2.0.1?!</title>
+  <title>What's new in Citrus 2.1?!</title>
 
-  <para>Citrus 2.0.1 is a bugfix release with some enhancements in Citrus feature set. See the following overview on what has changed.</para>
+  <para>Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes and improvements. See the following overview on what has changed.</para>
 
   <section id="new-2-0-soap-mtom">
     <title>SOAP MTOM support</title>

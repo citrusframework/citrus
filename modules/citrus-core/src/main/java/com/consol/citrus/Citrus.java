@@ -37,7 +37,7 @@ import java.util.Properties;
  * and test execution methods.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public final class Citrus {
 

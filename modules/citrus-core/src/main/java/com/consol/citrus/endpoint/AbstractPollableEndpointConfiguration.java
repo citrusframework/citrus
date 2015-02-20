@@ -20,7 +20,7 @@ package com.consol.citrus.endpoint;
  * Abstract pollable endpoint configuration adds polling interval settings.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public class AbstractPollableEndpointConfiguration extends AbstractEndpointConfiguration implements PollableEndpointConfiguration {
 

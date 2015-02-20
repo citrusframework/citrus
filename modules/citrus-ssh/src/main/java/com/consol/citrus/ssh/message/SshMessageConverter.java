@@ -26,7 +26,7 @@ import javax.xml.transform.Source;
 
 /**
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public class SshMessageConverter implements MessageConverter<SshMessage, SshEndpointConfiguration> {
 

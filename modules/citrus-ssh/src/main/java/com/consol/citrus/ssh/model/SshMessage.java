@@ -18,7 +18,7 @@ package com.consol.citrus.ssh.model;
 
 /**
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public interface SshMessage {
 }

@@ -1,5 +1,5 @@
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-1.4.xsd=com/consol/citrus/schema/citrus-vertx-config-1.4.xsd
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-1.4.1.xsd=com/consol/citrus/schema/citrus-vertx-config-1.4.1.xsd
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-2.0.xsd=com/consol/citrus/schema/citrus-vertx-config-2.0.xsd
-http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-2.0.1.xsd=com/consol/citrus/schema/citrus-vertx-config-2.0.1.xsd
+http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config-2.1.xsd=com/consol/citrus/schema/citrus-vertx-config-2.1.xsd
 http\://www.citrusframework.org/schema/vertx/config/citrus-vertx-config.xsd=com/consol/citrus/schema/citrus-vertx-config.xsd

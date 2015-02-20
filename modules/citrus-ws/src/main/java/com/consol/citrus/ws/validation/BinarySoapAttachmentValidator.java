@@ -29,7 +29,7 @@ import java.io.IOException;
  * Soap attachment validator performs binary content validation by comparing attachment content binary input streams.
  *
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public class BinarySoapAttachmentValidator extends AbstractSoapAttachmentValidator {
 

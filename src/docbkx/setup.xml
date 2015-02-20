@@ -79,7 +79,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
                 <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.1&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</programlisting>
             </listitem>
@@ -89,7 +89,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
                 <programlisting>&lt;plugin&gt;
   &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;2.0.1&lt;/version&gt;
+  &lt;version&gt;2.1&lt;/version&gt;
   &lt;configuration&gt;
     &lt;author&gt;Donald Duck&lt;/author&gt;
     &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
@@ -245,7 +245,7 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
     &lt;/fileset&gt;
   &lt;/path&gt;
   
-  &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-2.0.1.jar&quot;/&gt;
+  &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-2.1.jar&quot;/&gt;
   
   &lt;target name=&quot;compile.tests&quot;>
     &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;

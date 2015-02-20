@@ -21,7 +21,7 @@ import com.consol.citrus.admin.model.TestReport;
 
 /**
  * @author Christoph Deppisch
- * @since 2.0.1
+ * @since 2.1
  */
 public interface TestReportService {
 
