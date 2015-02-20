@@ -194,8 +194,8 @@
                                 <![CDATA[
                                     <image:addImage xmlns:image="http://www.citrusframework.org/imageService/">
                                         <isbn>1234</isbn>
-                                        <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQpWYXJpYWJsZXMgJXt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
-                                        <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E74210A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
+                                        <image>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50ISBWYXJpYWJsZXMgJHt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==</image>
+                                        <icon>5468697320697320612062696E6172792069636F6E206174746163686D656E7421205661726961626C657320247B746573747D2073686F756C64206E6F74206265207265706C6163656421</icon>
                                     </image:addImage>
                                 ]]>
                             </data>
