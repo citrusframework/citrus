@@ -825,7 +825,6 @@
       </plugins>
     </pluginManagement>
     
-    <!-- Does not work with Maven2 on continuous build
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -833,7 +832,6 @@
         <version>2.7</version>
       </extension>
     </extensions>
-     -->
   </build>
 
   <repositories>
@@ -1180,7 +1178,7 @@
                 </goals>
               </execution>
               <execution>
-                <id>copy-citrus-ssh-schemas</id>
+                <id>copy-citrus-ssh-message-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${project.build.directory}/site/schema/ssh/message</outputDirectory>
@@ -1216,7 +1214,7 @@
                 </goals>
               </execution>
               <execution>
-                <id>copy-citrus-mail-schemas</id>
+                <id>copy-citrus-mail-message-schemas</id>
                 <phase>post-site</phase>
                 <configuration>
                   <outputDirectory>${project.build.directory}/site/schema/mail/message</outputDirectory>
