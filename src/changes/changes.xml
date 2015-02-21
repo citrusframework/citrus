@@ -15,7 +15,11 @@
   </properties>
   
   <body>
-    <release version="2.1" date="15.02.2015" description="2.1 release">
+    <release version="2.2" date="01.05.2015" description="2.2 release">
+
+    </release>
+
+    <release version="2.1" date="20.02.2015" description="2.1 release">
         <action dev="christophd" type="update">
           CITRUS-244 Keep SOAP envelope for incoming requests
         </action>
