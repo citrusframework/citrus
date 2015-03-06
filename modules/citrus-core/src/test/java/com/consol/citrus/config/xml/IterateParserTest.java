@@ -35,21 +35,21 @@ public class IterateParserTest extends AbstractActionParserTest<Iterate> {
         Iterate action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i lt 3");
         Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getIndex(), 1);
+        Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getStep(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "index lt= 2");
         Assert.assertEquals(action.getIndexName(), "index");
-        Assert.assertEquals(action.getIndex(), 1);
+        Assert.assertEquals(action.getStart(), 1);
         Assert.assertEquals(action.getStep(), 1);
         Assert.assertEquals(action.getActionCount(), 1);
         
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getCondition(), "i lt= 10");
         Assert.assertEquals(action.getIndexName(), "i");
-        Assert.assertEquals(action.getIndex(), 0);
+        Assert.assertEquals(action.getStart(), 0);
         Assert.assertEquals(action.getStep(), 5);
         Assert.assertEquals(action.getActionCount(), 2);
     }

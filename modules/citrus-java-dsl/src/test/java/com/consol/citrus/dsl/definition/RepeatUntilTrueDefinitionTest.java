@@ -45,7 +45,7 @@ public class RepeatUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
         RepeatUntilTrue container = (RepeatUntilTrue)builder.testCase().getActions().get(0);
         assertEquals(container.getActions().size(), 3);
         assertEquals(container.getCondition(), "i lt 5");
-        assertEquals(container.getIndex(), 2);
+        assertEquals(container.getStart(), 2);
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }

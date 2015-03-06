@@ -58,7 +58,7 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionDefinition<R
      * @return
      */
 	public RepeatOnErrorUntilTrueDefinition startsWith(int index) {
-		action.setIndex(index);
+		action.setStart(index);
 		return this;
 	}
 	

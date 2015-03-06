@@ -51,7 +51,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         assertEquals(container.getActions().size(), 3);
         assertEquals(container.getAutoSleep(), Long.valueOf(2000L));
         assertEquals(container.getCondition(), "i gt 5");
-        assertEquals(container.getIndex(), 1);
+        assertEquals(container.getStart(), 1);
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
 
@@ -59,7 +59,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getAutoSleep(), Long.valueOf(200L));
         assertEquals(container.getCondition(), "k gt= 5");
-        assertEquals(container.getIndex(), 2);
+        assertEquals(container.getStart(), 2);
         assertEquals(container.getIndexName(), "k");
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }

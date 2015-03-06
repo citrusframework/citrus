@@ -100,7 +100,7 @@ public class IterateTest extends AbstractTestNGUnitTest {
         iterate.setCondition("i lt= 10");
         iterate.setIndexName("i");
         iterate.setStep(2);
-        iterate.setIndex(2);
+        iterate.setStart(2);
         
         iterate.execute(context);
         

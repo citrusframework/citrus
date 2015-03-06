@@ -45,7 +45,7 @@ public class RepeatUntilTrueDefinition extends AbstractActionDefinition<RepeatUn
      * @param index the index to set
      */
 	public RepeatUntilTrueDefinition startsWith(int index) {
-		action.setIndex(index);
+		action.setStart(index);
 		return this;
 	}
 	

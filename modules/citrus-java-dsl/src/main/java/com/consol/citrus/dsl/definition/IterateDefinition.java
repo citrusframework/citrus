@@ -58,7 +58,7 @@ public class IterateDefinition extends AbstractActionDefinition<Iterate> {
      * @return
      */
     public IterateDefinition startsWith(int index) {
-        action.setIndex(index);
+        action.setStart(index);
         return this;
     }
     

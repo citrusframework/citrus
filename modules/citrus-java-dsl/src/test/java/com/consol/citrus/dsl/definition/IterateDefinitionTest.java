@@ -51,7 +51,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getCondition(), "i lt 5");
         assertEquals(container.getStep(), 1);
-        assertEquals(container.getIndex(), 0);
+        assertEquals(container.getStart(), 0);
     }
 
     @Test
@@ -88,6 +88,6 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getCondition(), "i lt 5");
         assertEquals(container.getStep(), 1);
-        assertEquals(container.getIndex(), 0);
+        assertEquals(container.getStart(), 0);
     }
 }
