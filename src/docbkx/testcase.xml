@@ -87,7 +87,7 @@
         &lt;/variables&gt;
         &lt;actions&gt;
             &lt;echo&gt;
-                &lt;message&gt;${test}&lt;/message&gt;
+                &lt;message&gt;${text}&lt;/message&gt;
             &lt;/echo&gt;
         &lt;/actions&gt;
     &lt;/testcase&gt;
@@ -121,7 +121,7 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
     
         variable("text", "Hello Test Framework");
     
-        echo("${test}");
+        echo("${text}");
     }
 }</programlisting>
     
