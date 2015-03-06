@@ -31,10 +31,14 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
     protected String indexName = "i";
 
     /** Looping index */
-    protected int index = 1;
+    protected int index;
+
+    /** Cache start index for further container executions - e.g. in loop */
+    protected int start = 1;
 	
     @Override
-    public void doExecute(TestContext context) {
+    public final void doExecute(TestContext context) {
+        index = start;
         executeIteration(context);
     }
     
@@ -97,6 +101,14 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
     }
 
     /**
+     * Setter for index start.
+     * @param start the start index value.
+     */
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    /**
      * Gets the condition.
      * @return the condition
      */
@@ -118,5 +130,13 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      */
     public int getIndex() {
         return index;
+    }
+
+    /**
+     * Gets the start index.
+     * @return
+     */
+    public int getStart() {
+        return start;
     }
 }

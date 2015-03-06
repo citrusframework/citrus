@@ -57,6 +57,14 @@
 					<message>index is: ${i}</message>
 				</echo>
 			</iterate>
+
+			<iterate condition="i lt= 60" index="i" start="10" step="10">
+				<iterate condition="k lt= 6" index="k" start="0" step="2">
+					<echo>
+						<message>index is: ${i}, ${k}</message>
+					</echo>
+				</iterate>
+			</iterate>
     </actions>
   </testcase>
 </spring:beans>

@@ -39,7 +39,7 @@ public class IterateParser extends AbstractIterationTestActionParser {
         
         String start = element.getAttribute("start");
         if (StringUtils.hasText(start)) {
-            builder.addPropertyValue("index", Integer.valueOf(start));
+            builder.addPropertyValue("start", Integer.valueOf(start));
         }
         
         String step = element.getAttribute("step");
