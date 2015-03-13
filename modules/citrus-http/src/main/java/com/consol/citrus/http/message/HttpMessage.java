@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.message;
 
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.springframework.http.HttpMethod;
@@ -111,10 +112,31 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets the Http request query params.
-     * @param queryParams
+     * @param queryParamString
      */
-    public HttpMessage queryParams(String queryParams) {
-        setHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
+    public HttpMessage queryParams(String queryParamString) {
+        header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
+        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
+        return this;
+    }
+
+    /**
+     * Sets a new Http request query param.
+     * @param name
+     * @param value
+     */
+    public HttpMessage queryParam(String name, String value) {
+        String queryParams;
+        if (getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS) != null) {
+            queryParams = getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS).toString();
+            queryParams += "," + name + "=" + value;
+        } else {
+            queryParams = name + "=" + value;
+        }
+
+        header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
+        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParams);
+
         return this;
     }
 

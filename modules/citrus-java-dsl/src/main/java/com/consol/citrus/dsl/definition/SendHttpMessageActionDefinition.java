@@ -21,7 +21,6 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.util.StringUtils;
 
 /**
  * Special method for HTTP senders. This definition is used to set the Citrus special headers with special
@@ -88,12 +87,9 @@ public class SendHttpMessageActionDefinition extends SendMessageActionDefinition
      * @return
      */
     public SendHttpMessageActionDefinition queryParam(String name, String value) {
-        String queryParams = null;
+        String queryParams;
         if (getMessageContentBuilder().getMessageHeaders().containsKey(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME)) {
             queryParams = getMessageContentBuilder().getMessageHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME).toString();
-        }
-
-        if (StringUtils.hasText(queryParams)) {
             queryParams += "," + name + "=" + value;
         } else {
             queryParams = name + "=" + value;

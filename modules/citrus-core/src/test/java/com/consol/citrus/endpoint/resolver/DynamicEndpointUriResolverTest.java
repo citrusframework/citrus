@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -40,12 +41,20 @@ public class DynamicEndpointUriResolverTest {
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), "http://localhost:8080/request");
     }
 
-    @Test
-    public void testEndpointMappingWithPath() {
+    @Test(dataProvider = "endpointPathProvider")
+    public void testEndpointMappingWithPath(String endpointUri, String requestPath, String expected) {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message testMessage;
-        String[][] tests = new String[][] {
+        Message testMessage = createTestMessage()
+                    .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, endpointUri)
+                    .setHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, requestPath);
+
+        Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), expected);
+    }
+
+    @DataProvider
+    public Object[][] endpointPathProvider() {
+        return new String[][] {
                 { "http://localhost:8080/request", "/test", "http://localhost:8080/request/test" },
                 { "http://localhost:8080/request/", "/test", "http://localhost:8080/request/test" },
                 { "http://localhost:8080/request", "test", "http://localhost:8080/request/test"},
@@ -53,36 +62,28 @@ public class DynamicEndpointUriResolverTest {
                 { "http://localhost:8080/request/", "////test", "http://localhost:8080/request/test"},
                 { "http://localhost:8080/request", "test/", "http://localhost:8080/request/test/"},
         };
-
-        for (String[] test : tests) {
-            testMessage = createTestMessage()
-                    .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, test[0])
-                    .setHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, test[1]);
-
-            Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), test[2]);
-        }
     }
 
-    @Test
-    public void testEndpointMappingWithQueryParams() {
+    @Test(dataProvider = "queryParamDataProvider")
+    public void testEndpointMappingWithQueryParams(String endpointUri, String queryParamString, String expected) {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
-        Message testMessage;
-        String[][] tests = new String[][] {
+        Message testMessage = createTestMessage()
+                    .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, endpointUri)
+                    .setHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
+
+        Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), expected);
+    }
+
+    @DataProvider
+    public Object[][] queryParamDataProvider() {
+        return new String[][] {
                 { "http://localhost:8080/request", "param1=value1", "http://localhost:8080/request?param1=value1" },
                 { "http://localhost:8080/request", "", "http://localhost:8080/request" },
                 { "http://localhost:8080/request/", "param1=", "http://localhost:8080/request?param1=" },
                 { "http://localhost:8080/request/", "param1=value1,param2=value2,param3=value3", "http://localhost:8080/request?param1=value1&param2=value2&param3=value3" },
                 { "http://localhost:8080/request////", "param1=value1", "http://localhost:8080/request?param1=value1"},
         };
-
-        for (String[] test : tests) {
-            testMessage = createTestMessage()
-                    .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, test[0])
-                    .setHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, test[1]);
-
-            Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), test[2]);
-        }
     }
 
     @Test

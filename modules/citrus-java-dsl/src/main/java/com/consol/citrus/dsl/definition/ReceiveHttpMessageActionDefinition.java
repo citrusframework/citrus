@@ -112,7 +112,7 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
         }
 
         if (StringUtils.hasText(queryParams)) {
-            queryParams += "&" + name + "=" + value;
+            queryParams += "," + name + "=" + value;
         } else {
             queryParams = name + "=" + value;
         }

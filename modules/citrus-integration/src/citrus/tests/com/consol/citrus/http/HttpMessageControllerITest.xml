@@ -124,7 +124,7 @@
                             <element name="citrus_http_method" value="GET"/>
                             <element name="citrus_http_request_uri" value="/test/user"/>
                             <element name="citrus_http_context_path" value=""/>
-                            <element name="citrus_http_query_params" value="id=${id}&amp;name=TestUser"/>
+                            <element name="citrus_http_query_params" value="id=${id},name=TestUser"/>
                         </header>
                     </receive>
                 </sequential>

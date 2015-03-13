@@ -36,7 +36,7 @@ public class DynamicEndpointUriResolver implements EndpointUriResolver {
     /** Static header entry name specifying the dynamic endpoint uri */
     public static final String ENDPOINT_URI_HEADER_NAME = MessageHeaders.PREFIX + "endpoint_uri";
     public static final String REQUEST_PATH_HEADER_NAME = MessageHeaders.PREFIX + "request_path";
-    public static final String QUERY_PARAM_HEADER_NAME = MessageHeaders.PREFIX + "query_param";
+    public static final String QUERY_PARAM_HEADER_NAME = MessageHeaders.PREFIX + "query_params";
 
     /** Default fallback uri */
     private String defaultEndpointUri;

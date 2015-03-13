@@ -105,9 +105,15 @@ public class HttpMessageController {
 
         String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
 
+        if (queryParams == null) {
+            queryParams = "";
+        } else {
+            queryParams = queryParams.replaceAll("&", ",");
+        }
+
         request.uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
-                .queryParams(queryParams != null ? queryParams : "")
+                .queryParams(queryParams)
                 .method(method);
 
         Message response = endpointAdapter.handleMessage(request);
