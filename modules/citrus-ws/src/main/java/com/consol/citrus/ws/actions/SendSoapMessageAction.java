@@ -56,7 +56,7 @@ public class SendSoapMessageAction extends SendMessageAction {
     protected SoapMessage createMessage(TestContext context, String messageType) {
         Message message = super.createMessage(context, getMessageType());
 
-        SoapMessage soapMessage = new SoapMessage(message).setMtomEnabled(mtomEnabled);
+        SoapMessage soapMessage = new SoapMessage(message).mtomEnabled(mtomEnabled);
         try {
             for (SoapAttachment attachment : attachments) {
                 attachment.resolveDynamicContent(context);

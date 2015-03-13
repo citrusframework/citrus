@@ -79,15 +79,15 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
     public HttpMessage convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration) {
         Map<String, ?> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
         HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders))
-                .setVersion("HTTP/1.1"); //TODO check if we have access to version information
+                .version("HTTP/1.1"); //TODO check if we have access to version information
 
         for (Map.Entry<String, String> customHeader : getCustomHeaders(message.getHeaders(), mappedHeaders).entrySet()) {
             httpMessage.setHeader(customHeader.getKey(), customHeader.getValue());
         }
 
         if (message instanceof ResponseEntity) {
-            httpMessage.setStatusCode(((ResponseEntity) message).getStatusCode());
-            httpMessage.setReasonPhrase(((ResponseEntity) message).getStatusCode().name());
+            httpMessage.statusCode(((ResponseEntity) message).getStatusCode());
+            httpMessage.reasonPhrase(((ResponseEntity) message).getStatusCode().name());
         }
 
         return httpMessage;

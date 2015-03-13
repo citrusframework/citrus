@@ -66,6 +66,16 @@ public class SoapMessage extends DefaultMessage {
         super(payload, headers);
     }
 
+    /**
+     * Sets new header name value pair.
+     * @param headerName
+     * @param headerValue
+     * @return
+     */
+    public SoapMessage header(String headerName, Object headerValue) {
+        return (SoapMessage) super.setHeader(headerName, headerValue);
+    }
+
     @Override
     public SoapMessage setHeader(String headerName, Object headerValue) {
         return (SoapMessage) super.setHeader(headerName, headerValue);
@@ -80,8 +90,26 @@ public class SoapMessage extends DefaultMessage {
      * Set soap action for this message.
      * @param soapAction
      */
-    public SoapMessage setSoapAction(String soapAction) {
+    public SoapMessage soapAction(String soapAction) {
         setHeader(SoapMessageHeaders.SOAP_ACTION, soapAction);
+        return this;
+    }
+
+    /**
+     * Enable or disable mtom attachments
+     * @param mtomEnabled
+     */
+    public SoapMessage mtomEnabled(boolean mtomEnabled) {
+        this.mtomEnabled = mtomEnabled;
+        return this;
+    }
+
+    /**
+     * Adds new attachment to this message.
+     * @param attachment
+     */
+    public SoapMessage addAttachment(SoapAttachment attachment) {
+        this.attachments.add(attachment);
         return this;
     }
 
@@ -94,20 +122,6 @@ public class SoapMessage extends DefaultMessage {
     }
 
     /**
-     * Adds new attachment to this message.
-     * @param attachment
-     */
-    public SoapMessage addAttachment(SoapAttachment attachment) {
-        this.attachments.add(attachment);
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(super.toString() + "[attachments: %s]", attachments);
-    }
-
-    /**
      * Gets the list of message attachments.
      * @return
      */
@@ -116,19 +130,15 @@ public class SoapMessage extends DefaultMessage {
     }
     
     /**
-     * Enable or disable mtom attachments
-     * @param mtomEnabled
-     */
-    public SoapMessage setMtomEnabled(boolean mtomEnabled) {
-        this.mtomEnabled = mtomEnabled;
-        return this;
-    }
-
-    /**
      * Gets mtom attachments enabled
      * @return 
      */
     public boolean isMtomEnabled() {
         return this.mtomEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(super.toString() + "[attachments: %s]", attachments);
     }
 }

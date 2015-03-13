@@ -68,48 +68,70 @@ public class SoapFault extends SoapMessage {
         return QNameUtils.parseQNameString(faultCode);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-
-        QName faultCodeQName = getFaultCodeQName();
-        if (StringUtils.hasLength(faultCodeQName.getNamespaceURI()) && StringUtils.hasLength(faultCodeQName.getPrefix())) {
-            builder.append(decorate(DECORATION_PREFIX + faultCodeQName.getNamespaceURI() + DECORATION_SUFFIX + faultCodeQName.getPrefix() + ":" + faultCodeQName.getLocalPart()));
-        } else if (StringUtils.hasLength(faultCodeQName.getNamespaceURI())) {
-            builder.append(decorate(DECORATION_PREFIX + faultCodeQName.getNamespaceURI() + DECORATION_SUFFIX + faultCodeQName.getLocalPart()));
-        } else {
-            builder.append(decorate(faultCodeQName.getLocalPart()));
-        }
-
-        if (StringUtils.hasText(getFaultString())) {
-            builder.append(decorate(getFaultString()));
-
-            if (getLocale() != null) {
-                builder.append(decorate(getLocale().toString()));
-            }
-
-            if (faultActor != null) {
-                builder.append(decorate(faultActor));
-            }
-        }
-
-        return super.toString() + String.format("[fault: %s]", builder.toString());
+    /**
+     * Sets the fault code.
+     * @param faultCode
+     */
+    public SoapFault faultCode(String faultCode) {
+        this.faultCode = faultCode;
+        return this;
     }
 
     /**
-     * Adds token value decoration according to syntax.
-     * @return
+     * Sets the fault string or reason.
+     * @param faultString
      */
-    private static String decorate(String value) {
-        return DECORATION_PREFIX + value + DECORATION_SUFFIX;
+    public SoapFault faultString(String faultString) {
+        this.faultString = faultString;
+        return this;
     }
 
     /**
      * Sets the faultActor.
      * @param faultActor the faultActor to set
      */
-    public void setFaultActor(String faultActor) {
+    public SoapFault faultActor(String faultActor) {
         this.faultActor = faultActor;
+        return this;
+    }
+
+    /**
+     * Sets the faultDetails.
+     * @param faultDetails the faultDetails to set
+     */
+    public SoapFault faultDetails(List<String> faultDetails) {
+        this.faultDetails = faultDetails;
+        return this;
+    }
+
+    /**
+     * Adds a new fault detail in builder pattern style.
+     * @param faultDetail
+     * @return
+     */
+    public SoapFault addFaultDetail(String faultDetail) {
+        this.faultDetails.add(faultDetail);
+        return this;
+    }
+
+    /**
+     * Sets the locale used in SOAP fault.
+     * @param locale
+     */
+    public SoapFault locale(Locale locale) {
+        this.locale = locale;
+        return this;
+    }
+
+    /**
+     * Sets the locale used in SOAP fault.
+     * @param locale
+     */
+    public SoapFault locale(String locale) {
+        LocaleEditor localeEditor = new LocaleEditor();
+        localeEditor.setAsText(locale);
+        this.locale = (Locale) localeEditor.getValue();
+        return this;
     }
 
     /**
@@ -129,27 +151,11 @@ public class SoapFault extends SoapMessage {
     }
 
     /**
-     * Sets the fault code.
-     * @param faultCode
-     */
-    public void setFaultCode(String faultCode) {
-        this.faultCode = faultCode;
-    }
-
-    /**
      * Gets the faultString.
      * @return the faultString
      */
     public String getFaultString() {
         return faultString;
-    }
-
-    /**
-     * Sets the fault string or reason.
-     * @param faultString
-     */
-    public void setFaultString(String faultString) {
-        this.faultString = faultString;
     }
 
     /**
@@ -161,24 +167,6 @@ public class SoapFault extends SoapMessage {
     }
 
     /**
-     * Sets the faultDetails.
-     * @param faultDetails the faultDetails to set
-     */
-    public void setFaultDetails(List<String> faultDetails) {
-        this.faultDetails = faultDetails;
-    }
-
-    /**
-     * Adds a new fault detail in builder pattern style.
-     * @param faultDetail
-     * @return
-     */
-    public SoapFault addFaultDetail(String faultDetail) {
-        this.faultDetails.add(faultDetail);
-        return this;
-    }
-
-    /**
      * Gets the locale used in SOAP fault.
      * @return
      */
@@ -187,37 +175,19 @@ public class SoapFault extends SoapMessage {
     }
 
     /**
-     * Sets the locale used in SOAP fault.
-     * @param locale
-     */
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    /**
-     * Sets the locale used in SOAP fault.
-     * @param locale
-     */
-    public void setLocale(String locale) {
-        LocaleEditor localeEditor = new LocaleEditor();
-        localeEditor.setAsText(locale);
-        this.locale = (Locale) localeEditor.getValue();
-    }
-
-    /**
      * Builder method from Spring WS SOAP fault object.
      * @param fault
      * @return
      */
     public static SoapFault from(org.springframework.ws.soap.SoapFault fault) {
-        SoapFault soapFault = new SoapFault();
 
         QNameEditor qNameEditor = new QNameEditor();
         qNameEditor.setValue(fault.getFaultCode());
 
-        soapFault.setFaultCode(qNameEditor.getAsText());
-        soapFault.setFaultActor(fault.getFaultActorOrRole());
-        soapFault.setFaultString(fault.getFaultStringOrReason());
+        SoapFault soapFault = new SoapFault()
+            .faultCode(qNameEditor.getAsText())
+            .faultActor(fault.getFaultActorOrRole())
+            .faultString(fault.getFaultStringOrReason());
 
         if (fault.getFaultDetail() != null) {
             Iterator<SoapFaultDetailElement> details = fault.getFaultDetail().getDetailEntries();
@@ -252,5 +222,41 @@ public class SoapFault extends SoapMessage {
         }
 
         return detailResult.toString();
+    }
+
+    /**
+     * Adds token value decoration according to syntax.
+     * @return
+     */
+    private static String decorate(String value) {
+        return DECORATION_PREFIX + value + DECORATION_SUFFIX;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        QName faultCodeQName = getFaultCodeQName();
+        if (StringUtils.hasLength(faultCodeQName.getNamespaceURI()) && StringUtils.hasLength(faultCodeQName.getPrefix())) {
+            builder.append(decorate(decorate(faultCodeQName.getNamespaceURI()) + faultCodeQName.getPrefix() + ":" + faultCodeQName.getLocalPart()));
+        } else if (StringUtils.hasLength(faultCodeQName.getNamespaceURI())) {
+            builder.append(decorate(decorate(faultCodeQName.getNamespaceURI()) + faultCodeQName.getLocalPart()));
+        } else {
+            builder.append(decorate(faultCodeQName.getLocalPart()));
+        }
+
+        if (StringUtils.hasText(getFaultString())) {
+            builder.append(decorate(getFaultString()));
+
+            if (getLocale() != null) {
+                builder.append(decorate(getLocale().toString()));
+            }
+
+            if (faultActor != null) {
+                builder.append(decorate(faultActor));
+            }
+        }
+
+        return super.toString() + String.format("[fault: %s]", builder.toString());
     }
 }

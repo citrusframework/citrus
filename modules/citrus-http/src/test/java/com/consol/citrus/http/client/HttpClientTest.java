@@ -203,7 +203,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setRequestUrl(requestUrl);
 
         HttpMessage requestMessage = new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .setRequestMethod(HttpMethod.GET);
+                .method(HttpMethod.GET);
 
         endpointConfiguration.setRestTemplate(restTemplate);
 

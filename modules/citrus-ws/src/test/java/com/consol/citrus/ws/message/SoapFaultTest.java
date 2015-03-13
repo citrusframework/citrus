@@ -27,19 +27,19 @@ public class SoapFaultTest {
     @Test
     public void testToString() {
         SoapFault fault = new SoapFault();
-        fault.setFaultCode("TEC-1000");
+        fault.faultCode("TEC-1000");
         Assert.assertTrue(fault.toString().endsWith("[fault: {TEC-1000}]"));
 
-        fault.setFaultString("Internal server error");
+        fault.faultString("Internal server error");
         Assert.assertTrue(fault.toString().endsWith("[fault: {TEC-1000}{Internal server error}{en}]"));
 
-        fault.setFaultCode("{http://citrusframework.org}TEC-1000");
+        fault.faultCode("{http://citrusframework.org}TEC-1000");
         Assert.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{en}]"));
 
-        fault.setLocale("DE");
+        fault.locale("DE");
         Assert.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{de}]"));
 
-        fault.setFaultActor("Actor");
+        fault.faultActor("Actor");
         Assert.assertTrue(fault.toString().endsWith("[fault: {{http://citrusframework.org}TEC-1000}{Internal server error}{de}{Actor}]"));
     }
 }

@@ -53,11 +53,11 @@ public class JmsMessage extends DefaultMessage {
         super(payload, headers);
 
         if (!headers.containsKey(JmsMessageHeaders.MESSAGE_ID)) {
-            setJmsMessageId(getId());
+            messageId(getId());
         }
 
         if (!headers.containsKey(JmsMessageHeaders.TIMESTAMP)) {
-            setJmsTimestamp(getTimestamp());
+            timestamp(getTimestamp());
         }
     }
 
@@ -65,8 +65,53 @@ public class JmsMessage extends DefaultMessage {
      * Sets the JMS message id header.
      * @param messageId
      */
-    public JmsMessage setJmsMessageId(String messageId) {
+    public JmsMessage messageId(String messageId) {
         setHeader(JmsMessageHeaders.MESSAGE_ID, messageId);
+        return this;
+    }
+
+    /**
+     * Sets the JMS timestamp header.
+     * @param timestamp
+     */
+    public JmsMessage timestamp(Long timestamp) {
+        setHeader(JmsMessageHeaders.TIMESTAMP, timestamp);
+        return this;
+    }
+
+    /**
+     * Sets the JMS correlation id header.
+     * @param correlationId
+     */
+    public JmsMessage correlationId(String correlationId) {
+        setHeader(JmsMessageHeaders.CORRELATION_ID, correlationId);
+        return this;
+    }
+
+    /**
+     * Sets the JMS reply to header.
+     * @param replyTo
+     */
+    public JmsMessage replyTo(Destination replyTo) {
+        setHeader(JmsMessageHeaders.REPLY_TO, replyTo);
+        return this;
+    }
+
+    /**
+     * Sets the JMS redelivered header.
+     * @param redelivered
+     */
+    public JmsMessage redelivered(String redelivered) {
+        setHeader(JmsMessageHeaders.REDELIVERED, redelivered);
+        return this;
+    }
+
+    /**
+     * Sets the JMS type header.
+     * @param type
+     */
+    public JmsMessage type(String type) {
+        setHeader(JmsMessageHeaders.TYPE, type);
         return this;
     }
 
@@ -74,7 +119,7 @@ public class JmsMessage extends DefaultMessage {
      * Gets the JMS messageId header.
      * @return
      */
-    public String getJmsMessageId() {
+    public String getMessageId() {
         Object messageId = getHeader(JmsMessageHeaders.MESSAGE_ID);
 
         if (messageId != null) {
@@ -85,19 +130,10 @@ public class JmsMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the JMS timestamp header.
-     * @param timestamp
-     */
-    public JmsMessage setJmsTimestamp(Long timestamp) {
-        setHeader(JmsMessageHeaders.TIMESTAMP, timestamp);
-        return this;
-    }
-
-    /**
      * Gets the JMS timestamp header.
      * @return
      */
-    public Long getJmsTimestamp() {
+    public Long getTimestamp() {
         Object timestamp = getHeader(JmsMessageHeaders.TIMESTAMP);
 
         if (timestamp != null) {
@@ -105,15 +141,6 @@ public class JmsMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the JMS correlation id header.
-     * @param correlationId
-     */
-    public JmsMessage setCorrelationId(String correlationId) {
-        setHeader(JmsMessageHeaders.CORRELATION_ID, correlationId);
-        return this;
     }
 
     /**
@@ -131,15 +158,6 @@ public class JmsMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the JMS reply to header.
-     * @param replyTo
-     */
-    public JmsMessage setReplyTo(Destination replyTo) {
-        setHeader(JmsMessageHeaders.REPLY_TO, replyTo);
-        return this;
-    }
-
-    /**
      * Gets the JMS reply to header.
      * @return
      */
@@ -154,15 +172,6 @@ public class JmsMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the JMS redelivered header.
-     * @param redelivered
-     */
-    public JmsMessage setRedelivered(String redelivered) {
-        setHeader(JmsMessageHeaders.REDELIVERED, redelivered);
-        return this;
-    }
-
-    /**
      * Gets the JMS redelivered header.
      * @return
      */
@@ -174,15 +183,6 @@ public class JmsMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the JMS type header.
-     * @param type
-     */
-    public JmsMessage setType(String type) {
-        setHeader(JmsMessageHeaders.TYPE, type);
-        return this;
     }
 
     /**

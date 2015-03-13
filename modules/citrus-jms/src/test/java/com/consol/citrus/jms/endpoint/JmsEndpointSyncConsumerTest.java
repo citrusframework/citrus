@@ -150,7 +150,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination), context);
+        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").replyTo(replyDestination), context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer);
@@ -180,7 +180,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").setReplyTo(replyDestination), context);
+        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").replyTo(replyDestination), context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -195,7 +195,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         JmsMessage requestMessage = new JmsMessage("")
-                .setReplyTo(replyDestination);
+                .replyTo(replyDestination);
 
         ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(requestMessage.getId(), endpoint.createConsumer(), context);
 

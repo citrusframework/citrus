@@ -58,7 +58,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         if (!StringUtils.hasText(faultCode)) {
             throw new CitrusRuntimeException("Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
         }
-        soapFault.setFaultCode(context.replaceDynamicContentInString(faultCode));
+        soapFault.faultCode(context.replaceDynamicContentInString(faultCode));
 
         for (Map.Entry<String, Object> header : soapMessage.copyHeaders().entrySet()) {
             if (!header.getKey().equals(MessageHeaders.ID)) {
@@ -75,11 +75,11 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         }
 
         if (StringUtils.hasText(faultActor)) {
-            soapFault.setFaultActor(context.replaceDynamicContentInString(faultActor));
+            soapFault.faultActor(context.replaceDynamicContentInString(faultActor));
         }
 
         if (faultString != null) {
-            soapFault.setFaultString(context.replaceDynamicContentInString(faultString));
+            soapFault.faultString(context.replaceDynamicContentInString(faultString));
         }
 
         for (String faultDetail : faultDetails) {

@@ -58,9 +58,78 @@ public class HttpMessage extends DefaultMessage {
      * Sets the Http request method.
      * @param method
      */
-    public HttpMessage setRequestMethod(HttpMethod method) {
+    public HttpMessage method(HttpMethod method) {
         setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
         return this;
+    }
+
+    /**
+     * Sets the Http version.
+     * @param version
+     */
+    public HttpMessage version(String version) {
+        setHeader(HttpMessageHeaders.HTTP_VERSION, version);
+        return this;
+    }
+
+    /**
+     * Sets the Http response status code.
+     * @param statusCode
+     */
+    public HttpMessage statusCode(HttpStatus statusCode) {
+        setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, Integer.valueOf(statusCode.value()));
+        reasonPhrase(statusCode.getReasonPhrase());
+        return this;
+    }
+
+    /**
+     * Sets the Http response reason phrase.
+     * @param reasonPhrase
+     */
+    public HttpMessage reasonPhrase(String reasonPhrase) {
+        setHeader(HttpMessageHeaders.HTTP_REASON_PHRASE, reasonPhrase);
+        return this;
+    }
+
+    /**
+     * Sets the Http request request uri.
+     * @param requestUri
+     */
+    public HttpMessage uri(String requestUri) {
+        setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, requestUri);
+        return this;
+    }
+
+    /**
+     * Sets the Http request context path.
+     * @param contextPath
+     */
+    public HttpMessage contextPath(String contextPath) {
+        setHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
+        return this;
+    }
+
+    /**
+     * Sets the Http request query params.
+     * @param queryParams
+     */
+    public HttpMessage queryParams(String queryParams) {
+        setHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
+        return this;
+    }
+
+    /**
+     * Sets new header name value pair.
+     * @param headerName
+     * @param headerValue
+     */
+    public HttpMessage header(String headerName, Object headerValue) {
+        return (HttpMessage) super.setHeader(headerName, headerValue);
+    }
+
+    @Override
+    public HttpMessage setHeader(String headerName, Object headerValue) {
+        return (HttpMessage) super.setHeader(headerName, headerValue);
     }
 
     /**
@@ -78,19 +147,10 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http request request uri.
-     * @param requestUri
-     */
-    public HttpMessage setRequestUri(String requestUri) {
-        setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, requestUri);
-        return this;
-    }
-
-    /**
      * Gets the Http request request uri.
      * @return
      */
-    public String getRequestUri() {
+    public String getUri() {
         Object requestUri = getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
 
         if (requestUri != null) {
@@ -98,15 +158,6 @@ public class HttpMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the Http request context path.
-     * @param contextPath
-     */
-    public HttpMessage setContextPath(String contextPath) {
-        setHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
-        return this;
     }
 
     /**
@@ -124,15 +175,6 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http request query params.
-     * @param queryParams
-     */
-    public HttpMessage setQueryParams(String queryParams) {
-        setHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
-        return this;
-    }
-
-    /**
      * Gets the Http request query params.
      * @return
      */
@@ -144,15 +186,6 @@ public class HttpMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the Http response status code.
-     * @param statusCode
-     */
-    public HttpMessage setStatusCode(HttpStatus statusCode) {
-        setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, Integer.valueOf(statusCode.value()));
-        return this;
     }
 
     /**
@@ -176,15 +209,6 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http response reason phrase.
-     * @param reasonPhrase
-     */
-    public HttpMessage setReasonPhrase(String reasonPhrase) {
-        setHeader(HttpMessageHeaders.HTTP_REASON_PHRASE, reasonPhrase);
-        return this;
-    }
-
-    /**
      * Gets the Http response reason phrase.
      * @return
      */
@@ -196,15 +220,6 @@ public class HttpMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the Http version.
-     * @param version
-     */
-    public HttpMessage setVersion(String version) {
-        setHeader(HttpMessageHeaders.HTTP_VERSION, version);
-        return this;
     }
 
     /**
@@ -221,8 +236,4 @@ public class HttpMessage extends DefaultMessage {
         return null;
     }
 
-    @Override
-    public HttpMessage setHeader(String headerName, Object headerValue) {
-        return (HttpMessage) super.setHeader(headerName, headerValue);
-    }
 }

@@ -117,11 +117,11 @@ public class AssertSoapFault extends AbstractActionContainer {
         SoapFault controlFault= new SoapFault();
 
         if (StringUtils.hasText(faultActor)) {
-            controlFault.setFaultActor(context.replaceDynamicContentInString(faultActor));
+            controlFault.faultActor(context.replaceDynamicContentInString(faultActor));
         }
 
-        controlFault.setFaultCode(context.replaceDynamicContentInString(faultCode));
-        controlFault.setFaultString(context.replaceDynamicContentInString(faultString));
+        controlFault.faultCode(context.replaceDynamicContentInString(faultCode));
+        controlFault.faultString(context.replaceDynamicContentInString(faultString));
 
         for (String faultDetail : faultDetails) {
             controlFault.addFaultDetail(context.replaceDynamicContentInString(faultDetail));

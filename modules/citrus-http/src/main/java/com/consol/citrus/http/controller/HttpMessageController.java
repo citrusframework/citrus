@@ -103,13 +103,12 @@ public class HttpMessageController {
         HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         UrlPathHelper pathHelper = new UrlPathHelper();
 
-        request.setRequestUri(pathHelper.getRequestUri(servletRequest));
-        request.setContextPath(pathHelper.getContextPath(servletRequest));
-
         String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
-        request.setQueryParams(queryParams != null ? queryParams : "");
 
-        request.setRequestMethod(method);
+        request.uri(pathHelper.getRequestUri(servletRequest))
+                .contextPath(pathHelper.getContextPath(servletRequest))
+                .queryParams(queryParams != null ? queryParams : "")
+                .method(method);
 
         Message response = endpointAdapter.handleMessage(request);
         if (response == null) {
@@ -123,7 +122,7 @@ public class HttpMessageController {
             }
 
             if (httpResponse.getStatusCode() == null) {
-                httpResponse.setStatusCode(HttpStatus.OK);
+                httpResponse.statusCode(HttpStatus.OK);
             }
 
             responseCache = (ResponseEntity) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration);

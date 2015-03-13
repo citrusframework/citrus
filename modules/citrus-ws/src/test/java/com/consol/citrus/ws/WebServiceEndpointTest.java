@@ -730,8 +730,8 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final SoapFault responseMessage = new SoapFault();
-        responseMessage.setFaultCode("SERVER");
-        responseMessage.setFaultString("Invalid request, because of unknown error");
+        responseMessage.faultCode("SERVER");
+        responseMessage.faultString("Invalid request, because of unknown error");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
@@ -801,8 +801,8 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final SoapFault responseMessage = new SoapFault();
-        responseMessage.setFaultCode("CLIENT");
-        responseMessage.setFaultString("Invalid request");
+        responseMessage.faultCode("CLIENT");
+        responseMessage.faultString("Invalid request");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
@@ -873,8 +873,8 @@ public class WebServiceEndpointTest {
 
         final SoapFault responseMessage = new SoapFault();
         responseMessage.setPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>");
-        responseMessage.setFaultCode("SERVER");
-        responseMessage.setFaultString("Invalid request");
+        responseMessage.faultCode("SERVER");
+        responseMessage.faultString("Invalid request");
         responseMessage.addFaultDetail("<DetailMessage><text>This request was not OK!</text></DetailMessage>");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
@@ -950,8 +950,8 @@ public class WebServiceEndpointTest {
 
         final SoapFault responseMessage = new SoapFault();
         responseMessage.setPayload("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResponseMessage><text>This request was not OK!</text></ResponseMessage>");
-        responseMessage.setFaultCode("SERVER");
-        responseMessage.setFaultString("Invalid request");
+        responseMessage.faultCode("SERVER");
+        responseMessage.faultString("Invalid request");
         responseMessage.addFaultDetail("<DetailMessage><text>This request was not OK!</text></DetailMessage>");
         responseMessage.addFaultDetail("<Error><text>This request was not OK!</text></Error>");
 
@@ -1092,8 +1092,8 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final SoapFault responseMessage = new SoapFault();
-        responseMessage.setFaultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
-        responseMessage.setFaultString("Invalid request");
+        responseMessage.faultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
+        responseMessage.faultString("Invalid request");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
@@ -1171,8 +1171,8 @@ public class WebServiceEndpointTest {
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final SoapFault responseMessage = new SoapFault();
-        responseMessage.setFaultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
-        responseMessage.setFaultString("Invalid request");
+        responseMessage.faultCode("{http://www.consol.de/citrus}citrus:TEC-1000");
+        responseMessage.faultString("Invalid request");
 
         endpoint.setEndpointAdapter(new StaticEndpointAdapter() {
             public Message handleMessageInternal(Message message) {
