@@ -29,6 +29,13 @@ import java.util.Map;
 public class JmsMessage extends DefaultMessage {
 
     /**
+     * Empty constructor initializing with empty message payload.
+     */
+    public JmsMessage() {
+        super();
+    }
+
+    /**
      * Constructs copy of given message.
      * @param message
      */

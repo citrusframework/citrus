@@ -31,6 +31,13 @@ import java.util.Map;
 public class HttpMessage extends DefaultMessage {
 
     /**
+     * Empty constructor initializing with empty message payload.
+     */
+    public HttpMessage() {
+        super();
+    }
+
+    /**
      * Constructs copy of given message.
      * @param message
      */

@@ -54,13 +54,6 @@ public class SoapFault extends SoapMessage {
     private List<String> faultDetails = new ArrayList<String>();
 
     /**
-     * Default constructor using message payload.
-     */
-    public SoapFault() {
-        super("");
-    }
-
-    /**
      * Returns fault code as qualified name.
      * @return
      */

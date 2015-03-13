@@ -57,6 +57,13 @@ public class DefaultMessage implements Message {
     private static Logger log = LoggerFactory.getLogger(DefaultMessage.class);
 
     /**
+     * Empty constructor initializing with empty message payload.
+     */
+    public DefaultMessage() {
+        this("");
+    }
+
+    /**
      * Constructs copy of given message.
      * @param message
      */

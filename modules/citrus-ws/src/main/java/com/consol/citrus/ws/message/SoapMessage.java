@@ -38,6 +38,13 @@ public class SoapMessage extends DefaultMessage {
 
     /** enable/disable mtom attachments */
     private boolean mtomEnabled = false;
+
+    /**
+     * Empty constructor initializing with empty message payload.
+     */
+    public SoapMessage() {
+        super();
+    }
     
     /**
      * Constructs copy of given message.
