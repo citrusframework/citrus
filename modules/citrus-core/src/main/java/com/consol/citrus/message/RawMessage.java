@@ -22,6 +22,17 @@ package com.consol.citrus.message;
  */
 public class RawMessage extends DefaultMessage {
 
+    /**
+     * Empty constructor initializing with empty message payload.
+     */
+    public RawMessage() {
+        super();
+    }
+
+    /**
+     * Default constructor initializing with message payload
+     * @param messageData
+     */
     public RawMessage(String messageData) {
         super(messageData);
     }
