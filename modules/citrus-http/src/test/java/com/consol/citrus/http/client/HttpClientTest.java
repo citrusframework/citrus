@@ -151,8 +151,8 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setContentType("text/xml");
         endpointConfiguration.setCharset("ISO-8859-1");
 
-        Message requestMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
-                .setHeader("Content-Type", "application/xml;charset=UTF-8")
+        Message requestMessage = new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                .contentType("application/xml;charset=UTF-8")
                 .setHeader("Accept", "application/xml");
 
         endpointConfiguration.setRestTemplate(restTemplate);

@@ -17,10 +17,12 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -109,6 +111,15 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
+     * Sets the Http request content type.
+     * @param contentType
+     */
+    public HttpMessage contentType(String contentType) {
+        setHeader("Content-Type", contentType);
+        return this;
+    }
+
+    /**
      * Sets the Http request context path.
      * @param contextPath
      */
@@ -133,6 +144,10 @@ public class HttpMessage extends DefaultMessage {
      * @param value
      */
     public HttpMessage queryParam(String name, String value) {
+        if (!StringUtils.hasText(name)) {
+            throw new CitrusRuntimeException("Invalid query param name - must not be empty!");
+        }
+
         String queryParams;
         if (getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS) != null) {
             queryParams = getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS).toString();

@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.http.message.HttpMessage;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -38,20 +39,19 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
             send("httpClient")
                 .http()
                 .uri("http://localhost:8072")
-                .method(HttpMethod.GET)
-                .header("Content-Type", "text/html")
-                .header("Accept", "application/xml;charset=UTF-8"),
+                .message(new HttpMessage()
+                    .method(HttpMethod.GET)
+                    .contentType("text/html")
+                    .header("Accept", "application/xml;charset=UTF-8")),
                 
             sequential(
-                    receive("httpServerRequestEndpoint")
-                            .header("Host", "localhost:8072")
-                            .header("Content-Type", "text/html;charset=ISO-8859-1")
-                            .header("Accept", "application/xml;charset=UTF-8")
-                            .http()
-                            .method(HttpMethod.GET)
-                            .uri("/")
-                            .contextPath("")
-                            .queryParam("", "")
+                receive("httpServerRequestEndpoint")
+                    .message(new HttpMessage()
+                        .method(HttpMethod.GET)
+                        .contentType("text/html;charset=ISO-8859-1")
+                        .header("Host", "localhost:8072")
+                        .header("Accept", "application/xml;charset=UTF-8"))
+                    .http().uri("/").contextPath("")
             )
         );
         
@@ -68,20 +68,21 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
             send("httpClient")
                 .http()
                 .uri("http://localhost:8072/test/user/${id}")
-                .method(HttpMethod.GET)
-                .header("Content-Type", "text/html")
-                .header("Accept", "application/xml;charset=UTF-8"),
+                .message(new HttpMessage()
+                    .method(HttpMethod.GET)
+                    .contentType("text/html")
+                    .header("Accept", "application/xml;charset=UTF-8")),
                 
             sequential(
-                    receive("httpServerRequestEndpoint")
-                            .http()
-                            .header("Host", "localhost:8072")
-                            .header("Content-Type", "text/html;charset=ISO-8859-1")
-                            .header("Accept", "application/xml;charset=UTF-8")
-                            .method(HttpMethod.GET)
-                            .uri("/test/user/${id}")
-                            .contextPath("")
-                            .queryParam("", "")
+                receive("httpServerRequestEndpoint")
+                    .http()
+                    .message(new HttpMessage()
+                        .contentType("text/html;charset=ISO-8859-1")
+                        .method(HttpMethod.GET)
+                        .header("Host", "localhost:8072")
+                        .header("Accept", "application/xml;charset=UTF-8"))
+                    .uri("/test/user/${id}")
+                    .contextPath("")
             )
         );
         
@@ -97,20 +98,22 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
             send("httpClient")
                 .http()
                 .uri("http://localhost:8072/test")
-                .method(HttpMethod.GET)
-                .path("user")
-                .queryParam("id", "${id}")
-                .queryParam("name", "TestUser")
-                .header("Content-Type", "text/html")
-                .header("Accept", "application/xml;charset=UTF-8"),
-                
+                .message(new HttpMessage()
+                    .method(HttpMethod.GET)
+                    .contentType("text/html")
+                    .queryParam("id", "${id}")
+                    .queryParam("name", "TestUser")
+                    .header("Accept", "application/xml;charset=UTF-8"))
+                .path("user"),
+
             sequential(
                 receive("httpServerRequestEndpoint")
                     .http()
-                    .header("Host", "localhost:8072")
-                    .header("Content-Type", "text/html;charset=ISO-8859-1")
-                    .header("Accept", "application/xml;charset=UTF-8")
-                    .method(HttpMethod.GET)
+                    .message(new HttpMessage()
+                        .method(HttpMethod.GET)
+                        .contentType("text/html;charset=ISO-8859-1")
+                        .header("Host", "localhost:8072")
+                        .header("Accept", "application/xml;charset=UTF-8"))
                     .uri("/test/user")
                     .contextPath("")
                     .queryParam("id", "${id}")

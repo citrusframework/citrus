@@ -106,9 +106,8 @@ public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefi
      * @return
      */
     public ReceiveHttpMessageActionDefinition queryParam(String name, String value) {
-        if (!StringUtils.hasText(name) && !StringUtils.hasText(value)) {
-            header(HttpMessageHeaders.HTTP_QUERY_PARAMS, "");
-            return this;
+        if (!StringUtils.hasText(name)) {
+            throw new CitrusRuntimeException("Invalid query param name - must not be empty!");
         }
 
         if (StringUtils.hasText(queryParams)) {
