@@ -50,8 +50,35 @@ public class FtpMessage extends DefaultMessage {
      * @param command
      * @return
      */
-    public FtpMessage setCommand(FTPCmd command) {
+    public FtpMessage command(FTPCmd command) {
         setHeader(FtpMessageHeaders.FTP_COMMAND, command);
+        return this;
+    }
+
+    /**
+     * Sets the reply string.
+     * @param replyString
+     */
+    public FtpMessage replyString(String replyString) {
+        setHeader(FtpMessageHeaders.FTP_REPLY_STRING, replyString);
+        return this;
+    }
+
+    /**
+     * Sets the command args.
+     * @param arguments
+     */
+    public FtpMessage arguments(String arguments) {
+        setHeader(FtpMessageHeaders.FTP_ARGS, arguments);
+        return this;
+    }
+
+    /**
+     * Sets the reply code.
+     * @param replyCode
+     */
+    public FtpMessage replyCode(Integer replyCode) {
+        setHeader(FtpMessageHeaders.FTP_REPLY_CODE, replyCode);
         return this;
     }
 
@@ -69,15 +96,6 @@ public class FtpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the command args.
-     * @param arguments
-     */
-    public FtpMessage setArguments(String arguments) {
-        setHeader(FtpMessageHeaders.FTP_ARGS, arguments);
-        return this;
-    }
-
-    /**
      * Gets the command args.
      */
     public String getArguments() {
@@ -88,15 +106,6 @@ public class FtpMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the reply code.
-     * @param replyCode
-     */
-    public FtpMessage setReplyCode(Integer replyCode) {
-        setHeader(FtpMessageHeaders.FTP_REPLY_CODE, replyCode);
-        return this;
     }
 
     /**
@@ -114,15 +123,6 @@ public class FtpMessage extends DefaultMessage {
         }
 
         return null;
-    }
-
-    /**
-     * Sets the reply string.
-     * @param replyString
-     */
-    public FtpMessage setReplyString(String replyString) {
-        setHeader(FtpMessageHeaders.FTP_REPLY_STRING, replyString);
-        return this;
     }
 
     /**

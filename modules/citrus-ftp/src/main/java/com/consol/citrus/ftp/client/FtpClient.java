@@ -104,8 +104,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             log.info(String.format("FTP message was successfully sent to: '%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
             correlationManager.store(correlationKey, new FtpMessage(ftpMessage.getCommand(), ftpMessage.getArguments())
-                    .setReplyCode(reply)
-                    .setReplyString(ftpClient.getReplyString()));
+                    .replyCode(reply)
+                    .replyString(ftpClient.getReplyString()));
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to execute ftp command", e);
         }

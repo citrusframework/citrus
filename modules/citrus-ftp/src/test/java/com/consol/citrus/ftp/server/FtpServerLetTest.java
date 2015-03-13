@@ -61,7 +61,7 @@ public class FtpServerLetTest {
                 Assert.assertNull(ftpMessage.getReplyCode());
                 Assert.assertNull(ftpMessage.getReplyString());
 
-                return new FtpMessage(FTPCmd.MKD, "testDir").setReplyCode(200). setReplyString("OK");
+                return new FtpMessage(FTPCmd.MKD, "testDir").replyCode(200).replyString("OK");
             }
         });
 
