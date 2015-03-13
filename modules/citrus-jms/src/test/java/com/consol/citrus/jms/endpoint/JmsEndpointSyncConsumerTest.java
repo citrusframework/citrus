@@ -150,7 +150,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").replyTo(replyDestination), context);
+        jmsSyncConsumer.saveReplyDestination(new JmsMessage().replyTo(replyDestination), context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer);
@@ -180,7 +180,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         replay(jmsTemplate, connectionFactory, messageProducer, connection, session);
 
         JmsSyncConsumer jmsSyncConsumer = (JmsSyncConsumer)endpoint.createConsumer();
-        jmsSyncConsumer.saveReplyDestination(new JmsMessage("").replyTo(replyDestination), context);
+        jmsSyncConsumer.saveReplyDestination(new JmsMessage().replyTo(replyDestination), context);
         jmsSyncConsumer.send(message, context);
 
         verify(jmsTemplate, connectionFactory, messageProducer, connection, session);
@@ -194,7 +194,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        JmsMessage requestMessage = new JmsMessage("")
+        JmsMessage requestMessage = new JmsMessage()
                 .replyTo(replyDestination);
 
         ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(requestMessage.getId(), endpoint.createConsumer(), context);
@@ -230,7 +230,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        JmsMessage requestMessage = new JmsMessage("");
+        JmsMessage requestMessage = new JmsMessage();
 
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
@@ -259,7 +259,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint endpoint = new JmsSyncEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
-        JmsMessage requestMessage = new JmsMessage("");
+        JmsMessage requestMessage = new JmsMessage();
 
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
