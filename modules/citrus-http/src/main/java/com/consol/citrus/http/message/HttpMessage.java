@@ -88,7 +88,6 @@ public class HttpMessage extends DefaultMessage {
      */
     public HttpMessage statusCode(HttpStatus statusCode) {
         setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, Integer.valueOf(statusCode.value()));
-        reasonPhrase(statusCode.getReasonPhrase());
         return this;
     }
 
