@@ -119,6 +119,15 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
+     * Sets the Http accepted content type for response.
+     * @param accept
+     */
+    public HttpMessage accept(String accept) {
+        setHeader("Accept", accept);
+        return this;
+    }
+
+    /**
      * Sets the Http request context path.
      * @param contextPath
      */

@@ -42,7 +42,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .message(new HttpMessage()
                     .method(HttpMethod.GET)
                     .contentType("text/html")
-                    .header("Accept", "application/xml;charset=UTF-8")),
+                    .accept("application/xml;charset=UTF-8")),
                 
             sequential(
                 receive("httpServerRequestEndpoint")
@@ -50,7 +50,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                         .method(HttpMethod.GET)
                         .contentType("text/html;charset=ISO-8859-1")
                         .header("Host", "localhost:8072")
-                        .header("Accept", "application/xml;charset=UTF-8"))
+                        .accept("application/xml;charset=UTF-8"))
                     .http().uri("/").contextPath("")
             )
         );
@@ -71,8 +71,8 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                 .message(new HttpMessage()
                     .method(HttpMethod.GET)
                     .contentType("text/html")
-                    .header("Accept", "application/xml;charset=UTF-8")),
-                
+                    .accept("application/xml;charset=UTF-8")),
+
             sequential(
                 receive("httpServerRequestEndpoint")
                     .http()
@@ -80,7 +80,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                         .contentType("text/html;charset=ISO-8859-1")
                         .method(HttpMethod.GET)
                         .header("Host", "localhost:8072")
-                        .header("Accept", "application/xml;charset=UTF-8"))
+                        .accept("application/xml;charset=UTF-8"))
                     .uri("/test/user/${id}")
                     .contextPath("")
             )
@@ -103,7 +103,7 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                     .contentType("text/html")
                     .queryParam("id", "${id}")
                     .queryParam("name", "TestUser")
-                    .header("Accept", "application/xml;charset=UTF-8"))
+                    .accept("application/xml;charset=UTF-8"))
                 .path("user"),
 
             sequential(
@@ -113,14 +113,14 @@ public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
                         .method(HttpMethod.GET)
                         .contentType("text/html;charset=ISO-8859-1")
                         .header("Host", "localhost:8072")
-                        .header("Accept", "application/xml;charset=UTF-8"))
+                        .accept("application/xml;charset=UTF-8"))
                     .uri("/test/user")
                     .contextPath("")
                     .queryParam("id", "${id}")
                     .queryParam("name", "TestUser")
             )
         );
-        
+
         receive("httpClient")
             .timeout(2000L)
             .http()

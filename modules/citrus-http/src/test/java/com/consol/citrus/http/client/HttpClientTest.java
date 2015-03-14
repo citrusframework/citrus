@@ -153,7 +153,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         Message requestMessage = new HttpMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .contentType("application/xml;charset=UTF-8")
-                .setHeader("Accept", "application/xml");
+                .accept("application/xml");
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
