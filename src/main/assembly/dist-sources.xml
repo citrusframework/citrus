@@ -6,20 +6,20 @@
   </formats>
   <fileSets>
     <fileSet>
-        <directory>${project.basedir}</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-          <include>README.md</include>
-          <include>LICENSE.txt</include>
-          <include>NOTICE.txt</include>
-        </includes>
+      <directory>${project.basedir}</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>README.md</include>
+        <include>LICENSE.txt</include>
+        <include>NOTICE.txt</include>
+      </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-core/target</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-core/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>modules/citrus-jms/target</directory>
@@ -29,18 +29,18 @@
       </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-http/target</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-http/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-ws/target</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-ws/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>modules/citrus-mail/target</directory>
@@ -50,11 +50,11 @@
       </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-ssh/target</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-ssh/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>modules/citrus-camel/target</directory>
@@ -78,11 +78,18 @@
       </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-java-dsl/target</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-java-dsl/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-jms/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
   </fileSets>
 </assembly>

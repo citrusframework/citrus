@@ -20,6 +20,7 @@
         <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
+        <include>com.consol.citrus:citrus-arquillian</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
         <include>com.consol.citrus.model:citrus-model-jms</include>
         <include>com.consol.citrus.model:citrus-model-http</include>
@@ -192,11 +193,11 @@
       </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-core/target</directory>
-        <outputDirectory>src</outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-core/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>modules/citrus-jms/target</directory>
@@ -206,25 +207,25 @@
       </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-http/target</directory>
-        <outputDirectory>src</outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-http/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-ws/target</directory>
-        <outputDirectory>src</outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-ws/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+          <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-ssh/target</directory>
-        <outputDirectory>src</outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-ssh/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     <fileSet>
       <directory>modules/citrus-mail/target</directory>
@@ -255,22 +256,29 @@
       </includes>
     </fileSet>
     <fileSet>
-        <directory>modules/citrus-java-dsl/target</directory>
-        <outputDirectory>src</outputDirectory>
-        <includes>
-            <include>*sources.jar</include>
-        </includes>
+      <directory>modules/citrus-java-dsl/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-arquillian/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
     </fileSet>
     
     <!-- License, readme, notice -->
     <fileSet>
-        <directory>${project.basedir}</directory>
-        <outputDirectory></outputDirectory>
-        <includes>
-          <include>README.md</include>
-          <include>LICENSE.txt</include>
-          <include>NOTICE.txt</include>
-        </includes>
+      <directory>${project.basedir}</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>README.md</include>
+        <include>LICENSE.txt</include>
+        <include>NOTICE.txt</include>
+      </includes>
     </fileSet>
   </fileSets>
   

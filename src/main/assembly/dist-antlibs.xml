@@ -24,6 +24,7 @@
         <include>com.consol.citrus:citrus-vertx</include>
         <include>com.consol.citrus:citrus-ftp</include>
         <include>com.consol.citrus:citrus-java-dsl</include>
+        <include>com.consol.citrus:citrus-arquillian</include>
         <include>com.consol.citrus.model:citrus-model-core</include>
         <include>com.consol.citrus.model:citrus-model-jms</include>
         <include>com.consol.citrus.model:citrus-model-http</include>
