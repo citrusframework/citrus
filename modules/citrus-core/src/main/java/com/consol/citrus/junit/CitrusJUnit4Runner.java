@@ -25,7 +25,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,33 +60,77 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
         List<FrameworkMethod> interceptedMethods = new ArrayList<>();
 
         for (FrameworkMethod method : methods) {
-            interceptedMethods.add(method);
-
-            if (getTestClass().getJavaClass().getClass().isInstance(AbstractJUnit4CitrusTest.class)) {
+            if (AbstractJUnit4CitrusTest.class.isAssignableFrom(getTestClass().getJavaClass()) &&
+                    method.getMethod().getAnnotation(CitrusXmlTest.class) != null) {
                 CitrusXmlTest citrusXmlTestAnnotation = method.getMethod().getAnnotation(CitrusXmlTest.class);
-                if (citrusXmlTestAnnotation != null) {
-                    if (citrusXmlTestAnnotation.name().length > 1) {
-                        for (int i = 1; i < citrusXmlTestAnnotation.name().length; i++) {
-                            interceptedMethods.add(new FrameworkMethod(method.getMethod()));
-                        }
-                    }
+                String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
 
-                    String[] packagesToScan = citrusXmlTestAnnotation.packageScan();
-                    for (String packageName : packagesToScan) {
-                        try {
-                            Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
-                            for (int i = 1; i < fileResources.length; i++) {
-                                interceptedMethods.add(new FrameworkMethod(method.getMethod()));
-                            }
-                        } catch (IOException e) {
-                            log.error("Unable to locate file resources for test package '" + packageName + "'", e);
+                if (citrusXmlTestAnnotation.name().length > 0) {
+                    for (int i = 0; i < citrusXmlTestAnnotation.name().length; i++) {
+                        interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(), citrusXmlTestAnnotation.name()[i],
+                                method.getMethod().getDeclaringClass().getPackage().getName()));
+                    }
+                } else if (packagesToScan.length == 0) {
+                    interceptedMethods.add(method);
+                }
+
+                for (String packageName : packagesToScan) {
+                    try {
+                        Resource[] fileResources = new PathMatchingResourcePatternResolver().getResources(packageName.replace('.', '/') + "/**/*Test.xml");
+                        for (Resource fileResource : fileResources) {
+                            String filePath = fileResource.getFile().getParentFile().getCanonicalPath();
+                            filePath = filePath.substring(filePath.indexOf(packageName.replace('.', File.separatorChar)));
+
+                            interceptedMethods.add(new CitrusFrameworkMethod(method.getMethod(),
+                                    fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()),
+                                    filePath));
                         }
+                    } catch (IOException e) {
+                        log.error("Unable to locate file resources for test package '" + packageName + "'", e);
                     }
                 }
+            } else {
+                interceptedMethods.add(method);
             }
+
         }
 
         return interceptedMethods;
+    }
+
+    /**
+     * Special framework method also holding test name which comes from CitrusXmlTest annotation. This way
+     * execution can decide which test to invoke when annotation has more than one test name defined or package scan is
+     * used in annotation.
+     */
+    public static class CitrusFrameworkMethod extends FrameworkMethod {
+
+        private final String testName;
+        private final String packageName;
+
+        /**
+         * Returns a new {@code FrameworkMethod} for {@code method}
+         *
+         * @param method
+         */
+        public CitrusFrameworkMethod(Method method, String testName, String packageName) {
+            super(method);
+            this.testName = testName;
+            this.packageName = packageName;
+        }
+
+        @Override
+        public String getName() {
+            return testName;
+        }
+
+        /**
+         * Gets the test package name.
+         * @return
+         */
+        public String getPackageName() {
+            return packageName;
+        }
     }
 
     /**
@@ -95,6 +141,11 @@ public class CitrusJUnit4Runner extends SpringJUnit4ClassRunner {
         private final FrameworkMethod frameworkMethod;
         private final Object testInstance;
 
+        /**
+         * Constructor using framework method and test instance as object.
+         * @param frameworkMethod
+         * @param testInstance
+         */
         public InvokeRunMethod(FrameworkMethod frameworkMethod, Object testInstance) {
             super(frameworkMethod, testInstance);
 

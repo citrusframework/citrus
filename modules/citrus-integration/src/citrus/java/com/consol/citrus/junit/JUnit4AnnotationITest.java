@@ -23,15 +23,25 @@ import org.junit.Test;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class EchoActionJUnit4AnnotationITest extends AbstractJUnit4CitrusTest {
-
-    @Test
-    @CitrusXmlTest(name = "EchoActionJUnit4AnnotationITest")
-    public void echoActionJUnit4ITest() {
-    }
+public class JUnit4AnnotationITest extends AbstractJUnit4CitrusTest {
 
     @Test
     @CitrusXmlTest
-    public void EchoActionJUnit4AnnotationITest() {
+    public void JUnit4AnnotationITest() {
+    }
+
+    @Test
+    @CitrusXmlTest(name = "SampleITest")
+    public void JUnit4Annotation_1_ITest() {
+    }
+
+    @Test
+    @CitrusXmlTest(name = { "EchoActionITest", "FailActionITest", "CreateVariablesITest" }, packageName = "com.consol.citrus.actions")
+    public void JUnit4Annotation_2_ITest() {
+    }
+
+    @Test
+    @CitrusXmlTest(packageScan = "com.consol.citrus.functions")
+    public void JUnit4Annotation_3_ITest() {
     }
 }

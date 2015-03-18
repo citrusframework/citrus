@@ -31,8 +31,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
-
 /**
  * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides 
  * test listener support and loads the root application context files for Citrus.
@@ -54,19 +52,15 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
      * @param frameworkMethod
      */
     protected void run(FrameworkMethod frameworkMethod) {
-        Method method = frameworkMethod.getMethod();
+        if (frameworkMethod.getAnnotation(CitrusXmlTest.class) != null) {
+            CitrusXmlTest citrusTestAnnotation = frameworkMethod.getAnnotation(CitrusXmlTest.class);
 
-        if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            CitrusXmlTest citrusTestAnnotation = method.getAnnotation(CitrusXmlTest.class);
-
-            String testName = method.getName();
-            if (citrusTestAnnotation.name().length > 0) {
-                testName = citrusTestAnnotation.name()[0];
-            }
-
-            String testPackage = method.getDeclaringClass().getPackage().getName();
+            String testName = frameworkMethod.getName();
+            String testPackage = frameworkMethod.getMethod().getDeclaringClass().getPackage().getName();
             if (StringUtils.hasText(citrusTestAnnotation.packageName())) {
                 testPackage = citrusTestAnnotation.packageName();
+            } else if (frameworkMethod instanceof CitrusJUnit4Runner.CitrusFrameworkMethod) {
+                testPackage = ((CitrusJUnit4Runner.CitrusFrameworkMethod) frameworkMethod).getPackageName();
             }
 
             if (citrus == null) {
