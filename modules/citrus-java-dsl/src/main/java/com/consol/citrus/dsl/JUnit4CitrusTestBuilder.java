@@ -19,11 +19,9 @@ package com.consol.citrus.dsl;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
-import com.consol.citrus.junit.JUnitTestExecutor;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
@@ -68,6 +66,11 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
      * basic test case properties.
      */
     protected void configure() {
+    }
+
+    @Override
+    public TestCase getTestCase() {
+        return testBuilder.getTestCase();
     }
 
     @Override
@@ -388,13 +391,4 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
         return testBuilder.getVariables();
     }
 
-    @Override
-    protected JUnitTestExecutor createExecutor() {
-        return new JUnitTestExecutor(applicationContext, getClass()) {
-            @Override
-            protected TestCase getTestCase(TestContext context) {
-                return testBuilder.getTestCase();
-            }
-        };
-    }
 }

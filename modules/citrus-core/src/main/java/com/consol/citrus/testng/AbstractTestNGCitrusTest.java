@@ -46,8 +46,9 @@ import java.util.*;
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = CitrusSpringConfig.class)
-@Listeners( { CitrusMethodInterceptor.class } )
+@Listeners( { PrepareTestNGMethodInterceptor.class } )
 public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringContextTests {
+
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -59,7 +60,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
-            List<TestLoader> methodTestLoaders = createTestLoader(method);
+            List<TestLoader> methodTestLoaders = createTestLoadersForMethod(method);
 
             if (!CollectionUtils.isEmpty(methodTestLoaders)) {
                 try {
@@ -105,7 +106,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param method
      * @return
      */
-    private List<TestLoader> createTestLoader(Method method) {
+    private List<TestLoader> createTestLoadersForMethod(Method method) {
         List<TestLoader> methodTestLoaders = new ArrayList<TestLoader>();
 
         if (method.getAnnotation(CitrusXmlTest.class) != null) {
@@ -153,18 +154,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     }
 
     /**
-     * Creates new test loader which has TestNG test annotations set for test execution. Only
-     * suitable for tests that get created at runtime through factory method. Subclasses
-     * may overwrite this in order to provide custom test loader with custom test annotations set.
-     * @param testName
-     * @param packageName
-     * @return
-     */
-    protected TestLoader createTestLoader(String testName, String packageName) {
-        return new XmlTestLoader(testName, packageName, applicationContext);
-    }
-
-    /**
      * Runs tasks before test suite.
      * @param testContext the test context.
      * @throws Exception on error.
@@ -176,6 +165,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         citrus = Citrus.newInstance(applicationContext);
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+    }
+
+    /**
+     * Runs tasks after test suite.
+     * @param testContext the test context.
+     */
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite(ITestContext testContext) {
+        citrus.afterSuite(testContext.getSuite().getName());
     }
 
     /**
@@ -210,6 +208,38 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         }
 
         citrus.run(testCase, ctx);
+    }
+
+    /**
+     * Prepares the test context.
+     *
+     * Provides a hook for test context modifications before the test gets executed.
+     *
+     * @param testContext the test context.
+     * @return the (prepared) test context.
+     */
+    protected TestContext prepareTestContext(final TestContext testContext) {
+        return testContext;
+    }
+
+    /**
+     * Creates new test loader which has TestNG test annotations set for test execution. Only
+     * suitable for tests that get created at runtime through factory method. Subclasses
+     * may overwrite this in order to provide custom test loader with custom test annotations set.
+     * @param testName
+     * @param packageName
+     * @return
+     */
+    protected TestLoader createTestLoader(String testName, String packageName) {
+        return new XmlTestLoader(testName, packageName, applicationContext);
+    }
+
+    /**
+     * Constructs the test case to execute.
+     * @return
+     */
+    protected TestCase getTestCase() {
+        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
     }
 
     /**
@@ -251,35 +281,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         return parameterNames;
     }
 
-    /**
-     * Prepares the test context.
-     *
-     * Provides a hook for test context modifications before the test gets executed.
-     *
-     * @param testContext the test context.
-     * @return the (prepared) test context.
-     */
-    protected TestContext prepareTestContext(final TestContext testContext) {
-        return testContext;
-    }
-
-    /**
-     * Constructs the test case to execute.
-     * @return
-     */
-    protected TestCase getTestCase() {
-        return createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()).load();
-    }
-
-    /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
-     */
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        citrus.afterSuite(testContext.getSuite().getName());
-    }
-    
     /**
      * Class faking test execution as callback. Used in run hookable method when test case
      * was executed before and callback is needed for super class run method invocation.

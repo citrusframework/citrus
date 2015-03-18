@@ -48,6 +48,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  */
 public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements TestBuilder {
+
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 

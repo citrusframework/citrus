@@ -34,21 +34,11 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
-public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListener {
+public class TestSuiteExecutionListener extends AbstractTestExecutionListener {
 
-    private static boolean done = false;
-    
-    private static Object doneMonitor = new Object();
-    
     @Override
     public void prepareTestInstance(TestContext testContext) throws Exception {
-        synchronized (doneMonitor) {
-            if (done) { 
-                return; 
-            } else {
-                TestSuiteAwareExecutionListener.preparationDone();
-            }
-            
+        if (TestSuiteState.shouldExecuteBeforeSuite()) {
             ApplicationContext ctx = testContext.getApplicationContext();
 
             List<SequenceBeforeSuite> beforeSuite = CollectionUtils.arrayToList(ctx.getBeansOfType(SequenceBeforeSuite.class).values().toArray());
@@ -76,13 +66,6 @@ public class TestSuiteAwareExecutionListener extends AbstractTestExecutionListen
         }
     }
     
-    /**
-     * Static method setting done flag on execution listener.
-     */
-    private static void preparationDone() {
-        done = true;
-    }
-
     /**
      * Shutdown hook runnable gets executed during JVM shutdown.
      * This is our only chance to provide after suite logic when using JUnit. After

@@ -36,10 +36,10 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class CitrusMethodInterceptor implements IMethodInterceptor {
+public class PrepareTestNGMethodInterceptor implements IMethodInterceptor {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusMethodInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(PrepareTestNGMethodInterceptor.class);
 
     @Override
     public List<IMethodInstance> intercept(List<IMethodInstance> methods, ITestContext context) {
