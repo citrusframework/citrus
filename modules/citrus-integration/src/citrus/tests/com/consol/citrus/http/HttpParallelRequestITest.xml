@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="HttpParallelRequestITest">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2015-03-19</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-03-19T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      The simple HttpServer implementation is launched and requests are sent in parallel to the server destination.
+    </description>
+
+    <variables>
+      <variable name="custom_header_id" value="123456789"/>
+    </variables>
+
+    <actions>
+      <send endpoint="httpStandaloneClient" fork="true">
+        <message>
+          <data>
+            <![CDATA[
+              <testRequestMessage>
+                <text>Hello HttpServer</text>
+              </testRequestMessage>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="CustomHeaderId" value="${custom_header_id}"/>
+        </header>
+        <extract>
+          <header name="citrus_message_id" variable="request#1"/>
+        </extract>
+      </send>
+
+      <send endpoint="httpStandaloneClient" fork="true">
+        <message>
+          <data>
+            <![CDATA[
+              <testRequestMessage>
+                <text>Hello HttpServer</text>
+              </testRequestMessage>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="CustomHeaderId" value="${custom_header_id}"/>
+        </header>
+        <extract>
+          <header name="citrus_message_id" variable="request#2"/>
+        </extract>
+      </send>
+
+      <create-variables>
+        <variable name="citrus_message_correlator_httpStandaloneClient" value="citrus_message_id = '${request#2}'"></variable>
+      </create-variables>
+
+      <receive endpoint="httpStandaloneClient">
+        <message>
+          <data>
+            <![CDATA[
+              <testResponseMessage>
+              <text>Hello TestFramework</text>
+              </testResponseMessage>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_http_status_code" value="200"/>
+          <element name="citrus_http_version" value="HTTP/1.1"/>
+          <element name="citrus_http_reason_phrase" value="OK"/>
+        </header>
+      </receive>
+
+      <create-variables>
+        <variable name="citrus_message_correlator_httpStandaloneClient" value="citrus_message_id = '${request#1}'"></variable>
+      </create-variables>
+
+      <receive endpoint="httpStandaloneClient">
+        <message>
+          <data>
+            <![CDATA[
+              <testResponseMessage>
+              <text>Hello TestFramework</text>
+              </testResponseMessage>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="citrus_http_status_code" value="200"/>
+          <element name="citrus_http_version" value="HTTP/1.1"/>
+          <element name="citrus_http_reason_phrase" value="OK"/>
+        </header>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

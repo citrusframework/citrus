@@ -28,4 +28,8 @@ public class HttpServerStandaloneITest extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
     public void HttpServerStandaloneITest() {}
+
+    @Test
+    @CitrusXmlTest
+    public void HttpParallelRequestITest() {}
 }
