@@ -95,7 +95,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         }
 
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(soapMessage);
-        correlationManager.createCorrelationKey(correlationKey, this, context);
+        correlationManager.createCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), correlationKey, context);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {
@@ -140,7 +141,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context) {
-        return receive(correlationManager.getCorrelationKey(this, context), context);
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), context), context);
     }
 
     @Override
@@ -150,7 +152,8 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), context), context, timeout);
     }
 
     @Override

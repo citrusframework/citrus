@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.integration.core.MessagingTemplate;
@@ -198,7 +199,8 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
         expect(messageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
-        
+        expect(messageCorrelator.getCorrelationKeyName(anyObject(Consumer.class))).andReturn("correlationKeyName").once();
+
         replay(messagingTemplate, channel, messageCorrelator);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
@@ -247,7 +249,9 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
-        channelSyncProducer.getCorrelationManager().createCorrelationKey(channelSyncProducer.toString(), channelSyncProducer, context);
+        channelSyncProducer.getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(channelSyncProducer),
+                channelSyncProducer.toString(), context);
         channelSyncProducer.getCorrelationManager().store(channelSyncProducer.toString(), message);
 
         Assert.assertEquals(channelSyncProducer.receive(context), message);

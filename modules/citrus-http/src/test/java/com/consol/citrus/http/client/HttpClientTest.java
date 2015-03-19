@@ -19,6 +19,7 @@ package com.consol.citrus.http.client;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.*;
+import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -365,6 +366,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
                 .andReturn(new ResponseEntity<String>(responseBody, HttpStatus.OK)).once();
 
         expect(correlator.getCorrelationKey(requestMessage)).andReturn("correlationKey").once();
+        expect(correlator.getCorrelationKeyName(anyObject(Consumer.class))).andReturn("correlationKeyName").once();
 
         replay(restTemplate, correlator);
 

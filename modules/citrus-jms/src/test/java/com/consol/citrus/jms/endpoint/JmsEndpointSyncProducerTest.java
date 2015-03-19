@@ -271,7 +271,9 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer, context);
+        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer),
+                jmsSyncProducer.toString(), context);
         jmsSyncProducer.getCorrelationManager().store(jmsSyncProducer.toString(), message);
 
         Assert.assertEquals(jmsSyncProducer.receive(context), message);
@@ -314,7 +316,9 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         });
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer, context);
+        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer),
+                jmsSyncProducer.toString(), context);
 
         Assert.assertEquals(retryCount, 0);
         Assert.assertEquals(jmsSyncProducer.receive(context, 2500), message);
@@ -342,7 +346,9 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer, context);
+        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer),
+                jmsSyncProducer.toString(), context);
 
         Assert.assertEquals(retryCount, 0);
         try {
@@ -372,9 +378,10 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
             }
         });
 
-
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer, context);
+        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer),
+                jmsSyncProducer.toString(), context);
 
         Assert.assertEquals(retryCount, 0);
         try {
@@ -406,7 +413,9 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(jmsSyncProducer.toString(), jmsSyncProducer, context);
+        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer),
+                jmsSyncProducer.toString(), context);
 
         Assert.assertEquals(retryCount, 0);
         try {
