@@ -59,7 +59,8 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
     @Override
     public void send(Message message, TestContext context) {
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(correlationKey, this, context);
+        correlationManager.createCorrelationKey(
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), correlationKey, context);
 
         String destinationChannelName = getDestinationChannelName();
 
@@ -88,7 +89,8 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(TestContext context) {
-        return receive(correlationManager.getCorrelationKey(this, context), context);
+        return receive(correlationManager.getCorrelationKey(
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context), context);
     }
 
     @Override
@@ -98,7 +100,8 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
+        return receive(correlationManager.getCorrelationKey(
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context), context, timeout);
     }
 
     @Override

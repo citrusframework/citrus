@@ -16,6 +16,8 @@
 
 package com.consol.citrus.message;
 
+import com.consol.citrus.messaging.Consumer;
+
 /**
  * Message correlator interface for synchronous reply messages. Correlator uses
  * a specific header entry in messages in order to construct a unique message correlation key.
@@ -36,4 +38,11 @@ public interface MessageCorrelator {
      * @return
      */
     String getCorrelationKey(String id);
+
+    /**
+     * Constructs unique correlation key name for given consumer.
+     * @param consumer
+     * @return
+     */
+    String getCorrelationKeyName(Consumer consumer);
 }

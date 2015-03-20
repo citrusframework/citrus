@@ -84,7 +84,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
 
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(ftpMessage);
-        correlationManager.createCorrelationKey(correlationKey, this, context);
+        correlationManager.createCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), correlationKey, context);
 
         log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 
@@ -143,7 +144,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive(correlationManager.getCorrelationKey(this, context), context);
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), context), context);
     }
 
     @Override
@@ -153,7 +155,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), context), context, timeout);
     }
 
     @Override

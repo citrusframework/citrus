@@ -21,6 +21,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -241,7 +242,8 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         expect(messagingTemplate.receive(channel)).andReturn(message).once();
         
         expect(messageCorrelator.getCorrelationKey(anyObject(Message.class))).andReturn(MessageHeaders.ID + " = '123456789'").once();
-        
+        expect(messageCorrelator.getCorrelationKeyName(anyObject(Consumer.class))).andReturn("correlationKeyName").once();
+
         replay(messagingTemplate, channel, replyChannel, messageCorrelator);
 
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
@@ -356,7 +358,9 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         Message request = new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel);
 
-        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(request.getId(), endpoint.createConsumer(), context);
+        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer()),
+                request.getId(), context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
@@ -411,7 +415,9 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         ChannelSyncEndpoint dummyEndpoint = new ChannelSyncEndpoint();
         dummyEndpoint.setName("dummyEndpoint");
-        ((ChannelSyncConsumer)dummyEndpoint.createConsumer()).getCorrelationManager().createCorrelationKey("123456789", dummyEndpoint.createConsumer(), context);
+        ((ChannelSyncConsumer)dummyEndpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
+                dummyEndpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(dummyEndpoint.createConsumer()),
+                "123456789", context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);
@@ -437,7 +443,9 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey("123456789", endpoint.createConsumer(), context);
+        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer()),
+                "123456789", context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", headers);

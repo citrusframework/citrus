@@ -18,8 +18,6 @@ package com.consol.citrus.message.correlation;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.messaging.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,25 +37,25 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     private ObjectStore<T> objectStore = new DefaultObjectStore<T>();
 
     @Override
-    public void createCorrelationKey(String correlationKey, Consumer consumer, TestContext context) {
+    public void createCorrelationKey(String id, String correlationKey, TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Saving correlation key for '%s'", getCorrelationKeyName(consumer)));
+            log.debug(String.format("Saving correlation key for '%s'", id));
         }
 
-        context.setVariable(getCorrelationKeyName(consumer), correlationKey);
+        context.setVariable(id, correlationKey);
     }
 
     @Override
-    public String getCorrelationKey(Consumer consumer, TestContext context) {
+    public String getCorrelationKey(String id, TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Get correlation key for '%s'", getCorrelationKeyName(consumer)));
+            log.debug(String.format("Get correlation key for '%s'", id));
         }
 
-        if (context.getVariables().containsKey(getCorrelationKeyName(consumer))) {
-            return context.getVariable(getCorrelationKeyName(consumer));
+        if (context.getVariables().containsKey(id)) {
+            return context.getVariable(id);
         }
 
-        throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", getCorrelationKeyName(consumer)));
+        throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", id));
     }
 
     @Override
@@ -81,15 +79,6 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
         }
 
         return objectStore.remove(correlationKey);
-    }
-
-    /**
-     * Constructs unique correlation key name for given consumer.
-     * @param consumer
-     * @return
-     */
-    protected String getCorrelationKeyName(Consumer consumer) {
-        return MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName();
     }
 
     @Override

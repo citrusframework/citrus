@@ -18,6 +18,7 @@ package com.consol.citrus.ws.client;
 
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
+import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.SoapMessage;
 import org.easymock.EasyMock;
@@ -86,6 +87,7 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
                 (WebServiceMessageCallback)anyObject())).andReturn(true).once();
 
         expect(correlator.getCorrelationKey(requestMessage)).andReturn("correlationKey").once();
+        expect(correlator.getCorrelationKeyName(anyObject(Consumer.class))).andReturn("correlationKeyName").once();
 
         replay(webServiceTemplate, correlator);
 

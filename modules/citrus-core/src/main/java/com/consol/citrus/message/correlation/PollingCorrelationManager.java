@@ -19,7 +19,6 @@ package com.consol.citrus.message.correlation;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.PollableEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.messaging.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,14 +62,14 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
     }
 
     @Override
-    public String getCorrelationKey(Consumer consumer, TestContext context) {
+    public String getCorrelationKey(String id, TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Get correlation key for '%s'", getCorrelationKeyName(consumer)));
+            log.debug(String.format("Get correlation key for '%s'", id));
         }
 
         String correlationKey = null;
-        if (context.getVariables().containsKey(getCorrelationKeyName(consumer))) {
-            correlationKey = context.getVariable(getCorrelationKeyName(consumer));
+        if (context.getVariables().containsKey(id)) {
+            correlationKey = context.getVariable(id);
         }
 
         long timeLeft = 1000L;
@@ -88,13 +87,13 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
                 RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
             }
 
-            if (context.getVariables().containsKey(getCorrelationKeyName(consumer))) {
-                correlationKey = context.getVariable(getCorrelationKeyName(consumer));
+            if (context.getVariables().containsKey(id)) {
+                correlationKey = context.getVariable(id);
             }
         }
 
         if (correlationKey == null) {
-            throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", getCorrelationKeyName(consumer)));
+            throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", id));
         }
 
         return correlationKey;

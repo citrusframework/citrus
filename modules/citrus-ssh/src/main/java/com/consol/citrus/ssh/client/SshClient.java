@@ -82,7 +82,8 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public void send(Message message, TestContext context) {
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(correlationKey, this, context);
+        correlationManager.createCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), correlationKey, context);
 
         SshRequest request = (SshRequest) getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration());
 
@@ -122,7 +123,8 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context) {
-        return receive(correlationManager.getCorrelationKey(this, context), context);
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), context), context);
     }
 
     @Override
@@ -132,7 +134,8 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
+        return receive(correlationManager.getCorrelationKey(
+                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(this), context), context, timeout);
     }
 
     @Override

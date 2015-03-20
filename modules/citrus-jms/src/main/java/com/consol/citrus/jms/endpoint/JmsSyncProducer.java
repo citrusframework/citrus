@@ -71,7 +71,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(correlationKey, this, context);
+        correlationManager.createCorrelationKey(
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), correlationKey, context);
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
@@ -131,7 +132,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context) {
-        return receive(correlationManager.getCorrelationKey(this, context), context);
+        return receive(correlationManager.getCorrelationKey(
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context), context);
     }
 
     @Override
@@ -141,7 +143,8 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return receive(correlationManager.getCorrelationKey(this, context), context, timeout);
+        return receive(correlationManager.getCorrelationKey(
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context), context, timeout);
     }
 
     @Override
