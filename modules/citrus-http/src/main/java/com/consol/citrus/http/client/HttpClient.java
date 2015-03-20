@@ -90,9 +90,9 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             httpMessage = new HttpMessage(message);
         }
 
+        String correlationKeyName = getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(httpMessage);
-        correlationManager.createCorrelationKey(
-                getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
+        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointUriResolver() != null) {

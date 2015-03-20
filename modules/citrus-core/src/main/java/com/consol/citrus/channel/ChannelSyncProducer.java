@@ -58,9 +58,9 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
     @Override
     public void send(Message message, TestContext context) {
+        String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
+        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
 
         String destinationChannelName = getDestinationChannelName();
 

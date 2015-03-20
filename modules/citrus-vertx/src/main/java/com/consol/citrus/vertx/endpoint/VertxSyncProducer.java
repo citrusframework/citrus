@@ -64,9 +64,9 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
     public void send(Message message, final TestContext context) {
         log.info("Sending message to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");
 
+        String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         final String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
+        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
         context.onOutboundMessage(message);
 
         log.info("Message was successfully sent to Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");

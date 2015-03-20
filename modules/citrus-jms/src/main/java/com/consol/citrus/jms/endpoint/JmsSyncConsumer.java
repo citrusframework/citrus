@@ -76,8 +76,8 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
     public void send(final Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = correlationManager.getCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), context);
+        String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
+        String correlationKey = correlationManager.getCorrelationKey(correlationKeyName, context);
         Destination replyDestination = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyDestination, "Failed to find JMS reply destination for message correlation key: '" + correlationKey + "'");
 
@@ -106,9 +106,9 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
      */
     public void saveReplyDestination(JmsMessage jmsMessage, TestContext context) {
         if (jmsMessage.getReplyTo() != null) {
+            String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(jmsMessage);
-            correlationManager.createCorrelationKey(
-                    endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
+            correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, jmsMessage.getReplyTo());
         }  else {
             log.warn("Unable to retrieve reply to destination for message \n" +

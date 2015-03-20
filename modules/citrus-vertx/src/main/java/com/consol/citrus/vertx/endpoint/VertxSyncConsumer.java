@@ -70,8 +70,8 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        String correlationKey = correlationManager.getCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), context);
+        String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
+        String correlationKey = correlationManager.getCorrelationKey(correlationKeyName, context);
         String replyAddress = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyAddress, "Failed to find reply address for message correlation key: '" + correlationKey + "'");
 
@@ -93,9 +93,9 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
      */
     public void saveReplyDestination(Message receivedMessage, TestContext context) {
         if (receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS) != null) {
+            String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
-            correlationManager.createCorrelationKey(
-                    endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
+            correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }  else {
             log.warn("Unable to retrieve reply address for message \n" +

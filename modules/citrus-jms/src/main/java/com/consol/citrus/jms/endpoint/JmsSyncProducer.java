@@ -70,9 +70,9 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
+        String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
+        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
