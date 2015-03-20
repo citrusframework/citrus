@@ -271,7 +271,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createProducer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+        jmsSyncProducer.getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
         jmsSyncProducer.getCorrelationManager().store(jmsSyncProducer.toString(), message);
@@ -316,7 +316,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         });
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+        jmsSyncProducer.getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
@@ -346,7 +346,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+        jmsSyncProducer.getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
@@ -379,7 +379,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         });
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+        jmsSyncProducer.getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 
@@ -413,7 +413,7 @@ public class JmsEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
 
         JmsSyncProducer jmsSyncProducer = (JmsSyncProducer)endpoint.createConsumer();
-        jmsSyncProducer.getCorrelationManager().createCorrelationKey(
+        jmsSyncProducer.getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(jmsSyncProducer.getName()),
                 jmsSyncProducer.toString(), context);
 

@@ -32,21 +32,21 @@ public interface CorrelationManager<T> {
      * Creates new correlation key in test context by saving as test variable. Method is called when
      * synchronous communication is initialized.
      *
-     * @param id
+     * @param correlationKeyName
      * @param correlationKey
      * @param context
      */
-    void createCorrelationKey(String id, String correlationKey, TestContext context);
+    void saveCorrelationKey(String correlationKeyName, String correlationKey, TestContext context);
 
     /**
      * Gets correlation key for given identifier. Consults test context with test variables
      * for retrieving stored correlation key.
      *
-     * @param id
+     * @param correlationKeyName
      * @param context
      * @return
      */
-    String getCorrelationKey(String id, TestContext context);
+    String getCorrelationKey(String correlationKeyName, TestContext context);
 
     /**
      * Store object to correlation storage using the given correlation key.

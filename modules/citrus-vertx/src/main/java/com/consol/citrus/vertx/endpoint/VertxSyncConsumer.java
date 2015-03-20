@@ -95,7 +95,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         if (receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS) != null) {
             String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
-            correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+            correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, receivedMessage.getHeader(CitrusVertxMessageHeaders.VERTX_REPLY_ADDRESS).toString());
         }  else {
             log.warn("Unable to retrieve reply address for message \n" +

@@ -85,7 +85,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
         String correlationKeyName = getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(ftpMessage);
-        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+        correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
         log.info(String.format("Sending FTP message to: ftp://'%s:%s'", getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()));
 

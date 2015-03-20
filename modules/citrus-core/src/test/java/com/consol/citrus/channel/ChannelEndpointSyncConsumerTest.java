@@ -357,7 +357,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         Message request = new DefaultMessage("").setHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL, replyChannel);
 
-        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
+        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 request.getId(), context);
 
@@ -414,7 +414,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         ChannelSyncEndpoint dummyEndpoint = new ChannelSyncEndpoint();
         dummyEndpoint.setName("dummyEndpoint");
-        ((ChannelSyncConsumer)dummyEndpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
+        ((ChannelSyncConsumer)dummyEndpoint.createConsumer()).getCorrelationManager().saveCorrelationKey(
                 dummyEndpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(dummyEndpoint.createConsumer().getName()),
                 "123456789", context);
 
@@ -442,7 +442,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         MessageCorrelator correlator = new DefaultMessageCorrelator();
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
-        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
+        ((ChannelSyncConsumer)endpoint.createConsumer()).getCorrelationManager().saveCorrelationKey(
                 endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 "123456789", context);
 

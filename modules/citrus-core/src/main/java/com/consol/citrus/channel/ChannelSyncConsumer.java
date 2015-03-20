@@ -104,7 +104,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         if (replyChannel != null) {
             String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
-            correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+            correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, replyChannel);
         } else {
             log.warn("Unable to retrieve reply message channel for message \n" +

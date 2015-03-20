@@ -108,7 +108,7 @@ public class JmsSyncConsumer extends JmsConsumer implements ReplyProducer {
         if (jmsMessage.getReplyTo() != null) {
             String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(jmsMessage);
-            correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+            correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
             correlationManager.store(correlationKey, jmsMessage.getReplyTo());
         }  else {
             log.warn("Unable to retrieve reply to destination for message \n" +

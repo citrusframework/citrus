@@ -72,7 +72,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+        correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");

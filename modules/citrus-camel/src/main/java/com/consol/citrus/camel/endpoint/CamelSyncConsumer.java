@@ -75,7 +75,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
-        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+        correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
         correlationManager.store(correlationKey, exchange);
 
         return message;

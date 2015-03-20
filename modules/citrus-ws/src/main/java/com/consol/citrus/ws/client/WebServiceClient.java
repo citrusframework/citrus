@@ -96,7 +96,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
         String correlationKeyName = getEndpointConfiguration().getCorrelator().getCorrelationKeyName(getName());
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(soapMessage);
-        correlationManager.createCorrelationKey(correlationKeyName, correlationKey, context);
+        correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
         String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {

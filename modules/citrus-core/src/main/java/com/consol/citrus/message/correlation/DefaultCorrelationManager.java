@@ -37,12 +37,12 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     private ObjectStore<T> objectStore = new DefaultObjectStore<T>();
 
     @Override
-    public void createCorrelationKey(String id, String correlationKey, TestContext context) {
+    public void saveCorrelationKey(String correlationKeyName, String correlationKey, TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Saving correlation key for '%s'", id));
+            log.debug(String.format("Saving correlation key for '%s'", correlationKeyName));
         }
 
-        context.setVariable(id, correlationKey);
+        context.setVariable(correlationKeyName, correlationKey);
     }
 
     @Override
