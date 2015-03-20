@@ -16,8 +16,6 @@
 
 package com.consol.citrus.message;
 
-import com.consol.citrus.messaging.Consumer;
-
 /**
  * Default message correlator implementation using the Spring integration message id
  * as correlation key.
@@ -37,7 +35,7 @@ public class DefaultMessageCorrelator implements MessageCorrelator {
     }
 
     @Override
-    public String getCorrelationKeyName(Consumer consumer) {
-        return MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumer.getName();
+    public String getCorrelationKeyName(String consumerName) {
+        return MessageHeaders.MESSAGE_CORRELATION_KEY + "_" + consumerName;
     }
 }

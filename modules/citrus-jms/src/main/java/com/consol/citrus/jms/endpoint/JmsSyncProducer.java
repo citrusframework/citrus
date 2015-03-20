@@ -72,7 +72,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
 
         String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(message);
         correlationManager.createCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), correlationKey, context);
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
         String defaultDestinationName = endpointConfiguration.getDefaultDestinationName();
 
         log.info("Sending JMS message to destination: '" + defaultDestinationName + "'");
@@ -133,7 +133,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     @Override
     public Message receive(TestContext context) {
         return receive(correlationManager.getCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context), context);
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), context), context);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     @Override
     public Message receive(TestContext context, long timeout) {
         return receive(correlationManager.getCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context), context, timeout);
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), context), context, timeout);
     }
 
     @Override

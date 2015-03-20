@@ -68,7 +68,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         Assert.notNull(message, "Can not send empty message");
 
         String correlationKey = correlationManager.getCorrelationKey(
-                endpointConfiguration.getCorrelator().getCorrelationKeyName(this), context);
+                endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), context);
         MessageChannel replyChannel = correlationManager.find(correlationKey, endpointConfiguration.getTimeout());
         Assert.notNull(replyChannel, "Failed to find reply channel for message correlation key: " + correlationKey);
 
@@ -104,7 +104,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         if (replyChannel != null) {
             String correlationKey = endpointConfiguration.getCorrelator().getCorrelationKey(receivedMessage);
             correlationManager.createCorrelationKey(
-                    endpointConfiguration.getCorrelator().getCorrelationKeyName(this), correlationKey, context);
+                    endpointConfiguration.getCorrelator().getCorrelationKeyName(getName()), correlationKey, context);
             correlationManager.store(correlationKey, replyChannel);
         } else {
             log.warn("Unable to retrieve reply message channel for message \n" +

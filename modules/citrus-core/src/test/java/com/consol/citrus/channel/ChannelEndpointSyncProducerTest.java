@@ -18,14 +18,11 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.*;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -199,7 +196,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         expect(messagingTemplate.sendAndReceive(eq(channel), anyObject(org.springframework.messaging.Message.class))).andReturn(response).once();
         
         expect(messageCorrelator.getCorrelationKey(message)).andReturn(MessageHeaders.ID + " = '123456789'").once();
-        expect(messageCorrelator.getCorrelationKeyName(anyObject(Consumer.class))).andReturn("correlationKeyName").once();
+        expect(messageCorrelator.getCorrelationKeyName(anyObject(String.class))).andReturn("correlationKeyName").once();
 
         replay(messagingTemplate, channel, messageCorrelator);
 
@@ -250,7 +247,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
         channelSyncProducer.getCorrelationManager().createCorrelationKey(
-                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(channelSyncProducer),
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(channelSyncProducer.getName()),
                 channelSyncProducer.toString(), context);
         channelSyncProducer.getCorrelationManager().store(channelSyncProducer.toString(), message);
 

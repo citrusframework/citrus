@@ -198,7 +198,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                 .replyTo(replyDestination);
 
         ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
-                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer()),
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 requestMessage.getId(), context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -240,7 +240,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         JmsSyncEndpoint dummyEndpoint = new JmsSyncEndpoint();
         dummyEndpoint.setName("dummyEndpoint");
         ((JmsSyncConsumer)dummyEndpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
-                dummyEndpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(dummyEndpoint.createConsumer()),
+                dummyEndpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(dummyEndpoint.createConsumer().getName()),
                 "123456789", context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -269,7 +269,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
-                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer()),
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 "123456789", context);
 
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -295,7 +295,7 @@ public class JmsEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
 
         ((JmsSyncConsumer)endpoint.createConsumer()).getCorrelationManager().createCorrelationKey(
-                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer()),
+                endpoint.getEndpointConfiguration().getCorrelator().getCorrelationKeyName(endpoint.createConsumer().getName()),
                 "123456789", context);
 
         Map<String, Object> headers = new HashMap<String, Object>();
