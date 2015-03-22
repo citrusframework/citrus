@@ -40,4 +40,8 @@ public class HttpServerITest extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
     public void HttpParallelRequest_2_ITest() {}
+
+    @Test(invocationCount = 100)
+    @CitrusXmlTest
+    public void HttpParallelRequest_3_ITest() {}
 }

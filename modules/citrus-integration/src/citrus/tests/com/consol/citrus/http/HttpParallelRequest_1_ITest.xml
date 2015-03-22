@@ -38,9 +38,6 @@
             <header>
               <element name="CustomHeaderId" value="${custom_header_id}"/>
             </header>
-            <extract>
-              <header name="citrus_message_id" variable="request#1"/>
-            </extract>
           </send>
         </iterate>
 
