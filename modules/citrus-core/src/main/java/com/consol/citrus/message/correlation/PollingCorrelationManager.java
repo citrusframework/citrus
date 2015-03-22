@@ -62,14 +62,14 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
     }
 
     @Override
-    public String getCorrelationKey(String id, TestContext context) {
+    public String getCorrelationKey(String correlationKeyName, TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Get correlation key for '%s'", id));
+            log.debug(String.format("Get correlation key for '%s'", correlationKeyName));
         }
 
         String correlationKey = null;
-        if (context.getVariables().containsKey(id)) {
-            correlationKey = context.getVariable(id);
+        if (context.getVariables().containsKey(correlationKeyName)) {
+            correlationKey = context.getVariable(correlationKeyName);
         }
 
         long timeLeft = 1000L;
@@ -87,13 +87,13 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
                 RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
             }
 
-            if (context.getVariables().containsKey(id)) {
-                correlationKey = context.getVariable(id);
+            if (context.getVariables().containsKey(correlationKeyName)) {
+                correlationKey = context.getVariable(correlationKeyName);
             }
         }
 
         if (correlationKey == null) {
-            throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", id));
+            throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", correlationKeyName));
         }
 
         return correlationKey;
