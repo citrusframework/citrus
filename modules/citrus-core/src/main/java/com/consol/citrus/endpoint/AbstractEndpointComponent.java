@@ -19,6 +19,7 @@ package com.consol.citrus.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,6 +40,8 @@ import java.util.*;
  */
 public abstract class AbstractEndpointComponent implements EndpointComponent {
 
+    public static final String ENDPOINT_NAME = "endpointName";
+
     /** Component name usually the Spring bean id */
     private String name;
 
@@ -52,32 +55,44 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
                 path = path.substring(2);
             }
 
-            Map<String, String> parameters;
             if (path.contains("?")) {
-                String parameterString = path.substring(path.indexOf('?') + 1);
                 path = path.substring(0, path.indexOf('?'));
-                parameters = getParameters(parameterString);
-            } else {
-                parameters = new HashMap<String, String>();
             }
 
-            return createEndpoint(path, parameters, context);
+            Map<String, String> parameters = getParameters(endpointUri);
+            String endpointName = null;
+            if (parameters.containsKey(ENDPOINT_NAME)) {
+                endpointName = parameters.remove(ENDPOINT_NAME);
+            }
+
+            Endpoint endpoint = createEndpoint(path, parameters, context);
+
+            if (StringUtils.hasText(endpointName)) {
+                endpoint.setName(endpointName);
+            }
+
+            return endpoint;
         } catch (URISyntaxException e) {
             throw new CitrusRuntimeException(String.format("Unable to parse endpoint uri '%s'", endpointUri), e);
         }
     }
 
-    protected Map<String, String> getParameters(String parameterString) {
+    @Override
+    public Map<String, String> getParameters(String endpointUri) {
         Map<String, String> parameters = new LinkedHashMap<String, String>();
 
-        StringTokenizer tok = new StringTokenizer(parameterString, "&");
-        while (tok.hasMoreElements()) {
-            String[] parameterValue = tok.nextToken().split("=");
-            if (parameterValue.length != 2) {
-                throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
-            }
+        if (endpointUri.contains("?")) {
+            String parameterString = endpointUri.substring(endpointUri.indexOf('?') + 1);
 
-            parameters.put(parameterValue[0], parameterValue[1]);
+            StringTokenizer tok = new StringTokenizer(parameterString, "&");
+            while (tok.hasMoreElements()) {
+                String[] parameterValue = tok.nextToken().split("=");
+                if (parameterValue.length != 2) {
+                    throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
+                }
+
+                parameters.put(parameterValue[0], parameterValue[1]);
+            }
         }
 
         return parameters;

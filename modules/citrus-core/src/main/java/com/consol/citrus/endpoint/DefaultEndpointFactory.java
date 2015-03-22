@@ -26,6 +26,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default endpoint factory implementation uses registered endpoint components in Spring application context to create endpoint
@@ -47,7 +48,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
     private Properties endpointComponentProperties;
 
     /** Endpoint cache for endpoint reuse */
-    private Map<String, Endpoint> endpointCache = new HashMap<String, Endpoint>();
+    private Map<String, Endpoint> endpointCache = new ConcurrentHashMap<>();
 
     /**
      * Default constructor.
@@ -80,13 +81,23 @@ public class DefaultEndpointFactory implements EndpointFactory {
             throw new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName));
         }
 
-        if (endpointCache.containsKey(endpointUri)) {
-            log.info(String.format("Found cached endpoint for uri '%s'", endpointUri));
-            return endpointCache.get(endpointUri);
+        Map<String, String> parameters = component.getParameters(endpointUri);
+        String cachedEndpointName;
+        if (parameters.containsKey(AbstractEndpointComponent.ENDPOINT_NAME)) {
+            cachedEndpointName = parameters.remove(AbstractEndpointComponent.ENDPOINT_NAME);
         } else {
-            Endpoint endpoint = component.createEndpoint(endpointUri, context);
-            endpointCache.put(endpointUri, endpoint);
-            return endpoint;
+            cachedEndpointName = endpointUri;
+        }
+
+        synchronized (endpointCache) {
+            if (endpointCache.containsKey(cachedEndpointName)) {
+                log.info(String.format("Found cached endpoint for uri '%s'", cachedEndpointName));
+                return endpointCache.get(cachedEndpointName);
+            } else {
+                Endpoint endpoint = component.createEndpoint(endpointUri, context);
+                endpointCache.put(cachedEndpointName, endpoint);
+                return endpoint;
+            }
         }
     }
 

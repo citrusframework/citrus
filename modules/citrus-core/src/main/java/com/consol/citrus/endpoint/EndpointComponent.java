@@ -19,6 +19,8 @@ package com.consol.citrus.endpoint;
 import com.consol.citrus.context.TestContext;
 import org.springframework.beans.factory.BeanNameAware;
 
+import java.util.Map;
+
 /**
  * Endpoint component registers with bean name in Spring application context and is then responsible to create proper endpoints dynamically from
  * endpoint uri values. Creates endpoint instance by parsing the dynamic endpoint uri with special properties and parameters. Creates proper endpoint
@@ -48,4 +50,11 @@ public interface EndpointComponent extends BeanNameAware {
      * @param name
      */
     void setName(String name);
+
+    /**
+     * Construct endpoint name from endpoint uri.
+     * @param endpointUri
+     * @return
+     */
+    Map<String, String> getParameters(String endpointUri);
 }

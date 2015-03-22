@@ -46,16 +46,16 @@ public class DefaultCorrelationManager<T> implements CorrelationManager<T> {
     }
 
     @Override
-    public String getCorrelationKey(String id, TestContext context) {
+    public String getCorrelationKey(String correlationKeyName, TestContext context) {
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Get correlation key for '%s'", id));
+            log.debug(String.format("Get correlation key for '%s'", correlationKeyName));
         }
 
-        if (context.getVariables().containsKey(id)) {
-            return context.getVariable(id);
+        if (context.getVariables().containsKey(correlationKeyName)) {
+            return context.getVariable(correlationKeyName);
         }
 
-        throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", id));
+        throw new CitrusRuntimeException(String.format("Failed to get correlation key for '%s'", correlationKeyName));
     }
 
     @Override

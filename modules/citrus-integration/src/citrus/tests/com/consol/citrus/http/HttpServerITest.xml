@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="HttpServerITest">
-		<meta-info>
-			<author>Unknown</author>
-			<creationdate>2008-04-25</creationdate>
-			<status>FINAL</status>
-			<last-updated-by>Unknown</last-updated-by>
-			<last-updated-on>2008-04-25T00:00:00</last-updated-on>
-		</meta-info>
-		
+        <meta-info>
+          <author>Unknown</author>
+          <creationdate>2008-04-25</creationdate>
+          <status>FINAL</status>
+          <last-updated-by>Unknown</last-updated-by>
+          <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+        </meta-info>
+
         <description>
-			The simple HttpServer implementation is launched and requests are sent to the server destination.
-		</description>
-		
-		<variables>
-			<variable name="custom_header_id" value="123456789"/>
-		</variables>
+          The simple HttpServer implementation is launched and requests are sent to the server destination.
+        </description>
+
+        <variables>
+          <variable name="custom_header_id" value="123456789"/>
+        </variables>
     
         <actions>
             <echo>
@@ -27,10 +27,10 @@
                 <message>
                   <data>
                     <![CDATA[
-	            				<testRequestMessage>
-	            					<text>Hello HttpServer</text>
-	            				</testRequestMessage>
-	            			]]>
+                      <testRequestMessage>
+                        <text>Hello HttpServer</text>
+                      </testRequestMessage>
+                    ]]>
                   </data>
                 </message>
                 <header>
@@ -42,70 +42,70 @@
               </send>
 
               <sequential>
-                    <receive endpoint="httpServerRequestEndpoint" actor="helloClient">
-                        <message>
-                            <data>
-                                <![CDATA[
-                                    <testRequestMessage>
-                                        <text>Hello HttpServer</text>
-                                    </testRequestMessage>
-                                ]]>
-                            </data>
-                        </message>
-                        <header>
-                            <element name="CustomHeaderId" value="${custom_header_id}"/>
-                            <element name="Content-Type" value="text/xml;charset=UTF-8"/>
-                            <element name="Accept" value="text/xml, */*"/>
-                            <element name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
-                            <element name="citrus_http_method" value="POST"/>
-                            <element name="citrus_http_request_uri" value="/test"/>
-                        </header>
-                        <extract>
-                            <header name="citrus_jms_messageId" variable="correlation_id"/>
-                        </extract>
-                    </receive>
-    	            
-    	            <send endpoint="httpServerResponseEndpoint" actor="helloServer">
-    	            	<message>
-    	            		<data>
-    	            			<![CDATA[
-    	            				<testResponseMessage>
-    	            					<text>Hello Citrus</text>
-    	            				</testResponseMessage>
-    	            			]]>
-    	            		</data>
-    	            	</message>
-    	            	<header>
-    	           			<element name="CustomHeaderId" value="${custom_header_id}"/>
-    	           			<element name="citrus_http_status_code" value="200"/>
-    	           			<element name="citrus_http_version" value="HTTP/1.1"/>
-    	           			<element name="citrus_http_reason_phrase" value="OK"/>
+                  <receive endpoint="httpServerRequestEndpoint" actor="helloClient">
+                      <message>
+                          <data>
+                              <![CDATA[
+                                  <testRequestMessage>
+                                      <text>Hello HttpServer</text>
+                                  </testRequestMessage>
+                              ]]>
+                          </data>
+                      </message>
+                      <header>
+                          <element name="CustomHeaderId" value="${custom_header_id}"/>
+                          <element name="Content-Type" value="text/xml;charset=UTF-8"/>
+                          <element name="Accept" value="text/xml, */*"/>
+                          <element name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
+                          <element name="citrus_http_method" value="POST"/>
+                          <element name="citrus_http_request_uri" value="/test"/>
+                      </header>
+                      <extract>
+                          <header name="citrus_jms_messageId" variable="correlation_id"/>
+                      </extract>
+                  </receive>
+
+                  <send endpoint="httpServerResponseEndpoint" actor="helloServer">
+                    <message>
+                      <data>
+                        <![CDATA[
+                          <testResponseMessage>
+                            <text>Hello Citrus</text>
+                          </testResponseMessage>
+                        ]]>
+                      </data>
+                    </message>
+                    <header>
+                      <element name="CustomHeaderId" value="${custom_header_id}"/>
+                      <element name="citrus_http_status_code" value="200"/>
+                      <element name="citrus_http_version" value="HTTP/1.1"/>
+                      <element name="citrus_http_reason_phrase" value="OK"/>
                             <element name="Content-Type" value="text/xml"/>
                             <element name="citrus_jms_correlationId" value="${correlation_id}"/>
-    	           		</header>
-    	            </send>
+                    </header>
+                  </send>
                 </sequential>
             </parallel>
 
-          <receive endpoint="httpClient" actor="helloServer">
-            <message>
-              <data>
-                <![CDATA[
-            				<testResponseMessage>
-            					<text>Hello Citrus</text>
-            				</testResponseMessage>
-            			]]>
-              </data>
-            </message>
-            <header>
-              <element name="CustomHeaderId" value="${custom_header_id}"/>
-              <element name="citrus_http_status_code" value="200"/>
-              <element name="citrus_http_version" value="HTTP/1.1"/>
-              <element name="citrus_http_reason_phrase" value="OK"/>
-            </header>
-          </receive>
+            <receive endpoint="httpClient" actor="helloServer">
+              <message>
+                <data>
+                  <![CDATA[
+                      <testResponseMessage>
+                        <text>Hello Citrus</text>
+                      </testResponseMessage>
+                    ]]>
+                </data>
+              </message>
+              <header>
+                <element name="CustomHeaderId" value="${custom_header_id}"/>
+                <element name="citrus_http_status_code" value="200"/>
+                <element name="citrus_http_version" value="HTTP/1.1"/>
+                <element name="citrus_http_reason_phrase" value="OK"/>
+              </header>
+            </receive>
 
-          <echo>
+            <echo>
                 <message>Send Http request and respond with 404 status code</message>
             </echo>
             
@@ -183,27 +183,27 @@
             </echo>
             
             <send endpoint="httpClient">
-            	<message>
-            		<data>
-            			<![CDATA[
-            				<testRequestMessage>
-            					<text>Hello HttpServer</text>
-            				</testRequestMessage>
-            			]]>
-            		</data>
-            	</message>
-            	<header>
-          			<element name="CustomHeaderId" value="${custom_header_id}"/>
-          		</header>
+              <message>
+                <data>
+                  <![CDATA[
+                    <testRequestMessage>
+                      <text>Hello HttpServer</text>
+                    </testRequestMessage>
+                  ]]>
+                </data>
+              </message>
+              <header>
+                <element name="CustomHeaderId" value="${custom_header_id}"/>
+              </header>
             </send>
             
             <receive endpoint="httpClient" timeout="2000">
-            	<message/>
-            	<header>
-           			<element name="citrus_http_status_code" value="200"/>
-           			<element name="citrus_http_version" value="HTTP/1.1"/>
-           			<element name="citrus_http_reason_phrase" value="OK"/>
-           		</header>
+              <message/>
+              <header>
+                <element name="citrus_http_status_code" value="200"/>
+                <element name="citrus_http_version" value="HTTP/1.1"/>
+                <element name="citrus_http_reason_phrase" value="OK"/>
+              </header>
             </receive>
             
         </actions>

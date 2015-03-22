@@ -156,6 +156,15 @@
          auto-start="true"
          context-config-location="classpath:com/consol/citrus/http/citrus-http-standalone-servlet.xml"
          resource-base="src/citrus/resources"/>
+
+    <citrus-http:server id="echoHttpServer"
+          port="8074"
+          auto-start="true"/>
+
+    <citrus-http:client id="echoHttpClient"
+                      request-url="http://localhost:8074/test"
+                      request-method="POST"
+                      content-type="text/xml"/>
                         
     <citrus-http:client id="httpClient"
          request-url="http://localhost:8072/test"

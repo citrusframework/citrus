@@ -139,8 +139,7 @@ public class SendMessageAction extends AbstractTestAction {
         if (endpoint != null) {
             return endpoint;
         } else if (StringUtils.hasText(endpointUri)) {
-            endpoint = context.getEndpointFactory().create(endpointUri, context);
-            return endpoint;
+            return context.getEndpointFactory().create(endpointUri, context);
         } else {
             throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
         }
