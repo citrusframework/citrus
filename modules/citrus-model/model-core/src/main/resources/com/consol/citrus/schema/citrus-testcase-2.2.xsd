@@ -643,6 +643,42 @@
         <xs:attribute name="build-listener" type="xs:string" />
     </xs:complexType>
 
+    <xs:complexType name="StartActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="servers" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="server" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="server" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="StopActionType">
+        <xs:sequence>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element name="servers" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="server" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:attribute name="name" type="xs:string" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="server" type="xs:string"/>
+    </xs:complexType>
+
     <xs:complexType name="ScriptDefinitionType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -699,6 +735,8 @@
             <xs:element ref="groovy"/>
             <xs:element ref="transform"/>
             <xs:element ref="ant"/>
+            <xs:element ref="start"/>
+            <xs:element ref="stop"/>
             <xs:any namespace="##other" processContents="strict"/>
         </xs:choice>
     </xs:group>
@@ -766,6 +804,8 @@
     <xs:element name="call-template" type="CallTemplateActionType"/>
     <xs:element name="transform" type="TransformActionType"/>
     <xs:element name="ant" type="AntActionType"/>
+    <xs:element name="start" type="StartActionType"/>
+    <xs:element name="stop" type="StopActionType"/>
 
     <xs:element name="template" type="TemplateType"/>
 

@@ -65,6 +65,8 @@ public final class TestActionRegistry {
         registerActionParser("groovy", new GroovyActionParser());
         registerActionParser("transform", new TransformActionParser());
         registerActionParser("ant", new AntRunActionParser());
+        registerActionParser("start", new StartServerActionParser());
+        registerActionParser("stop", new StopServerActionParser());
     }
 
     /**

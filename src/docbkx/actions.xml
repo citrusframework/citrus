@@ -24,6 +24,7 @@
   <xi:include href='actions-assert.xml'/>
   <xi:include href='actions-catch.xml'/>
   <xi:include href='actions-antrun.xml'/>
+  <xi:include href='actions-manage-server.xml'/>
   <xi:include href='actions-generic-action.xml'/>
   
 </chapter>

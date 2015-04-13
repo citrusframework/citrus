@@ -32,7 +32,7 @@ public class StopServerAction extends AbstractTestAction {
     /** List of servers to stop */
     private List<Server> serverList = new ArrayList<Server>();
 
-    /** Single server isntance to stop */
+    /** Single server instance to stop */
     private Server server;
 
     /**

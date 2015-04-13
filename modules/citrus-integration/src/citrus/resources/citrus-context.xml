@@ -346,6 +346,17 @@
          port="25025"
          auto-start="true"/>
 
+    <!-- Simple server implementation with status event channel -->
+    <bean id="simpleServer" class="com.consol.citrus.server.SimpleServer">
+      <property name="autoStart" value="false"/>
+      <property name="statusChannelEndpoint" ref="statusChannelEndpoint"/>
+    </bean>
+
+    <citrus:channel-endpoint id="statusChannelEndpoint"
+            channel-name="statusChannel"/>
+
+    <citrus:channel id="statusChannel" capacity="5"/>
+
     <!-- Sample data dictionary for hello service messages -->
     <citrus:xml-data-dictionary id="helloServiceDataDictionary" global-scope="false">
       <citrus:mappings>

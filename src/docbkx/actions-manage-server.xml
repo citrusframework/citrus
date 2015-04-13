@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="actions-manage-server">
+    <title>Start/Stop server instances</title>
+
+    <para>The Citrus framework provides several server instances for simulating server side business logic. This can be a Http server as well as a FTP or mail server instance.
+    By default these server instances start automatically when Citrus application is loaded. You can explicitly start/stop a server instance within a test case using dedicated start and stop
+    test actions.</para>
+    
+    <para>Let me explain with a simple sample test case:</para>
+    
+    <para><emphasis>XML DSL</emphasis></para>
+    <programlisting>&lt;testcase name=&quot;StartStopServerTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;start&gt;
+            &lt;servers&gt;
+                &lt;server name=&quot;someHttpServer&quot;/&gt;
+                &lt;server name=&quot;someFtpServer&quot;/&gt;
+            &lt;/servers&gt;
+        &lt;/start&gt;
+
+        &lt;stop&gt;
+            &lt;servers&gt;
+                &lt;server name=&quot;someHttpServer&quot;/&gt;
+            &lt;/servers&gt;
+        &lt;/stop&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+    <para>The action can handle one to many server instances for start and stop operation. The server name references to a Spring bean of type <emphasis>com.consol.citrus.server.Server</emphasis> in the Spring
+    application context. The server instance is started/stopped accordingly during the test case as the test action is executed. This is a good way to test downtime scenarios of interface partners with respective
+    error handling when connections to servers are lost.</para>
+
+    <para><emphasis>Java DSL</emphasis></para>
+    <programlisting language="java">@Autowired
+private HttpServer someHttpServer;
+
+@Autowired
+private FtpServer someFtpServer;
+
+@CitrusTest
+public void startStopServerTest() {
+    start(someHttpServer, someFtpServer);
+
+    stop(someHttpServer);
+}</programlisting>
+    
+    <para>In the Java DSL we can reference a server object. The servers can be injected to the test case with Spring's autowiring mechanism.</para>
+    
+    <para>As you can see starting and stopping Citrus server instances is very easy. You can also write your own server implementations by implementing the interface <emphasis>com.consol.citrus.server.Server</emphasis>.
+    All custom server implementations can then be started and stopped during a test case.</para>
+
+</section>
