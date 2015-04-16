@@ -1,24 +1,28 @@
-<div class="navbar navbar-static-top">
-  <div class="navbar-inner">
-    <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </a>
-      <a class="brand" href="#"><img src="images/brand-logo.png"/><span>&nbsp;Citrus Admin</span></a>
-      <div class="nav-collapse">
-        <ul id="header-nav" class="nav">
-          <li><a id="nav-open" href="setup">Open</a></li>
-          <li><a id="nav-project" href="#project">Dashboard</a></li>
-          <li><a id="nav-config" href="#config">Configuration</a></li>
-          <li><a id="nav-tests" href="#tests">Tests</a></li>
-          <li><a id="nav-stats" href="#stats">Statistics</a></li>
-          <li><a id="nav-settings" href="#settings">Settings</a></li>
-          <li><a id="nav-about" href="#about">About</a></li>
-        </ul>
-      </div><!--/.nav-collapse -->
+      </button>
+      <a class="navbar-brand" href="#"><img src="images/brand-logo.png"/><span>Citrus</span></a>
     </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a id="nav-open" href="setup">Open</a></li>
+        <li><a id="nav-project" href="#project">Dashboard</a></li>
+        <li><a id="nav-config" href="#config">Configuration</a></li>
+        <li><a id="nav-tests" href="#tests">Tests</a></li>
+        <li><a id="nav-stats" href="#stats">Statistics</a></li>
+        <li><a id="nav-settings" href="#settings">Settings</a></li>
+        <li><a id="nav-about" href="#about">About</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="log">Log</a></li>
+      </ul>
+      <div class="pull-right" id="web-socket"></div>
+    </div><!--/.nav-collapse -->
   </div>
-  <div class="pull-right" id="web-socket"></div>
-</div>
+</nav>

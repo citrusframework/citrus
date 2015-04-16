@@ -1,4 +1,4 @@
-<div class="container-fluid content-header">
+<div class="container content-header">
   <div>
     <h1><i class="fa fa-cubes"/> Tests
       <small>Citrus integration test cases</small>&nbsp;
@@ -6,22 +6,24 @@
     </h1>
   </div>
 </div>
-<div class="container-fluid content-nav">
+<div class="container content-nav">
     <span>On this page you see all test cases in this project. Select a test and execute it with a run configuration.</span>
     <form id="search-form" class="form-horizontal pull-right" method="GET" action="#">
-      <div class="input-append">
-        <input id="test-name" type="text" autocomplete="off" class="input-large" data-provide="typeahead" placeholder="TestCase"/>
-        <button id="button-search" type="submit" class="btn btn-citrus"><i class="fa fa-search fa-white"></i></button>
+      <div class="form-group">
+        <div class="input-group">
+          <input id="test-name" type="text" autocomplete="off" class="input-large" data-provide="typeahead" placeholder="TestCase"/>
+          <a id="button-search" type="submit" class="input-group-addon btn btn-citrus"><i class="fa fa-search fa-white"></i></a>
+        </div>
       </div>
     </form>
 </div>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2 navigation">
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2 navigation">
         <div id="test-file-tree" class="file-tree"></div>
     </div>
-    <div class="span10 separated">
+    <div class="col-lg-10 separated">
 	    <ul id="test-tabs" class="nav nav-tabs">
             <li style="display: none;" class="active">
                 <a href="#open-tab" data-toggle="tab">Open</a>

@@ -1,25 +1,22 @@
-<div class="container-fluid content-header">
+<div class="container content-header">
   <div>
     <h1><i class="fa fa-cube"/> Project: {{project.name}}</h1>
   </div>
 </div>
-<div class="container-fluid content-nav">
+<div class="container content-nav">
   <div>
     <p>
       <span><b>Projecthome:</b></span> <span>{{project.projectHome}}</span>
-      <span><b>Name:</b></span> <span>{{project.name}}</span>
-      <span><b>Citrus version:</b></span> <span>{{project.version}}</span>
-      <span><b>Package:</b></span> <span>{{project.basePackage}}</span>
     </p>
   </div>
 </div>
 
-<div class="container-fluid content">
-  <div class="row-fluid">
-    <div class="span3">
+<div class="container content">
+  <div class="row">
+    <div class="col-lg-4">
       <h2 class="page-header"><i class="fa fa-wrench"/> Configuration</h2>
       <p>Citrus Spring application context configuration:</p>
-      <ul id="config-overview" style="list-style: none; margin: 0 0 10px 5px">
+      <ul class="overview">
         <li><i class="fa fa-angle-double-right"/> <a href="#config/endpoints">Endpoints</a></li>
         <li><i class="fa fa-angle-double-right"/> <a href="#config/schemas">Schema Definitions</a></li>
         <li><i class="fa fa-angle-double-right"/> <a href="#config/functions">Functions</a></li>
@@ -32,11 +29,11 @@
       <a href="#config" title="Show configuration page"><i class="fa fa-wrench"/> Show configuration</a>
     </div>
 
-    <div class="span4">
+    <div class="col-lg-4">
       <h2 class="page-header"><i class="fa fa-cubes"/> Tests</h2>
       <p>Your project has <span class="badge badge-emphasis badge-citrus">{{project.testCount}}</span> test cases!</p>
       <span>Latest tests:</span>
-      <ul id="test-overview" style="list-style: none; margin: 0 0 10px 5px">
+      <ul class="overview">
         {{#each latestTests}}
         <li><i class="fa fa-file-text-o"/> <a href="#tests/{{name}}" title="{{packageName}}.{{name}}">{{name}}</a></li>
         {{/each}}
@@ -44,53 +41,50 @@
       <a href="#tests" title="View all tests"><i class="fa fa-cubes"/> View all tests</a>
     </div>
 
-    <div class="span3">
-      <h2 class="page-header"><i class="fa fa-tasks"/> Latest results</h2>
-      <p>Latest test results: <b>{{dateFormat testReport.executionDate}}</b> (duration: <b>{{duration testReport.duration}})</b>)</p>
-      <p>Name: <b>{{testReport.suiteName}}</b></p>
-      <span>Passed: {{testReport.passed}} ({{percentage testReport.passed total=testReport.total dp=2}}%)</span>
-      <div class="progress progress-success test-report-bar">
-        <div class="bar" style="width: {{percentage testReport.passed total=testReport.total}}%"></div>
-      </div>
-      <span>Failed: {{testReport.failed}} ({{percentage testReport.failed total=testReport.total dp=2}}%)</span>
-      <div class="progress progress-danger test-report-bar">
-        <div class="bar" style="width: {{percentage testReport.failed total=testReport.total}}%"></div>
-      </div>
-      <span>Skipped: {{testReport.skipped}} ({{percentage testReport.skipped total=testReport.total dp=2}}%)</span>
-      <div class="progress progress-warning test-report-bar">
-        <div class="bar" style="width: {{percentage testReport.skipped total=testReport.total}}%"></div>
-      </div>
-      <p>Total: {{testReport.total}}</p>
-      <a href="#stats" title="Show test reports"><i class="fa fa-tasks"/> Complete results</a>
+    <div class="col-lg-4">
+      <h2 class="page-header"><i class="fa fa-cogs"/> Settings</h2>
+        <p>
+          <b>Name:</b> {{project.name}}<br/>
+          <b>Version:</b> {{project.version}}<br/>
+          <b>Package:</b> {{project.basePackage}}
+        </p>
+        <p><b>ProjectHome:</b> {{project.projectHome}}</p>
+        <p><b>Description:</b><br/>
+            {{#if project.description}}
+            <p>{{project.description}}</p>
+            {{/if}}
+            {{#unless project.description}}
+            <p>No project description</p>
+            {{/unless}}
+        </p>
+      <a href="#project" title="Edit project settings"><i class="fa fa-edit"/> Edit settings</a>
     </div>
   </div>
 </div>
 
-<div class="container-fluid" style="margin-top: 40px;">
-  <div class="row-fluid">
-    <div class="span4">
-      <h2 class="page-header"><i class="fa fa-cogs"/> Settings</h2>
-      <ul id="settings-overview" style="list-style: none; margin: 0 0 10px 5px">
-        <li><b>Name:</b> {{project.name}}</li>
-        <li><b>Version:</b> {{project.version}}</li>
-        <li><b>Package:</b> {{project.basePackage}}</li>
-        <li>&nbsp;</li>
-        <li><b>ProjectHome:</b> {{project.projectHome}}</li>
-        <li>&nbsp;</li>
-        <li><b>Description:</b><br/>
-          <blockquote>
-          {{#if project.description}}
-          <p>{{project.description}}</p>
-          {{/if}}
-          {{#unless project.description}}
-          <p>No project description</p>
-          {{/unless}}
-          </blockquote>
-        </li>
-      </ul>
-      <a href="#project" title="Edit project settings"><i class="fa fa-edit"/> Edit settings</a>
-    </div>
-    <div class="span6">
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <h2 class="page-header"><i class="fa fa-tasks"/> Latest results</h2>
+      <p>
+        <b>Date:</b> {{dateFormat testReport.executionDate}}<br/>
+        <b>Duration:</b> {{duration testReport.duration}}<br/>
+        <b>Suite Name:</b> {{testReport.suiteName}}
+      </p>
+      <span><b>Passed:</b> {{testReport.passed}} ({{percentage testReport.passed total=testReport.total dp=2}}%)</span>
+      <div class="progress test-report-bar">
+        <div class="progress-bar progress-bar-success" style="width:{{percentage testReport.passed total=testReport.total}}%"></div>
+      </div>
+      <span><b>Failed:</b> {{testReport.failed}} ({{percentage testReport.failed total=testReport.total dp=2}}%)</span>
+      <div class="progress test-report-bar">
+        <div class="progress-bar progress-bar-danger" style="width:{{percentage testReport.failed total=testReport.total}}%"></div>
+      </div>
+      <span><b>Skipped:</b> {{testReport.skipped}} ({{percentage testReport.skipped total=testReport.total dp=2}}%)</span>
+      <div class="progress test-report-bar">
+        <div class="progress-bar progress-bar-warning" style="width:{{percentage testReport.skipped total=testReport.total}}%"></div>
+      </div>
+      <p><b>Total Tests:</b> {{testReport.total}}</p>
+      <a href="#stats" title="Show test reports"><i class="fa fa-tasks"/> Complete results</a>
     </div>
   </div>
 </div>
