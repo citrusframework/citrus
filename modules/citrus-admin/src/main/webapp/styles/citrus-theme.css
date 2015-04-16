@@ -211,6 +211,35 @@ span.message-outbound {
     left: -6px;
 }
 
+.nav-pills > li {
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
+.nav-pills > li + li {
+    margin-left: 0px;
+}
+
+.nav-pills > li > a {
+    background: #eff6fb;
+    color: #333;
+    min-width: 160px;
+    text-align: center;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    background: #0096D6;
+    color: #fff;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+    background: #0096D6;
+    color: #fff;
+}
+
 .dropdown-menu .sub-menu {
     left: 100%;
     position: absolute;

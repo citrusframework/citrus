@@ -7,27 +7,18 @@
     </h1>
   </div>
 </div>
-<div class="container content-nav">
-  <div>
-    <p>On this page you can manage the Citrus Spring configuration elements such as message endpoints, schema repositories and global variables</p>
-  </div>
+
+<div class="container">
+  <ul id="config-tabs" class="nav nav-pills"/>
 </div>
 
 <div class="container content">
-  <div class="row">
-    <div class="col-lg-3 navigation">
-      <ul id="config-tabs" class="nav nav-pills nav-stacked">
-      </ul>
-    </div>
-    <div class="col-lg-9">
-      <div id="config-tab-content" class="tab-content"></div>
-    </div>
-  </div>
+  <div id="config-tab-content" class="tab-content"></div>
 </div>
 
 <code id="config-tab-template" style="display: none;">
   <li id="tab-{{var name='id'}}" class="">
-    <a href="#config-tab-{{var name='id'}}" data-toggle="tab">{{var name='tabDisplayName'}} <i class="fa fa-angle-double-right pull-right"></i></a>
+    <a href="#config-tab-{{var name='id'}}" data-toggle="tab">{{var name='tabDisplayName'}}</a>
   </li>
 </code>
 
