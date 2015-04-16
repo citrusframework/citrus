@@ -8,10 +8,10 @@
 </div>
 <div class="container content-nav">
     <span>On this page you see all test cases in this project. Select a test and execute it with a run configuration.</span>
-    <form id="search-form" class="form-horizontal pull-right" method="GET" action="#">
+    <form id="search-form" class="form-inline pull-right" method="GET" action="#">
       <div class="form-group">
         <div class="input-group">
-          <input id="test-name" type="text" autocomplete="off" class="input-large" data-provide="typeahead" placeholder="TestCase"/>
+          <input id="test-name" type="text" autocomplete="off" class="form-control" data-provider="typeahead" placeholder="TestCase"/>
           <a id="button-search" type="submit" class="input-group-addon btn btn-citrus"><i class="fa fa-search fa-white"></i></a>
         </div>
       </div>
@@ -19,11 +19,11 @@
 </div>
 
 <div class="container">
-  <div class="row">
+  <div class="row bordered">
     <div class="col-lg-2 navigation">
         <div id="test-file-tree" class="file-tree"></div>
     </div>
-    <div class="col-lg-10 separated">
+    <div class="col-lg-10">
 	    <ul id="test-tabs" class="nav nav-tabs">
             <li style="display: none;" class="active">
                 <a href="#open-tab" data-toggle="tab">Open</a>
