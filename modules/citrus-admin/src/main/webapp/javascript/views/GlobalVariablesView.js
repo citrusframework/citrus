@@ -14,9 +14,6 @@
 
             render: function () {
                 $(this.el).html(TemplateManager.template('GlobalVariablesView', {namespaceCount: this.globalVariables.variables.length, variables: this.globalVariables.variables}));
-
-                $( "#variables" ).sortable().disableSelection();
-
                 return this;
             },
 

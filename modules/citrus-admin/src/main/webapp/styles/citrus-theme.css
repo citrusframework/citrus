@@ -26,6 +26,22 @@ a:hover {
 
 /** Container **/
 
+.jumbotron {
+    background-color: #eff6fb;
+}
+
+.jumbotron h1, .jumbotron .h1 {
+    font-size: 55px;
+}
+
+.jumbotron p {
+    font-size: 19px;
+}
+
+.jumbotron .btn {
+    font-size: 18px;
+}
+
 .content-header {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -97,15 +113,19 @@ span.message-outbound {
   border: none;
 }
 
-.badge-header {
+.label-header, .badge-header {
   min-width: 350px;
   font-size: 30.5px;
 }
 
-.badge-emphasis {
+.label-emphasis, .badge-emphasis {
   min-width: 20px;
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
+}
+
+.label-primary {
+    background-color: #0096D6;
 }
 
 .label-citrus, .badge-citrus {
@@ -539,8 +559,8 @@ div.file-tree {
 }
 
 .btn-primary:hover {
-    border-color: #337ab7;
-    background-color: #337ab7;
+    border-color: #33abde;
+    background-color: #33abde;
 }
 
 .btn-citrus {
@@ -721,6 +741,10 @@ i.channel {
 .connected-horizontal {
     float: left;
     margin-right: 20px;
+}
+
+.list-group-item:focus, .list-group-item:hover {
+    background-color: #f5f5f5;
 }
 
 ul.sortable {

@@ -4,7 +4,7 @@
             dictionaries: [],
 
             events: {
-                "click tr.dictionary": "showEditForm",
+                "click div.dictionary": "showEditForm",
                 "click .btn-new": "showNewForm",
                 "click .btn-remove": "remove",
                 "click #btn-add": "create",
@@ -37,17 +37,18 @@
             },
 
             removeMapping: function (event) {
-                $(event.target).parent().parent().remove();
+                $('div#mappings').find('#' + $(event.target).parent().attr('data-target')).remove();
                 return false;
             },
 
             addMapping: function (event) {
                 var mappingKey = $('#dictionary-edit').find('input[name = "path"]').val();
                 var mappingValue = $('#dictionary-edit').find('input[name = "value"]').val();
+                var uniqueId = _.uniqueId('new_');
 
-                $('#dictionary-edit').find('ul#mappings').append('<li id="' + mappingKey + '"' + ' title="' + mappingValue + '" class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + mappingKey + '</b>=' + mappingValue + '&nbsp;<a class="btn-remove-mapping pull-right" href="#config" title="Remove mapping"><i class="fa fa-times" style="color: #A50000;"></i></a></li>');
+                $('#dictionary-edit').find('div#mappings').append('<div id="' + uniqueId + '"' + ' title="' + mappingValue + '" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + mappingKey + '</b>=' + mappingValue + '&nbsp;<a class="btn-remove-mapping pull-right" href="#config" title="Remove mapping" data-target="' + uniqueId + '"><i class="fa fa-times" style="color: #A50000;"></i></a></div>');
 
-                $('#mapping-edit').find('ul#mappings').find('li:last').find('a.btn-remove-mapping').click(_.bind(function(event) {
+                $('#dictionary-edit').find('div#mappings').find('div:last').find('a.btn-remove-mapping').click(_.bind(function(event) {
                     this.removeMapping(event);
                 }, this));
 
@@ -196,17 +197,17 @@
             getDataDictionaryJSON: function(serializedForm) {
                 var mappings = [];
 
-                $('#dictionary-edit').find('ul#mappings').children('li').each(function(index) {
+                $('#dictionary-edit').find('div#mappings').children().each(function(index) {
                     mappings.push( {path: $(this).attr('id'), value: $(this).attr('title')} );
                 });
 
-                var functionLibrary = { id: serializedForm.id,
+                var dataDictionary = { id: serializedForm.id,
                                         type: serializedForm.type,
                                         globalScope: serializedForm.globalScope,
                                         mappingStrategy: serializedForm.mappingStrategy,
                                         mappings: { mappings: mappings} };
 
-                return JSON.stringify(functionLibrary);
+                return JSON.stringify(dataDictionary);
             },
 
             extractId: function(encodedId) {

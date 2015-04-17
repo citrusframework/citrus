@@ -16,14 +16,16 @@
         <input name="value" placeholder="Value" type="text" class="form-control"/>
       </div>
 
-      <a href="#config" id="btn-add" class="btn btn-primary">Add variable</a>
+      <a href="#config" id="btn-add" class="btn btn-primary"><i class="fa fa-plus"></i> Add variable</a>
     </div>
   </form>
 
-  <ul id="variables" class="sortable">
+  <br/>
+
+  <div id="variables" class="list-group">
     {{#each variables}}
-    <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{name}}</b> = {{value}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
+    <div class="list-group-item clickable" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{name}}</b> = {{value}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
     {{/each}}
-  </ul>
+  </div>
 
 </div>

@@ -21,19 +21,25 @@
       </fieldset>
     </form>
     
-    <div id="dialog-file-tree" class="modal hide">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" area-hidden="true">&times;</button>
-        <h3>Select project home</h3>
-      </div>
-      
-      <div class="modal-body">
-        <p>Please select Citrus project home directory and confirm.</p>
-        <div id="file-tree" class="file-tree"></div>
-      </div>
-      <div class="modal-footer">
-        <a id="button-close" name="dialog-close" class="btn btn-default">Close</a>
-        <a id="button-select" name="dialog-select" class="btn btn-primary">Open</a>
+    <div id="dialog-file-tree" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">Select project home</h3>
+          </div>
+
+          <div class="modal-body">
+            <p>Please select Citrus project home directory and confirm.</p>
+            <div id="file-tree" class="file-tree"></div>
+          </div>
+
+          <div class="modal-footer">
+            <a id="button-close" name="dialog-close" class="btn btn-default" data-dismiss="modal">Close</a>
+            <a id="button-select" name="dialog-select" class="btn btn-primary">Open</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -16,45 +16,27 @@
       <span><i class="fa fa-share-alt-square"></i> {{capitalize type}} Endpoints</span>
     </h2>
 
-    <table class="table table-hover table-condensed config-table">
-      <thead>
-      <tr>
-        <th style="width: 80px;">Type</th>
-        <th style="width: 400px;">Name</th>
-        <th>Configuration</th>
-        <th style="width: 20px;"></th>
-      </tr>
-      </thead>
-      <tbody>
+    <div class="list-group">
       {{#unless endpoints.length}}
-      <tr><td colspan="4">&nbsp;<i class="fa fa-times"></i> No endpoints defined</td></tr>
+      <div class="list-group-item"><i class="fa fa-times"></i> No endpoints defined</div>
       {{/unless}}
 
       {{#each endpoints}}
-      <tr class="endpoint clickable" id="{{id}}">
-        <td><span class="badge badge-{{type}}"><i class="fa fa-share-alt-square"></i> &nbsp;{{type}}</span></td>
-        <td>{{id}}</td>
-        <td>
+      <div class="list-group-item endpoint clickable" id="{{id}}">
+          <a class="btn-remove pull-right" href="#config" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>
+          <span class="label label-{{type}}"><i class="fa fa-share-alt-square"></i></span>&nbsp;
+          <span><b>{{id}}</b></span>
           <ul class="properties">
             {{#each properties}}
-              {{#if value}}
-              <li><b>{{id}}</b>:{{value}}</li>
-              {{/if}}
+            {{#if value}}
+            <li><b>{{id}}</b>:{{value}}</li>
+            {{/if}}
             {{/each}}
           </ul>
-        </td>
-        <td>
-          <a class="btn-remove" href="#config" title="Remove endpoint"><i class="fa fa-times" style="color: #A50000;"></i></a>&nbsp;
-        </td>
-      </tr>
+      </div>
       {{/each}}
-      </tbody>
-      <tfoot>
-      <tr>
-        <td colspan="3">&nbsp;<a name="{{type}}" class="btn-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a></td>
-      </tr>
-      </tfoot>
-    </table>
+    </div>
+    <a name="{{type}}" class="btn-new clickable" title="Add endpoint"><i class="fa fa-plus"></i> Add</a>
   {{/each}}
 </div>
 

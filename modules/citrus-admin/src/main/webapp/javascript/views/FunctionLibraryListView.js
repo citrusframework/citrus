@@ -5,7 +5,7 @@
             libraries: [],
 
             events: {
-                "click tr.library": "showEditForm",
+                "click div.library": "showEditForm",
                 "click .btn-new": "showNewForm",
                 "click .btn-remove": "remove",
                 "click #btn-add": "create",
@@ -48,7 +48,7 @@
             },
 
             removeFunction: function (event) {
-                $(event.target).parent().parent().remove();
+                $('div#functions').find('#' + $(event.target).parent().attr('data-target')).remove();
                 return false;
             },
 
@@ -56,9 +56,9 @@
                 var functionName = $('#library-edit').find('input[name = "name"]').val();
                 var functionClass = $('#library-edit').find('input[name = "clazz"]').val();
 
-                $('#library-edit').find('ul#functions').append('<li id="' + functionName + '"' + ' title="' + functionClass + '" class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + functionName + '()</b> class=' + functionClass + '&nbsp;<a class="btn-remove-function pull-right" href="#config" title="Remove function"><i class="fa fa-times" style="color: #A50000;"></i></a></li>');
+                $('#library-edit').find('div#functions').append('<div id="' + functionName + '"' + ' title="' + functionClass + '" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + functionName + '()</b> class=' + functionClass + '&nbsp;<a class="btn-remove-function pull-right" href="#config" title="Remove function" data-target="' + functionName + '"><i class="fa fa-times" style="color: #A50000;"></i></a></div>');
 
-                $('#library-edit').find('ul#functions').find('li:last').find('a.btn-remove-function').click(_.bind(function(event) {
+                $('#library-edit').find('div#functions').find('div:last').find('a.btn-remove-function').click(_.bind(function(event) {
                     this.removeFunction(event);
                 }, this));
 
@@ -207,7 +207,7 @@
             getFunctionLibraryJSON: function(serializedForm) {
                 var functions = [];
 
-                $('#library-edit').find('ul#functions').children('li').each(function(index) {
+                $('#library-edit').find('div#functions').children().each(function(index) {
                     functions.push( {name: $(this).attr('id'), clazz: $(this).attr('title')} );
                 });
 

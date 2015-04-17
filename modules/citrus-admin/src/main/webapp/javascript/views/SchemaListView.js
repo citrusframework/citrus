@@ -15,8 +15,8 @@
                 "click #btn-repository-add": "createRepository",
                 "click #btn-repository-save": "updateRepository",
                 "click #btn-repository-cancel": "closeRepositoryForm",
-                "click tr.schema": "showSchemaEditForm",
-                "click tr.repository": "showRepositoryEditForm"
+                "click div.schema": "showSchemaEditForm",
+                "click div.repository": "showRepositoryEditForm"
             },
 
             initialize: function () {
@@ -134,10 +134,6 @@
                     dataType: "json",
                     success: _.bind(function (response) {
                         $('#repository-edit').html(TemplateManager.template('SchemaRepositoryEditView', {repository: response, schemas: this.filterSchemas(response.schemas.revesAndSchemas)}));
-
-                        $( "#schemas-included, #schemas-excluded" ).sortable({
-                          connectWith: ".schema-list"
-                        }).disableSelection();
 
                         $('#schema-list').hide('slide', function() {
                             $('#repository-edit').show('slide');
@@ -278,7 +274,7 @@
             getSchemaRepositoryJSON: function(serializedForm) {
                 var schemas = [];
 
-                $('ul#schemas-included').children('li').each(function(index) {
+                $('input:checked').each(function(index) {
                     schemas.push( $(this).attr('id') );
                 });
 

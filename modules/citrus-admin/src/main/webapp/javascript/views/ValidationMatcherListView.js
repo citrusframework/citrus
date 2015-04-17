@@ -5,7 +5,7 @@
             libraries: [],
 
             events: {
-                "click tr.matcher": "showEditForm",
+                "click div.matcher": "showEditForm",
                 "click .btn-new": "showNewForm",
                 "click .btn-remove": "remove",
                 "click #btn-add": "create",
@@ -48,7 +48,7 @@
             },
 
             removeMatcher: function (event) {
-                $(event.target).parent().parent().remove();
+                $('div#matcher').find('#' + $(event.target).parent().attr('data-target')).remove();
                 return false;
             },
 
@@ -56,9 +56,9 @@
                 var matcherName = $('#matcher-edit').find('input[name = "name"]').val();
                 var matcherClass = $('#matcher-edit').find('input[name = "clazz"]').val();
 
-                $('#matcher-edit').find('ul#matcher').append('<li id="' + matcherName + '"' + ' title="' + matcherClass + '" class="sortable highlight"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + matcherName + '()</b> class=' + matcherClass + '&nbsp;<a class="btn-remove-matcher pull-right" href="#config" title="Remove matcher"><i class="fa fa-times" style="color: #A50000;"></i></a></li>');
+                $('#matcher-edit').find('div#matcher').append('<div id="' + matcherName + '"' + ' title="' + matcherClass + '" class="list-group-item clickable"><i class="fa fa-file-text-o"></i>&nbsp;<b>' + matcherName + '()</b> class=' + matcherClass + '&nbsp;<a class="btn-remove-matcher pull-right" href="#config" title="Remove matcher" data-target="' + matcherName + '"><i class="fa fa-times" style="color: #A50000;"></i></a></div>');
 
-                $('#matcher-edit').find('ul#matcher').find('li:last').find('a.btn-remove-matcher').click(_.bind(function(event) {
+                $('#matcher-edit').find('div#matcher').find('div:last').find('a.btn-remove-matcher').click(_.bind(function(event) {
                     this.removeMatcher(event);
                 }, this));
 
@@ -207,7 +207,7 @@
             getValidationMatcherJSON: function(serializedForm) {
                 var matchers = [];
 
-                $('#matcher-edit').find('ul#matcher').children('li').each(function(index) {
+                $('#matcher-edit').find('div#matcher').children().each(function(index) {
                     matchers.push( {name: $(this).attr('id'), clazz: $(this).attr('title')} );
                 });
 

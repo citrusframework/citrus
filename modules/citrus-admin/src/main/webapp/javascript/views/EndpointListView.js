@@ -4,7 +4,7 @@
             endpoints: undefined,
 
             events: {
-                "click tr.endpoint": "showEditForm",
+                "click div.endpoint": "showEditForm",
                 "click .btn-new": "showNewForm",
                 "click .btn-remove": "remove",
                 "click #btn-add": "create",
