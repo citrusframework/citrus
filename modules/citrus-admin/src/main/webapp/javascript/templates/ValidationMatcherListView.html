@@ -60,23 +60,23 @@
   </h2>
 
   <form class="form-horizontal">
-    <div class="control-group">
-      <label class="control-label">Name</label>
-      <div class="controls">
-        <input name="id" value="{{defaultLibrary.id}}" disabled="disabled" type="text" class="span8"/>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <input name="id" value="{{defaultLibrary.id}}" disabled="disabled" type="text" class="form-control"/>
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">Prefix</label>
-      <div class="controls">
-        <input name="prefix" value="{{defaultLibrary.prefix}}" disabled="disabled" type="text" class="span12"/>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Prefix</label>
+      <div class="col-sm-10">
+        <input name="prefix" value="{{defaultLibrary.prefix}}" disabled="disabled" type="text" class="form-control"/>
       </div>
     </div>
 
-    <div class="control-group">
-      <label class="control-label">Validation Matcher</label>
-      <div class="controls">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Validation Matcher</label>
+      <div class="col-sm-10">
         <ul id="matcher" class="sortable box">
           {{#each defaultLibrary.matchers}}
           <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>@{{name}}@()</b> class={{clazz}}</li>

@@ -7,24 +7,24 @@
 <form id="repository-edit-form" class="form-horizontal">
   {{#if repository.id}}
   <input name="id" type="hidden" value="{{repository.id}}"/>
-  <div class="control-group">
-    <label class="control-label">Name <em>*</em></label>
-    <div class="controls">
-      <input name="newId" value="{{repository.id}}" type="text" class="span8"/>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="newId" value="{{repository.id}}" type="text" class="form-control"/>
     </div>
   </div>
   {{else}}
-  <div class="control-group">
-      <label class="control-label">Name <em>*</em></label>
-      <div class="controls">
-          <input name="id" value="{{repository.id}}" type="text" class="span8"/>
+  <div class="form-group">
+      <label class="col-sm-2 control-label">Name <em>*</em></label>
+      <div class="col-sm-10">
+          <input name="id" value="{{repository.id}}" type="text" class="form-control"/>
       </div>
   </div>
   {{/if}}
 
-  <div class="control-group">
-    <label class="control-label">Schemas</label>
-    <div class="controls">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Schemas</label>
+    <div class="col-sm-10">
       <div class="connected-horizontal">
         <p style="text-align: right;"><b>Not included</b></p>
         <ul id="schemas-excluded" class="schema-list sortable box">
@@ -45,12 +45,12 @@
     </div>
   </div>
 
-  <div class="control-group">
-    <div class="controls">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
       {{#if repository.id}}
-      <a href="#config" id="btn-repository-save" class="btn btn-citrus">Save</a>
+      <a href="#config" id="btn-repository-save" class="btn btn-primary">Save</a>
       {{else}}
-      <a href="#config" id="btn-repository-add" class="btn btn-citrus">Add</a>
+      <a href="#config" id="btn-repository-add" class="btn btn-primary">Add</a>
       {{/if}}
       <a href="#config" id="btn-repository-cancel" class="btn btn-default">Close</a>
     </div>

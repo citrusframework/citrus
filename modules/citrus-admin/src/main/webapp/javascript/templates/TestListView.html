@@ -8,14 +8,20 @@
 </div>
 <div class="container content-nav">
     <span>On this page you see all test cases in this project. Select a test and execute it with a run configuration.</span>
-    <form id="search-form" class="form-inline pull-right" method="GET" action="#">
-      <div class="form-group">
-        <div class="input-group">
-          <input id="test-name" type="text" autocomplete="off" class="form-control" data-provider="typeahead" placeholder="TestCase"/>
-          <a id="button-search" type="submit" class="input-group-addon btn btn-citrus"><i class="fa fa-search fa-white"></i></a>
+    <div class="pull-right">
+      <form id="search-form" class="form-inline" method="GET" action="#">
+        <div class="form-group">
+          <div class="col-sm-1">
+            <div class="input-group">
+              <input id="test-name" type="text" autocomplete="off" class="form-control" data-provider="typeahead" placeholder="TestCase"/>
+              <div class="input-group-btn">
+                <button id="button-search" type="submit" class="btn btn-citrus"><i class="fa fa-search fa-white"></i></button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
 </div>
 
 <div class="container">

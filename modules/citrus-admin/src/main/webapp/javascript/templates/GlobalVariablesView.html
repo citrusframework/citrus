@@ -6,36 +6,24 @@
   <p>Global variables are normal test variables that are valid for all test cases. You should put in here constant values that are used across all test cases. Inside the test case you can use
   those global variables with the usual variable expression syntax.</p>
 
-  <p>Your project defines the following global variables:</p>
-
-  <br/>
-
-  <form id="global-variables-edit-form" class="form-horizontal">
-    <div class="control-group">
-      <label class="control-label">Variables</label>
-      <div class="controls">
-        <ul id="variables" class="sortable box">
-          {{#each variables}}
-          <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;{{name}}={{value}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
-          {{/each}}
-        </ul>
+  <form id="global-variables-edit-form">
+    <div class="row">
+      <div class="col-xs-3">
+        <input name="name" placeholder="Name" type="text" class="form-control"/>
       </div>
-    </div>
 
-    <div class="control-group">
-      <label class="control-label">Global Variable <em>*</em></label>
-      <div class="controls">
-        <input name="name" placeholder="Name" type="text" class="span3"/>
-        <input name="value" placeholder="Value" type="text" class="span9"/>
+      <div class="col-xs-5">
+        <input name="value" placeholder="Value" type="text" class="form-control"/>
       </div>
-    </div>
 
-    <div class="control-group">
-      <div class="controls">
-         <a href="#config" id="btn-add" class="btn btn-citrus">Add variable</a>
-      </div>
+      <a href="#config" id="btn-add" class="btn btn-primary">Add variable</a>
     </div>
-
   </form>
+
+  <ul id="variables" class="sortable">
+    {{#each variables}}
+    <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{name}}</b> = {{value}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
+    {{/each}}
+  </ul>
 
 </div>

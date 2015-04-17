@@ -8,25 +8,25 @@
   <input name="modelType" type="hidden" value="{{modelType}}"/>
   {{#if id}}
   <input name="id" type="hidden" value="{{id}}"/>
-  <div class="control-group">
-    <label class="control-label">Type <em>*</em></label>
-    <div class="controls">
-      <select name="type" value="{{type}}" disabled="true" class="span8">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type <em>*</em></label>
+    <div class="col-sm-10">
+      <select name="type" value="{{type}}" disabled="true" class="form-control">
         <option>{{type}}</option>
       </select>
     </div>
   </div>
-  <div class="control-group">
-    <label class="control-label">Name <em>*</em></label>
-    <div class="controls">
-      <input name="newId" value="{{id}}" type="text" class="span8"/>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="newId" value="{{id}}" type="text" class="form-control"/>
     </div>
   </div>
   {{else}}
-  <div class="control-group">
-    <label class="control-label">Type <em>*</em></label>
-    <div class="controls">
-      <select id="endpointType" name="type" class="span8" value="{{type}}">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Type <em>*</em></label>
+    <div class="col-sm-10">
+      <select id="endpointType" name="type" class="form-control" value="{{type}}">
         <option value="jms">jms</option>
         <option value="channel">channel</option>
         <option value="http">http</option>
@@ -38,22 +38,22 @@
       </select>
     </div>
   </div>
-  <div class="control-group">
-    <label class="control-label">Name <em>*</em></label>
-    <div class="controls">
-      <input name="id" value="{{id}}" type="text" class="span8"/>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">Name <em>*</em></label>
+    <div class="col-sm-10">
+      <input name="id" value="{{id}}" type="text" class="form-control"/>
     </div>
   </div>
   {{/if}}
 
   {{#each properties}}
-  <div class="control-group">
-    <label class="control-label">{{displayName}}</label>
-    <div class="controls">
+  <div class="form-group">
+    <label class="col-sm-2 control-label">{{displayName}}</label>
+    <div class="col-sm-10">
       {{#if optionKey}}
-      <div class="input-append">
-        <input name="{{fieldName}}" class="input-xlarge" value="{{value}}" type="text"/>
-        <div id="option-dropdown" class="btn-group">
+      <div class="input-group">
+        <input name="{{fieldName}}" class="form-control" value="{{value}}" type="text"/>
+        <div id="option-dropdown" class="btn-group input-group-btn">
           <button id="{{fieldName}}" name="{{optionKey}}" class="btn btn-option-search dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-search"></i>
           </button>
@@ -64,26 +64,26 @@
       {{/if}}
       {{#unless optionKey}}
         {{#if options}}
-        <select id="{{fieldName}}" class="span8" name="{{fieldName}}" value="{{value}}">
+        <select id="{{fieldName}}" class="form-control" name="{{fieldName}}" value="{{value}}">
           {{#each options}}
           <option value="{{this}}">{{this}}</option>
           {{/each}}
         </select>
         {{/if}}
         {{#unless options}}
-        <input name="{{fieldName}}" value="{{value}}" type="text" class="span8"/>
+        <input name="{{fieldName}}" value="{{value}}" type="text" class="form-control"/>
         {{/unless}}
       {{/unless}}
     </div>
   </div>
   {{/each}}
 
-  <div class="control-group">
-    <div class="controls">
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
       {{#if id}}
-      <a href="#config" id="btn-save" class="btn btn-citrus">Save</a>
+      <a href="#config" id="btn-save" class="btn btn-primary">Save</a>
       {{else}}
-      <a href="#config" id="btn-add" class="btn btn-citrus">Add</a>
+      <a href="#config" id="btn-add" class="btn btn-primary">Add</a>
       {{/if}}
       <a href="#config" id="btn-cancel" class="btn btn-default">Close</a>
     </div>

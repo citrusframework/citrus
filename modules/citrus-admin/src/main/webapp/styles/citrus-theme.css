@@ -395,16 +395,11 @@ form#search-form {
 }
 
 form#search-form #test-name {
-    width: 185px;
+    width: 250px;
 }
 
 .form-horizontal .form-group {
     margin-bottom: 10px;
-}
-
-.form-horizontal .control-label {
-    width: 175px;
-    font-weight: bold;
 }
 
 input[readonly], select[readonly], textarea[readonly] {
@@ -733,7 +728,9 @@ ul.sortable {
     margin: 0px 0px;
     padding: 5px 0 0 0;
     min-width: 310px;
-    min-height: 150px;
+    min-height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 ul.sortable li {

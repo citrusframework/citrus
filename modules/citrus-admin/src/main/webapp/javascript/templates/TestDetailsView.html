@@ -2,10 +2,10 @@
 <div id="{{test.id}}" class="test-details">
   <div id="run-{{test.id}}">
     <form id="test-run-form" class="form-horizontal">
-      <div class="control-group">
-        <label class="control-label">Run configuration</label>
-        <div class="controls">
-          <select id="run-config" class="input-xxlarge">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Run configuration</label>
+        <div class="col-sm-10">
+          <select id="run-config" class="form-control">
             {{#each runConfigurations}}
             <option id="{{id}}">{{id}}&nbsp;<i class="fa fa-check" style="{{#unless standard}}display: none;{{/unless}}"></i></option>
             {{/each}}
@@ -13,8 +13,8 @@
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="controls">
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
           <a id="btn-run" class="btn btn-success" type="button" title="Run test">&nbsp;<i class="fa fa-play"></i>&nbsp;Run Test</a>
           <a id="btn-cancel" class="btn btn-default" type="button" title="Stop test" style="display: none;">&nbsp;<i class="fa fa-stop"></i>&nbsp;Stop Test</a>
           <a id="btn-edit" class="btn btn-default" type="button" title="New">&nbsp;<i class="fa fa-edit"></i>&nbsp;Edit configurations</a>
@@ -25,51 +25,51 @@
 
   <div id="info-{{test.id}}">
     <form id="test-info-edit-form" class="form-horizontal">
-      <div class="control-group">
-        <label class="control-label">Name</label>
-        <div class="controls">
-          <input id="name" class="input-xxlarge" name="name" type="text" placeholder="Test" value="{{test.name}}"/>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <input id="name" class="form-control" name="name" type="text" placeholder="Test" value="{{test.name}}"/>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Author</label>
-        <div class="controls">
-          <input id="author" class="input-xxlarge" name="author" type="text" placeholder="Author" value="{{test.metaInfo.author}}"/>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Author</label>
+        <div class="col-sm-10">
+          <input id="author" class="form-control" name="author" type="text" placeholder="Author" value="{{test.metaInfo.author}}"/>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Status</label>
-        <div class="controls">
-          <input id="status" class="input-xxlarge" name="status" type="text" placeholder="Status" value="{{test.metaInfo.status}}"/>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Status</label>
+        <div class="col-sm-10">
+          <input id="status" class="form-control" name="status" type="text" placeholder="Status" value="{{test.metaInfo.status}}"/>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Package</label>
-        <div class="controls">
-          <input id="packageName" class="input-xxlarge" name="packageName" type="text" placeholder="Package" value="{{test.packageName}}"/>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Package</label>
+        <div class="col-sm-10">
+          <input id="packageName" class="form-control" name="packageName" type="text" placeholder="Package" value="{{test.packageName}}"/>
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Description</label>
-        <div class="controls">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Description</label>
+        <div class="col-sm-10">
             {{#if test.description}}
-            <textarea rows="3" class="input-xxlarge">{{test.description}}</textarea>
+            <textarea rows="3" class="form-control">{{test.description}}</textarea>
             {{/if}}
             {{#unless test.description}}
-            <textarea class="input-xxlarge">No description</textarea>
+            <textarea class="form-control">No description</textarea>
             {{/unless}}
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">Source Code</label>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Source Code</label>
 
-        <div class="controls">
-          <label style="width:auto;" class="control-label"><a id="xml-source" href="#tests">XML</a>&nbsp;|&nbsp;<a id="java-source" href="#tests">Java</a></label>
+        <div class="col-sm-10">
+          <label class="col-sm-2 control-label"><a id="xml-source" href="#tests">XML</a>&nbsp;|&nbsp;<a id="java-source" href="#tests">Java</a></label>
         </div>
       </div>
     </form>
@@ -77,9 +77,9 @@
 
   <div class="test-variables">
     <form id="test-variables-edit-form" class="form-horizontal">
-      <div class="control-group">
-        <label class="control-label">Variables</label>
-        <div class="controls">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Variables</label>
+        <div class="col-sm-10">
           <ul id="variables" class="sortable box">
             {{#each test.variables}}
             <li class="sortable highlight" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;{{@key}}={{this}}&nbsp;<a class="btn-remove pull-right" href="#tests" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></li>
@@ -88,16 +88,18 @@
         </div>
       </div>
 
-      <div class="control-group">
-        <label class="control-label">New Variable <em></em></label>
-        <div class="controls">
-          <input name="name" placeholder="Name" type="text" class="span3"/>
-          <input name="value" placeholder="Value" type="text" class="span9"/>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">New Variable <em></em></label>
+        <div class="col-sm-3">
+          <input name="name" placeholder="Name" type="text" class="form-control"/>
+        </div>
+        <div class="col-sm-7">
+          <input name="value" placeholder="Value" type="text" class="form-control"/>
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="controls">
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
           <a href="#tests" id="btn-add" class="btn btn-default">Add variable</a>
         </div>
       </div>
@@ -106,9 +108,9 @@
 
   <div id="design-{{test.id}}">
     <form class="form-horizontal">
-      <div class="control-group">
-        <label class="control-label">Actions</label>
-        <div class="controls">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">Actions</label>
+        <div class="col-sm-10">
           <div class="test-design"></div>
         </div>
       </div>
