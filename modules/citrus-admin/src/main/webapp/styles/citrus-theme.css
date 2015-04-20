@@ -158,6 +158,18 @@ span.message-outbound {
     background-color: #92bed2;
 }
 
+.badge-success {
+    background-color: #5cb85c
+}
+
+.badge-warning {
+    background-color: #f0ad4e
+}
+
+.badge-danger {
+    background-color: #d9534f
+}
+
 /** Tables **/
 
 .table-hover tbody tr:hover td,
@@ -245,8 +257,7 @@ span.message-outbound {
 
 .nav > li > a:hover,
 .nav > li > a:focus {
-    background: #0096D6;
-    color: #fff;
+    background: #e3effc;
 }
 
 .nav-pills > li.active > a,
@@ -256,12 +267,52 @@ span.message-outbound {
     color: #fff;
 }
 
-.dropdown-menu .sub-menu {
-    left: 100%;
-    position: absolute;
+.dropdown-submenu{
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
     top: 0;
-    visibility: hidden;
-    margin-top: -1px;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #cccccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fcc300;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
 }
 
 .dropdown-menu li > a:hover,
@@ -326,14 +377,34 @@ span.message-outbound {
 
 /** Tab navigation **/
 
-.nav-tabs > li > a, .nav-tabs > li > a:hover {
+.nav-tabs > li > a {
     color: #404040;
     background-color: #eff6fb;
+    border: 1px solid #dddddd;
+    padding-right: 25px;
 }
 
-.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    color: #fff;
+    background-color: #0096D6;
+    border-color: #0096D6;
+}
+
+.nav-tabs > li > a:hover {
     color: #404040;
-    background-color: #ffffff;
+    background-color: #e3effc;
+    border-color: #dddddd;
+}
+
+.nav-tabs > li.closable {
+    margin-bottom: -22px;
+}
+
+.nav-tabs > li.closable > button {
+    position: relative;
+    top: -42px;
 }
 
 .nav-pills.nav-stacked > li > a {
@@ -341,7 +412,8 @@ span.message-outbound {
     background-color: #ffffff;
 }
 
-.nav-pills.nav-stacked > .active > a, .nav-pills.nav-stacked > li > a:hover {
+.nav-pills.nav-stacked > .active > a,
+.nav-pills.nav-stacked > li > a:hover {
     color: #404040;
     background-color: #eff6fb;
 }
@@ -351,36 +423,18 @@ span.message-outbound {
     margin-top: 3px;
 }
 
-.nav-pills.nav-stacked > .active > a > i, .nav-pills.nav-stacked > li > a:hover > i {
+.nav-pills.nav-stacked > .active > a > i,
+.nav-pills.nav-stacked > li > a:hover > i {
     color: #fcc300;
     margin-top: 3px;
 }
 
 #test-tabs {
-    border-bottom: none;
-    margin-bottom: 0px;
+    margin-bottom: 20px;
 }
 
 #test-tabs button.close {
     margin-right: 8px;
-}
-
-#test-tabs > li > a {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-image: none;
-    border-right: 1px solid #dddddd;
-    border-bottom: 1px solid #dddddd;
-    border-left: none;
-    border-top: none;
-    padding-right: 25px;
-    margin-right: 0px;
-}
-
-#test-tabs > li.active > a {
-    border-bottom: none;
 }
 
 /** Headings **/
@@ -405,7 +459,7 @@ h4.page-header {
 }
 
 .clickable-hover:hover {
-  background: #f5f5f5;
+  background: #eff6fb;
 }
 
 /** Forms **/
@@ -743,8 +797,12 @@ i.channel {
     margin-right: 20px;
 }
 
+.list-group-item {
+    padding: 3px 15px;
+}
+
 .list-group-item:focus, .list-group-item:hover {
-    background-color: #f5f5f5;
+    background-color: #eff6fb;
 }
 
 ul.sortable {
@@ -830,7 +888,7 @@ li.sortable.highlight {
 }
 
 ul.properties {
-  margin: 0 0 10px 0px;
+  margin: 0 0 0 0;
 }
 
 ul.properties li {
@@ -852,18 +910,6 @@ div.test-details-open {
 
 .test-details h3 {
     margin: 20px 0px;
-}
-
-.test-details-header {
-    margin-top: 0;
-    padding: 15px 20px;
-    background-color: #0096D6;
-    color: #ffffff;
-    border-top: 1px solid #dddddd;
-}
-
-.test-details-header small {
-    color: #ffffff;
 }
 
 .progress {

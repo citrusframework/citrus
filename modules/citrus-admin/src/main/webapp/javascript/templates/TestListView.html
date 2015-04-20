@@ -25,33 +25,37 @@
 </div>
 
 <div class="container">
-  <div class="row bordered">
-    <div class="col-lg-2 navigation">
-        <div id="test-file-tree" class="file-tree"></div>
+    <ul id="test-tabs" class="nav nav-tabs">
+      <li role="presentation" class="dropdown">
+        <a id="packages" class="dropdown-toggle" data-toggle="dropdown" href="#open-tab" role="button" aria-expanded="false">Open &nbsp;<span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="packages">
+          {{#each testPackages}}
+          <li role="presentation" class="dropdown-submenu"><a id="{{packageName}}" role="menuitem" tabindex="-1" href="#tests">{{packageName}}</a>
+            <ul class="dropdown-menu" role="menu">
+              {{#each tests}}
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="#tests/{{name}}">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+          {{/each}}
+        </ul>
+      </li>
+    </ul>
+
+    <div id="test-tab-content" class="tab-content">
+      <div class="tab-pane active" id="open-tab">
+        <div class="test-details-open">
+            <h3>Open test case</h3>
+            <p class="muted">Open by name with <em>Ctrl + O</em></p>
+        </div>
+      </div>
     </div>
-    <div class="col-lg-10">
-	    <ul id="test-tabs" class="nav nav-tabs">
-            <li style="display: none;" class="active">
-                <a href="#open-tab" data-toggle="tab">Open</a>
-            </li>
-	    </ul>
-	    
-	    <div id="test-tab-content" class="tab-content">
-	      <div class="tab-pane active" id="open-tab">
-              <div class="test-details-open">
-                  <h3>Open test case</h3>
-                  <p class="muted">Open by name with <em>Ctrl + O</em></p>
-              </div>
-	      </div>
-	    </div>
-    </div>
-  </div>
 </div>
 
 <code id="test-details-tab" class="template">
-  <li id="tab-{{var name='id'}}" class="">
-    <button id="tab-close-{{var name='id'}}" type="button" class="close">&times;</button>
+  <li id="tab-{{var name='id'}}" class="closable">
     <a href="#test-details-tab-{{var name='id'}}" data-toggle="tab">{{var name='name'}}</a>
+    <button id="tab-close-{{var name='id'}}" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   </li>
 </code>
 

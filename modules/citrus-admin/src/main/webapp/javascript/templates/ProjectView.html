@@ -62,26 +62,17 @@
 <div class="container content">
   <div class="row">
     <div class="col-lg-4">
-      <h2 class="page-header"><i class="fa fa-tasks"/> Latest results</h2>
+      <h2 class="page-header"><i class="fa fa-tasks"/> Test results</h2>
       <p>
         <b>Date:</b> {{dateFormat testReport.executionDate}}<br/>
         <b>Duration:</b> {{duration testReport.duration}}<br/>
         <b>Suite Name:</b> {{testReport.suiteName}}
       </p>
-      <span><b>Passed:</b> {{testReport.passed}} ({{percentage testReport.passed total=testReport.total dp=2}}%)</span>
-      <div class="progress test-report-bar">
-        <div class="progress-bar progress-bar-success" style="width:{{percentage testReport.passed total=testReport.total}}%"></div>
-      </div>
-      <span><b>Failed:</b> {{testReport.failed}} ({{percentage testReport.failed total=testReport.total dp=2}}%)</span>
-      <div class="progress test-report-bar">
-        <div class="progress-bar progress-bar-danger" style="width:{{percentage testReport.failed total=testReport.total}}%"></div>
-      </div>
-      <span><b>Skipped:</b> {{testReport.skipped}} ({{percentage testReport.skipped total=testReport.total dp=2}}%)</span>
-      <div class="progress test-report-bar">
-        <div class="progress-bar progress-bar-warning" style="width:{{percentage testReport.skipped total=testReport.total}}%"></div>
-      </div>
+      <p><span class="badge badge-success"><i class="fa fa-check"></i></span>&nbsp;<b>Passed:</b> {{testReport.passed}} ({{percentage testReport.passed total=testReport.total dp=2}}%)</p>
+      <p><span class="badge badge-danger"><i class="fa fa-times"></i></span>&nbsp;<b>Failed:</b> {{testReport.failed}} ({{percentage testReport.failed total=testReport.total dp=2}}%)</p>
+      <p><span class="badge badge-warning"><i class="fa fa-minus"></i></span>&nbsp;<b>Skipped:</b> {{testReport.skipped}} ({{percentage testReport.skipped total=testReport.total dp=2}}%)</p>
       <p><b>Total Tests:</b> {{testReport.total}}</p>
-      <a href="#stats" title="Show test reports"><i class="fa fa-tasks"/> Complete results</a>
+      <a href="#stats" title="Show test reports"><i class="fa fa-tasks"/> Result details</a>
     </div>
   </div>
 </div>

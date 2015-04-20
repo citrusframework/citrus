@@ -17,21 +17,18 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.launcher.ProcessMonitor;
-import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.model.TestCaseData;
+import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.TestCaseService;
 import com.consol.citrus.admin.util.FileHelper;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -60,28 +57,6 @@ public class TestCaseController {
     @ResponseBody
     public List<TestCaseData> list() {
         return testCaseService.getTests(projectService.getActiveProject());
-    }
-
-    @RequestMapping(method = { RequestMethod.POST })
-    @ResponseBody
-    public ModelAndView list(@RequestParam("dir") String dir) {
-        ModelAndView view = new ModelAndView("TestFileTree");
-
-        FileTreeModel model = testCaseService.getTestFileTree(projectService.getActiveProject(), FilenameUtils.separatorsToSystem(fileHelper.decodeDirectoryUrl(dir, "")));
-
-        if (StringUtils.hasText(model.getCompactFolder())) {
-            view.addObject("compactFolder", FilenameUtils.separatorsToUnix(model.getCompactFolder()));
-            view.addObject("baseDir", FilenameUtils.separatorsToUnix(fileHelper.decodeDirectoryUrl(dir, "")
-                    + model.getCompactFolder() + File.separator));
-        } else {
-            view.addObject("baseDir", FilenameUtils.separatorsToUnix(fileHelper.decodeDirectoryUrl(dir, "")));
-        }
-
-        view.addObject("folders", model.getFolders());
-        view.addObject("xmlFiles", model.getXmlFiles());
-        view.addObject("javaFiles", model.getJavaFiles());
-
-        return view;
     }
 
     @RequestMapping(value = "/count", method = { RequestMethod.POST })

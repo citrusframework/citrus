@@ -34,14 +34,6 @@ public interface FileHelper {
     String[] getFolders(File directory);
 
     /**
-     * Gets files of explicit extension nature living in given directory.
-     * @param directory
-     * @param fileExtension
-     * @return
-     */
-    String[] getFiles(File directory, String fileExtension);
-    
-    /**
      * Scans file path for filename and returns file instance.
      * @param directory
      * @param filename

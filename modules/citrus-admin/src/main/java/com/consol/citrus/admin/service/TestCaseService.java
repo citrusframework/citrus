@@ -73,12 +73,4 @@ public interface TestCaseService {
      * @return
      */
     String getSourceCode(Project project, String packageName, String testName, TestCaseType type);
-
-    /**
-     * Searches directory for Citrus test cases and constructs proper file tree model.
-     * @param project
-     * @param dir
-     * @return
-     */
-    FileTreeModel getTestFileTree(Project project, String dir);
 }

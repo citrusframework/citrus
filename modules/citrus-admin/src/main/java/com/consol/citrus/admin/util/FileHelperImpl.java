@@ -17,13 +17,12 @@
 package com.consol.citrus.admin.util;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * @author Martin Maher, Christoph Deppisch
@@ -32,9 +31,7 @@ import java.util.*;
 @Component
 public class FileHelperImpl implements FileHelper {
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String[] getFolders(File directory) {
         if (directory.exists()) {
             String[] files = directory.list(new FilenameFilter() {
@@ -55,32 +52,7 @@ public class FileHelperImpl implements FileHelper {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String[] getFiles(File directory, final String fileExtension) {
-        List<String> fileNames = new ArrayList<String>();
-
-        if (!directory.exists()) {
-            return new String[] {};
-        }
-
-        File[] found = directory.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(fileExtension);
-            }
-        });
-
-        for (File file : found) {
-            fileNames.add(FilenameUtils.getBaseName(file.getName()));
-        }
-
-        return fileNames.toArray(new String[fileNames.size()]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public File findFileInPath(File directory, String filename, boolean recursive) {
         if (!directory.isDirectory()) {
             String msg = String.format("Expected a directory but instead got '%s'", directory.getAbsolutePath());
@@ -103,11 +75,9 @@ public class FileHelperImpl implements FileHelper {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String decodeDirectoryUrl(String url, String rootDirectory) {
-        String directory = null;
+        String directory;
 
         try {
             directory = URLDecoder.decode(url, "UTF-8"); // TODO use system default encoding?

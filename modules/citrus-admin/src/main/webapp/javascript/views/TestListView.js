@@ -9,12 +9,7 @@
           },
           
           initialize: function() {
-          },
-          
-          render: function() {
-              $(this.el).html(TemplateManager.template('TestListView', {}));
-
-              $.ajax({
+            $.ajax({
                   url: "testcase",
                   type: 'GET',
                   dataType: "json",
@@ -23,16 +18,19 @@
                   }, this),
                   async: false
               });
+          },
+          
+          render: function() {
+              var testItems = _.map(this.tests, function(item) {
+                  return _.pick(item, 'name', 'packageName');
+              });
 
-              $('#test-file-tree').fileTree({
-                  root: '/',
-                  script: 'testcase',
-                  multiFolder: true,
-                  expandSpeed: 1,
-                  collapseSpeed: 1
-              }, _.bind(function(file) {
-                  CitrusAdmin.navigate("tests/" + _.find(this.tests, function(t) {return t.file == file}).name, true);
-              }, this));
+              var grouped = _.groupBy(testItems, 'packageName');
+              var packages = _.map(_.uniq(_.pluck(testItems, 'packageName')), function(item) {
+                  return { packageName: item, tests: _.property(item)(grouped) };
+              });
+
+              $(this.el).html(TemplateManager.template('TestListView', { testPackages: packages }));
 
               var searchKeys = _.map(this.tests, function(test){ return test.name; });
               $('#test-name').typeahead({
@@ -75,9 +73,12 @@
               }
 
               if ($('ul#test-tabs li#tab-' + test.id).size() === 0) {
-                  
                   $('ul#test-tabs').append(Handlebars.compile($('#test-details-tab').html())({id: test.id, name: test.name}));
                   $('div#test-tab-content').append(Handlebars.compile($('#test-details-tab-pane').html())({id: test.id}));
+
+                  $('li#tab-' + test.id).find('a:first').on('shown.bs.tab', function (e) {
+                    CitrusAdmin.navigate('tests/' + $(e.target).text(), false);
+                  });
                 
                   // bind close function on newly created tab
                   $('#tab-close-' + test.id).click(function() {
@@ -88,15 +89,12 @@
 
                       if (isActiveTab) {
                           // removed tab was active so display next tab
-                          $('ul#test-tabs').find('li:last').find('a').tab('show');
+                          $('ul#test-tabs').children('li:last').find('a:first').tab('show');
                       }
 
-                      if ($('ul#test-tabs').find('li').size() == 1) {
+                      if ($('ul#test-tabs').children('li').size() == 1) {
                           // last tab was closed so navigate to testcase base page
                           CitrusAdmin.navigate('tests', false);
-                      } else {
-                          // navigate to new active tab
-                          CitrusAdmin.navigate('tests/' + $('ul#test-tabs').find('li.active').find('a').text(), false);
                       }
                   });
                 

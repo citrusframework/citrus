@@ -70,30 +70,4 @@ public class TestCaseServiceTest extends AbstractTestNGSpringContextTests {
 
         verify(project);
     }
-
-    @Test
-    public void testGetTestFileTree() throws IOException {
-        reset(project);
-        expect(project.getProjectHome()).andReturn(new ClassPathResource("test-project").getFile().getAbsolutePath()).atLeastOnce();
-        replay(project);
-
-        FileTreeModel tests = testCaseService.getTestFileTree(project, "com/consol/citrus");
-
-        Assert.assertNotNull(tests);
-        Assert.assertEquals(tests.getXmlFiles().size(), 1L);
-
-        FileTreeModel.TestFileModel test = tests.getXmlFiles().get(0);
-        Assert.assertEquals(test.getFilename(), "BarTest");
-        Assert.assertNull(test.getTestMethods());
-
-        Assert.assertEquals(tests.getJavaFiles().size(), 1L);
-
-        test = tests.getJavaFiles().get(0);
-        Assert.assertEquals(test.getFilename(), "JavaTest");
-        Assert.assertEquals(test.getTestMethods().size(), 2L);
-        Assert.assertEquals(test.getTestMethods().get(0), "FooJavaTest");
-        Assert.assertEquals(test.getTestMethods().get(1), "FooTest");
-
-        verify(project);
-    }
 }
