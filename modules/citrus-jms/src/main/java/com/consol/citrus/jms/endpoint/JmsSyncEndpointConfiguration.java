@@ -41,7 +41,7 @@ public class JmsSyncEndpointConfiguration extends JmsEndpointConfiguration imple
     private String replyDestinationName;
 
     /** Polling interval when waiting for synchronous reply message to arrive */
-    private long pollingInterval = 500;
+    private long pollingInterval = 500L;
 
     /**
      * Set the reply message correlator.
