@@ -233,22 +233,33 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       automatically.</para>
 
       <para>No matter what approach you are using to set up the Apache Ant classpath see the following sample Ant build script which uses
-      the Citrus project artifacts in combination with the Citrus Ant tasks to run the tests.</para>
+      the Citrus project artifacts in combination with the TestNG Ant tasks to run the tests.</para>
       
-      <programlisting>&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot;&gt;
-  
+      <programlisting>&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot; xmlns:artifact=&quot;antlib:org.apache.maven.artifact.ant&quot;&gt;
+
   &lt;property file=&quot;src/citrus/resources/citrus.properties&quot;/&gt;
-  
+
+  &lt;path id=&quot;maven-ant-tasks.classpath&quot; path=&quot;lib/maven-ant-tasks-2.1.3.jar&quot; /&gt;
+  &lt;typedef resource=&quot;org/apache/maven/artifact/ant/antlib.xml&quot;
+    uri=&quot;antlib:org.apache.maven.artifact.ant&quot;
+    classpathref=&quot;maven-ant-tasks.classpath&quot; /&gt;
+
+  &lt;artifact:pom id=&quot;citrus-pom&quot; file=&quot;pom.xml&quot; /&gt;
+  &lt;artifact:dependencies filesetId=&quot;citrus-dependencies&quot; pomRefId=&quot;citrus-pom&quot; /&gt;
+
   &lt;path id=&quot;citrus-classpath&quot;&gt;
-    &lt;fileset dir=&quot;lib&quot;&gt;
-      &lt;include name=&quot;*.jar&quot;/&gt;
-    &lt;/fileset&gt;
+    &lt;pathelement path=&quot;src/citrus/java&quot;/&gt;
+    &lt;pathelement path=&quot;src/citrus/resources&quot;/&gt;
+    &lt;pathelement path=&quot;src/citrus/tests&quot;/&gt;
+    &lt;fileset refid=&quot;citrus-dependencies&quot;/&gt;
   &lt;/path&gt;
-  
-  &lt;target name=&quot;compile.tests&quot;>
+
+  &lt;taskdef resource=&quot;testngtasks&quot; classpath=&quot;lib/testng-6.8.8.jar&quot;/&gt;
+
+  &lt;target name=&quot;compile.tests&quot;&gt;
     &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
     &lt;javac srcdir=&quot;src/citrus/tests&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
-  &lt;/target>
+  &lt;/target&gt;
 
   &lt;target name=&quot;create.test&quot; description=&quot;Creates a new empty test case&quot;&gt;
     &lt;input message=&quot;Enter test name:&quot; addproperty=&quot;test.name&quot;/&gt;
@@ -259,30 +270,32 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
 
     &lt;java classname=&quot;com.consol.citrus.util.TestCaseCreator&quot;&gt;
       &lt;classpath refid=&quot;citrus-classpath&quot;/&gt;
-      &lt;arg line=&quot;-name ${test.name} -author ${test.author} -description ${test.description} 
-                    -package ${test.package} -framework ${test.framework}&quot;/&gt;
+      &lt;arg line=&quot;-name ${test.name} -author ${test.author} -description ${test.description} -package ${test.package} -framework ${test.framework}&quot;/&gt;
     &lt;/java&gt;
   &lt;/target&gt;
-  
+
   &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
-    &lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;
+    &lt;testng classpathref=&quot;citrus-classpath&quot;&gt;
+      &lt;classfileset dir=&quot;src/citrus/java&quot; includes=&quot;**/*.class&quot; /&gt;
+    &lt;/testng&gt;
   &lt;/target&gt;
-  
+
   &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
     &lt;touch file=&quot;test.history&quot;/&gt;
     &lt;loadproperties srcfile=&quot;test.history&quot;/&gt;
-    
+
     &lt;echo message=&quot;Last test executed: ${last.test.executed}&quot;/&gt;
-    &lt;input message=&quot;Enter test name or leave empty for last test executed:&quot; addproperty=&quot;testclass&quot; 
-                    defaultvalue=&quot;${last.test.executed}&quot;/&gt;
-    
+    &lt;input message=&quot;Enter test name or leave empty for last test executed:&quot; addproperty=&quot;testclass&quot; defaultvalue=&quot;${last.test.executed}&quot;/&gt;
+
     &lt;propertyfile file=&quot;test.history&quot;&gt;
-        &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
+      &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
     &lt;/propertyfile&gt;
 
-    &lt;citrus test=&quot;${testclass}&quot;/&gt;
+    &lt;testng classpathref=&quot;citrus-classpath&quot;&gt;
+      &lt;classfileset dir=&quot;src/citrus/java&quot; includes=&quot;**/${testclass}.class&quot; /&gt;
+    &lt;/testng&gt;
   &lt;/target&gt;
-    
+
 &lt;/project&gt;</programlisting>
       
       <note>

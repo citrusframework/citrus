@@ -7,8 +7,8 @@
       
       <p>
         In this how-to tutorial I will use Apache Ant to manage a Citrus project and we will use Ant to execute Citrus test cases. First of all
-        I loaded the latest <a href="download.html">Citrus release archive</a> with dependencies (citrus-with-dependencies-1.x.zip). 
-        I have unzipped the archive to a temporary location on my local storage in order to have access to the Citrus binaries and sources.
+        I loaded the latest <a href="download.html">Citrus release archive</a> to an empty folder on my local storage.
+        Unzip the archive in order to have access to the Citrus binaries and sources.
       </p>
       
       <p><b>Preconditions</b></p>
@@ -38,7 +38,8 @@
       
       <p>
         So now lets start to set up a new Citrus Java project. In contrast to a Maven generated project we have to create our project structure 
-        ourself when using Ant. So lets have a look at a usual Citrus project structure. I am using the <a href="http://www.eclipse.org/">Eclipse 
+        ourself when using Ant. A good starting point is the samples folder coming with the Citrus release distribution. Here you can see several
+        sample Citrus projects with given folder structure. So lets have a look at a usual Citrus project structure. I am using the <a href="http://www.eclipse.org/">Eclipse
         IDE</a> development tool to set up the new Java project. I am also accessing Ant from the command line in this tutorial so you may also 
         want to install Ant first before continuing. See the <a href="http://ant.apache.org/">Ant homepage</a> for detailed installation 
         instructions.
@@ -61,22 +62,31 @@
       </ul>
       
       <p>
-        As a next step I copied all Java libraries that are needed to run with Citrus to the <i>lib</i> folder. This includes the Citrus Java 
-        archives (citrus-core-1.x.jar, citrus-http-1.x.jar, ...) coming from the <a href="download.html">downladed release archive</a> and all 
+        As a next step we setup a <i>lib</i> folder for some libraries we need for execution. This includes the Citrus Java
+        archives (citrus-core.jar, citrus-http.jar, etc.) coming from the <a href="download.html">downladed release archive</a> and all
         dependency libraries also available in the release archive. Finally what's missing is the Ant build file (build.xml) with following content.
       </p>
       
-      <pre class="prettyprint linenums">&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot;&gt;
+      <pre class="prettyprint linenums">&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot; xmlns:artifact=&quot;antlib:org.apache.maven.artifact.ant&quot;&gt;
   
     &lt;property file=&quot;src/citrus/resources/citrus.properties&quot;/&gt;
     
+    &lt;path id=&quot;maven-ant-tasks.classpath&quot; path=&quot;lib/maven-ant-tasks-2.1.3.jar&quot; /&gt;
+    &lt;typedef resource=&quot;org/apache/maven/artifact/ant/antlib.xml&quot;
+             uri=&quot;antlib:org.apache.maven.artifact.ant&quot;
+             classpathref=&quot;maven-ant-tasks.classpath&quot; /&gt;
+
+    &lt;artifact:pom id=&quot;citrus-pom&quot; file=&quot;pom.xml&quot; /&gt;
+    &lt;artifact:dependencies filesetId=&quot;citrus-dependencies&quot; pomRefId=&quot;citrus-pom&quot; /&gt;
+
     &lt;path id=&quot;citrus-classpath&quot;&gt;
-        &lt;fileset dir=&quot;lib&quot;&gt;
-            &lt;include name=&quot;*.jar&quot;/&gt;
-        &lt;/fileset&gt;
+      &lt;pathelement path=&quot;src/citrus/java&quot;/&gt;
+      &lt;pathelement path=&quot;src/citrus/resources&quot;/&gt;
+      &lt;pathelement path=&quot;src/citrus/tests&quot;/&gt;
+      &lt;fileset refid=&quot;citrus-dependencies&quot;/&gt;
     &lt;/path&gt;
-    
-    &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-2.0.jar&quot;/&gt;
+
+    &lt;taskdef resource=&quot;testngtasks&quot; classpath=&quot;lib/testng-6.8.8.jar&quot;/&gt;
     
     &lt;target name=&quot;compile.tests&quot;&gt;
         &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
@@ -97,36 +107,38 @@
     &lt;/target&gt;
     
     &lt;target name=&quot;citrus.run.tests&quot; depends=&quot;compile.tests&quot; description=&quot;Runs all Citrus tests&quot;&gt;
-        &lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;
+        &lt;testng classpathref=&quot;citrus-classpath&quot;&gt;
+          &lt;classfileset dir=&quot;src/citrus/java&quot; includes=&quot;**/*.class&quot; /&gt;
+        &lt;/testng&gt;
     &lt;/target&gt;
-    
+
     &lt;target name=&quot;citrus.run.single.test&quot; depends=&quot;compile.tests&quot; description=&quot;Runs a single test by name&quot;&gt;
         &lt;touch file=&quot;test.history&quot;/&gt;
         &lt;loadproperties srcfile=&quot;test.history&quot;/&gt;
-        
+
         &lt;echo message=&quot;Last test executed: ${last.test.executed}&quot;/&gt;
         &lt;input message=&quot;Enter test name or leave empty for last test executed:&quot; addproperty=&quot;testclass&quot; defaultvalue=&quot;${last.test.executed}&quot;/&gt;
-        
+
         &lt;propertyfile file=&quot;test.history&quot;&gt;
             &lt;entry key=&quot;last.test.executed&quot; type=&quot;string&quot; value=&quot;${testclass}&quot;/&gt;
         &lt;/propertyfile&gt;
 
-        &lt;citrus test=&quot;${testclass}&quot;/&gt;
+        &lt;testng classpathref=&quot;citrus-classpath&quot;&gt;
+          &lt;classfileset dir=&quot;src/citrus/java&quot; includes=&quot;**/${testclass}.class&quot; /&gt;
+        &lt;/testng&gt;
     &lt;/target&gt;
     
 &lt;/project&gt;</pre>
       
       <p>
-        Those who are familiar with Ant will understand this file easily. A Java classpath is defined with its conventional name 
-        <i>&quot;citrus-classpath&quot;</i>. The classpath definition includes all Java libraries found inside the lib folder. Besides that the 
-        build file declares the Citrus special Ant tasks.
+        Those who are familiar with Ant will understand this file easily. We used the maven ant tasks in order to download all 3rd party libraries needed for a Citrus run. You need to setup the
+        Maven Ant tasks JAR and the TestNG JAR in the lib directory before executing the build script for the first time.
+        Further a Java classpath is defined with its conventional name <i>&quot;citrus-classpath&quot;</i>. The classpath definition includes all Java libraries found inside the lib folder. Besides that the
+        build file declares the TestNG special Ant tasks that help us to execute the tests.
       </p>
       
-      <pre class="prettyprint linenums">&lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-2.0.jar&quot;/&gt;</pre>
-      
       <p>
-        These Citrus Ant task definitions will help to execute Citrus out of a Ant build script. For instance the Ant task will automatically add
-        the source folders to the classpath. We will handle the Citrus tasks later in this tutorial in more detail. For now we will start with the
+        These TestNG Ant task definitions will help to execute Citrus out of a Ant build script. We will handle the execution later in this tutorial in more detail. For now we will start with the
         <i>&quot;create.test&quot;</i> target. This target creates new test cases for your project. So let us give it a try! I execute the 
         &quot;create.test&quot; target from the command line using my seperate Ant installation. To be honest it is more comfortable to use the 
         built-in Eclipse Ant plugin to execute Ant targets, but I choose the command line first to be more independent from the IDE tool.
@@ -262,31 +274,9 @@ Found 0 tasks after
 FINISH successfully</pre>
       
       <p>
-        If we have a closer look at the <i>&quot;citrus.run.single.test&quot;</i> target we see how Citrus is called with the special Ant task.
-      </p>
-      
-      <pre class="prettyprint linenums">&lt;citrus test=&quot;MyFirstTest&quot;/&gt;</pre>
-      
-      <p>
-        The task executes Citrus using the test suite named &quot;citrus-samples&quot;. All we need to run one specific test is to specify its name.
-        You can also run multiple test cases when using a space seperated list.
-      </p>
-      
-      <pre class="prettyprint linenums">&lt;citrus test=&quot;MyFirstTest AnotherTest SomeOtherTest&quot;/&gt;</pre>
-      
-      <p>
         The execution by test names only is suitable for executing a small amount of test cases. If you want to run a whole package of tests use
-        the package notation instead as it is used in the <i>&quot;citrus.run.tests&quot;</i> target.
+        the package notation instead as it is used in the <i>&quot;citrus.run.tests&quot;</i> target which executes all tests in the package &quot;com.consol.citrus&quot;.
       </p>
-      
-      <pre class="prettyprint linenums">&lt;citrus package=&quot;com.consol.citrus.*&quot;/&gt;</pre>
-      
-      <p>
-        Citrus will now execute all tests in the package &quot;com.consol.citrus&quot;. Also here you are able to run multiple packages by adding
-        them to a space seperated list.
-      </p>
-      
-      <pre class="prettyprint linenums">&lt;citrus package=&quot;com.consol.citrus.package com.consol.citrus.someotherpackage&quot;/&gt;</pre>
       
       <p>
         The last option you have when executing Citrus is a TestNG suite xml file. TestNG can configure test suites via XML. We have a look at a very
@@ -307,7 +297,9 @@ FINISH successfully</pre>
         files when executed with Ant.
       </p>
       
-      <pre class="prettyprint linenums">&lt;citrus testngxml=&quot;src/citrus/resources/testng.xml&quot;/&gt;</pre>
+      <pre class="prettyprint linenums">&lt;testng&gt;
+  &lt;xmlfileset dir=&quot;configuration&quot; includes=&quot;testng.xml&quot;/&gt;
+&lt;/testng&gt;</pre>
       
       <p>
         That's it! This is how Citrus connects with a normal Eclipse Java project and Ant. With Ant you can integrate your Citrus tests easily
