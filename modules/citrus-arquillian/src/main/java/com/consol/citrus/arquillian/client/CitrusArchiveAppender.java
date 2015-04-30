@@ -16,14 +16,21 @@
 
 package com.consol.citrus.arquillian.client;
 
+import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.annotation.InjectCitrus;
+import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
+import com.consol.citrus.arquillian.container.CitrusRemoteConfigurationProducer;
 import com.consol.citrus.arquillian.container.CitrusRemoteExtension;
 import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
+import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
 import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.container.test.spi.client.deployment.CachedAuxilliaryArchiveAppender;
+import org.jboss.arquillian.core.api.Instance;
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.springframework.util.ReflectionUtils;
 
@@ -33,14 +40,22 @@ import org.springframework.util.ReflectionUtils;
  */
 public class CitrusArchiveAppender extends CachedAuxilliaryArchiveAppender {
 
+    @Inject
+    private Instance<CitrusConfiguration> configurationInstance;
+
     @Override
     protected Archive<?> buildArchive() {
         return ShrinkWrap.create(JavaArchive.class)
             .addClass(InjectCitrus.class)
+            .addClass(CitrusExtensionConstants.class)
+            .addClass(CitrusConfiguration.class)
             .addClass(CitrusInstanceProducer.class)
+            .addClass(CitrusLifecycleHandler.class)
             .addClass(CitrusTestEnricher.class)
-            .addPackage(CitrusRemoteExtension.class.getPackage())
+            .addClass(CitrusRemoteConfigurationProducer.class)
+            .addClass(CitrusRemoteExtension.class)
             .addPackage(ReflectionUtils.class.getPackage())
+            .addAsResource(new StringAsset(configurationInstance.get().toString()), CitrusExtensionConstants.CITRUS_REMOTE_PROPERTIES)
             .addAsServiceProvider(RemoteLoadableExtension.class, CitrusRemoteExtension.class);
     }
 }

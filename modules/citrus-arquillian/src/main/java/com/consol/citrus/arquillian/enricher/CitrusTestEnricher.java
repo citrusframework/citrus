@@ -18,11 +18,15 @@ package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.annotation.InjectCitrus;
+import com.consol.citrus.dsl.CitrusTestBuilder;
+import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -61,6 +65,36 @@ public class CitrusTestEnricher implements TestEnricher {
 
     @Override
     public Object[] resolve(Method method) {
-        return new Object[method.getParameterTypes().length];
+        Object[] values = new Object[method.getParameterTypes().length];
+        Class<?>[] parameterTypes = method.getParameterTypes();
+
+        for (int i = 0; i < parameterTypes.length; i++) {
+            final Annotation[] parameterAnnotations = method.getParameterAnnotations()[i];
+            for (Annotation annotation : parameterAnnotations) {
+                if (annotation instanceof CitrusTest) {
+                    CitrusTest citrusTestAnnotation = (CitrusTest) annotation;
+                    Class<?> clazz = parameterTypes[i];
+                    if (isSupportedParameter(clazz)) {
+                        CitrusTestBuilder citrusTestBuilder = new CitrusTestBuilder(citrusFramework.get().getApplicationContext());
+
+                        if (StringUtils.hasText(citrusTestAnnotation.name())) {
+                            citrusTestBuilder.name(citrusTestAnnotation.name());
+                        } else {
+                            citrusTestBuilder.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+                        }
+
+                        values[i] = citrusTestBuilder;
+                    } else {
+                        throw new RuntimeException("Not able to provide a client injection for type " + clazz);
+                    }
+                }
+            }
+        }
+
+        return values;
+    }
+
+    private boolean isSupportedParameter(Class<?> clazz) {
+        return CitrusTestBuilder.class.isAssignableFrom(clazz);
     }
 }

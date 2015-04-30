@@ -19,6 +19,7 @@ package com.consol.citrus.arquillian.container;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
+import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
 import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
 
@@ -32,7 +33,10 @@ public class CitrusRemoteExtension implements RemoteLoadableExtension {
     public void register(ExtensionBuilder builder) {
         if (Validate.classExists(CitrusExtensionConstants.CITRUS)) {
             builder.service(TestEnricher.class, CitrusTestEnricher.class);
+
+            builder.observer(CitrusRemoteConfigurationProducer.class);
             builder.observer(CitrusInstanceProducer.class);
+            builder.observer(CitrusLifecycleHandler.class);
         }
     }
 }

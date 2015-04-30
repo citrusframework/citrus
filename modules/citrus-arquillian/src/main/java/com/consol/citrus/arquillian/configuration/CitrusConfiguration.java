@@ -20,9 +20,8 @@ import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Map;
+import java.io.*;
+import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
@@ -36,22 +35,61 @@ public class CitrusConfiguration implements Serializable {
     /** Automatically adds Citrus dependencies to archive packages */
     private boolean autoPackage = true;
 
+    /** Test suite name */
+    private String suiteName = "citrus-arquillian-suite";
+
+    /** Property set this configuration was created from */
+    private final Properties extensionProperties;
+
+    private CitrusConfiguration(Properties extensionProperties) {
+        this.extensionProperties = extensionProperties;
+    }
+
     /**
      * Constructs Citrus configuration instance from Arquillian extension descriptor.
      * @param descriptor
      * @return
      */
     public static CitrusConfiguration from(ArquillianDescriptor descriptor) {
-        Map<String, String> extensionProperties = readPropertiesFromDescriptor(descriptor);
+        return from(readPropertiesFromDescriptor(descriptor));
+    }
 
-        CitrusConfiguration configuration = new CitrusConfiguration();
-        configuration.setCitrusVersion(extensionProperties.get("citrusVersion"));
+    /**
+     * Constructs Citrus configuration instance from given property set.
+     * @param extensionProperties
+     * @return
+     */
+    public static CitrusConfiguration from(Properties extensionProperties) {
+        CitrusConfiguration configuration = new CitrusConfiguration(extensionProperties);
+        configuration.setCitrusVersion(getProperty(extensionProperties, "citrusVersion"));
 
         if (extensionProperties.containsKey("autoPackage")) {
-            configuration.setAutoPackage(Boolean.valueOf(extensionProperties.get("autoPackage")));
+            configuration.setAutoPackage(Boolean.valueOf(getProperty(extensionProperties, "autoPackage")));
+        }
+
+        if (extensionProperties.containsKey("suiteName")) {
+            configuration.setSuiteName(getProperty(extensionProperties, "suiteName"));
         }
 
         return configuration;
+    }
+
+    /**
+     * Try to read property from property set. When not set or null value return null else
+     * return String representation of value object.
+     * @param extensionProperties
+     * @param propertyName
+     * @return
+     */
+    private static String getProperty(Properties extensionProperties, String propertyName) {
+        if (extensionProperties.containsKey(propertyName)) {
+            Object value = extensionProperties.get(propertyName);
+            if (value != null) {
+                return value.toString();
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -59,14 +97,27 @@ public class CitrusConfiguration implements Serializable {
      * @param descriptor
      * @return
      */
-    private static Map<String, String> readPropertiesFromDescriptor(ArquillianDescriptor descriptor) {
+    private static Properties readPropertiesFromDescriptor(ArquillianDescriptor descriptor) {
         for (ExtensionDef extension : descriptor.getExtensions()) {
             if (CitrusExtensionConstants.CITRUS_EXTENSION_QUALIFIER.equals(extension.getExtensionName())) {
-                return extension.getExtensionProperties();
+                Properties properties = new Properties();
+                properties.putAll(extension.getExtensionProperties());
+                return properties;
             }
         }
 
-        return Collections.emptyMap();
+        return new Properties();
+    }
+
+    @Override
+    public String toString() {
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            extensionProperties.store(outputStream, "arquillian-citrus-remote-configuration");
+            return outputStream.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not write the properties file.", e);
+        }
     }
 
     /**
@@ -83,6 +134,22 @@ public class CitrusConfiguration implements Serializable {
      */
     public void setAutoPackage(boolean autoPackage) {
         this.autoPackage = autoPackage;
+    }
+
+    /**
+     * Gets the test suite name.
+     * @return
+     */
+    public String getSuiteName() {
+        return suiteName;
+    }
+
+    /**
+     * Sets the test suite name.
+     * @param suiteName
+     */
+    public void setSuiteName(String suiteName) {
+        this.suiteName = suiteName;
     }
 
     /**

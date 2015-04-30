@@ -20,6 +20,7 @@ import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.configuration.CitrusConfigurationProducer;
 import com.consol.citrus.arquillian.enricher.CitrusInstanceProducer;
 import com.consol.citrus.arquillian.enricher.CitrusTestEnricher;
+import com.consol.citrus.arquillian.lifecycle.CitrusLifecycleHandler;
 import org.jboss.arquillian.container.test.spi.client.deployment.*;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
@@ -36,10 +37,10 @@ public class CitrusExtension implements LoadableExtension {
             builder.service(AuxiliaryArchiveAppender.class, CitrusArchiveAppender.class);
             builder.service(ApplicationArchiveProcessor.class, CitrusArchiveProcessor.class);
 
-            builder.observer(CitrusConfigurationProducer.class);
-
             builder.service(TestEnricher.class, CitrusTestEnricher.class);
+            builder.observer(CitrusConfigurationProducer.class);
             builder.observer(CitrusInstanceProducer.class);
+            builder.observer(CitrusLifecycleHandler.class);
         }
     }
 }

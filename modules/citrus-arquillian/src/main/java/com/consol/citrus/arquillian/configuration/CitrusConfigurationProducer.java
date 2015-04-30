@@ -28,9 +28,9 @@ public class CitrusConfigurationProducer {
 
     @Inject
     @ApplicationScoped
-    private InstanceProducer<CitrusConfiguration> configurationProducer;
+    private InstanceProducer<CitrusConfiguration> configurationInstance;
 
     public void configure(@Observes ArquillianDescriptor descriptor) {
-        configurationProducer.set(CitrusConfiguration.from(descriptor));
+        configurationInstance.set(CitrusConfiguration.from(descriptor));
     }
 }

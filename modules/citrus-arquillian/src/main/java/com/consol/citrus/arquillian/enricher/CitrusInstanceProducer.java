@@ -17,6 +17,7 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.config.CitrusBaseConfig;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.*;
@@ -32,7 +33,7 @@ public class CitrusInstanceProducer {
     @ApplicationScoped
     private InstanceProducer<Citrus> citrusInstance;
 
-    public void beforeSuite(@Observes BeforeSuite event) {
+    public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.INSTANCE_PRECEDENCE) BeforeSuite event) {
         citrusInstance.set(Citrus.newInstance(CitrusBaseConfig.class));
     }
 }

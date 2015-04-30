@@ -26,6 +26,7 @@ import com.consol.citrus.report.TestSuiteListeners;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,7 +116,7 @@ public final class Citrus {
      * @param testGroups
      */
     public void beforeSuite(String suiteName, String ... testGroups) {
-        if (beforeSuite != null) {
+        if (!CollectionUtils.isEmpty(beforeSuite)) {
             for (SequenceBeforeSuite sequenceBeforeSuite : beforeSuite) {
                 try {
                     if (sequenceBeforeSuite.shouldExecute(suiteName, testGroups)) {
@@ -137,7 +138,7 @@ public final class Citrus {
      * @param testGroups
      */
     public void afterSuite(String suiteName, String ... testGroups) {
-        if (afterSuite != null) {
+        if (!CollectionUtils.isEmpty(afterSuite)) {
             for (SequenceAfterSuite sequenceAfterSuite : afterSuite) {
                 try {
                     if (sequenceAfterSuite.shouldExecute(suiteName, testGroups)) {
