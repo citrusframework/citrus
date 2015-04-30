@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -66,12 +67,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -105,12 +107,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -147,12 +150,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -190,12 +194,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -232,11 +237,12 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
 
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -275,12 +281,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -317,12 +324,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -357,12 +365,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AssertSoapFault.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "soap-fault");
-        
-        AssertSoapFault container = (AssertSoapFault)(builder.testCase().getTestAction(0));
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);

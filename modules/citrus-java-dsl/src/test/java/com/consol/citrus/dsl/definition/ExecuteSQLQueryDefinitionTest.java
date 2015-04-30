@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -57,13 +58,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getFile()).andReturn(file).once();
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 1);
@@ -92,13 +94,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
                 .validator(validator);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 1);
@@ -122,13 +125,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
                 .validateScript("assert row[0].COLUMN == 'value1'", ScriptTypes.GROOVY);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
@@ -155,13 +159,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         reset(resource, file);
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(resource, file);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
@@ -186,13 +191,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
                 .groovy("assert row[0].COLUMN == 'value1'");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
@@ -219,13 +225,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         reset(resource, file);
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(resource, file);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
-        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)builder.testCase().getActions().get(0);
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);

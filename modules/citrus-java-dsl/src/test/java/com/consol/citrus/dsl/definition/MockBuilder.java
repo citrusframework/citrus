@@ -16,7 +16,6 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
@@ -46,13 +45,5 @@ public class MockBuilder extends CitrusTestBuilder {
     @Override
     public void execute(TestContext context) {
         configure();
-    }
-
-    /**
-     * Provide public access to test case for unit test assertions.
-     * @return
-     */
-    public TestCase testCase() {
-        return getTestCase();
     }
 }

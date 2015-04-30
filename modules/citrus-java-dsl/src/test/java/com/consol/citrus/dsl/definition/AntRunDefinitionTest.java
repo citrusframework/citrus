@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.tools.ant.BuildListener;
 import org.easymock.EasyMock;
@@ -40,11 +41,12 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         };
         
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
-        
-        AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
+        AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
@@ -59,13 +61,14 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
                     .targets("prepare", "test", "release");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
-        
-        AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
+        AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertNull(action.getTarget());
@@ -83,13 +86,14 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
                     .property("filePath", "/home/sayHello.txt");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
-        
-        AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
+        AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
@@ -108,13 +112,14 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
                     .propertyFile("/ant/build.properties");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
-        
-        AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
+        AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
@@ -134,13 +139,14 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
                     .listener(buildListener);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), AntRunAction.class);
-        
-        AntRunAction action = (AntRunAction)builder.testCase().getActions().get(0);
+        AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildListener(), buildListener);
     }

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,13 +36,14 @@ public class InputDefinitionTest extends AbstractTestNGUnitTest {
                     .answers("Yes", "No", "Maybe");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), InputAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), InputAction.class);
-        
-        InputAction action = (InputAction)builder.testCase().getActions().get(0);
+        InputAction action = (InputAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "input");
         Assert.assertEquals(action.getMessage(), "TestMessage");
         Assert.assertEquals(action.getValidAnswers(), "Yes/No/Maybe");

@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.*;
@@ -24,12 +25,12 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.*;
 
 import static org.easymock.EasyMock.*;
-import static org.testng.Assert.assertEquals;
 
 public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
     
@@ -64,17 +65,18 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Template.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "fooTemplate");
-        
-        Template container = (Template)builder.testCase().getActions().get(0);
-        assertEquals(container.isGlobalContext(), true);
-        assertEquals(container.getParameter().toString(), "{param=foo, text=Citrus rocks!}");
-        assertEquals(container.getActions().size(), 2);
-        assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-        assertEquals(container.getActions().get(1).getClass(), SleepAction.class);
+        Template container = (Template)test.getActions().get(0);
+        Assert.assertEquals(container.isGlobalContext(), true);
+        Assert.assertEquals(container.getParameter().toString(), "{param=foo, text=Citrus rocks!}");
+        Assert.assertEquals(container.getActions().size(), 2);
+        Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(container.getActions().get(1).getClass(), SleepAction.class);
         
         verify(applicationContextMock);
     }
@@ -106,16 +108,17 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Template.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "fooTemplate");
-        
-        Template container = (Template)builder.testCase().getActions().get(0);
-        assertEquals(container.isGlobalContext(), false);
-        assertEquals(container.getParameter().size(), 0L);
-        assertEquals(container.getActions().size(), 1);
-        assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
+        Template container = (Template)test.getActions().get(0);
+        Assert.assertEquals(container.isGlobalContext(), false);
+        Assert.assertEquals(container.getParameter().size(), 0L);
+        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         
         verify(applicationContextMock);
     }

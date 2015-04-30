@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -43,12 +44,14 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
     		        .result("result");
 			}
 		};
-	
+
 		builder.execute();
-		Assert.assertEquals(builder.testCase().getActions().size(), 1);
-		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TransformAction.class);
+
+		TestCase test = builder.build();
+		Assert.assertEquals(test.getActions().size(), 1);
+		Assert.assertEquals(test.getActions().get(0).getClass(), TransformAction.class);
 		
-		TransformAction action = (TransformAction)builder.testCase().getActions().get(0);
+		TransformAction action = (TransformAction)test.getActions().get(0);
 		
 		Assert.assertEquals(action.getName(), "transform");
 		Assert.assertEquals(action.getXmlData(), "<Test>XML</test>");
@@ -73,12 +76,14 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
         expect(xmlResource.getInputStream()).andReturn(new ByteArrayInputStream("xmlData".getBytes())).once();
         expect(xsltResource.getInputStream()).andReturn(new ByteArrayInputStream("xsltSource".getBytes())).once();
         replay(xmlResource, xsltResource);
-		
+
 		builder.execute();
-		Assert.assertEquals(builder.testCase().getActions().size(), 1);
-		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TransformAction.class);
+
+		TestCase test = builder.build();
+		Assert.assertEquals(test.getActions().size(), 1);
+		Assert.assertEquals(test.getActions().get(0).getClass(), TransformAction.class);
 		
-		TransformAction action = (TransformAction)builder.testCase().getActions().get(0);
+		TransformAction action = (TransformAction)test.getActions().get(0);
 		
 		Assert.assertEquals(action.getName(), "transform");
 		Assert.assertEquals(action.getXmlData(), "xmlData");

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -62,11 +63,12 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SendMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -79,7 +81,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         Assert.assertFalse(action.isForkMode());
 
-        action = ((SendMessageAction)builder.testCase().getActions().get(1));
+        action = ((SendMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -102,10 +104,11 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -132,10 +135,11 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -164,10 +168,11 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -202,10 +207,11 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        SendMessageAction action = ((SendMessageAction)builder.testCase().getActions().get(0));
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpointUri(), "httpClient");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());

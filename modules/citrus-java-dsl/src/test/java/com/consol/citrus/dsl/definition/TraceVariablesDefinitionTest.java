@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,18 +34,19 @@ public class TraceVariablesDefinitionTest extends AbstractTestNGUnitTest {
 				traceVariables("variable1", "variable2");
 			}
 		};
-			
+
 		builder.execute();
+
+		TestCase test = builder.build();
+		Assert.assertEquals(test.getActions().size(), 2);
+		Assert.assertEquals(test.getActions().get(0).getClass(), TraceVariablesAction.class);
+		Assert.assertEquals(test.getActions().get(1).getClass(), TraceVariablesAction.class);
 		
-		Assert.assertEquals(builder.testCase().getActions().size(), 2);
-		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), TraceVariablesAction.class);
-		Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), TraceVariablesAction.class);
-		
-		TraceVariablesAction action = (TraceVariablesAction)builder.testCase().getActions().get(0);
+		TraceVariablesAction action = (TraceVariablesAction)test.getActions().get(0);
 		Assert.assertEquals(action.getName(), "trace");
 		Assert.assertNull(action.getVariableNames());
 		
-		action = (TraceVariablesAction)builder.testCase().getActions().get(1);
+		action = (TraceVariablesAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "trace");
         Assert.assertNotNull(action.getVariableNames());
         Assert.assertEquals(action.getVariableNames().toString(), "[variable1, variable2]");

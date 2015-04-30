@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -59,15 +60,16 @@ public class TestNGCitrusTestBuilderTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getName(), "");
+        Assert.assertEquals(test.getPackageName(), "com.consol.citrus.dsl");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getName(), "");
-        Assert.assertEquals(builder.testCase().getPackageName(), "com.consol.citrus.dsl");
+        Assert.assertEquals(test.getDescription(), "This is a Test");
         
-        Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
-        
-        Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), Status.FINAL);
+        Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(test.getMetaInfo().getStatus(), Status.FINAL);
 
         verify(applicationContextMock);
     }

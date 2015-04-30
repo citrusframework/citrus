@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,14 +33,14 @@ public class StopTimeDefinitionTest extends AbstractTestNGUnitTest {
                 stopTime("TestId");
             }
         };
-    
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), StopTimeAction.class);
         
-        
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), StopTimeAction.class);
-        
-        StopTimeAction action = (StopTimeAction)builder.testCase().getActions().get(0);
+        StopTimeAction action = (StopTimeAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "stop-time");
         Assert.assertEquals(action.getId(), "TestId");
     }

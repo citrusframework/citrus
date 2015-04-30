@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
@@ -31,14 +32,15 @@ public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
                 conditional(echo("${var}")).when("${var} = 5");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        assertEquals(test.getActions().get(0).getName(), "conditional");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Conditional.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "conditional");
-        
-        Conditional container = (Conditional)builder.testCase().getActions().get(0);
+        Conditional container = (Conditional)test.getActions().get(0);
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getExpression(), "${var} = 5");
     }

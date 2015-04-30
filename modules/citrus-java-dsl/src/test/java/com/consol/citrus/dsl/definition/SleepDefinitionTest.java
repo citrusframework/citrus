@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -36,19 +37,20 @@ public class SleepDefinitionTest extends AbstractTestNGUnitTest {
                 sleep(500);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SleepAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SleepAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SleepAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), SleepAction.class);
-        
-        SleepAction action = (SleepAction)builder.testCase().getActions().get(0);
+        SleepAction action = (SleepAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sleep");
         Assert.assertEquals(action.getSeconds(), "0.5");
         Assert.assertEquals(action.getMilliseconds(), "5000");
 
-        action = (SleepAction)builder.testCase().getActions().get(1);
+        action = (SleepAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "sleep");
         Assert.assertNull(action.getSeconds());
         Assert.assertEquals(action.getMilliseconds(), "500");

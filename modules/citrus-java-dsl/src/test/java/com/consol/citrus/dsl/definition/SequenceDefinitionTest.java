@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Sequence;
 import com.consol.citrus.context.TestContext;
@@ -34,14 +35,15 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
                 sequential(echo("${var}"), sleep(5000L));
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Sequence.class);
+        assertEquals(test.getActions().get(0).getName(), "sequential");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Sequence.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "sequential");
-        
-        Sequence container = (Sequence)builder.testCase().getActions().get(0);
+        Sequence container = (Sequence)test.getActions().get(0);
         assertEquals(container.getActions().size(), 2);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
     }
@@ -71,11 +73,12 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Sequence.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "sequential");
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Sequence.class);
+        assertEquals(test.getActions().get(0).getName(), "sequential");
 
-        Sequence container = (Sequence)builder.testCase().getActions().get(0);
+        Sequence container = (Sequence)test.getActions().get(0);
         assertEquals(container.getActions().size(), 4);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         assertTrue(container.getActions().get(1).getClass().isAnonymousClass());

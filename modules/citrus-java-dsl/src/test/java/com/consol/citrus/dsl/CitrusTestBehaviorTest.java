@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.dsl.definition.MockBuilder;
@@ -45,16 +46,17 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getDescription(), "This is a Test");
+        Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
 
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(0)).getMessage(), "fooBehavior");
+        Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "fooBehavior");
 
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(1)).getMessage(), "test");
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "test");
     }
 
     @Test
@@ -87,23 +89,24 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getDescription(), "This is a Test");
+        Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
 
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(0)).getMessage(), "test");
+        Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "test");
 
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(1)).getMessage(), "behavior");
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "behavior");
 
-        Assert.assertEquals(builder.testCase().getFinallyChain().size(), 2);
-        Assert.assertEquals(builder.testCase().getFinallyChain().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getFinallyChain().get(0)).getMessage(), "finally");
+        Assert.assertEquals(test.getFinallyChain().size(), 2);
+        Assert.assertEquals(test.getFinallyChain().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinallyChain().get(0)).getMessage(), "finally");
 
-        Assert.assertEquals(builder.testCase().getFinallyChain().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getFinallyChain().get(1)).getMessage(), "behaviorFinally");
+        Assert.assertEquals(test.getFinallyChain().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinallyChain().get(1)).getMessage(), "behaviorFinally");
     }
 
     @Test
@@ -127,19 +130,20 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 3);
-        Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getDescription(), "This is a Test");
+        Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
 
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(0)).getMessage(), "fooBehavior");
+        Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "fooBehavior");
 
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(1)).getMessage(), "test");
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "test");
 
-        Assert.assertEquals(builder.testCase().getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(2)).getMessage(), "barBehavior");
+        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "barBehavior");
 
         Assert.assertEquals(builder.getVariables().size(), 3);
         Assert.assertEquals(builder.getVariables().get("test"), "test");
@@ -167,19 +171,20 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 3);
-        Assert.assertEquals(builder.testCase().getDescription(), "This is a Test");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(builder.testCase().getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getDescription(), "This is a Test");
+        Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
+        Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
 
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(0)).getMessage(), "fooBehavior");
+        Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "fooBehavior");
 
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(1)).getMessage(), "test");
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "test");
 
-        Assert.assertEquals(builder.testCase().getActions().get(2).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)builder.testCase().getActions().get(2)).getMessage(), "fooBehavior");
+        Assert.assertEquals(test.getActions().get(2).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "fooBehavior");
     }
 
     private static class FooBehavior extends CitrusTestBehavior {

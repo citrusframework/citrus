@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.context.TestContext;
@@ -39,14 +40,15 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
                     .condition("i lt 5");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Iterate.class);
+        assertEquals(test.getActions().get(0).getName(), "iterate");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "iterate");
-        
-        Iterate container = (Iterate)builder.testCase().getActions().get(0);
+        Iterate container = (Iterate)test.getActions().get(0);
         assertEquals(container.getActionCount(), 1);
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getCondition(), "i lt 5");
@@ -79,11 +81,12 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Iterate.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "iterate");
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Iterate.class);
+        assertEquals(test.getActions().get(0).getName(), "iterate");
 
-        Iterate container = (Iterate)builder.testCase().getActions().get(0);
+        Iterate container = (Iterate)test.getActions().get(0);
         assertEquals(container.getActionCount(), 2);
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getCondition(), "i lt 5");

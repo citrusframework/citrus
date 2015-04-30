@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -64,10 +65,11 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -99,10 +101,11 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
@@ -140,10 +143,11 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getEndpointUri(), "httpClient");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());

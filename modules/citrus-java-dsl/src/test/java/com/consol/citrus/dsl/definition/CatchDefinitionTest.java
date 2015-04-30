@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
@@ -36,21 +37,22 @@ public class CatchDefinitionTest extends AbstractTestNGUnitTest {
                 catchException(CitrusRuntimeException.class, echo("${var}"), sleep(100L));
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 2);
+        assertEquals(test.getActions().get(0).getClass(), Catch.class);
+        assertEquals(test.getActions().get(0).getName(), "catch");
+        assertEquals(test.getActions().get(1).getClass(), Catch.class);
+        assertEquals(test.getActions().get(1).getName(), "catch");
         
-        assertEquals(builder.testCase().getActions().size(), 2);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Catch.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "catch");
-        assertEquals(builder.testCase().getActions().get(1).getClass(), Catch.class);
-        assertEquals(builder.testCase().getActions().get(1).getName(), "catch");
-        
-        Catch container = (Catch)builder.testCase().getActions().get(0);
+        Catch container = (Catch)test.getActions().get(0);
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getException(), "com.consol.citrus.exceptions.CitrusRuntimeException");
         assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");
         
-        container = (Catch)builder.testCase().getActions().get(1);
+        container = (Catch)test.getActions().get(1);
         assertEquals(container.getActions().size(), 2);
         assertEquals(container.getException(), "com.consol.citrus.exceptions.CitrusRuntimeException");
         assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");

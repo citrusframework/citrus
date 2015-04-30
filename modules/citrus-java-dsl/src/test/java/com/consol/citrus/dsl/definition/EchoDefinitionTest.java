@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,13 +36,14 @@ public class EchoDefinitionTest extends AbstractTestNGUnitTest {
                 echo("Hello Citrus!");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), EchoAction.class);
-        
-        EchoAction action = (EchoAction)builder.testCase().getActions().get(0);
+        EchoAction action = (EchoAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "echo");
         Assert.assertEquals(action.getMessage(), "Hello Citrus!");
     }

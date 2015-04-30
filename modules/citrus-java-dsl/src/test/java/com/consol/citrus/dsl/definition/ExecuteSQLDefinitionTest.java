@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -48,13 +49,14 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
                     .ignoreErrors(false);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
-        
-        ExecuteSQLAction action = (ExecuteSQLAction)builder.testCase().getActions().get(0);
+        ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
         Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
         Assert.assertEquals(action.isIgnoreErrors(), false);
@@ -76,13 +78,14 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getFile()).andReturn(file).once();
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
-        
-        builder.execute();
-        
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ExecuteSQLAction.class);
 
-        ExecuteSQLAction action = (ExecuteSQLAction)builder.testCase().getActions().get(0);
+        builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
+
+        ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
         Assert.assertEquals(action.isIgnoreErrors(), true);
         Assert.assertEquals(action.getDataSource(), dataSource);

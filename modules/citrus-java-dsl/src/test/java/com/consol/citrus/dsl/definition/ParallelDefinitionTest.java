@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Parallel;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -34,14 +35,15 @@ public class ParallelDefinitionTest extends AbstractTestNGUnitTest {
                         echo("ASDF"));
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Parallel.class);
+        assertEquals(test.getActions().get(0).getName(), "parallel");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Parallel.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "parallel");
-        
-        Parallel container = (Parallel)builder.testCase().getActions().get(0); 
+        Parallel container = (Parallel)test.getActions().get(0);
         assertEquals(container.getActions().size(), 3);
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }

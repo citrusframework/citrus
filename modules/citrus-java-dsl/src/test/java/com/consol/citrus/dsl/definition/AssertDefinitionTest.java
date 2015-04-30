@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Assert;
@@ -38,14 +39,15 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
                     .message("Unknown variable 'foo'");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Assert.class);
+        assertEquals(test.getActions().get(0).getName(), "assert");
         
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Assert.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "assert");
-        
-        Assert container = (Assert)(builder.testCase().getTestAction(0));
+        Assert container = (Assert)(test.getTestAction(0));
         
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getAction().getClass(), EchoAction.class);
@@ -72,11 +74,12 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        assertEquals(builder.testCase().getActions().size(), 1);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), Assert.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "assert");
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Assert.class);
+        assertEquals(test.getActions().get(0).getName(), "assert");
 
-        Assert container = (Assert)(builder.testCase().getTestAction(0));
+        Assert container = (Assert)(test.getTestAction(0));
 
         assertEquals(container.getActions().size(), 1);
         assertTrue(container.getAction().getClass().isAnonymousClass());

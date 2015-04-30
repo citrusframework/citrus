@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.endpoint.Endpoint;
@@ -58,10 +59,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
@@ -94,10 +96,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpointUri(), "soapEndpoint");
@@ -131,10 +134,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
@@ -163,10 +167,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
@@ -195,10 +200,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);
@@ -229,10 +235,11 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), SendSoapFaultAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = ((SendSoapFaultAction)builder.testCase().getActions().get(0));
+        SendSoapFaultAction action = ((SendSoapFaultAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapEndpoint);

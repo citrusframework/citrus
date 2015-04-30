@@ -90,7 +90,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
                 }
 
                 TestContext ctx = prepareTestContext(citrus.createTestContext());
-                TestCase testCase = testBuilder.getTestCase();
+                TestCase testCase = testBuilder.build();
 
                 if (parameters != null) {
                     handleTestParameters(testResult.getMethod(), testCase,
@@ -138,7 +138,7 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
 
     @Override
     public TestCase getTestCase() {
-        return testBuilder.getTestCase();
+        return testBuilder.build();
     }
 
     @Override

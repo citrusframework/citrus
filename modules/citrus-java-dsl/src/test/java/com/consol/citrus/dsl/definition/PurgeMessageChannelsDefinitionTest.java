@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -61,11 +62,12 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "purge-channel");
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeMessageChannelAction.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "purge-channel");
 
-        PurgeMessageChannelAction action = (PurgeMessageChannelAction) builder.testCase().getActions().get(0);
+        PurgeMessageChannelAction action = (PurgeMessageChannelAction) test.getActions().get(0);
         Assert.assertEquals(action.getChannels().size(), 3);
         Assert.assertEquals(action.getChannels().toString(), "[" + channel1.toString() + ", " + channel2.toString() + ", " + channel3.toString() + "]");
         Assert.assertNull(action.getMessageSelector());
@@ -96,10 +98,11 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeMessageChannelAction.class);
 
-        PurgeMessageChannelAction action = (PurgeMessageChannelAction) builder.testCase().getActions().get(0);
+        PurgeMessageChannelAction action = (PurgeMessageChannelAction) test.getActions().get(0);
         Assert.assertEquals(action.getChannelNames().size(), 4);
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1, ch2, ch3, ch4]");
         Assert.assertEquals(action.getChannelResolver(), channelResolver);
@@ -128,11 +131,12 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
-        
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeMessageChannelAction.class);
 
-        PurgeMessageChannelAction action = (PurgeMessageChannelAction) builder.testCase().getActions().get(0);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeMessageChannelAction.class);
+
+        PurgeMessageChannelAction action = (PurgeMessageChannelAction) test.getActions().get(0);
         Assert.assertEquals(action.getChannelNames().size(), 1);
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1]");
         Assert.assertNotNull(action.getChannelResolver());

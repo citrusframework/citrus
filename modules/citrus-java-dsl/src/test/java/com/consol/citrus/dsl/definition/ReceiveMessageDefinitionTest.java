@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -78,10 +79,11 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -98,13 +100,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -138,10 +141,11 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -169,10 +173,11 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -207,10 +212,11 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -235,13 +241,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -268,13 +275,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         reset(resource);
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayload".getBytes())).once();
         replay(resource);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -307,11 +315,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -329,13 +338,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .timeout(1000L);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -358,14 +368,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -378,7 +389,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
         
-        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
+        action = ((ReceiveMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -406,14 +417,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -427,7 +439,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderResources().size(), 0L);
         
-        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
+        action = ((ReceiveMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -461,11 +473,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -480,7 +493,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderResources().size(), 0L);
 
-        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
+        action = ((ReceiveMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -515,14 +528,15 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someHeaderData".getBytes())).once();
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
         replay(resource);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -535,7 +549,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderData().size(), 1L);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderData().get(0), "someHeaderData");
         
-        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
+        action = ((ReceiveMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -575,11 +589,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         builder.execute();
 
-        Assert.assertEquals(builder.testCase().getActions().size(), 2);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), ReceiveMessageAction.class);
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -593,7 +608,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getHeaderData().get(1), "someHeaderData");
 
-        action = ((ReceiveMessageAction)builder.testCase().getActions().get(1));
+        action = ((ReceiveMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -624,13 +639,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validator(validator);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -669,11 +685,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -702,13 +719,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .selector(messageSelector);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -727,13 +745,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .selector("operation = 'sayHello'");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -764,11 +783,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -793,13 +813,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .extractFromHeader("requestId", "id");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -834,11 +855,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -870,13 +892,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validationCallback(callback);
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -914,11 +937,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -963,11 +987,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -1008,11 +1033,12 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -1047,13 +1073,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validateNamespace("pfx", "http://www.consol.de/schemas/test");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -1080,13 +1107,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .validate("Foo.message", "control");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -1112,13 +1140,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .ignore("TestRequest.Message");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -1144,13 +1173,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .xsd("testSchema");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
@@ -1175,13 +1205,14 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
                     .xsdSchemaRepository("testSchemaRepository");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
-        ReceiveMessageAction action = ((ReceiveMessageAction)builder.testCase().getActions().get(0));
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
         
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());

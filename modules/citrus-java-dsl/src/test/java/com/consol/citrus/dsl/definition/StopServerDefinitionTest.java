@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
@@ -40,19 +41,19 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 				stop(server1, server2, server3);
 			}
 		};
-		
+
 		builder.execute();
+
+		TestCase test = builder.build();
+		Assert.assertEquals(test.getActions().size(), 2);
+		Assert.assertEquals(test.getActions().get(0).getClass(), StopServerAction.class);
+		Assert.assertEquals(test.getActions().get(1).getClass(), StopServerAction.class);
 		
-		
-		Assert.assertEquals(builder.testCase().getActions().size(), 2);
-		Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), StopServerAction.class);
-		Assert.assertEquals(builder.testCase().getActions().get(1).getClass(), StopServerAction.class);
-		
-		StopServerAction action = (StopServerAction)builder.testCase().getActions().get(0);
+		StopServerAction action = (StopServerAction)test.getActions().get(0);
 		Assert.assertEquals(action.getName(), "stop-server");
 		Assert.assertEquals(action.getServer(), testServer);
 		
-		action = (StopServerAction)builder.testCase().getActions().get(1);
+		action = (StopServerAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "stop-server");
 		Assert.assertEquals(action.getServerList().size(), 3);
 		Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");

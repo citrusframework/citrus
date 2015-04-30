@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -44,14 +45,15 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
                     .sleep(1000);
             }
         };
-          
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "purge-queue");
           
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "purge-queue");
-          
-        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.testCase().getActions().get(0);
+        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000);
         Assert.assertEquals(action.getSleepTime(), 1000);
         Assert.assertEquals(action.getConnectionFactory(), connectionFactory);
@@ -72,13 +74,14 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
                     .sleep(1000);
             }
         };
-          
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
           
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
-          
-        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)builder.testCase().getActions().get(0);
+        PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000);
         Assert.assertEquals(action.getSleepTime(), 1000);
         Assert.assertEquals(action.getConnectionFactory(), connectionFactory);

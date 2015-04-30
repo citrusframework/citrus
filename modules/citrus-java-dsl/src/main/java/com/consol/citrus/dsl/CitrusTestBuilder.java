@@ -42,7 +42,7 @@ import java.util.*;
  * Citrus test builder offers builder pattern methods in order to configure a
  * test case with test actions, variables and properties.
  *
- * Subclass may add its custom logic in configure() method by calling builder methods.
+ * Subclass may add custom logic in {@link CitrusTestBuilder#configure()} method by calling builder methods.
  *
  * @author Christoph Deppisch
  * @since 1.3.1
@@ -102,6 +102,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public void execute(TestContext context) {
         configure();
+        build();
         getTestCase().execute(context);
     }
 
@@ -116,9 +117,8 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Main entrance method for builder pattern usage. Subclasses may override
-     * this method and call Java DSL builder methods for adding test actions and
-     * basic test case properties.
+     * Main entrance method for subclasses to call Java DSL builder methods in order to
+     * add test actions and basic test case properties to this builder instance.
      */
     protected void configure() {
     }
@@ -656,10 +656,17 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
     /**
      * Gets the testCase.
-     *
      * @return the testCase the testCase to get.
      */
-    public TestCase getTestCase() {
+    protected TestCase getTestCase() {
+        return testCase;
+    }
+
+    /**
+     * Builds the test case.
+     * @return
+     */
+    public TestCase build() {
         return testCase;
     }
 

@@ -70,7 +70,7 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
 
     @Override
     public TestCase getTestCase() {
-        return testBuilder.getTestCase();
+        return testBuilder.build();
     }
 
     @Override

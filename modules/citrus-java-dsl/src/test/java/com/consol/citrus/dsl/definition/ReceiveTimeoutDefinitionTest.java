@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
@@ -47,13 +48,14 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
                     .selector("TestMessageSelectorString");
             }
         };
-         
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveTimeoutAction.class);
          
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
-         
-        ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
+        ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
@@ -77,11 +79,12 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
         };
 
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveTimeoutAction.class);
          
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), ReceiveTimeoutAction.class);
-         
-        ReceiveTimeoutAction action = (ReceiveTimeoutAction)builder.testCase().getActions().get(0);
+        ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive-timeout");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getTimeout(), 500);

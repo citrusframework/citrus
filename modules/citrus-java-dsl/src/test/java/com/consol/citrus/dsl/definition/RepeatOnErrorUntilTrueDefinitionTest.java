@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -40,14 +41,15 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
                     .until("k gt= 5");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        assertEquals(test.getActions().size(), 2);
+        assertEquals(test.getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
+        assertEquals(test.getActions().get(0).getName(), "repeat-on-error");
         
-        assertEquals(builder.testCase().getActions().size(), 2);
-        assertEquals(builder.testCase().getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
-        assertEquals(builder.testCase().getActions().get(0).getName(), "repeat-on-error");
-        
-        RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)builder.testCase().getActions().get(0);
+        RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)test.getActions().get(0);
         assertEquals(container.getActions().size(), 3);
         assertEquals(container.getAutoSleep(), Long.valueOf(2000L));
         assertEquals(container.getCondition(), "i gt 5");
@@ -55,7 +57,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
 
-        container = (RepeatOnErrorUntilTrue)builder.testCase().getActions().get(1);
+        container = (RepeatOnErrorUntilTrue)test.getActions().get(1);
         assertEquals(container.getActions().size(), 1);
         assertEquals(container.getAutoSleep(), Long.valueOf(200L));
         assertEquals(container.getCondition(), "k gt= 5");

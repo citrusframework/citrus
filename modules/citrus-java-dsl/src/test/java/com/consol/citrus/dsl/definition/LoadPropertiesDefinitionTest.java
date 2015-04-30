@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -31,13 +32,14 @@ public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
                 load("classpath:test.properties");
             }
         };
-            
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), LoadPropertiesAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), LoadPropertiesAction.class);
-        
-        LoadPropertiesAction action = (LoadPropertiesAction)builder.testCase().getActions().get(0);
+        LoadPropertiesAction action = (LoadPropertiesAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "load");
         Assert.assertEquals(action.getFilePath(), "classpath:test.properties");
     }

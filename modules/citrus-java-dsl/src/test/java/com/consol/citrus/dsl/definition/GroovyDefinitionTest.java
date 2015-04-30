@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.TestCase;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -47,14 +48,15 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         reset(scriptResource);
         expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(scriptResource);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "groovy");
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getName(), "groovy");
-        
-        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)test.getActions().get(0);
         Assert.assertEquals(action.getScript(), "someScript");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
         
@@ -70,13 +72,14 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
                     .skipTemplate();
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
-        
-        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)test.getActions().get(0);
         Assert.assertEquals(action.getScript(), "println 'Groovy!'");
         Assert.assertEquals(action.isUseScriptTemplate(), false);
     }
@@ -95,13 +98,14 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         expect(scriptTemplate.getFile()).andReturn(file).once();
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(scriptTemplate, file);
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
-        
-        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)test.getActions().get(0);
         Assert.assertEquals(action.getScriptTemplatePath(), "classpath:some.file");
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
@@ -115,13 +119,14 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
                     .template("classpath:script-template.groovy");
             }
         };
-        
+
         builder.execute();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
-        Assert.assertEquals(builder.testCase().getActions().size(), 1);
-        Assert.assertEquals(builder.testCase().getActions().get(0).getClass(), GroovyAction.class);
-        
-        GroovyAction action = (GroovyAction)builder.testCase().getActions().get(0);
+        GroovyAction action = (GroovyAction)test.getActions().get(0);
         Assert.assertNotNull(action.getScriptTemplatePath());
         Assert.assertEquals(action.isUseScriptTemplate(), true);
     }
