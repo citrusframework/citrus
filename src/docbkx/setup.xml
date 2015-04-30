@@ -226,13 +226,13 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       storage. We are seeking for the Citrus project artifacts coming as normal Java archives (e.g. citrus-core.jar,
       citrus-ws.jar, etc.)</para>
       
-      <para>You have to include those Citrus Java archives as well as all dependency libraries to your Ant Java classpath. Usually
+      <para>You have to include those Citrus Java archives as well as all dependency libraries to your Apache Ant Java classpath. Usually
       you would copy all libraries into your project's lib directory and declare those libraries in the Ant build file. As this approach
       can be very time consuming I recommend to use a dependency management API such as Apache Ivy which gives you automatic dependency
       resolution like that from Maven. In particular this comes in handy with all the 3rd party dependencies that would be resolved
       automatically.</para>
 
-      <para>No matter what approach you are using to set up the ANT classpath see the following sample Ant build script which uses
+      <para>No matter what approach you are using to set up the Apache Ant classpath see the following sample Ant build script which uses
       the Citrus project artifacts in combination with the Citrus Ant tasks to run the tests.</para>
       
       <programlisting>&lt;project name=&quot;citrus-sample&quot; basedir=&quot;.&quot; default=&quot;citrus.run.tests&quot;&gt;
@@ -244,8 +244,6 @@ mvn integration-test -Dtest=MyFirstCitrusTest </programlisting>
       &lt;include name=&quot;*.jar&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/path&gt;
-  
-  &lt;typedef resource=&quot;citrustasks&quot; classpath=&quot;lib/citrus-ant-tasks-2.2-SNAPSHOT.jar&quot;/&gt;
   
   &lt;target name=&quot;compile.tests&quot;>
     &lt;javac srcdir=&quot;src/citrus/java&quot; classpathref=&quot;citrus-classpath&quot;/&gt;
