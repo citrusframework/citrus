@@ -142,7 +142,7 @@ public class Project {
                 projectInfo.put("version", XPathUtils.evaluateExpression(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext, XPathConstants.STRING));
                 projectInfo.put("description", XPathUtils.evaluateExpression(buildDoc, "/project/@description", nsContext, XPathConstants.STRING));
             } catch (IOException e) {
-                throw new CitrusAdminRuntimeException("Unable to open ANT build.xml file", e);
+                throw new CitrusAdminRuntimeException("Unable to open Apache Ant build.xml file", e);
             }
         } else {
             projectInfo.put("basePackage", basePackage);

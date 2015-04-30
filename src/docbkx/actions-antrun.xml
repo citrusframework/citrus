@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section id="actions-antrun">
-    <title>Running ANT build targets</title>
+    <title>Running Apache Ant build targets</title>
 
-    <para>The &lt;ant&gt; action loads a build.xml ANT file and executes one or more targets in the ANT project. The target is executed with
-    optional build properties passed to the ANT run. The ANT build output is logged with Citrus logger and the test case success is bound to 
-    the ANT build success. This means in case the ANT build fails for some reason the test case will also fail with build exception accordingly.</para>
+    <para>The &lt;ant&gt; action loads a build.xml Ant file and executes one or more targets in the Ant project. The target is executed with
+    optional build properties passed to the Ant run. The Ant build output is logged with Citrus logger and the test case success is bound to
+    the Ant build success. This means in case the Ant build fails for some reason the test case will also fail with build exception accordingly.</para>
     
-    <para>See this basic ANT run example to see how it works within your test case:</para>
+    <para>See this basic Ant run example to see how it works within your test case:</para>
     
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;AntRunTest&quot;&gt;
@@ -35,7 +35,7 @@ public void antRunTest() {
         .property("welcomeText", "$Hello!");
 }</programlisting>
     
-    <para>The respective build.xml ANT file must provide the target to call. For example:</para>
+    <para>The respective build.xml Ant file must provide the target to call. For example:</para>
     
     <programlisting>&lt;project name=&quot;citrus-build&quot; default=&quot;sayHello&quot;&gt;
     &lt;property name=&quot;welcomeText&quot; value=&quot;Welcome to Citrus!&quot;&gt;&lt;/property&gt;
@@ -49,7 +49,7 @@ public void antRunTest() {
     &lt;/target&gt;
 &lt;/project&gt;</programlisting>
 
-    <para>As you can see you can pass custom build properties to the ANT build execution. Existing ANT build properties are 
+    <para>As you can see you can pass custom build properties to the Ant build execution. Existing Ant build properties are
     replaced and you can use the properties in your build file as usual.</para>
     
     <para>You can also call multiple targets within one single build run by using a comma separated list of target names:</para>
@@ -82,9 +82,9 @@ public void antRunTest() {
     <para>The build properties can live in external file resource as an alternative to the inline property definitions. You just have to use the
     respective file resource path and all nested properties get loaded as build properties.</para>
     
-    <para>In addition to that you can also define a custom build listener. The build listener must implement the ANT API interface <emphasis>org.apache.tools.ant.BuildListener</emphasis>. 
-    During the ANT build run the build listener is called with several callback methods (e.g. buildStarted(), buildFinished(), targetStarted(), targetFinished(), ...). This is how 
-    you can add additional logic to the ANT build run from Citrus. A custom build listener could manage the fail state of your test case, in particular by 
+    <para>In addition to that you can also define a custom build listener. The build listener must implement the Ant API interface <emphasis>org.apache.tools.ant.BuildListener</emphasis>.
+    During the Ant build run the build listener is called with several callback methods (e.g. buildStarted(), buildFinished(), targetStarted(), targetFinished(), ...). This is how
+    you can add additional logic to the Ant build run from Citrus. A custom build listener could manage the fail state of your test case, in particular by
     raising some exception forcing the test case to fail accordingly.</para>
     
     <para><emphasis>XML DSL</emphasis></para>
@@ -111,5 +111,5 @@ public void antRunTest() {
 }</programlisting>
 
     <para>The <emphasis>customBuildListener</emphasis> used in the example above should reference a Spring bean in the Citrus application context. The bean implements
-    the interface <emphasis>org.apache.tools.ant.BuildListener</emphasis> and controls the ANT build run.</para>
+    the interface <emphasis>org.apache.tools.ant.BuildListener</emphasis> and controls the Ant build run.</para>
 </section>
