@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.ValidationException;
 import org.testng.annotations.Test;
 

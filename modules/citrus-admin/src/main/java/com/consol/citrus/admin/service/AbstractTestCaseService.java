@@ -26,7 +26,7 @@ import com.consol.citrus.admin.executor.ApplicationContextHolder;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.spring.model.SpringBeans;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.model.testcase.core.Testcase;
 import com.consol.citrus.model.testcase.core.Variables;
 import org.springframework.beans.factory.annotation.Autowired;

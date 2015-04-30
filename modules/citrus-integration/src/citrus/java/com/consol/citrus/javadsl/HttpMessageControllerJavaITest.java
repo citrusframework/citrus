@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.http.message.HttpMessage;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

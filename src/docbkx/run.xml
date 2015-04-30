@@ -133,7 +133,7 @@ public class SampleTest extends AbstractTestNGCitrusTest {
       sample TestNG Java class for this:</para>
 
       <programlisting language="java">import org.testng.annotations.Test;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 @Test

@@ -20,13 +20,7 @@ package com.consol.citrus.arquillian;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public abstract class CitrusExtensionConstants {
-
-    /**
-     * Prevent instantiation.
-     */
-    private CitrusExtensionConstants() {
-    }
+public final class CitrusExtensionConstants {
 
     /** Arquillian extension configuration qualifier */
     public static final String CITRUS_EXTENSION_QUALIFIER = "citrus";
@@ -41,4 +35,10 @@ public abstract class CitrusExtensionConstants {
     public static final int REMOTE_CONFIG_PRECEDENCE = 2;
     public static final int INSTANCE_PRECEDENCE = 1;
     public static final int LIFECYCLE_PRECEDENCE = 0;
+
+    /**
+     * Prevent instantiation.
+     */
+    private CitrusExtensionConstants() {
+    }
 }

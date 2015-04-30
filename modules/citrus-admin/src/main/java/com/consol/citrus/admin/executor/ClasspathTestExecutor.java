@@ -20,7 +20,7 @@ import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.websocket.WebSocketLoggingAppender;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl;
 
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

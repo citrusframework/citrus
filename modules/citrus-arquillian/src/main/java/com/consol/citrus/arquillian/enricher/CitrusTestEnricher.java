@@ -17,9 +17,9 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.arquillian.annotation.InjectCitrus;
+import com.consol.citrus.annotations.CitrusFramework;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.CitrusTestBuilder;
-import com.consol.citrus.dsl.annotations.CitrusTest;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
@@ -49,7 +49,7 @@ public class CitrusTestEnricher implements TestEnricher {
         }, new ReflectionUtils.FieldFilter() {
             @Override
             public boolean matches(Field field) {
-                if (field.isAnnotationPresent(InjectCitrus.class) &&
+                if (field.isAnnotationPresent(CitrusFramework.class) &&
                         Citrus.class.isAssignableFrom(field.getType())) {
                     if (!field.isAccessible()) {
                         ReflectionUtils.makeAccessible(field);

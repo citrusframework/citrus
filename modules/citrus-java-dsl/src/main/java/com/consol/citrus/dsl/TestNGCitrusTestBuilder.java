@@ -20,7 +20,7 @@ import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;

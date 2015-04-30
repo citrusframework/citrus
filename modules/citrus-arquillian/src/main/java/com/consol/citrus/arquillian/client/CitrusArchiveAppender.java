@@ -17,7 +17,6 @@
 package com.consol.citrus.arquillian.client;
 
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
-import com.consol.citrus.arquillian.annotation.InjectCitrus;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.container.CitrusRemoteConfigurationProducer;
 import com.consol.citrus.arquillian.container.CitrusRemoteExtension;
@@ -46,7 +45,6 @@ public class CitrusArchiveAppender extends CachedAuxilliaryArchiveAppender {
     @Override
     protected Archive<?> buildArchive() {
         return ShrinkWrap.create(JavaArchive.class)
-            .addClass(InjectCitrus.class)
             .addClass(CitrusExtensionConstants.class)
             .addClass(CitrusConfiguration.class)
             .addClass(CitrusInstanceProducer.class)

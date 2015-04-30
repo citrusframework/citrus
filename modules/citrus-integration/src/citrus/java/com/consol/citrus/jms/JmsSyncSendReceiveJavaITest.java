@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms;
 
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.annotations;
+package com.consol.citrus.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

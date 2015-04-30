@@ -23,7 +23,7 @@ import com.consol.citrus.admin.executor.*;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.util.FileHelper;
 import com.consol.citrus.dsl.*;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;

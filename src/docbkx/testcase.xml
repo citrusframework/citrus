@@ -110,7 +110,7 @@
     
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">import org.testng.annotations.Test;
-import com.consol.citrus.dsl.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 
 @Test
