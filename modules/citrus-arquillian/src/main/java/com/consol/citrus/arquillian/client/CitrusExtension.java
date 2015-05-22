@@ -26,6 +26,8 @@ import org.jboss.arquillian.core.spi.LoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
 
 /**
+ * Arquillian extension registers archive appenders, processors and observers for Citrus extension.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

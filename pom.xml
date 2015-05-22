@@ -473,6 +473,11 @@
         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
         <version>2.1.1</version>
       </dependency>
+      <dependency>
+        <groupId>org.jboss.shrinkwrap</groupId>
+        <artifactId>shrinkwrap-impl-base</artifactId>
+        <version>1.2.2</version>
+      </dependency>
 
       <!-- JaxB Bindings (API and implementation) -->
       <dependency>

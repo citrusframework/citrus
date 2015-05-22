@@ -25,11 +25,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
 
 /**
+ * Special remote configuration producer operates on server side remote test execution. Reads Citrus remote
+ * property file as classpath resource and constructs proper Citrus extension configuration.
+ *
+ * Citrus remote property is usually created from auxiliary archive that is loaded automatically with Citrus
+ * Arquillian extension. If not use {@link com.consol.citrus.arquillian.CitrusExtensionConstants#CITRUS_REMOTE_PROPERTIES} property
+ * file name as resource in your Shrinkwrap test deployment.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */
@@ -42,6 +50,10 @@ public class CitrusRemoteConfigurationProducer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusRemoteConfigurationProducer.class);
 
+    /**
+     * Observes before suite event and tries to load Citrus remote extension properties.
+     * @param event
+     */
     public void configure(@Observes(precedence = CitrusExtensionConstants.REMOTE_CONFIG_PRECEDENCE) BeforeSuite event) {
         configurationInstance.set(CitrusConfiguration.from(getRemoteConfigurationProperties()));
     }
@@ -54,11 +66,24 @@ public class CitrusRemoteConfigurationProducer {
         });
 
         try {
+            if (log.isDebugEnabled()) {
+                log.debug("Loading Citrus remote extension properties ...");
+            }
+
             Properties props = new Properties();
-            props.load(ctcl.getResourceAsStream(CitrusExtensionConstants.CITRUS_REMOTE_PROPERTIES));
+            InputStream inputStream = ctcl.getResourceAsStream(CitrusExtensionConstants.CITRUS_REMOTE_PROPERTIES);
+            if (inputStream != null) {
+                props.load(inputStream);
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully loaded Citrus remote extension properties");
+            }
 
             return props;
         } catch (IOException e) {
+            log.warn("Unable to load Citrus remote extension properties");
+
             return new Properties();
         }
     }

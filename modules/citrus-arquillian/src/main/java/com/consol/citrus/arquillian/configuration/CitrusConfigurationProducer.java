@@ -21,6 +21,8 @@ import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.core.api.annotation.*;
 
 /**
+ * Reads Citrus extension properties from Arquillian descriptor and constructs proper configuration instance.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

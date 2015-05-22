@@ -26,6 +26,8 @@ import org.jboss.arquillian.test.spi.event.suite.AfterSuite;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 
 /**
+ * Observes Arquillian before and after suite events in order to execute corresponding lifecycle phases in Citrus.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

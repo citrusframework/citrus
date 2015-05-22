@@ -24,6 +24,8 @@ import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
 
 /**
+ * Arquillian remote extension loads enricher and observables for Citrus remote extension.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

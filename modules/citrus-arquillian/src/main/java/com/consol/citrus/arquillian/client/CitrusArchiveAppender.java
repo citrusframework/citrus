@@ -34,6 +34,9 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.springframework.util.ReflectionUtils;
 
 /**
+ * Archive appender creates an auxilliary archive with all necessary Citrus extension classes and resources for
+ * execution in remote application server.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

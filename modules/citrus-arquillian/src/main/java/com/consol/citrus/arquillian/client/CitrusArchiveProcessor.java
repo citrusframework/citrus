@@ -27,6 +27,9 @@ import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
+ * Archive processor automatically adds Citrus libraries to deployable archive. According to extension configuration
+ * explicit Citrus version is loaded and libraries are added automatically to enterprise or web archive.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

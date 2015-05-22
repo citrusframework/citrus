@@ -31,20 +31,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
+ * Test enricher works on Citrus annotated test class fields and test methods. Injects
+ * Citrus framework instance as well as Citrus test instances to Arquillian test methods.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */
 public class CitrusTestEnricher implements TestEnricher {
 
     @Inject
-    private Instance<Citrus> citrusFramework;
+    private Instance<Citrus> citrusInstance;
 
     @Override
     public void enrich(final Object testCase) {
         ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                ReflectionUtils.setField(field, testCase, citrusFramework.get());
+                ReflectionUtils.setField(field, testCase, citrusInstance.get());
             }
         }, new ReflectionUtils.FieldFilter() {
             @Override
@@ -75,7 +78,7 @@ public class CitrusTestEnricher implements TestEnricher {
                     CitrusTest citrusTestAnnotation = (CitrusTest) annotation;
                     Class<?> clazz = parameterTypes[i];
                     if (isSupportedParameter(clazz)) {
-                        CitrusTestBuilder citrusTestBuilder = new CitrusTestBuilder(citrusFramework.get().getApplicationContext());
+                        CitrusTestBuilder citrusTestBuilder = new CitrusTestBuilder(citrusInstance.get().getApplicationContext());
 
                         if (StringUtils.hasText(citrusTestAnnotation.name())) {
                             citrusTestBuilder.name(citrusTestAnnotation.name());

@@ -24,6 +24,9 @@ import java.io.*;
 import java.util.Properties;
 
 /**
+ * Citrus extension configuration. User can customize properties either by setting extension properties in Arquillian descriptor or
+ * in remote extension property file.
+ *
  * @author Christoph Deppisch
  * @since 2.2
  */

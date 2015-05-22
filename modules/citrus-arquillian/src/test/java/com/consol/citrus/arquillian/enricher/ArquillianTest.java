@@ -17,26 +17,38 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.arquillian.CitrusExtensionConstants;
-import com.consol.citrus.config.CitrusBaseConfig;
-import org.jboss.arquillian.core.api.InstanceProducer;
-import org.jboss.arquillian.core.api.annotation.*;
-import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
+import com.consol.citrus.annotations.CitrusFramework;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.CitrusTestBuilder;
+import org.jboss.arquillian.test.api.ArquillianResource;
+
+import java.net.URL;
 
 /**
- * Creates a new Citrus instance with basic configuration and sets result as application scoped
- * Arquillian resource.
- *
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class CitrusInstanceProducer {
+public class ArquillianTest {
 
-    @Inject
-    @ApplicationScoped
-    private InstanceProducer<Citrus> citrusInstance;
+    @CitrusFramework
+    private Citrus citrus;
 
-    public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.INSTANCE_PRECEDENCE) BeforeSuite event) {
-        citrusInstance.set(Citrus.newInstance(CitrusBaseConfig.class));
+    public void testMethod(@CitrusTest CitrusTestBuilder citrusTest) {
+    }
+
+    public void testMethod(@ArquillianResource URL url, @CitrusTest CitrusTestBuilder citrusTest) {
+    }
+
+    public void testMethod(@CitrusTest CitrusTestBuilder citrusTest, @ArquillianResource URL url) {
+    }
+
+    public void testMethod(@ArquillianResource URL url) {
+    }
+
+    public void otherMethod() {
+    }
+
+    public Citrus getCitrus() {
+        return citrus;
     }
 }
