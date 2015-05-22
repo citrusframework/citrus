@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -151,17 +152,21 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
      */
     private String getResponseContent(HttpServletResponse response, Object handler) {
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append(response);
-        
-        if (handler instanceof HttpMessageController) {
-            ResponseEntity<String> responseEntity = ((HttpMessageController)handler).getResponseCache();
-            if (responseEntity != null) {
-                builder.append(NEWLINE);
-                builder.append(responseEntity.getBody());
+
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            if (handlerMethod.getBean() instanceof HttpMessageController) {
+                ResponseEntity<String> responseEntity =
+                        ((HttpMessageController) handlerMethod.getBean()).getResponseCache();
+                if (responseEntity != null) {
+                    builder.append(NEWLINE);
+                    builder.append(responseEntity.getBody());
+                }
             }
         }
-        
+
         return builder.toString();
     }
 
