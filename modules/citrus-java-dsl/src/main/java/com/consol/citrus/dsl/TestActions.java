@@ -43,6 +43,12 @@ import java.util.Arrays;
 public class TestActions {
 
     /**
+     * Prevent instantiation.
+     */
+    private TestActions() {
+    }
+
+    /**
      * Action creating new test variables during a test.
      *
      * @return
@@ -349,8 +355,7 @@ public class TestActions {
      * Add sleep action with default delay time.
      */
     public static SleepAction sleep() {
-        SleepAction action = new SleepAction();
-        return action;
+        return new SleepAction();
     }
 
     /**
@@ -433,8 +438,7 @@ public class TestActions {
      * @return
      */
     public static StopTimeAction stopTime() {
-        StopTimeAction action = new StopTimeAction();
-        return action;
+        return new StopTimeAction();
     }
 
     /**
@@ -456,8 +460,7 @@ public class TestActions {
      * @return
      */
     public static TraceVariablesAction traceVariables() {
-        TraceVariablesAction action = new TraceVariablesAction();
-        return action;
+        return new TraceVariablesAction();
     }
 
     /**

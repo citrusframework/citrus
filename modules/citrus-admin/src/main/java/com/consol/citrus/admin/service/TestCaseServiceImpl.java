@@ -21,9 +21,8 @@ import com.consol.citrus.admin.configuration.*;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.*;
 import com.consol.citrus.admin.model.*;
-import com.consol.citrus.admin.util.FileHelper;
-import com.consol.citrus.dsl.*;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -38,7 +37,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test case service reads tests from file system and delegates to file system test executor for
@@ -59,9 +59,6 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
     /** Test executor works on project classpath */
     @Autowired
     private ClasspathTestExecutor classpathTestExecutor;
-
-    @Autowired
-    private FileHelper fileHelper;
 
     @Override
     public List<TestCaseData> getTests(Project project) {

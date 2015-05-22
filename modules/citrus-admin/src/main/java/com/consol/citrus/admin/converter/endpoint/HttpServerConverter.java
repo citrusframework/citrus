@@ -29,17 +29,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class HttpServerConverter extends AbstractEndpointConverter<Server> {
 
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+
     @Override
     public EndpointData convert(Server server) {
         EndpointData endpointData = new EndpointData(getEndpointType(), server.getId(), getModelClass());
 
         endpointData.add(property("port", server));
-        endpointData.add(property("autoStart", server, "true")
-                .options("true", "false"));
+        endpointData.add(property("autoStart", server, TRUE)
+                .options(TRUE, FALSE));
         endpointData.add(property("resourceBase", server));
         endpointData.add(property("contextPath", server));
-        endpointData.add(property("rootParentContext", server, "true")
-                .options("true", "false"));
+        endpointData.add(property("rootParentContext", server, TRUE)
+                .options(TRUE, FALSE));
         endpointData.add(property("messageConverter", server)
                 .optionKey(MessageConverter.class.getName()));
         endpointData.add(property("endpointAdapter", server)

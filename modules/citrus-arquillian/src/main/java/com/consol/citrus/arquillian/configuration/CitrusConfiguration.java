@@ -30,7 +30,7 @@ import java.util.Properties;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class CitrusConfiguration implements Serializable {
+public final class CitrusConfiguration implements Serializable {
 
     /** Citrus version to use in archive packages */
     private String citrusVersion;

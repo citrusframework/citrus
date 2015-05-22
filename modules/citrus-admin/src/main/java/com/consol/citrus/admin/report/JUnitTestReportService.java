@@ -28,7 +28,6 @@ import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 /**
  * @author Christoph Deppisch
@@ -38,9 +37,6 @@ public class JUnitTestReportService implements TestReportService {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JUnitTestReportService.class);
-
-    /** Date format */
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
 
     @Override
     public TestReport loadReport(Project activeProject) {

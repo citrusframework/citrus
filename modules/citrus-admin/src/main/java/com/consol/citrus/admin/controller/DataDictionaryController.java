@@ -34,6 +34,8 @@ import java.util.List;
 @RequestMapping("/data-dictionary")
 public class DataDictionaryController {
 
+    public static final String MODEL_TYPE = "modelType";
+
     @Autowired
     private ProjectService projectService;
 
@@ -84,13 +86,13 @@ public class DataDictionaryController {
     private JSONObject enrichModelType(JSONObject dictionary) {
         String type = dictionary.get("type").toString();
         if (type.equals("xpath-data-dictionary")) {
-            dictionary.put("modelType", XpathDataDictionary.class.getName());
+            dictionary.put(MODEL_TYPE, XpathDataDictionary.class.getName());
         } else if (type.equals("xml-data-dictionary")) {
-            dictionary.put("modelType", XmlDataDictionary.class.getName());
+            dictionary.put(MODEL_TYPE, XmlDataDictionary.class.getName());
         } else if (type.equals("json-data-dictionary")) {
-            dictionary.put("modelType", JsonDataDictionary.class.getName());
+            dictionary.put(MODEL_TYPE, JsonDataDictionary.class.getName());
         } else {
-            dictionary.put("modelType", DataDictionaryType.class.getName());
+            dictionary.put(MODEL_TYPE, DataDictionaryType.class.getName());
         }
         return dictionary;
     }

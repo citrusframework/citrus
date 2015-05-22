@@ -30,6 +30,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Map;
 
@@ -73,8 +75,13 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                 
                 if (StringUtils.hasText(validationScript)) {
                     log.info("Start groovy SQL result set validation");
-                    
-                    GroovyClassLoader loader = new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
+
+                    GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
+                        public GroovyClassLoader run() {
+                            return new GroovyClassLoader(GroovyScriptMessageValidator.class.getClassLoader());
+                        }
+                    });
+
                     Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                                 .withCode(validationScript)
                                                                 .build());

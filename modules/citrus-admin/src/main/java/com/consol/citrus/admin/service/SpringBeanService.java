@@ -53,6 +53,8 @@ import java.util.*;
 @Component
 public class SpringBeanService {
 
+    public static final String FAILED_TO_UPDATE_BEAN_DEFINITION = "Failed to update bean definition";
+    public static final String UNABLE_TO_READ_TRANSFORMATION_SOURCE = "Unable to read update bean definition transformation source";
     @Autowired
     protected JAXBHelper jaxbHelper;
     
@@ -214,9 +216,9 @@ public class SpringBeanService {
             FileUtils.writeToFile(result.toString(), configFile);
             return;
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+            throw new CitrusAdminRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
         } catch (TransformerException e) {
-            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+            throw new CitrusAdminRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
     }
     
@@ -251,9 +253,9 @@ public class SpringBeanService {
                 return;
             }
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+            throw new CitrusAdminRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
         } catch (TransformerException e) {
-            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+            throw new CitrusAdminRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
     }
 
@@ -291,9 +293,9 @@ public class SpringBeanService {
                 return;
             }
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+            throw new CitrusAdminRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
         } catch (TransformerException e) {
-            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+            throw new CitrusAdminRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
     }
     
@@ -337,9 +339,9 @@ public class SpringBeanService {
                 }
             }
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+            throw new CitrusAdminRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
         } catch (TransformerException e) {
-            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+            throw new CitrusAdminRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
     }
 
@@ -388,9 +390,9 @@ public class SpringBeanService {
                 }
             }
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+            throw new CitrusAdminRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
         } catch (TransformerException e) {
-            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+            throw new CitrusAdminRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
     }
 
@@ -415,9 +417,9 @@ public class SpringBeanService {
 
             return result.toString();
         } catch (IOException e) {
-            throw new CitrusAdminRuntimeException("Unable to read update bean definition transformation source", e);
+            throw new CitrusAdminRuntimeException(UNABLE_TO_READ_TRANSFORMATION_SOURCE, e);
         } catch (TransformerException e) {
-            throw new CitrusAdminRuntimeException("Failed to update bean definition", e);
+            throw new CitrusAdminRuntimeException(FAILED_TO_UPDATE_BEAN_DEFINITION, e);
         }
     }
 

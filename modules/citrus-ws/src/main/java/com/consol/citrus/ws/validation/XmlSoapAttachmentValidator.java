@@ -21,8 +21,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -33,9 +31,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author Christoph Deppisch
  */
 public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
 
     @Autowired(required = false)
     @Qualifier("soapAttachmentValidator")

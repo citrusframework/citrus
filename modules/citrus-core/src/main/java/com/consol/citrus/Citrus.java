@@ -87,7 +87,7 @@ public final class Citrus {
      * such as test listeners and test context factory.
      * @return
      */
-    public static final Citrus newInstance() {
+    public static Citrus newInstance() {
         return newInstance(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
     }
 
@@ -96,7 +96,7 @@ public final class Citrus {
      * that gets loaded as application context.
      * @return
      */
-    public static final Citrus newInstance(Class<? extends CitrusBaseConfig> configClass) {
+    public static Citrus newInstance(Class<? extends CitrusBaseConfig> configClass) {
         return newInstance(new AnnotationConfigApplicationContext(configClass));
     }
 
@@ -105,9 +105,8 @@ public final class Citrus {
      * @param applicationContext
      * @return
      */
-    public static final Citrus newInstance(ApplicationContext applicationContext) {
-        Citrus citrus = new Citrus(applicationContext);
-        return citrus;
+    public static Citrus newInstance(ApplicationContext applicationContext) {
+        return new Citrus(applicationContext);
     }
 
     /**

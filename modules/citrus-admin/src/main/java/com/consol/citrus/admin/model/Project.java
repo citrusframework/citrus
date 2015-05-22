@@ -90,15 +90,15 @@ public class Project {
             throw new CitrusAdminRuntimeException("Could not parse Citrus project information file", e);
         }
 
-        name = projectInfo.get("name").toString();
-        version = projectInfo.get("version").toString();
+        name = projectInfo.get(ProjectInfo.NAME).toString();
+        version = projectInfo.get(ProjectInfo.VERSION).toString();
 
-        if (projectInfo.containsKey("description")) {
-            description = projectInfo.get("description").toString();
+        if (projectInfo.containsKey(ProjectInfo.DESCRIPTION)) {
+            description = projectInfo.get(ProjectInfo.DESCRIPTION).toString();
         }
 
-        if (projectInfo.containsKey("basePackage")) {
-            basePackage = projectInfo.get("basePackage").toString();
+        if (projectInfo.containsKey(ProjectInfo.BASE_PACKAGE)) {
+            basePackage = projectInfo.get(ProjectInfo.BASE_PACKAGE).toString();
         }
 
         MavenRunConfiguration mavenRunConfiguration = new MavenRunConfiguration();
@@ -125,10 +125,10 @@ public class Project {
                 nsContext.bindNamespaceUri("mvn", "http://maven.apache.org/POM/4.0.0");
 
                 Document pomDoc = XMLUtils.parseMessagePayload(pomXml);
-                projectInfo.put("basePackage", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:groupId", nsContext, XPathConstants.STRING));
-                projectInfo.put("name", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:artifactId", nsContext, XPathConstants.STRING));
-                projectInfo.put("version", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext, XPathConstants.STRING));
-                projectInfo.put("description", XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:description", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.BASE_PACKAGE, XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:groupId", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.NAME, XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:artifactId", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.VERSION, XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:properties/mvn:citrus.version", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.DESCRIPTION, XPathUtils.evaluateExpression(pomDoc, "/mvn:project/mvn:description", nsContext, XPathConstants.STRING));
             } catch (IOException e) {
                 throw new CitrusAdminRuntimeException("Unable to open Maven pom.xml file", e);
             }
@@ -138,17 +138,17 @@ public class Project {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
 
                 Document buildDoc = XMLUtils.parseMessagePayload(buildXml);
-                projectInfo.put("name", XPathUtils.evaluateExpression(buildDoc, "/project/@name", nsContext, XPathConstants.STRING));
-                projectInfo.put("version", XPathUtils.evaluateExpression(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext, XPathConstants.STRING));
-                projectInfo.put("description", XPathUtils.evaluateExpression(buildDoc, "/project/@description", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.NAME, XPathUtils.evaluateExpression(buildDoc, "/project/@name", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.VERSION, XPathUtils.evaluateExpression(buildDoc, "/project/property[@name='citrus.version']/@value", nsContext, XPathConstants.STRING));
+                projectInfo.put(ProjectInfo.DESCRIPTION, XPathUtils.evaluateExpression(buildDoc, "/project/@description", nsContext, XPathConstants.STRING));
             } catch (IOException e) {
                 throw new CitrusAdminRuntimeException("Unable to open Apache Ant build.xml file", e);
             }
         } else {
-            projectInfo.put("basePackage", basePackage);
-            projectInfo.put("name", name);
-            projectInfo.put("version", version);
-            projectInfo.put("description", description);
+            projectInfo.put(ProjectInfo.BASE_PACKAGE, basePackage);
+            projectInfo.put(ProjectInfo.NAME, name);
+            projectInfo.put(ProjectInfo.VERSION, version);
+            projectInfo.put(ProjectInfo.DESCRIPTION, description);
         }
 
         FileOutputStream fos = null;

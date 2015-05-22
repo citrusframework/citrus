@@ -21,7 +21,6 @@ import com.consol.citrus.admin.model.TestCaseData;
 import com.consol.citrus.admin.model.TestCaseType;
 import com.consol.citrus.admin.service.ProjectService;
 import com.consol.citrus.admin.service.TestCaseService;
-import com.consol.citrus.admin.util.FileHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +49,6 @@ public class TestCaseController {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private FileHelper fileHelper;
-    
     @RequestMapping(method = { RequestMethod.GET })
     @ResponseBody
     public List<TestCaseData> list() {

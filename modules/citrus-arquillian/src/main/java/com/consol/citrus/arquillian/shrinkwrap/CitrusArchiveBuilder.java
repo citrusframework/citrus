@@ -31,7 +31,7 @@ import java.util.List;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class CitrusArchiveBuilder {
+public final class CitrusArchiveBuilder {
 
     /** Should include transitive dependency libraries */
     private boolean transitivity = true;

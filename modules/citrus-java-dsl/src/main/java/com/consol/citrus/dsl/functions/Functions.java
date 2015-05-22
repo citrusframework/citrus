@@ -28,6 +28,12 @@ import java.util.*;
 public class Functions {
 
     /**
+     * Prevent instantiation.
+     */
+    private Functions() {
+    }
+
+    /**
      * Runs current date function with arguments.
      * @return
      */

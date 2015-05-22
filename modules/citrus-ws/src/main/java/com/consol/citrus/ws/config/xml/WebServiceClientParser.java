@@ -46,21 +46,21 @@ public class WebServiceClientParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute(REQUEST_URL_ATTRIBUTE), "defaultUri");
 
         if (element.hasAttribute("web-service-template") && (element.hasAttribute("message-factory") ||
-                element.hasAttribute("message-sender") ||
-                element.hasAttribute("message-senders"))) {
+                element.hasAttribute(MESSAGE_SENDER_ATTRIBUTE) ||
+                element.hasAttribute(MESSAGE_SENDERS_ATTRIBUTE))) {
             parserContext.getReaderContext().error("When providing a 'web-service-template' reference, none of " +
-                    "'message-factory', '" + "message-sender" +
-                    "', or '" + "message-senders" + "' should be set.", element);
+                    "'message-factory', '" + MESSAGE_SENDER_ATTRIBUTE +
+                    "', or '" + MESSAGE_SENDERS_ATTRIBUTE + "' should be set.", element);
         }
 
-        if (!element.hasAttribute("request-url") && !element.hasAttribute("endpoint-resolver")) {
+        if (!element.hasAttribute(REQUEST_URL_ATTRIBUTE) && !element.hasAttribute("endpoint-resolver")) {
             parserContext.getReaderContext().error(String.format("One of the properties '%s' or '%s' is required!",
-                    "request-url", "endpoint-resolver"), element);
+                    REQUEST_URL_ATTRIBUTE, "endpoint-resolver"), element);
         }
 
-        if (element.hasAttribute("message-sender") && element.hasAttribute("message-senders")) {
+        if (element.hasAttribute(MESSAGE_SENDER_ATTRIBUTE) && element.hasAttribute(MESSAGE_SENDERS_ATTRIBUTE)) {
             parserContext.getReaderContext().error(String.format("When '%s' is set, no '%s' attribute should be provided.",
-                    "message-sender", "message-senders"), element);
+                    MESSAGE_SENDER_ATTRIBUTE, MESSAGE_SENDERS_ATTRIBUTE), element);
         }
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("web-service-template"), "webServiceTemplate");

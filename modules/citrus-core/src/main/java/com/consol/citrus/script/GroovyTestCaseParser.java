@@ -29,6 +29,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import java.io.*;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * Class parsing a groovy script to create a test case instance.
@@ -61,9 +63,13 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
         BufferedReader bodyReader = null;
         
         try {
-            ClassLoader parent = getClass().getClassLoader();
-            GroovyClassLoader loader = new GroovyClassLoader(parent);
-            
+            GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
+                public GroovyClassLoader run() {
+                    ClassLoader parent = getClass().getClassLoader();
+                    return new GroovyClassLoader(parent);
+                }
+            });
+
             StringBuilder script = new StringBuilder();
             bodyReader = new BufferedReader(new FileReader(groovyScript.getFile()));
             templateReader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("test_template.groovy")));
