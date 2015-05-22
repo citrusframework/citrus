@@ -20,10 +20,16 @@ package com.consol.citrus.junit;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class TestSuiteState {
+public final class TestSuiteState {
 
     /** Boolean state holder, true indicates that before suite has already been executed */
     private static Boolean beforeSuiteState = false;
+
+    /**
+     * Prevent instantiation.
+     */
+    private TestSuiteState() {
+    }
 
     /**
      * Perform synchronized checks on before suite already done. If before suite has not been done yet
@@ -32,14 +38,12 @@ public class TestSuiteState {
      *
      * @return flag indicating if before suite should be executed
      */
-    public static boolean shouldExecuteBeforeSuite() {
-        synchronized (beforeSuiteState) {
-            if (!beforeSuiteState) {
-                beforeSuiteState = true;
-                return true;
-            } else {
-                return false;
-            }
+    public static synchronized boolean shouldExecuteBeforeSuite() {
+        if (!beforeSuiteState) {
+            beforeSuiteState = true;
+            return true;
+        } else {
+            return false;
         }
     }
 }
