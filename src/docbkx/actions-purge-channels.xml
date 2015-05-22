@@ -14,10 +14,10 @@
     <para><emphasis>XML DSL</emphasis></para>
     <programlisting>&lt;testcase name=&quot;purgeChannelTest&quot;&gt;
   &lt;actions&gt;
-      &lt;purge-channels&gt;
+      &lt;purge-channel&gt;
           &lt;channel name=&quot;someChannelName&quot;/&gt;
           &lt;channel name=&quot;anotherChannelName&quot;/&gt;
-      &lt;/purge-channels&gt;
+      &lt;/purge-channel&gt;
       
       &lt;purge-channel&gt;
           &lt;channel ref=&quot;someChannel&quot;/&gt;
@@ -122,21 +122,26 @@ public void purgeTest() {
     very beginning of the test. A more straight forward approach would be to introduce some purging action which is automatically executed before each test. 
     Fortunately the Citrus test suite offers a very simple way to do this. It is described in <xref linkend="testsuite-before-test"/>.</para>
         
-    <para>When using the special action sequence between test cases you must define a normal Spring bean definition first. The 
-    'com.consol.citrus.actions.PurgeMessageChannelAction' bean offers the respective properties for setting channel destinations to be purged. 
+    <para>When using the special action sequence before test cases we are able to purge channel destinations every time a test case executes.
     See the upcoming example to find out how the action is defined in the Spring configuration application context.</para>
-        
-    <programlisting>&lt;bean id=&quot;purgeMessageChannels&quot;
-    class=&quot;com.consol.citrus.actions.PurgeMessageChannelsAction&quot;&gt;
-    &lt;property name=&quot;channelNames&quot;&gt;
-        &lt;list&gt;
-            &lt;value&gt;fooChannel&lt;/value&gt;
-            &lt;value&gt;barChannel&lt;/value&gt;
-        &lt;/list&gt;
-    &lt;/property&gt;
-&lt;/bean&gt;</programlisting>
-    
-    <para>Use this Spring bean definition in the action sequence before each test and your test do not influence each other with obsolete messages still
-    waiting on the message channels for consumption.</para>
+
+    <programlisting>&lt;citrus:before-test id=&quot;purgeBeforeTest&quot;&gt;
+    &lt;citrus:actions&gt;
+        &lt;purge-channel&gt;
+            &lt;channel name=&quot;fooChannel&quot;/&gt;
+            &lt;channel name=&quot;barChannel&quot;/&gt;
+        &lt;/purge-channel&gt;
+    &lt;/citrus:actions&gt;
+&lt;/citrus:before-test&gt;</programlisting>
+
+    <para>Just use this before-test bean in the citrus-context.xml Spring bean application context and the purge channel action is active. Obsolete messages that are
+    waiting on the message channels for consumption are purged before the next test in line is executed.</para>
+
+    <tip>
+        <para>Purging message channels becomes also very interesting when working with server instances in Citrus. Each server component automatically has an inbound message channel
+        where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message
+        channel. The message channel follows a naming convention <emphasis>{serverName}.inbound</emphasis> where <emphasis>{serverName}</emphasis> is the Spring bean name of the Citrus server
+        endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.</para>
+    </tip>
     
 </section>

@@ -186,6 +186,12 @@
         from older Citrus versions might know how we had to configure this setup somehow verbose in a separate configuration file. But these times have changed as Citrus configuration has become a lot easier in this manner. So now
         the test case does not worry about that settings on the server and just uses the server id reference as synchronous endpoint.</para>
 
+        <tip>
+          <para>The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages
+            you can do this easily by purging the internal message channel. The message channel follows a naming convention <emphasis>{serverName}.inbound</emphasis> where <emphasis>{serverName}</emphasis> is the Spring bean name of the Citrus server
+            endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.</para>
+        </tip>
+
         <para>However we do not want to loose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus HTTP server. We
         provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper response messages for the client in various ways. Before we have a closer
         look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.</para>
