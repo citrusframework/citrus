@@ -110,10 +110,10 @@ public class SampleTest extends AbstractTestNGCitrusTest {
     public void multipleTests() {}
 
     @CitrusXmlTest(name = "OtherTest", packageName = "com.other.testpackage")
-    public void sampleTest() {}
+    public void otherPackageTest() {}
 
     @CitrusXmlTest(packageScan =  { "com.some.testpackage", "com.other.testpackage" })
-    public void sampleTest() {}
+    public void packageScanTest() {}
 }</programlisting>
 
       <para>You are free to combine these test annotations as you like in your class. As the whole Java class is annotated with the TestNG
@@ -191,21 +191,15 @@ public class MyFirstTest extends TestNGCitrusTestBuilder {
     <section id="run-junit">
         <title>Run with JUnit</title>
         
-        <para>First thing that has to be said clearly is the fact that we are not able to provide the same amount and quality of Citrus TestNG features for JUnit.
-        No doubt JUnit is a very popular unit test framework for Java applications widely accepted and widely supported by many tools. However JUnit is not as customizable
-        as TestNG and you can not participate in the test execution process in such a detail that you can do with TestNG. This is why Citrus JUnit features are limited to a
-        certain extent.</para>
-
-        <para>The mentioned limitations are that you can only execute a single Citrus test case within a JUnit test class. So you have to create a JUnit test class for each
-        Citrus test case. Second thing to mention is that the @CitrusTest and @CitrusXmlTest annotations do not work with JUnit which is a direct consequence from the first
-        limitation that we have mentioned.</para>
-
-        <para>However Citrus offers complete JUnit support for executing test cases. If you choose <emphasis>junit</emphasis> as execution framework
+        <para>JUnit is a very popular unit test framework for Java applications widely accepted and widely supported by many tools. In general Citrus supports both JUnit and TestNG
+        as test execution frameworks. Although the TestNG customization features are slightly more powerful than those offered by JUnit you as a Citrus user should be able to use the framework of
+        your choice. The complete support for executing test cases with package scans and multiple annotated methods is given for both frameworks. If you choose <emphasis>junit</emphasis> as execution framework
         Citrus generates a Java file that looks like this:</para>
         
         <programlisting language="java">package com.consol.citrus.samples;
 
 import org.junit.Test;
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
   
 /**
@@ -215,21 +209,30 @@ import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
  */
 public class SampleTest extends AbstractJUnit4CitrusTest {
     @Test
-    public void sampleTest() {
-        executeTest();
-    }
+    @CitrusXmlTest(name = "SampleTest")
+    public void sampleTest() {}
+
+    @Test
+    @CitrusXmlTest(name = { "SampleTest", "Sample2Test" })
+    public void multipleTests() {}
+
+    @Test
+    @CitrusXmlTest(name = "OtherTest", packageName = "com.other.testpackage")
+    public void otherPackageTest() {}
+
+    @Test
+    @CitrusXmlTest(packageScan =  { "com.some.testpackage", "com.other.testpackage" })
+    public void packageScanTest() {}
 }</programlisting>
         
-        <para>The different JUnit versions reveal slight differences, but the idea is the same. We extend a base
-        JUnit Citrus test class and have on single test method that executes the Citrus test with calling the
-        <emphasis>executeTest()</emphasis> method from superclass. We are still able to use all JUnit features such
-        as before/after test actions or enable/disable tests.</para>
+        <para>JUnit and TestNG as frameworks reveal slight differences, but the idea is the same. We extend a base JUnit Citrus test class and have one to many test methods that load the XML
+        Citrus test cases for execution. As you can see the test class can hold several annotated test methods that get executed as JUnit tests. The fine thing here is that we are still able
+        to use all JUnit features such as before/after test actions or enable/disable tests.</para>
 
-        <para>The Java JUnit classes are simply responsible for executing the Citrus test cases. Citrus and the Spring framework
-        take care on loading the XML test file and to set up the application context. The test is executed and success/failure
-        are reported just like a usual JUnit test would do. This also means that you can execute this Citrus JUnit class like every other
-        JUnit test like from your IDE, from Maven, from ANT and so on. This means that you can include the Citrus test execution into
-        you software building lifecycle and continuous build for instance.</para>
+        <para>The Java JUnit classes are simply responsible for loading and executing the Citrus test cases. Citrus takes care on loading the XML test as a file system resource and to set up the
+        Spring application context. The test is executed and success/failure state is reported exactly like a usual JUnit unit test would do. This also means that you can execute this Citrus JUnit class like every other
+        JUnit test, especially out of any Java IDE, with Maven, with ANT and so on. This means that you can easily include the Citrus test execution into
+        you software building lifecycle and continuous build.</para>
         
         <tip>
             <para>So now we know both TestNG and JUnit support in Citrus. Which framework should someone choose?
@@ -244,6 +247,7 @@ public class SampleTest extends AbstractJUnit4CitrusTest {
 
         <programlisting language="java">package com.consol.citrus.samples;
 
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.JUnit4CitrusTestBuilder;
 import org.junit.Test;
 
@@ -254,23 +258,29 @@ import org.junit.Test;
  */
 public class SampleTest extends JUnit4CitrusTestBuilder {
 
-    @Override
-    protected void configure() {
+    @Test
+    @CitrusTest
+    public void EchoSampleTest() {
         variable("time", "citrus:currentDate()");
         echo("Hello Citrus!");
         echo("CurrentTime is: ${time}");
     }
 
     @Test
-    public void doExecute() {
-        executeTest();
+    @CitrusTest(name = "CitrusEchoTest")
+    public void echoTest() {
+        echo("Hello Citrus!");
     }
 }</programlisting>
 
       <para>The Java DSL test case looks quite familiar as we also use the JUnit4 <emphasis>@Test</emphasis> annotation in order
-      to mark our test for unit test execution. In addition to that we extend from a basic JUnit4 Citrus test builder which enables
-      the Java domain specific language features. The Citrus test logic goes directly to the configure method. There is no need
-      for a XML test file anymore.</para>
+      to mark our test for unit test execution. In addition to that we add a <emphasis>@CitrusTest</emphasis> annotation and extend
+      from a basic JUnit4 Citrus test builder which enables the Java domain specific language features. The Citrus test logic goes
+      directly to the method block. There is no need for a XML test file anymore.</para>
+
+      <para>As you can see the <emphasis>@CitrusTest</emphasis> annotation supports multiple tet methods in one single class. Each test is
+      prepared and executed separately just as you know it from JUnit. You can define an explicit Citrus test name that is used in Citrus test
+      reports. If no explicit test name is given the test method name will be used as a test name.</para>
 
       <para>If you need to know more details on how to use the Citrus Java DSL just continue with this reference guide. We will describe
       the capabilities in detail later on.</para>

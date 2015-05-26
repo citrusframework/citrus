@@ -18,14 +18,18 @@ package com.consol.citrus.dsl;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.*;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
+import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.core.io.Resource;
+import org.springframework.util.ReflectionUtils;
 
 import javax.jms.ConnectionFactory;
 import javax.sql.DataSource;
@@ -51,6 +55,26 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
         testBuilder = new CitrusTestBuilder(applicationContext);
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
+    }
+
+    @Override
+    protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
+        if (frameworkMethod.getMethod().getAnnotation(CitrusTest.class) != null) {
+            init();
+            name(frameworkMethod.getTestName());
+
+            ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this);
+
+            if (citrus == null) {
+                citrus = Citrus.newInstance(applicationContext);
+            }
+
+            TestContext ctx = prepareTestContext(citrus.createTestContext());
+            TestCase testCase = testBuilder.build();
+            citrus.run(testCase, ctx);
+        } else {
+            super.run(frameworkMethod);
+        }
     }
 
     @Override

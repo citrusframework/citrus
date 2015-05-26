@@ -18,18 +18,15 @@ package com.consol.citrus.junit;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import org.junit.runner.RunWith;
-import org.junit.runners.model.FrameworkMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-import org.springframework.util.StringUtils;
 
 /**
  * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides 
@@ -48,31 +45,19 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
     protected Citrus citrus;
 
     /**
-     * Reads Citrus tst annotation from framework method and executes test case.
+     * Reads Citrus test annotation from framework method and executes test case.
      * @param frameworkMethod
      */
-    protected void run(FrameworkMethod frameworkMethod) {
-        if (frameworkMethod.getAnnotation(CitrusXmlTest.class) != null) {
-            CitrusXmlTest citrusTestAnnotation = frameworkMethod.getAnnotation(CitrusXmlTest.class);
-
-            String testName = frameworkMethod.getName();
-            String testPackage = frameworkMethod.getMethod().getDeclaringClass().getPackage().getName();
-            if (StringUtils.hasText(citrusTestAnnotation.packageName())) {
-                testPackage = citrusTestAnnotation.packageName();
-            } else if (frameworkMethod instanceof CitrusJUnit4Runner.CitrusFrameworkMethod) {
-                testPackage = ((CitrusJUnit4Runner.CitrusFrameworkMethod) frameworkMethod).getPackageName();
-            }
-
-            if (citrus == null) {
-                citrus = Citrus.newInstance(applicationContext);
-            }
-
-            TestContext ctx = prepareTestContext(citrus.createTestContext());
-            TestLoader testLoader = createTestLoader(testName, testPackage);
-            TestCase testCase = testLoader.load();
-
-            citrus.run(testCase, ctx);
+    protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
+        if (citrus == null) {
+            citrus = Citrus.newInstance(applicationContext);
         }
+
+        TestContext ctx = prepareTestContext(citrus.createTestContext());
+        TestLoader testLoader = createTestLoader(frameworkMethod.getTestName(), frameworkMethod.getPackageName());
+        TestCase testCase = testLoader.load();
+
+        citrus.run(testCase, ctx);
     }
 
     /**
