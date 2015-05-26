@@ -17,8 +17,11 @@
 package com.consol.citrus.arquillian.configuration;
 
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
+import com.consol.citrus.config.CitrusBaseConfig;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Properties;
@@ -32,6 +35,9 @@ import java.util.Properties;
  */
 public final class CitrusConfiguration implements Serializable {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusConfiguration.class);
+
     /** Citrus version to use in archive packages */
     private String citrusVersion;
 
@@ -40,6 +46,9 @@ public final class CitrusConfiguration implements Serializable {
 
     /** Test suite name */
     private String suiteName = "citrus-arquillian-suite";
+
+    /** Configuration class loaded when creating Spring application context */
+    private Class<? extends CitrusBaseConfig> configurationClass = CitrusBaseConfig.class;
 
     /** Property set this configuration was created from */
     private final Properties extensionProperties;
@@ -72,6 +81,21 @@ public final class CitrusConfiguration implements Serializable {
 
         if (extensionProperties.containsKey("suiteName")) {
             configuration.setSuiteName(getProperty(extensionProperties, "suiteName"));
+        }
+
+        if (extensionProperties.containsKey("configurationClass")) {
+            String configurationClass = getProperty(extensionProperties, "configurationClass");
+            try {
+                Class<?> configType = Class.forName(configurationClass);
+
+                if (CitrusBaseConfig.class.isAssignableFrom(configType)) {
+                    configuration.setConfigurationClass((Class<? extends CitrusBaseConfig>) configType);
+                } else {
+                    log.warn(String.format("Found invalid Citrus configuration class: %s, must be a subclass of %s", configurationClass, CitrusBaseConfig.class));
+                }
+            } catch (ClassNotFoundException e) {
+                log.warn(String.format("Unable to access Citrus configuration class: %s", configurationClass), e);
+            }
         }
 
         return configuration;
@@ -169,5 +193,21 @@ public final class CitrusConfiguration implements Serializable {
      */
     public void setCitrusVersion(String citrusVersion) {
         this.citrusVersion = citrusVersion;
+    }
+
+    /**
+     * Gets the Citrus Spring configuration class.
+     * @return
+     */
+    public Class<? extends CitrusBaseConfig> getConfigurationClass() {
+        return configurationClass;
+    }
+
+    /**
+     * Sets the Citrus Spring configuration class.
+     * @param configurationClass
+     */
+    public void setConfigurationClass(Class<? extends CitrusBaseConfig> configurationClass) {
+        this.configurationClass = configurationClass;
     }
 }

@@ -18,6 +18,7 @@ package com.consol.citrus.arquillian.container;
 
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
+import com.consol.citrus.config.CitrusBaseConfig;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.jboss.arquillian.core.api.InstanceProducer;
@@ -45,6 +46,7 @@ public class CitrusRemoteConfigurationProducerTest {
                 Assert.assertEquals(configuration.getCitrusVersion(), "latest");
                 Assert.assertTrue(configuration.isAutoPackage());
                 Assert.assertEquals(configuration.getSuiteName(), "remoteSuite");
+                Assert.assertEquals(configuration.getConfigurationClass(), CitrusBaseConfig.class);
 
                 return null;
             }

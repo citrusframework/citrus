@@ -17,24 +17,34 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
+import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
 
 public class CitrusInstanceProducerTest {
 
     private CitrusInstanceProducer citrusInstanceProducer = new CitrusInstanceProducer();
+
+    private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
+
     private InstanceProducer<Citrus> instanceProducer = EasyMock.createMock(InstanceProducer.class);
+    private Instance<CitrusConfiguration> configurationInstance = EasyMock.createMock(Instance.class);
 
     @Test
     public void testCreateInstance() throws Exception {
-        reset(instanceProducer);
+        reset(instanceProducer, configurationInstance);
+
+        expect(configurationInstance.get()).andReturn(configuration).once();
 
         instanceProducer.set(anyObject(Citrus.class));
         expectLastCall().andAnswer(new IAnswer<Void>() {
@@ -46,11 +56,12 @@ public class CitrusInstanceProducerTest {
             }
         });
 
-        replay(instanceProducer);
+        replay(instanceProducer, configurationInstance);
 
         InjectionHelper.inject(citrusInstanceProducer, "citrusInstance", instanceProducer);
+        InjectionHelper.inject(citrusInstanceProducer, "configurationInstance", configurationInstance);
         citrusInstanceProducer.beforeSuite(new BeforeSuite());
 
-        verify(instanceProducer);
+        verify(instanceProducer, configurationInstance);
     }
 }
