@@ -1,52 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="changes-new">
-  <title>What's new in Citrus 2.1?!</title>
+  <title>What's new in Citrus 2.2?!</title>
 
-  <para>Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes and improvements. See the following overview on what has changed.</para>
+  <para>Citrus 2.2 is a release mostly adding new features as well as improvements to given Citrus features. Bugfixes of course are also part of the package. See the following overview on what has changed.</para>
 
-  <section id="new-2-0-soap-mtom">
-    <title>SOAP MTOM support</title>
+  <section id="new-2-2-arquillian">
+    <title>Arquillian support</title>
 
-    <para>SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made
-    this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See <xref linkend="soap-attachment-mtom"/> for details.</para>
+    <para>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your
+      Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource
+      allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order
+      to use the Citrus feature set inside the Arquillian boundaries. See <xref linkend="arquillian"/> for details.</para>
   </section>
 
-  <section id="new-2-0-soap-keep-envelope">
-    <title>SOAP envelope handling</title>
+  <section id="new-2-2-junit-improvements">
+    <title>JUnit support</title>
 
-    <para>In its default behavior Citrus will remove the SOAP envelope for incoming SOAP requests just providing the SOAP body as message payload. This is more straight forward in a test case to perform further validation steps. However it might be mandatory to see the whole SOAP envelope
-      inside the test case for special validation. As a user you can now choose how to handle incoming SOAP envelope by definig the <emphasis>keep-soap-envelope</emphasis> setting on the Citrus SOAP server components. See <xref linkend="soap-keep-envelope"/> for details.</para>
+    <para>Citrus supports both major players in unit testing TestNG and JUnit. Unfortunately we did not offer the same feature support for JUnit as it was done for TestNG. Now with Citrus 2.2 we improved the JUnit support
+      in Citrus so you are able to use all features with both frameworks. This is especially related to using the <emphasis>@CitrusTest</emphasis> and <emphasis>@CitrusXmlTest</emphasis> method annotations in test classes.
+      See <xref linkend="run-junit"/> how it works.</para>
   </section>
 
-  <section id="new-2-0-soap-1-2">
-    <title>SOAP 1.2 message factory</title>
+  <section id="new-2-2-startstop-action">
+    <title>Start/Stop server action</title>
 
-    <para>The Citrus SOAP server component was missing a setting for the SOAP message factory to use. The SOAP message factory implementation decides which SOAP version to use 1.1 or 1.2. Now you can set the message factory on the server component and define the SOAP version to use.
-    See <xref linkend="soap-12"/> for details.</para>
+    <para>Citrus was missing a dedicated test action to start and stop Citrus server components at tet runtime. With the newly added test actions you are able to start and stop server components as you like within your test
+      case. See <xref linkend="actions-manage-server"/> with a detailed description.</para>
   </section>
 
-  <section id="new-2-0-testng-data-provider">
-    <title>TestNG data provider handling</title>
+  <section id="new-2-2-anttasks">
+    <title>Citrus Ant tasks</title>
 
-    <para>We improved the TestNG data provider handling in Citrus. Now you can use the usual TestNG data provider annotations in your test methods. TestNG will call the Citrus test case several times with respective parameters provided as test variables. This replaces the old <emphasis>citrusDataProvider</emphasis>
-    mechanism that tried to make things working in a kind of workaround. The new provider handling also supports multiple data providers in a test class. <xref linkend="run-testng-data-providers"/> describes how this is working for you.</para>
+    <para>We discontinue to support the Citrus Ant tasks. The Ant tasks were not very stable an lacked full feature support when executing test cases with JUnit in Apache Ant. Instead we added a brief description on how to
+      execute Citrus tests with the well documented and stable default JUnit and TestNG ant tasks. See <xref linkend="setup-using-ant"/> how it works.</para>
   </section>
 
-  <section id="new-2-0-mail-namespace">
-    <title>Mail message namespace</title>
-
-    <para>The Citrus mail components enable message exchange as mail client and server. For validation purpose the components offer a XML mail message representation. We have added a target namespace <emphasis>xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;</emphasis> and a
-      XSD schema for this XML mail message representation. From now on you have to use the namespace accordingly in your mail message payloads when sending and receiving mail messages in Citrus. See <xref linkend="mail"/> how to use the new XML mail message namespace.</para>
-  </section>
-
-  <section id="new-2-0-ssh-namespace">
-    <title>Ssh message namespace</title>
-
-    <para>When sending and receiving messages via ssh Citrus provides a XML representation for request and response data. These ssh messages follow a new target namespace <emphasis>xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;</emphasis> and a
-      XSD schema. This means you have to use the namespace accordingly in your ssh message payloads when sending and receiving ssh messages in Citrus. See <xref linkend="ssh"/> for further details.</para>
-  </section>
-
-  <section id="new-2-0-bugfixes">
+  <section id="new-2-2-bugfixes">
     <title>Bugfixes</title>
 
     <para>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues

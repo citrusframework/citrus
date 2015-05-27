@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section id="history-2-1">
+  <title>Changes in Citrus 2.1</title>
+
+  <para>Citrus 2.1 adds some enhancements to the Citrus feature set as well as bugfixes and improvements. See the following overview on what has changed.</para>
+
+  <section id="new-2-1-soap-mtom">
+    <title>SOAP MTOM support</title>
+
+    <para>SOAP MTOM stands for Message Transmission Optimization Mechanism which allows you to send and receive large SOAP attachment contents streamed with optimized resource allocation on server and client. Many thanks to community contributions (github/stonator) that made
+      this happen with Citrus SOAP client and server. As a user you can shoose to send and receive SOAP attachments with MTOM optimization. See <xref linkend="soap-attachment-mtom"/> for details.</para>
+  </section>
+
+  <section id="new-2-1-soap-keep-envelope">
+    <title>SOAP envelope handling</title>
+
+    <para>In its default behavior Citrus will remove the SOAP envelope for incoming SOAP requests just providing the SOAP body as message payload. This is more straight forward in a test case to perform further validation steps. However it might be mandatory to see the whole SOAP envelope
+      inside the test case for special validation. As a user you can now choose how to handle incoming SOAP envelope by definig the <emphasis>keep-soap-envelope</emphasis> setting on the Citrus SOAP server components. See <xref linkend="soap-keep-envelope"/> for details.</para>
+  </section>
+
+  <section id="new-2-1-soap-1-2">
+    <title>SOAP 1.2 message factory</title>
+
+    <para>The Citrus SOAP server component was missing a setting for the SOAP message factory to use. The SOAP message factory implementation decides which SOAP version to use 1.1 or 1.2. Now you can set the message factory on the server component and define the SOAP version to use.
+      See <xref linkend="soap-12"/> for details.</para>
+  </section>
+
+  <section id="new-2-1-testng-data-provider">
+    <title>TestNG data provider handling</title>
+
+    <para>We improved the TestNG data provider handling in Citrus. Now you can use the usual TestNG data provider annotations in your test methods. TestNG will call the Citrus test case several times with respective parameters provided as test variables. This replaces the old <emphasis>citrusDataProvider</emphasis>
+      mechanism that tried to make things working in a kind of workaround. The new provider handling also supports multiple data providers in a test class. <xref linkend="run-testng-data-providers"/> describes how this is working for you.</para>
+  </section>
+
+  <section id="new-2-1-mail-namespace">
+    <title>Mail message namespace</title>
+
+    <para>The Citrus mail components enable message exchange as mail client and server. For validation purpose the components offer a XML mail message representation. We have added a target namespace <emphasis>xmlns=&quot;http://www.citrusframework.org/schema/mail/message&quot;</emphasis> and a
+      XSD schema for this XML mail message representation. From now on you have to use the namespace accordingly in your mail message payloads when sending and receiving mail messages in Citrus. See <xref linkend="mail"/> how to use the new XML mail message namespace.</para>
+  </section>
+
+  <section id="new-2-1-ssh-namespace">
+    <title>Ssh message namespace</title>
+
+    <para>When sending and receiving messages via ssh Citrus provides a XML representation for request and response data. These ssh messages follow a new target namespace <emphasis>xmlns=&quot;http://www.citrusframework.org/schema/ssh/message&quot;</emphasis> and a
+      XSD schema. This means you have to use the namespace accordingly in your ssh message payloads when sending and receiving ssh messages in Citrus. See <xref linkend="ssh"/> for further details.</para>
+  </section>
+
+</section>

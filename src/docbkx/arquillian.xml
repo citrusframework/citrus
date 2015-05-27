@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="arquillian">
+  <title>Arquillian support</title>
+
+  <para>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your
+    Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource
+    allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order
+    to use the Citrus feature set inside the Arquillian boundaries.</para>
+
+  <para>Read the next section in order to find out more about the Citrus Arquillian extension.</para>
+
+  <section id="arquillian-extension">
+    <title>Citrus Arquillian extension</title>
+
+    <para>Arquillian offers a fine mechanism for extensions adding features to the Arquillian test setup and test execution. The Citrus extension respectively adds Citrus framework instance creation and Citrus test execution to the
+      Arquillian world. First of all lets have a look at the extension descriptor properties settable via <emphasis>arquillian.xml</emphasis>:</para>
+
+    <programlisting>&lt;extension qualifier=&quot;citrus&quot;&gt;
+    &lt;property name=&quot;citrusVersion&quot;&gt;2.2-SNAPSHOT&lt;/property&gt;
+    &lt;property name=&quot;autoPackage&quot;&gt;true&lt;/property&gt;
+    &lt;property name=&quot;suiteName&quot;&gt;citrus-arquillian-suite&lt;/property&gt;
+&lt;/extension&gt;</programlisting>
+
+    <para>The Citrus extension uses a specific qualifier <emphasis>citrus</emphasis> for defining properties inside the Arquillian descriptor. Following properties are settable in current version:</para>
+
+    <itemizedlist>
+      <listitem>citrusVersion: The explicit version of Citrus that should be used. Be sure to have the same library version available in your project (e.g. as Maven dependency). This property is optional.
+        By default the extension just uses the latest stable version.</listitem>
+      <listitem>autoPackage: When true (default setting) the extension will automatically add Citrus libraries and all transitive dependencies to the test deployment. This automatically enables you to use the Citrus API inside the Arquillian test
+        even when the test is executed inside the application container.</listitem>
+      <listitem>suiteName: This optional setting defines the name of the test suite that is used for the Citrus test run. When using before/after suite functionality in Citrus this setting might be of interest.</listitem>
+      <listitem>configurationClass: Full qualified Java class name of customized Citrus Spring bean configuration to use when loading the Citrus Spring application context. As a user you can define a custom configuration class that must
+      be a subclass of <emphasis>com.consol.citrus.config.CitrusBaseConfig</emphasis>. When specified the custom class is loaded otherwise the default <emphasis>com.consol.citrus.config.CitrusBaseConfig</emphasis> is loaded to set up the
+      Spring application context.</listitem>
+    </itemizedlist>
+
+    <para>Now that we have added the extension descriptor with all properties we need to add the respective Citrus Arquillian extension as library to our project. This is done via Maven in your project's POM file as normal dependency:</para>
+
+    <programlisting>&lt;dependency&gt;
+  &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+  &lt;artifactId&gt;citrus-arquillian&lt;/artifactId&gt;
+  &lt;version&gt;2.2-SNAPSHOT&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</programlisting>
+
+    <para>Now everything is set up to use Citrus within Arquillian. Lets use Citrus functionality in a Arquillian test case.</para>
+  </section>
+
+  <section id="arquillian-client">
+    <title>Client side testing</title>
+
+    <para>Arquillian separates client and container side testing. When using client side testing the test case is executed outside of the application container deployment. This means that your test case has no direct access to container managed resources such as JNDI resources.
+      On the plus side it is not necessary to include your test in the container deployment. The test case interacts with the container deployment as a normal client would do. Lets have a look at a first example:</para>
+
+    <programlisting language="java">@RunWith(Arquillian.class)
+@RunAsClient
+public class EmployeeResourceTest {
+
+    @CitrusFramework
+    private Citrus citrusFramework;
+
+    @ArquillianResource
+    private URL baseUri;
+
+    private String serviceUri;
+
+    @Deployment
+    public static WebArchive createDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+            .addClasses(RegistryApplication.class, EmployeeResource.class,
+                Employees.class, Employee.class, EmployeeRepository.class);
+    }
+
+    @Before
+    public void setUp() throws MalformedURLException {
+        serviceUri = new URL(baseUri, &quot;registry/employee&quot;).toExternalForm();
+    }
+
+    /**
+    * Test adding new employees and getting list of all employees.
+    */
+    @Test
+    public void testCreateEmployeeAndGet(@CitrusTest CitrusTestBuilder citrus) {
+        citrus.send(serviceUri)
+            .message(new HttpMessage(&quot;name=Penny&amp;age=20&quot;)
+            .method(HttpMethod.POST)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+
+        citrus.receive(serviceUri)
+            .message(new HttpMessage()
+            .statusCode(HttpStatus.NO_CONTENT));
+
+        citrus.send(serviceUri)
+            .message(new HttpMessage()
+            .method(HttpMethod.GET)
+            .accept(MediaType.APPLICATION_XML));
+
+        citrus.receive(serviceUri)
+        .message(new HttpMessage(&quot;<employees>&quot; +
+            &quot;<employee>&quot; +
+              &quot;<age>20</age>&quot; +
+              &quot;<name>Penny</name>&quot; +
+              &quot;</employee>&quot; +
+            &quot;</employees>&quot;)
+        .statusCode(HttpStatus.OK));
+
+        citrusFramework.run(citrus.build());
+    }
+}</programlisting>
+
+    <para>First of all we use the basic Arquillian JUnit test runner <emphasis>@RunWith(Arquillian.class)</emphasis> in combination with the <emphasis>@RunAsClient</emphasis> annotation telling Arquillian that this is a client side test case.
+      As this is a usual Arquillian test case we have access to Arquillian resources that automatically get injected such as the base uri of the test deployment. The test deployment is a web deployment created via ShrinkWrap. We add the application
+      specific classes that build our remote RESTful service that we would like to test.</para>
+
+    <para>The Citrus Arquillian extension is able to setup a proper Citrus test environment in the background. As a result the test case can reference a Citrus framework instance with the <emphasis>@CitrusFramework</emphasis> annotation. We will use
+    this instance of Citrus later on when it comes to execute the Citrus testing logic.</para>
+
+    <para>No we can focus on writing a test method which is again nothing but a normal JUnit test method. The Citrus extension takes care on injecting the <emphasis>@CitrusTest</emphasis> annotated method parameter. With this Citrus test builder instance
+    we can build a Citrus test logic for sending and receiving messages via Http in order to call the remote RESTful employee service of our test deployment. The Http endpoint uri is injected via Arquillian and we are able to call the remote service as
+    a client.</para>
+
+    <para>The respective result is received with well known Citrus receive message logic. We can validate the response messages accordingly and make sure the client call was done right. The very last statement in out test method executes the Citrus test
+    logic within the Citrus framework boundaries. As a result the JUnit test method is successful or failed with errors coming from Citrus test execution.</para>
+
+    <para>This is how Citrus and Arquillian can interact in a test scenario where the test deployment is managed by Arquillian and the client side actions take place within Citrus. This is a great way to combine both frameworks with Citrus being able
+    to call different service API endpoints in addition with validating the outcome. This was a client side test case where the test logic was executed outside of the application container. Arquillian also supports container remote test cases where we
+    have direct access to container managed resources. The following section describes how this works with Citrus.</para>
+  </section>
+
+  <section id="arquillian-container">
+    <title>Container side testing</title>
+
+    <para>In previous sections we have seen how to combine Citrus with Arquillian in a client side test case. This is the way to go for all test cases that do not need to have access on container managed resources. Lets have a look at a sample where
+    we want to gain access to a JMS queue and connection managed by the application container.</para>
+
+    <programlisting language="java">@RunWith(Arquillian.class)
+public class EchoServiceTest {
+
+      @CitrusFramework
+      private Citrus citrusFramework;
+
+      @Resource(mappedName = &quot;jms/queue/test&quot;)
+      private Queue echoQueue;
+
+      @Resource(mappedName = &quot;/ConnectionFactory&quot;)
+      private ConnectionFactory connectionFactory;
+
+      private JmsSyncEndpoint jmsSyncEndpoint;
+
+      @Deployment
+      @OverProtocol(&quot;Servlet 3.0&quot;)
+      public static WebArchive createDeployment() throws MalformedURLException {
+          return ShrinkWrap.create(WebArchive.class)
+                  .addClasses(EchoService.class);
+      }
+
+      @Before
+      public void setUp() {
+          JmsSyncEndpointConfiguration endpointConfiguration = new JmsSyncEndpointConfiguration();
+          endpointConfiguration.setConnectionFactory(new SingleConnectionFactory(connectionFactory));
+          endpointConfiguration.setDestination(echoQueue);
+          jmsSyncEndpoint = new JmsSyncEndpoint(endpointConfiguration);
+      }
+
+      @After
+      public void cleanUp() {
+          closeConnections();
+      }
+
+      @Test
+      public void shouldBeAbleToSendMessage(@CitrusTest CitrusTestBuilder citrus) throws Exception {
+          String messageBody = &quot;ping&quot;;
+
+          citrus.send(jmsSyncEndpoint)
+                .messageType(MessageType.PLAINTEXT)
+                .message(new JmsMessage(messageBody));
+
+          citrus.receive(jmsSyncEndpoint)
+                .messageType(MessageType.PLAINTEXT)
+                .message(new JmsMessage(messageBody));
+
+          citrusFramework.run(citrus.build());
+      }
+
+      private void closeConnections() {
+          ((SingleConnectionFactory)jmsSyncEndpoint.getEndpointConfiguration().getConnectionFactory()).destroy();
+      }
+}</programlisting>
+
+    <para>As you can see the test case accesses two container managed resources via JNDI. This is a JMS queue and a JMS connection that get automatically injected as resources. In a before test annotated method we can use
+      these resources to build up a proper Citrus JMS endpoint. Inside the test method we can use the JMS endpoint for sending and receiving JMS messages via Citrus. As usual response messages received are validated and
+      compared to an expected message. After the test we should close the JMS connection in order to avoid exceptions when the application container is shutting down after the test.</para>
+
+    <para>The test is now part of the test deployment and is executed within the application container boundaries. As usual we can use the Citrus extension to automatically inject the Citrus framework instance as well as the
+    Citrus test builder instance for building the Citrus test logic.</para>
+
+    <para>This is how to combine Citrus and Arquillian in order to build integration tests on Java EE services in a real application container environment. With Citrus you are able to set up more complex test scenarios with
+      simulated services such as mail or ftp servers. We can build Citrus endpoints with container managed resources.</para>
+
+  </section>
+
+</chapter>
