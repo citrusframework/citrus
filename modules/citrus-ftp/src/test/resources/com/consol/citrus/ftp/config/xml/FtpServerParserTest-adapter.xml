@@ -26,7 +26,7 @@
                       port="22222"
                       endpoint-adapter="ftpServerAdapter2"/>
 
-  <citrus-jms:jms-endpoint-adapter id="ftpServerAdapter2"
+  <citrus-jms:endpoint-adapter id="ftpServerAdapter2"
                                    destination-name="serverQueue"
                                    connection-factory="connectionFactory"
                                    timeout="2500"/>

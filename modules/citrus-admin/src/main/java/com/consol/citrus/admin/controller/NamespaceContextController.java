@@ -16,8 +16,9 @@
 
 package com.consol.citrus.admin.controller;
 
-import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.NamespaceContext;
+import com.consol.citrus.admin.service.NamespaceContextService;
+import com.consol.citrus.admin.service.ProjectService;
+import com.consol.citrus.model.config.core.NamespaceContextDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +39,13 @@ public class NamespaceContextController {
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
-    public NamespaceContext getNamespaceContext() {
+    public NamespaceContextDefinition getNamespaceContext() {
         return namespaceContextService.getNamespaceContext(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateNamespaceContext(@RequestBody NamespaceContext context) {
+    public void updateNamespaceContext(@RequestBody NamespaceContextDefinition context) {
         namespaceContextService.updateNamespaceContext(projectService.getProjectContextConfigFile(), context);
     }
 }

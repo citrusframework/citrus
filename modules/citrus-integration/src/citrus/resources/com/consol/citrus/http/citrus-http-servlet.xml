@@ -42,7 +42,7 @@
     <property name="endpointAdapter" ref="jmsEndpointAdapter"/>
   </bean>
 
-  <citrus-jms:jms-endpoint-adapter id="jmsEndpointAdapter"
+  <citrus-jms:endpoint-adapter id="jmsEndpointAdapter"
                                destination-name="JMS.Citrus.Http.Request.Forward"
                                reply-destination-name="JMS.Citrus.Http.Request.Ack"
                                connection-factory="jmsConnectionFactory"

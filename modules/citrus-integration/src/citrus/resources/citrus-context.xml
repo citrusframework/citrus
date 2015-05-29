@@ -216,7 +216,7 @@
          auto-start="true"
          endpoint-adapter="sshEndpointAdapter"/>
   
-    <citrus-jms:jms-endpoint-adapter id="sshEndpointAdapter"
+    <citrus-jms:endpoint-adapter id="sshEndpointAdapter"
          destination-name="${jms.queue.ssh.request.forward}"
          reply-destination-name="${jms.queue.ssh.request.ack}"
          connection-factory="connectionFactory"

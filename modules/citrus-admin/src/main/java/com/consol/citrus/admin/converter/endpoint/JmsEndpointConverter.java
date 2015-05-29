@@ -2,7 +2,7 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.jms.Endpoint;
+import com.consol.citrus.model.config.jms.JmsEndpointDefinition;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -14,10 +14,10 @@ import javax.jms.ConnectionFactory;
  * @since 1.3.1
  */
 @Component
-public class JmsEndpointConverter extends AbstractEndpointConverter<Endpoint> {
+public class JmsEndpointConverter extends AbstractEndpointConverter<JmsEndpointDefinition> {
 
     @Override
-    public EndpointData convert(Endpoint definition) {
+    public EndpointData convert(JmsEndpointDefinition definition) {
         EndpointData endpointData = new EndpointData(getEndpointType(), definition.getId(), getModelClass());
 
         if (StringUtils.hasText(definition.getDestinationName())) {
@@ -41,7 +41,7 @@ public class JmsEndpointConverter extends AbstractEndpointConverter<Endpoint> {
     }
 
     @Override
-    public Class<Endpoint> getModelClass() {
-        return Endpoint.class;
+    public Class<JmsEndpointDefinition> getModelClass() {
+        return JmsEndpointDefinition.class;
     }
 }

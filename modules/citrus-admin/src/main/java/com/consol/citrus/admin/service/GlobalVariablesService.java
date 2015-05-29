@@ -18,7 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.converter.spring.GlobalVariablesSpringBeanConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.model.config.core.GlobalVariables;
+import com.consol.citrus.model.config.core.GlobalVariablesDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -45,8 +45,8 @@ public class GlobalVariablesService {
      * @param projectConfigFile
      * @return
      */
-    public GlobalVariables getGlobalVariables(File projectConfigFile) {
-        List<GlobalVariables> contexts = springBeanService.getBeanDefinitions(projectConfigFile, GlobalVariables.class);
+    public GlobalVariablesDefinition getGlobalVariables(File projectConfigFile) {
+        List<GlobalVariablesDefinition> contexts = springBeanService.getBeanDefinitions(projectConfigFile, GlobalVariablesDefinition.class);
 
         if (CollectionUtils.isEmpty(contexts)) {
             List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectConfigFile, SpringBean.class, Collections.singletonMap("class", com.consol.citrus.variable.GlobalVariables.class.getName()));
@@ -56,7 +56,7 @@ public class GlobalVariablesService {
         }
 
         if (CollectionUtils.isEmpty(contexts)) {
-            return new GlobalVariables();
+            return new GlobalVariablesDefinition();
         } else {
             return contexts.get(0);
         }
@@ -69,13 +69,13 @@ public class GlobalVariablesService {
      * @param projectConfigFile
      * @param context
      */
-    public void updateGlobalVariables(File projectConfigFile, GlobalVariables context) {
+    public void updateGlobalVariables(File projectConfigFile, GlobalVariablesDefinition context) {
         if (context.getVariables().isEmpty()) {
-            springBeanService.removeBeanDefinitions(projectConfigFile, GlobalVariables.class);
+            springBeanService.removeBeanDefinitions(projectConfigFile, GlobalVariablesDefinition.class);
         } else if (getGlobalVariables(projectConfigFile).getVariables().isEmpty()) {
             springBeanService.addBeanDefinition(projectConfigFile, context);
         } else {
-            springBeanService.updateBeanDefinitions(projectConfigFile, GlobalVariables.class, context);
+            springBeanService.updateBeanDefinitions(projectConfigFile, GlobalVariablesDefinition.class, context);
         }
     }
 }

@@ -18,7 +18,7 @@ package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.admin.model.TestActionData;
-import com.consol.citrus.model.testcase.core.Action;
+import com.consol.citrus.model.testcase.core.ActionDefinition;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
 
 /**
@@ -46,7 +46,7 @@ public class ActionConverter extends AbstractTestActionConverter<Object, TestAct
 
     @Override
     public Object convertModel(TestAction model) {
-        Action action = new ObjectFactory().createAction();
+        ActionDefinition action = new ObjectFactory().createActionDefinition();
 
         action.setReference(model.getName());
         action.setDescription(model.getDescription());

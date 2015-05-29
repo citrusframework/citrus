@@ -38,11 +38,11 @@ public class DataDictionarySpringBeanConverter implements SpringBeanConverter<Da
         DataDictionaryType library;
 
         if (springBean.getClazz().equals(XpathMappingDataDictionary.class.getName())) {
-            library = new ObjectFactory().createXpathDataDictionary();
+            library = new ObjectFactory().createXpathDataDictionaryDefinition();
         } else if (springBean.getClazz().equals(NodeMappingDataDictionary.class.getName())) {
-            library = new ObjectFactory().createXmlDataDictionary();
+            library = new ObjectFactory().createXmlDataDictionaryDefinition();
         } else if (springBean.getClazz().equals(JsonMappingDataDictionary.class.getName())) {
-            library = new ObjectFactory().createJsonDataDictionary();
+            library = new ObjectFactory().createJsonDataDictionaryDefinition();
         } else {
             throw new CitrusAdminRuntimeException(String.format("Failed to convert Spring bean of type '%s' to data dictionary model object", springBean.getClazz()));
         }

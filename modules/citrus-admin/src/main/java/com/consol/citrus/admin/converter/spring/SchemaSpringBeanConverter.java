@@ -18,8 +18,7 @@ package com.consol.citrus.admin.converter.spring;
 
 import com.consol.citrus.admin.spring.model.Property;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.model.config.core.ObjectFactory;
-import com.consol.citrus.model.config.core.Schema;
+import com.consol.citrus.model.config.core.*;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,11 +27,11 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class SchemaSpringBeanConverter implements SpringBeanConverter<Schema> {
+public class SchemaSpringBeanConverter implements SpringBeanConverter<SchemaDefinition> {
 
     @Override
-    public Schema convert(SpringBean springBean) {
-        Schema schema = new ObjectFactory().createSchema();
+    public SchemaDefinition convert(SpringBean springBean) {
+        SchemaDefinition schema = new ObjectFactory().createSchemaDefinition();
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("xsd")) {

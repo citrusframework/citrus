@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.SchemaRepository;
+import com.consol.citrus.model.config.core.SchemaRepositoryDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,33 +44,33 @@ public class SchemaRepositoryController {
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
-    public List<SchemaRepository> listSchemaRepositories() {
+    public List<SchemaRepositoryDefinition> listSchemaRepositories() {
         return schemaRepositoryService.listSchemaRepositories(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createSchemaRepository(@RequestBody SchemaRepository xsdSchemaRepository) {
+    public void createSchemaRepository(@RequestBody SchemaRepositoryDefinition xsdSchemaRepository) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchemaRepository);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public SchemaRepository getSchemaRepository(@PathVariable("id") String id) {
+    public SchemaRepositoryDefinition getSchemaRepository(@PathVariable("id") String id) {
         return schemaRepositoryService.getSchemaRepository(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepository xsdSchemaRepository) {
-        List<SchemaRepository.Schemas.Ref> schemaRefs = new ArrayList<SchemaRepository.Schemas.Ref>();
+    public void updateSchemaRepository(@PathVariable("id") String id, @RequestBody SchemaRepositoryDefinition xsdSchemaRepository) {
+        List<SchemaRepositoryDefinition.Schemas.Ref> schemaRefs = new ArrayList<SchemaRepositoryDefinition.Schemas.Ref>();
         for (Object schema: xsdSchemaRepository.getSchemas().getRevesAndSchemas()) {
             if (schema instanceof String) {
-                SchemaRepository.Schemas.Ref ref = new SchemaRepository.Schemas.Ref();
+                SchemaRepositoryDefinition.Schemas.Ref ref = new SchemaRepositoryDefinition.Schemas.Ref();
                 ref.setSchema((String) schema);
                 schemaRefs.add(ref);
-            } else if (schema instanceof SchemaRepository.Schemas.Ref) {
-                schemaRefs.add((SchemaRepository.Schemas.Ref) schema);
+            } else if (schema instanceof SchemaRepositoryDefinition.Schemas.Ref) {
+                schemaRefs.add((SchemaRepositoryDefinition.Schemas.Ref) schema);
             }
         }
 

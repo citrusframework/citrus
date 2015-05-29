@@ -20,9 +20,8 @@ import com.consol.citrus.admin.converter.spring.ValidationMatcherSpringBeanConve
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.model.config.core.ObjectFactory;
-import com.consol.citrus.model.config.core.ValidationMatcherLibrary;
-import com.consol.citrus.validation.matcher.ValidationMatcher;
-import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
+import com.consol.citrus.model.config.core.ValidationMatcherLibraryDefinition;
+import com.consol.citrus.validation.matcher.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,8 +46,8 @@ public class ValidationMatcherService {
      * Gets the default validation matcher library from Citrus Spring bean configuration.
      * @return
      */
-    public ValidationMatcherLibrary getDefaultValidationMatcherLibrary() {
-        ValidationMatcherLibrary library = new ObjectFactory().createValidationMatcherLibrary();
+    public ValidationMatcherLibraryDefinition getDefaultValidationMatcherLibrary() {
+        ValidationMatcherLibraryDefinition library = new ObjectFactory().createValidationMatcherLibraryDefinition();
 
         ValidationMatcherConfig config = new ValidationMatcherConfig();
         com.consol.citrus.validation.matcher.ValidationMatcherLibrary defaultValidationMatcher = config.getValidationMatcherLibrary();
@@ -56,7 +55,7 @@ public class ValidationMatcherService {
         library.setPrefix(defaultValidationMatcher.getPrefix());
 
         for (Map.Entry<String, ValidationMatcher> matcherEntry : defaultValidationMatcher.getMembers().entrySet()) {
-            ValidationMatcherLibrary.Matcher matcher = new ValidationMatcherLibrary.Matcher();
+            ValidationMatcherLibraryDefinition.Matcher matcher = new ValidationMatcherLibraryDefinition.Matcher();
             matcher.setName(matcherEntry.getKey());
             matcher.setClazz(matcherEntry.getValue().getClass().getName());
             library.getMatchers().add(matcher);
@@ -70,8 +69,8 @@ public class ValidationMatcherService {
      * @param id
      * @return
      */
-    public ValidationMatcherLibrary getValidationMatcherLibrary(String id) {
-        ValidationMatcherLibrary library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, ValidationMatcherLibrary.class);
+    public ValidationMatcherLibraryDefinition getValidationMatcherLibrary(String id) {
+        ValidationMatcherLibraryDefinition library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, ValidationMatcherLibraryDefinition.class);
 
         if (library == null) {
             SpringBean springBean = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, SpringBean.class);
@@ -91,12 +90,12 @@ public class ValidationMatcherService {
      * List all validation matcher libraries in application context.
      * @return
      */
-    public List<ValidationMatcherLibrary> listValidationMatcherLibraries() {
-        List<ValidationMatcherLibrary> libraries = new ArrayList<ValidationMatcherLibrary>();
+    public List<ValidationMatcherLibraryDefinition> listValidationMatcherLibraries() {
+        List<ValidationMatcherLibraryDefinition> libraries = new ArrayList<ValidationMatcherLibraryDefinition>();
 
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), ValidationMatcherLibrary.class));
+        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), ValidationMatcherLibraryDefinition.class));
 
-        List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", com.consol.citrus.validation.matcher.ValidationMatcherLibrary.class.getName()));
+        List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", ValidationMatcherLibrary.class.getName()));
         for (SpringBean springBean : springBeans) {
             libraries.add(matcherLibrarySpringBeanConverter.convert(springBean));
         }

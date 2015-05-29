@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.Schema;
+import com.consol.citrus.model.config.core.SchemaDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -43,25 +43,25 @@ public class SchemaController {
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
-    public List<Schema> listXsdSchemas() {
+    public List<SchemaDefinition> listXsdSchemas() {
         return schemaService.listSchemas(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createXsdSchema(@RequestBody Schema xsdSchema) {
+    public void createXsdSchema(@RequestBody SchemaDefinition xsdSchema) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), xsdSchema);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public Schema getXsdSchema(@PathVariable("id") String id) {
+    public SchemaDefinition getXsdSchema(@PathVariable("id") String id) {
         return schemaService.getSchema(projectService.getProjectContextConfigFile(), id);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateXsdSchema(@PathVariable("id") String id, @RequestBody Schema xsdSchema) {
+    public void updateXsdSchema(@PathVariable("id") String id, @RequestBody SchemaDefinition xsdSchema) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, xsdSchema);
     }
 

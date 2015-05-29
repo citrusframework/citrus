@@ -16,7 +16,12 @@
               adapter="org.w3._2001.xmlschema.Adapter2" />
       <xjc:simple />
     </globalBindings>
-    <schemaBindings><package name="com.consol.citrus.model.config.ssh"/></schemaBindings>
+    <schemaBindings>
+      <package name="com.consol.citrus.model.config.ssh"/>
+      <nameXmlTransform>
+        <elementName prefix="Ssh" suffix="Definition" />
+      </nameXmlTransform>
+    </schemaBindings>
   </bindings>
 
 </bindings>

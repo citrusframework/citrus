@@ -161,7 +161,7 @@ royal.airline.request.queue=Royal.Airline.Request.Queue</programlisting>
                        uri=&quot;/flightbooking&quot; 
                        endpoint-adapter=&quot;jmsEndpointAdapter&quot;/&gt;
         
-&lt;citrus-jms:jms-endpoint-adapter id=&quot;jmsEndpointAdapter
+&lt;citrus-jms:endpoint-adapter id=&quot;jmsEndpointAdapter
       destination-name=&quot;${royal.airline.request.queue}&quot;/&gt;
       connection-factory=&quot;connectionFactory&quot; /&gt;
       timeout=&quot;2000&quot;/&gt;

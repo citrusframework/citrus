@@ -25,10 +25,9 @@ import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.ApplicationContextHolder;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.spring.model.SpringBeans;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.model.testcase.core.Testcase;
-import com.consol.citrus.model.testcase.core.Variables;
+import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -69,7 +68,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
         testCase.setPackageName(packageName);
         testCase.setType(type);
 
-        Testcase testModel;
+        TestcaseDefinition testModel;
         if (type.equals(TestCaseType.XML)) {
             testModel = getXmlTestModel(project, packageName, testName);
         } else if (type.equals(TestCaseType.JAVA)) {
@@ -79,7 +78,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
         }
 
         if (testModel.getVariables() != null) {
-            for (Variables.Variable variable : testModel.getVariables().getVariables()) {
+            for (VariablesDefinition.Variable variable : testModel.getVariables().getVariables()) {
                 testCase.getVariables().put(variable.getName(), variable.getValue());
             }
         }
@@ -111,7 +110,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
      * @param testName
      * @return
      */
-    private Testcase getJavaTestModel(String packageName, String testName) {
+    private TestcaseDefinition getJavaTestModel(String packageName, String testName) {
         String methodName = null;
         String testClassName;
 
@@ -148,7 +147,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
                         }
                     }
 
-                    Testcase model = getJavaDslTest(builder, method);
+                    TestcaseDefinition model = getJavaDslTest(builder, method);
                     model.setName(StringUtils.hasText(methodName) ? methodName : testClassName);
                     return model;
                 }
@@ -159,12 +158,12 @@ public abstract class AbstractTestCaseService implements TestCaseService {
             throw new CitrusAdminRuntimeException("Failed to load Java source " + packageName + "." + testClassName, e);
         }
 
-        Testcase testModel = new Testcase();
+        TestcaseDefinition testModel = new TestcaseDefinition();
         testModel.setName(StringUtils.hasText(methodName) ? methodName : testClassName);
         return testModel;
     }
 
-    private Testcase getJavaDslTest(TestNGCitrusTestBuilder builder, Method method) {
+    private TestcaseDefinition getJavaDslTest(TestNGCitrusTestBuilder builder, Method method) {
         builder.init();
         ReflectionUtils.invokeMethod(method, builder);
 
@@ -178,7 +177,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
      * @param testName
      * @return
      */
-    private Testcase getXmlTestModel(Project project, String packageName, String testName) {
+    private TestcaseDefinition getXmlTestModel(Project project, String packageName, String testName) {
         String xmlSource = getSourceCode(project, packageName, testName, TestCaseType.XML);
 
         if (!StringUtils.hasText(xmlSource)) {

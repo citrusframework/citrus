@@ -19,7 +19,7 @@ package com.consol.citrus.admin.converter.endpoint;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.*;
-import com.consol.citrus.model.config.ws.Client;
+import com.consol.citrus.model.config.ws.WebServiceClientDefinition;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapMessageFactory;
@@ -32,10 +32,10 @@ import java.util.List;
  * @since 1.3.1
  */
 @Component
-public class WebServiceClientConverter extends AbstractEndpointConverter<Client> {
+public class WebServiceClientConverter extends AbstractEndpointConverter<WebServiceClientDefinition> {
 
     @Override
-    public EndpointData convert(Client client) {
+    public EndpointData convert(WebServiceClientDefinition client) {
         EndpointData endpointData = new EndpointData(getEndpointType(), client.getId(), getModelClass());
 
         endpointData.add(property("requestUrl", client));
@@ -74,8 +74,8 @@ public class WebServiceClientConverter extends AbstractEndpointConverter<Client>
     }
 
     @Override
-    public Class<Client> getModelClass() {
-        return Client.class;
+    public Class<WebServiceClientDefinition> getModelClass() {
+        return WebServiceClientDefinition.class;
     }
 
     @Override

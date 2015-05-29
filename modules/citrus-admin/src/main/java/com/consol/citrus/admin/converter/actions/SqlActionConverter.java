@@ -17,8 +17,7 @@ package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.admin.model.TestActionData;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.Sql;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Component;
  * @since 1.4
  */
 @Component
-public class SqlActionConverter extends AbstractTestActionConverter<Sql, ExecuteSQLAction> {
+public class SqlActionConverter extends AbstractTestActionConverter<SqlDefinition, ExecuteSQLAction> {
 
 
     /**
@@ -37,7 +36,7 @@ public class SqlActionConverter extends AbstractTestActionConverter<Sql, Execute
     }
 
     @Override
-    public TestActionData convert(Sql definition) {
+    public TestActionData convert(SqlDefinition definition) {
         TestActionData action = new TestActionData(getActionType(), getModelClass());
 
         action.add(property("datasource", definition));
@@ -48,8 +47,8 @@ public class SqlActionConverter extends AbstractTestActionConverter<Sql, Execute
     }
 
     @Override
-    public Sql convertModel(ExecuteSQLAction definition) {
-        Sql action = new ObjectFactory().createSql();
+    public SqlDefinition convertModel(ExecuteSQLAction definition) {
+        SqlDefinition action = new ObjectFactory().createSqlDefinition();
 
         action.setDescription(definition.getDescription());
         action.setDatasource(definition.getDataSource().toString());
@@ -58,7 +57,7 @@ public class SqlActionConverter extends AbstractTestActionConverter<Sql, Execute
     }
 
     @Override
-    public Class<Sql> getModelClass() {
-        return Sql.class;
+    public Class<SqlDefinition> getModelClass() {
+        return SqlDefinition.class;
     }
 }

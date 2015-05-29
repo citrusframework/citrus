@@ -18,7 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.converter.spring.NamespaceContextSpringBeanConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.model.config.core.NamespaceContext;
+import com.consol.citrus.model.config.core.NamespaceContextDefinition;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,8 +46,8 @@ public class NamespaceContextService {
      * @param projectConfigFile
      * @return
      */
-    public NamespaceContext getNamespaceContext(File projectConfigFile) {
-        List<NamespaceContext> contexts = springBeanService.getBeanDefinitions(projectConfigFile, NamespaceContext.class);
+    public NamespaceContextDefinition getNamespaceContext(File projectConfigFile) {
+        List<NamespaceContextDefinition> contexts = springBeanService.getBeanDefinitions(projectConfigFile, NamespaceContextDefinition.class);
 
         if (CollectionUtils.isEmpty(contexts)) {
             List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectConfigFile, SpringBean.class, Collections.singletonMap("class", NamespaceContextBuilder.class.getName()));
@@ -57,7 +57,7 @@ public class NamespaceContextService {
         }
 
         if (CollectionUtils.isEmpty(contexts)) {
-            return new NamespaceContext();
+            return new NamespaceContextDefinition();
         } else {
             return contexts.get(0);
         }
@@ -70,13 +70,13 @@ public class NamespaceContextService {
      * @param projectConfigFile
      * @param context
      */
-    public void updateNamespaceContext(File projectConfigFile, NamespaceContext context) {
+    public void updateNamespaceContext(File projectConfigFile, NamespaceContextDefinition context) {
         if (context.getNamespaces().isEmpty()) {
-            springBeanService.removeBeanDefinitions(projectConfigFile, NamespaceContext.class);
+            springBeanService.removeBeanDefinitions(projectConfigFile, NamespaceContextDefinition.class);
         } else if (getNamespaceContext(projectConfigFile).getNamespaces().isEmpty()) {
             springBeanService.addBeanDefinition(projectConfigFile, context);
         } else {
-            springBeanService.updateBeanDefinitions(projectConfigFile, NamespaceContext.class, context);
+            springBeanService.updateBeanDefinitions(projectConfigFile, NamespaceContextDefinition.class, context);
         }
     }
 }

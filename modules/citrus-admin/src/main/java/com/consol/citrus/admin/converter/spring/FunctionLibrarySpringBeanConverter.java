@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.spring;
 
 import com.consol.citrus.admin.spring.model.*;
-import com.consol.citrus.model.config.core.*;
+import com.consol.citrus.model.config.core.FunctionLibraryDefinition;
 import com.consol.citrus.model.config.core.ObjectFactory;
 import org.springframework.util.StringUtils;
 
@@ -27,16 +27,16 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FunctionLibrarySpringBeanConverter implements SpringBeanConverter<FunctionLibrary> {
+public class FunctionLibrarySpringBeanConverter implements SpringBeanConverter<FunctionLibraryDefinition> {
 
     @Override
-    public FunctionLibrary convert(SpringBean springBean) {
-        FunctionLibrary library = new ObjectFactory().createFunctionLibrary();
+    public FunctionLibraryDefinition convert(SpringBean springBean) {
+        FunctionLibraryDefinition library = new ObjectFactory().createFunctionLibraryDefinition();
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("members")) {
                 for (Entry entry : property.getMap().getEntries()) {
-                    FunctionLibrary.Function function = new FunctionLibrary.Function();
+                    FunctionLibraryDefinition.Function function = new FunctionLibraryDefinition.Function();
                     function.setName(entry.getKey());
                     function.setClazz(entry.getValue());
                     library.getFunctions().add(function);

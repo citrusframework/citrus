@@ -23,28 +23,28 @@ import org.testng.annotations.Test;
  * @author Martin.Maher@consol.de
  * @since 1.3.1
  */
-public class SchemaRepositoryBuilderTest {
+public class SchemaRepositoryDefinitionBuilderTest {
 
     @Test
     public void testBuildWithSchemas() throws Exception {
-        SchemaRepository schemaRepository = new SchemaRepositoryBuilder()
+        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinitionBuilder()
                 .withId("schemaRepo")
-                .addSchema(new SchemaBuilder().withId("schema1").withLocation("location1").build())
+                .addSchema(new SchemaDefinitionBuilder().withId("schema1").withLocation("location1").build())
                 .addSchema("schema2", "location2")
                 .build();
 
         Assert.assertNotNull(schemaRepository);
         Assert.assertEquals(schemaRepository.getId(), "schemaRepo");
         Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), 2);
-        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getId(), "schema1");
-        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getLocation(), "location1");
-        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getId(), "schema2");
-        Assert.assertEquals(((Schema)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getLocation(), "location2");
+        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getId(), "schema1");
+        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getLocation(), "location1");
+        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getId(), "schema2");
+        Assert.assertEquals(((SchemaDefinition)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getLocation(), "location2");
     }
 
     @Test
     public void testBuildWithRefs() throws Exception {
-        SchemaRepository schemaRepository = new SchemaRepositoryBuilder()
+        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinitionBuilder()
                 .withId("schemaRepo")
                 .addSchemaReference("schema1")
                 .addSchemaReference("schema2")
@@ -53,7 +53,7 @@ public class SchemaRepositoryBuilderTest {
         Assert.assertNotNull(schemaRepository);
         Assert.assertEquals(schemaRepository.getId(), "schemaRepo");
         Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), 2);
-        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), "schema1");
-        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), "schema2");
+        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), "schema1");
+        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), "schema2");
     }
 }

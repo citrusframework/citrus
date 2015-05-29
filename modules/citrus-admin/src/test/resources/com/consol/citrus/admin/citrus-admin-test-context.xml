@@ -51,6 +51,6 @@
     <!-- XML Marshalling -->
     <oxm:jaxb2-marshaller id="jaxbMarshaller">
       <oxm:class-to-be-bound name="com.consol.citrus.admin.spring.model.SpringBeans" />
-      <oxm:class-to-be-bound name="com.consol.citrus.model.testcase.core.Testcase" />
+      <oxm:class-to-be-bound name="com.consol.citrus.model.testcase.core.TestcaseDefinition" />
     </oxm:jaxb2-marshaller>
 </beans>

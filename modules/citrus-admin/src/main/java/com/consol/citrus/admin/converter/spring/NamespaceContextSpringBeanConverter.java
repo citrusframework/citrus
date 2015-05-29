@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.spring;
 
 import com.consol.citrus.admin.spring.model.*;
-import com.consol.citrus.model.config.core.NamespaceContext;
+import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.model.config.core.ObjectFactory;
 
 /**
@@ -26,16 +26,16 @@ import com.consol.citrus.model.config.core.ObjectFactory;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class NamespaceContextSpringBeanConverter implements SpringBeanConverter<NamespaceContext> {
+public class NamespaceContextSpringBeanConverter implements SpringBeanConverter<NamespaceContextDefinition> {
 
     @Override
-    public NamespaceContext convert(SpringBean springBean) {
-        NamespaceContext context = new ObjectFactory().createNamespaceContext();
+    public NamespaceContextDefinition convert(SpringBean springBean) {
+        NamespaceContextDefinition context = new ObjectFactory().createNamespaceContextDefinition();
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("namespaceMappings")) {
                 for (Entry entry : property.getMap().getEntries()) {
-                    NamespaceContext.Namespace namespace = new NamespaceContext.Namespace();
+                    NamespaceContextDefinition.Namespace namespace = new NamespaceContextDefinition.Namespace();
                     namespace.setPrefix(entry.getKey());
                     namespace.setUri(entry.getValue());
                     context.getNamespaces().add(namespace);

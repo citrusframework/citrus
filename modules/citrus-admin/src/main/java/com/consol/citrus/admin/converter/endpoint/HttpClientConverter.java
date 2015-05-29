@@ -18,7 +18,7 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.*;
-import com.consol.citrus.model.config.http.Client;
+import com.consol.citrus.model.config.http.HttpClientDefinition;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -32,10 +32,10 @@ import java.util.List;
  * @since 1.3.1
  */
 @Component
-public class HttpClientConverter extends AbstractEndpointConverter<Client> {
+public class HttpClientConverter extends AbstractEndpointConverter<HttpClientDefinition> {
 
     @Override
-    public EndpointData convert(Client client) {
+    public EndpointData convert(HttpClientDefinition client) {
         EndpointData endpointData = new EndpointData(getEndpointType(), client.getId(), getModelClass());
 
         endpointData.add(property("requestUrl", client));
@@ -86,8 +86,8 @@ public class HttpClientConverter extends AbstractEndpointConverter<Client> {
     }
 
     @Override
-    public Class<Client> getModelClass() {
-        return Client.class;
+    public Class<HttpClientDefinition> getModelClass() {
+        return HttpClientDefinition.class;
     }
 
     @Override

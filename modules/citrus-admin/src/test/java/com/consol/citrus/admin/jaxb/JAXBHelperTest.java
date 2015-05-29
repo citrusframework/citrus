@@ -70,7 +70,7 @@ public class JAXBHelperTest {
     public void testMarshalClass() {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
 
-        Schema xsdSchema = new SchemaBuilder().withId("123").withLocation("this <location /> should be escaped").build();
+        SchemaDefinition xsdSchema = new SchemaDefinitionBuilder().withId("123").withLocation("this <location /> should be escaped").build();
 
         String marshalledXml = jaxbHelper.marshal(jaxbContext, xsdSchema);
 
@@ -93,7 +93,7 @@ public class JAXBHelperTest {
                 "xmlns=\"http://www.citrusframework.org/schema/config\"/>";
 
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
-        Schema xsdSchema = jaxbHelper.unmarshal(jaxbContext, Schema.class, xml);
+        SchemaDefinition xsdSchema = jaxbHelper.unmarshal(jaxbContext, SchemaDefinition.class, xml);
 
         Assert.assertNotNull(xsdSchema);
         Assert.assertEquals(xsdSchema.getLocation(), "this <location /> should be escaped");
@@ -104,26 +104,26 @@ public class JAXBHelperTest {
     @Test(expectedExceptions = CitrusAdminRuntimeException.class, expectedExceptionsMessageRegExp = "Exception thrown during unmarshal")
     public void testUnmarshalFromFile_fileDoesNotExist() throws Exception {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
-        jaxbHelper.unmarshal(jaxbContext, Schema.class, new File("someNonExistentFile.xml"));
+        jaxbHelper.unmarshal(jaxbContext, SchemaDefinition.class, new File("someNonExistentFile.xml"));
     }
 
     @Test
     public void testMarshalToAndUnmarshalFromFile() throws Exception {
         JAXBContext jaxbContext = jaxbHelper.createJAXBContextByPath(CONTEXT_PATHS);
 
-        SchemaRepository schemaRepository = new SchemaRepositoryBuilder().withId("123").addSchemaReference("abc").addSchemaReference("def").build();
+        SchemaRepositoryDefinition schemaRepository = new SchemaRepositoryDefinitionBuilder().withId("123").addSchemaReference("abc").addSchemaReference("def").build();
 
         File tmpXmlFile = File.createTempFile("marshalltest", ".xml");
         tmpXmlFile.deleteOnExit();
 
         jaxbHelper.marshal(jaxbContext, schemaRepository, tmpXmlFile);
 
-        SchemaRepository loadedSchemaRepository = jaxbHelper.unmarshal(jaxbContext, SchemaRepository.class, tmpXmlFile);
+        SchemaRepositoryDefinition loadedSchemaRepository = jaxbHelper.unmarshal(jaxbContext, SchemaRepositoryDefinition.class, tmpXmlFile);
 
         Assert.assertNotNull(loadedSchemaRepository);
         Assert.assertEquals(schemaRepository.getId(), loadedSchemaRepository.getId());
         Assert.assertEquals(schemaRepository.getSchemas().getRevesAndSchemas().size(), loadedSchemaRepository.getSchemas().getRevesAndSchemas().size());
-        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), ((SchemaRepository.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema());
-        Assert.assertEquals(((SchemaRepository.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), ((SchemaRepository.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema());
+        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema(), ((SchemaRepositoryDefinition.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(0)).getSchema());
+        Assert.assertEquals(((SchemaRepositoryDefinition.Schemas.Ref)schemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema(), ((SchemaRepositoryDefinition.Schemas.Ref)loadedSchemaRepository.getSchemas().getRevesAndSchemas().get(1)).getSchema());
     }
 }

@@ -7,10 +7,10 @@
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                             http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
 
-    <citrus-jms:jms-endpoint-adapter id="endpointAdapter1"
+    <citrus-jms:endpoint-adapter id="endpointAdapter1"
                                  destination-name="serverQueue"/>
 
-    <citrus-jms:jms-endpoint-adapter id="endpointAdapter2"
+    <citrus-jms:endpoint-adapter id="endpointAdapter2"
                                    destination-name="fooQueue"
                                    reply-destination-name="replyQueue"
                                    connection-factory="connectionFactory"

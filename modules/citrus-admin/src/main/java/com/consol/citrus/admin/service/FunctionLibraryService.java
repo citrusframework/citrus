@@ -19,9 +19,8 @@ package com.consol.citrus.admin.service;
 import com.consol.citrus.admin.converter.spring.FunctionLibrarySpringBeanConverter;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.functions.Function;
-import com.consol.citrus.functions.FunctionConfig;
-import com.consol.citrus.model.config.core.FunctionLibrary;
+import com.consol.citrus.functions.*;
+import com.consol.citrus.model.config.core.FunctionLibraryDefinition;
 import com.consol.citrus.model.config.core.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,8 +46,8 @@ public class FunctionLibraryService {
      * Gets the default function library from Citrus Spring bean configuration.
      * @return
      */
-    public FunctionLibrary getDefaultFunctionLibrary() {
-        FunctionLibrary library = new ObjectFactory().createFunctionLibrary();
+    public FunctionLibraryDefinition getDefaultFunctionLibrary() {
+        FunctionLibraryDefinition library = new ObjectFactory().createFunctionLibraryDefinition();
 
         FunctionConfig config = new FunctionConfig();
         com.consol.citrus.functions.FunctionLibrary defaultFunctionLibrary = config.getFunctionaLibrary();
@@ -56,7 +55,7 @@ public class FunctionLibraryService {
         library.setPrefix(defaultFunctionLibrary.getPrefix());
 
         for (Map.Entry<String, Function> functionEntry : defaultFunctionLibrary.getMembers().entrySet()) {
-            FunctionLibrary.Function function = new FunctionLibrary.Function();
+            FunctionLibraryDefinition.Function function = new FunctionLibraryDefinition.Function();
             function.setName(functionEntry.getKey());
             function.setClazz(functionEntry.getValue().getClass().getName());
             library.getFunctions().add(function);
@@ -70,8 +69,8 @@ public class FunctionLibraryService {
      * @param id
      * @return
      */
-    public FunctionLibrary getFunctionLibrary(String id) {
-        FunctionLibrary library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, FunctionLibrary.class);
+    public FunctionLibraryDefinition getFunctionLibrary(String id) {
+        FunctionLibraryDefinition library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, FunctionLibraryDefinition.class);
 
         if (library == null) {
             SpringBean springBean = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, SpringBean.class);
@@ -91,10 +90,10 @@ public class FunctionLibraryService {
      * List all function libraries in application context.
      * @return
      */
-    public List<FunctionLibrary> listFunctionLibraries() {
-        List<FunctionLibrary> libraries = new ArrayList<FunctionLibrary>();
+    public List<FunctionLibraryDefinition> listFunctionLibraries() {
+        List<FunctionLibraryDefinition> libraries = new ArrayList<FunctionLibraryDefinition>();
 
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), FunctionLibrary.class));
+        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), FunctionLibraryDefinition.class));
 
         List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", com.consol.citrus.functions.FunctionLibrary.class.getName()));
         for (SpringBean springBean : springBeans) {

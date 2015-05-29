@@ -22,17 +22,17 @@ package com.consol.citrus.model.config.core;
  * @author Martin.Maher@consol.de
  * @since 1.3.1
  */
-public class SchemaBuilder {
+public class SchemaDefinitionBuilder {
 
     /**
      * Model object
      */
-    private Schema model = new Schema();
+    private SchemaDefinition model = new SchemaDefinition();
 
     /**
      * Default constructor
      */
-    public SchemaBuilder() {
+    public SchemaDefinitionBuilder() {
     }
 
     /**
@@ -41,7 +41,7 @@ public class SchemaBuilder {
      * @param id
      * @return
      */
-    public SchemaBuilder withId(String id) {
+    public SchemaDefinitionBuilder withId(String id) {
         model.setId(id);
         return this;
     }
@@ -52,7 +52,7 @@ public class SchemaBuilder {
      * @param location the location (classpath of file)
      * @return
      */
-    public SchemaBuilder withLocation(String location) {
+    public SchemaDefinitionBuilder withLocation(String location) {
         model.setLocation(location);
         return this;
     }
@@ -62,7 +62,7 @@ public class SchemaBuilder {
      *
      * @return
      */
-    public Schema build() {
+    public SchemaDefinition build() {
         return model;
     }
 }

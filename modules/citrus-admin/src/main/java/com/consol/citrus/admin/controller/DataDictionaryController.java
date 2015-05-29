@@ -86,11 +86,11 @@ public class DataDictionaryController {
     private JSONObject enrichModelType(JSONObject dictionary) {
         String type = dictionary.get("type").toString();
         if (type.equals("xpath-data-dictionary")) {
-            dictionary.put(MODEL_TYPE, XpathDataDictionary.class.getName());
+            dictionary.put(MODEL_TYPE, XpathDataDictionaryDefinition.class.getName());
         } else if (type.equals("xml-data-dictionary")) {
-            dictionary.put(MODEL_TYPE, XmlDataDictionary.class.getName());
+            dictionary.put(MODEL_TYPE, XmlDataDictionaryDefinition.class.getName());
         } else if (type.equals("json-data-dictionary")) {
-            dictionary.put(MODEL_TYPE, JsonDataDictionary.class.getName());
+            dictionary.put(MODEL_TYPE, JsonDataDictionaryDefinition.class.getName());
         } else {
             dictionary.put(MODEL_TYPE, DataDictionaryType.class.getName());
         }

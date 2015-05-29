@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.ValidationMatcherLibrary;
+import com.consol.citrus.model.config.core.ValidationMatcherLibraryDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -43,31 +43,31 @@ public class ValidationMatcherController {
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
-    public List<ValidationMatcherLibrary> listFunctionLibraries() {
+    public List<ValidationMatcherLibraryDefinition> listFunctionLibraries() {
         return validationMatcherService.listValidationMatcherLibraries();
     }
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createValidationMatcherLibrary(@RequestBody ValidationMatcherLibrary library) {
+    public void createValidationMatcherLibrary(@RequestBody ValidationMatcherLibraryDefinition library) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), library);
     }
 
     @RequestMapping(value = "/default", method = {RequestMethod.GET})
     @ResponseBody
-    public ValidationMatcherLibrary getDefaultValidationMatcherLibrary() {
+    public ValidationMatcherLibraryDefinition getDefaultValidationMatcherLibrary() {
         return validationMatcherService.getDefaultValidationMatcherLibrary();
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public ValidationMatcherLibrary getValidationMatcherLibrary(@PathVariable("id") String id) {
+    public ValidationMatcherLibraryDefinition getValidationMatcherLibrary(@PathVariable("id") String id) {
         return validationMatcherService.getValidationMatcherLibrary(id);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.POST})
     @ResponseBody
-    public void updateValidationMatcherLibrary(@PathVariable("id") String id, @RequestBody ValidationMatcherLibrary library) {
+    public void updateValidationMatcherLibrary(@PathVariable("id") String id, @RequestBody ValidationMatcherLibraryDefinition library) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, library);
     }
 

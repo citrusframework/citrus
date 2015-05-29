@@ -20,6 +20,7 @@ import com.consol.citrus.admin.converter.spring.DataDictionarySpringBeanConverte
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.spring.model.SpringBean;
 import com.consol.citrus.model.config.core.*;
+import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import com.consol.citrus.variable.dictionary.xml.XpathMappingDataDictionary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,14 +49,14 @@ public class DataDictionaryService {
      * @return
      */
     public DataDictionaryType getDataDictionary(String id) {
-        DataDictionaryType library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, XpathDataDictionary.class);
+        DataDictionaryType library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, XpathDataDictionaryDefinition.class);
 
         if (library == null) {
-            library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, XmlDataDictionary.class);
+            library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, XmlDataDictionaryDefinition.class);
         }
 
         if (library == null) {
-            library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, JsonDataDictionary.class);
+            library = springBeanService.getBeanDefinition(projectService.getProjectContextConfigFile(), id, JsonDataDictionaryDefinition.class);
         }
 
         if (library == null) {
@@ -79,14 +80,14 @@ public class DataDictionaryService {
     public List<DataDictionaryType> listDataDictionaries() {
         List<DataDictionaryType> libraries = new ArrayList<DataDictionaryType>();
 
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), XpathDataDictionary.class));
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), XmlDataDictionary.class));
-        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), JsonDataDictionary.class));
+        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), XpathDataDictionaryDefinition.class));
+        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), XmlDataDictionaryDefinition.class));
+        libraries.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), JsonDataDictionaryDefinition.class));
 
         List<SpringBean> springBeans = new ArrayList<SpringBean>();
         springBeans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", XpathMappingDataDictionary.class.getName())));
         springBeans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", NodeMappingDataDictionary.class.getName())));
-        springBeans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", JsonDataDictionary.class.getName())));
+        springBeans.addAll(springBeanService.getBeanDefinitions(projectService.getProjectContextConfigFile(), SpringBean.class, Collections.singletonMap("class", JsonMappingDataDictionary.class.getName())));
         for (SpringBean springBean : springBeans) {
             libraries.add(dictionarySpringBeanConverter.convert(springBean));
         }

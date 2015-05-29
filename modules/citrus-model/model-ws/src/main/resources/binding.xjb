@@ -16,7 +16,12 @@
               adapter="org.w3._2001.xmlschema.Adapter2" />
       <xjc:simple />
     </globalBindings>
-    <schemaBindings><package name="com.consol.citrus.model.config.ws"/></schemaBindings>
+    <schemaBindings>
+      <package name="com.consol.citrus.model.config.ws"/>
+      <nameXmlTransform>
+        <elementName prefix="WebService" suffix="Definition" />
+      </nameXmlTransform>
+    </schemaBindings>
   </bindings>
 
 </bindings>

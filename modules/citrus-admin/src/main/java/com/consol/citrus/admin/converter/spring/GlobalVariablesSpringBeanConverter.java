@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.spring;
 
 import com.consol.citrus.admin.spring.model.*;
-import com.consol.citrus.model.config.core.*;
+import com.consol.citrus.model.config.core.GlobalVariablesDefinition;
 import com.consol.citrus.model.config.core.ObjectFactory;
 
 /**
@@ -26,16 +26,16 @@ import com.consol.citrus.model.config.core.ObjectFactory;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class GlobalVariablesSpringBeanConverter implements SpringBeanConverter<GlobalVariables> {
+public class GlobalVariablesSpringBeanConverter implements SpringBeanConverter<GlobalVariablesDefinition> {
 
     @Override
-    public GlobalVariables convert(SpringBean springBean) {
-        GlobalVariables variables = new ObjectFactory().createGlobalVariables();
+    public GlobalVariablesDefinition convert(SpringBean springBean) {
+        GlobalVariablesDefinition variables = new ObjectFactory().createGlobalVariablesDefinition();
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("variables")) {
                 for (Entry entry : property.getMap().getEntries()) {
-                    GlobalVariables.Variable variable = new GlobalVariables.Variable();
+                    GlobalVariablesDefinition.Variable variable = new GlobalVariablesDefinition.Variable();
                     variable.setName(entry.getKey());
                     variable.setValue(entry.getValue());
                     variables.getVariables().add(variable);

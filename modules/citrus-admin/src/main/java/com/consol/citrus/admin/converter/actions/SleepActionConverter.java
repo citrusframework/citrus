@@ -17,8 +17,7 @@ package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.admin.model.TestActionData;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.Sleep;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,14 +25,14 @@ import org.springframework.stereotype.Component;
  * @since 1.4
  */
 @Component
-public class SleepActionConverter extends AbstractTestActionConverter<Sleep, SleepAction> {
+public class SleepActionConverter extends AbstractTestActionConverter<SleepDefinition, SleepAction> {
 
     public SleepActionConverter() {
         super("sleep");
     }
 
     @Override
-    public TestActionData convert(Sleep definition) {
+    public TestActionData convert(SleepDefinition definition) {
         TestActionData action = new TestActionData(getActionType(), getModelClass());
 
         addActionProperties(action, definition);
@@ -45,8 +44,8 @@ public class SleepActionConverter extends AbstractTestActionConverter<Sleep, Sle
     }
 
     @Override
-    public Sleep convertModel(SleepAction definition) {
-        Sleep action = new ObjectFactory().createSleep();
+    public SleepDefinition convertModel(SleepAction definition) {
+        SleepDefinition action = new ObjectFactory().createSleepDefinition();
 
         action.setDescription(definition.getDescription());
         action.setMilliseconds(definition.getMilliseconds());
@@ -56,7 +55,7 @@ public class SleepActionConverter extends AbstractTestActionConverter<Sleep, Sle
     }
 
     @Override
-    public Class<Sleep> getModelClass() {
-        return Sleep.class;
+    public Class<SleepDefinition> getModelClass() {
+        return SleepDefinition.class;
     }
 }

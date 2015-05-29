@@ -31,6 +31,6 @@ public class CitrusJmsConfigNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("endpoint", new JmsEndpointParser());
         registerBeanDefinitionParser("sync-endpoint", new JmsSyncEndpointParser());
-        registerBeanDefinitionParser("jms-endpoint-adapter", new JmsEndpointAdapterParser());
+        registerBeanDefinitionParser("endpoint-adapter", new JmsEndpointAdapterParser());
     }
 }

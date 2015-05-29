@@ -89,7 +89,7 @@
       <property name="handleMimeHeaders" value="true"/>
     </bean>
 
-    <citrus-jms:jms-endpoint-adapter id="jmsEndpointAdapter"
+    <citrus-jms:endpoint-adapter id="jmsEndpointAdapter"
                                  destination-name="Citrus.Ws.Stub.RequestQueue"
                                  reply-destination-name="Citrus.Ws.Stub.ResponseQueue"
                                  connection-factory="jmsConnectionFactory"

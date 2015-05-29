@@ -64,7 +64,7 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="jms-endpoint-adapter">
+  <xs:element name="endpoint-adapter">
     <xs:annotation>
       <xs:documentation>Jms server endpoint adapter forwards incoming requests to jms destination.</xs:documentation>
     </xs:annotation>

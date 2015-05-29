@@ -19,7 +19,7 @@ package com.consol.citrus.admin.converter.endpoint;
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.ws.Server;
+import com.consol.citrus.model.config.ws.WebServiceServerDefinition;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,13 +27,13 @@ import org.springframework.stereotype.Component;
  * @since 2.0
  */
 @Component
-public class WebServiceServerConverter extends AbstractEndpointConverter<Server> {
+public class WebServiceServerConverter extends AbstractEndpointConverter<WebServiceServerDefinition> {
 
     public static final String TRUE = "true";
     public static final String FALSE = "false";
 
     @Override
-    public EndpointData convert(Server server) {
+    public EndpointData convert(WebServiceServerDefinition server) {
         EndpointData endpointData = new EndpointData(getEndpointType(), server.getId(), getModelClass());
 
         endpointData.add(property("port", server));
@@ -65,8 +65,8 @@ public class WebServiceServerConverter extends AbstractEndpointConverter<Server>
     }
 
     @Override
-    public Class<Server> getModelClass() {
-        return Server.class;
+    public Class<WebServiceServerDefinition> getModelClass() {
+        return WebServiceServerDefinition.class;
     }
 
     @Override

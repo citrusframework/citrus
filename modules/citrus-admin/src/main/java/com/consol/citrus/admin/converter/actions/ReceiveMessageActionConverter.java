@@ -17,8 +17,7 @@ package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.admin.model.TestActionData;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.Receive;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Component;
  * @since 1.4
  */
 @Component
-public class ReceiveMessageActionConverter extends AbstractTestActionConverter<Receive, ReceiveMessageAction> {
+public class ReceiveMessageActionConverter extends AbstractTestActionConverter<ReceiveDefinition, ReceiveMessageAction> {
 
     /**
      * Default constructor using action type reference.
@@ -36,7 +35,7 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     }
 
     @Override
-    public TestActionData convert(Receive definition) {
+    public TestActionData convert(ReceiveDefinition definition) {
         TestActionData action = new TestActionData(getActionType(), getModelClass());
 
         action.add(property("endoint", definition));
@@ -46,8 +45,8 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
     }
 
     @Override
-    public Receive convertModel(ReceiveMessageAction definition) {
-        Receive action = new ObjectFactory().createReceive();
+    public ReceiveDefinition convertModel(ReceiveMessageAction definition) {
+        ReceiveDefinition action = new ObjectFactory().createReceiveDefinition();
 
         if (definition.getActor() != null) {
             action.setActor(definition.getActor().getName());
@@ -67,7 +66,7 @@ public class ReceiveMessageActionConverter extends AbstractTestActionConverter<R
      * @return
      */
     @Override
-    public Class<Receive> getModelClass() {
-        return Receive.class;
+    public Class<ReceiveDefinition> getModelClass() {
+        return ReceiveDefinition.class;
     }
 }

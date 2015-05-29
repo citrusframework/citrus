@@ -18,7 +18,7 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.MessageCorrelator;
-import com.consol.citrus.model.config.ftp.Client;
+import com.consol.citrus.model.config.ftp.FtpClientDefinition;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,10 +26,10 @@ import org.springframework.stereotype.Component;
  * @since 2.0
  */
 @Component
-public class FtpEndpointConverter extends AbstractEndpointConverter<Client> {
+public class FtpEndpointConverter extends AbstractEndpointConverter<FtpClientDefinition> {
 
     @Override
-    public EndpointData convert(Client client) {
+    public EndpointData convert(FtpClientDefinition client) {
         EndpointData endpointData = new EndpointData(getEndpointType(), client.getId(), getModelClass());
 
         endpointData.add(property("host", client));
@@ -47,7 +47,7 @@ public class FtpEndpointConverter extends AbstractEndpointConverter<Client> {
     }
 
     @Override
-    public Class<Client> getModelClass() {
-        return Client.class;
+    public Class<FtpClientDefinition> getModelClass() {
+        return FtpClientDefinition.class;
     }
 }

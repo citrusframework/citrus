@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.ssh.Client;
+import com.consol.citrus.model.config.ssh.SshClientDefinition;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ public class SshClientConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        EndpointData endpointData = endpointConverter.convert(new Client());
+        EndpointData endpointData = endpointConverter.convert(new SshClientDefinition());
         Assert.assertEquals(endpointData.getType(), "ssh");
     }
 }

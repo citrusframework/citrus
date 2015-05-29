@@ -17,8 +17,7 @@ package com.consol.citrus.admin.converter.actions;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.admin.model.TestActionData;
-import com.consol.citrus.model.testcase.core.ObjectFactory;
-import com.consol.citrus.model.testcase.core.Send;
+import com.consol.citrus.model.testcase.core.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Component;
  * @since 1.4
  */
 @Component
-public class SendMessageActionConverter extends AbstractTestActionConverter<Send, SendMessageAction> {
+public class SendMessageActionConverter extends AbstractTestActionConverter<SendDefinition, SendMessageAction> {
 
     /**
      * Default constructor using action type reference.
@@ -36,7 +35,7 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
     }
 
     @Override
-    public TestActionData convert(Send definition) {
+    public TestActionData convert(SendDefinition definition) {
         TestActionData action = new TestActionData(getActionType(), getModelClass());
 
         action.add(property("endoint", definition));
@@ -48,8 +47,8 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
     }
 
     @Override
-    public Send convertModel(SendMessageAction definition) {
-        Send action = new ObjectFactory().createSend();
+    public SendDefinition convertModel(SendMessageAction definition) {
+        SendDefinition action = new ObjectFactory().createSendDefinition();
 
         if (definition.getActor() != null) {
             action.setActor(definition.getActor().getName());
@@ -64,7 +63,7 @@ public class SendMessageActionConverter extends AbstractTestActionConverter<Send
     }
 
     @Override
-    public Class<Send> getModelClass() {
-        return Send.class;
+    public Class<SendDefinition> getModelClass() {
+        return SendDefinition.class;
     }
 }

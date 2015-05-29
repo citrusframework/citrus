@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.core.ChannelEndpoint;
+import com.consol.citrus.model.config.core.ChannelEndpointDefinition;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.stereotype.Component;
@@ -28,10 +28,10 @@ import org.springframework.util.StringUtils;
  * @since 1.3.1
  */
 @Component
-public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelEndpoint> {
+public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelEndpointDefinition> {
 
     @Override
-    public EndpointData convert(ChannelEndpoint definition) {
+    public EndpointData convert(ChannelEndpointDefinition definition) {
         EndpointData endpointData = new EndpointData(getEndpointType(), definition.getId(), getModelClass());
 
         if (StringUtils.hasText(definition.getChannelName())) {
@@ -51,8 +51,8 @@ public class ChannelEndpointConverter extends AbstractEndpointConverter<ChannelE
     }
 
     @Override
-    public Class<ChannelEndpoint> getModelClass() {
-        return ChannelEndpoint.class;
+    public Class<ChannelEndpointDefinition> getModelClass() {
+        return ChannelEndpointDefinition.class;
     }
 
     @Override

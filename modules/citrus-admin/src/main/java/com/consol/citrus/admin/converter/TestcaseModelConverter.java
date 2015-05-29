@@ -30,11 +30,11 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class TestcaseModelConverter implements ObjectConverter<Testcase, TestCase> {
+public class TestcaseModelConverter implements ObjectConverter<TestcaseDefinition, TestCase> {
 
     @Override
-    public Testcase convert(TestCase definition) {
-        Testcase testModel = new Testcase();
+    public TestcaseDefinition convert(TestCase definition) {
+        TestcaseDefinition testModel = new TestcaseDefinition();
 
         testModel.setName(definition.getName());
         testModel.setDescription(definition.getDescription());
@@ -44,9 +44,9 @@ public class TestcaseModelConverter implements ObjectConverter<Testcase, TestCas
         metaInfoType.setStatus(definition.getMetaInfo().getStatus().name());
         testModel.setMetaInfo(metaInfoType);
 
-        Variables variables = new Variables();
+        VariablesDefinition variables = new VariablesDefinition();
         for (Map.Entry<String, ?> variableEntry : definition.getVariableDefinitions().entrySet()) {
-            Variables.Variable variable = new Variables.Variable();
+            VariablesDefinition.Variable variable = new VariablesDefinition.Variable();
 
             variable.setName(variableEntry.getKey());
             variable.setValue(variableEntry.getValue().toString());

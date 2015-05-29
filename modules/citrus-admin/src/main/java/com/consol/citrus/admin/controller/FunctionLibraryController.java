@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.controller;
 
 import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.FunctionLibrary;
+import com.consol.citrus.model.config.core.FunctionLibraryDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -43,31 +43,31 @@ public class FunctionLibraryController {
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
-    public List<FunctionLibrary> listFunctionLibraries() {
+    public List<FunctionLibraryDefinition> listFunctionLibraries() {
         return functionLibraryService.listFunctionLibraries();
     }
 
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseBody
-    public void createFunctionLibrary(@RequestBody FunctionLibrary library) {
+    public void createFunctionLibrary(@RequestBody FunctionLibraryDefinition library) {
         springBeanService.addBeanDefinition(projectService.getProjectContextConfigFile(), library);
     }
 
     @RequestMapping(value = "/default", method = {RequestMethod.GET})
     @ResponseBody
-    public FunctionLibrary getDefaultFunctionLibrary() {
+    public FunctionLibraryDefinition getDefaultFunctionLibrary() {
         return functionLibraryService.getDefaultFunctionLibrary();
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.GET})
     @ResponseBody
-    public FunctionLibrary getFunctionLibrary(@PathVariable("id") String id) {
+    public FunctionLibraryDefinition getFunctionLibrary(@PathVariable("id") String id) {
         return functionLibraryService.getFunctionLibrary(id);
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.POST})
     @ResponseBody
-    public void updateFunctionLibrary(@PathVariable("id") String id, @RequestBody FunctionLibrary library) {
+    public void updateFunctionLibrary(@PathVariable("id") String id, @RequestBody FunctionLibraryDefinition library) {
         springBeanService.updateBeanDefinition(projectService.getProjectContextConfigFile(), id, library);
     }
 

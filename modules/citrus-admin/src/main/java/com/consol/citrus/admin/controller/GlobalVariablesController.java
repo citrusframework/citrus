@@ -16,8 +16,9 @@
 
 package com.consol.citrus.admin.controller;
 
-import com.consol.citrus.admin.service.*;
-import com.consol.citrus.model.config.core.GlobalVariables;
+import com.consol.citrus.admin.service.GlobalVariablesService;
+import com.consol.citrus.admin.service.ProjectService;
+import com.consol.citrus.model.config.core.GlobalVariablesDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +39,13 @@ public class GlobalVariablesController {
 
     @RequestMapping(method = {RequestMethod.GET})
     @ResponseBody
-    public GlobalVariables getGlobalVariables() {
+    public GlobalVariablesDefinition getGlobalVariables() {
         return globalVariablesService.getGlobalVariables(projectService.getProjectContextConfigFile());
     }
 
     @RequestMapping(method = {RequestMethod.PUT})
     @ResponseBody
-    public void updateGlobalVariables(@RequestBody GlobalVariables variables) {
+    public void updateGlobalVariables(@RequestBody GlobalVariablesDefinition variables) {
         globalVariablesService.updateGlobalVariables(projectService.getProjectContextConfigFile(), variables);
     }
 }

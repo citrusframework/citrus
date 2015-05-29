@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.mail.Client;
+import com.consol.citrus.model.config.mail.MailClientDefinition;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ public class MailClientConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        EndpointData endpointData = endpointConverter.convert(new Client());
+        EndpointData endpointData = endpointConverter.convert(new MailClientDefinition());
         Assert.assertEquals(endpointData.getType(), "mail");
     }
 }

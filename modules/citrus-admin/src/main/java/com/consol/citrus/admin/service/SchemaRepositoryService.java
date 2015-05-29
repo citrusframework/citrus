@@ -18,7 +18,7 @@ package com.consol.citrus.admin.service;
 
 import com.consol.citrus.admin.converter.spring.SchemaRepositorySpringBeanConverter;
 import com.consol.citrus.admin.spring.model.SpringBean;
-import com.consol.citrus.model.config.core.SchemaRepository;
+import com.consol.citrus.model.config.core.SchemaRepositoryDefinition;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,10 +47,10 @@ public class SchemaRepositoryService {
      * @param projectConfigFile
      * @return
      */
-    public List<SchemaRepository> listSchemaRepositories(File projectConfigFile) {
-        List<SchemaRepository> schemaRepositories = new ArrayList<SchemaRepository>();
+    public List<SchemaRepositoryDefinition> listSchemaRepositories(File projectConfigFile) {
+        List<SchemaRepositoryDefinition> schemaRepositories = new ArrayList<SchemaRepositoryDefinition>();
 
-        schemaRepositories.addAll(springBeanService.getBeanDefinitions(projectConfigFile, SchemaRepository.class));
+        schemaRepositories.addAll(springBeanService.getBeanDefinitions(projectConfigFile, SchemaRepositoryDefinition.class));
 
         List<SpringBean> springBeans = springBeanService.getBeanDefinitions(projectConfigFile, SpringBean.class, Collections.singletonMap("class", XsdSchemaRepository.class.getName()));
         for (SpringBean springBean : springBeans) {
@@ -67,8 +67,8 @@ public class SchemaRepositoryService {
      * @param id
      * @return
      */
-    public SchemaRepository getSchemaRepository(File projectConfigFile, String id) {
-        SchemaRepository repository = springBeanService.getBeanDefinition(projectConfigFile, id, SchemaRepository.class);
+    public SchemaRepositoryDefinition getSchemaRepository(File projectConfigFile, String id) {
+        SchemaRepositoryDefinition repository = springBeanService.getBeanDefinition(projectConfigFile, id, SchemaRepositoryDefinition.class);
 
         if (repository == null) {
             SpringBean springBean = springBeanService.getBeanDefinition(projectConfigFile, id, SpringBean.class);

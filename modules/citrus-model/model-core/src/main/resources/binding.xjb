@@ -19,11 +19,21 @@
   </globalBindings>
 
   <bindings schemaLocation="com/consol/citrus/schema/citrus-config.xsd">
-    <schemaBindings><package name="com.consol.citrus.model.config.core"/></schemaBindings>
+    <schemaBindings>
+      <package name="com.consol.citrus.model.config.core"/>
+      <nameXmlTransform>
+        <elementName suffix="Definition" />
+      </nameXmlTransform>
+    </schemaBindings>
   </bindings>
   
   <bindings schemaLocation="com/consol/citrus/schema/citrus-testcase.xsd">
-    <schemaBindings><package name="com.consol.citrus.model.testcase.core"/></schemaBindings>
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.core"/>
+      <nameXmlTransform>
+        <elementName suffix="Definition" />
+      </nameXmlTransform>
+    </schemaBindings>
     <bindings node="//xs:element[@name='selector']">
       <bindings node=".//xs:element[@name='value']">
         <property name="SelectorValue"/>

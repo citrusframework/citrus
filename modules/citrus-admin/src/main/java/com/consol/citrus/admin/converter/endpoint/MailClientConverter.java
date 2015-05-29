@@ -18,7 +18,7 @@ package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
 import com.consol.citrus.message.MessageConverter;
-import com.consol.citrus.model.config.mail.Client;
+import com.consol.citrus.model.config.mail.MailClientDefinition;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
@@ -27,10 +27,10 @@ import org.springframework.stereotype.Component;
  * @since 1.4.1
  */
 @Component
-public class MailClientConverter extends AbstractEndpointConverter<Client> {
+public class MailClientConverter extends AbstractEndpointConverter<MailClientDefinition> {
 
     @Override
-    public EndpointData convert(Client client) {
+    public EndpointData convert(MailClientDefinition client) {
         EndpointData endpointData = new EndpointData(getEndpointType(), client.getId(), getModelClass());
 
         endpointData.add(property("host", client));
@@ -48,7 +48,7 @@ public class MailClientConverter extends AbstractEndpointConverter<Client> {
     }
 
     @Override
-    public Class<Client> getModelClass() {
-        return Client.class;
+    public Class<MailClientDefinition> getModelClass() {
+        return MailClientDefinition.class;
     }
 }

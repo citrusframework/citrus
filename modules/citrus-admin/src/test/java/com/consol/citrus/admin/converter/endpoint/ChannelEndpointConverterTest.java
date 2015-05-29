@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.converter.endpoint;
 
 import com.consol.citrus.admin.model.EndpointData;
-import com.consol.citrus.model.config.core.ChannelEndpoint;
+import com.consol.citrus.model.config.core.ChannelEndpointDefinition;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ public class ChannelEndpointConverterTest {
 
     @Test
     public void testConvert() throws Exception {
-        EndpointData endpointData = endpointConverter.convert(new ChannelEndpoint());
+        EndpointData endpointData = endpointConverter.convert(new ChannelEndpointDefinition());
         Assert.assertEquals(endpointData.getType(), "channel");
     }
 }

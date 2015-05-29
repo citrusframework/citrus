@@ -29,13 +29,13 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<SchemaRepository> {
+public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<SchemaRepositoryDefinition> {
 
     @Override
-    public SchemaRepository convert(SpringBean springBean) {
-        SchemaRepository repository = new ObjectFactory().createSchemaRepository();
+    public SchemaRepositoryDefinition convert(SpringBean springBean) {
+        SchemaRepositoryDefinition repository = new ObjectFactory().createSchemaRepositoryDefinition();
         repository.setId(springBean.getId());
-        repository.setSchemas(new SchemaRepository.Schemas());
+        repository.setSchemas(new SchemaRepositoryDefinition.Schemas());
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("schemas")) {
@@ -43,7 +43,7 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
                     if (item instanceof SpringBean) {
                         SpringBean bean = (SpringBean)item;
 
-                        Schema schema = new Schema();
+                        SchemaDefinition schema = new SchemaDefinition();
 
                         if (StringUtils.hasText(bean.getId())) {
                             schema.setId(bean.getId());
@@ -68,7 +68,7 @@ public class SchemaRepositorySpringBeanConverter implements SpringBeanConverter<
                         repository.getSchemas().getRevesAndSchemas().add(schema);
                     } else if (item instanceof Ref) {
                         Ref ref = (Ref) item;
-                        SchemaRepository.Schemas.Ref schema = new SchemaRepository.Schemas.Ref();
+                        SchemaRepositoryDefinition.Schemas.Ref schema = new SchemaRepositoryDefinition.Schemas.Ref();
                         schema.setSchema(ref.getBean());
                         repository.getSchemas().getRevesAndSchemas().add(schema);
                     }

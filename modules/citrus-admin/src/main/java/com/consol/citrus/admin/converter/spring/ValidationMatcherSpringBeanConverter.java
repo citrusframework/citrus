@@ -17,8 +17,8 @@
 package com.consol.citrus.admin.converter.spring;
 
 import com.consol.citrus.admin.spring.model.*;
-import com.consol.citrus.model.config.core.*;
 import com.consol.citrus.model.config.core.ObjectFactory;
+import com.consol.citrus.model.config.core.ValidationMatcherLibraryDefinition;
 import org.springframework.util.StringUtils;
 
 /**
@@ -27,16 +27,16 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class ValidationMatcherSpringBeanConverter implements SpringBeanConverter<ValidationMatcherLibrary> {
+public class ValidationMatcherSpringBeanConverter implements SpringBeanConverter<ValidationMatcherLibraryDefinition> {
 
     @Override
-    public ValidationMatcherLibrary convert(SpringBean springBean) {
-        ValidationMatcherLibrary library = new ObjectFactory().createValidationMatcherLibrary();
+    public ValidationMatcherLibraryDefinition convert(SpringBean springBean) {
+        ValidationMatcherLibraryDefinition library = new ObjectFactory().createValidationMatcherLibraryDefinition();
 
         for (Property property : springBean.getProperties()) {
             if (property.getName().equals("members")) {
                 for (Entry entry : property.getMap().getEntries()) {
-                    ValidationMatcherLibrary.Matcher matcher = new ValidationMatcherLibrary.Matcher();
+                    ValidationMatcherLibraryDefinition.Matcher matcher = new ValidationMatcherLibraryDefinition.Matcher();
                     matcher.setName(entry.getKey());
                     matcher.setClazz(entry.getValue());
                     library.getMatchers().add(matcher);
