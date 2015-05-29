@@ -61,13 +61,25 @@
         </header>
       </send>
 
-      <receive endpoint="camel:seda:exceptions">
+      <receive endpoint="camel:sync:seda:exceptions">
         <message type="plaintext">
           <data>Something went wrong!</data>
         </message>
         <header>
           <element name="CamelExceptionCaught" value="com.consol.citrus.exceptions.CitrusRuntimeException: Something went wrong!"/>
         </header>
+      </receive>
+
+      <send endpoint="camel:sync:seda:exceptions">
+        <message type="plaintext">
+          <data>Hello after error!</data>
+        </message>
+      </send>
+
+      <receive endpoint="camel:sync:direct:hello">
+        <message type="plaintext">
+          <data>Hello after error!</data>
+        </message>
       </receive>
 
     </actions>
