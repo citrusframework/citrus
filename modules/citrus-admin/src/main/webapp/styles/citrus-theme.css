@@ -30,16 +30,8 @@ a:hover {
     background-color: #eff6fb;
 }
 
-.jumbotron h1, .jumbotron .h1 {
-    font-size: 55px;
-}
-
-.jumbotron p {
-    font-size: 19px;
-}
-
 .jumbotron .btn {
-    font-size: 18px;
+    font-size: 22px;
 }
 
 .content-header {
@@ -201,6 +193,7 @@ span.message-outbound {
 .navbar-default {
     background: #0096D6;
     border: none;
+    margin-bottom: 0;
 }
 
 .navbar .nav > li > a {

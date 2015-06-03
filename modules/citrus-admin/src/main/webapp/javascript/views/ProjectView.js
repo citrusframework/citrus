@@ -38,7 +38,7 @@
                     return test.lastModified;
                 });
 
-                return _.last(latestTests, 6).reverse();
+                return _.last(latestTests, 8).reverse();
             },
 
             getTestReport: function() {
