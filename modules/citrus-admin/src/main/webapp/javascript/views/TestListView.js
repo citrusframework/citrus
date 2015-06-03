@@ -5,7 +5,7 @@
           tests: {},
 
           events: {
-              "submit #search-form" : "searchTest"
+              "submit #search-test-form" : "searchTest"
           },
           
           initialize: function() {

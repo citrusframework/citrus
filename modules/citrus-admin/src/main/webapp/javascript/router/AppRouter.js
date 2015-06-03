@@ -73,7 +73,7 @@
           
           stats: function() {
               if (!this.statsView) {
-                  $('#stats-content').html('<div class="container content-header"><h1>Statistics <small>Manage project statistics</small></h1></div><div class="container content-nav"><div><p>Not implemented yet! Coming soon!</p></div></div>');
+                  $('#stats-content').html('<div class="container content-header"><h1>Statistics <small>Manage project statistics</small></h1></div><div class="container"><div class="content-nav"><p>Not implemented yet! Coming soon!</p></div></div>');
               }
 
               $('#content').children().hide();
@@ -83,7 +83,7 @@
 
           settings: function() {
                 if (!this.statsView) {
-                    $('#settings-content').html('<div class="container content-header"><h1>Settings <small>Administration settings</small></h1></div><div class="container content-nav"><div><p>Not implemented yet! Coming soon!</p></div></div>');
+                    $('#settings-content').html('<div class="container content-header"><h1>Settings <small>Administration settings</small></h1></div><div class="container"><div class="content-nav"><p>Not implemented yet! Coming soon!</p></div></div>');
                 }
 
                 $('#content').children().hide();
@@ -93,7 +93,7 @@
 
           about: function() {
               if (!this.statsView) {
-                  $('#about-content').html('<div class="container content-header"><h1>About <small>Behind the scenes</small></h1></div><div class="container content-nav"><div><p>Not implemented yet! Coming soon!</p></div></div>');
+                  $('#about-content').html('<div class="container content-header"><h1>About <small>Behind the scenes</small></h1></div><div class="container"><div class="content-nav"><p>Not implemented yet! Coming soon!</p></div></div>');
               }
 
               $('#content').children().hide();

@@ -26,6 +26,9 @@
     {{#each variables}}
     <div class="list-group-item clickable" id="{{name}}"><i class="fa fa-file-text-o"></i>&nbsp;<b>{{name}}</b> = {{value}}&nbsp;<a class="btn-remove pull-right" href="#config" title="Remove variable"><i class="fa fa-times" style="color: #A50000;"></i></a></div>
     {{/each}}
+    {{#unless variables}}
+    <div class="list-group-item clickable" id="noVariable"><i class="fa fa-times"></i> No variables defined</a></div>
+    {{/unless}}
   </div>
 
 </div>

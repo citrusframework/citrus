@@ -37,10 +37,6 @@
                     idSuffix: "namespace-context",
                     displayName: "Namespace Context",
                     view: NamespaceContextView
-                },
-                {
-                    idSuffix: "message-validators",
-                    displayName: "Message Validators"
                 }
             ],
 

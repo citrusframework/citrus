@@ -42,7 +42,9 @@ a:hover {
 .content-nav {
     background-color: #eff6fb;
     padding-top: 10px;
-    min-height: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+    min-height: 45px;
     border-radius: 4px;
     margin-bottom: 35px;
 }
@@ -244,8 +246,9 @@ span.message-outbound {
 .nav-pills > li > a {
     background: #eff6fb;
     color: #333;
-    min-width: 160px;
+    min-width: 223px;
     text-align: center;
+    margin: 1px;
 }
 
 .nav > li > a:hover,
@@ -457,11 +460,11 @@ h4.page-header {
 
 /** Forms **/
 
-form#search-form {
-    margin: 0 0 10px;
+form#search-test-form {
+    margin: 5px 0 10px;
 }
 
-form#search-form #test-name {
+form#search-test-form #test-name {
     width: 250px;
 }
 
@@ -788,6 +791,11 @@ i.channel {
 .connected-horizontal {
     float: left;
     margin-right: 20px;
+}
+
+.list-group {
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .list-group-item {
