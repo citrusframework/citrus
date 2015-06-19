@@ -6,6 +6,25 @@
     preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit 
     best into the initialization and cleanup phases of Citrus. All you have to do is add some Spring bean definitions to the Citrus 
     application context.</para>
+
+    <note>
+      <para>It is important to notice that the Citrus configuration components that we are going to use in the next section belong to a separate
+      XML namespace <emphasis>citrus-test</emphasis>. We have to add the namespace declaration to the XML root element of our XML configuration file accordingly.</para>
+
+      <programlisting>&lt;spring:beans xmlns=&quot;http://www.citrusframework.org/schema/testcase&quot;
+        xmlns:spring=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xmlns:citrus-test=&quot;http://www.citrusframework.org/schema/testcase&quot;
+        xsi:schemaLocation=&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/testcase
+        http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd&quot;&gt;
+
+        [...]
+
+        &lt;/beans&gt;</programlisting>
+    </note>
     
     <section id="testsuite-before">
         <title>Before suite</title>
@@ -49,7 +68,7 @@
     &lt;/citrus:actions&gt;
 &lt;/citrus:before-suite&gt;</programlisting>
 
-        <para>The above after suite container is only executed with the test suite called <empphasis>databaseSuite</empphasis> or when the test group <empphasis>e2e</empphasis> is defined. Test groups and suite names are only supported
+        <para>The above after suite container is only executed with the test suite called <emphasis>databaseSuite</emphasis> or when the test group <emphasis>e2e</emphasis> is defined. Test groups and suite names are only supported
           when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with
           the JUnit test framework.</para>
 
@@ -92,7 +111,7 @@
     &lt;/citrus:actions&gt;
 &lt;/citrus:after-suite&gt;</programlisting>
 
-        <para>The above after suite container is only executed with the test suite called <empphasis>databaseSuite</empphasis> or when the test group <empphasis>e2e</empphasis> is defined. Test groups and suite names are only supported
+        <para>The above after suite container is only executed with the test suite called <emphasis>databaseSuite</emphasis> or when the test group <emphasis>e2e</emphasis> is defined. Test groups and suite names are only supported
         when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with
         the JUnit test framework.</para>
 
