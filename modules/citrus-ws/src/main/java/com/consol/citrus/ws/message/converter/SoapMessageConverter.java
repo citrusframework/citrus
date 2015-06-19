@@ -219,7 +219,13 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                             int xmlProcessingInstruction = messagePayload.indexOf("?>");
                             xmlProcessingInstruction = xmlProcessingInstruction > 0 ? (xmlProcessingInstruction + 2) : 0;
                             int rootElementEnd = messagePayload.indexOf('>', xmlProcessingInstruction);
+
                             if (rootElementEnd > 0) {
+                                if (messagePayload.charAt(rootElementEnd - 1) == '/') {
+                                    // root element is closed immediately e.g. <root/> need to adjust root element end
+                                    rootElementEnd--;
+                                }
+
                                 String namespace = attribute.getNodeName() + "=\"" + attribute.getNodeValue() + "\"";
                                 if (!messagePayload.contains(namespace)) {
                                     message.setPayload(messagePayload.substring(0, rootElementEnd) + " " + namespace + messagePayload.substring(rootElementEnd));
