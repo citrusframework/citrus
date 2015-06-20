@@ -763,13 +763,46 @@
           <version>2.3</version>
           <executions>
             <execution>
-              <id>generate-sources-jar</id>
-              <phase>package</phase>
+              <id>attach-sources</id>
               <goals>
                 <goal>jar-no-fork</goal>
               </goals>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.9</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>1.6</version>
+          <executions>
+            <execution>
+              <id>sign-artifacts</id>
+              <phase>verify</phase>
+              <goals>
+                <goal>sign</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <useAgent>true</useAgent>
+            <keyname>christoph.deppisch@consol.de</keyname>
+            <gpgArguments>
+              <arg>--allow-weak-digest-algos</arg>
+            </gpgArguments>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
@@ -779,11 +812,6 @@
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
           <version>0.11</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>rat-maven-plugin</artifactId>
-          <version>1.0-alpha-3</version>
           <configuration>
             <includes>
               <include>**/*.java</include>
@@ -853,6 +881,22 @@
 
       </plugins>
     </pluginManagement>
+
+    <!-- Default plugins for all modules -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+      </plugin>
+    </plugins>
     
     <extensions>
       <extension>
@@ -894,6 +938,31 @@
         <docbkx.img.path>images</docbkx.img.path>
       </properties>
     </profile>
+
+    <profile>
+      <id>release-central</id>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>sonatype-nexus-snapshots</id>
+          <name>Sonatype Nexus Snapshots</name>
+          <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+          <id>sonatype-nexus-staging</id>
+          <name>Nexus Release Repository</name>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     
     <profile>
       <id>release-labs</id>
@@ -915,6 +984,15 @@
         <site.url>http://www.citrusframework.org</site.url>
         <docbkx.img.path>images</docbkx.img.path>
       </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     
     <profile>
@@ -1003,21 +1081,6 @@
                 <phase>pre-site</phase>
               </execution>
             </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9</version>
-            <configuration>
-              <aggregate>true</aggregate>
-              <linksource>true</linksource>
-              <links>
-                <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-                <link>http://logging.apache.org/log4j/docs/api/</link>
-                <link>http://static.springframework.org/spring/docs/2.5.x/api/</link>
-                <link>http://testng.org/javadocs/</link>
-              </links>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -1460,7 +1523,7 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.7.2.201409121644</version>
+            <version>0.7.1.201405082137</version>
             <executions>
               <execution>
                 <id>jacoco-initialize</id>
@@ -1484,7 +1547,7 @@
               </execution>
               <execution>
                 <id>jacoco-report</id>
-                <phase>verify</phase>
+                <phase>package</phase>
                 <goals>
                   <goal>report</goal>
                 </goals>
