@@ -34,7 +34,7 @@ import java.io.InputStream;
  */
 public class HttpServerTest extends AbstractTestNGUnitTest {
 
-    @Test(enabled = false) // TODO MM enable and fix test
+    @Test
     public void startupAndShutdownTest() throws IOException {
         HttpServer server = new HttpServer();
         server.setPort(8095);
@@ -46,8 +46,8 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         //build a client to test the server
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet("http://localhost:8095/test");
-        get.setHeader(HttpHeader.ACCEPT.name(), "text/xml");
-        get.setHeader(HttpHeader.CONTENT_TYPE.name(), "text/xml");
+        get.setHeader(HttpHeader.ACCEPT.asString(), "text/xml");
+        get.setHeader(HttpHeader.CONTENT_TYPE.asString(), "text/xml");
         //send get request
         HttpResponse res = httpclient.execute(get);
         //assert get was successful
