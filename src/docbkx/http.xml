@@ -15,7 +15,7 @@
         <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-http&lt;/artifactId&gt;
-  &lt;version&gt;2.2-SNAPSHOT&lt;/version&gt;
+  &lt;version&gt;2.2&lt;/version&gt;
 &lt;/dependency&gt;</programlisting>
 
         <para>As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level

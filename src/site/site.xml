@@ -6,7 +6,7 @@
   <skin>
     <groupId>com.consol.citrus.mvn</groupId>
     <artifactId>citrus-default-skin</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.2</version>
   </skin>
   <body>
     <menu name="Home"/>
