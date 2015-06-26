@@ -42,10 +42,10 @@ enum SocketEvent {
 
     /**
      * Creates proper JSON message for socket event.
-     * @param processId
-     * @param pushEvent
-     * @param message
-     * @return
+     * @param processId the process id
+     * @param pushEvent the type of event
+     * @param message the event message
+     * @return a json representation of the message
      */
     @SuppressWarnings("unchecked")
     public static JSONObject createEvent(String processId, SocketEvent pushEvent, String message) {

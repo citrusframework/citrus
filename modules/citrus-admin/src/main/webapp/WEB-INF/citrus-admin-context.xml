@@ -140,6 +140,8 @@
     <!-- Central web socket pushes events to connected clients -->
     <bean id="loggingWebSocket" class="com.consol.citrus.admin.websocket.LoggingWebSocket" scope="singleton"/>
 
+    <bean id="loggingWebSocketCreator" class="com.consol.citrus.admin.websocket.LoggingWebSocketCreator" scope="singleton"/>
+
     <bean class="com.consol.citrus.admin.websocket.WebSocketTestListener"/>
     <bean class="com.consol.citrus.admin.websocket.WebSocketProcessListener"/>
     <bean class="com.consol.citrus.admin.websocket.WebSocketLoggingAppender"/>

@@ -58,7 +58,7 @@
               </message>
               <header>
                 <element name="CustomHeaderId" value="${custom_header_id}"/>
-                <element name="Content-Type" value="text/xml;charset=UTF-8"/>
+                <element name="Content-Type" value="text/xml"/>
                 <element name="Accept" value="text/xml,*/*"/>
                 <element name="citrus_http_method" value="POST"/>
                 <element name="citrus_http_request_uri" value="/test"/>

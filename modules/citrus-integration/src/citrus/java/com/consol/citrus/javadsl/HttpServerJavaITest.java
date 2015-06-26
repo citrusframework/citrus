@@ -48,7 +48,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .header("Content-Type", "text/xml;charset=UTF-8")
+                    .header("Content-Type", "text/xml")
                     .header("Accept", "text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .header("citrus_http_method", "POST")
@@ -96,7 +96,7 @@ public class HttpServerJavaITest extends TestNGCitrusTestBuilder {
                                 "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .header("Content-Type", "text/xml;charset=UTF-8")
+                    .header("Content-Type", "text/xml")
                     .header("Accept", "text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .header("citrus_http_method", "POST")

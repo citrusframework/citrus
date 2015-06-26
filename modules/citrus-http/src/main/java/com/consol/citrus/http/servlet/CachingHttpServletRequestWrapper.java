@@ -19,10 +19,12 @@ package com.consol.citrus.http.servlet;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.util.FileCopyUtils;
 
 /**
@@ -59,6 +61,21 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
         private RequestCachingInputStream() {
             this.is = new ByteArrayInputStream(body);
+        }
+
+        @Override
+        public boolean isFinished() {
+            return is.available() == 0;
+        }
+
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setReadListener(ReadListener readListener) {
+            throw new CitrusRuntimeException("Unsupported operation");
         }
 
         @Override

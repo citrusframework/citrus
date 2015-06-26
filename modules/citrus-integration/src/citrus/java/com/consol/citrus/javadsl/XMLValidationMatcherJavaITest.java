@@ -49,7 +49,7 @@ public class XMLValidationMatcherJavaITest extends TestNGCitrusTestBuilder {
                                   "<timestamp>@ignore@</timestamp>" +
                                 "</data>')@')</text>" +
                                 "</testRequestMessage>")
-                    .header("Content-Type", "text/xml;charset=UTF-8")
+                    .header("Content-Type", "text/xml")
                     .header("Accept", "text/xml, */*")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                     .header("citrus_http_method", "POST")

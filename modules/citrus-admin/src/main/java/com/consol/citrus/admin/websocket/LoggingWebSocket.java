@@ -16,7 +16,8 @@
 
 package com.consol.citrus.admin.websocket;
 
-import org.eclipse.jetty.websocket.WebSocket;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.*;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +31,18 @@ import java.util.*;
  * @author Martin.Maher@consol.de
  * @since 1.3
  */
-public class LoggingWebSocket implements WebSocket.OnTextMessage {
+@WebSocket
+public class LoggingWebSocket {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger LOG = LoggerFactory.getLogger(LoggingWebSocket.class);
 
     /**
-     * Web Socket connections
-     * TODO MM thread safe
+     * Web Socket sessions
      */
-    private List<Connection> connections = new ArrayList<Connection>();
+    private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());
 
     /**
      * Default constructor.
@@ -55,65 +58,67 @@ public class LoggingWebSocket implements WebSocket.OnTextMessage {
         timer.schedule(task, 60000, 60000);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onOpen(Connection connection) {
-        LOG.info("Accepted a new connection");
-        this.connections.add(connection);
+    @SuppressWarnings("unused")
+    @OnWebSocketConnect
+    public void handleConnect(Session session) {
+        LOG.info("Accepted a new session");
+        sessions.add(session);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings({"PMD.CloseResource"})
-    public void onClose(int closeCode, String message) {
-        LOG.debug("Web socket connection closed");
-        Iterator<Connection> itor = connections.iterator();
-        while (itor.hasNext()) {
-            Connection connection = itor.next();
-            if (connection == null || !connection.isOpen()) {
-                itor.remove();
+    @SuppressWarnings({"PMD.CloseResource", "unused"})
+    @OnWebSocketClose
+    public void handleClose(int statusCode, String reason) {
+        LOG.info(String.format("Closing session (%s:%s)", statusCode, reason));
+        for (Session session : sessions) {
+            if (session == null || !session.isOpen()) {
+                sessions.remove(session);
             }
         }
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onMessage(String data) {
-        LOG.info("Received web socket client message: " + data);
+    @SuppressWarnings("unused")
+    @OnWebSocketMessage
+    public void handleMessage(String message) {
+        LOG.info(String.format("Received message from client: %s", message));
+    }
+
+    @SuppressWarnings("unused")
+    @OnWebSocketError
+    public void handleError(Throwable error) {
+        LOG.warn("Error in websocket", error);
     }
 
     /**
      * Send ping event.
      */
     @SuppressWarnings("unchecked")
-    public void ping() {
+    private void ping() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("event", SocketEvent.PING.name());
         push(jsonObject);
     }
 
+
     /**
      * Push event to connected clients.
-     * @param event
+     *
+     * @param event the event to send to the connected clients
      */
     @SuppressWarnings({"PMD.CloseResource"})
     protected void push(JSONObject event) {
-        Iterator<Connection> itor = connections.iterator();
-        while (itor.hasNext()) {
-            Connection connection = itor.next();
-            if (connection != null && connection.isOpen()) {
-                try {
-                    connection.sendMessage(event.toString());
-                } catch (IOException e) {
-                    LOG.error("Error sending message", e);
-                }
-            } else {
-                itor.remove();
-            }
+        for (Session session : sessions) {
+            sendToSession(session, event);
         }
     }
+
+    private void sendToSession(Session session, JSONObject event) {
+        try {
+            if (session != null && session.isOpen()) {
+                session.getRemote().sendString(event.toString());
+            }
+        } catch (IOException e) {
+            LOG.error("Error sending message", e);
+        }
+    }
+
 }
