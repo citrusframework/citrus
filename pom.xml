@@ -168,7 +168,7 @@
     <jetty.version>8.1.16.v20140903</jetty.version>
     <testng.version>6.8.8</testng.version>
     <slf4j.version>1.7.7</slf4j.version>
-    <arquillian.version>1.1.7.Final</arquillian.version>
+    <arquillian.version>1.1.8.Final</arquillian.version>
     <sonar.host.url>http://labs.consol.de/sonar</sonar.host.url>
     <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
     <docbkx.img.path>images</docbkx.img.path>
