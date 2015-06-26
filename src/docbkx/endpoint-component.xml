@@ -88,9 +88,9 @@
   <para>The optional parameters get directly set as endpoint configuration. You can use primitive values as well as Spring bean id references. Citrus will automatically detect the target parameter type and resolve the value to a Spring bean
     in the application context if necessary. If you use some unknown parameter Citrus will raise an exception at runtime as the endpoint could not be created properly.</para>
 
-  <para>In synchronous communication we always reuse endpoint components in order to receive synchronous messages on a reply destination. Now when using dynamic endpoints that get created at runtime we might not be able to receive the
-    synchronous message. Citrus caches endpoints created at runtime so you can just use the exact same endpoint uri in your test case to get the cached endpoint instance. Then synchronous communication will work just as it is done with
-  static endpoint components:</para>
+  <para>In synchronous communication we have to reuse endpoint components in order to receive synchronous messages on reply destinations. This is a problem when using dynamic endpoints as the endpoints get created at runtime. Citrus uses a
+    caching of endpoints that get created at runtime. Following from that we have to use the exact same endpoint uri in your test case in order to get the cached endpoint instance. With this little trick synchronous communication will work
+    just as it is done with static endpoint components. Have a look at this sample test:</para>
 
   <programlisting>&lt;testcase name=&quot;DynamicEndpointTest&quot;&gt;
     &lt;actions&gt;
@@ -112,8 +112,54 @@
     &lt;/actions&gt;
 &lt;/testcase&gt;</programlisting>
 
-  <para>As you can see we used the exact dynamic endpoint uri in both send and receive actions. Citrus is then able to reuse the same dynamic endpoint and the synchronous reply will be received as expected. Once again the dynamic endpoint uri
-    mechanism provides a fast way to write test cases in Citrus with less configuration. But you should consider to use the static endpoint components defined in the basic Spring bean application context for endpoints that are heavily reused
-    in multiple test cases.</para>
+  <para>As you can see we used the exact dynamic endpoint uri in both send and receive actions. Citrus is then able to reuse the same dynamic endpoint and the synchronous reply will be received as expected. However the reuse of exactly the same
+    endpoint uri might get annoying as we also have to copy endpoint uri parameters and so on.</para>
+
+<programlisting>&lt;testcase name=&quot;DynamicEndpointTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;send endpoint=&quot;http://localhost:8080/HelloService?user=1234567&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                [...]
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+
+        &lt;receive endpoint=&quot;http://localhost:8080/HelloService?user=1234567&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                [...]
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/receive&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+
+  <para>We have to use the exact same endpoint uri when receiving the synchronous service response. This is not very straight forward. This is why Citrus also supports dynamic endpoint names. With a special endpoint uri parameter called
+    <emphasis>endpointName</emphasis> you can name the dynamic endpoint. In a corresponding receive action you just use the endpoint name as reference which makes life more easy:</para>
+
+  <programlisting>&lt;testcase name=&quot;DynamicEndpointTest&quot;&gt;
+    &lt;actions&gt;
+        &lt;send endpoint=&quot;http://localhost:8080/HelloService?endpointName=myHttpClient&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                [...]
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+
+        &lt;receive endpoint=&quot;http://localhost?endpointName=myHttpClient&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                [...]
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/receive&gt;
+    &lt;/actions&gt;
+&lt;/testcase&gt;</programlisting>
+
+  <para>So we can reference the dynamic endpoint with the given name. The internal <emphasis>endpointName</emphasis> uri parameter is automatically removed before sending out messages. Once again the dynamic endpoint uri mechanism provides a fast
+    way to write test cases in Citrus with less configuration. But you should consider to use the static endpoint components defined in the basic Spring bean application context for endpoints that are heavily reused in multiple test cases.</para>
 
 </chapter>

@@ -15,10 +15,31 @@
   </properties>
   
   <body>
-    <release version="2.2" date="01.05.2015" description="2.2 release">
-      <action dev="christophd" type="add">
-        CITRUS-249 Arquillian integration
-      </action>
+    <release version="2.2" date="26.06.2015" description="2.2 release">
+        <action dev="christophd" type="fix">
+          CITRUS-261 Http server response message tracing
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-260 Customize dynamic endpoint names
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-259 Nullpointer in SoapMessageConverter
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-254 Citrus annotation support in JUnit
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-252 ANT tasks and tutorial
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-250 Start/Stop server action
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-249 Arquillian integration
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-245 Iterating action container in loops
+        </action>
     </release>
 
     <release version="2.1" date="20.02.2015" description="2.1 release">
