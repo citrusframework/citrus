@@ -13,14 +13,6 @@
   <artifactId>citrus-jms</artifactId>
   <name>citrus-jms</name>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>

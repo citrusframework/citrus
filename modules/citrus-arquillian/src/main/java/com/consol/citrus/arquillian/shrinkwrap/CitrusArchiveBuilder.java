@@ -16,6 +16,7 @@
 
 package com.consol.citrus.arquillian.shrinkwrap;
 
+import com.consol.citrus.Citrus;
 import org.jboss.shrinkwrap.resolver.api.FormatStage;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
@@ -40,7 +41,7 @@ public final class CitrusArchiveBuilder {
     private boolean offline = true;
 
     /** Citrus version to use */
-    private String version = "2.2";
+    private String version = Citrus.getVersion();
 
     /** List of Citrus artifact names to resolve */
     private List<String> artifactCoordinates = new ArrayList<>();

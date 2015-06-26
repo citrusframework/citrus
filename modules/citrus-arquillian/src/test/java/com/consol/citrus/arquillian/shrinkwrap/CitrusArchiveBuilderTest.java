@@ -16,14 +16,25 @@
 
 package com.consol.citrus.arquillian.shrinkwrap;
 
+import com.consol.citrus.Citrus;
+import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CitrusArchiveBuilderTest {
+
+    @BeforeClass
+    public void setCitrusVersion() {
+        Field version = ReflectionUtils.findField(Citrus.class, "version");
+        ReflectionUtils.makeAccessible(version);
+        ReflectionUtils.setField(version, Citrus.class, "2.2");
+    }
 
     @Test
     public void testResolveAll() throws Exception {
@@ -41,7 +52,7 @@ public class CitrusArchiveBuilderTest {
             artifactFileNames.add(artifactResource.getName());
         }
 
-        String version = "2.2";
+        String version = Citrus.getVersion();
         Assert.assertTrue(artifactFileNames.contains("citrus-core-" + version + ".jar"));
         Assert.assertTrue(artifactFileNames.contains("citrus-jms-" + version + ".jar"));
         Assert.assertTrue(artifactFileNames.contains("citrus-http-" + version + ".jar"));
@@ -56,7 +67,7 @@ public class CitrusArchiveBuilderTest {
 
     @Test
     public void testResolveAllWithVersion() throws Exception {
-        String version = "2.1";
+        String version = Citrus.getVersion();
         File[] artifactResources = CitrusArchiveBuilder
                 .version(version)
                 .transitivity(false)
@@ -94,7 +105,7 @@ public class CitrusArchiveBuilderTest {
         Assert.assertNotNull(artifactResources);
         Assert.assertEquals(artifactResources.length, 1);
 
-        Assert.assertEquals(artifactResources[0].getName(), "citrus-jms-2.2.jar");
+        Assert.assertEquals(artifactResources[0].getName(), "citrus-jms-" + Citrus.getVersion() + ".jar");
     }
 
     @Test
@@ -109,6 +120,6 @@ public class CitrusArchiveBuilderTest {
         Assert.assertNotNull(artifactResources);
         Assert.assertEquals(artifactResources.length, 1);
 
-        Assert.assertEquals(artifactResources[0].getName(), "citrus-core-2.2.jar");
+        Assert.assertEquals(artifactResources[0].getName(), "citrus-core-" + Citrus.getVersion() + ".jar");
     }
 }

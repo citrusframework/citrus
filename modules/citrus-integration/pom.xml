@@ -22,15 +22,6 @@
   <build>
     <plugins>
         <plugin>
-          <groupId>com.consol.citrus.mvn</groupId>
-          <artifactId>citrus-maven-plugin</artifactId>
-          <version>${project.version}</version>
-          <configuration>
-            <targetPackage>com.consol.citrus</targetPackage>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
           <configuration>

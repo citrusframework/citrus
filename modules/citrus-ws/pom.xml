@@ -13,13 +13,6 @@
   <artifactId>citrus-ws</artifactId>
   <name>citrus-ws</name>
   
-  <build>
-  	<plugins>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-        </plugin>
-  	</plugins>
-  </build>
   <dependencies>
   	<!-- Citrus Internal -->
     <dependency>
