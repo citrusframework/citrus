@@ -24,8 +24,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CitrusArchiveBuilderTest {
 
@@ -33,7 +32,7 @@ public class CitrusArchiveBuilderTest {
     public void setCitrusVersion() {
         Field version = ReflectionUtils.findField(Citrus.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "2.2");
+        ReflectionUtils.setField(version, Citrus.class, "2.2-SNAPSHOT");
     }
 
     @Test
@@ -47,29 +46,22 @@ public class CitrusArchiveBuilderTest {
         Assert.assertNotNull(artifactResources);
         Assert.assertEquals(artifactResources.length, 10);
 
-        List<String> artifactFileNames = new ArrayList<>();
-        for (File artifactResource : artifactResources) {
-            artifactFileNames.add(artifactResource.getName());
-        }
-
-        String version = Citrus.getVersion();
-        Assert.assertTrue(artifactFileNames.contains("citrus-core-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-jms-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-http-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-ws-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-ftp-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-camel-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-ssh-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-mail-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-vertx-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-java-dsl-" + version + ".jar"));
+        verifyArtifact(artifactResources, "citrus-core-.*jar");
+        verifyArtifact(artifactResources, "citrus-jms-.*jar");
+        verifyArtifact(artifactResources, "citrus-http-.*jar");
+        verifyArtifact(artifactResources, "citrus-ws-.*jar");
+        verifyArtifact(artifactResources, "citrus-ftp-.*jar");
+        verifyArtifact(artifactResources, "citrus-camel-.*jar");
+        verifyArtifact(artifactResources, "citrus-ssh-.*jar");
+        verifyArtifact(artifactResources, "citrus-mail-.*jar");
+        verifyArtifact(artifactResources, "citrus-vertx-.*jar");
+        verifyArtifact(artifactResources, "citrus-java-dsl-.*jar");
     }
 
     @Test
     public void testResolveAllWithVersion() throws Exception {
-        String version = Citrus.getVersion();
         File[] artifactResources = CitrusArchiveBuilder
-                .version(version)
+                .version(Citrus.getVersion())
                 .transitivity(false)
                 .all()
                 .build();
@@ -82,16 +74,16 @@ public class CitrusArchiveBuilderTest {
             artifactFileNames.add(artifactResource.getName());
         }
 
-        Assert.assertTrue(artifactFileNames.contains("citrus-core-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-jms-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-http-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-ws-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-ftp-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-camel-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-ssh-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-mail-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-vertx-" + version + ".jar"));
-        Assert.assertTrue(artifactFileNames.contains("citrus-java-dsl-" + version + ".jar"));
+        verifyArtifact(artifactResources, "citrus-core-.*jar");
+        verifyArtifact(artifactResources, "citrus-jms-.*jar");
+        verifyArtifact(artifactResources, "citrus-http-.*jar");
+        verifyArtifact(artifactResources, "citrus-ws-.*jar");
+        verifyArtifact(artifactResources, "citrus-ftp-.*jar");
+        verifyArtifact(artifactResources, "citrus-camel-.*jar");
+        verifyArtifact(artifactResources, "citrus-ssh-.*jar");
+        verifyArtifact(artifactResources, "citrus-mail-.*jar");
+        verifyArtifact(artifactResources, "citrus-vertx-.*jar");
+        verifyArtifact(artifactResources, "citrus-java-dsl-.*jar");
     }
 
     @Test
@@ -105,7 +97,7 @@ public class CitrusArchiveBuilderTest {
         Assert.assertNotNull(artifactResources);
         Assert.assertEquals(artifactResources.length, 1);
 
-        Assert.assertEquals(artifactResources[0].getName(), "citrus-jms-" + Citrus.getVersion() + ".jar");
+        verifyArtifact(artifactResources, "citrus-jms-.*jar");
     }
 
     @Test
@@ -120,6 +112,16 @@ public class CitrusArchiveBuilderTest {
         Assert.assertNotNull(artifactResources);
         Assert.assertEquals(artifactResources.length, 1);
 
-        Assert.assertEquals(artifactResources[0].getName(), "citrus-core-" + Citrus.getVersion() + ".jar");
+        verifyArtifact(artifactResources, "citrus-core-.*jar");
+    }
+
+    private void verifyArtifact(File[] artifactResources, String expectedFileNamePattern) {
+        for (File artifactResource : artifactResources) {
+            if (artifactResource.getName().matches(expectedFileNamePattern)) {
+                return;
+            }
+        }
+
+        Assert.fail("Missing artifact resource for file name pattern: " + expectedFileNamePattern);
     }
 }

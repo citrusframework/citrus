@@ -16,15 +16,21 @@
 
 package com.consol.citrus.arquillian.client;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import com.consol.citrus.arquillian.shrinkwrap.CitrusArchiveBuilder;
 import org.easymock.EasyMock;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.test.spi.TestClass;
+import org.jboss.shrinkwrap.api.*;
 import org.jboss.shrinkwrap.api.spec.*;
-import org.testng.annotations.Test;
+import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.spec.*;
+import org.springframework.util.ReflectionUtils;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
+import java.lang.reflect.Field;
 import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
@@ -34,81 +40,110 @@ public class CitrusArchiveProcessorTest {
     private CitrusArchiveProcessor archiveProcessor = new CitrusArchiveProcessor();
     private Instance<CitrusConfiguration> configurationInstance = EasyMock.createMock(Instance.class);
 
-    private EnterpriseArchive enterpriseArchive = EasyMock.createMock(EnterpriseArchive.class);
-    private JavaArchive javaArchive = EasyMock.createMock(JavaArchive.class);
-    private WebArchive webArchive = EasyMock.createMock(WebArchive.class);
+    private CitrusConfiguration configuration;
+
+    @BeforeClass
+    public void setCitrusVersion() {
+        Field version = ReflectionUtils.findField(Citrus.class, "version");
+        ReflectionUtils.makeAccessible(version);
+        ReflectionUtils.setField(version, Citrus.class, "2.2-SNAPSHOT");
+    }
+
+    @BeforeMethod
+    public void prepareConfiguration() throws IllegalAccessException {
+        configuration = CitrusConfiguration.from(new Properties());
+
+        reset(configurationInstance);
+        expect(configurationInstance.get()).andReturn(configuration).anyTimes();
+        replay(configurationInstance);
+
+        InjectionHelper.inject(archiveProcessor, "configurationInstance", configurationInstance);
+    }
 
     @Test
     public void testProcessEnterpriseArchive() throws Exception {
-        CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
-
-        reset(configurationInstance, enterpriseArchive, javaArchive);
-
-        expect(configurationInstance.get()).andReturn(configuration).anyTimes();
-        expect(enterpriseArchive.addAsModules(CitrusArchiveBuilder.latestVersion().all().build())).andReturn(enterpriseArchive).once();
-
-        replay(configurationInstance, enterpriseArchive, javaArchive);
-
-        InjectionHelper.inject(archiveProcessor, "configurationInstance", configurationInstance);
-
+        EnterpriseArchive enterpriseArchive = new EnterpriseArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
         archiveProcessor.process(enterpriseArchive, new TestClass(this.getClass()));
-        archiveProcessor.process(javaArchive, new TestClass(this.getClass()));
+        verifyArtifact(enterpriseArchive, "/citrus-core-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-jms-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-http-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-ws-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-ftp-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-camel-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-ssh-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-mail-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-vertx-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-java-dsl-.*jar");
 
-        verify(configurationInstance, enterpriseArchive, javaArchive);
+        JavaArchive javaArchive = new JavaArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
+        archiveProcessor.process(javaArchive, new TestClass(this.getClass()));
+        Assert.assertEquals(javaArchive.getContent().size(), 0L);
+
+        verify(configurationInstance);
     }
 
     @Test
     public void testProcessExplicitCitrusVersion() throws Exception {
-        CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
-        configuration.setCitrusVersion("2.1");
+        configuration.setCitrusVersion(Citrus.getVersion());
 
-        reset(configurationInstance, enterpriseArchive);
-
-        expect(configurationInstance.get()).andReturn(configuration).anyTimes();
-        expect(enterpriseArchive.addAsModules(CitrusArchiveBuilder.version("2.1").all().build())).andReturn(enterpriseArchive).once();
-
-        replay(configurationInstance, enterpriseArchive);
-
-        InjectionHelper.inject(archiveProcessor, "configurationInstance", configurationInstance);
-
+        EnterpriseArchive enterpriseArchive = new EnterpriseArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
         archiveProcessor.process(enterpriseArchive, new TestClass(this.getClass()));
+        verifyArtifact(enterpriseArchive, "/citrus-core-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-jms-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-http-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-ws-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-ftp-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-camel-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-ssh-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-mail-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-vertx-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-java-dsl-.*jar");
 
-        verify(configurationInstance, enterpriseArchive);
+        verify(configurationInstance);
     }
 
     @Test
     public void testProcessWebArchive() throws Exception {
-        CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
-
-        reset(configurationInstance, webArchive);
-
-        expect(configurationInstance.get()).andReturn(configuration).anyTimes();
-        expect(webArchive.addAsLibraries(CitrusArchiveBuilder.latestVersion().all().build())).andReturn(webArchive).once();
-
-        replay(configurationInstance, webArchive);
-
-        InjectionHelper.inject(archiveProcessor, "configurationInstance", configurationInstance);
-
+        WebArchive webArchive = new WebArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
         archiveProcessor.process(webArchive, new TestClass(this.getClass()));
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-core-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-jms-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-http-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-ws-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-ftp-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-camel-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-ssh-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-mail-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-vertx-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-java-dsl-.*jar");
 
-        verify(configurationInstance, webArchive);
+        verify(configurationInstance);
     }
 
     @Test
     public void testProcessNoAutoPackage() throws Exception {
-        CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
         configuration.setAutoPackage(false);
 
-        reset(configurationInstance, enterpriseArchive, javaArchive, webArchive);
-        expect(configurationInstance.get()).andReturn(configuration).anyTimes();
-        replay(configurationInstance, enterpriseArchive, javaArchive, webArchive);
-
-        InjectionHelper.inject(archiveProcessor, "configurationInstance", configurationInstance);
-
+        EnterpriseArchive enterpriseArchive = new EnterpriseArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
         archiveProcessor.process(enterpriseArchive, new TestClass(this.getClass()));
+        Assert.assertEquals(enterpriseArchive.getContent().size(), 0L);
+        JavaArchive javaArchive = new JavaArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
         archiveProcessor.process(javaArchive, new TestClass(this.getClass()));
+        Assert.assertEquals(javaArchive.getContent().size(), 0L);
+        WebArchive webArchive = new WebArchiveImpl(new MemoryMapArchiveImpl(new ConfigurationBuilder().build()));
         archiveProcessor.process(webArchive, new TestClass(this.getClass()));
+        Assert.assertEquals(webArchive.getContent().size(), 0L);
 
-        verify(configurationInstance, enterpriseArchive, javaArchive,  webArchive);
+        verify(configurationInstance);
+    }
+
+    private void verifyArtifact(Archive archive, String expectedFileNamePattern) {
+        for (Object path : archive.getContent().keySet()) {
+            if (((ArchivePath) path).get().matches(expectedFileNamePattern)) {
+                return;
+            }
+        }
+
+        Assert.fail("Missing artifact resource for file name pattern: " + expectedFileNamePattern);
     }
 }
