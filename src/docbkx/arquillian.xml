@@ -16,7 +16,7 @@
       Arquillian world. First of all lets have a look at the extension descriptor properties settable via <emphasis>arquillian.xml</emphasis>:</para>
 
     <programlisting>&lt;extension qualifier=&quot;citrus&quot;&gt;
-    &lt;property name=&quot;citrusVersion&quot;&gt;2.2&lt;/property&gt;
+    &lt;property name=&quot;citrusVersion&quot;&gt;2.2.1-SNAPSHOT&lt;/property&gt;
     &lt;property name=&quot;autoPackage&quot;&gt;true&lt;/property&gt;
     &lt;property name=&quot;suiteName&quot;&gt;citrus-arquillian-suite&lt;/property&gt;
 &lt;/extension&gt;</programlisting>
@@ -39,7 +39,7 @@
     <programlisting>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-arquillian&lt;/artifactId&gt;
-  &lt;version&gt;2.2&lt;/version&gt;
+  &lt;version&gt;2.2.1-SNAPSHOT&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</programlisting>
 
