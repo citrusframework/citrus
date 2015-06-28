@@ -63,7 +63,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
      * Default constructor using endpoint configuration.
      * @param endpointConfiguration
      */
-    protected HttpClient(HttpEndpointConfiguration endpointConfiguration) {
+    public HttpClient(HttpEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
         this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");

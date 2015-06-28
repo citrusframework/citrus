@@ -117,11 +117,7 @@
         </message>
         <header>
           <element name="SOAPAction" value='"HelloService/sayHello"'/>
-          <element name="Content-Type" value="text/xml;charset=utf-8"/>
-          <!--
-             TODO MM should be more robust or should ignore case when doing charset check
-            http://stackoverflow.com/questions/19391221/http-are-character-set-names-case-sensitive
-            -->
+          <element name="Content-Type" value="text/xml;charset=UTF-8"/>
         </header>
       </receive>
 
