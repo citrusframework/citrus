@@ -15,6 +15,10 @@
   </properties>
   
   <body>
+    <release version="2.2.1" date="01.07.2015" description="2.2.1 release">
+
+    </release>
+
     <release version="2.2" date="26.06.2015" description="2.2 release">
         <action dev="christophd" type="fix">
           CITRUS-261 Http server response message tracing
