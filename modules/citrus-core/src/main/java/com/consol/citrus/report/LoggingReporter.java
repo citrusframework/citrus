@@ -20,7 +20,6 @@ import com.consol.citrus.*;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.report.TestResult.RESULT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -56,13 +55,16 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         log.info("CITRUS TEST RESULTS");
         newLine();
 
-        for (TestResult testResult : testResults) {
-            log.info(testResult.toString());
+        testResults.doWithResults(new TestResults.ResultCallback() {
+            @Override
+            public void doWithResult(TestResult testResult) {
+                log.info(testResult.toString());
 
-            if (testResult.getResult().equals(RESULT.FAILURE)) {
-                log.info(testResult.getFailureCause());
+                if (testResult.isFailed()) {
+                    log.info(testResult.getFailureCause());
+                }
             }
-        }
+        });
 
         newLine();
         log.info("Number of skipped tests: " + testResults.getSkipped() + " (" + testResults.getSkippedPercentage() + "%)");
@@ -78,11 +80,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
-        if (cause != null) {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
-        } else {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, test.getParameters()));
-        }
+        testResults.addResult(TestResult.failed(test.getName(), cause, test.getParameters()));
 
         newLine();
         log.error("TEST FAILED " + test.getName() + " <" + test.getPackageName() + "> Nested exception is: ", cause);
@@ -98,7 +96,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
         separator();
         newLine();
 
-        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
+        testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
     }
 
     @Override
@@ -115,7 +113,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
 
     @Override
     public void onTestSuccess(TestCase test) {
-        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
+        testResults.addResult(TestResult.success(test.getName(), test.getParameters()));
 
         newLine();
         log.info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")");

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,34 +16,30 @@
 
 package com.consol.citrus.dsl.definition;
 
-import com.consol.citrus.container.Assert;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.container.TestActionContainer;
+
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3
+ * @since 2.3
  */
-public class AssertDefinition extends AbstractActionContainerDefinition<Assert> {
+public class AbstractActionContainerDefinition<T extends TestActionContainer> extends AbstractActionDefinition<T> {
 
-	public AssertDefinition(Assert action) {
-	    super(action);
-    }
-	
-	/**
-	 * Expected exception during execution.
-	 * @param exception
-	 * @return
-	 */
-	public AssertDefinition exception(Class<? extends Throwable> exception) {
-	    action.setException(exception);
-	    return this;
-	}
-	
     /**
-     * Expect error message in exception.
-     * @param message
+     * Default constructor with test action.
+     * @param action
      */
-	public AssertDefinition message(String message) {
-		action.setMessage(message);
-		return this;
-	}
+    public AbstractActionContainerDefinition(T action) {
+        super(action);
+    }
+
+    /**
+     * Gets the test action container nested actions.
+     * @return
+     */
+    public List<TestAction> getActions() {
+        return super.getAction().getActions();
+    }
 }

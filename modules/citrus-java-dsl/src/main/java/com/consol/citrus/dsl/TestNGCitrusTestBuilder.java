@@ -22,6 +22,7 @@ import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -55,13 +56,21 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     /** Test builder delegate */
     private CitrusTestBuilder testBuilder;
 
+    /**
+     * Initialize test case and variables. Must be done with each test run.
+     */
+    public void init() {
+        testBuilder = new CitrusTestBuilder(applicationContext);
+        name(this.getClass().getSimpleName());
+        packageName(this.getClass().getPackage().getName());
+    }
+
     @Override
     public void run(final IHookCallBack callBack, ITestResult testResult) {
         Method method = testResult.getMethod().getConstructorOrMethod().getMethod();
 
         if (method != null && method.getAnnotation(CitrusTest.class) != null) {
             CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
-
             init();
 
             if (StringUtils.hasText(citrusTestAnnotation.name())) {
@@ -110,15 +119,6 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
         } else {
             super.run(callBack, testResult);
         }
-    }
-
-    /**
-     * Initialize test case and variables. Must be done with each test run.
-     */
-    public void init() {
-        testBuilder = new CitrusTestBuilder(applicationContext);
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
     }
 
     @Override
@@ -449,6 +449,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     @Override
     public void doFinally(TestAction ... actions) {
         testBuilder.doFinally(actions);
+    }
+
+    @Override
+    public PositionHandle positionHandle() {
+        return testBuilder.positionHandle();
     }
 
     /**

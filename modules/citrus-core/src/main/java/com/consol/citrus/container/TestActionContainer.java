@@ -26,7 +26,7 @@ import java.util.List;
  * 
  * @author Christoph Deppisch
  */
-public interface TestActionContainer {
+public interface TestActionContainer extends TestAction {
 
     /**
      * Sets the embedded test actions to execute within this container.

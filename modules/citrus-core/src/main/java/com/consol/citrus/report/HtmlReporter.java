@@ -16,10 +16,8 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestResult.RESULT;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -83,37 +81,40 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
      */
     public void generateTestResults() {
         String report = "";
-        StringBuilder reportDetails = new StringBuilder();
+        final StringBuilder reportDetails = new StringBuilder();
         
         log.info("Generating HTML test report ...");
         
         try {
-            String testDetails = FileUtils.readToString(TEST_DETAIL_TEMPLATE);
-            String unknown = "N/A";
+            final String testDetails = FileUtils.readToString(TEST_DETAIL_TEMPLATE);
+            final String unknown = "N/A";
             
-            for (TestResult result : testResults) {
-                ResultDetail detail = details.get(result.getTestName());
-                
-                Properties detailProps = new Properties();
-                detailProps.put("test.style.class", result.getResult().toString().toLowerCase());
-                detailProps.put("test.case.name", result.getTestName());
-                detailProps.put("test.author", !StringUtils.hasText(detail.getMetaInfo().getAuthor()) ? unknown : detail.getMetaInfo().getAuthor());
-                detailProps.put("test.status", detail.getMetaInfo().getStatus().toString());
-                detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? unknown : dateFormat.format(detail.getMetaInfo().getCreationDate()));
-                detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? unknown : detail.getMetaInfo().getLastUpdatedBy());
-                detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? unknown : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
-                detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? unknown : detail.getDescription());
-                detailProps.put("test.result", result.getResult().toString().toUpperCase());
-                
-                reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
-                
-                if (result.getResult().equals(RESULT.FAILURE) && result.getCause() != null) {
-                    reportDetails.append(getStackTraceHtml(result.getCause()));
+            testResults.doWithResults(new TestResults.ResultCallback() {
+                @Override
+                public void doWithResult(TestResult result) {
+                    ResultDetail detail = details.get(result.getTestName());
+
+                    Properties detailProps = new Properties();
+                    detailProps.put("test.style.class", result.getResult().toLowerCase());
+                    detailProps.put("test.case.name", result.getTestName());
+                    detailProps.put("test.author", !StringUtils.hasText(detail.getMetaInfo().getAuthor()) ? unknown : detail.getMetaInfo().getAuthor());
+                    detailProps.put("test.status", detail.getMetaInfo().getStatus().toString());
+                    detailProps.put("test.creation.date", detail.getMetaInfo().getCreationDate() == null ? unknown : dateFormat.format(detail.getMetaInfo().getCreationDate()));
+                    detailProps.put("test.updater", !StringUtils.hasText(detail.getMetaInfo().getLastUpdatedBy()) ? unknown : detail.getMetaInfo().getLastUpdatedBy());
+                    detailProps.put("test.update.date", detail.getMetaInfo().getLastUpdatedOn() == null ? unknown : dateFormat.format(detail.getMetaInfo().getLastUpdatedOn()));
+                    detailProps.put("test.description", !StringUtils.hasText(detail.getDescription()) ? unknown : detail.getDescription());
+                    detailProps.put("test.result", result.getResult());
+
+                    reportDetails.append(PropertyUtils.replacePropertiesInString(testDetails, detailProps));
+
+                    if (result.isFailed() && result.getCause() != null) {
+                        reportDetails.append(getStackTraceHtml(result.getCause()));
+                    }
                 }
-            }
+            });
 
             Properties reportProps = new Properties();
-            reportProps.put("test.cnt", Integer.toString(testResults.size()));
+            reportProps.put("test.cnt", Integer.toString(testResults.getSize()));
             reportProps.put("skipped.test.cnt", Integer.toString(testResults.getSkipped()));
             reportProps.put("skipped.test.pct", testResults.getSkippedPercentage());
             reportProps.put("failed.test.cnt", Integer.toString(testResults.getFailed()));
@@ -289,25 +290,20 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     public void onTestSuccess(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));        
+        testResults.addResult(TestResult.success(test.getName(), test.getParameters()));
     }
     
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         details.put(test.getName(), ResultDetail.build(test));
-        
-        if (cause != null) {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
-        } else {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, null, test.getParameters()));
-        }
+        testResults.addResult(TestResult.failed(test.getName(), cause, test.getParameters()));
     }
     
     @Override
     public void onTestSkipped(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
+        testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
     }
     
     /**

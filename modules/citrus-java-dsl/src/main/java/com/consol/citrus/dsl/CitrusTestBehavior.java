@@ -17,9 +17,7 @@
 package com.consol.citrus.dsl;
 
 import com.consol.citrus.TestAction;
-
-import java.util.List;
-import java.util.Map;
+import com.consol.citrus.dsl.util.PositionHandle;
 
 /**
  * Abstract Citrus test behavior provides interface method implementations for
@@ -30,33 +28,38 @@ import java.util.Map;
  */
 public abstract class CitrusTestBehavior extends CitrusTestBuilder implements TestBehavior {
 
+    /** Target test builder to add actions and variables on */
+    private TestBuilder target;
+
     /**
      * Subclasses must overwrite this apply building method in order
      * to add test action logic.
      */
     public abstract void apply();
 
-    /**
-     * Get this apply's test actions.
-     * @return
-     */
-    public List<TestAction> getTestActions() {
-        return getTestCase().getActions();
+    @Override
+    public void apply(TestBuilder target) {
+        this.target = target;
+        apply();
     }
 
-    /**
-     * Get this apply's finally test actions.
-     * @return
-     */
-    public List<TestAction> getFinallyActions() {
-        return getTestCase().getFinallyChain();
+    @Override
+    public void variable(String name, Object value) {
+        target.variable(name, value);
     }
 
-    /**
-     * Get this apply's test variables.
-     * @return
-     */
-    public Map<String, Object> getVariableDefinitions() {
-        return getVariables();
+    @Override
+    public void action(TestAction testAction) {
+        target.action(testAction);
+    }
+
+    @Override
+    public void doFinally(TestAction... actions) {
+        target.doFinally(actions);
+    }
+
+    @Override
+    public PositionHandle positionHandle() {
+        return target.positionHandle();
     }
 }

@@ -22,6 +22,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
@@ -405,6 +406,11 @@ public class JUnit4CitrusTestBuilder extends AbstractJUnit4CitrusTest implements
     @Override
     public void doFinally(TestAction ... actions) {
         testBuilder.doFinally(actions);
+    }
+
+    @Override
+    public PositionHandle positionHandle() {
+        return testBuilder.positionHandle();
     }
 
     /**

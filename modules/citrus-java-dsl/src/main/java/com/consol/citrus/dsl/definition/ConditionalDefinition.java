@@ -25,7 +25,7 @@ import com.consol.citrus.container.Conditional;
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
  */
-public class ConditionalDefinition extends AbstractActionDefinition<Conditional> {
+public class ConditionalDefinition extends AbstractActionContainerDefinition<Conditional> {
 
 	public ConditionalDefinition(Conditional action) {
 	    super(action);

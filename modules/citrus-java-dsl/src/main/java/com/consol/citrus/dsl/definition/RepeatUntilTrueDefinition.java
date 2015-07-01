@@ -25,7 +25,7 @@ import com.consol.citrus.container.RepeatUntilTrue;
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
  */
-public class RepeatUntilTrueDefinition extends AbstractActionDefinition<RepeatUntilTrue> {
+public class RepeatUntilTrueDefinition extends AbstractActionContainerDefinition<RepeatUntilTrue> {
 
 	public RepeatUntilTrueDefinition(RepeatUntilTrue action) {
 	    super(action);

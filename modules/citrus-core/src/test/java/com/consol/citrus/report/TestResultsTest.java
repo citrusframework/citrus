@@ -16,6 +16,7 @@
 
 package com.consol.citrus.report;
 
+import com.consol.citrus.TestResult;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,8 +30,8 @@ public class TestResultsTest {
     public void testSuccessResults() throws Exception {
         TestResults results = new TestResults();
 
-        results.add(new TestResult("OkTest", TestResult.RESULT.SUCCESS));
-        results.add(new TestResult("OkTest2", TestResult.RESULT.SUCCESS));
+        results.addResult(TestResult.success("OkTest"));
+        results.addResult(TestResult.success("OkTest2"));
 
         Assert.assertEquals(results.getSuccess(), 2);
         Assert.assertEquals(results.getSuccessPercentage(), "100.0");
@@ -44,9 +45,9 @@ public class TestResultsTest {
     public void testFailedResults() throws Exception {
         TestResults results = new TestResults();
 
-        results.add(new TestResult("OkTest", TestResult.RESULT.SUCCESS));
-        results.add(new TestResult("FailedTest", TestResult.RESULT.FAILURE, new CitrusRuntimeException("This went wrong")));
-        results.add(new TestResult("OkTest2", TestResult.RESULT.SUCCESS));
+        results.addResult(TestResult.success("OkTest"));
+        results.addResult(TestResult.failed("FailedTest", new CitrusRuntimeException("This went wrong")));
+        results.addResult(TestResult.success("OkTest2"));
 
         Assert.assertEquals(results.getSuccess(), 2);
         Assert.assertEquals(results.getSuccessPercentage(), "66.7");
@@ -60,9 +61,9 @@ public class TestResultsTest {
     public void testSkippedResults() throws Exception {
         TestResults results = new TestResults();
 
-        results.add(new TestResult("OkTest", TestResult.RESULT.SUCCESS));
-        results.add(new TestResult("FailedTest", TestResult.RESULT.FAILURE, new CitrusRuntimeException("This went wrong")));
-        results.add(new TestResult("SkippedTest", TestResult.RESULT.SKIP));
+        results.addResult(TestResult.success("OkTest"));
+        results.addResult(TestResult.failed("FailedTest", new CitrusRuntimeException("This went wrong")));
+        results.addResult(TestResult.skipped("SkippedTest"));
 
 
         Assert.assertEquals(results.getSuccess(), 1);

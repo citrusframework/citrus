@@ -21,6 +21,7 @@ import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -40,11 +41,6 @@ import java.util.Date;
  * @since 1.3.1
  */
 public interface TestBuilder extends ApplicationContextAware {
-
-    /**
-     * Initializing method prepares test builder members for usage.
-     */
-    void init();
 
     /**
      * Set custom test case name.
@@ -540,4 +536,10 @@ public interface TestBuilder extends ApplicationContextAware {
      * @param actions
      */
     void doFinally(TestAction... actions);
+
+    /**
+     * Gets new position handle of current test action situation.
+     * @return
+     */
+    PositionHandle positionHandle();
 }

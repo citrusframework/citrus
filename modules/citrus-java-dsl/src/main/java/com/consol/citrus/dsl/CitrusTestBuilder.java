@@ -50,17 +50,20 @@ import java.util.*;
 public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
     /** This builders test case */
-    private TestCase testCase;
+    private final TestCase testCase = new TestCase();
 
     /** The test variables to set before execution */
-    private Map<String, Object> variables;
+    private Map<String, Object> variables= new LinkedHashMap<>();
 
     /** Spring bean application context */
     private ApplicationContext applicationContext;
 
     /** Default constructor */
     public CitrusTestBuilder() {
-        init();
+        testCase.setVariableDefinitions(variables);
+
+        name(this.getClass().getSimpleName());
+        packageName(this.getClass().getPackage().getName());
     }
 
     /**
@@ -68,8 +71,9 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      * @param applicationContext
      */
     public CitrusTestBuilder(ApplicationContext applicationContext) {
+        this();
+
         this.applicationContext = applicationContext;
-        init();
 
         try {
             if (applicationContext != null) {
@@ -81,18 +85,10 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     }
 
     /**
-     * Build an execute test case with new test context generated from Spring bean application context.
-     * If no Spring bean application context is set an exception is raised. Users may want to create proper test context
-     * instance themselves in case Spring application context is not present. Otherwise set application context before execution properly.
+     * Build and execute test case with new test context.
      */
     public void execute() {
-        if (applicationContext == null) {
-            throw new CitrusRuntimeException("Unable to create test context for test builder execution without Spring bean application context set properly");
-        }
-
-        TestContext context = applicationContext.getBean(TestContext.class);
-        context.setApplicationContext(applicationContext);
-        execute(context);
+        execute(createTestContext());
     }
 
     /**
@@ -103,17 +99,24 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     public void execute(TestContext context) {
         configure();
         build();
-        getTestCase().execute(context);
+        testCase.execute(context);
     }
 
-    @Override
-    public final void init() {
-        variables = new LinkedHashMap<String, Object>();
-        testCase = new TestCase();
-        testCase.setVariableDefinitions(variables);
+    /**
+     * Creates new test context from Spring bean application context.
+     * If no Spring bean application context is set an exception is raised. Users may want to create proper test context
+     * instance themselves in case Spring application context is not present.
+     * @return
+     */
+    protected TestContext createTestContext() {
+        if (applicationContext == null) {
+            throw new CitrusRuntimeException("Unable to create test context for test builder execution without Spring bean application context set properly");
+        }
 
-        name(this.getClass().getSimpleName());
-        packageName(this.getClass().getPackage().getName());
+        TestContext context = applicationContext.getBean(TestContext.class);
+        context.setApplicationContext(applicationContext);
+
+        return context;
     }
 
     /**
@@ -162,207 +165,215 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     @Override
     public CreateVariablesActionDefinition variables() {
         CreateVariablesActionDefinition definition = TestActions.createVariables();
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public CreateVariablesAction setVariable(String variableName, String value) {
         CreateVariablesAction action = TestActions.createVariable(variableName, value);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public void action(TestAction testAction) {
-        testCase.addTestAction(testAction);
+        List<TestAction> actions = null;
+        if (testAction instanceof AbstractActionContainerDefinition) {
+            actions = ((AbstractActionContainerDefinition) testAction).getActions();
+        } else if (testAction instanceof AbstractActionContainer) {
+            actions = ((AbstractActionContainer) testAction).getActions();
+        }
+
+        if (!CollectionUtils.isEmpty(actions)) {
+            for (TestAction action : actions) {
+                if (action instanceof AbstractActionDefinition<?>) {
+                    testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
+                } else if (!action.getClass().isAnonymousClass()) {
+                    testCase.getActions().remove(action);
+                }
+            }
+        }
+
+        if (testAction instanceof AbstractActionDefinition<?>) {
+            testCase.addTestAction(((AbstractActionDefinition<?>) testAction).getAction());
+        } else {
+            testCase.addTestAction(testAction);
+        }
     }
 
     @Override
     public void applyBehavior(TestBehavior behavior) {
         behavior.setApplicationContext(applicationContext);
-        behavior.init();
-        behavior.apply();
-
-        for (Map.Entry<String, Object> variable : behavior.getVariableDefinitions().entrySet()) {
-            variable(variable.getKey(), variable.getValue());
-        }
-
-        for (TestAction action : behavior.getTestActions()) {
-            action(action);
-        }
-
-        for (TestAction action : behavior.getFinallyActions()) {
-            testCase.getFinallyChain().add(action);
-        }
+        behavior.apply(this);
     }
 
     @Override
     public AntRunActionDefinition antrun(String buildFilePath) {
         AntRunActionDefinition definition = TestActions.antrun(buildFilePath);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public EchoAction echo(String message) {
         EchoAction action = TestActions.echo(message);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public ExecutePLSQLActionDefinition plsql(DataSource dataSource) {
         ExecutePLSQLActionDefinition definition = TestActions.plsql(dataSource);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public ExecuteSQLActionDefinition sql(DataSource dataSource) {
         ExecuteSQLActionDefinition definition = TestActions.sql(dataSource);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public ExecuteSQLQueryActionDefinition query(DataSource dataSource) {
         ExecuteSQLQueryActionDefinition definition = TestActions.query(dataSource);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
         ReceiveTimeoutActionDefinition definition = TestActions.expectTimeout(messageEndpoint);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
         ReceiveTimeoutActionDefinition definition = TestActions.expectTimeout(messageEndpointUri);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public FailAction fail(String message) {
         FailAction action = TestActions.fail(message);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public InputActionDefinition input() {
         InputActionDefinition definition = TestActions.input();
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public JavaActionDefinition java(String className) {
         JavaActionDefinition definition = TestActions.java(className);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public JavaActionDefinition java(Class<?> clazz) {
         JavaActionDefinition definition = TestActions.java(clazz);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public JavaActionDefinition java(Object instance) {
         JavaActionDefinition definition = TestActions.java(instance);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public LoadPropertiesAction load(String filePath) {
         LoadPropertiesAction action = TestActions.load(filePath);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
         PurgeJMSQueuesActionDefinition definition = TestActions.purgeQueues(connectionFactory);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public PurgeJMSQueuesActionDefinition purgeQueues() {
         PurgeJMSQueuesActionDefinition definition = TestActions.purgeQueues(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public PurgeMessageChannelActionDefinition purgeChannels() {
         PurgeMessageChannelActionDefinition definition = TestActions.purgeChannels().channelResolver(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public ReceiveSoapMessageActionDefinition receive(WebServiceServer server) {
         ReceiveSoapMessageActionDefinition definition = TestActions.receive(server).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public ReceiveMessageActionDefinition receive(Endpoint messageEndpoint) {
         ReceiveMessageActionDefinition definition = TestActions.receive(messageEndpoint).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
 
-        definition.position(new PositionHandle(testCase.getActions()));
+        definition.position(positionHandle());
         return definition;
     }
 
     @Override
     public ReceiveMessageActionDefinition receive(String messageEndpointUri) {
         ReceiveMessageActionDefinition definition = TestActions.receive(messageEndpointUri).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
 
-        definition.position(new PositionHandle(testCase.getActions()));
+        definition.position(positionHandle());
         return definition;
     }
 
     @Override
     public SendSoapMessageActionDefinition send(WebServiceClient client) {
         SendSoapMessageActionDefinition definition = TestActions.send(client).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public SendMessageActionDefinition send(Endpoint messageEndpoint) {
         SendMessageActionDefinition definition = TestActions.send(messageEndpoint).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
 
-        definition.position(new PositionHandle(testCase.getActions()));
+        definition.position(positionHandle());
         return definition;
     }
 
     @Override
     public SendMessageActionDefinition send(String messageEndpointUri) {
         SendMessageActionDefinition definition = TestActions.send(messageEndpointUri).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
 
-        definition.position(new PositionHandle(testCase.getActions()));
+        definition.position(positionHandle());
         return definition;
     }
 
     @Override
     public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointUri) {
         SendSoapFaultActionDefinition definition = TestActions.sendSoapFault(messageEndpointUri).withApplicationContext(applicationContext);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
@@ -370,134 +381,119 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
     public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
         SendSoapFaultActionDefinition definition = TestActions.sendSoapFault(messageEndpoint).withApplicationContext(applicationContext);
 
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public SleepAction sleep() {
         SleepAction action = TestActions.sleep();
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public SleepAction sleep(long milliseconds) {
         SleepAction action = TestActions.sleep(milliseconds);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public SleepAction sleep(double seconds) {
         SleepAction action = TestActions.sleep(seconds);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public StartServerAction start(Server... servers) {
         StartServerAction action = TestActions.start(servers);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public StartServerAction start(Server server) {
         StartServerAction action = TestActions.start(server);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public StopServerAction stop(Server... servers) {
         StopServerAction action = TestActions.stop(servers);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public StopServerAction stop(Server server) {
         StopServerAction action = TestActions.stop(server);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public StopTimeAction stopTime() {
         StopTimeAction action = TestActions.stopTime();
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public StopTimeAction stopTime(String id) {
         StopTimeAction action = TestActions.stopTime(id);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public TraceVariablesAction traceVariables() {
         TraceVariablesAction action = TestActions.traceVariables();
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public TraceVariablesAction traceVariables(String... variables) {
         TraceVariablesAction action = TestActions.traceVariables(variables);
-        testCase.addTestAction(action);
+        action(action);
         return action;
     }
 
     @Override
     public GroovyActionDefinition groovy(String script) {
         GroovyActionDefinition definition = TestActions.groovy(script);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public GroovyActionDefinition groovy(Resource scriptResource) {
         GroovyActionDefinition definition = TestActions.groovy(scriptResource);
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public TransformActionDefinition transform() {
         TransformActionDefinition definition = TestActions.transform();
-        testCase.addTestAction(definition.getAction());
+        action(definition);
         return definition;
     }
 
     @Override
     public AssertDefinition assertException(TestAction testAction) {
         AssertDefinition definition = TestActions.assertException(testAction);
-        if (!testAction.getClass().isAnonymousClass()) {
-          testCase.getActions().remove((testCase.getActions().size()) - 1);
-        }
-
-        testCase.addTestAction(definition.getAction());
-
+        action(definition);
         return definition;
     }
 
     @Override
     public Catch catchException(String exception, TestAction... actions) {
         Catch container = TestActions.catchException(exception, actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.getActions().add(container);
-
+        action(container);
         return container;
     }
 
@@ -519,127 +515,65 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             definition.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
         }
 
-        if (!testAction.getClass().isAnonymousClass()) {
-            testCase.getActions().remove((testCase.getActions().size()) - 1);
-        }
-
-        testCase.addTestAction(definition.getAction());
-
+        action(definition);
         return definition;
     }
 
     @Override
     public ConditionalDefinition conditional(TestAction... actions) {
         ConditionalDefinition container = TestActions.conditional(actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.getActions().add(container.getAction());
-
+        action(container);
         return container;
     }
 
     @Override
     public IterateDefinition iterate(TestAction... actions) {
         IterateDefinition container = TestActions.iterate(actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.getActions().add(container.getAction());
-
+        action(container);
         return container;
     }
 
     @Override
     public Parallel parallel(TestAction... actions) {
         Parallel container = TestActions.parallel(actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.getActions().add(container);
-
+        action(container);
         return container;
     }
 
     @Override
     public RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions) {
         RepeatOnErrorUntilTrueDefinition container = TestActions.repeatOnError(actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.addTestAction(container.getAction());
+        action(container);
         return container;
     }
 
     @Override
     public RepeatUntilTrueDefinition repeat(TestAction... actions) {
         RepeatUntilTrueDefinition container = TestActions.repeat(actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.addTestAction(container.getAction());
+        action(container);
         return container;
     }
 
     @Override
     public Sequence sequential(TestAction... actions) {
         Sequence container = TestActions.sequential(actions);
-
-        for (TestAction action : actions) {
-            if (action instanceof AbstractActionDefinition<?>) {
-                testCase.getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-            } else if (!action.getClass().isAnonymousClass()) {
-                testCase.getActions().remove(action);
-            }
-        }
-
-        testCase.getActions().add(container);
-
+        action(container);
         return container;
     }
 
     @Override
     public TemplateDefinition template(String name) {
         TemplateDefinition template = TestActions.template(name).load(applicationContext);
-        testCase.addTestAction(template.getAction());
+        action(template);
         return template;
     }
 
-    /**
-     * Adds sequence of test actions to finally block.
-     *
-     * @param actions
-     */
+    @Override
+    public PositionHandle positionHandle() {
+        return new PositionHandle(testCase.getActions());
+    }
+
+    @Override
     public void doFinally(TestAction... actions) {
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
@@ -652,14 +586,6 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
                 testCase.getFinallyChain().add(action);
             }
         }
-    }
-
-    /**
-     * Gets the testCase.
-     * @return the testCase the testCase to get.
-     */
-    protected TestCase getTestCase() {
-        return testCase;
     }
 
     /**

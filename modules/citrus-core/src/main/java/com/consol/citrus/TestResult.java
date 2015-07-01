@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.report;
+package com.consol.citrus;
 
 import org.springframework.util.StringUtils;
 
@@ -29,7 +29,7 @@ import java.util.*;
 public class TestResult {
 
     /** Possible test results */
-    public static enum RESULT {SUCCESS, FAILURE, SKIP};
+    private static enum RESULT {SUCCESS, FAILURE, SKIP};
 
     /** Actual result */
     private RESULT result;
@@ -44,11 +44,70 @@ public class TestResult {
     private Throwable cause;
 
     /**
+     * Create new test result for successful execution.
+     * @param name
+     * @return
+     */
+    public static TestResult success(String name) {
+        return new TestResult(name, RESULT.SUCCESS);
+    }
+
+    /**
+     * Create new test result with parameters for successful execution.
+     * @param name
+     * @param parameters
+     * @return
+     */
+    public static TestResult success(String name, Map<String, Object> parameters) {
+        return new TestResult(name, RESULT.SUCCESS, parameters);
+    }
+
+    /**
+     * Create new test result for skipped test.
+     * @param name
+     * @return
+     */
+    public static TestResult skipped(String name) {
+        return new TestResult(name, RESULT.SKIP);
+    }
+
+    /**
+     * Create new test result with parameters for skipped test.
+     * @param name
+     * @param parameters
+     * @return
+     */
+    public static TestResult skipped(String name, Map<String, Object> parameters) {
+        return new TestResult(name, RESULT.SKIP, parameters);
+    }
+
+    /**
+     * Create new test result for failed execution.
+     * @param name
+     * @param cause
+     * @return
+     */
+    public static TestResult failed(String name, Throwable cause) {
+        return new TestResult(name, RESULT.FAILURE, cause);
+    }
+
+    /**
+     * Create new test result with parameters for failed execution.
+     * @param name
+     * @param cause
+     * @param parameters
+     * @return
+     */
+    public static TestResult failed(String name, Throwable cause, Map<String, Object> parameters) {
+        return new TestResult(name, RESULT.FAILURE, cause, parameters);
+    }
+
+    /**
      * Constructor using fields.
      * @param name
      * @param result
      */
-    public TestResult(String name, RESULT result) {
+    private TestResult(String name, RESULT result) {
         this(name, result, new HashMap<String, Object>());
     }
     
@@ -58,7 +117,7 @@ public class TestResult {
      * @param result
      * @param parameters
      */
-    public TestResult(String name, RESULT result, Map<String, Object> parameters) {
+    private TestResult(String name, RESULT result, Map<String, Object> parameters) {
         this(name, result, null, parameters);
     }
 
@@ -68,7 +127,7 @@ public class TestResult {
      * @param result
      * @param cause
      */
-    public TestResult(String name, RESULT result, Throwable cause) {
+    private TestResult(String name, RESULT result, Throwable cause) {
         this(name, result, cause, new HashMap<String, Object>());
     }
 
@@ -78,7 +137,7 @@ public class TestResult {
      * @param result
      * @param cause
      */
-    public TestResult(String name, RESULT result, Throwable cause, Map<String, Object> parameters) {
+    private TestResult(String name, RESULT result, Throwable cause, Map<String, Object> parameters) {
         this.testName = name;
         this.result = result;
         this.cause = cause;
@@ -130,6 +189,30 @@ public class TestResult {
     }
 
     /**
+     * Checks successful result state.
+     * @return
+     */
+    public boolean isSuccess() {
+        return !isSkipped() && result.equals(RESULT.SUCCESS);
+    }
+
+    /**
+     * Checks failed result state.
+     * @return
+     */
+    public boolean isFailed() {
+        return !isSkipped() && result.equals(RESULT.FAILURE);
+    }
+
+    /**
+     * Checks skipped result state.
+     * @return
+     */
+    public boolean isSkipped() {
+        return result.equals(RESULT.SKIP);
+    }
+
+    /**
      * Setter for the failure cause.
      * @param cause the cause to set
      */
@@ -165,8 +248,8 @@ public class TestResult {
      * Getter for test result.
      * @return the result
      */
-    public RESULT getResult() {
-        return result;
+    public String getResult() {
+        return result.name();
     }
 
     /**

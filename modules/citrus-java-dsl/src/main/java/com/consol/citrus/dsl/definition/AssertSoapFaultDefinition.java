@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author Christoph Deppisch
  * since 1.3
  */
-public class AssertSoapFaultDefinition extends AbstractActionDefinition<AssertSoapFault> {
+public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition<AssertSoapFault> {
 
     private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
     

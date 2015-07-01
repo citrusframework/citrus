@@ -16,12 +16,9 @@
 
 package com.consol.citrus.report;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestResult;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
@@ -31,9 +28,11 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestResult.RESULT;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * {@link TestReporter} implementation that generates the famous JUnit XML reports. JUnit can
@@ -201,12 +200,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
         testCaseElement.appendChild(errorElement);
 
         testSuiteElement.appendChild(testCaseElement);
-        
-        if (cause != null) {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, cause, test.getParameters()));
-        } else {
-            testResults.addResult(new TestResult(test.getName(), RESULT.FAILURE, test.getParameters()));
-        }
+        testResults.addResult(TestResult.failed(test.getName(), cause, test.getParameters()));
     }
 
     /**
@@ -220,7 +214,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
      * @see com.consol.citrus.report.TestListener#onTestSkipped(com.consol.citrus.TestCase)
      */
     public void onTestSkipped(TestCase test) {
-        testResults.addResult(new TestResult(test.getName(), RESULT.SKIP, test.getParameters()));
+        testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
     }
 
     /**
@@ -242,7 +236,7 @@ public class JUnitReporter implements TestSuiteListener, TestListener, TestRepor
 
         testSuiteElement.appendChild(testCaseElement);
         
-        testResults.addResult(new TestResult(test.getName(), RESULT.SUCCESS, test.getParameters()));
+        testResults.addResult(TestResult.success(test.getName(), test.getParameters()));
     }
 
     /**

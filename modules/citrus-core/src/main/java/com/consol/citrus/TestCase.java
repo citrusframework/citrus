@@ -37,7 +37,7 @@ import java.util.Map.Entry;
  */
 public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
-    /** Further chain of test actions to be executed in any case (Success, error)
+    /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
     private List<TestAction> finallyChain = new ArrayList<TestAction>();
 
@@ -53,9 +53,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     /** In case test was called with parameters from outside */
     private Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
-    /** This tests context holding variables */
-    private TestContext testContext;
-
     @Autowired
     private TestActionListeners testActionListeners = new TestActionListeners();
 
@@ -64,36 +61,93 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     @Autowired(required = false)
     private List<SequenceAfterTest> afterTest;
+
+    /** The result of this test case */
+    private TestResult testResult;
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
 
     /**
+     * Starts the test case.
+     * @param context
+     */
+    public void start(TestContext context) {
+        context.getTestListeners().onTestStart(this);
+
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Initializing test case");
+            }
+
+           /* build up the global test variables in TestContext by
+            * getting the names and the current values of all variables */
+            for (Entry<String, ?> entry : variableDefinitions.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+
+                if (value instanceof String) {
+                    //check if value is a variable or function (and resolve it accordingly)
+                    context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
+                } else {
+                    context.setVariable(key, value);
+                }
+            }
+
+            /* Debug print all variables */
+            if (context.hasVariables() && log.isDebugEnabled()) {
+                log.debug("Global variables:");
+                for (Entry<String, Object> entry : context.getVariables().entrySet()) {
+                    log.debug(entry.getKey() + " = " + entry.getValue());
+                }
+            }
+
+            // add default variables for test
+            context.setVariable(CitrusConstants.TEST_NAME_VARIABLE, getName());
+            context.setVariable(CitrusConstants.TEST_PACKAGE_VARIABLE, getPackageName());
+
+            for (Entry<String, Object> paramEntry : parameters.entrySet()) {
+                log.info(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
+                context.setVariable(paramEntry.getKey(), paramEntry.getValue());
+            }
+
+            beforeTest(context);
+        } catch (Exception e) {
+            testResult = TestResult.failed(getName(), e);
+            throw new TestCaseFailedException(e);
+        } catch (Error e) {
+            testResult = TestResult.failed(getName(), e);
+            throw new TestCaseFailedException(e);
+        }
+    }
+
+    /**
      * Method executes the test case and all its actions.
      */
     public void doExecute(TestContext context) {
-        this.testContext = context;
-
         if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
-            context.getTestListeners().onTestStart(this);
 
             try {
-                beforeTest(context);
-                run(context);
+                start(context);
 
-                context.getTestListeners().onTestSuccess(this);
+                for (TestAction action: actions) {
+                    executeAction(action, context);
+                }
+
+                testResult = TestResult.success(getName());
+            } catch (TestCaseFailedException e) {
+                throw e;
             } catch (Exception e) {
-                context.getTestListeners().onTestFailure(this, e);
+                testResult = TestResult.failed(getName(), e);
                 throw new TestCaseFailedException(e);
             } catch (Error e) {
-                context.getTestListeners().onTestFailure(this, e);
+                testResult = TestResult.failed(getName(), e);
                 throw new TestCaseFailedException(e);
             } finally {
-                afterTest(context);
-                context.getTestListeners().onTestFinish(this);
                 finish(context);
             }
         } else {
+            testResult = TestResult.skipped(getName());
             context.getTestListeners().onTestSkipped(this);
         }
     }
@@ -131,63 +185,28 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                     }
                 } catch (Exception e) {
                     log.warn("After test failed with errors", e);
+                } catch (Error e) {
+                    log.warn("After test failed with errors", e);
                 }
             }
         }
     }
 
     /**
-     * Runs all test actions for this test case.
+     * Executes a single test action with given test context.
+     * @param action
      * @param context
      */
-    protected void run(TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Initializing test case");
-        }
-
-        /* build up the global test variables in TestContext by
-         * getting the names and the current values of all variables */
-        for (Entry<String, ?> entry : variableDefinitions.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            if (value instanceof String) {
-                //check if value is a variable or function (and resolve it accordingly)
-                context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
-            } else {
-                context.setVariable(key, value);
-            }
-        }
-
-        /* Debug print all variables */
-        if (context.hasVariables() && log.isDebugEnabled()) {
-            log.debug("Global variables:");
-            for (Entry<String, Object> entry : context.getVariables().entrySet()) {
-                log.debug(entry.getKey() + " = " + entry.getValue());
-            }
-        }
-
-        // add default variables for test
-        context.setVariable(CitrusConstants.TEST_NAME_VARIABLE, getName());
-        context.setVariable(CitrusConstants.TEST_PACKAGE_VARIABLE, getPackageName());
-
-        for (Entry<String, Object> paramEntry : parameters.entrySet()) {
-            log.info(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
-            context.setVariable(paramEntry.getKey(), paramEntry.getValue());
-        }
-
-        /* execute the test actions */
-        for (TestAction action: actions) {
-            if (!action.isDisabled(context)) {
-                testActionListeners.onTestActionStart(this, action);
-                setLastExecutedAction(action);
+    protected void executeAction(TestAction action, TestContext context) {
+        if (!action.isDisabled(context)) {
+            testActionListeners.onTestActionStart(this, action);
+            setLastExecutedAction(action);
 
                 /* execute the test action and validate its success */
-                action.execute(context);
-                testActionListeners.onTestActionFinish(this, action);
-            } else {
-                testActionListeners.onTestActionSkipped(this, action);
-            }
+            action.execute(context);
+            testActionListeners.onTestActionFinish(this, action);
+        } else {
+            testActionListeners.onTestActionSkipped(this, action);
         }
     }
 
@@ -195,15 +214,33 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Method that will be executed in any case of test case result (success, error)
      * Usually used for clean up tasks.
      */
-    protected void finish(TestContext context) {
-        if (!finallyChain.isEmpty()) {
-            log.info("Finish test case with finally block actions");
-        }
+    public void finish(TestContext context) {
+        context.getTestListeners().onTestFinish(this);
 
-        /* walk through the finally chain and execute the actions in there */
-        for (TestAction action : finallyChain) {
-            /* execute the test action and validate its success */
-            action.execute(context);
+        try {
+            if (!finallyChain.isEmpty()) {
+                log.info("Finish test case with actions in finally block");
+
+                /* walk through the finally chain and execute the actions in there */
+                for (TestAction action : finallyChain) {
+                /* execute the test action and validate its success */
+                    action.execute(context);
+                }
+            }
+        } catch (Exception e) {
+            testResult = TestResult.failed(getName(), e);
+            throw new TestCaseFailedException(e);
+        } catch (Error e) {
+            testResult = TestResult.failed(getName(), e);
+            throw new TestCaseFailedException(e);
+        } finally {
+            if (testResult.isSuccess()) {
+                context.getTestListeners().onTestSuccess(this);
+            } else {
+                context.getTestListeners().onTestFailure(this, testResult.getCause());
+            }
+
+            afterTest(context);
         }
     }
 
@@ -333,14 +370,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     public Map<String, Object> getParameters() {
         return parameters;
-    }
-
-    /**
-     * Provides this tests context to test case listeners for instance.
-     * @return
-     */
-    public TestContext getTestContext() {
-        return testContext;
     }
 
     /**
