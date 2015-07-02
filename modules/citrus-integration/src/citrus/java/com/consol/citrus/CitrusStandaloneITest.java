@@ -16,7 +16,7 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.dsl.CitrusTestBuilder;
+import com.consol.citrus.dsl.DefaultTestBuilder;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.MessageType;
@@ -24,7 +24,8 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.ws.message.SoapMessage;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -41,7 +42,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void echoTest() {
-        CitrusTestBuilder test = new CitrusTestBuilder();
+        DefaultTestBuilder test = new DefaultTestBuilder();
 
         test.name("EchoITest");
 
@@ -52,7 +53,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void jmsTest() {
-        CitrusTestBuilder test = new CitrusTestBuilder();
+        DefaultTestBuilder test = new DefaultTestBuilder();
 
         test.name("JmsITest");
 
@@ -73,7 +74,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void httpTest() {
-        CitrusTestBuilder test = new CitrusTestBuilder();
+        DefaultTestBuilder test = new DefaultTestBuilder();
 
         test.name("HttpITest");
 
@@ -95,7 +96,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void soapTest() {
-        CitrusTestBuilder test = new CitrusTestBuilder();
+        DefaultTestBuilder test = new DefaultTestBuilder();
 
         test.name("SoapITest");
 

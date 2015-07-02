@@ -19,7 +19,7 @@ package com.consol.citrus.arquillian.enricher;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.CitrusTestBuilder;
+import com.consol.citrus.dsl.TestBuilder;
 import org.jboss.arquillian.test.api.ArquillianResource;
 
 import java.net.URL;
@@ -33,13 +33,13 @@ public class ArquillianTest {
     @CitrusFramework
     private Citrus citrus;
 
-    public void testMethod(@CitrusTest CitrusTestBuilder citrusTest) {
+    public void testMethod(@CitrusTest TestBuilder testBuilder) {
     }
 
-    public void testMethod(@ArquillianResource URL url, @CitrusTest CitrusTestBuilder citrusTest) {
+    public void testMethod(@ArquillianResource URL url, @CitrusTest TestBuilder testBuilder) {
     }
 
-    public void testMethod(@CitrusTest CitrusTestBuilder citrusTest, @ArquillianResource URL url) {
+    public void testMethod(@CitrusTest TestBuilder testBuilder, @ArquillianResource URL url) {
     }
 
     public void testMethod(@ArquillianResource URL url) {

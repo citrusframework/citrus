@@ -54,13 +54,13 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
-    private CitrusTestBuilder testBuilder;
+    private DefaultTestBuilder testBuilder;
 
     /**
      * Initialize test case and variables. Must be done with each test run.
      */
     public void init() {
-        testBuilder = new CitrusTestBuilder(applicationContext);
+        testBuilder = new DefaultTestBuilder(applicationContext);
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
     }

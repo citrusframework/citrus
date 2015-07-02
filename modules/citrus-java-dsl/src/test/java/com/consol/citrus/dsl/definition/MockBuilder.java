@@ -17,7 +17,7 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.CitrusTestBuilder;
+import com.consol.citrus.dsl.DefaultExecutableTestBuilderComponent;
 import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
 import org.springframework.context.ApplicationContext;
 
@@ -27,14 +27,15 @@ import org.springframework.context.ApplicationContext;
  * 
  * @author Christoph Deppisch
  */
-public class MockBuilder extends CitrusTestBuilder {
+public class MockBuilder extends DefaultExecutableTestBuilderComponent {
 
     /**
      * Constructor using an application context.
      * @param applicationContext
      */
     public MockBuilder(ApplicationContext applicationContext) {
-        super(applicationContext);
+        setApplicationContext(applicationContext);
+        initialize();
     }
 
     @Override

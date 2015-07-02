@@ -54,11 +54,13 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<Test name=\"FooTest\"></Test>"));
 
+        Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(), "<Test name=\"FooTest\">OK</Test>");
 
         response = endpointAdapter.handleMessage(
                 new DefaultMessage("<Test name=\"BarTest\"></Test>"));
 
+        Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(), "<Test name=\"BarTest\">OK</Test>");
     }
 
@@ -74,6 +76,7 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
                 new DefaultMessage(
                         "<FooBarTest></FooBarTest>"));
 
+        Assert.assertNotNull(response);
         Assert.assertEquals(response.getPayload(), "<FooBarTest>OK</FooBarTest>");
     }
 

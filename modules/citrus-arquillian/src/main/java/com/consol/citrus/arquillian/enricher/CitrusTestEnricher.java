@@ -19,7 +19,7 @@ package com.consol.citrus.arquillian.enricher;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.CitrusTestBuilder;
+import com.consol.citrus.dsl.*;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
@@ -78,15 +78,15 @@ public class CitrusTestEnricher implements TestEnricher {
                     CitrusTest citrusTestAnnotation = (CitrusTest) annotation;
                     Class<?> clazz = parameterTypes[i];
                     if (isSupportedParameter(clazz)) {
-                        CitrusTestBuilder citrusTestBuilder = new CitrusTestBuilder(citrusInstance.get().getApplicationContext());
+                        TestBuilder testBuilder = new DefaultTestBuilder(citrusInstance.get().getApplicationContext());
 
                         if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                            citrusTestBuilder.name(citrusTestAnnotation.name());
+                            testBuilder.name(citrusTestAnnotation.name());
                         } else {
-                            citrusTestBuilder.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+                            testBuilder.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
                         }
 
-                        values[i] = citrusTestBuilder;
+                        values[i] = testBuilder;
                     } else {
                         throw new RuntimeException("Not able to provide a client injection for type " + clazz);
                     }
@@ -98,6 +98,6 @@ public class CitrusTestEnricher implements TestEnricher {
     }
 
     private boolean isSupportedParameter(Class<?> clazz) {
-        return CitrusTestBuilder.class.isAssignableFrom(clazz);
+        return TestBuilder.class.isAssignableFrom(clazz);
     }
 }

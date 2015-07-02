@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,15 @@
 
 package com.consol.citrus.dsl;
 
-import org.springframework.context.ApplicationContext;
-
 /**
  * @author Christoph Deppisch
- * @since 1.3.1
- * @deprecated in favour of using {@link com.consol.citrus.dsl.DefaultTestBuilder}
+ * @since 2.2
  */
-public class CitrusTestBuilder extends DefaultTestBuilder {
+public interface ExecutableTestBuilder extends TestBuilder {
 
     /**
-     * Default constructor.
+     * Builds and executes test case. Automatically creates new test context
+     * with help of Spring bean application context.
      */
-    public CitrusTestBuilder() {
-        super();
-    }
-
-    /**
-     * Constructor using Spring bean application context.
-     * @param applicationContext
-     */
-    public CitrusTestBuilder(ApplicationContext applicationContext) {
-        super(applicationContext);
-    }
-
+    void execute();
 }

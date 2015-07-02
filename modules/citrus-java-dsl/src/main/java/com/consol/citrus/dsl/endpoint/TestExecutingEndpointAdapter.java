@@ -17,8 +17,8 @@
 package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.dsl.*;
 import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
-import com.consol.citrus.dsl.CitrusTestBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -34,10 +34,10 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
 
     @Override
     public Message dispatchMessage(final Message request, String mappingName) {
-        final CitrusTestBuilder testBuilder;
+        final ExecutableTestBuilder testBuilder;
 
         try {
-            testBuilder = getApplicationContext().getBean(mappingName, CitrusTestBuilder.class);
+            testBuilder = getApplicationContext().getBean(mappingName, ExecutableTestBuilder.class);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +
                     mappingName + "' in Spring bean context", e);
@@ -64,6 +64,6 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
      * @param request the triggering request message.
      * @param testBuilder the found test builder.
      */
-    protected void prepareExecution(Message request, CitrusTestBuilder testBuilder) {
+    protected void prepareExecution(Message request, ExecutableTestBuilder testBuilder) {
     }
 }
