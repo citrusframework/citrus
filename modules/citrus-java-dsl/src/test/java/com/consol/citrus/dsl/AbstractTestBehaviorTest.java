@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
+public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorFrontPosition() {
@@ -74,7 +74,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
                     echo("finally")
                 );
 
-                applyBehavior(new CitrusTestBehavior() {
+                applyBehavior(new AbstractTestBehavior() {
                     @Override
                     public void apply() {
                         echo("behavior");
@@ -187,7 +187,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((EchoAction)test.getActions().get(2)).getMessage(), "fooBehavior");
     }
 
-    private static class FooBehavior extends CitrusTestBehavior {
+    private static class FooBehavior extends AbstractTestBehavior {
         public void apply() {
             variable("foo", "test");
 
@@ -195,7 +195,7 @@ public class CitrusTestBehaviorTest extends AbstractTestNGUnitTest {
         }
     }
 
-    private static class BarBehavior extends CitrusTestBehavior {
+    private static class BarBehavior extends AbstractTestBehavior {
         public void apply() {
             variable("bar", "test");
 

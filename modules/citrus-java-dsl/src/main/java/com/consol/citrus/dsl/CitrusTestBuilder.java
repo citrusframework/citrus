@@ -98,8 +98,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
      */
     public void execute(TestContext context) {
         configure();
-        build();
-        testCase.execute(context);
+        build().execute(context);
     }
 
     /**
@@ -113,10 +112,7 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
             throw new CitrusRuntimeException("Unable to create test context for test builder execution without Spring bean application context set properly");
         }
 
-        TestContext context = applicationContext.getBean(TestContext.class);
-        context.setApplicationContext(applicationContext);
-
-        return context;
+        return applicationContext.getBean(TestContext.class);
     }
 
     /**
@@ -598,10 +594,9 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
 
     /**
      * Get the test variables.
-     *
      * @return
      */
-    protected Map<String, Object> getVariables() {
+    public Map<String, Object> getVariables() {
         return variables;
     }
 

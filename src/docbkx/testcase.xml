@@ -296,6 +296,53 @@ public void sampleTest() {
 }</programlisting>
     </section>
   </section>
+
+  <section id="testcase-behavior">
+    <title>Using test behaviors</title>
+
+    <para>When using the Java DSL the concept of behaviors is a good way to reuse test action blocks. By putting test actions to a test behavior we can instantiate and apply
+    the behavior to different test cases multiple times. The mechanism is explained best when having a simple sample:</para>
+
+    <programlisting language="java">public class FooBehavior extends AbstractTestBehavior {
+    public void apply() {
+        variable("foo", "test");
+
+        echo("fooBehavior");
+    }
+}
+
+public class BarBehavior extends AbstractTestBehavior {
+    public void apply() {
+        variable("bar", "test");
+
+        echo("barBehavior");
+    }
+}</programlisting>
+
+    <para>The listing above shows two test behaviors that add very specific test actions and test variables to the test case. As you can see the test behavior is able to use the
+    same Java DSL action methods as a normal test case would do. Inside the apply method block we define the behaviors test logic. Now once this is done we can use the behaviors
+    in a test case like this:</para>
+
+    <programlisting language="java">@CitrusTest
+public void behaviorTest() {
+    description("This is a behavior Test");
+    author("Christoph");
+    status(TestCaseMetaInfo.Status.FINAL);
+
+    variable("var", "test");
+
+    applyBehavior(new FooBehavior());
+
+    echo("Successfully applied bar behavior");
+
+    applyBehavior(new BarBehavior());
+
+    echo("Successfully applied bar behavior");
+}</programlisting>
+
+    <para>The behavior is applied to the test case by calling the <emphasis>applyBehavior</emphasis> method. As a result the behavior is called adding its logic at this point of the
+    test execution. The same behavior can now be called in multiple test cases so we have a reusable set of test actions.</para>
+  </section>
   
   <section id="testcase-metainfo">
     <title>Meta information</title>

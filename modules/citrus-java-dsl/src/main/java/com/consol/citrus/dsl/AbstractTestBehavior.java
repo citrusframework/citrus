@@ -26,7 +26,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
  * @author Christoph Deppisch
  * @since 1.3.1
  */
-public abstract class CitrusTestBehavior extends CitrusTestBuilder implements TestBehavior {
+public abstract class AbstractTestBehavior extends CitrusTestBuilder implements TestBehavior {
 
     /** Target test builder to add actions and variables on */
     private TestBuilder target;
