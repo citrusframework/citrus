@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import org.testng.annotations.Test;
 
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class SequentialJavaITest extends TestNGCitrusTestBuilder {
+public class SequentialJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void SequentialJavaITest() {

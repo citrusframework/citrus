@@ -131,10 +131,10 @@
     <programlisting language="java">import org.testng.ITestContext;
 import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 
 @Test
-public class SendMessageTest extends TestNGCitrusTestBuilder {
+public class SendMessageTestDesigner extends TestNGCitrusTestDesigner {
 
     @CitrusTest(name = "SendMessageTest")
     public void sendMessageTest() {
@@ -152,7 +152,7 @@ public class SendMessageTest extends TestNGCitrusTestBuilder {
     }
 }</programlisting>
 
-    <para>Instead of using the XML tags for send we use methods from <emphasis>TestNGCitrusTestBuilder</emphasis> class. The same message endpoint
+    <para>Instead of using the XML tags for send we use methods from <emphasis>TestNGCitrusTestDesigner</emphasis> class. The same message endpoint
     is referenced within the send message action. The payload is constructed as plain Java character sequence which is a bit verbose. We will see
     later on how we can improve this. For now it is important to understand the combination of send test action and a message endpoints.</para>
     

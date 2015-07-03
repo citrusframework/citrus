@@ -27,7 +27,7 @@ public class FailDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 fail("This test will fail.");

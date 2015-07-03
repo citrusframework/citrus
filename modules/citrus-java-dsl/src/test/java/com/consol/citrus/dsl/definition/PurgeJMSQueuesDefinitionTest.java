@@ -35,7 +35,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueueNames() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -64,7 +64,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueues() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)

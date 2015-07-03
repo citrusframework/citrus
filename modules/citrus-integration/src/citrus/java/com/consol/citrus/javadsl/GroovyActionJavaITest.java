@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class GroovyActionJavaITest extends TestNGCitrusTestBuilder {
+public class GroovyActionJavaITest extends TestNGCitrusTestDesigner {
     
     /** OS new line */
     private static final String NEWLINE = System.getProperty("line.separator");

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +28,7 @@ import javax.sql.DataSource;
  * @author Christoph Deppisch
  */
 @Test
-public class QueryDatabaseRetriesJavaITest extends TestNGCitrusTestBuilder {
+public class QueryDatabaseRetriesJavaITest extends TestNGCitrusTestDesigner {
     
     @Autowired
     @Qualifier("testDataSource")

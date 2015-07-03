@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.http.message.HttpMessage;
 import org.springframework.http.HttpMethod;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class HttpMessageControllerJavaITest extends TestNGCitrusTestBuilder {
+public class HttpMessageControllerJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest(name = "HttpMessageControllerJavaITest")
     public void httpMessageControllerITest() {

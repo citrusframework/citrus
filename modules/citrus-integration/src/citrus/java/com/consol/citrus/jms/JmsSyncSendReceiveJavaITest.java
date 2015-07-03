@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class JmsSyncSendReceiveJavaITest extends AbstractJmsTestBuilder {
+public class JmsSyncSendReceiveJavaITest extends AbstractJmsTestDesigner {
     
     @CitrusTest
     public void JmsSyncSendReceiveJavaITest() {

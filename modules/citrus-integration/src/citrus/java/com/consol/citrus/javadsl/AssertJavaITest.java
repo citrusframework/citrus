@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -30,7 +30,7 @@ import java.io.IOException;
  * @author Christoph Deppisch
  */
 @Test
-public class AssertJavaITest extends TestNGCitrusTestBuilder {
+public class AssertJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void AssertJavaITest() {

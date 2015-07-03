@@ -40,7 +40,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveTimeoutBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 expectTimeout(messageEndpoint)
@@ -70,7 +70,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 expectTimeout("fooMessageEndpoint")

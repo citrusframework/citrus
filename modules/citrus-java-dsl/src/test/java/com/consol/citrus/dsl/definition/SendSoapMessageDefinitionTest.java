@@ -68,7 +68,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFork() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -111,7 +111,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAction() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -141,7 +141,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachment() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -176,7 +176,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachmentData() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -211,7 +211,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleSoapAttachmentData() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -252,7 +252,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachmentResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -297,7 +297,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("soapClient")
@@ -343,7 +343,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("soapClient")

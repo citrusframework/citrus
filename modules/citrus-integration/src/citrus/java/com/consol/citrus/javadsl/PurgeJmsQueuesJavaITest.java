@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,7 +29,7 @@ import javax.jms.Queue;
  * @author Christoph Deppisch
  */
 @Test
-public class PurgeJmsQueuesJavaITest extends TestNGCitrusTestBuilder {
+public class PurgeJmsQueuesJavaITest extends TestNGCitrusTestDesigner {
     
     @Autowired
     @Qualifier("connectionFactory")

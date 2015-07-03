@@ -38,7 +38,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(4);
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 java("com.consol.citrus.dsl.util.JavaTest")
@@ -68,7 +68,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 java(EchoAction.class)
@@ -97,7 +97,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 java(new EchoAction())

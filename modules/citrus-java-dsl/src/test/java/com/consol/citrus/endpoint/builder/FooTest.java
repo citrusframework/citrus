@@ -16,12 +16,12 @@
 
 package com.consol.citrus.endpoint.builder;
 
-import com.consol.citrus.dsl.DefaultExecutableTestBuilderComponent;
+import com.consol.citrus.dsl.design.DefaultExecutableTestDesignerComponent;
 import com.consol.citrus.message.MessageType;
 import org.springframework.stereotype.Component;
 
 @Component("FooTest")
-public class FooTest extends DefaultExecutableTestBuilderComponent {
+public class FooTest extends DefaultExecutableTestDesignerComponent {
 
     @Override
     public void configure() {

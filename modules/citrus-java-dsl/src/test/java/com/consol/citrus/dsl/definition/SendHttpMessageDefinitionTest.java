@@ -49,7 +49,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFork() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -92,7 +92,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpMethod() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -122,7 +122,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndPath() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -154,7 +154,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndQueryParams() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -194,7 +194,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("httpClient")

@@ -1,13 +1,13 @@
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import org.testng.ITestContext;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class EchoActionConfigureITest extends TestNGCitrusTestBuilder {
+public class EchoActionConfigureITest extends TestNGCitrusTestDesigner {
 
     @Override
     protected void configure() {

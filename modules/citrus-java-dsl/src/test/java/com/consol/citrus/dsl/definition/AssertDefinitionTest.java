@@ -31,7 +31,7 @@ import static org.testng.Assert.assertTrue;
 public class AssertDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testAssertBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 assertException(echo("${foo}"))
@@ -58,7 +58,7 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 assertException(new AbstractTestAction() {

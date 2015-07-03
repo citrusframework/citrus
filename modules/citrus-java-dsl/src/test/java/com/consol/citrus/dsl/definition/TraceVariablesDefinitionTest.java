@@ -27,7 +27,7 @@ public class TraceVariablesDefinitionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testTraceVariablesBuilder() {
-		MockBuilder builder = new MockBuilder(applicationContext) {
+		MockDesigner builder = new MockDesigner(applicationContext) {
 			@Override
 			public void configure() {
 				traceVariables();

@@ -26,7 +26,7 @@ import static org.testng.Assert.assertEquals;
 public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testConditionalBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 conditional(echo("${var}")).when("${var} = 5");

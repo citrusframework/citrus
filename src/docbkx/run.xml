@@ -134,10 +134,10 @@ public class SampleTest extends AbstractTestNGCitrusTest {
 
       <programlisting language="java">import org.testng.annotations.Test;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 
 @Test
-public class MyFirstTest extends TestNGCitrusTestBuilder {
+public class MyFirstTestDesigner extends TestNGCitrusTestDesigner {
     @CitrusTest(name = "MyFirstTest")
     public void myFirstTest() {
         description("First example showing the basic test case definition elements!");
@@ -248,7 +248,7 @@ public class SampleTest extends AbstractJUnit4CitrusTest {
         <programlisting language="java">package com.consol.citrus.samples;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.JUnit4CitrusTestBuilder;
+import com.consol.citrus.dsl.JUnit4CitrusTestDesigner;
 import org.junit.Test;
 
 /**
@@ -256,7 +256,7 @@ import org.junit.Test;
  *
  * @author Unknown
  */
-public class SampleTest extends JUnit4CitrusTestBuilder {
+public class SampleTest extends JUnit4CitrusTestDesigner {
 
     @Test
     @CitrusTest

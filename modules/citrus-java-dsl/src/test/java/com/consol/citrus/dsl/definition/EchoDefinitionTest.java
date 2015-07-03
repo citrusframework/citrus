@@ -30,7 +30,7 @@ public class EchoDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testEchoBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 echo("Hello Citrus!");

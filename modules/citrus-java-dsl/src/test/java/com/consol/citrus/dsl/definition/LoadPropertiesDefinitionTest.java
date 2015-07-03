@@ -26,7 +26,7 @@ import com.consol.citrus.actions.LoadPropertiesAction;
 public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void TestLoadBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 load("classpath:test.properties");

@@ -37,7 +37,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -64,7 +64,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -92,7 +92,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)

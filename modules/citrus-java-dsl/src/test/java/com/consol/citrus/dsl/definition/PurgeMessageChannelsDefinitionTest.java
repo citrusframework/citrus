@@ -51,7 +51,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testPurgeChannelsBuilderWithChannels() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -85,7 +85,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -122,7 +122,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
                 .andReturn(new DefaultHeaderChannelRegistry()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 purgeChannels()

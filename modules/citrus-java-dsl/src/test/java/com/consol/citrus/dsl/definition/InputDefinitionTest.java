@@ -27,7 +27,7 @@ public class InputDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void TestInputBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 input()

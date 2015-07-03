@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.dsl.definition.MockBuilder;
+import com.consol.citrus.dsl.definition.MockDesigner;
 import com.consol.citrus.report.TestActionListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -34,12 +34,12 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class TestNGCitrusTestBuilderTest {
+public class TestNGCitrusTestDesignerTest {
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
 
     @Test
-    public void testCitrusTestBuilder() {
+    public void testCitrusTestDesigner() {
         reset(applicationContextMock);
 
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
@@ -48,7 +48,7 @@ public class TestNGCitrusTestBuilderTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 description("This is a Test");

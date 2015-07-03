@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.testng.CitrusParameters;
 import org.testng.annotations.DataProvider;
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class DataProviderJavaITest extends TestNGCitrusTestBuilder {
+public class DataProviderJavaITest extends TestNGCitrusTestDesigner {
 
     @CitrusTest
     @CitrusParameters( {"message", "delay"} )

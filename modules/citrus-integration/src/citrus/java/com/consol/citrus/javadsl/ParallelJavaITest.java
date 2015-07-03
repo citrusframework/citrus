@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class ParallelJavaITest extends TestNGCitrusTestBuilder {
+public class ParallelJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void ParallelJavaITest() {

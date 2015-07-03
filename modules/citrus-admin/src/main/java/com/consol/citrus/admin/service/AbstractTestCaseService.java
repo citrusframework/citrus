@@ -26,8 +26,9 @@ import com.consol.citrus.admin.executor.ApplicationContextHolder;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.admin.spring.model.SpringBeans;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
-import com.consol.citrus.model.testcase.core.*;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import com.consol.citrus.model.testcase.core.TestcaseDefinition;
+import com.consol.citrus.model.testcase.core.VariablesDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -123,18 +124,18 @@ public abstract class AbstractTestCaseService implements TestCaseService {
         }
 
         try {
-            Class<?> testBuilderClass = Class.forName(packageName + "." + testClassName);
+            Class<?> testDesignerClass = Class.forName(packageName + "." + testClassName);
 
             if (!applicationContextHolder.isApplicationContextLoaded()) {
                 applicationContextHolder.loadApplicationContext();
             }
 
-            TestNGCitrusTestBuilder builder = (TestNGCitrusTestBuilder) testBuilderClass.getConstructor(new Class[]{}).newInstance();
+            TestNGCitrusTestDesigner builder = (TestNGCitrusTestDesigner) testDesignerClass.getConstructor(new Class[]{}).newInstance();
             AutowireCapableBeanFactory beanFactory = applicationContextHolder.getApplicationContext().getAutowireCapableBeanFactory();
             beanFactory.autowireBeanProperties(builder, AutowireCapableBeanFactory.AUTOWIRE_NO, false);
-            beanFactory.initializeBean(builder, testBuilderClass.getName());
+            beanFactory.initializeBean(builder, testDesignerClass.getName());
 
-            for (Method method : ReflectionUtils.getAllDeclaredMethods(testBuilderClass)) {
+            for (Method method : ReflectionUtils.getAllDeclaredMethods(testDesignerClass)) {
                 CitrusTest citrusTestAnnotation = method.getAnnotation(CitrusTest.class);
                 if (citrusTestAnnotation != null) {
                     if (StringUtils.hasText(methodName)) {
@@ -163,7 +164,7 @@ public abstract class AbstractTestCaseService implements TestCaseService {
         return testModel;
     }
 
-    private TestcaseDefinition getJavaDslTest(TestNGCitrusTestBuilder builder, Method method) {
+    private TestcaseDefinition getJavaDslTest(TestNGCitrusTestDesigner builder, Method method) {
         builder.init();
         ReflectionUtils.invokeMethod(method, builder);
 

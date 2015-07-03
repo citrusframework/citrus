@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.exceptions.ValidationException;
 import org.testng.annotations.Test;
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class ValidateNamespacesJavaITest extends TestNGCitrusTestBuilder {
+public class ValidateNamespacesJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void ValidateNamespacesJavaITest() {

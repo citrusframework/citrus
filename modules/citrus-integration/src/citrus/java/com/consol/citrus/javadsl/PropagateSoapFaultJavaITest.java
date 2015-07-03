@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import org.testng.annotations.Test;
 
@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class PropagateSoapFaultJavaITest extends TestNGCitrusTestBuilder {
+public class PropagateSoapFaultJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void PropagateSoapFaultJavaITest() {

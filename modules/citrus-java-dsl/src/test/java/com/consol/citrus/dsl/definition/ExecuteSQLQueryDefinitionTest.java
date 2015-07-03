@@ -43,7 +43,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -82,7 +82,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLQueryWithStatements() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -117,7 +117,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidationScript() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -147,7 +147,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidationScriptResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -183,7 +183,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyValidationScript() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -213,7 +213,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)

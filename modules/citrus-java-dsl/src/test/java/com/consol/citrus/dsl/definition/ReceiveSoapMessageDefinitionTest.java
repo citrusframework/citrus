@@ -71,7 +71,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWebServiceServerReceive() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(server)
@@ -110,7 +110,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachment() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -150,7 +150,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachmentData() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -191,7 +191,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testSoapAttachmentResource() throws IOException {
         final Resource attachmentResource = EasyMock.createMock(Resource.class);
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -235,7 +235,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleSoapAttachmentData() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -287,7 +287,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive("replyMessageEndpoint")
@@ -329,7 +329,7 @@ public class ReceiveSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)

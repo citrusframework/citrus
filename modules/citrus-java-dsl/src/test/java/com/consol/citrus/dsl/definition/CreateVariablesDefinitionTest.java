@@ -27,7 +27,7 @@ public class CreateVariablesDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateVariablesBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 variables().add("foo", "bar")

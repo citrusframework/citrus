@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.context.TestContext;
 
@@ -26,7 +26,7 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class DefaultExecutableTestBuilderComponent extends DefaultTestBuilderComponent implements ExecutableTestBuilder {
+public class DefaultExecutableTestDesignerComponent extends DefaultTestDesignerComponent implements ExecutableTestDesigner {
     @Override
     public void execute() {
         execute(createTestContext());

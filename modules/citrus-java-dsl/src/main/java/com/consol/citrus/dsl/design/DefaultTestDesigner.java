@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.CreateVariablesAction;
+import com.consol.citrus.dsl.*;
+import com.consol.citrus.dsl.behavior.TestBehavior;
 import com.consol.citrus.dsl.definition.AbstractActionDefinition;
 import com.consol.citrus.dsl.definition.CreateVariablesActionDefinition;
 import org.springframework.context.ApplicationContext;
@@ -32,12 +34,12 @@ import java.util.Date;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class DefaultTestBuilder extends AbstractTestBuilder {
+public class DefaultTestDesigner extends AbstractTestDesigner {
 
     /**
      * Default constructor.
      */
-    public DefaultTestBuilder() {
+    public DefaultTestDesigner() {
         super();
     }
 
@@ -45,7 +47,7 @@ public class DefaultTestBuilder extends AbstractTestBuilder {
      * Constructor using Spring bean application context.
      * @param applicationContext
      */
-    public DefaultTestBuilder(ApplicationContext applicationContext) {
+    public DefaultTestDesigner(ApplicationContext applicationContext) {
         super(applicationContext);
     }
 

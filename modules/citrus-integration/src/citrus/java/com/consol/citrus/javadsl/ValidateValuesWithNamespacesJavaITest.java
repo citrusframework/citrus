@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class ValidateValuesWithNamespacesJavaITest extends TestNGCitrusTestBuilder {
+public class ValidateValuesWithNamespacesJavaITest extends TestNGCitrusTestDesigner {
     
     @Autowired
     private NamespaceContextBuilder namespaceContextBuilder;

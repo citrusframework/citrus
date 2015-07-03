@@ -70,7 +70,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveEmpty() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint);
@@ -93,7 +93,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -131,7 +131,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -163,7 +163,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshaller() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -202,7 +202,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -234,7 +234,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithPayloadString() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -264,7 +264,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithPayloadResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -306,7 +306,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive("fooMessageEndpoint")
@@ -330,7 +330,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithTimeout() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -354,7 +354,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithHeaders() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -405,7 +405,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithHeaderData() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -456,7 +456,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithMultipleHeaderData() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -511,7 +511,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithHeaderResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -567,7 +567,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithMultipleHeaderResource() throws IOException {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -629,7 +629,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidator() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -673,7 +673,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -711,7 +711,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
         final Map<String, String> messageSelector = new HashMap<String, String>();
         messageSelector.put("operation", "sayHello");
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -737,7 +737,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithSelectorExpression() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -772,7 +772,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -804,7 +804,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -842,7 +842,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -882,7 +882,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidationCallback() {
         final ValidationCallback callback = EasyMock.createMock(ValidationCallback.class);
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -926,7 +926,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -976,7 +976,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock, resource, resourceFile);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1021,7 +1021,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1065,7 +1065,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithNamespaceValidation() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1098,7 +1098,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithPathValidationExpressions() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1132,7 +1132,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithIgnoreElements() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1165,7 +1165,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithSchema() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1197,7 +1197,7 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderWithSchemaRepository() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(messageEndpoint)

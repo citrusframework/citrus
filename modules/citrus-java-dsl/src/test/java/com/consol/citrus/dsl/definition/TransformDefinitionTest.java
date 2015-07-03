@@ -35,7 +35,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testTransformBuilderWithData() {
-		MockBuilder builder = new MockBuilder(applicationContext) {
+		MockDesigner builder = new MockDesigner(applicationContext) {
     		@Override
     		public void configure() {
     		    transform()
@@ -61,7 +61,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 		
 	@Test
 	public void testTransformBuilderWithResource() throws IOException {
-		MockBuilder builder = new MockBuilder(applicationContext) {
+		MockDesigner builder = new MockDesigner(applicationContext) {
 			@Override
 			public void configure() {
 				transform()

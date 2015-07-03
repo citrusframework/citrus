@@ -19,7 +19,7 @@ package com.consol.citrus.admin.executor;
 import com.consol.citrus.admin.configuration.ClasspathRunConfiguration;
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.websocket.WebSocketLoggingAppender;
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -66,8 +66,8 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
                 applicationContextHolder.loadApplicationContext();
             }
 
-            if (TestNGCitrusTestBuilder.class.isAssignableFrom(testClass)) {
-                runTestBuilder(testClassName, methodName, testClass);
+            if (TestNGCitrusTestDesigner.class.isAssignableFrom(testClass)) {
+                runTestDesigner(testClassName, methodName, testClass);
             } else if (AbstractTestNGCitrusTest.class.isAssignableFrom(testClass)) {
                 runTest(testClassName, methodName, testClass);
             }
@@ -147,7 +147,7 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
      * @param methodName
      * @param testClass
      */
-    private void runTestBuilder(String testName, String methodName, Class<?> testClass) {
+    private void runTestDesigner(String testName, String methodName, Class<?> testClass) {
         runTest(testName, methodName, testClass);
     }
 

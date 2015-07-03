@@ -49,7 +49,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestProperties() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(httpClient)
@@ -87,7 +87,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpResponseProperties() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(httpClient)
@@ -130,7 +130,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive("httpClient")

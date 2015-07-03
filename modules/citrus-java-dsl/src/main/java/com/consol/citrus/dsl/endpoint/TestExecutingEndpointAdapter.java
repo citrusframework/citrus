@@ -17,7 +17,7 @@
 package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.*;
+import com.consol.citrus.dsl.design.ExecutableTestDesigner;
 import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -34,10 +34,10 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
 
     @Override
     public Message dispatchMessage(final Message request, String mappingName) {
-        final ExecutableTestBuilder testBuilder;
+        final ExecutableTestDesigner testDesigner;
 
         try {
-            testBuilder = getApplicationContext().getBean(mappingName, ExecutableTestBuilder.class);
+            testDesigner = getApplicationContext().getBean(mappingName, ExecutableTestDesigner.class);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +
                     mappingName + "' in Spring bean context", e);
@@ -45,8 +45,8 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
 
         getTaskExecutor().execute(new Runnable() {
             public void run() {
-                prepareExecution(request, testBuilder);
-                testBuilder.execute();
+                prepareExecution(request, testDesigner);
+                testDesigner.execute();
             }
         });
 
@@ -62,8 +62,8 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
      * Prepares the test builder instance before execution. Subclasses may add custom properties to test builder
      * here.
      * @param request the triggering request message.
-     * @param testBuilder the found test builder.
+     * @param testDesigner the found test builder.
      */
-    protected void prepareExecution(Message request, ExecutableTestBuilder testBuilder) {
+    protected void prepareExecution(Message request, ExecutableTestDesigner testDesigner) {
     }
 }

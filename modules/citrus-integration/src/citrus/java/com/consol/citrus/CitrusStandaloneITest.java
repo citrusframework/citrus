@@ -16,7 +16,7 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.dsl.DefaultTestBuilder;
+import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.jms.message.JmsMessage;
 import com.consol.citrus.message.MessageType;
@@ -42,7 +42,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void echoTest() {
-        DefaultTestBuilder test = new DefaultTestBuilder();
+        DefaultTestDesigner test = new DefaultTestDesigner();
 
         test.name("EchoITest");
 
@@ -53,7 +53,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void jmsTest() {
-        DefaultTestBuilder test = new DefaultTestBuilder();
+        DefaultTestDesigner test = new DefaultTestDesigner();
 
         test.name("JmsITest");
 
@@ -74,7 +74,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void httpTest() {
-        DefaultTestBuilder test = new DefaultTestBuilder();
+        DefaultTestDesigner test = new DefaultTestDesigner();
 
         test.name("HttpITest");
 
@@ -96,7 +96,7 @@ public class CitrusStandaloneITest extends AbstractTestNGCitrusTest {
 
     @Test
     public void soapTest() {
-        DefaultTestBuilder test = new DefaultTestBuilder();
+        DefaultTestDesigner test = new DefaultTestDesigner();
 
         test.name("SoapITest");
 

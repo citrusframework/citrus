@@ -29,7 +29,7 @@ import static org.testng.Assert.assertEquals;
 public class CatchDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testCatchBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 catchException("com.consol.citrus.exceptions.CitrusRuntimeException", echo("${var}"));

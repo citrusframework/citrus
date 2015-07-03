@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class TransformActionJavaITest extends TestNGCitrusTestBuilder {
+public class TransformActionJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void TransformActionJavaITest() {

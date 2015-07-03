@@ -22,7 +22,9 @@ import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.executor.*;
 import com.consol.citrus.admin.model.*;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.*;
+import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -220,8 +222,8 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
                     tests.add(testCase);
                     position = javaContent.indexOf(citrusAnnotation, position + citrusAnnotation.length());
                 }
-            } else if (javaContent.contains(TestNGCitrusTestBuilder.class.getSimpleName()) ||
-                       javaContent.contains(JUnit4CitrusTestBuilder.class.getSimpleName())) {
+            } else if (javaContent.contains(TestNGCitrusTestDesigner.class.getSimpleName()) ||
+                       javaContent.contains(JUnit4CitrusTestDesigner.class.getSimpleName())) {
                 TestCaseData testCase = new TestCaseData();
                 testCase.setType(TestCaseType.JAVA);
                 testCase.setName(testName);
@@ -251,10 +253,10 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         List<TestCaseData> tests = new ArrayList<TestCaseData>();
 
         try {
-            Class<?> testBuilderClass = Class.forName(testPackage + "." + testName);
+            Class<?> testDesignerClass = Class.forName(testPackage + "." + testName);
 
-            if (TestBuilder.class.isAssignableFrom(testBuilderClass)) {
-                List<String> methods = getTestMethods(testBuilderClass);
+            if (TestDesigner.class.isAssignableFrom(testDesignerClass)) {
+                List<String> methods = getTestMethods(testDesignerClass);
                 for (String method : methods) {
                     TestCaseData testCase = new TestCaseData();
                     testCase.setType(TestCaseType.JAVA);

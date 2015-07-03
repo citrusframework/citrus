@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.dsl.TestActions;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
@@ -41,7 +42,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public abstract class AbstractTestBuilder implements TestBuilder {
+public abstract class AbstractTestDesigner implements TestDesigner {
 
     /** This builders test case */
     private final TestCase testCase = new TestCase();
@@ -53,7 +54,7 @@ public abstract class AbstractTestBuilder implements TestBuilder {
     private ApplicationContext applicationContext;
 
     /** Default constructor */
-    public AbstractTestBuilder() {
+    public AbstractTestDesigner() {
         testCase.setVariableDefinitions(variables);
 
         name(this.getClass().getSimpleName());
@@ -64,7 +65,7 @@ public abstract class AbstractTestBuilder implements TestBuilder {
      * Constructor using Spring bean application context.
      * @param applicationContext
      */
-    public AbstractTestBuilder(ApplicationContext applicationContext) {
+    public AbstractTestDesigner(ApplicationContext applicationContext) {
         this();
 
         try {

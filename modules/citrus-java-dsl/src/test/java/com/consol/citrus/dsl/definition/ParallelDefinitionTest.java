@@ -27,7 +27,7 @@ import static org.testng.Assert.assertEquals;
 public class ParallelDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testParallelBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 parallel(echo("${var}"), 

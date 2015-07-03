@@ -57,7 +57,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -96,7 +96,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -138,7 +138,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -183,7 +183,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(resource, applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -225,7 +225,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -269,7 +269,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(resource, applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -313,7 +313,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -354,7 +354,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockBuilder builder = new MockBuilder(applicationContextMock) {
+        MockDesigner builder = new MockDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))

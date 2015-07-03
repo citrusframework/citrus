@@ -32,7 +32,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilder() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -54,7 +54,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -77,7 +77,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -104,7 +104,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -131,7 +131,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = EasyMock.createMock(BuildListener.class);
         
-        MockBuilder builder = new MockBuilder(applicationContext) {
+        MockDesigner builder = new MockDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,28 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.jms;
+
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+
+import com.consol.citrus.demo.HelloJmsDemo;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2
  */
-public interface ExecutableTestBuilder extends TestBuilder {
+public abstract class AbstractJmsTestDesigner extends TestNGCitrusTestDesigner {
 
-    /**
-     * Builds and executes test case. Automatically creates new test context
-     * with help of Spring bean application context.
-     */
-    void execute();
+    private HelloJmsDemo demo = new HelloJmsDemo();
+    
+    @BeforeSuite
+    public void startDemo() {
+        demo.start();
+    }
+    
+    @AfterSuite(alwaysRun=true) 
+    public void stopDemo() {
+        demo.stop();
+    }
 }

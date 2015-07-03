@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -25,12 +25,12 @@ import org.springframework.context.ApplicationContextAware;
  * {@link org.springframework.stereotype.Component} annotated bean loaded with Spring's annotation scan support. The builder is aware of the application context and
  * the bean lifecylce automatically setting up application context and initializing tasks.
  *
- * Subclass may add custom logic in {@link com.consol.citrus.dsl.DefaultTestBuilderComponent#configure()} method by calling builder methods.
+ * Subclass may add custom logic in {@link DefaultTestDesignerComponent#configure()} method by calling builder methods.
  *
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class DefaultTestBuilderComponent extends DefaultTestBuilder implements ApplicationContextAware, InitializingBean {
+public class DefaultTestDesignerComponent extends DefaultTestDesigner implements ApplicationContextAware, InitializingBean {
 
     /**
      * Main entrance method for subclasses to call Java DSL builder methods in order to

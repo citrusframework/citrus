@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.javadsl;
+package com.consol.citrus.dsl;
 
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.annotations.CitrusTest;
-import org.testng.annotations.Test;
+import com.consol.citrus.dsl.behavior.AbstractTestBehavior;
 
 /**
+ * Abstract Citrus test behavior provides interface method implementations for
+ * behavior access and defines abstract apply method for subclasses to implement.
+ *
  * @author Christoph Deppisch
+ * @since 1.3.1
+ * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.behavior.AbstractTestBehavior}
  */
-@Test
-public class SleepActionJavaITest extends TestNGCitrusTestDesigner {
-    
-    @CitrusTest
-    public void SleepActionJavaITest() {
-        sleep(500);
-        sleep();
-    }
+public abstract class CitrusTestBehavior extends AbstractTestBehavior {
 }

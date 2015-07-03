@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.context.TestContext;
 import org.springframework.context.ApplicationContext;
@@ -23,13 +23,13 @@ import org.springframework.context.ApplicationContext;
  * @author Christoph Deppisch
  * @since 2.2
  */
-public class DefaultExecutableTestBuilder extends DefaultTestBuilder implements ExecutableTestBuilder {
+public class DefaultExecutableTestDesigner extends DefaultTestDesigner implements ExecutableTestDesigner {
 
     /**
      * Constructor using Spring bean application context.
      * @param applicationContext
      */
-    public DefaultExecutableTestBuilder(ApplicationContext applicationContext) {
+    public DefaultExecutableTestDesigner(ApplicationContext applicationContext) {
         super(applicationContext);
     }
 

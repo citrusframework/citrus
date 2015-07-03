@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class ServerSoapFaultJavaITest extends TestNGCitrusTestBuilder {
+public class ServerSoapFaultJavaITest extends TestNGCitrusTestDesigner {
     
     @Autowired
     @Qualifier("xmlSoapFaultValidator")

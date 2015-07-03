@@ -16,7 +16,7 @@
 
 package com.consol.citrus.javadsl;
 
-import com.consol.citrus.dsl.TestNGCitrusTestBuilder;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.message.MessageType;
 import org.testng.annotations.Test;
@@ -27,7 +27,7 @@ import java.util.*;
  * @author Christoph Deppisch
  */
 @Test
-public class MessageChannelJavalTest extends TestNGCitrusTestBuilder {
+public class MessageChannelJavalTest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
     public void MessageChannelJavalTest() {
