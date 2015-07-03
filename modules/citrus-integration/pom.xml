@@ -39,18 +39,16 @@
         </plugin>
 
         <plugin>
-          <groupId>org.mortbay.jetty</groupId>
+          <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <configuration>
             <webAppConfig>
               <contextPath>/citrus-admin</contextPath>
             </webAppConfig>
-            <connectors>
-              <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                <port>${citrus.serverPort}</port>
-                <maxIdleTime>60000</maxIdleTime>
-              </connector>
-            </connectors>
+            <httpConnector>
+              <port>${citrus.serverPort}</port>
+              <idleTimeout>60000</idleTimeout>
+            </httpConnector>
             <stopPort>${citrus.stopPort}</stopPort>
             <stopKey>stop</stopKey>
             <scanIntervalSeconds>5</scanIntervalSeconds>

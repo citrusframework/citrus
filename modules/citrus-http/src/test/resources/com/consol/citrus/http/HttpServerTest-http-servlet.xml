@@ -21,7 +21,7 @@
         <bean class="org.springframework.http.converter.StringHttpMessageConverter">
           <property name="supportedMediaTypes">
             <util:list>
-              <value>text/xml</value>
+              <value>*/*</value>
             </util:list>
           </property>
         </bean>

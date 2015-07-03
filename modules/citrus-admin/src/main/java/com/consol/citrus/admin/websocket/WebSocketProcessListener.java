@@ -97,16 +97,16 @@ public class WebSocketProcessListener implements ProcessListener {
 
     /**
      * Setter for dependency injection of loggingWebSocket instance.
-     * @param loggingWebSocket
+     * @param loggingWebSocket the logging web socket
      */
     public void setLoggingWebSocket(LoggingWebSocket loggingWebSocket) {
         this.loggingWebSocket = loggingWebSocket;
     }
 
     /**
-     * Checks if output line is normal log outpu in log4j format.
-     * @param output
-     * @return
+     * Checks if output line is normal log output in log4j format.
+     * @param output the output to check
+     * @return true if normal log4j output
      */
     private boolean isProcessOutputLine(String output) {
         return output.contains("INFO") || output.contains("DEBUG") || output.contains("ERROR") || output.contains("WARN") || output.contains("TRACE");

@@ -16,17 +16,22 @@
 
 package com.consol.citrus.http.server;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpEndpointConfiguration;
+import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.impl.client.*;
-import org.eclipse.jetty.http.HttpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.ResourceAccessException;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Simple unit test for HttpServer
@@ -34,35 +39,46 @@ import java.io.InputStream;
  */
 public class HttpServerTest extends AbstractTestNGUnitTest {
 
+    private int port = 8095;
+    private String uri = "http://localhost:" + port + "/test";
+
+    private HttpClient client;
+
+    @Autowired
+    private TestContextFactory testContextFactory;
+
+    @BeforeClass
+    public void setupClient() {
+        HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
+        endpointConfiguration.setRequestUrl(uri);
+        client = new HttpClient(endpointConfiguration);
+    }
+
     @Test
     public void startupAndShutdownTest() throws IOException {
         HttpServer server = new HttpServer();
-        server.setPort(8095);
+        server.setPort(port);
         server.setApplicationContext(applicationContext);
         server.setContextConfigLocation("classpath:com/consol/citrus/http/HttpServerTest-http-servlet.xml");
 
         server.startup();
 
-        //build a client to test the server
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpGet get = new HttpGet("http://localhost:8095/test");
-        get.setHeader(HttpHeaders.ACCEPT, "text/xml");
-        get.setHeader(HttpHeaders.CONTENT_TYPE, "text/xml");
-        //send get request
-        HttpResponse res = httpclient.execute(get);
+        TestContext context = testContextFactory.getObject();
+        client.send(new HttpMessage("Hello")
+                .method(HttpMethod.GET), context);
+
         //assert get was successful
-        Assert.assertTrue(res.getStatusLine().getStatusCode() == 200);
-        //read the response (otherwise conn is not released)
-        InputStream resStream = res.getEntity().getContent();
-        resStream.close();
+        Assert.assertEquals(client.receive(context).getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
 
         server.shutdown();
 
         try {
-            httpclient.execute(get);
-            Assert.fail("Server shutdown did not work!!");
-        } catch (HttpHostConnectException e) {
-          //fine, we expected this
+            client.send(new HttpMessage("Should fail")
+                    .method(HttpMethod.GET), context);
+
+            Assert.fail("Server supposed to be in shut down state, but was accessible via client request");
+        } catch (ResourceAccessException e) {
+            Assert.assertTrue(e.getMessage().contains("Connection refused"));
         }
     }
 }

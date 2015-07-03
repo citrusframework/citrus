@@ -206,14 +206,31 @@
     </dependency>
     
     <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-servlet</artifactId>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-websocket</artifactId>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+      <scope>provided</scope>
     </dependency>
-    
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>javax-websocket-server-impl</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-webapp</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
@@ -317,22 +334,24 @@
       </plugin>
 
       <plugin>
-          <groupId>org.mortbay.jetty</groupId>
+          <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <configuration>
               <webAppConfig>
                   <contextPath>/citrus-admin</contextPath>
               </webAppConfig>
-              <connectors>
-                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>${citrus.serverPort}</port>
-                  <maxIdleTime>60000</maxIdleTime>
-                </connector>
-              </connectors>
+              <httpConnector>
+                <port>${citrus.serverPort}</port>
+                <idleTimeout>60000</idleTimeout>
+              </httpConnector>
               <stopPort>${citrus.stopPort}</stopPort>
               <stopKey>stop</stopKey>
               <scanIntervalSeconds>5</scanIntervalSeconds>
               <systemProperties>
+                  <systemProperty>
+                    <name>file.encoding</name>
+                    <value>${project.build.sourceEncoding}</value>
+                  </systemProperty>
                   <systemProperty>
                     <name>file.encoding</name>
                     <value>${project.build.sourceEncoding}</value>

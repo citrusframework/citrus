@@ -165,7 +165,7 @@
     <activemq.version>5.10.0</activemq.version>
     <vertx.version>2.1.2</vertx.version>
     <groovy.version>2.1.0</groovy.version>
-    <jetty.version>8.1.16.v20140903</jetty.version>
+    <jetty.version>9.2.11.v20150529</jetty.version>
     <testng.version>6.8.8</testng.version>
     <slf4j.version>1.7.7</slf4j.version>
     <arquillian.version>1.1.8.Final</arquillian.version>
@@ -385,11 +385,20 @@
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-websocket</artifactId>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>javax-websocket-server-impl</artifactId>
         <version>${jetty.version}</version>
       </dependency>
-      
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-annotations</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-webapp</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.googlecode.json-simple</groupId>
         <artifactId>json-simple</artifactId>
@@ -738,7 +747,7 @@
           <version>3.4</version>
         </plugin>
         <plugin>
-          <groupId>org.mortbay.jetty</groupId>
+          <groupId>org.eclipse.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
           <version>${jetty.version}</version>
         </plugin>

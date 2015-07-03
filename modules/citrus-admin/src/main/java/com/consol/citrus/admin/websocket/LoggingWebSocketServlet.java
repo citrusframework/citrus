@@ -16,15 +16,15 @@
 
 package com.consol.citrus.admin.websocket;
 
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Logging WebSocket
@@ -36,26 +36,23 @@ public class LoggingWebSocketServlet extends WebSocketServlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(LoggingWebSocketServlet.class);
 
-    private LoggingWebSocket loggingWebSocket;
+    private WebSocketCreator webSocketCreator;
+
+    @Override
+    public void configure(WebSocketServletFactory factory) {
+        LOG.info("Configuring the websocket");
+        factory.setCreator(webSocketCreator);
+    }
 
     @Override
     public void init() throws ServletException {
+        LOG.info("Initialising the websocket");
+        webSocketCreator = getWebSocketCreator();
         super.init();
-        loggingWebSocket = getLoggingWebSocket();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public WebSocket doWebSocketConnect(HttpServletRequest request, String protocol) {
-        LOG.info("Accepted a new connection");
-        return loggingWebSocket;
-    }
-
-    private LoggingWebSocket getLoggingWebSocket() {
+    private WebSocketCreator getWebSocketCreator() {
         WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
-        return springContext.getBean(LoggingWebSocket.class);
+        return springContext.getBean(LoggingWebSocketCreator.class);
     }
-
-
 }
