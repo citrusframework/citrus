@@ -39,7 +39,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
-    private List<TestAction> finallyChain = new ArrayList<TestAction>();
+    private List<TestAction> finalActions = new ArrayList<>();
 
     /** Tests variables */
     private Map<String, ?> variableDefinitions = new LinkedHashMap<String, Object>();
@@ -202,7 +202,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             testActionListeners.onTestActionStart(this, action);
             setLastExecutedAction(action);
 
-                /* execute the test action and validate its success */
             action.execute(context);
             testActionListeners.onTestActionFinish(this, action);
         } else {
@@ -218,12 +217,11 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         context.getTestListeners().onTestFinish(this);
 
         try {
-            if (!finallyChain.isEmpty()) {
+            if (!finalActions.isEmpty()) {
                 log.info("Finish test case with actions in finally block");
 
                 /* walk through the finally chain and execute the actions in there */
-                for (TestAction action : finallyChain) {
-                /* execute the test action and validate its success */
+                for (TestAction action : finalActions) {
                     action.execute(context);
                 }
             }
@@ -262,10 +260,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /**
      * Setter for finally chain.
-     * @param finallyChain
+     * @param finalActions
      */
-    public void setFinallyChain(List<TestAction> finallyChain) {
-        this.finallyChain = finallyChain;
+    public void setFinalActions(List<TestAction> finalActions) {
+        this.finalActions = finalActions;
     }
 
     @Override
@@ -280,7 +278,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         buf.append("] ");
 
-        buf.append("[testChain:");
+        buf.append("[testActions:");
 
         for (TestAction action: actions) {
             buf.append(action.getClass().getName()).append(";");
@@ -295,8 +293,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Adds action to finally action chain.
      * @param testAction
      */
-    public void addFinallyChainAction(TestAction testAction) {
-        this.finallyChain.add(testAction);
+    public void addFinalAction(TestAction testAction) {
+        this.finalActions.add(testAction);
     }
     
     /**
@@ -317,10 +315,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /**
      * Get all actions in the finally chain.
-     * @return the finallyChain
+     * @return the finalActions
      */
-    public List<TestAction> getFinallyChain() {
-        return finallyChain;
+    public List<TestAction> getFinalActions() {
+        return finalActions;
     }
 
     /**

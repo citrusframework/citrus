@@ -101,12 +101,12 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "behavior");
 
-        Assert.assertEquals(test.getFinallyChain().size(), 2);
-        Assert.assertEquals(test.getFinallyChain().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getFinallyChain().get(0)).getMessage(), "finally");
+        Assert.assertEquals(test.getFinalActions().size(), 2);
+        Assert.assertEquals(test.getFinalActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinalActions().get(0)).getMessage(), "finally");
 
-        Assert.assertEquals(test.getFinallyChain().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getFinallyChain().get(1)).getMessage(), "behaviorFinally");
+        Assert.assertEquals(test.getFinalActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinalActions().get(1)).getMessage(), "behaviorFinally");
     }
 
     @Test

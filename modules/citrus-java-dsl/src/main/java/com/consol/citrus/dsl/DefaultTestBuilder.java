@@ -110,12 +110,12 @@ public class DefaultTestBuilder extends AbstractTestBuilder {
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
                 getTestCase().getActions().remove(((AbstractActionDefinition<?>) action).getAction());
-                getTestCase().getFinallyChain().add(((AbstractActionDefinition<?>) action).getAction());
+                getTestCase().getFinalActions().add(((AbstractActionDefinition<?>) action).getAction());
             } else if (!action.getClass().isAnonymousClass()) {
                 getTestCase().getActions().remove(action);
-                getTestCase().getFinallyChain().add(action);
+                getTestCase().getFinalActions().add(action);
             } else {
-                getTestCase().getFinallyChain().add(action);
+                getTestCase().getFinalActions().add(action);
             }
         }
     }

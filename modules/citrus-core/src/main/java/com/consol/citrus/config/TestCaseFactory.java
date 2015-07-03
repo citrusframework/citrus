@@ -16,15 +16,14 @@
 
 package com.consol.citrus.config;
 
-import java.util.List;
-
-import org.springframework.beans.factory.FactoryBean;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import org.springframework.beans.factory.FactoryBean;
+
+import java.util.List;
 
 /**
- * Test case factory bean constructs test cases with action chain and finally block.
+ * Test case factory bean constructs test cases with test actions and test finally block.
  * 
  * @author Christoph Deppisch
  */
@@ -33,52 +32,46 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
     private TestCase testCase;
 
     /** Test action chain */
-    private List<TestAction> testChain;
+    private List<TestAction> testActions;
     /** Test actions in finally block */
-    private List<TestAction> finallyChain;
+    private List<TestAction> finalActions;
 
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
+    @Override
     public TestCase getObject() throws Exception {
-        if (this.testChain != null && this.testChain.size() > 0) {
-            for (int i = 0; i < testChain.size(); i++) {
-                TestAction action = testChain.get(i);
+        if (this.testActions != null && this.testActions.size() > 0) {
+            for (int i = 0; i < testActions.size(); i++) {
+                TestAction action = testActions.get(i);
                 testCase.addTestAction(action);
             }
         }
 
-        if (this.finallyChain != null && this.finallyChain.size() > 0) {
-            for (int i = 0; i < finallyChain.size(); i++) {
-                TestAction action = finallyChain.get(i);
-                testCase.addFinallyChainAction(action);
+        if (this.finalActions != null && this.finalActions.size() > 0) {
+            for (int i = 0; i < finalActions.size(); i++) {
+                TestAction action = finalActions.get(i);
+                testCase.addFinalAction(action);
             }
         }
 
         return this.testCase;
     }
 
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
+    @Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     public Class getObjectType() {
         return TestCase.class;
     }
 
-	/**
-	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-	 */
+	@Override
     public boolean isSingleton() {
         return true;
     }
 
     /**
-     * Setter for finally chain.
-     * @param finallyChain
+     * Setter for final test actions.
+     * @param finalActions
      */
-    public void setFinallyChain(List<TestAction> finallyChain) {
-        this.finallyChain = finallyChain;
+    public void setFinalActions(List<TestAction> finalActions) {
+        this.finalActions = finalActions;
     }
 
     /**
@@ -90,10 +83,10 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
     }
 
     /**
-     * Set the test action chain.
-     * @param testChain
+     * Set the test actions.
+     * @param testActions
      */
-    public void setTestChain(List<TestAction> testChain) {
-        this.testChain = testChain;
+    public void setTestActions(List<TestAction> testActions) {
+        this.testActions = testActions;
     }
 }

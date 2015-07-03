@@ -16,11 +16,11 @@
 
 package com.consol.citrus.container;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base class for all containers holding several embedded test actions.
@@ -34,58 +34,42 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
     /** Last executed action for error reporting reasons */
     private TestAction lastExecutedAction;
     
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
-     */
+    @Override
     public void setActions(List<TestAction> actions) {
         this. actions = actions;
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getActions()
-     */
+
+    @Override
     public List<TestAction> getActions() {
         return actions;
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getActionCount()
-     */
+
+    @Override
     public long getActionCount() {
         return actions.size();
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#addTestAction(com.consol.citrus.TestAction)
-     */
+
+    @Override
     public void addTestAction(TestAction action) {
         actions.add(action);
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getActionIndex(com.consol.citrus.TestAction)
-     */
+
+    @Override
     public int getActionIndex(TestAction action) {
         return actions.indexOf(action);
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getLastExecutedAction()
-     */
+
+    @Override
     public TestAction getLastExecutedAction() {
         return lastExecutedAction;
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#setLastExecutedAction(com.consol.citrus.TestAction)
-     */
+
+    @Override
     public void setLastExecutedAction(TestAction action) {
         this.lastExecutedAction = action;
     }
-    
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
-     */
+
+    @Override
     public TestAction getTestAction(int index) {
         return actions.get(index);
     }

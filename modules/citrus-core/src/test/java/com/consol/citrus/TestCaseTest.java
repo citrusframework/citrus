@@ -90,12 +90,12 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testFinallyChain() {
+    public void testFinalActions() {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
         
         testcase.addTestAction(new EchoAction());
-        testcase.addFinallyChainAction(new EchoAction());
+        testcase.addFinalAction(new EchoAction());
         
         testcase.execute(context);
     }

@@ -65,8 +65,8 @@ public class TestCaseParser implements BeanDefinitionParser {
         Element finallyBlockElement = DomUtils.getChildElementByTagName(element, "finally");
 
         testCaseFactory.addPropertyValue("testCase", testCase.getBeanDefinition());
-        testCaseFactory.addPropertyValue("testChain", parseActions(actionsElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
-        testCaseFactory.addPropertyValue("finallyChain", parseActions(finallyBlockElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
+        testCaseFactory.addPropertyValue("testActions", parseActions(actionsElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
+        testCaseFactory.addPropertyValue("finalActions", parseActions(finallyBlockElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
 
         parserContext.getRegistry().registerBeanDefinition(testName, testCaseFactory.getBeanDefinition());
 
