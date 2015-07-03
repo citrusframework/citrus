@@ -128,6 +128,11 @@ public class TestNGCitrusTestBuilder extends AbstractTestNGCitrusTest implements
         super.executeTest(testContext);
     }
 
+    @Override
+    public TestCase build() {
+        return testBuilder.build();
+    }
+
     /**
      * Main entrance method for builder pattern usage. Subclasses may override
      * this method and call Java DSL builder methods for adding test actions and

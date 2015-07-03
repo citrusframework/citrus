@@ -16,8 +16,7 @@
 
 package com.consol.citrus.dsl;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.definition.*;
@@ -41,6 +40,12 @@ import java.util.Date;
  * @since 1.3.1
  */
 public interface TestBuilder extends ApplicationContextAware {
+
+    /**
+     * Builds the test case.
+     * @return
+     */
+    TestCase build();
 
     /**
      * Set custom test case name.
