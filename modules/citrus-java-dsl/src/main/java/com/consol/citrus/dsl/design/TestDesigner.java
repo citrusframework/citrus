@@ -19,7 +19,6 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
-import com.consol.citrus.dsl.behavior.TestBehavior;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;

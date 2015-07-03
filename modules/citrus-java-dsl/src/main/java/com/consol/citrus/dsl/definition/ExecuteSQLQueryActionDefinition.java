@@ -16,18 +16,18 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
+import org.springframework.core.io.Resource;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -42,6 +42,16 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 
 	public ExecuteSQLQueryActionDefinition(ExecuteSQLQueryAction action) {
 	    super(action);
+    }
+
+    /**
+     * Sets the SQL data source.
+     * @param dataSource
+     * @return
+     */
+    public ExecuteSQLQueryActionDefinition dataSource(DataSource dataSource) {
+        action.setDataSource(dataSource);
+        return this;
     }
 
 	/**

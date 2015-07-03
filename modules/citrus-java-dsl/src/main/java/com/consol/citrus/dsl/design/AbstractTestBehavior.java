@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.behavior;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.util.PositionHandle;
 
 /**

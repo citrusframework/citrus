@@ -19,7 +19,7 @@ package com.consol.citrus.dsl;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.dsl.behavior.AbstractTestBehavior;
+import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.dsl.definition.MockDesigner;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;

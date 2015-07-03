@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
@@ -65,7 +66,6 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     /** Handle for test action position in test case sequence use when switching to SOAP specific definition */
     private PositionHandle positionHandle;
 
-
     /**
      * Default constructor with test action.
      * @param action
@@ -73,6 +73,26 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     public SendMessageActionDefinition(A action) {
         super(action);
         this.self = (T) this;
+    }
+
+    /**
+     * Sets the message endpoint to send messages to.
+     * @param messageEndpoint
+     * @return
+     */
+    public SendMessageActionDefinition endpoint(Endpoint messageEndpoint) {
+        action.setEndpoint(messageEndpoint);
+        return this;
+    }
+
+    /**
+     * Sets the message endpoint uri to send messages to.
+     * @param messageEndpointUri
+     * @return
+     */
+    public SendMessageActionDefinition endpoint(String messageEndpointUri) {
+        action.setEndpointUri(messageEndpointUri);
+        return this;
     }
 
     /**

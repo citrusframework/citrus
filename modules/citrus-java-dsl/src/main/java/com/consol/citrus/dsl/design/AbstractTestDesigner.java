@@ -74,7 +74,7 @@ public abstract class AbstractTestDesigner implements TestDesigner {
                 initialize();
             }
         } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to setup test builder with application context", e);
+            throw new CitrusRuntimeException("Failed to setup test designer", e);
         }
     }
 

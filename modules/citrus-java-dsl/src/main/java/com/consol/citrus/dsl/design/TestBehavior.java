@@ -1,6 +1,4 @@
-package com.consol.citrus.dsl.behavior;
-
-import com.consol.citrus.dsl.design.TestDesigner;
+package com.consol.citrus.dsl.design;
 
 /**
  * Test apply interface applies to test builder classes adding all builder

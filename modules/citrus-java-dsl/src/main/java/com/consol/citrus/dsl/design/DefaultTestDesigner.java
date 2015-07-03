@@ -20,7 +20,6 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.dsl.*;
-import com.consol.citrus.dsl.behavior.TestBehavior;
 import com.consol.citrus.dsl.definition.AbstractActionDefinition;
 import com.consol.citrus.dsl.definition.CreateVariablesActionDefinition;
 import org.springframework.context.ApplicationContext;

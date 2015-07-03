@@ -197,7 +197,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param action
      * @param context
      */
-    protected void executeAction(TestAction action, TestContext context) {
+    public void executeAction(TestAction action, TestContext context) {
         if (!action.isDisabled(context)) {
             testActionListeners.onTestActionStart(this, action);
             setLastExecutedAction(action);

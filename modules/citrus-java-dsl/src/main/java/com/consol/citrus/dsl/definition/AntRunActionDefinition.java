@@ -16,12 +16,11 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.Arrays;
-
+import com.consol.citrus.actions.AntRunAction;
 import org.apache.tools.ant.BuildListener;
 import org.springframework.util.StringUtils;
 
-import com.consol.citrus.actions.AntRunAction;
+import java.util.Arrays;
 
 /**
  * Action running ANT build targets during test.
@@ -33,6 +32,11 @@ public class AntRunActionDefinition extends AbstractActionDefinition<AntRunActio
 
 	public AntRunActionDefinition(AntRunAction action) {
 	    super(action);
+    }
+
+    public AntRunActionDefinition buildFilePath(String buildFilePath) {
+        action.setBuildFilePath(buildFilePath);
+        return this;
     }
 	
 	/**

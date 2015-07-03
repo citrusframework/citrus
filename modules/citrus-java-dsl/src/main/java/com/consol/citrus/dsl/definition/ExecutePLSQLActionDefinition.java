@@ -16,14 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import org.springframework.core.io.Resource;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Creates an ExecutePLSQLAction, which executes PLSQL statements either declared inline as 
@@ -37,6 +37,16 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 	public ExecutePLSQLActionDefinition(ExecutePLSQLAction action) {
 	    super(action);
     }
+
+	/**
+	 * Sets the SQL data source.
+	 * @param dataSource
+	 * @return
+	 */
+	public ExecutePLSQLActionDefinition dataSource(DataSource dataSource) {
+		action.setDataSource(dataSource);
+		return this;
+	}
 
 	/**
      * Adds a list of statements to execute. 

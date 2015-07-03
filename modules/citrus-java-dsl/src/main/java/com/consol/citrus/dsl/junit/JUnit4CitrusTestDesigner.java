@@ -21,7 +21,7 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.behavior.TestBehavior;
+import com.consol.citrus.dsl.design.TestBehavior;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;

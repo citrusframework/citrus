@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.dsl.design.AbstractTestBehavior;
+import com.consol.citrus.dsl.definition.AbstractActionDefinition;
 
 /**
- * Abstract Citrus test behavior provides interface method implementations for
- * behavior access and defines abstract apply method for subclasses to implement.
- *
  * @author Christoph Deppisch
- * @since 1.3.1
- * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.AbstractTestBehavior}
+ * @since 2.2.1
  */
-public abstract class CitrusTestBehavior extends AbstractTestBehavior {
+public interface TestActionConfigurer<T extends AbstractActionDefinition> {
+
+    void configure(T definition);
 }

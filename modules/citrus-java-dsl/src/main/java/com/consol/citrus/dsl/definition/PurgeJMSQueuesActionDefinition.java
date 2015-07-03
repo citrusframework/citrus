@@ -123,4 +123,12 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
 		action.setSleepTime(millis);
 		return this;
 	}
+
+	/**
+	 * Checks if connection factory is set properly.
+	 * @return
+	 */
+	public boolean hasConnectionFactory() {
+		return action.getConnectionFactory() != null;
+	}
 }
