@@ -44,8 +44,8 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
         HttpHeaders httpHeaders = new HttpHeaders();
         endpointConfiguration.getHeaderMapper().fromHeaders(new org.springframework.messaging.MessageHeaders(httpMessage.copyHeaders()), httpHeaders);
 
-        Map<String, ?> messageHeaders = httpMessage.copyHeaders();
-        for (Map.Entry<String, ?> header : messageHeaders.entrySet()) {
+        Map<String, Object> messageHeaders = httpMessage.copyHeaders();
+        for (Map.Entry<String, Object> header : messageHeaders.entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
                     !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
                     !httpHeaders.containsKey(header.getKey())) {
@@ -77,7 +77,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
 
     @Override
     public HttpMessage convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration) {
-        Map<String, ?> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
+        Map<String, Object> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
         HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders))
                 .version("HTTP/1.1"); //TODO check if we have access to version information
 
@@ -102,8 +102,8 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
      * @param mappedHeaders the previously mapped header entries (all standard headers).
      * @return
      */
-    private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, ?> mappedHeaders) {
-        Map<String, String> customHeaders = new HashMap<String, String>();
+    private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, Object> mappedHeaders) {
+        Map<String, String> customHeaders = new HashMap<>();
 
         for (Map.Entry<String, List<String>> header : httpHeaders.entrySet()) {
             if (!mappedHeaders.containsKey(header.getKey())) {
@@ -120,10 +120,10 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
      *
      * @param headers the http request headers.
      */
-    private Map<String, Object> convertHeaderTypes(Map<String, ?> headers) {
-        Map<String, Object> convertedHeaders = new HashMap<String, Object>();
+    private Map<String, Object> convertHeaderTypes(Map<String, Object> headers) {
+        Map<String, Object> convertedHeaders = new HashMap<>();
 
-        for (Map.Entry<String, ?> header : headers.entrySet()) {
+        for (Map.Entry<String, Object> header : headers.entrySet()) {
             if (header.getValue() instanceof Collection<?>) {
                 Collection<?> value = (Collection<?>)header.getValue();
                 convertedHeaders.put(header.getKey(), StringUtils.collectionToCommaDelimitedString(value));

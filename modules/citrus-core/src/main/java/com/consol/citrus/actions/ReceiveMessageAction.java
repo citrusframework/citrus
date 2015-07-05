@@ -51,7 +51,7 @@ import java.util.*;
  */
 public class ReceiveMessageAction extends AbstractTestAction implements InitializingBean {
     /** Build message selector with name value pairs */
-    private Map<String, String> messageSelector = new HashMap<String, String>();
+    private Map<String, Object> messageSelector = new HashMap<>();
 
     /** Select messages via message selector string */
     private String messageSelectorString;
@@ -213,7 +213,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Setter for messageSelector.
      * @param messageSelector
      */
-    public void setMessageSelector(Map<String, String> messageSelector) {
+    public void setMessageSelector(Map<String, Object> messageSelector) {
         this.messageSelector = messageSelector;
     }
 
@@ -341,7 +341,7 @@ public class ReceiveMessageAction extends AbstractTestAction implements Initiali
      * Gets the messageSelector.
      * @return the messageSelector
      */
-    public Map<String, String> getMessageSelector() {
+    public Map<String, Object> getMessageSelector() {
         return messageSelector;
     }
 

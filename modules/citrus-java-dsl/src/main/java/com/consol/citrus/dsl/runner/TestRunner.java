@@ -164,6 +164,18 @@ public interface TestRunner extends ApplicationContextAware {
     void send(TestActionConfigurer<SendMessageActionDefinition> configurer);
 
     /**
+     * Add sleep action with default delay time.
+     */
+    void sleep();
+
+    /**
+     * Add sleep action with time in milliseconds.
+     *
+     * @param milliseconds
+     */
+    void sleep(long milliseconds);
+
+    /**
      * Apply test apply with all test actions, finally actions and test
      * variables defined in given apply.
      *
@@ -171,4 +183,10 @@ public interface TestRunner extends ApplicationContextAware {
      */
     void applyBehavior(TestBehavior behavior);
 
+    /**
+     * Add test parameters to the test.
+     * @param parameterNames
+     * @param parameterValues
+     */
+    void parameter(String[] parameterNames, Object[] parameterValues);
 }

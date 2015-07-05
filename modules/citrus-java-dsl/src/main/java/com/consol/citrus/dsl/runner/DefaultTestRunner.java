@@ -27,6 +27,8 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +39,9 @@ import javax.jms.ConnectionFactory;
  * @since 2.2.1
  */
 public class DefaultTestRunner implements TestRunner {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(DefaultTestRunner.class);
 
     /** This builders test case */
     private final TestCase testCase = new TestCase();
@@ -105,6 +110,8 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public <T> T variable(String name, T value) {
+        testCase.getVariableDefinitions().put(name, value);
+
         if (value instanceof String) {
             String resolved = context.resolveDynamicValue((String) value);
             context.setVariable(name, resolved);
@@ -112,6 +119,16 @@ public class DefaultTestRunner implements TestRunner {
         } else {
             context.setVariable(name, value);
             return value;
+        }
+    }
+
+    @Override
+    public void parameter(String[] parameterNames, Object[] parameterValues) {
+        testCase.setParameters(parameterNames, parameterValues);
+
+        for (int i = 0; i < parameterNames.length; i++) {
+            log.info(String.format("Initializing test parameter '%s' as variable", parameterNames[i]));
+            context.setVariable(parameterNames[i], parameterValues[i]);
         }
     }
 
@@ -210,6 +227,16 @@ public class DefaultTestRunner implements TestRunner {
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
         run(definition.getAction());
+    }
+
+    @Override
+    public void sleep() {
+        run(TestActions.sleep());
+    }
+
+    @Override
+    public void sleep(long milliseconds) {
+        run(TestActions.sleep(milliseconds));
     }
 
     /**

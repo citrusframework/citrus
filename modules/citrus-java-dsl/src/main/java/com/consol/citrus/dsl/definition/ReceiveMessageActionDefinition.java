@@ -418,7 +418,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @param messageSelector
      * @return
      */
-    public T selector(Map<String, String> messageSelector) {
+    public T selector(Map<String, Object> messageSelector) {
         action.setMessageSelector(messageSelector);
 
         return self;

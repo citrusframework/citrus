@@ -45,7 +45,7 @@ public class TestcaseModelConverter implements ObjectConverter<TestcaseDefinitio
         testModel.setMetaInfo(metaInfoType);
 
         VariablesDefinition variables = new VariablesDefinition();
-        for (Map.Entry<String, ?> variableEntry : definition.getVariableDefinitions().entrySet()) {
+        for (Map.Entry<String, Object> variableEntry : definition.getVariableDefinitions().entrySet()) {
             VariablesDefinition.Variable variable = new VariablesDefinition.Variable();
 
             variable.setName(variableEntry.getKey());
