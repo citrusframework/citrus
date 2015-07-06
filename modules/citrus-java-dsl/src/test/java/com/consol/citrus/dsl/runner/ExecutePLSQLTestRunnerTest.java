@@ -31,6 +31,10 @@ import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
 
+/**
+ * @author Christoph Deppisch
+ * @since 2.2.1
+ */
 public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     private JdbcTemplate jdbcTemplate = EasyMock.createMock(JdbcTemplate.class);
     private Resource sqlResource = EasyMock.createMock(Resource.class);

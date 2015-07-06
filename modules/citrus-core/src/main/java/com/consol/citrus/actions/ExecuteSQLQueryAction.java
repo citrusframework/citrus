@@ -18,9 +18,7 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
@@ -75,6 +73,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         if (statements.isEmpty()) {
             statements = createStatementsFromFileResource(context);
         }
+
         try {
             //for control result set validation
             Map<String, List<String>> columnValuesMap = new HashMap<String, List<String>>();

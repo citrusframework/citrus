@@ -30,6 +30,10 @@ import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
 
+/**
+ * @author Christoph Deppisch
+ * @since 1.3
+ */
 public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     private Resource sqlResource = EasyMock.createMock(Resource.class);

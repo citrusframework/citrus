@@ -30,7 +30,10 @@ import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
 
-
+/**
+ * @author Christoph Deppisch
+ * @since 1.3
+ */
 public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
@@ -43,9 +46,9 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 sql(dataSource)
-                    .statement("Test Statement")
-                    .statement("Test2 Statement")
-                    .statement("Test3 Statement")
+                    .statement("TEST_STMT_1")
+                    .statement("TEST_STMT_2")
+                    .statement("TEST_STMT_3")
                     .ignoreErrors(false);
             }
         };
@@ -58,13 +61,13 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
         
         ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
-        Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
+        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
         Assert.assertEquals(action.isIgnoreErrors(), false);
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
     
     @Test
-    public void TestExecuteSQLBuilderWithSQLResource() throws IOException {
+    public void TestExecuteSQLBuilderWithResource() throws IOException {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {

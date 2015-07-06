@@ -23,6 +23,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -42,6 +43,16 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 
 	public ExecuteSQLQueryActionDefinition(ExecuteSQLQueryAction action) {
 	    super(action);
+    }
+
+    /**
+     * Sets the Spring JDBC template to use.
+     * @param jdbcTemplate
+     * @return
+     */
+    public ExecuteSQLQueryActionDefinition jdbcTemplate(JdbcTemplate jdbcTemplate) {
+        action.setJdbcTemplate(jdbcTemplate);
+        return this;
     }
 
     /**

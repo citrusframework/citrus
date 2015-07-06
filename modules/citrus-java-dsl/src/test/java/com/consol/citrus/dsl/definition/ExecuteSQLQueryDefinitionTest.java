@@ -33,6 +33,10 @@ import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
 
+/**
+ * @author Christoph Deppisch
+ * @since 2.2.1
+ */
 public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
     
@@ -49,8 +53,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
                 query(dataSource)
                     .sqlResource(resource)
                     .validate("COLUMN", "value")
-                    .extract("COLUMN", "variable")
-                    .validator(validator);
+                    .extract("COLUMN", "variable");
             }
         };
         
@@ -75,7 +78,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:some.file");
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertNull(action.getValidator());
         
         verify(resource, file);
     }
@@ -83,15 +86,14 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteSQLQueryWithStatements() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
-        @Override
-        public void configure() {
-            query(dataSource)
-                .statement("stmt1")
-                .statement("stmt2")
-                .statement("stmt3")
-                .validate("COLUMN", "value1", "value2")
-                .extract("COLUMN", "variable")
-                .validator(validator);
+            @Override
+            public void configure() {
+                query(dataSource)
+                    .statement("stmt1")
+                    .statement("stmt2")
+                    .statement("stmt3")
+                    .validate("COLUMN", "value1", "value2")
+                    .extract("COLUMN", "variable");
             }
         };
 
@@ -112,17 +114,17 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getStatements().toString(), "[stmt1, stmt2, stmt3]");
         Assert.assertNull(action.getScriptValidationContext());
         Assert.assertEquals(action.getDataSource(), dataSource);
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertNull(action.getValidator());
     }
     
     @Test
     public void testValidationScript() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
-        @Override
-        public void configure() {
-            query(dataSource)
-                .statement("stmt")
-                .validateScript("assert row[0].COLUMN == 'value1'", ScriptTypes.GROOVY);
+            @Override
+            public void configure() {
+                query(dataSource)
+                    .statement("stmt")
+                    .validateScript("assert rows[0].COLUMN == 'value1'", ScriptTypes.GROOVY);
             }
         };
 
@@ -138,7 +140,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert row[0].COLUMN == 'value1'");
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert rows[0].COLUMN == 'value1'");
         Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
@@ -148,11 +150,11 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testValidationScriptResource() throws IOException {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
-        @Override
-        public void configure() {
-            query(dataSource)
-                .statement("stmt")
-                .validateScript(resource, ScriptTypes.GROOVY);
+            @Override
+            public void configure() {
+                query(dataSource)
+                    .statement("stmt")
+                    .validateScript(resource, ScriptTypes.GROOVY);
             }
         };
         
@@ -184,11 +186,11 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testGroovyValidationScript() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
-        @Override
-        public void configure() {
-            query(dataSource)
-                .statement("stmt")
-                .groovy("assert row[0].COLUMN == 'value1'");
+            @Override
+            public void configure() {
+                query(dataSource)
+                    .statement("stmt")
+                    .groovy("assert rows[0].COLUMN == 'value1'");
             }
         };
 
@@ -204,7 +206,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
         Assert.assertNotNull(action.getScriptValidationContext());
-        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert row[0].COLUMN == 'value1'");
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert rows[0].COLUMN == 'value1'");
         Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
         Assert.assertEquals(action.getStatements().size(), 1);
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
@@ -214,11 +216,11 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
-        @Override
-        public void configure() {
-            query(dataSource)
-                .statement("stmt")
-                .groovy(resource);
+            @Override
+            public void configure() {
+                query(dataSource)
+                    .statement("stmt")
+                    .groovy(resource);
             }
         };
         
@@ -245,5 +247,37 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getDataSource(), dataSource);
         
         verify(resource, file);
+    }
+
+    @Test
+    public void testCustomScriptValidator() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                query(dataSource)
+                        .statement("stmt")
+                        .validateScript("assert something", ScriptTypes.GROOVY)
+                        .validator(validator);
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
+
+        ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
+
+        Assert.assertEquals(action.getName(), "sql-query");
+        Assert.assertEquals(action.getControlResultSet().size(), 0);
+        Assert.assertEquals(action.getExtractVariables().size(), 0);
+        Assert.assertNotNull(action.getScriptValidationContext());
+        Assert.assertEquals(action.getScriptValidationContext().getValidationScript(), "assert something");
+        Assert.assertNull(action.getScriptValidationContext().getValidationScriptResourcePath());
+        Assert.assertEquals(action.getStatements().size(), 1);
+        Assert.assertEquals(action.getStatements().toString(), "[stmt]");
+        Assert.assertEquals(action.getDataSource(), dataSource);
+        Assert.assertEquals(action.getValidator(), validator);
     }
 }

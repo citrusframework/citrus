@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -37,6 +38,16 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
 	public ExecuteSQLActionDefinition(ExecuteSQLAction action) {
 	    super(action);
     }
+
+	/**
+	 * Sets the Spring JDBC template to use.
+	 * @param jdbcTemplate
+	 * @return
+	 */
+	public ExecuteSQLActionDefinition jdbcTemplate(JdbcTemplate jdbcTemplate) {
+		action.setJdbcTemplate(jdbcTemplate);
+		return this;
+	}
 
 	/**
 	 * Sets the SQL data source.
