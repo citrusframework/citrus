@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -34,7 +34,7 @@ public class TestRequest {
      * Default constructor using message field.
      * @param message
      */
-    TestRequest(String message) {
+    public TestRequest(String message) {
         this.message = message;
     }
 

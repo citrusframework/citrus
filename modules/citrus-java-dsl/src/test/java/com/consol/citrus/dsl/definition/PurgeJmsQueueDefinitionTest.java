@@ -26,7 +26,11 @@ import org.testng.annotations.Test;
 import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 
-public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
+/**
+ * @author Christoph Deppisch
+ * @since 1.3
+ */
+public class PurgeJmsQueueDefinitionTest extends AbstractTestNGUnitTest {
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
     
     private Queue queue1 = EasyMock.createMock(Queue.class);
@@ -34,7 +38,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     private Queue queue3 = EasyMock.createMock(Queue.class);
     
     @Test
-    public void testPurgeJMSQueuesBuilderWithQueueNames() {
+    public void testPurgeJmsQueuesBuilderWithQueueNames() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -63,7 +67,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testPurgeJMSQueuesBuilderWithQueues() {
+    public void testPurgeJmsQueuesBuilderWithQueues() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {

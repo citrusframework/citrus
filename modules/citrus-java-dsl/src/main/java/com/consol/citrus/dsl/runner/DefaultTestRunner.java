@@ -196,8 +196,8 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public void purgeQueues(TestActionConfigurer<PurgeJMSQueuesActionDefinition> configurer) {
-        PurgeJMSQueuesActionDefinition definition = new PurgeJMSQueuesActionDefinition(new PurgeJmsQueuesAction());
+    public void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
+        PurgeJmsQueueActionDefinition definition = new PurgeJmsQueueActionDefinition(new PurgeJmsQueuesAction());
         configurer.configure(definition);
 
         if (!definition.hasConnectionFactory()) {

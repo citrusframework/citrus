@@ -140,7 +140,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public void purgeQueues(TestActionConfigurer<PurgeJMSQueuesActionDefinition> configurer) {
+    public void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
         testRunner.purgeQueues(configurer);
     }
 

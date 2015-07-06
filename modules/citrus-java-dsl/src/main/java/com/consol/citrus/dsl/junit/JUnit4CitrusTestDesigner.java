@@ -227,12 +227,12 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
+    public PurgeJmsQueueActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
         return testDesigner.purgeQueues(connectionFactory);
     }
 
     @Override
-    public PurgeJMSQueuesActionDefinition purgeQueues() {
+    public PurgeJmsQueueActionDefinition purgeQueues() {
         return testDesigner.purgeQueues();
     }
 

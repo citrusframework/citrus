@@ -136,7 +136,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    void purgeQueues(TestActionConfigurer<PurgeJMSQueuesActionDefinition> configurer);
+    void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer);
 
     /**
      * Creates a new purge message channel action definition

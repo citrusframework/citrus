@@ -208,15 +208,15 @@ public abstract class AbstractTestDesigner implements TestDesigner {
     }
 
     @Override
-    public PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
-        PurgeJMSQueuesActionDefinition definition = TestActions.purgeQueues(connectionFactory);
+    public PurgeJmsQueueActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
+        PurgeJmsQueueActionDefinition definition = TestActions.purgeQueues(connectionFactory);
         action(definition);
         return definition;
     }
 
     @Override
-    public PurgeJMSQueuesActionDefinition purgeQueues() {
-        PurgeJMSQueuesActionDefinition definition = TestActions.purgeQueues(getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
+    public PurgeJmsQueueActionDefinition purgeQueues() {
+        PurgeJmsQueueActionDefinition definition = TestActions.purgeQueues(getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
         action(definition);
         return definition;
     }

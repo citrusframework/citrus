@@ -240,14 +240,14 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param connectionFactory
      * @return
      */
-    PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory);
+    PurgeJmsQueueActionDefinition purgeQueues(ConnectionFactory connectionFactory);
 
     /**
      * Purge queues using default connection factory.
      *
      * @return
      */
-    PurgeJMSQueuesActionDefinition purgeQueues();
+    PurgeJmsQueueActionDefinition purgeQueues();
 
     /**
      * Creates a new purge message channel action definition

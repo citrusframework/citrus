@@ -203,7 +203,7 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
-    public void purgeQueues(TestActionConfigurer<PurgeJMSQueuesActionDefinition> configurer) {
+    public void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
         testRunner.purgeQueues(configurer);
     }
 

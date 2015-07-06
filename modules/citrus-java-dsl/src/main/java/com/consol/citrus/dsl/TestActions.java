@@ -235,10 +235,10 @@ public class TestActions {
      * @param connectionFactory
      * @return
      */
-    public static PurgeJMSQueuesActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
+    public static PurgeJmsQueueActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
         PurgeJmsQueuesAction action = new PurgeJmsQueuesAction();
         action.setConnectionFactory(connectionFactory);
-        return new PurgeJMSQueuesActionDefinition(action);
+        return new PurgeJmsQueueActionDefinition(action);
     }
 
     /**

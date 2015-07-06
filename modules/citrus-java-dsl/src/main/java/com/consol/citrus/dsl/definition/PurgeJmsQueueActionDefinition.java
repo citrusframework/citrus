@@ -35,9 +35,9 @@ import java.util.List;
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
  */
-public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<PurgeJmsQueuesAction> {
+public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<PurgeJmsQueuesAction> {
 
-	public PurgeJMSQueuesActionDefinition(PurgeJmsQueuesAction action) {
+	public PurgeJmsQueueActionDefinition(PurgeJmsQueuesAction action) {
 	    super(action);
     }
 
@@ -45,7 +45,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * Sets the Connection factory.
      * @param connectionFactory the queueConnectionFactory to set
      */
-	public PurgeJMSQueuesActionDefinition connectionFactory(ConnectionFactory connectionFactory) {
+	public PurgeJmsQueueActionDefinition connectionFactory(ConnectionFactory connectionFactory) {
 		action.setConnectionFactory(connectionFactory);
 		return this;
 	}
@@ -54,7 +54,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * List of queues to purge in this action.
      * @param queues The queues which are to be purged.
      */
-	public PurgeJMSQueuesActionDefinition queues(List<Queue> queues) {
+	public PurgeJmsQueueActionDefinition queues(List<Queue> queues) {
 		action.getQueues().addAll(queues);
 		return this;
 	}
@@ -64,7 +64,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
 	 * @param queues
 	 * @return
 	 */
-	public PurgeJMSQueuesActionDefinition queues(Queue... queues) {
+	public PurgeJmsQueueActionDefinition queues(Queue... queues) {
 		return queues(Arrays.asList(queues));
 	}
 	
@@ -73,7 +73,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * @param queue
      * @return
      */
-    public PurgeJMSQueuesActionDefinition queue(Queue queue) {
+    public PurgeJmsQueueActionDefinition queue(Queue queue) {
         action.getQueues().add(queue);
         return this;
     }
@@ -82,7 +82,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * List of queue names to purge in this action. 
      * @param names the queueNames to set
      */
-	public PurgeJMSQueuesActionDefinition queueNames(List<String> names) {
+	public PurgeJmsQueueActionDefinition queueNames(List<String> names) {
 		action.getQueueNames().addAll(names);
 		return this;
 	}
@@ -92,7 +92,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
 	 * @param names
 	 * @return
 	 */
-	public PurgeJMSQueuesActionDefinition queueNames(String... names) {
+	public PurgeJmsQueueActionDefinition queueNames(String... names) {
 		return queueNames(Arrays.asList(names));
 	}
 	
@@ -101,7 +101,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * @param name
      * @return
      */
-    public PurgeJMSQueuesActionDefinition queue(String name) {
+    public PurgeJmsQueueActionDefinition queue(String name) {
         action.getQueueNames().add(name);
         return this;
     }
@@ -110,7 +110,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * Receive timeout for reading message from a destination.
      * @param receiveTimeout the receiveTimeout to set
      */
-	public PurgeJMSQueuesActionDefinition timeout(long receiveTimeout) {
+	public PurgeJmsQueueActionDefinition timeout(long receiveTimeout) {
 		action.setReceiveTimeout(receiveTimeout);
 		return this;
 	}
@@ -119,7 +119,7 @@ public class PurgeJMSQueuesActionDefinition extends AbstractActionDefinition<Pur
      * Sets the sleepTime.
      * @param millis the sleepTime to set
      */
-	public PurgeJMSQueuesActionDefinition sleep(long millis) {
+	public PurgeJmsQueueActionDefinition sleep(long millis) {
 		action.setSleepTime(millis);
 		return this;
 	}

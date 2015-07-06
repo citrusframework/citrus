@@ -32,6 +32,10 @@ import java.util.HashMap;
 
 import static org.easymock.EasyMock.*;
 
+/**
+ * @author Christoph Deppisch
+ * @since 1.3
+ */
 public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
     
     private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);

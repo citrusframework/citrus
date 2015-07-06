@@ -17,7 +17,7 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.definition.PurgeJMSQueuesActionDefinition;
+import com.consol.citrus.dsl.definition.PurgeJmsQueueActionDefinition;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -28,7 +28,11 @@ import javax.jms.*;
 
 import static org.easymock.EasyMock.*;
 
-public class PurgeJMSQueuesTestRunnerTest extends AbstractTestNGUnitTest {
+/**
+ * @author Christoph Deppisch
+ * @since 2.2.1
+ */
+public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
     private ConnectionFactory connectionFactory = EasyMock.createMock(ConnectionFactory.class);
     private Connection connection = EasyMock.createMock(Connection.class);
     private Session session = EasyMock.createMock(Session.class);
@@ -39,7 +43,7 @@ public class PurgeJMSQueuesTestRunnerTest extends AbstractTestNGUnitTest {
     private Queue queue4 = EasyMock.createMock(Queue.class);
 
     @Test
-    public void testPurgeJMSQueuesBuilderWithQueueNames() throws JMSException {
+    public void testPurgeJmsQueuesBuilderWithQueueNames() throws JMSException {
         reset(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         connection.start();
@@ -59,9 +63,9 @@ public class PurgeJMSQueuesTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeQueues(new TestActionConfigurer<PurgeJMSQueuesActionDefinition>() {
+                purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
                     @Override
-                    public void configure(PurgeJMSQueuesActionDefinition definition) {
+                    public void configure(PurgeJmsQueueActionDefinition definition) {
                         definition.connectionFactory(connectionFactory)
                                 .queueNames("q1", "q2", "q3")
                                 .queue("q4")
@@ -89,7 +93,7 @@ public class PurgeJMSQueuesTestRunnerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testPurgeJMSQueuesBuilderWithQueues() throws JMSException {
+    public void testPurgeJmsQueuesBuilderWithQueues() throws JMSException {
         reset(connectionFactory, connection, session, messageConsumer, queue1, queue2, queue3, queue4);
         expect(connectionFactory.createConnection()).andReturn(connection).once();
         connection.start();
@@ -108,9 +112,9 @@ public class PurgeJMSQueuesTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeQueues(new TestActionConfigurer<PurgeJMSQueuesActionDefinition>() {
+                purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
                     @Override
-                    public void configure(PurgeJMSQueuesActionDefinition definition) {
+                    public void configure(PurgeJmsQueueActionDefinition definition) {
                         definition.connectionFactory(connectionFactory)
                                 .queues(queue1, queue2)
                                 .queue(queue3)

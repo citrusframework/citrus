@@ -20,6 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.dsl.TestRequest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
@@ -189,8 +190,6 @@ public class ReceiveMessageDefinitionTest extends AbstractTestNGUnitTest {
 
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-
-        verify(applicationContextMock);
     }
 
     @Test
