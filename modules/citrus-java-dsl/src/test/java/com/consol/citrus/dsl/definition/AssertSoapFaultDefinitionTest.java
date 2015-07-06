@@ -57,7 +57,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -66,7 +66,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -96,7 +96,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -106,7 +106,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -138,7 +138,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -149,7 +149,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -183,7 +183,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(resource, applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -193,7 +193,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -225,7 +225,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -235,7 +235,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -269,7 +269,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(resource, applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -280,7 +280,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -313,7 +313,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -323,7 +323,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -354,7 +354,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 assertSoapFault(echo("${foo}"))
@@ -364,7 +364,7 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

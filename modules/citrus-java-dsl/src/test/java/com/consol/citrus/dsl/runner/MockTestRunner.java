@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.design.DefaultExecutableTestDesignerComponent;
+import com.consol.citrus.TestCase;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Test instance for {@link com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner} used in unit tests in order to provide
- * unit testing access to builder functionality.
- * 
  * @author Christoph Deppisch
+ * @since 2.2.1
  */
-public class MockDesigner extends DefaultExecutableTestDesignerComponent {
+public class MockTestRunner extends DefaultTestRunner {
 
     /**
      * Constructor using an application context.
      * @param applicationContext
      */
-    public MockDesigner(ApplicationContext applicationContext) {
-        setApplicationContext(applicationContext);
-        initialize();
+    public MockTestRunner(String name, ApplicationContext applicationContext) {
+        super(applicationContext);
+
+        name(name);
+
+        start();
+        execute();
+        stop();
     }
 
-    @Override
     public void execute() {
-        configure();
     }
 
     @Override
-    public void execute(TestContext context) {
-        configure();
+    protected TestCase getTestCase() {
+        return super.getTestCase();
     }
 }

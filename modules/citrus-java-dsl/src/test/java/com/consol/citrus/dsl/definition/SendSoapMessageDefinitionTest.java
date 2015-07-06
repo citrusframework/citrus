@@ -68,7 +68,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFork() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -80,7 +80,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -111,7 +111,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAction() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -121,7 +121,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -141,7 +141,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachment() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -150,7 +150,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -176,7 +176,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachmentData() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -185,7 +185,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -211,7 +211,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleSoapAttachmentData() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -221,7 +221,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -252,7 +252,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSoapAttachmentResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -265,7 +265,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someAttachmentData".getBytes())).once();
         replay(resource);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -297,7 +297,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("soapClient")
@@ -311,7 +311,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -343,7 +343,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("soapClient")
@@ -355,7 +355,7 @@ public class SendSoapMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

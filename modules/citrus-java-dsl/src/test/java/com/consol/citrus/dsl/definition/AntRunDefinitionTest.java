@@ -32,7 +32,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -40,7 +40,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
         
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -54,7 +54,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -62,7 +62,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -77,7 +77,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -87,7 +87,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -104,7 +104,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -113,7 +113,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -131,7 +131,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = EasyMock.createMock(BuildListener.class);
         
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -140,7 +140,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

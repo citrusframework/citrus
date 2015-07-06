@@ -27,7 +27,7 @@ public class InputDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void TestInputBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 input()
@@ -37,7 +37,7 @@ public class InputDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

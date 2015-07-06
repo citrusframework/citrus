@@ -68,7 +68,6 @@ public class DefaultTestRunner implements TestRunner {
         this.applicationContext = applicationContext;
 
         try {
-            createTestContext();
             initialize();
         } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to setup test runner", e);
@@ -76,6 +75,8 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     protected void initialize() {
+        createTestContext();
+
         testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 
         if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
@@ -260,4 +261,7 @@ public class DefaultTestRunner implements TestRunner {
         this.applicationContext = applicationContext;
     }
 
+    protected TestCase getTestCase() {
+        return testCase;
+    }
 }

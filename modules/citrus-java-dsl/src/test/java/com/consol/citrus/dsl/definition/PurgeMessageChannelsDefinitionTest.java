@@ -51,7 +51,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testPurgeChannelsBuilderWithChannels() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -60,7 +60,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -85,7 +85,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -96,7 +96,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -122,7 +122,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
                 .andReturn(new DefaultHeaderChannelRegistry()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -130,7 +130,7 @@ public class PurgeMessageChannelsDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

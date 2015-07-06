@@ -47,7 +47,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFault() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
@@ -57,7 +57,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -85,7 +85,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 sendSoapFault("soapEndpoint")
@@ -94,7 +94,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -118,7 +118,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithDetailResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
@@ -132,7 +132,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someDetailData".getBytes())).once();
         replay(resource);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -155,7 +155,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithDetail() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
@@ -165,7 +165,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -188,7 +188,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithDetailResourcePath() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
@@ -198,7 +198,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -222,7 +222,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithMultipleDetail() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
@@ -233,7 +233,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

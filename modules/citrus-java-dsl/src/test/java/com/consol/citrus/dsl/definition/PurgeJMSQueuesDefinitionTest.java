@@ -35,7 +35,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueueNames() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -46,7 +46,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -64,7 +64,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testPurgeJMSQueuesBuilderWithQueues() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 purgeQueues(connectionFactory)
@@ -75,7 +75,7 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

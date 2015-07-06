@@ -27,14 +27,14 @@ public class StopTimeDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testStopTimeBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 stopTime("TestId");
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

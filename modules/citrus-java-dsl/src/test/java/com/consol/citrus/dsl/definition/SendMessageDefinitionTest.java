@@ -63,7 +63,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithMessageInstance() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -71,7 +71,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -92,7 +92,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendBuilderWithObjectMessageInstance() {
         final Message message = new DefaultMessage(new Integer(10)).setHeader("operation", "foo");
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -100,7 +100,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -128,7 +128,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testSendBuilderWithObjectMessageInstanceAdditionalHeader() {
         final Message message = new DefaultMessage(new Integer(10)).setHeader("operation", "foo");
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -137,7 +137,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -172,7 +172,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean(Marshaller.class)).andReturn(marshaller).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -180,7 +180,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -201,7 +201,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithPayloadModelExplicitMarshaller() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -209,7 +209,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -237,7 +237,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBean("myMarshaller", Marshaller.class)).andReturn(marshaller).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -245,7 +245,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -266,7 +266,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithPayloadData() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -274,7 +274,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -293,7 +293,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithPayloadResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -305,7 +305,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("somePayloadData".getBytes())).once();
         replay(resource);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -332,7 +332,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("fooMessageEndpoint")
@@ -340,7 +340,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -355,7 +355,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithHeaders() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -365,7 +365,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -386,7 +386,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithHeaderData() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -399,7 +399,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -435,7 +435,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithMultipleHeaderData() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -450,7 +450,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -488,7 +488,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSendBuilderWithHeaderDataResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -506,7 +506,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("otherHeaderData".getBytes())).once();
         replay(resource);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -542,7 +542,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -552,7 +552,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -571,7 +571,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -581,7 +581,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -600,7 +600,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testXpathSupport() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(messageEndpoint)
@@ -609,7 +609,7 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

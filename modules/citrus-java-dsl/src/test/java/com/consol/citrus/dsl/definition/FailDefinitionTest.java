@@ -27,14 +27,14 @@ public class FailDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 fail("This test will fail.");
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

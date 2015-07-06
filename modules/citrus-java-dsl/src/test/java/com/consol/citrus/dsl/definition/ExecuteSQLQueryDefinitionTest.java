@@ -43,7 +43,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -59,7 +59,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -82,7 +82,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecuteSQLQueryWithStatements() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -95,7 +95,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -117,7 +117,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidationScript() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -126,7 +126,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -147,7 +147,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testValidationScriptResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -160,7 +160,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(resource, file);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -183,7 +183,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyValidationScript() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -192,7 +192,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -213,7 +213,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
         @Override
         public void configure() {
             query(dataSource)
@@ -226,7 +226,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         expect(resource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(resource, file);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

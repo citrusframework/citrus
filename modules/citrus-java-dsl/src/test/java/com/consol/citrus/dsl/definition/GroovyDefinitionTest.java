@@ -37,7 +37,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
             
     @Test
     public void testGroovyBuilderWithResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 groovy(scriptResource)
@@ -49,7 +49,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         expect(scriptResource.getInputStream()).andReturn(new ByteArrayInputStream("someScript".getBytes())).once();
         replay(scriptResource);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -65,7 +65,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithScript() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -73,7 +73,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -86,7 +86,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplate() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -99,7 +99,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(scriptTemplate, file);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -112,7 +112,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testGroovyBuilderWithTemplatePath() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 groovy("println 'Groovy!'")
@@ -120,7 +120,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

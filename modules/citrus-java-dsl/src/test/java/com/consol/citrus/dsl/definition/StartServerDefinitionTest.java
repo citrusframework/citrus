@@ -34,7 +34,7 @@ public class StartServerDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testStartServerBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 start(testServer);
@@ -42,7 +42,7 @@ public class StartServerDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);

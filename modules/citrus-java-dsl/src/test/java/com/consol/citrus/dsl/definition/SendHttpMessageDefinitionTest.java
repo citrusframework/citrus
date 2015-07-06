@@ -49,7 +49,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFork() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -61,7 +61,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -92,7 +92,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpMethod() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -102,7 +102,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -122,7 +122,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndPath() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -133,7 +133,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -154,7 +154,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndQueryParams() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -166,7 +166,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -194,7 +194,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 send("httpClient")
@@ -205,7 +205,7 @@ public class SendHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

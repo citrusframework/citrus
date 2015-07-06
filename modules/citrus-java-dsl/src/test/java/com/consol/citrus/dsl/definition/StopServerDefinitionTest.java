@@ -34,7 +34,7 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testStopServerBuilder() {
-		MockDesigner builder = new MockDesigner(applicationContext) {
+		MockTestDesigner builder = new MockTestDesigner(applicationContext) {
 			@Override
 			public void configure() {
 				stop(testServer);
@@ -42,7 +42,7 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 			}
 		};
 
-		builder.execute();
+		builder.configure();
 
 		TestCase test = builder.build();
 		Assert.assertEquals(test.getActions().size(), 2);

@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class IterateDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testIterateBuilder() {      
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 iterate(variables().add("index", "${i}"))
@@ -41,7 +41,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);
@@ -58,7 +58,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithAnonymousAction() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             /** Logger */
             private Logger log = LoggerFactory.getLogger(IterateDefinitionTest.class);
 
@@ -79,7 +79,7 @@ public class IterateDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);

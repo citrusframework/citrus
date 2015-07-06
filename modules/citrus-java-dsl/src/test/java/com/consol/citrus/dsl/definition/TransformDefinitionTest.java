@@ -35,7 +35,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 	
 	@Test
 	public void testTransformBuilderWithData() {
-		MockDesigner builder = new MockDesigner(applicationContext) {
+		MockTestDesigner builder = new MockTestDesigner(applicationContext) {
     		@Override
     		public void configure() {
     		    transform()
@@ -45,7 +45,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 			}
 		};
 
-		builder.execute();
+		builder.configure();
 
 		TestCase test = builder.build();
 		Assert.assertEquals(test.getActions().size(), 1);
@@ -61,7 +61,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
 		
 	@Test
 	public void testTransformBuilderWithResource() throws IOException {
-		MockDesigner builder = new MockDesigner(applicationContext) {
+		MockTestDesigner builder = new MockTestDesigner(applicationContext) {
 			@Override
 			public void configure() {
 				transform()
@@ -77,7 +77,7 @@ public class TransformDefinitionTest extends AbstractTestNGUnitTest {
         expect(xsltResource.getInputStream()).andReturn(new ByteArrayInputStream("xsltSource".getBytes())).once();
         replay(xmlResource, xsltResource);
 
-		builder.execute();
+		builder.configure();
 
 		TestCase test = builder.build();
 		Assert.assertEquals(test.getActions().size(), 1);

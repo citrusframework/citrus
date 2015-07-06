@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,34 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.EchoAction;
-
 /**
  * @author Christoph Deppisch
+ * @since 2.2.1
  */
-public class EchoDefinitionTest extends AbstractTestNGUnitTest {
-    
+public class EchoTestRunnerTest extends AbstractTestNGUnitTest {
+
     @Test
     public void testEchoBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
-            public void configure() {
+            public void execute() {
                 echo("Hello Citrus!");
             }
         };
 
-        builder.configure();
-
-        TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
-        
+        Assert.assertEquals(test.getLastExecutedAction().getClass(), EchoAction.class);
+
         EchoAction action = (EchoAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "echo");
         Assert.assertEquals(action.getMessage(), "Hello Citrus!");

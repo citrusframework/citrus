@@ -49,7 +49,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestProperties() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(httpClient)
@@ -63,7 +63,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -87,7 +87,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpResponseProperties() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 receive(httpClient)
@@ -99,7 +99,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -130,7 +130,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
         expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 receive("httpClient")
@@ -141,7 +141,7 @@ public class ReceiveHttpMessageDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

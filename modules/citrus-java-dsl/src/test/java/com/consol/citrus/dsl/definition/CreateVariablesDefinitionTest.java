@@ -27,7 +27,7 @@ public class CreateVariablesDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCreateVariablesBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 variables().add("foo", "bar")
@@ -37,7 +37,7 @@ public class CreateVariablesDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);

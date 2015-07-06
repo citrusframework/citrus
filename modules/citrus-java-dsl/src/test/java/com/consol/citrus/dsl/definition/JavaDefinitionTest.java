@@ -38,7 +38,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(4);
         
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 java("com.consol.citrus.dsl.util.JavaTest")
@@ -48,7 +48,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -68,7 +68,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 java(EchoAction.class)
@@ -77,7 +77,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -97,7 +97,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         final List<Object> methodArgs = new ArrayList<Object>();
         methodArgs.add(new TestContext());
         
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 java(new EchoAction())
@@ -106,7 +106,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

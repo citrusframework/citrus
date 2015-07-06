@@ -39,7 +39,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void TestExecuteSQLBuilderWithStatement() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -50,7 +50,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -65,7 +65,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void TestExecuteSQLBuilderWithSQLResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -79,7 +79,7 @@ public class ExecuteSQLDefinitionTest extends AbstractTestNGUnitTest {
         expect(file.getAbsolutePath()).andReturn("classpath:some.file").once();
         replay(resource, file);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

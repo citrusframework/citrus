@@ -27,7 +27,7 @@ public class TraceVariablesDefinitionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testTraceVariablesBuilder() {
-		MockDesigner builder = new MockDesigner(applicationContext) {
+		MockTestDesigner builder = new MockTestDesigner(applicationContext) {
 			@Override
 			public void configure() {
 				traceVariables();
@@ -35,7 +35,7 @@ public class TraceVariablesDefinitionTest extends AbstractTestNGUnitTest {
 			}
 		};
 
-		builder.execute();
+		builder.configure();
 
 		TestCase test = builder.build();
 		Assert.assertEquals(test.getActions().size(), 2);

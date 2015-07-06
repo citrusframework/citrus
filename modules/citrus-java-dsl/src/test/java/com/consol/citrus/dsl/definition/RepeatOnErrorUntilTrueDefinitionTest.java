@@ -27,7 +27,7 @@ import static org.testng.Assert.assertEquals;
 public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatOnErrorUntilTrueBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 repeatOnError(echo("${var}"), sleep(3000), echo("${var}"))
@@ -42,7 +42,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 2);

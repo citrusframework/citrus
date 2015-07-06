@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.dsl.definition.MockDesigner;
+import com.consol.citrus.dsl.definition.MockTestDesigner;
 import com.consol.citrus.report.TestActionListeners;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
@@ -48,7 +48,7 @@ public class TestNGCitrusTestDesignerTest {
 
         replay(applicationContextMock);
 
-        MockDesigner builder = new MockDesigner(applicationContextMock) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -59,7 +59,7 @@ public class TestNGCitrusTestDesignerTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

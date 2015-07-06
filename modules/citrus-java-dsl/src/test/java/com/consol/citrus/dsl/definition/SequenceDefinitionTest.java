@@ -29,14 +29,14 @@ import static org.testng.Assert.assertTrue;
 public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testSequenceBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sequential(echo("${var}"), sleep(5000L));
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);
@@ -50,7 +50,7 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSequenceBuilderWithAnonymousAction() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sequential(
@@ -71,7 +71,7 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);

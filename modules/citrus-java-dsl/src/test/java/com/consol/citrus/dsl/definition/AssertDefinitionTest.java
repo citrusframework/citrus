@@ -31,7 +31,7 @@ import static org.testng.Assert.assertTrue;
 public class AssertDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testAssertBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 assertException(echo("${foo}"))
@@ -40,7 +40,7 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);
@@ -58,7 +58,7 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 assertException(new AbstractTestAction() {
@@ -72,7 +72,7 @@ public class AssertDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);

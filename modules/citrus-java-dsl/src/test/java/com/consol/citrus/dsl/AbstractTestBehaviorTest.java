@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.dsl.design.AbstractTestBehavior;
-import com.consol.citrus.dsl.definition.MockDesigner;
+import com.consol.citrus.dsl.definition.MockTestDesigner;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorFrontPosition() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 applyBehavior(new FooBehavior());
@@ -45,7 +45,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -62,7 +62,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorWithFinally() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -88,7 +88,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
@@ -112,7 +112,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehavior() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -129,7 +129,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 3);
@@ -154,7 +154,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehaviorTwice() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -170,7 +170,7 @@ public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 3);

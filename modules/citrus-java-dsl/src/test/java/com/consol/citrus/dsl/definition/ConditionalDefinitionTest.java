@@ -26,14 +26,14 @@ import static org.testng.Assert.assertEquals;
 public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void testConditionalBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 conditional(echo("${var}")).when("${var} = 5");
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         assertEquals(test.getActions().size(), 1);

@@ -26,14 +26,14 @@ import com.consol.citrus.actions.LoadPropertiesAction;
 public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
     @Test
     public void TestLoadBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 load("classpath:test.properties");
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

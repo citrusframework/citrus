@@ -37,7 +37,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -47,7 +47,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -64,7 +64,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -76,7 +76,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
         expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream("testScript".getBytes())).once();
         replay(sqlResource);
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
@@ -92,7 +92,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -101,7 +101,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);

@@ -30,7 +30,7 @@ public class SleepDefinitionTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testSleepBuilder() {
-        MockDesigner builder = new MockDesigner(applicationContext) {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
                 sleep(0.5);
@@ -38,7 +38,7 @@ public class SleepDefinitionTest extends AbstractTestNGUnitTest {
             }
         };
 
-        builder.execute();
+        builder.configure();
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 2);
