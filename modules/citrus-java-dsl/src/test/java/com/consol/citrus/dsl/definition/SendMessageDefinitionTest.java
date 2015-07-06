@@ -539,6 +539,8 @@ public class SendMessageDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getHeaderData().size(), 1L);
         Assert.assertEquals(messageBuilder.getHeaderData().get(0), "otherHeaderData");
         Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
+
+        verify(resource);
     }
     
     @Test
