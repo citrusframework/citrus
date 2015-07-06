@@ -20,10 +20,13 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AntRunAction;
 import com.consol.citrus.dsl.definition.AntRunActionDefinition;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -149,6 +152,19 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = EasyMock.createMock(BuildListener.class);
 
+        reset(buildListener);
+        buildListener.taskStarted(anyObject(BuildEvent.class));
+        expectLastCall().once();
+        buildListener.targetStarted(anyObject(BuildEvent.class));
+        expectLastCall().once();
+        buildListener.messageLogged(anyObject(BuildEvent.class));
+        expectLastCall().atLeastOnce();
+        buildListener.targetFinished(anyObject(BuildEvent.class));
+        expectLastCall().once();
+        buildListener.taskFinished(anyObject(BuildEvent.class));
+        expectLastCall().once();
+        replay(buildListener);
+
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -171,5 +187,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildListener(), buildListener);
+
+        verify(buildListener);
     }
 }

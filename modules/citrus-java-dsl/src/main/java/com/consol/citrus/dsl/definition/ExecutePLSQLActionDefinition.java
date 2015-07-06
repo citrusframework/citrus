@@ -20,6 +20,7 @@ import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -37,6 +38,16 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 	public ExecutePLSQLActionDefinition(ExecutePLSQLAction action) {
 	    super(action);
     }
+
+	/**
+	 * Sets the Spring JDBC template to use.
+	 * @param jdbcTemplate
+	 * @return
+	 */
+	public ExecutePLSQLActionDefinition jdbcTemplate(JdbcTemplate jdbcTemplate) {
+		action.setJdbcTemplate(jdbcTemplate);
+		return this;
+	}
 
 	/**
 	 * Sets the SQL data source.

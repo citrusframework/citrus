@@ -16,19 +16,18 @@
 
 package com.consol.citrus.actions;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActor;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestActor;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
@@ -52,7 +51,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     protected String sqlResourcePath;
     
     /** List of SQL statements */
-    protected List<String> statements = new ArrayList<String>();
+    protected List<String> statements = new ArrayList<>();
     
     /** Constant representing SQL comment */
     protected static final String SQL_COMMENT = "--";
@@ -98,7 +97,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         BufferedReader reader = null;
         StringBuffer buffer;
         
-        List<String> stmts = new ArrayList<String>();
+        List<String> stmts = new ArrayList<>();
         
         String sqlResource = context.replaceDynamicContentInString(sqlResourcePath);
         try {
@@ -114,7 +113,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
                 if (line != null && line.trim() != null && !line.trim().startsWith(SQL_COMMENT) && line.trim().length() > 0) {
                     if (line.trim().endsWith(getStatemendEndingCharacter())) {
                         buffer.append(decorateLastScriptLine(line));
-                        String stmt = buffer.toString();
+                        String stmt = buffer.toString().trim();
     
                         if (log.isDebugEnabled()) {
                             log.debug("Found statement: " + stmt);

@@ -32,7 +32,6 @@ import static org.easymock.EasyMock.*;
 
 public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
     private DataSource dataSource = EasyMock.createMock(DataSource.class);
-    
     private Resource sqlResource = EasyMock.createMock(Resource.class);
     
     @Test
@@ -41,9 +40,9 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 plsql(dataSource)
-                    .statement("Test Statement")
-                    .statement("Test2 Statement")
-                    .statement("Test3 Statement");
+                    .statement("TEST_STMT_1")
+                    .statement("TEST_STMT_2")
+                    .statement("TEST_STMT_3");
             }
         };
 
@@ -56,7 +55,7 @@ public class ExecutePLSQLDefinitionTest extends AbstractTestNGUnitTest {
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
         Assert.assertEquals(action.isIgnoreErrors(), false);
-        Assert.assertEquals(action.getStatements().toString(), "[Test Statement, Test2 Statement, Test3 Statement]");
+        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
         Assert.assertNull(action.getScript());
         Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getDataSource(), dataSource);
