@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.consol.citrus.actions.LoadPropertiesAction;
 
 /**
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class LoadPropertiesDefinitionTest extends AbstractTestNGUnitTest {
+public class LoadPropertiesTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testLoadBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
-            public void configure() {
-                load("classpath:test.properties");
+            public void execute() {
+                variable("checked", true);
+                load("classpath:com/consol/citrus/dsl/runner/build.properties");
             }
         };
 
-        builder.configure();
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("welcomeText"));
+        Assert.assertEquals(context.getVariable("welcomeText"), "Welcome with property file!");
 
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), LoadPropertiesAction.class);
-        
+        Assert.assertEquals(test.getLastExecutedAction().getClass(), LoadPropertiesAction.class);
+
         LoadPropertiesAction action = (LoadPropertiesAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "load");
-        Assert.assertEquals(action.getFilePath(), "classpath:test.properties");
+        Assert.assertEquals(action.getFilePath(), "classpath:com/consol/citrus/dsl/runner/build.properties");
     }
 }

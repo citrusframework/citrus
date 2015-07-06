@@ -23,6 +23,10 @@ import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.FailAction;
 
+/**
+ * @author Christoph Deppisch
+ * @since 1.3
+ */
 public class FailDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test

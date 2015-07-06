@@ -41,8 +41,8 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
                 purgeQueues(connectionFactory)
                     .queueNames("q1", "q2", "q3")
                     .queue("q4")
-                    .timeout(2000)
-                    .sleep(1000);
+                    .timeout(2000L)
+                    .sleep(1000L);
             }
         };
 
@@ -54,8 +54,8 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().get(0).getName(), "purge-queue");
           
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
-        Assert.assertEquals(action.getReceiveTimeout(), 2000);
-        Assert.assertEquals(action.getSleepTime(), 1000);
+        Assert.assertEquals(action.getReceiveTimeout(), 2000L);
+        Assert.assertEquals(action.getSleepTime(), 1000L);
         Assert.assertEquals(action.getConnectionFactory(), connectionFactory);
         Assert.assertEquals(action.getQueueNames().size(), 4);
         Assert.assertEquals(action.getQueueNames().toString(), "[q1, q2, q3, q4]");
@@ -70,8 +70,8 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
                 purgeQueues(connectionFactory)
                     .queues(queue1, queue2)
                     .queue(queue3)
-                    .timeout(2000)
-                    .sleep(1000);
+                    .timeout(2000L)
+                    .sleep(1000L);
             }
         };
 
@@ -82,8 +82,8 @@ public class PurgeJMSQueuesDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
           
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
-        Assert.assertEquals(action.getReceiveTimeout(), 2000);
-        Assert.assertEquals(action.getSleepTime(), 1000);
+        Assert.assertEquals(action.getReceiveTimeout(), 2000L);
+        Assert.assertEquals(action.getSleepTime(), 1000L);
         Assert.assertEquals(action.getConnectionFactory(), connectionFactory);
         Assert.assertEquals(action.getQueueNames().size(), 0);
         Assert.assertEquals(action.getQueues().size(), 3);
