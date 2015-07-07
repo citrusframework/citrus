@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,43 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
+import com.consol.citrus.dsl.definition.CatchDefinition;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class CatchDefinitionTest extends AbstractTestNGUnitTest {
+public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testCatchBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
-            public void configure() {
-                catchException(echo("${var}"))
-                    .exception(CitrusRuntimeException.class.getName());
+            public void execute() {
+                catchException(new TestActionConfigurer<CatchDefinition>() {
+                    @Override
+                    public void configure(CatchDefinition definition) {
+                        definition.exception(CitrusRuntimeException.class.getName());
+                    }
+                }).when(echo("${var}"));
+
                 
-                catchException(echo("${var}"), sleep(100L))
-                    .exception(CitrusRuntimeException.class);
+                catchException(new TestActionConfigurer<CatchDefinition>() {
+                    @Override
+                    public void configure(CatchDefinition definition) {
+                        definition.exception(CitrusRuntimeException.class);
+                    }
+                }).when(echo("${var}"), sleep(100L));
             }
         };
 
-        builder.configure();
-
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActions().size(), 2);
         assertEquals(test.getActions().get(0).getClass(), Catch.class);
         assertEquals(test.getActions().get(0).getName(), "catch");

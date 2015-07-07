@@ -248,14 +248,15 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    TestRunner assertException(TestActionConfigurer<AssertDefinition> configurer);
+    ContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer);
 
     /**
-     * Adds predicates to current action container. Useed when working with test action containers
-     * such as sequential, parallel, catch.
-     * @param predicate
+     * Catch exception when thrown in nested test action.
+     *
+     * @param configurer
+     * @return
      */
-    TestAction when(TestAction ... predicate);
+    ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer);
 
     /**
      * Apply test apply with all test actions, finally actions and test

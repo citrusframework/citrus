@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,7 +35,7 @@ public class CatchParserTest extends AbstractActionParserTest<Catch> {
         assertActionClassAndName(Catch.class, "catch");
         
         Catch action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getException(), "com.consol.citrus.exceptions.CitrusRuntimeException");
+        Assert.assertEquals(action.getException(), CitrusRuntimeException.class.getName());
         Assert.assertEquals(action.getActionCount(), 1);
         Assert.assertEquals(action.getActions().get(0).getClass(), FailAction.class);
     }

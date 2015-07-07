@@ -401,17 +401,7 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
-    public Catch catchException(String exception, TestAction ... actions) {
-        return testDesigner.catchException(exception, actions);
-    }
-
-    @Override
-    public Catch catchException(Class<? extends Throwable> exception, TestAction ... actions) {
-        return testDesigner.catchException(exception, actions);
-    }
-
-    @Override
-    public Catch catchException(TestAction ... actions) {
+    public CatchDefinition catchException(TestAction ... actions) {
         return testDesigner.catchException(actions);
     }
 

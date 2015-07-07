@@ -287,13 +287,12 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
-    public TestRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+    public ContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         return testRunner.assertException(configurer);
     }
 
     @Override
-    public TestAction when(TestAction... predicate) {
-        return testRunner.when(predicate);
+    public ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
+        return testRunner.catchException(configurer);
     }
-
 }

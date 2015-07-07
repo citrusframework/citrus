@@ -399,20 +399,11 @@ public abstract class AbstractTestDesigner implements TestDesigner {
     }
 
     @Override
-    public Catch catchException(String exception, TestAction... actions) {
-        Catch container = TestActions.catchException(exception, actions);
-        action(container);
-        return container;
-    }
-
-    @Override
-    public Catch catchException(Class<? extends Throwable> exception, TestAction... actions) {
-        return catchException(exception.getName(), actions);
-    }
-
-    @Override
-    public Catch catchException(TestAction... actions) {
-        return catchException(CitrusRuntimeException.class.getName(), actions);
+    public CatchDefinition catchException(TestAction... actions) {
+        CatchDefinition definition = TestActions.catchException(actions);
+        definition.exception(CitrusRuntimeException.class.getName());
+        action(definition);
+        return definition;
     }
 
     @Override

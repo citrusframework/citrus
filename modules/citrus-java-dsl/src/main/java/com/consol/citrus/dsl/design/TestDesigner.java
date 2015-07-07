@@ -448,28 +448,10 @@ public interface TestDesigner extends ApplicationContextAware {
     /**
      * Action catches possible exceptions in nested test actions.
      *
-     * @param exception the exception to be caught
-     * @param actions   nested test actions
-     * @return
-     */
-    Catch catchException(String exception, TestAction... actions);
-
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param exception
      * @param actions
      * @return
      */
-    Catch catchException(Class<? extends Throwable> exception, TestAction... actions);
-
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param actions
-     * @return
-     */
-    Catch catchException(TestAction... actions);
+    CatchDefinition catchException(TestAction... actions);
 
     /**
      * Assert SOAP fault during action execution.

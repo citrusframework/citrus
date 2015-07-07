@@ -16,17 +16,17 @@
 
 package com.consol.citrus.container;
 
-import java.util.*;
-
-import static org.easymock.EasyMock.*;
-
-import org.easymock.EasyMock;
-import org.testng.annotations.Test;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.testng.annotations.Test;
+
+import java.util.*;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -52,7 +52,7 @@ public class CatchTest extends AbstractTestNGUnitTest {
         List actionList = Collections.singletonList(new FailAction());
         catchAction.setActions(actionList);
         
-        catchAction.setException("com.consol.citrus.exceptions.CitrusRuntimeException");
+        catchAction.setException(CitrusRuntimeException.class.getName());
         
         catchAction.execute(context);
     }
@@ -65,7 +65,7 @@ public class CatchTest extends AbstractTestNGUnitTest {
         List actionList = Collections.singletonList(new EchoAction());
         catchAction.setActions(actionList);
         
-        catchAction.setException("com.consol.citrus.exceptions.CitrusRuntimeException");
+        catchAction.setException(CitrusRuntimeException.class.getName());
         
         catchAction.execute(context);
     }
@@ -89,7 +89,7 @@ public class CatchTest extends AbstractTestNGUnitTest {
         
         catchAction.setActions(actionList);
         
-        catchAction.setException("com.consol.citrus.exceptions.CitrusRuntimeException");
+        catchAction.setException(CitrusRuntimeException.class.getName());
         
         catchAction.execute(context);
     }
@@ -114,7 +114,7 @@ public class CatchTest extends AbstractTestNGUnitTest {
         
         catchAction.setActions(actionList);
         
-        catchAction.setException("com.consol.citrus.exceptions.CitrusRuntimeException");
+        catchAction.setException(CitrusRuntimeException.class.getName());
         
         catchAction.execute(context);
     }

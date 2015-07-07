@@ -539,13 +539,11 @@ public class TestActions {
     /**
      * Action catches possible exceptions in nested test actions.
      *
-     * @param exception the exception to be caught
      * @param actions   nested test actions
      * @return
      */
-    public static Catch catchException(String exception, TestAction... actions) {
+    public static CatchDefinition catchException(TestAction... actions) {
         Catch container = new Catch();
-        container.setException(exception);
 
         for (TestAction action : actions) {
             if (action instanceof AbstractActionDefinition<?>) {
@@ -555,28 +553,7 @@ public class TestActions {
             }
         }
 
-        return container;
-    }
-
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param exception
-     * @param actions
-     * @return
-     */
-    public static Catch catchException(Class<? extends Throwable> exception, TestAction... actions) {
-        return catchException(exception.getName(), actions);
-    }
-
-    /**
-     * Action catches possible exceptions in nested test actions.
-     *
-     * @param actions
-     * @return
-     */
-    public static Catch catchException(TestAction... actions) {
-        return catchException(CitrusRuntimeException.class.getName(), actions);
+        return new CatchDefinition(container);
     }
 
     /**

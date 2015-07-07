@@ -140,6 +140,10 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public <T extends TestAction> T run(T testAction) {
+        if (testAction instanceof TestActionContainer && containers.lastElement().equals(testAction)) {
+            containers.pop();
+        }
+
         if (!containers.isEmpty()) {
             containers.lastElement().addTestAction(testAction);
         } else {
@@ -306,23 +310,21 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public TestRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+    public ContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         AssertDefinition definition = new AssertDefinition(new Assert());
         configurer.configure(definition);
         containers.push(definition.getAction());
 
-        return this;
+        return new DefaultContainerRunner(definition.getAction(), this);
     }
 
     @Override
-    public TestAction when(TestAction ... predicate) {
-        if (containers.isEmpty()) {
-            throw new CitrusRuntimeException("Invalid use of 'when' predicate in Java DSL - " +
-                    "define action container first!");
-        }
+    public ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
+        CatchDefinition definition = new CatchDefinition(new Catch());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
 
-        AbstractActionContainer container = containers.pop();
-        return run(container);
+        return new DefaultContainerRunner(definition.getAction(), this);
     }
 
     /**
