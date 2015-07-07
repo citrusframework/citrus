@@ -19,8 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.container.SequenceAfterTest;
-import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestActions;
 import com.consol.citrus.dsl.definition.*;
@@ -35,6 +34,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import javax.jms.ConnectionFactory;
+import java.util.Stack;
 
 /**
  * @author Christoph Deppisch
@@ -53,6 +53,9 @@ public class DefaultTestRunner implements TestRunner {
 
     /** Spring bean application context */
     private ApplicationContext applicationContext;
+
+    /** Optional stack of containers cached for execution */
+    private Stack<AbstractActionContainer> containers = new Stack<>();
 
     /** Default constructor */
     public DefaultTestRunner() {
@@ -136,9 +139,15 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public void run(TestAction testAction) {
-        testCase.addTestAction(testAction);
-        testCase.executeAction(testAction, context);
+    public <T extends TestAction> T run(T testAction) {
+        if (!containers.isEmpty()) {
+            containers.lastElement().addTestAction(testAction);
+        } else {
+            testCase.addTestAction(testAction);
+            testCase.executeAction(testAction, context);
+        }
+
+        return testAction;
     }
 
     @Override
@@ -148,152 +157,172 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public void antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
+    public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
         AntRunActionDefinition definition = new AntRunActionDefinition(new AntRunAction());
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void echo(String message) {
-        run(TestActions.echo(message));
+    public EchoAction echo(String message) {
+        return run(TestActions.echo(message));
     }
 
     @Override
-    public void plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
+    public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
         ExecutePLSQLActionDefinition definition = new ExecutePLSQLActionDefinition(new ExecutePLSQLAction());
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
+    public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
         ExecuteSQLActionDefinition definition = new ExecuteSQLActionDefinition(new ExecuteSQLAction());
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
+    public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
         ExecuteSQLQueryActionDefinition definition = new ExecuteSQLQueryActionDefinition(new ExecuteSQLQueryAction());
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void fail(String message) {
-        run(TestActions.fail(message));
+    public FailAction fail(String message) {
+        return run(TestActions.fail(message));
     }
 
     @Override
-    public void receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
+    public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
         ReceiveTimeoutActionDefinition definition = new ReceiveTimeoutActionDefinition(new ReceiveTimeoutAction());
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void load(String filePath) {
-        run(TestActions.load(filePath));
+    public LoadPropertiesAction load(String filePath) {
+        return run(TestActions.load(filePath));
     }
 
     @Override
-    public void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
+    public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
         PurgeJmsQueueActionDefinition definition = new PurgeJmsQueueActionDefinition(new PurgeJmsQueuesAction());
         configurer.configure(definition);
 
         if (!definition.hasConnectionFactory()) {
             definition.connectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
         }
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
+    public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
         PurgeMessageChannelActionDefinition definition = new PurgeMessageChannelActionDefinition(new PurgeMessageChannelAction());
         definition.channelResolver(applicationContext);
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
+    public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
         ReceiveMessageActionDefinition definition = new ReceiveMessageActionDefinition(new ReceiveMessageAction());
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
+    public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
         SendMessageActionDefinition definition = new SendMessageActionDefinition(new SendMessageAction());
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void sleep() {
-        run(TestActions.sleep());
+    public SleepAction sleep() {
+        return run(TestActions.sleep());
     }
 
     @Override
-    public void sleep(long milliseconds) {
-        run(TestActions.sleep(milliseconds));
+    public SleepAction sleep(long milliseconds) {
+        return run(TestActions.sleep(milliseconds));
     }
 
     @Override
-    public void start(Server... servers) {
-        run(TestActions.start(servers));
+    public StartServerAction start(Server... servers) {
+        return (StartServerAction) run(TestActions.start(servers));
     }
 
     @Override
-    public void start(Server server) {
-        run(TestActions.start(server));
+    public StartServerAction start(Server server) {
+        return run(TestActions.start(server));
     }
 
     @Override
-    public void stop(Server... servers) {
-        run(TestActions.stop(servers));
+    public StopServerAction stop(Server... servers) {
+        return run(TestActions.stop(servers));
     }
 
     @Override
-    public void stop(Server server) {
-        run(TestActions.stop(server));
+    public StopServerAction stop(Server server) {
+        return run(TestActions.stop(server));
     }
 
     @Override
-    public void stopTime() {
-        run(TestActions.stopTime());
+    public StopTimeAction stopTime() {
+        return (StopTimeAction) run(TestActions.stopTime());
     }
 
     @Override
-    public void stopTime(String id) {
-        run(TestActions.stopTime(id));
+    public StopTimeAction stopTime(String id) {
+        return run(TestActions.stopTime(id));
     }
 
     @Override
-    public void traceVariables() {
-        run(TestActions.traceVariables());
+    public TraceVariablesAction traceVariables() {
+        return run(TestActions.traceVariables());
     }
 
     @Override
-    public void traceVariables(String... variables) {
-        run(TestActions.traceVariables(variables));
+    public TraceVariablesAction traceVariables(String... variables) {
+        return run(TestActions.traceVariables(variables));
     }
 
     @Override
-    public void groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
+    public GroovyAction groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
         GroovyActionDefinition definition = new GroovyActionDefinition(new GroovyAction());
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
     }
 
     @Override
-    public void transform(TestActionConfigurer<TransformActionDefinition> configurer) {
+    public TransformAction transform(TestActionConfigurer<TransformActionDefinition> configurer) {
         TransformActionDefinition definition = TestActions.transform();
         configurer.configure(definition);
-        run(definition.getAction());
+        return run(definition.getAction());
+    }
+
+    @Override
+    public TestRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+        AssertDefinition definition = new AssertDefinition(new Assert());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return this;
+    }
+
+    @Override
+    public TestAction when(TestAction ... predicate) {
+        if (containers.isEmpty()) {
+            throw new CitrusRuntimeException("Invalid use of 'when' predicate in Java DSL - " +
+                    "define action container first!");
+        }
+
+        AbstractActionContainer container = containers.pop();
+        return run(container);
     }
 
     /**

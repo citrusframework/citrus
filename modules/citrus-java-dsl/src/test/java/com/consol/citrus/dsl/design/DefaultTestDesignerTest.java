@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
@@ -34,7 +34,7 @@ import static org.easymock.EasyMock.*;
 /**
  * @author Christoph Deppisch
  */
-public class TestNGCitrusTestDesignerTest {
+public class DefaultTestDesignerTest {
 
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
 
@@ -64,7 +64,7 @@ public class TestNGCitrusTestDesignerTest {
         TestCase test = builder.build();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getName(), "");
-        Assert.assertEquals(test.getPackageName(), "com.consol.citrus.dsl");
+        Assert.assertEquals(test.getPackageName(), "com.consol.citrus.dsl.design");
         
         Assert.assertEquals(test.getDescription(), "This is a Test");
         

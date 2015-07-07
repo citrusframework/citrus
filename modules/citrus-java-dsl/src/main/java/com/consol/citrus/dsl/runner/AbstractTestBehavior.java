@@ -45,7 +45,7 @@ public abstract class AbstractTestBehavior extends DefaultTestRunner implements 
     }
 
     @Override
-    public void run(TestAction testAction) {
-        target.run(testAction);
+    public <T extends TestAction> T run(T testAction) {
+        return target.run(testAction);
     }
 }

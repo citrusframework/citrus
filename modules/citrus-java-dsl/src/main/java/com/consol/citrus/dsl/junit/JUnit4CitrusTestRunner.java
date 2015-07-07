@@ -17,11 +17,14 @@
 package com.consol.citrus.dsl.junit;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.runner.*;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import org.springframework.util.ReflectionUtils;
 
@@ -86,8 +89,8 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public void run(TestAction testAction) {
-        testRunner.run(testAction);
+    public <T extends TestAction> T run(T testAction) {
+        return testRunner.run(testAction);
     }
 
     @Override
@@ -101,123 +104,132 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public void antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
-        testRunner.antrun(configurer);
+    public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
+        return testRunner.antrun(configurer);
     }
 
     @Override
-    public void echo(String message) {
-        testRunner.echo(message);
+    public EchoAction echo(String message) {
+        return testRunner.echo(message);
     }
 
     @Override
-    public void plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
-        testRunner.plsql(configurer);
+    public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
+        return testRunner.plsql(configurer);
     }
 
     @Override
-    public void sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
-        testRunner.sql(configurer);
+    public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
+        return testRunner.sql(configurer);
     }
 
     @Override
-    public void query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
-        testRunner.query(configurer);
+    public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
+        return testRunner.query(configurer);
     }
 
     @Override
-    public void receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
-        testRunner.receiveTimeout(configurer);
+    public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
+        return testRunner.receiveTimeout(configurer);
     }
 
     @Override
-    public void fail(String message) {
-        testRunner.fail(message);
+    public FailAction fail(String message) {
+        return testRunner.fail(message);
     }
 
     @Override
-    public void load(String filePath) {
-        testRunner.load(filePath);
+    public LoadPropertiesAction load(String filePath) {
+        return testRunner.load(filePath);
     }
 
     @Override
-    public void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
-        testRunner.purgeQueues(configurer);
+    public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
+        return testRunner.purgeQueues(configurer);
     }
 
     @Override
-    public void purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
-        testRunner.purgeChannels(configurer);
+    public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
+        return testRunner.purgeChannels(configurer);
     }
 
     @Override
-    public void receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
-        testRunner.receive(configurer);
+    public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
+        return testRunner.receive(configurer);
     }
 
     @Override
-    public void send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
-        testRunner.send(configurer);
+    public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
+        return testRunner.send(configurer);
     }
 
     @Override
-    public void sleep() {
-        testRunner.sleep();
+    public SleepAction sleep() {
+        return testRunner.sleep();
     }
 
     @Override
-    public void sleep(long milliseconds) {
-        testRunner.sleep(milliseconds);
+    public SleepAction sleep(long milliseconds) {
+        return testRunner.sleep(milliseconds);
     }
 
     @Override
-    public void start(Server... servers) {
-        testRunner.start(servers);
+    public StartServerAction start(Server... servers) {
+        return testRunner.start(servers);
     }
 
     @Override
-    public void start(Server server) {
-        testRunner.start(server);
+    public StartServerAction start(Server server) {
+        return testRunner.start(server);
     }
 
     @Override
-    public void stop(Server... servers) {
-        testRunner.stop(servers);
+    public StopServerAction stop(Server... servers) {
+        return testRunner.stop(servers);
     }
 
     @Override
-    public void stop(Server server) {
-        testRunner.stop(server);
+    public StopServerAction stop(Server server) {
+        return testRunner.stop(server);
     }
 
     @Override
-    public void stopTime() {
-        testRunner.stopTime();
+    public StopTimeAction stopTime() {
+        return testRunner.stopTime();
     }
 
     @Override
-    public void stopTime(String id) {
-        testRunner.stopTime(id);
+    public StopTimeAction stopTime(String id) {
+        return testRunner.stopTime(id);
     }
 
     @Override
-    public void traceVariables() {
-        testRunner.traceVariables();
+    public TraceVariablesAction traceVariables() {
+        return testRunner.traceVariables();
     }
 
     @Override
-    public void traceVariables(String... variables) {
-        testRunner.traceVariables(variables);
+    public TraceVariablesAction traceVariables(String... variables) {
+        return testRunner.traceVariables(variables);
     }
 
     @Override
-    public void groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
-        testRunner.groovy(configurer);
+    public GroovyAction groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
+        return testRunner.groovy(configurer);
     }
 
     @Override
-    public void transform(TestActionConfigurer<TransformActionDefinition> configurer) {
-        testRunner.transform(configurer);
+    public TransformAction transform(TestActionConfigurer<TransformActionDefinition> configurer) {
+        return testRunner.transform(configurer);
     }
 
+    @Override
+    public TestRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+        return testRunner.assertException(configurer);
+    }
+
+    @Override
+    public TestAction when(TestAction... predicate) {
+        return testRunner.when(predicate);
+    }
 }
