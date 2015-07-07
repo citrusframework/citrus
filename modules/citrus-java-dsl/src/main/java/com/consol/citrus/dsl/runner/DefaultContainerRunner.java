@@ -42,6 +42,11 @@ public class DefaultContainerRunner implements ContainerRunner {
     }
 
     @Override
+    public TestActionContainer actions(TestAction ... predicate) {
+        return testRunner.run(container);
+    }
+
+    @Override
     public TestActionContainer when(TestAction ... predicate) {
         return testRunner.run(container);
     }

@@ -294,10 +294,33 @@ public interface TestRunner extends ApplicationContextAware {
     ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer);
 
     /**
+     * Run nested test actions in iteration.
+     * @param configurer
+     * @return
+     */
+    ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer);
+
+    /**
      * Run nested test actions in parallel to each other using multiple threads.
      * @return
      */
     ContainerRunner parallel();
+
+    /**
+     * Adds repeat on error until true container with nested test actions.
+     *
+     * @param configurer
+     * @return
+     */
+    ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorUntilTrueDefinition> configurer);
+
+    /**
+     * Adds repeat until true container with nested test actions.
+     *
+     * @param configurer
+     * @return
+     */
+    ContainerRunner repeat(TestActionConfigurer<RepeatUntilTrueDefinition> configurer);
 
     /**
      * Run nested test actions in sequence.
@@ -305,12 +328,6 @@ public interface TestRunner extends ApplicationContextAware {
      */
     ContainerRunner sequential();
 
-    /**
-     * Run nested test actions in iteration.
-     * @param configurer
-     * @return
-     */
-    ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer);
 
     /**
      * Apply test apply with all test actions, finally actions and test

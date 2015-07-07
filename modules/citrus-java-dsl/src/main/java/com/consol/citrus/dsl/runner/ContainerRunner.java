@@ -29,8 +29,15 @@ import com.consol.citrus.container.TestActionContainer;
 public interface ContainerRunner {
 
     /**
-     * Adds predicates to action container. Used when working with test action containers
+     * Adds actions to action container. Used when working with test action containers
      * such as sequential, parallel, catch.
+     * @param actions
+     */
+    TestActionContainer actions(TestAction ... actions);
+
+    /**
+     * Adds predicates to action container. Used when working with test action containers
+     * such as assertException.
      * @param predicate
      */
     TestActionContainer when(TestAction ... predicate);

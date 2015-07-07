@@ -33,10 +33,10 @@ public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
                 variable("var", "foo");
 
                 parallel()
-                    .when(
-                        echo("${var}"),
-                        sleep(200),
-                        echo("Hello World!")
+                    .actions(
+                            echo("${var}"),
+                            sleep(200),
+                            echo("Hello World!")
                     );
             }
         };
@@ -59,10 +59,10 @@ public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
                 variable("var", "foo");
 
                 parallel()
-                    .when(
+                    .actions(
                         echo("${var}"),
                         sequential()
-                            .when(
+                            .actions(
                                 echo("1st in sequential"),
                                 echo("2nd in sequential")
                             ),

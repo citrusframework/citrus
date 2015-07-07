@@ -333,6 +333,15 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
+        IterateDefinition definition = new IterateDefinition(new Iterate());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
     public ContainerRunner parallel() {
         Parallel container = new Parallel();
         containers.push(container);
@@ -341,20 +350,29 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorUntilTrueDefinition> configurer) {
+        RepeatOnErrorUntilTrueDefinition definition = new RepeatOnErrorUntilTrueDefinition(new RepeatOnErrorUntilTrue());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
+    public ContainerRunner repeat(TestActionConfigurer<RepeatUntilTrueDefinition> configurer) {
+        RepeatUntilTrueDefinition definition = new RepeatUntilTrueDefinition(new RepeatUntilTrue());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
     public ContainerRunner sequential() {
         Sequence container = new Sequence();
         containers.push(container);
 
         return new DefaultContainerRunner(container, this);
-    }
-
-    @Override
-    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
-        IterateDefinition definition = new IterateDefinition(new Iterate());
-        configurer.configure(definition);
-        containers.push(definition.getAction());
-
-        return new DefaultContainerRunner(definition.getAction(), this);
     }
 
     /**

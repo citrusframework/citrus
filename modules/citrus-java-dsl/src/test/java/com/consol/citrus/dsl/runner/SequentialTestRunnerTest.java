@@ -39,7 +39,7 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
                 variable("var", "foo");
 
                 sequential()
-                    .when(
+                    .actions(
                         echo("${var}"),
                         sleep(100L)
                     );
@@ -64,7 +64,7 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
                 variable("var", "foo");
 
                 sequential()
-                    .when(
+                    .actions(
                         echo("${var}"),
                         run(new AbstractTestAction() {
                             @Override

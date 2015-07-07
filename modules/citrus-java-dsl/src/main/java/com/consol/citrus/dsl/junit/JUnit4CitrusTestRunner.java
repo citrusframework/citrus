@@ -239,8 +239,23 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
+    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
+        return testRunner.iterate(configurer);
+    }
+
+    @Override
     public ContainerRunner parallel() {
         return testRunner.parallel();
+    }
+
+    @Override
+    public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorUntilTrueDefinition> configurer) {
+        return testRunner.repeatOnError(configurer);
+    }
+
+    @Override
+    public ContainerRunner repeat(TestActionConfigurer<RepeatUntilTrueDefinition> configurer) {
+        return testRunner.repeat(configurer);
     }
 
     @Override
@@ -248,8 +263,4 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
         return testRunner.sequential();
     }
 
-    @Override
-    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
-        return testRunner.iterate(configurer);
-    }
 }
