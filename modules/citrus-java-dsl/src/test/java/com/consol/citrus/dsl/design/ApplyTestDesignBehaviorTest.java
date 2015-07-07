@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl;
+package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.dsl.definition.MockTestDesigner;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -28,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class AbstractTestBehaviorTest extends AbstractTestNGUnitTest {
+public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorFrontPosition() {
