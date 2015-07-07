@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
@@ -28,21 +28,25 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3
+ * @since 2.2.1
  */
-public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
+public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testSequenceBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
-            public void configure() {
-                sequential(echo("${var}"), sleep(5000L));
+            public void execute() {
+                variable("var", "foo");
+
+                sequential()
+                    .when(
+                        echo("${var}"),
+                        sleep(100L)
+                    );
             }
         };
 
-        builder.configure();
-
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActions().size(), 1);
         assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         assertEquals(test.getActions().get(0).getName(), "sequential");
@@ -54,30 +58,32 @@ public class SequenceDefinitionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSequenceBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
-            public void configure() {
-                sequential(
+            public void execute() {
+                variable("var", "foo");
+
+                sequential()
+                    .when(
                         echo("${var}"),
-                        new AbstractTestAction() {
+                        run(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.setVariable("anonymous", "anonymous");
                             }
-                        },
-                        sleep(5000L),
-                        new AbstractTestAction() {
+                        }),
+                        sleep(100L),
+                        run(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.getVariable("anonymous");
                             }
-                        });
+                        })
+                    );
             }
         };
 
-        builder.configure();
-
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         assertEquals(test.getActions().size(), 1);
         assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         assertEquals(test.getActions().get(0).getName(), "sequential");

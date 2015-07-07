@@ -106,6 +106,8 @@ public interface TestDesigner extends ApplicationContextAware {
     /**
      * Action creating a new test variable during a test.
      *
+     * @param variableName
+     * @param value
      * @return
      */
     CreateVariablesAction setVariable(String variableName, String value);
@@ -326,6 +328,7 @@ public interface TestDesigner extends ApplicationContextAware {
 
     /**
      * Add sleep action with default delay time.
+     * @return
      */
     SleepAction sleep();
 
@@ -333,6 +336,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Add sleep action with time in milliseconds.
      *
      * @param milliseconds
+     * @return
      */
     SleepAction sleep(long milliseconds);
 
@@ -340,6 +344,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Add sleep action with time in seconds.
      *
      * @param seconds
+     * @return
      */
     SleepAction sleep(double seconds);
 

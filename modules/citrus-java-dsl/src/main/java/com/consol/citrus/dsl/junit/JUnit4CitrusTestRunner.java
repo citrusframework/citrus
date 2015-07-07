@@ -104,6 +104,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
+    public CreateVariablesAction createVariable(String variableName, String value) {
+        return testRunner.createVariable(variableName, value);
+    }
+
+    @Override
     public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
         return testRunner.antrun(configurer);
     }
@@ -231,5 +236,20 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
         return testRunner.catchException(configurer);
+    }
+
+    @Override
+    public ContainerRunner parallel() {
+        return testRunner.parallel();
+    }
+
+    @Override
+    public ContainerRunner sequential() {
+        return testRunner.sequential();
+    }
+
+    @Override
+    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
+        return testRunner.iterate(configurer);
     }
 }

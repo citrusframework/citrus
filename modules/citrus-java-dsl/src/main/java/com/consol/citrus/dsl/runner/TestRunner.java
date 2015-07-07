@@ -58,6 +58,7 @@ public interface TestRunner extends ApplicationContextAware {
      *
      * @param name
      * @param value
+     * @return
      */
     <T> T variable(String name, T value);
 
@@ -69,15 +70,26 @@ public interface TestRunner extends ApplicationContextAware {
     <T extends TestAction> T run(T testAction);
 
     /**
+     * Action creating a new test variable during a test.
+     *
+     * @param variableName
+     * @param value
+     * @return
+     */
+    CreateVariablesAction createVariable(String variableName, String value);
+
+    /**
      * Creates and executes a new ANT run action definition
      * for further configuration.
      * @param configurer
+     * @return
      */
     AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer);
 
     /**
      * Creates and executes a new echo action.
      * @param message
+     * @return
      */
     EchoAction echo(String message);
 
@@ -86,6 +98,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer);
 
@@ -94,6 +107,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer);
 
@@ -102,6 +116,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer);
 
@@ -109,6 +124,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Creates a new fail action.
      *
      * @param message
+     * @return
      */
     FailAction fail(String message);
 
@@ -117,12 +133,14 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer);
 
     /**
      * Creates a new load properties action.
      * @param filePath path to properties file.
+     * @return
      */
     LoadPropertiesAction load(String filePath);
 
@@ -131,6 +149,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer);
 
@@ -139,6 +158,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer);
 
@@ -146,6 +166,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Creates receive message action definition with message endpoint instance.
      *
      * @param configurer
+     * @return
      */
     ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer);
 
@@ -153,11 +174,13 @@ public interface TestRunner extends ApplicationContextAware {
      * Create send message action definition with message endpoint instance.
      *
      * @param configurer
+     * @return
      */
     SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer);
 
     /**
      * Add sleep action with default delay time.
+     * @return
      */
     SleepAction sleep();
 
@@ -165,6 +188,7 @@ public interface TestRunner extends ApplicationContextAware {
      * Add sleep action with time in milliseconds.
      *
      * @param milliseconds
+     * @return
      */
     SleepAction sleep(long milliseconds);
 
@@ -173,6 +197,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param servers
+     * @return
      */
     StartServerAction start(Server... servers);
 
@@ -181,6 +206,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param server
+     * @return
      */
     StartServerAction start(Server server);
 
@@ -189,6 +215,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param servers
+     * @return
      */
     StopServerAction stop(Server... servers);
 
@@ -197,11 +224,13 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param server
+     * @return
      */
     StopServerAction stop(Server server);
 
     /**
      * Creates a new stop time action.
+     * @return
      */
     StopTimeAction stopTime();
 
@@ -209,12 +238,15 @@ public interface TestRunner extends ApplicationContextAware {
      * Creates a new stop time action.
      *
      * @param id
+     * @return
      */
     StopTimeAction stopTime(String id);
 
     /**
      * Creates a new trace variables action definition
      * that prints variable values to the console/logger.
+     *
+     * @return
      */
     TraceVariablesAction traceVariables();
 
@@ -223,6 +255,7 @@ public interface TestRunner extends ApplicationContextAware {
      * that prints variable values to the console/logger.
      *
      * @param variables
+     * @return
      */
     TraceVariablesAction traceVariables(String... variables);
 
@@ -231,6 +264,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     GroovyAction groovy(TestActionConfigurer<GroovyActionDefinition> configurer);
 
@@ -239,6 +273,7 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
+     * @return
      */
     TransformAction transform(TestActionConfigurer<TransformActionDefinition> configurer);
 
@@ -257,6 +292,25 @@ public interface TestRunner extends ApplicationContextAware {
      * @return
      */
     ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer);
+
+    /**
+     * Run nested test actions in parallel to each other using multiple threads.
+     * @return
+     */
+    ContainerRunner parallel();
+
+    /**
+     * Run nested test actions in sequence.
+     * @return
+     */
+    ContainerRunner sequential();
+
+    /**
+     * Run nested test actions in iteration.
+     * @param configurer
+     * @return
+     */
+    ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer);
 
     /**
      * Apply test apply with all test actions, finally actions and test

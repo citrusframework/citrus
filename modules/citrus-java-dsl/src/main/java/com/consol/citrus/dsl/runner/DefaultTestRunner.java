@@ -161,6 +161,11 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public CreateVariablesAction createVariable(String variableName, String value) {
+        return run(TestActions.createVariable(variableName, value));
+    }
+
+    @Override
     public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
         AntRunActionDefinition definition = new AntRunActionDefinition(new AntRunAction());
         configurer.configure(definition);
@@ -321,6 +326,31 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
         CatchDefinition definition = new CatchDefinition(new Catch());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
+    public ContainerRunner parallel() {
+        Parallel container = new Parallel();
+        containers.push(container);
+
+        return new DefaultContainerRunner(container, this);
+    }
+
+    @Override
+    public ContainerRunner sequential() {
+        Sequence container = new Sequence();
+        containers.push(container);
+
+        return new DefaultContainerRunner(container, this);
+    }
+
+    @Override
+    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
+        IterateDefinition definition = new IterateDefinition(new Iterate());
         configurer.configure(definition);
         containers.push(definition.getAction());
 
