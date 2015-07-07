@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -42,6 +43,30 @@ public class GroovyActionDefinition extends AbstractActionDefinition<GroovyActio
         action.setScriptTemplatePath(scriptTemplatePath);
         return this;
     }
+
+	/**
+	 * Sets the Groovy script to execute.
+	 * @param script
+	 * @return
+	 */
+	public GroovyActionDefinition script(String script) {
+		action.setScript(script);
+		return this;
+	}
+
+	/**
+	 * Sets the Groovy script to execute.
+	 * @param scriptResource
+	 * @return
+	 */
+	public GroovyActionDefinition script(Resource scriptResource) {
+		try {
+			action.setScript(FileUtils.readToString(scriptResource));
+		} catch (IOException e) {
+			throw new CitrusRuntimeException("Failed to read script resource file", e);
+		}
+		return this;
+	}
 	
 	/**
      * Use a script template resource.

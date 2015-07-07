@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.server.Server;
 import org.springframework.context.ApplicationContextAware;
 
 /**
@@ -67,14 +68,12 @@ public interface TestRunner extends ApplicationContextAware {
      * Creates and executes a new ANT run action definition
      * for further configuration.
      * @param configurer
-     * @return
      */
     void antrun(TestActionConfigurer<AntRunActionDefinition> configurer);
 
     /**
      * Creates and executes a new echo action.
      * @param message
-     * @return
      */
     void echo(String message);
 
@@ -83,7 +82,6 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
-     * @return
      */
     void plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer);
 
@@ -92,7 +90,6 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
-     * @return
      */
     void sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer);
 
@@ -101,7 +98,6 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
-     * @return
      */
     void query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer);
 
@@ -109,7 +105,6 @@ public interface TestRunner extends ApplicationContextAware {
      * Creates a new fail action.
      *
      * @param message
-     * @return
      */
     void fail(String message);
 
@@ -118,14 +113,12 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
-     * @return
      */
     void receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer);
 
     /**
      * Creates a new load properties action.
      * @param filePath path to properties file.
-     * @return
      */
     void load(String filePath);
 
@@ -134,7 +127,6 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
-     * @return
      */
     void purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer);
 
@@ -143,7 +135,6 @@ public interface TestRunner extends ApplicationContextAware {
      * for further configuration.
      *
      * @param configurer
-     * @return
      */
     void purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer);
 
@@ -151,7 +142,6 @@ public interface TestRunner extends ApplicationContextAware {
      * Creates receive message action definition with message endpoint instance.
      *
      * @param configurer
-     * @return
      */
     void receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer);
 
@@ -159,7 +149,6 @@ public interface TestRunner extends ApplicationContextAware {
      * Create send message action definition with message endpoint instance.
      *
      * @param configurer
-     * @return
      */
     void send(TestActionConfigurer<SendMessageActionDefinition> configurer);
 
@@ -174,6 +163,80 @@ public interface TestRunner extends ApplicationContextAware {
      * @param milliseconds
      */
     void sleep(long milliseconds);
+
+    /**
+     * Creates a new start server action definition
+     * for further configuration.
+     *
+     * @param servers
+     */
+    void start(Server... servers);
+
+    /**
+     * Creates a new start server action definition
+     * for further configuration.
+     *
+     * @param server
+     */
+    void start(Server server);
+
+    /**
+     * Creates a new stop server action definition
+     * for further configuration.
+     *
+     * @param servers
+     */
+    void stop(Server... servers);
+
+    /**
+     * Creates a new stop server action definition
+     * for further configuration.
+     *
+     * @param server
+     */
+    void stop(Server server);
+
+    /**
+     * Creates a new stop time action.
+     */
+    void stopTime();
+
+    /**
+     * Creates a new stop time action.
+     *
+     * @param id
+     */
+    void stopTime(String id);
+
+    /**
+     * Creates a new trace variables action definition
+     * that prints variable values to the console/logger.
+     */
+    void traceVariables();
+
+    /**
+     * Creates a new trace variables action definition
+     * that prints variable values to the console/logger.
+     *
+     * @param variables
+     */
+    void traceVariables(String... variables);
+
+    /**
+     * Creates a new groovy action definition
+     * for further configuration.
+     *
+     * @param configurer
+     */
+    void groovy(TestActionConfigurer<GroovyActionDefinition> configurer);
+
+    /**
+     * Creates a new transform action definition
+     * for further configuration.
+     *
+     * @param configurer
+     */
+    void transform(TestActionConfigurer<TransformActionDefinition> configurer);
 
     /**
      * Apply test apply with all test actions, finally actions and test

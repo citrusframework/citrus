@@ -22,6 +22,7 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,6 +231,56 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     @Override
     public void sleep(long milliseconds) {
         testRunner.sleep(milliseconds);
+    }
+
+    @Override
+    public void start(Server... servers) {
+        testRunner.start(servers);
+    }
+
+    @Override
+    public void start(Server server) {
+        testRunner.start(server);
+    }
+
+    @Override
+    public void stop(Server... servers) {
+        testRunner.stop(servers);
+    }
+
+    @Override
+    public void stop(Server server) {
+        testRunner.stop(server);
+    }
+
+    @Override
+    public void stopTime() {
+        testRunner.stopTime();
+    }
+
+    @Override
+    public void stopTime(String id) {
+        testRunner.stopTime(id);
+    }
+
+    @Override
+    public void traceVariables() {
+        testRunner.traceVariables();
+    }
+
+    @Override
+    public void traceVariables(String... variables) {
+        testRunner.traceVariables(variables);
+    }
+
+    @Override
+    public void groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
+        testRunner.groovy(configurer);
+    }
+
+    @Override
+    public void transform(TestActionConfigurer<TransformActionDefinition> configurer) {
+        testRunner.transform(configurer);
     }
 
 }

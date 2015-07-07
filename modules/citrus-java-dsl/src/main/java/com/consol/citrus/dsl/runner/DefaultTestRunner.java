@@ -27,6 +27,8 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -238,6 +240,60 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public void sleep(long milliseconds) {
         run(TestActions.sleep(milliseconds));
+    }
+
+    @Override
+    public void start(Server... servers) {
+        run(TestActions.start(servers));
+    }
+
+    @Override
+    public void start(Server server) {
+        run(TestActions.start(server));
+    }
+
+    @Override
+    public void stop(Server... servers) {
+        run(TestActions.stop(servers));
+    }
+
+    @Override
+    public void stop(Server server) {
+        run(TestActions.stop(server));
+    }
+
+    @Override
+    public void stopTime() {
+        run(TestActions.stopTime());
+    }
+
+    @Override
+    public void stopTime(String id) {
+        run(TestActions.stopTime(id));
+    }
+
+    @Override
+    public void traceVariables() {
+        run(TestActions.traceVariables());
+    }
+
+    @Override
+    public void traceVariables(String... variables) {
+        run(TestActions.traceVariables(variables));
+    }
+
+    @Override
+    public void groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
+        GroovyActionDefinition definition = new GroovyActionDefinition(new GroovyAction());
+        configurer.configure(definition);
+        run(definition.getAction());
+    }
+
+    @Override
+    public void transform(TestActionConfigurer<TransformActionDefinition> configurer) {
+        TransformActionDefinition definition = TestActions.transform();
+        configurer.configure(definition);
+        run(definition.getAction());
     }
 
     /**

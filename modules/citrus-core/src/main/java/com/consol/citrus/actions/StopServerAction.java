@@ -18,6 +18,8 @@ package com.consol.citrus.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,9 @@ public class StopServerAction extends AbstractTestAction {
     /** Single server instance to stop */
     private Server server;
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(StopServerAction.class);
+
     /**
      * Default constructor.
      */
@@ -44,12 +49,16 @@ public class StopServerAction extends AbstractTestAction {
 
     @Override
     public void doExecute(TestContext context) {
+        log.info("Stopping servers");
+
         for (Server actServer : serverList) {
             actServer.stop();
+            log.info("Stopped server: " + actServer.getName());
         }
 
         if (server != null) {
             server.stop();
+            log.info("Stopped server: " + server.getName());
         }
     }
 

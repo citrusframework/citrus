@@ -22,6 +22,7 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.server.Server;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -167,6 +168,56 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public void sleep(long milliseconds) {
         testRunner.sleep(milliseconds);
+    }
+
+    @Override
+    public void start(Server... servers) {
+        testRunner.start(servers);
+    }
+
+    @Override
+    public void start(Server server) {
+        testRunner.start(server);
+    }
+
+    @Override
+    public void stop(Server... servers) {
+        testRunner.stop(servers);
+    }
+
+    @Override
+    public void stop(Server server) {
+        testRunner.stop(server);
+    }
+
+    @Override
+    public void stopTime() {
+        testRunner.stopTime();
+    }
+
+    @Override
+    public void stopTime(String id) {
+        testRunner.stopTime(id);
+    }
+
+    @Override
+    public void traceVariables() {
+        testRunner.traceVariables();
+    }
+
+    @Override
+    public void traceVariables(String... variables) {
+        testRunner.traceVariables(variables);
+    }
+
+    @Override
+    public void groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
+        testRunner.groovy(configurer);
+    }
+
+    @Override
+    public void transform(TestActionConfigurer<TransformActionDefinition> configurer) {
+        testRunner.transform(configurer);
     }
 
 }

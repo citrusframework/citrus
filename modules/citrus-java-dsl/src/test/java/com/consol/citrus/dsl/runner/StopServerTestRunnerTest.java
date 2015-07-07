@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.actions.StopServerAction;
+import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.actions.StopServerAction;
-import com.consol.citrus.server.Server;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
- * @since 2.0
+ * @since 2.2.1
  */
-public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
+public class StopServerTestRunnerTest extends AbstractTestNGUnitTest {
 	private Server testServer = EasyMock.createMock(Server.class);
 	
 	private Server server1 = EasyMock.createMock(Server.class);
@@ -38,17 +39,30 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testStopServerBuilder() {
-		MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+		reset(testServer, server1, server2, server3);
+		testServer.stop();
+		expectLastCall().once();
+		expect(testServer.getName()).andReturn("testServer").once();
+		server1.stop();
+		expectLastCall().once();
+		expect(server1.getName()).andReturn("server1").once();
+		server2.stop();
+		expectLastCall().once();
+		expect(server2.getName()).andReturn("server1").once();
+		server3.stop();
+		expectLastCall().once();
+		expect(server3.getName()).andReturn("server1").once();
+		replay(testServer, server1, server2, server3);
+
+		MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
 			@Override
-			public void configure() {
+			public void execute() {
 				stop(testServer);
 				stop(server1, server2, server3);
 			}
 		};
 
-		builder.configure();
-
-		TestCase test = builder.build();
+		TestCase test = builder.getTestCase();
 		Assert.assertEquals(test.getActions().size(), 2);
 		Assert.assertEquals(test.getActions().get(0).getClass(), StopServerAction.class);
 		Assert.assertEquals(test.getActions().get(1).getClass(), StopServerAction.class);
@@ -61,5 +75,7 @@ public class StopServerDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "stop-server");
 		Assert.assertEquals(action.getServerList().size(), 3);
 		Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");
+
+		verify(testServer, server1, server2, server3);
 	}
 }
