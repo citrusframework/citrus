@@ -517,9 +517,13 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         receiveSoapMessageAction.setValidationContexts(action.getValidationContexts());
         receiveSoapMessageAction.setValidator(action.getValidator());
         receiveSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
-        
-        positionHandle.switchTestAction(receiveSoapMessageAction);
-        
+
+        if (positionHandle != null) {
+            positionHandle.switchTestAction(receiveSoapMessageAction);
+        } else {
+            action = (A) receiveSoapMessageAction;
+        }
+
         ReceiveSoapMessageActionDefinition soapMessageActionDefinition = new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction);
         soapMessageActionDefinition.withApplicationContext(applicationContext);
         soapMessageActionDefinition.setMessageType(messageType);

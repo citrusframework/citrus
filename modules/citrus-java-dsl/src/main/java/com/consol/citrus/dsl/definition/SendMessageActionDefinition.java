@@ -378,7 +378,11 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         sendSoapMessageAction.setEndpointUri(action.getEndpointUri());
         sendSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
 
-        positionHandle.switchTestAction(sendSoapMessageAction);
+        if (positionHandle != null) {
+            positionHandle.switchTestAction(sendSoapMessageAction);
+        } else {
+            action = (A) sendSoapMessageAction;
+        }
 
         SendSoapMessageActionDefinition sendSoapMessageActionDefinition = new SendSoapMessageActionDefinition(sendSoapMessageAction);
         sendSoapMessageActionDefinition.withApplicationContext(applicationContext);
