@@ -196,6 +196,11 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
+    public CreateVariablesAction createVariable(String variableName, String value) {
+        return testDesigner.createVariable(variableName, value);
+    }
+
+    @Override
     public void action(TestAction testAction) {
         testDesigner.action(testAction);
     }

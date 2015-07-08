@@ -33,7 +33,7 @@ public class CreateVariablesDefinitionTest extends AbstractTestNGUnitTest {
                 variables().add("foo", "bar")
                            .add("text", "Hello Citrus!");
 
-                setVariable("foobar", "bars");
+                createVariable("foobar", "bars");
             }
         };
 

@@ -152,6 +152,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public CreateVariablesAction createVariable(String variableName, String value) {
+        return testDesigner.createVariable(variableName, value);
+    }
+
+    @Override
     public void action(TestAction testAction) {
         testDesigner.action(testAction);
     }

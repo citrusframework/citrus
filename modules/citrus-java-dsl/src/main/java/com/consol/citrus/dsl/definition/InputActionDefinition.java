@@ -54,7 +54,7 @@ public class InputActionDefinition extends AbstractActionDefinition<InputAction>
 	
 	 /**
      * Sets the valid answers.
-     * @param validAnswers the validAnswers to set
+     * @param answers the validAnswers to set
      */
 	public InputActionDefinition answers(String... answers) {
 	    if (answers.length == 0) {
