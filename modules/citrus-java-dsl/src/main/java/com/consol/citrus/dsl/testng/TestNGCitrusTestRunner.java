@@ -308,6 +308,11 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
+    public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultDefinition> configurer) {
+        return testRunner.assertSoapFault(configurer);
+    }
+
+    @Override
     public ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer) {
         return testRunner.conditional(configurer);
     }

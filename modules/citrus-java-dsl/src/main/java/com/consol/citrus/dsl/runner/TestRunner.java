@@ -311,6 +311,14 @@ public interface TestRunner extends ApplicationContextAware {
     ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer);
 
     /**
+     * Assert SOAP fault during action execution.
+     *
+     * @param configurer
+     * @return
+     */
+    ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultDefinition> configurer);
+
+    /**
      * Adds conditional container with nested test actions.
      *
      * @param configurer

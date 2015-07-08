@@ -28,6 +28,8 @@ import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -338,6 +340,20 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
         CatchDefinition definition = new CatchDefinition(new Catch());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
+    public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultDefinition> configurer) {
+        AssertSoapFaultDefinition definition = new AssertSoapFaultDefinition(new AssertSoapFault());
+
+        if (applicationContext.containsBean("soapFaultValidator")) {
+            definition.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+        }
+
         configurer.configure(definition);
         containers.push(definition.getAction());
 
