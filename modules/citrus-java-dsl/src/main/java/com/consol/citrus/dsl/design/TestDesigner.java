@@ -188,6 +188,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param messageEndpoint
      * @return
+     * @deprecated since 2.2.1 use {@link #receiveTimeout(com.consol.citrus.endpoint.Endpoint)}
      */
     ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint);
 
@@ -196,8 +197,26 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param messageEndpointName
      * @return
+     * @deprecated since 2.2.1 use {@link #receiveTimeout(String)}
      */
     ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName);
+
+    /**
+     * Creates a new receive timeout action definition
+     * for further configuration.
+     *
+     * @param messageEndpoint
+     * @return
+     */
+    ReceiveTimeoutActionDefinition receiveTimeout(Endpoint messageEndpoint);
+
+    /**
+     * Creates a new receive timeout action definition from message endpoint name as String.
+     *
+     * @param messageEndpointName
+     * @return
+     */
+    ReceiveTimeoutActionDefinition receiveTimeout(String messageEndpointName);
 
     /**
      * Creates a new fail action.

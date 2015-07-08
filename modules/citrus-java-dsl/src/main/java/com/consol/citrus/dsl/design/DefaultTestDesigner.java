@@ -216,13 +216,23 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
+        return receiveTimeout(messageEndpoint);
+    }
+
+    @Override
+    public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
+        return receiveTimeout(messageEndpointUri);
+    }
+
+    @Override
+    public ReceiveTimeoutActionDefinition receiveTimeout(Endpoint messageEndpoint) {
         ReceiveTimeoutActionDefinition definition = TestActions.expectTimeout(messageEndpoint);
         action(definition);
         return definition;
     }
 
     @Override
-    public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointUri) {
+    public ReceiveTimeoutActionDefinition receiveTimeout(String messageEndpointUri) {
         ReceiveTimeoutActionDefinition definition = TestActions.expectTimeout(messageEndpointUri);
         action(definition);
         return definition;

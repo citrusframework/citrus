@@ -47,7 +47,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                expectTimeout(messageEndpoint)
+                receiveTimeout(messageEndpoint)
                     .timeout(5000)
                     .selector("TestMessageSelectorString");
             }
@@ -77,7 +77,7 @@ public class ReceiveTimeoutDefinitionTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
             @Override
             public void configure() {
-                expectTimeout("fooMessageEndpoint")
+                receiveTimeout("fooMessageEndpoint")
                     .timeout(500);
             }
         };

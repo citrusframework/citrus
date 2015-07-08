@@ -202,6 +202,16 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public ReceiveTimeoutActionDefinition receiveTimeout(Endpoint messageEndpoint) {
+        return testDesigner.receiveTimeout(messageEndpoint);
+    }
+
+    @Override
+    public ReceiveTimeoutActionDefinition receiveTimeout(String messageEndpointName) {
+        return testDesigner.receiveTimeout(messageEndpointName);
+    }
+
+    @Override
     public FailAction fail(String message) {
         return testDesigner.fail(message);
     }
