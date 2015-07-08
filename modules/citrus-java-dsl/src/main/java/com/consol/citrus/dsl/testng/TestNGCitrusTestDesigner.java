@@ -451,6 +451,11 @@ public class TestNGCitrusTestDesigner extends AbstractTestNGCitrusTest implement
     }
 
     @Override
+    public TemplateDefinition applyTemplate(String name) {
+        return testDesigner.applyTemplate(name);
+    }
+
+    @Override
     public void doFinally(TestAction ... actions) {
         testDesigner.doFinally(actions);
     }

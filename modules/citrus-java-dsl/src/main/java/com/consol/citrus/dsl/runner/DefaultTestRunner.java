@@ -390,6 +390,16 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public Template applyTemplate(TestActionConfigurer<TemplateDefinition> configurer) {
+        TemplateDefinition definition = new TemplateDefinition(new Template());
+        configurer.configure(definition);
+        definition.load(applicationContext);
+        configurer.configure(definition);
+
+        return run(definition.getAction());
+    }
+
+    @Override
     public ContainerRunner doFinally() {
         FinallySequence container = new FinallySequence();
         containers.push(container);

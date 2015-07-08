@@ -407,6 +407,11 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
+    public TemplateDefinition applyTemplate(String name) {
+        return testDesigner.applyTemplate(name);
+    }
+
+    @Override
     public void doFinally(TestAction ... actions) {
         testDesigner.doFinally(actions);
     }

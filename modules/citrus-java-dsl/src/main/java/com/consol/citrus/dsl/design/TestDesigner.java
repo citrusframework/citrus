@@ -97,6 +97,21 @@ public interface TestDesigner extends ApplicationContextAware {
     void variable(String name, Object value);
 
     /**
+     * Adds a custom test action implementation.
+     *
+     * @param testAction
+     */
+    void action(TestAction testAction);
+
+    /**
+     * Apply test apply with all test actions, finally actions and test
+     * variables defined in given apply.
+     *
+     * @param behavior
+     */
+    void applyBehavior(TestBehavior behavior);
+
+    /**
      * Action creating new test variables during a test.
      *
      * @return
@@ -122,21 +137,6 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      */
     CreateVariablesAction createVariable(String variableName, String value);
-
-    /**
-     * Adds a custom test action implementation.
-     *
-     * @param testAction
-     */
-    void action(TestAction testAction);
-
-    /**
-     * Apply test apply with all test actions, finally actions and test
-     * variables defined in given apply.
-     *
-     * @param behavior
-     */
-    void applyBehavior(TestBehavior behavior);
 
     /**
      * Creates a new ANT run action definition
@@ -530,8 +530,17 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @param name
      * @return
+     * @deprecated since 2.2.1 use {@link #applyTemplate(String)}
      */
     TemplateDefinition template(String name);
+
+    /**
+     * Adds template container with nested test actions.
+     *
+     * @param name
+     * @return
+     */
+    TemplateDefinition applyTemplate(String name);
 
     /**
      * Adds sequence of test actions to finally block.

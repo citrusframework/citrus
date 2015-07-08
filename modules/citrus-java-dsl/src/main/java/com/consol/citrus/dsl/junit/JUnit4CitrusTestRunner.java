@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.junit;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.Template;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
@@ -266,6 +267,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public ContainerRunner sequential() {
         return testRunner.sequential();
+    }
+
+    @Override
+    public Template applyTemplate(TestActionConfigurer<TemplateDefinition> configurer) {
+        return testRunner.applyTemplate(configurer);
     }
 
     @Override

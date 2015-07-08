@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.definition;
+package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.definition.TemplateDefinition;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -32,7 +33,7 @@ import java.util.*;
 
 import static org.easymock.EasyMock.*;
 
-public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
+public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
     
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     
@@ -43,11 +44,12 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         
         List<TestAction> actions = new ArrayList<TestAction>();
         actions.add(new EchoAction());
-        actions.add(new SleepAction());
+        actions.add(new TraceVariablesAction());
         rootTemplate.setActions(actions);
         
         reset(applicationContextMock);
 
+        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
         expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -55,18 +57,21 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
-            public void configure() {
-                applyTemplate("fooTemplate")
-                    .parameter("param", "foo")
-                    .parameter("text", "Citrus rocks!");
+            public void execute() {
+                applyTemplate(new TestActionConfigurer<TemplateDefinition>() {
+                    @Override
+                    public void configure(TemplateDefinition definition) {
+                        definition.name("fooTemplate")
+                                .parameter("param", "foo")
+                                .parameter("text", "Citrus rocks!");
+                    }
+                });
             }
         };
 
-        builder.configure();
-
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
@@ -76,7 +81,7 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(container.getParameter().toString(), "{param=foo, text=Citrus rocks!}");
         Assert.assertEquals(container.getActions().size(), 2);
         Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(container.getActions().get(1).getClass(), SleepAction.class);
+        Assert.assertEquals(container.getActions().get(1).getClass(), TraceVariablesAction.class);
         
         verify(applicationContextMock);
     }
@@ -92,6 +97,7 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
         
         reset(applicationContextMock);
 
+        expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
         expect(applicationContextMock.getBean("fooTemplate", Template.class)).andReturn(rootTemplate).once();
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
         expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
@@ -99,17 +105,20 @@ public class TemplateDefinitionTest extends AbstractTestNGUnitTest {
 
         replay(applicationContextMock);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
-            public void configure() {
-                applyTemplate("fooTemplate")
-                    .globalContext(false);
+            public void execute() {
+                applyTemplate(new TestActionConfigurer<TemplateDefinition>() {
+                    @Override
+                    public void configure(TemplateDefinition definition) {
+                        definition.name("fooTemplate")
+                                .globalContext(false);
+                    }
+                });
             }
         };
 
-        builder.configure();
-
-        TestCase test = builder.build();
+        TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");

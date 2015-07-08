@@ -33,6 +33,17 @@ public class TemplateDefinition extends AbstractActionDefinition<Template> {
 	    super(action);
     }
 
+	/**
+	 * Sets the template name.
+	 * @param name
+	 * @return
+	 */
+	public TemplateDefinition name(String name) {
+		setName(name);
+		action.setName(name);
+		return this;
+	}
+
     /**
      * Loads template definition from Spring bean application context and sets attributes.
      * @param applicationContext
@@ -41,10 +52,10 @@ public class TemplateDefinition extends AbstractActionDefinition<Template> {
     public TemplateDefinition load(ApplicationContext applicationContext) {
         Template rootTemplate = applicationContext.getBean(getName(), Template.class);
 
-        getAction().setGlobalContext(rootTemplate.isGlobalContext());
-        getAction().setActor(rootTemplate.getActor());
-        getAction().setActions(rootTemplate.getActions());
-        getAction().setParameter(rootTemplate.getParameter());
+        action.setGlobalContext(rootTemplate.isGlobalContext());
+		action.setActor(rootTemplate.getActor());
+		action.setActions(rootTemplate.getActions());
+		action.setParameter(rootTemplate.getParameter());
 
         return this;
     }

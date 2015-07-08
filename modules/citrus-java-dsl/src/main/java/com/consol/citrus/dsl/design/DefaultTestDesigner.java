@@ -525,6 +525,11 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public TemplateDefinition template(String name) {
+        return applyTemplate(name);
+    }
+
+    @Override
+    public TemplateDefinition applyTemplate(String name) {
         TemplateDefinition template = TestActions.template(name).load(getApplicationContext());
         action(template);
         return template;

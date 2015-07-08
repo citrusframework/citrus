@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
+import com.consol.citrus.container.Template;
 import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
@@ -68,6 +69,14 @@ public interface TestRunner extends ApplicationContextAware {
      * @return
      */
     <T extends TestAction> T run(T testAction);
+
+    /**
+     * Apply test apply with all test actions, finally actions and test
+     * variables defined in given apply.
+     *
+     * @param behavior
+     */
+    void applyBehavior(TestBehavior behavior);
 
     /**
      * Action creating a new test variable during a test.
@@ -336,14 +345,13 @@ public interface TestRunner extends ApplicationContextAware {
      */
     ContainerRunner sequential();
 
-
     /**
-     * Apply test apply with all test actions, finally actions and test
-     * variables defined in given apply.
+     * Adds template container with nested test actions.
      *
-     * @param behavior
+     * @param configurer
+     * @return
      */
-    void applyBehavior(TestBehavior behavior);
+    Template applyTemplate(TestActionConfigurer<TemplateDefinition> configurer);
 
     /**
      * Adds sequence of test actions to finally block.
