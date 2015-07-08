@@ -28,6 +28,7 @@ import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -235,6 +236,11 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     @Override
     public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
         return testRunner.send(configurer);
+    }
+
+    @Override
+    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer) {
+        return testRunner.sendSoapFault(configurer);
     }
 
     @Override

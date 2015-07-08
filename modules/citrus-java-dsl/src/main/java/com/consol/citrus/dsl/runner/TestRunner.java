@@ -23,6 +23,7 @@ import com.consol.citrus.dsl.definition.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.springframework.context.ApplicationContextAware;
 
 /**
@@ -194,6 +195,15 @@ public interface TestRunner extends ApplicationContextAware {
      * @return
      */
     SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer);
+
+    /**
+     * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
+     * specific properties for SOAP fault messages.
+     *
+     * @param configurer
+     * @return
+     */
+    SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer);
 
     /**
      * Add sleep action with default delay time.

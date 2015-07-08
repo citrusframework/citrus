@@ -41,6 +41,9 @@ import static org.easymock.EasyMock.*;
  */
 public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
 
+    public static final String FAULT_STRING = "Something went wrong";
+    public static final String FAULT_CODE = "CITRUS-1000";
+
     private Endpoint soapEndpoint = EasyMock.createMock(Endpoint.class);
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
     private Resource resource = EasyMock.createMock(Resource.class);
@@ -52,8 +55,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             public void configure() {
                 sendSoapFault(soapEndpoint)
                         .faultActor("faultActor")
-                        .faultCode("CITRUS-1000")
-                        .faultString("Something went wrong");
+                        .faultCode(FAULT_CODE)
+                        .faultString(FAULT_STRING);
             }
         };
 
@@ -73,8 +76,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(action.getFaultActor(), "faultActor");
-        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
+        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
     }
 
     @Test
@@ -89,8 +92,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 sendSoapFault("soapEndpoint")
-                        .faultCode("CITRUS-1000")
-                        .faultString("Something went wrong");
+                        .faultCode(FAULT_CODE)
+                        .faultString(FAULT_STRING);
             }
         };
 
@@ -110,8 +113,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertNull(action.getFaultActor());
-        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
+        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
 
         verify(applicationContextMock);
     }
@@ -122,9 +125,9 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
-                        .faultCode("CITRUS-1000")
+                        .faultCode(FAULT_CODE)
                         .faultDetailResource(resource)
-                        .faultString("Something went wrong");
+                        .faultString(FAULT_STRING);
             }
         };
 
@@ -149,8 +152,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "someDetailData");
-        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
+        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
     }
 
     @Test
@@ -159,9 +162,9 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
-                        .faultCode("CITRUS-1000")
+                        .faultCode(FAULT_CODE)
                         .faultDetail("DETAIL")
-                        .faultString("Something went wrong");
+                        .faultString(FAULT_STRING);
             }
         };
 
@@ -182,8 +185,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL");
-        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
+        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
     }
 
     @Test
@@ -192,9 +195,9 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
-                        .faultCode("CITRUS-1000")
+                        .faultCode(FAULT_CODE)
                         .faultDetailResource("com/consol/citrus/soap/fault.xml")
-                        .faultString("Something went wrong");
+                        .faultString(FAULT_STRING);
             }
         };
 
@@ -216,8 +219,8 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getFaultDetails().size(), 0L);
         Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
         Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "com/consol/citrus/soap/fault.xml");
-        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
+        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
     }
 
     @Test
@@ -226,10 +229,10 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 sendSoapFault(soapEndpoint)
-                        .faultCode("CITRUS-1000")
+                        .faultCode(FAULT_CODE)
                         .faultDetail("DETAIL1")
                         .faultDetail("DETAIL2")
-                        .faultString("Something went wrong");
+                        .faultString(FAULT_STRING);
             }
         };
 
@@ -251,7 +254,7 @@ public class SendSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getFaultDetails().size(), 2L);
         Assert.assertEquals(action.getFaultDetails().get(0), "DETAIL1");
         Assert.assertEquals(action.getFaultDetails().get(1), "DETAIL2");
-        Assert.assertEquals(action.getFaultCode(), "CITRUS-1000");
-        Assert.assertEquals(action.getFaultString(), "Something went wrong");
+        Assert.assertEquals(action.getFaultCode(), FAULT_CODE);
+        Assert.assertEquals(action.getFaultString(), FAULT_STRING);
     }
 }

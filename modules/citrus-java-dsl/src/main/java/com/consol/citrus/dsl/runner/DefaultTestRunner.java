@@ -29,6 +29,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -259,6 +260,14 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
         SendMessageActionDefinition definition = new SendMessageActionDefinition(new SendMessageAction());
+        definition.withApplicationContext(applicationContext);
+        configurer.configure(definition);
+        return run(definition.getAction());
+    }
+
+    @Override
+    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer) {
+        SendSoapFaultActionDefinition definition = new SendSoapFaultActionDefinition(new SendSoapFaultAction());
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
         return run(definition.getAction());

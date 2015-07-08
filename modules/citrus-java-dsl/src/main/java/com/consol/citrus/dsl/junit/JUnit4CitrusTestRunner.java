@@ -27,6 +27,7 @@ import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -172,6 +173,11 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     @Override
     public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
         return testRunner.send(configurer);
+    }
+
+    @Override
+    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer) {
+        return testRunner.sendSoapFault(configurer);
     }
 
     @Override
