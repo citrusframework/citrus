@@ -43,7 +43,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)test.getActions().get(0);
@@ -65,7 +65,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)test.getActions().get(0);
@@ -90,7 +90,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)test.getActions().get(0);
@@ -116,7 +116,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)test.getActions().get(0);
@@ -143,7 +143,7 @@ public class AntRunDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         
         AntRunAction action = (AntRunAction)test.getActions().get(0);

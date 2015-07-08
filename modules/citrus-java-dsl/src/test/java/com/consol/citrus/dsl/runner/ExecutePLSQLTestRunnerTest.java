@@ -66,7 +66,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
         Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
 
@@ -113,7 +113,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         };
         
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
         Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
 
@@ -158,7 +158,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
         Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
 
@@ -201,7 +201,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
         Assert.assertEquals(test.getLastExecutedAction().getClass(), ExecutePLSQLAction.class);
 

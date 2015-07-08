@@ -65,7 +65,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
@@ -100,7 +100,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
@@ -131,7 +131,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
@@ -165,7 +165,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
@@ -197,7 +197,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
@@ -231,7 +231,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
         
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
@@ -264,7 +264,7 @@ public class ExecuteSQLQueryDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
 
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);

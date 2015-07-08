@@ -40,7 +40,7 @@ public class InputDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), InputAction.class);
         
         InputAction action = (InputAction)test.getActions().get(0);

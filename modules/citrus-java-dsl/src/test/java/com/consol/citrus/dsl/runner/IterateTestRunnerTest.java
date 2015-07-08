@@ -46,7 +46,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Iterate.class);
         assertEquals(test.getActions().get(0).getName(), "iterate");
         
@@ -81,7 +81,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Iterate.class);
         assertEquals(test.getActions().get(0).getName(), "iterate");
 

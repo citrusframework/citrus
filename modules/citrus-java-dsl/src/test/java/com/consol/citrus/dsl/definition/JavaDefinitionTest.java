@@ -51,7 +51,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), JavaAction.class);
         
         JavaAction action = ((JavaAction)test.getActions().get(0));
@@ -80,7 +80,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), JavaAction.class);
         
         JavaAction action = ((JavaAction)test.getActions().get(0));
@@ -109,7 +109,7 @@ public class JavaDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), JavaAction.class);
         
         JavaAction action = ((JavaAction)test.getActions().get(0));

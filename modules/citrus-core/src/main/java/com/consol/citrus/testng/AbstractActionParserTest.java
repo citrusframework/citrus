@@ -16,12 +16,11 @@
 
 package com.consol.citrus.testng;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.testng.Assert;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import org.testng.Assert;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Abstract base testng test for Citrus bean definition parser unit testing. Provides access to
@@ -66,6 +65,6 @@ public abstract class AbstractActionParserTest<T extends TestAction> extends Abs
      * @param count the number of expected test actions in test case.
      */
     protected void assertActionCount(int count) {
-        Assert.assertEquals(getTestCase().getActions().size(), count);
+        Assert.assertEquals(getTestCase().getActionCount(), count);
     }
 }

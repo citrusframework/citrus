@@ -42,12 +42,12 @@ public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Parallel.class);
         assertEquals(test.getActions().get(0).getName(), "parallel");
         
         Parallel container = (Parallel)test.getActions().get(0);
-        assertEquals(container.getActions().size(), 3);
+        assertEquals(container.getActionCount(), 3);
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }
 
@@ -73,12 +73,12 @@ public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Parallel.class);
         assertEquals(test.getActions().get(0).getName(), "parallel");
 
         Parallel container = (Parallel)test.getActions().get(0);
-        assertEquals(container.getActions().size(), 4);
+        assertEquals(container.getActionCount(), 4);
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
     }
 }

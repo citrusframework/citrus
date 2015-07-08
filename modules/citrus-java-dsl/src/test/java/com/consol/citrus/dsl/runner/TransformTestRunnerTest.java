@@ -65,7 +65,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 				"</html>\n");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), TransformAction.class);
 
         TransformAction action = (TransformAction)test.getActions().get(0);
@@ -102,7 +102,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 				"</html>\n");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), TransformAction.class);
 
         TransformAction action = (TransformAction)test.getActions().get(0);

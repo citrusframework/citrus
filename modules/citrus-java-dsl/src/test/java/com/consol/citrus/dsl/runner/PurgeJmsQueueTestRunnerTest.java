@@ -77,7 +77,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "purge-queue");
 
@@ -126,7 +126,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
           
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);

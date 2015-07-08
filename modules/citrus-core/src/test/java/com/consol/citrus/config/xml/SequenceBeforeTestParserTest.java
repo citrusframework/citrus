@@ -48,7 +48,7 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertNull(sequenceBefore.getNamePattern());
         Assert.assertNull(sequenceBefore.getPackageNamePattern());
         Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActions().size(), 3L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 3L);
 
         Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(sequenceBefore.getActions().get(1).getClass(), CustomTestAction.class);
@@ -65,7 +65,7 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertEquals(sequenceBefore.getNamePattern(), "*OK_Test");
         Assert.assertNull(sequenceBefore.getPackageNamePattern());
         Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActions().size(), 1L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
 
         Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
 
@@ -79,7 +79,7 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertNull(sequenceBefore.getNamePattern());
         Assert.assertEquals(sequenceBefore.getPackageNamePattern(), "com.consol.citrus.database");
         Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActions().size(), 1L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
 
         Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
 
@@ -95,7 +95,7 @@ public class SequenceBeforeTestParserTest extends AbstractBeanDefinitionParserTe
         Assert.assertEquals(sequenceBefore.getNamePattern(), "*OK_Test");
         Assert.assertEquals(sequenceBefore.getPackageNamePattern(), "com.consol.citrus.database");
         Assert.assertEquals(sequenceBefore.getTestGroups().size(), 2L);
-        Assert.assertEquals(sequenceBefore.getActions().size(), 1L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
 
         Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
 

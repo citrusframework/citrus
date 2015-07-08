@@ -44,7 +44,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("foo"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "fooBehavior");
 
@@ -77,7 +77,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
 
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "test");
@@ -115,7 +115,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("bar"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "fooBehavior");
 
@@ -144,7 +144,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("foo"), "test");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "fooBehavior");
 

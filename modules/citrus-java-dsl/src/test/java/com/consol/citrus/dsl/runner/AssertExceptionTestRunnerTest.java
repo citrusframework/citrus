@@ -46,13 +46,13 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
         
         Assert container = (Assert)(test.getTestAction(0));
         
-        assertEquals(container.getActions().size(), 1);
+        assertEquals(container.getActionCount(), 1);
         assertEquals(container.getAction().getClass(), EchoAction.class);
         assertEquals(container.getException(), CitrusRuntimeException.class);
         assertEquals(container.getMessage(), "Unknown variable 'foo'");
@@ -80,13 +80,13 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
 
         Assert container = (Assert)(test.getTestAction(0));
 
-        assertEquals(container.getActions().size(), 1);
+        assertEquals(container.getActionCount(), 1);
         assertTrue(container.getAction().getClass().isAnonymousClass());
         assertEquals(container.getException(), CitrusRuntimeException.class);
         assertEquals(container.getMessage(), "Unknown variable 'foo'");

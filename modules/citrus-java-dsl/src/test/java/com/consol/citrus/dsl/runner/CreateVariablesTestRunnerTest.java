@@ -36,7 +36,7 @@ public class CreateVariablesTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), CreateVariablesAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), CreateVariablesAction.class);
         Assert.assertEquals(test.getActions().get(2).getClass(), CreateVariablesAction.class);

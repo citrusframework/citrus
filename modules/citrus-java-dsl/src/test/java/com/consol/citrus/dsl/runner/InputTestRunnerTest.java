@@ -44,7 +44,7 @@ public class InputTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), InputAction.class);
         
         InputAction action = (InputAction)test.getActions().get(0);

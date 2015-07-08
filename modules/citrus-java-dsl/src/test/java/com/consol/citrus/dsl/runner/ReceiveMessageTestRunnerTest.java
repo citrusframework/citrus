@@ -103,7 +103,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -141,7 +141,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -194,7 +194,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -240,7 +240,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -291,7 +291,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -336,7 +336,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -383,7 +383,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -434,7 +434,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -470,7 +470,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -521,7 +521,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
@@ -591,7 +591,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
@@ -666,7 +666,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
@@ -748,7 +748,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
         
@@ -829,7 +829,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
 
@@ -895,7 +895,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -950,7 +950,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1001,7 +1001,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1044,7 +1044,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1099,7 +1099,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("language"), "ENG");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1152,7 +1152,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("id"), "123456");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1212,7 +1212,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("language"), "ENG");
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1267,7 +1267,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1321,7 +1321,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1379,7 +1379,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1434,7 +1434,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1489,7 +1489,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1539,7 +1539,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1588,7 +1588,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1648,7 +1648,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
 
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
@@ -1711,7 +1711,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));

@@ -45,12 +45,12 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         builder.configure();
 
         TestCase test = builder.build();
-        assertEquals(test.getActions().size(), 2);
+        assertEquals(test.getActionCount(), 2);
         assertEquals(test.getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
         assertEquals(test.getActions().get(0).getName(), "repeat-on-error");
         
         RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)test.getActions().get(0);
-        assertEquals(container.getActions().size(), 3);
+        assertEquals(container.getActionCount(), 3);
         assertEquals(container.getAutoSleep(), Long.valueOf(2000L));
         assertEquals(container.getCondition(), "i gt 5");
         assertEquals(container.getStart(), 1);
@@ -58,7 +58,7 @@ public class RepeatOnErrorUntilTrueDefinitionTest extends AbstractTestNGUnitTest
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
 
         container = (RepeatOnErrorUntilTrue)test.getActions().get(1);
-        assertEquals(container.getActions().size(), 1);
+        assertEquals(container.getActionCount(), 1);
         assertEquals(container.getAutoSleep(), Long.valueOf(200L));
         assertEquals(container.getCondition(), "k gt= 5");
         assertEquals(container.getStart(), 2);

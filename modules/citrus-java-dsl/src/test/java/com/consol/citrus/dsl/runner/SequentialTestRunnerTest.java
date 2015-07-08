@@ -47,12 +47,12 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         assertEquals(test.getActions().get(0).getName(), "sequential");
         
         Sequence container = (Sequence)test.getActions().get(0);
-        assertEquals(container.getActions().size(), 2);
+        assertEquals(container.getActionCount(), 2);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
     }
 
@@ -84,12 +84,12 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         assertEquals(test.getActions().get(0).getName(), "sequential");
 
         Sequence container = (Sequence)test.getActions().get(0);
-        assertEquals(container.getActions().size(), 4);
+        assertEquals(container.getActionCount(), 4);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         assertTrue(container.getActions().get(1).getClass().isAnonymousClass());
         assertEquals(container.getActions().get(2).getClass(), SleepAction.class);

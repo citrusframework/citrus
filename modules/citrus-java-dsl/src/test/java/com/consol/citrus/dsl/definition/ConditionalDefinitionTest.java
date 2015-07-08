@@ -36,12 +36,12 @@ public class ConditionalDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        assertEquals(test.getActions().size(), 1);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Conditional.class);
         assertEquals(test.getActions().get(0).getName(), "conditional");
         
         Conditional container = (Conditional)test.getActions().get(0);
-        assertEquals(container.getActions().size(), 1);
+        assertEquals(container.getActionCount(), 1);
         assertEquals(container.getExpression(), "${var} = 5");
     }
 }

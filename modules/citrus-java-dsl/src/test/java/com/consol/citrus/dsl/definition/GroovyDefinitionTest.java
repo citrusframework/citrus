@@ -52,7 +52,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "groovy");
         
@@ -76,7 +76,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)test.getActions().get(0);
@@ -102,7 +102,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)test.getActions().get(0);
@@ -123,7 +123,7 @@ public class GroovyDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), GroovyAction.class);
         
         GroovyAction action = (GroovyAction)test.getActions().get(0);

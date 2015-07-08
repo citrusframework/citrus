@@ -38,7 +38,7 @@ public class SleepTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), SleepAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), SleepAction.class);
         

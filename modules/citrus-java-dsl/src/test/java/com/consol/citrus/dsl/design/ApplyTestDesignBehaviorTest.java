@@ -47,7 +47,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
@@ -90,7 +90,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 2);
+        Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
@@ -131,7 +131,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);
@@ -172,7 +172,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 3);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getDescription(), "This is a Test");
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(test.getMetaInfo().getStatus(), TestCaseMetaInfo.Status.FINAL);

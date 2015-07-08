@@ -47,7 +47,7 @@ public class SequenceBeforeSuiteParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(sequenceBefore.getName(), "beforeSuite");
         Assert.assertEquals(sequenceBefore.getSuiteNames().size(), 0L);
         Assert.assertEquals(sequenceBefore.getTestGroups().size(), 0L);
-        Assert.assertEquals(sequenceBefore.getActions().size(), 3L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 3L);
 
         Assert.assertEquals(sequenceBefore.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(sequenceBefore.getActions().get(1).getClass(), CustomTestAction.class);
@@ -64,7 +64,7 @@ public class SequenceBeforeSuiteParserTest extends AbstractBeanDefinitionParserT
         Assert.assertEquals(sequenceBefore.getName(), "beforeSuite2");
         Assert.assertEquals(sequenceBefore.getSuiteNames().size(), 2L);
         Assert.assertEquals(sequenceBefore.getTestGroups().size(), 2L);
-        Assert.assertEquals(sequenceBefore.getActions().size(), 1L);
+        Assert.assertEquals(sequenceBefore.getActionCount(), 1L);
 
         Assert.assertFalse(sequenceBefore.shouldExecute("", null));
         Assert.assertFalse(sequenceBefore.shouldExecute("suiteA", null));

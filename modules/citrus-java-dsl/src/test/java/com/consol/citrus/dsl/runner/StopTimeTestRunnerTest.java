@@ -40,7 +40,7 @@ public class StopTimeTestRunnerTest extends AbstractTestNGUnitTest {
         };
 
         TestCase test = builder.getTestCase();
-        Assert.assertEquals(test.getActions().size(), 5);
+        Assert.assertEquals(test.getActionCount(), 5);
         Assert.assertEquals(test.getActions().get(0).getClass(), StopTimeAction.class);
         
         StopTimeAction action = (StopTimeAction)test.getActions().get(0);

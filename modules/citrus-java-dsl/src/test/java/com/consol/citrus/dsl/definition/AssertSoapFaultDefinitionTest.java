@@ -69,13 +69,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -109,13 +109,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -152,13 +152,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -196,13 +196,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -238,13 +238,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
 
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
 
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -283,13 +283,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -326,13 +326,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");
@@ -367,13 +367,13 @@ public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActions().size(), 1);
+        Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
         
         AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
         
-        Assert.assertEquals(container.getActions().size(), 1);
+        Assert.assertEquals(container.getActionCount(), 1);
         Assert.assertEquals(container.getAction().getClass(), EchoAction.class);
         Assert.assertEquals(container.getFaultCode(), "SOAP-ENV:Server");
         Assert.assertEquals(container.getFaultString(), "Internal server error");

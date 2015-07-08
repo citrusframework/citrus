@@ -44,7 +44,7 @@ public class FailTestRunnerTest extends AbstractTestNGUnitTest {
         } catch (CitrusRuntimeException e) {
             if (builder != null) {
                 TestCase test = builder.getTestCase();
-                Assert.assertEquals(test.getActions().size(), 1);
+                Assert.assertEquals(test.getActionCount(), 1);
                 Assert.assertEquals(test.getActions().get(0).getClass(), FailAction.class);
                 Assert.assertEquals(test.getLastExecutedAction().getClass(), FailAction.class);
 
