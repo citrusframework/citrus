@@ -100,6 +100,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * Action creating new test variables during a test.
      *
      * @return
+     * @deprecated since 2.2.1 use {@link #createVariable(String, String)}
      */
     CreateVariablesActionDefinition variables();
 
@@ -109,8 +110,18 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param variableName
      * @param value
      * @return
+     * @deprecated since 2.2.1 use {@link #createVariable(String, String)}
      */
     CreateVariablesAction setVariable(String variableName, String value);
+
+    /**
+     * Action creating a new test variable during a test.
+     *
+     * @param variableName
+     * @param value
+     * @return
+     */
+    CreateVariablesAction createVariable(String variableName, String value);
 
     /**
      * Adds a custom test action implementation.
