@@ -48,4 +48,9 @@ public abstract class AbstractTestBehavior extends DefaultTestRunner implements 
     public <T extends TestAction> T run(T testAction) {
         return target.run(testAction);
     }
+
+    @Override
+    public ContainerRunner doFinally() {
+        return target.doFinally();
+    }
 }

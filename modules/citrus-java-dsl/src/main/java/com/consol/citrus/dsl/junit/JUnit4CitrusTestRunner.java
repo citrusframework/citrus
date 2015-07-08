@@ -229,13 +229,18 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+    public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         return testRunner.assertException(configurer);
     }
 
     @Override
-    public ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
+    public ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
         return testRunner.catchException(configurer);
+    }
+
+    @Override
+    public ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer) {
+        return testRunner.conditional(configurer);
     }
 
     @Override
@@ -263,4 +268,8 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
         return testRunner.sequential();
     }
 
+    @Override
+    public ContainerRunner doFinally() {
+        return testRunner.doFinally();
+    }
 }

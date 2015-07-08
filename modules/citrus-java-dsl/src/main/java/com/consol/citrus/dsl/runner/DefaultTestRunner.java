@@ -142,6 +142,11 @@ public class DefaultTestRunner implements TestRunner {
     public <T extends TestAction> T run(T testAction) {
         if (testAction instanceof TestActionContainer && containers.lastElement().equals(testAction)) {
             containers.pop();
+
+            if (testAction instanceof FinallySequence) {
+                testCase.getFinalActions().addAll(((FinallySequence) testAction).getActions());
+                return testAction;
+            }
         }
 
         if (!containers.isEmpty()) {
@@ -315,7 +320,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+    public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         AssertDefinition definition = new AssertDefinition(new Assert());
         configurer.configure(definition);
         containers.push(definition.getAction());
@@ -324,8 +329,17 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
+    public ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
         CatchDefinition definition = new CatchDefinition(new Catch());
+        configurer.configure(definition);
+        containers.push(definition.getAction());
+
+        return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
+    public ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer) {
+        ConditionalDefinition definition = new ConditionalDefinition(new Conditional());
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -375,6 +389,14 @@ public class DefaultTestRunner implements TestRunner {
         return new DefaultContainerRunner(container, this);
     }
 
+    @Override
+    public ContainerRunner doFinally() {
+        FinallySequence container = new FinallySequence();
+        containers.push(container);
+
+        return new DefaultContainerRunner(container, this);
+    }
+
     /**
      * Creates new test context from Spring bean application context.
      * @return
@@ -398,5 +420,12 @@ public class DefaultTestRunner implements TestRunner {
 
     protected TestCase getTestCase() {
         return testCase;
+    }
+
+    /**
+     * Helper sequence to mark actions as finally actions that should be
+     * executed in finally block of test case.
+     */
+    private class FinallySequence extends Sequence {
     }
 }

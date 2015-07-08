@@ -283,7 +283,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer);
+    ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer);
 
     /**
      * Catch exception when thrown in nested test action.
@@ -291,7 +291,15 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer);
+    ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer);
+
+    /**
+     * Adds conditional container with nested test actions.
+     *
+     * @param configurer
+     * @return
+     */
+    ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer);
 
     /**
      * Run nested test actions in iteration.
@@ -336,6 +344,12 @@ public interface TestRunner extends ApplicationContextAware {
      * @param behavior
      */
     void applyBehavior(TestBehavior behavior);
+
+    /**
+     * Adds sequence of test actions to finally block.
+     * @return
+     */
+    ContainerRunner doFinally();
 
     /**
      * Add test parameters to the test.

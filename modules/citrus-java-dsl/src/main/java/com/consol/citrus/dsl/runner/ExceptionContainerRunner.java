@@ -23,31 +23,12 @@ import com.consol.citrus.container.TestActionContainer;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class DefaultContainerRunner implements ContainerRunner, ExceptionContainerRunner {
-
-    /** The test action container to run */
-    protected final TestActionContainer container;
-
-    /** Target test runner */
-    protected final TestRunner testRunner;
+public interface ExceptionContainerRunner {
 
     /**
-     * Default constructor initializing test action container and test runner fields.
-     * @param container
-     * @param testRunner
+     * Adds predicates to action container. Used when working with test action containers
+     * such as assert and catch exception containers.
+     * @param predicate
      */
-    public DefaultContainerRunner(TestActionContainer container, TestRunner testRunner) {
-        this.container = container;
-        this.testRunner = testRunner;
-    }
-
-    @Override
-    public TestActionContainer actions(TestAction ... actions) {
-        return testRunner.run(container);
-    }
-
-    @Override
-    public TestActionContainer when(TestAction ... predicate) {
-        return testRunner.run(container);
-    }
+    TestActionContainer when(TestAction... predicate);
 }

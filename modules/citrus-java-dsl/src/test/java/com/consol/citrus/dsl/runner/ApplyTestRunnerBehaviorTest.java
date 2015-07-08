@@ -53,6 +53,47 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testBehaviorWithFinally() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                echo("test");
+
+                doFinally().actions(
+                    echo("finally")
+                );
+
+                applyBehavior(new AbstractTestBehavior() {
+                    @Override
+                    public void apply() {
+                        echo("behavior");
+
+                        doFinally().actions(
+                            echo("behaviorFinally")
+                        );
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActions().size(), 2);
+
+        Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(0)).getMessage(), "test");
+
+        Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "behavior");
+
+        Assert.assertEquals(test.getFinalActions().size(), 2);
+        Assert.assertEquals(test.getFinalActions().get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinalActions().get(0)).getMessage(), "finally");
+
+        Assert.assertEquals(test.getFinalActions().get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)test.getFinalActions().get(1)).getMessage(), "behaviorFinally");
+    }
+
+    @Test
     public void testApplyBehavior() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override

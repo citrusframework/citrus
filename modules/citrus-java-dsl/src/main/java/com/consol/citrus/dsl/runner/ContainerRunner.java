@@ -34,11 +34,4 @@ public interface ContainerRunner {
      * @param actions
      */
     TestActionContainer actions(TestAction ... actions);
-
-    /**
-     * Adds predicates to action container. Used when working with test action containers
-     * such as assertException.
-     * @param predicate
-     */
-    TestActionContainer when(TestAction ... predicate);
 }
