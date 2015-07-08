@@ -209,6 +209,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public InputAction input(TestActionConfigurer<InputActionDefinition> configurer) {
+        InputActionDefinition definition = new InputActionDefinition(new InputAction());
+        configurer.configure(definition);
+        return run(definition.getAction());
+    }
+
+    @Override
     public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
         ReceiveTimeoutActionDefinition definition = new ReceiveTimeoutActionDefinition(new ReceiveTimeoutAction());
         configurer.configure(definition);

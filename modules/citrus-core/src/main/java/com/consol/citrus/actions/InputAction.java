@@ -36,9 +36,7 @@ import java.util.StringTokenizer;
  */
 public class InputAction extends AbstractTestAction {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(InputAction.class);
 
     /** Prompted message displayed to the user before input */

@@ -130,6 +130,15 @@ public interface TestRunner extends ApplicationContextAware {
     ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer);
 
     /**
+     * Creates a new receive timeout action definition
+     * for further configuration.
+     *
+     * @param configurer
+     * @return
+     */
+    ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer);
+
+    /**
      * Creates a new fail action.
      *
      * @param message
@@ -138,13 +147,12 @@ public interface TestRunner extends ApplicationContextAware {
     FailAction fail(String message);
 
     /**
-     * Creates a new receive timeout action definition
-     * for further configuration.
+     * Creates a new input action.
      *
      * @param configurer
      * @return
      */
-    ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer);
+    InputAction input(TestActionConfigurer<InputActionDefinition> configurer);
 
     /**
      * Creates a new load properties action.

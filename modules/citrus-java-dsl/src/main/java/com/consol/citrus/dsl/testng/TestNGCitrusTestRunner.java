@@ -208,6 +208,11 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
+    public InputAction input(TestActionConfigurer<InputActionDefinition> configurer) {
+        return testRunner.input(configurer);
+    }
+
+    @Override
     public LoadPropertiesAction load(String filePath) {
         return testRunner.load(filePath);
     }
