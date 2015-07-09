@@ -39,6 +39,10 @@ import javax.jms.ConnectionFactory;
 import java.util.Stack;
 
 /**
+ * Default test runner implementation. Provides Java DSL methods for test actions. Immediately executes test actions as
+ * they were built. This way the test case grows with each test action and changes for instance to the test context (variables) are
+ * immediately visible.
+ *
  * @author Christoph Deppisch
  * @since 2.2.1
  */
@@ -142,8 +146,13 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public <T extends TestAction> T run(T testAction) {
-        if (testAction instanceof TestActionContainer && containers.lastElement().equals(testAction)) {
-            containers.pop();
+        if (testAction instanceof TestActionContainer) {
+
+            if (containers.lastElement().equals(testAction)) {
+                containers.pop();
+            } else {
+                throw new CitrusRuntimeException("Invalid use of action containers - the container execution is not expected!");
+            }
 
             if (testAction instanceof FinallySequence) {
                 testCase.getFinalActions().addAll(((FinallySequence) testAction).getActions());

@@ -71,12 +71,12 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
                                 .step(1)
                                 .condition("i lt 5");
                     }
-                }).actions(createVariable("index", "${i}"), run(new AbstractTestAction() {
+                }).actions(createVariable("index", "${i}"), new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         Assert.assertTrue(Integer.valueOf(context.getVariable("index")) > 0);
                     }
-                }));
+                });
             }
         };
 

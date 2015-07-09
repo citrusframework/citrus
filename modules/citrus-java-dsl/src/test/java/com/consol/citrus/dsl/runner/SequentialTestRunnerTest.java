@@ -66,19 +66,19 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
                 sequential()
                     .actions(
                         echo("${var}"),
-                        run(new AbstractTestAction() {
+                        new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.setVariable("anonymous", "anonymous");
                             }
-                        }),
+                        },
                         sleep(100L),
-                        run(new AbstractTestAction() {
+                        new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.getVariable("anonymous");
                             }
-                        })
+                        }
                     );
             }
         };

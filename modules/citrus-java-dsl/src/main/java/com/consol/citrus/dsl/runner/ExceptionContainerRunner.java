@@ -28,7 +28,7 @@ public interface ExceptionContainerRunner {
     /**
      * Adds predicates to action container. Used when working with test action containers
      * such as assert and catch exception containers.
-     * @param predicate
+     * @param actions
      */
-    TestActionContainer when(TestAction... predicate);
+    TestActionContainer when(TestAction... actions);
 }

@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
@@ -43,11 +44,33 @@ public class DefaultContainerRunner implements ContainerRunner, ExceptionContain
 
     @Override
     public TestActionContainer actions(TestAction ... actions) {
+        checkActionOrder(actions);
         return testRunner.run(container);
     }
 
     @Override
-    public TestActionContainer when(TestAction ... predicate) {
+    public TestActionContainer when(TestAction ... actions) {
+        checkActionOrder(actions);
         return testRunner.run(container);
+    }
+
+    /**
+     * Walks through the actions and checks correct order with given action container. It is possible that
+     * some test actions were added that are not recognized yet. This is the case when user adds anonymous inner classes
+     * or test action instances that were not built with the Java DSL methods.
+     * @param actions
+     */
+    private void checkActionOrder(TestAction[] actions) {
+        for (int i = 0; i < actions.length; i++) {
+            if (container.getActions().size() == i) {
+                container.addTestAction(actions[i]);
+            } else if (!container.getActions().get(i).equals(actions[i])) {
+                container.getActions().add(i, actions[i]);
+            }
+        }
+
+        if (container.getActions().size() != actions.length) {
+            throw new CitrusRuntimeException("Invalid number of nested test actions for container execution - found unexpected actions");
+        }
     }
 }

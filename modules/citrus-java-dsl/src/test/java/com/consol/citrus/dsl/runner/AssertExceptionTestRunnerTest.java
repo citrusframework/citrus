@@ -70,12 +70,12 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
                         definition.exception(CitrusRuntimeException.class)
                                 .message("Unknown variable 'foo'");
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         context.getVariable("foo");
                     }
-                }));
+                });
             }
         };
 

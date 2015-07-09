@@ -88,12 +88,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                         definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR);
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -147,12 +147,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                         definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR);
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -205,12 +205,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><message>Something went wrong</message></ErrorDetail>");
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -267,12 +267,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetail("<MessageDetail><message>Something went wrong</message></MessageDetail>");
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -329,12 +329,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource(resource);
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -389,12 +389,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource("classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml");
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -453,12 +453,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetailResource(resource);
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -516,12 +516,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .validator(soapFaultValidator);
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
@@ -572,12 +572,12 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultActor("MyActor");
                     }
-                }).when(run(new AbstractTestAction() {
+                }).when(new AbstractTestAction() {
                     @Override
                     public void doExecute(TestContext context) {
                         throw new SoapFaultClientException(soapMessage);
                     }
-                }));
+                });
             }
         };
 
