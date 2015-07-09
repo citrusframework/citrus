@@ -29,9 +29,20 @@ import java.util.Map;
  */
 public class TemplateDefinition extends AbstractActionDefinition<Template> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public TemplateDefinition(Template action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public TemplateDefinition() {
+		super(new Template());
+	}
 
 	/**
 	 * Sets the template name.

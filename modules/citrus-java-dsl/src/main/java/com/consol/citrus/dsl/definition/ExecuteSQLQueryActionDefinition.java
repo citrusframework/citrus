@@ -41,8 +41,19 @@ import java.util.List;
  */
 public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<ExecuteSQLQueryAction> {
 
+    /**
+     * Constructor using action field.
+     * @param action
+     */
 	public ExecuteSQLQueryActionDefinition(ExecuteSQLQueryAction action) {
 	    super(action);
+    }
+
+    /**
+     * Default constructor.
+     */
+    public ExecuteSQLQueryActionDefinition() {
+        super(new ExecuteSQLQueryAction());
     }
 
     /**

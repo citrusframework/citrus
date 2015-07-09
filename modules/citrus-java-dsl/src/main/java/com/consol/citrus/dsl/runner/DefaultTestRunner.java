@@ -28,7 +28,6 @@ import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
@@ -175,7 +174,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
-        AntRunActionDefinition definition = new AntRunActionDefinition(new AntRunAction());
+        AntRunActionDefinition definition = new AntRunActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
@@ -187,21 +186,21 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
-        ExecutePLSQLActionDefinition definition = new ExecutePLSQLActionDefinition(new ExecutePLSQLAction());
+        ExecutePLSQLActionDefinition definition = new ExecutePLSQLActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
 
     @Override
     public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
-        ExecuteSQLActionDefinition definition = new ExecuteSQLActionDefinition(new ExecuteSQLAction());
+        ExecuteSQLActionDefinition definition = new ExecuteSQLActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
 
     @Override
     public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
-        ExecuteSQLQueryActionDefinition definition = new ExecuteSQLQueryActionDefinition(new ExecuteSQLQueryAction());
+        ExecuteSQLQueryActionDefinition definition = new ExecuteSQLQueryActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
@@ -213,14 +212,14 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public InputAction input(TestActionConfigurer<InputActionDefinition> configurer) {
-        InputActionDefinition definition = new InputActionDefinition(new InputAction());
+        InputActionDefinition definition = new InputActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
 
     @Override
     public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
-        ReceiveTimeoutActionDefinition definition = new ReceiveTimeoutActionDefinition(new ReceiveTimeoutAction());
+        ReceiveTimeoutActionDefinition definition = new ReceiveTimeoutActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
@@ -232,7 +231,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
-        PurgeJmsQueueActionDefinition definition = new PurgeJmsQueueActionDefinition(new PurgeJmsQueuesAction());
+        PurgeJmsQueueActionDefinition definition = new PurgeJmsQueueActionDefinition();
         configurer.configure(definition);
 
         if (!definition.hasConnectionFactory()) {
@@ -243,7 +242,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
-        PurgeMessageChannelActionDefinition definition = new PurgeMessageChannelActionDefinition(new PurgeMessageChannelAction());
+        PurgeMessageChannelActionDefinition definition = new PurgeMessageChannelActionDefinition();
         definition.channelResolver(applicationContext);
         configurer.configure(definition);
         return run(definition.getAction());
@@ -251,7 +250,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
-        ReceiveMessageActionDefinition definition = new ReceiveMessageActionDefinition(new ReceiveMessageAction());
+        ReceiveMessageActionDefinition definition = new ReceiveMessageActionDefinition();
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
         return run(definition.getAction());
@@ -259,7 +258,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
-        SendMessageActionDefinition definition = new SendMessageActionDefinition(new SendMessageAction());
+        SendMessageActionDefinition definition = new SendMessageActionDefinition();
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
         return run(definition.getAction());
@@ -267,7 +266,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer) {
-        SendSoapFaultActionDefinition definition = new SendSoapFaultActionDefinition(new SendSoapFaultAction());
+        SendSoapFaultActionDefinition definition = new SendSoapFaultActionDefinition();
         definition.withApplicationContext(applicationContext);
         configurer.configure(definition);
         return run(definition.getAction());
@@ -325,7 +324,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public GroovyAction groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
-        GroovyActionDefinition definition = new GroovyActionDefinition(new GroovyAction());
+        GroovyActionDefinition definition = new GroovyActionDefinition();
         configurer.configure(definition);
         return run(definition.getAction());
     }
@@ -339,7 +338,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
-        AssertDefinition definition = new AssertDefinition(new Assert());
+        AssertDefinition definition = new AssertDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -348,7 +347,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
-        CatchDefinition definition = new CatchDefinition(new Catch());
+        CatchDefinition definition = new CatchDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -357,7 +356,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultDefinition> configurer) {
-        AssertSoapFaultDefinition definition = new AssertSoapFaultDefinition(new AssertSoapFault());
+        AssertSoapFaultDefinition definition = new AssertSoapFaultDefinition();
 
         if (applicationContext.containsBean("soapFaultValidator")) {
             definition.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
@@ -371,7 +370,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer) {
-        ConditionalDefinition definition = new ConditionalDefinition(new Conditional());
+        ConditionalDefinition definition = new ConditionalDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -380,7 +379,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
-        IterateDefinition definition = new IterateDefinition(new Iterate());
+        IterateDefinition definition = new IterateDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -397,7 +396,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorUntilTrueDefinition> configurer) {
-        RepeatOnErrorUntilTrueDefinition definition = new RepeatOnErrorUntilTrueDefinition(new RepeatOnErrorUntilTrue());
+        RepeatOnErrorUntilTrueDefinition definition = new RepeatOnErrorUntilTrueDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -406,7 +405,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ContainerRunner repeat(TestActionConfigurer<RepeatUntilTrueDefinition> configurer) {
-        RepeatUntilTrueDefinition definition = new RepeatUntilTrueDefinition(new RepeatUntilTrue());
+        RepeatUntilTrueDefinition definition = new RepeatUntilTrueDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
@@ -423,7 +422,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public Template applyTemplate(TestActionConfigurer<TemplateDefinition> configurer) {
-        TemplateDefinition definition = new TemplateDefinition(new Template());
+        TemplateDefinition definition = new TemplateDefinition();
         configurer.configure(definition);
         definition.load(applicationContext);
         configurer.configure(definition);

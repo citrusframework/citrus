@@ -76,6 +76,13 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     }
 
     /**
+     * Default constructor.
+     */
+    public SendMessageActionDefinition() {
+        this((A) new SendMessageAction());
+    }
+
+    /**
      * Sets the message endpoint to send messages to.
      * @param messageEndpoint
      * @return

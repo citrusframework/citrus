@@ -84,6 +84,13 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     }
 
     /**
+     * Default constructor.
+     */
+    public ReceiveMessageActionDefinition() {
+        this((A) new ReceiveMessageAction());
+    }
+
+    /**
      * Sets the message endpoint to receive messages from.
      * @param messageEndpoint
      * @return

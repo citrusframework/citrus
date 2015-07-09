@@ -27,9 +27,20 @@ import com.consol.citrus.container.RepeatUntilTrue;
  */
 public class RepeatUntilTrueDefinition extends AbstractActionContainerDefinition<RepeatUntilTrue> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public RepeatUntilTrueDefinition(RepeatUntilTrue action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public RepeatUntilTrueDefinition() {
+		super(new RepeatUntilTrue());
+	}
 
 	/**
      * Sets Name of index variable.

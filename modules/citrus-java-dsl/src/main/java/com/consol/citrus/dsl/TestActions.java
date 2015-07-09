@@ -514,8 +514,7 @@ public class TestActions {
      * @return
      */
     public static TransformActionDefinition transform() {
-        TransformAction action = new TransformAction();
-        return new TransformActionDefinition(action);
+        return new TransformActionDefinition();
     }
 
     /**

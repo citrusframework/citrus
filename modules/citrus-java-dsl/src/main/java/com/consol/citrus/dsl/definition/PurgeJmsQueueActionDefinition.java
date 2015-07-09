@@ -37,9 +37,20 @@ import java.util.List;
  */
 public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<PurgeJmsQueuesAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public PurgeJmsQueueActionDefinition(PurgeJmsQueuesAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public PurgeJmsQueueActionDefinition() {
+		super(new PurgeJmsQueuesAction());
+	}
 
 	/**
      * Sets the Connection factory.

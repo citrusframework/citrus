@@ -30,9 +30,20 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class InputActionDefinition extends AbstractActionDefinition<InputAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public InputActionDefinition(InputAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public InputActionDefinition() {
+		super(new InputAction());
+	}
 
 	/**
      * Sets the message displayed to the user.

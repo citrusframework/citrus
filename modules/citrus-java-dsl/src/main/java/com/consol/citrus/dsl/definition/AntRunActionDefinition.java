@@ -30,8 +30,19 @@ import java.util.Arrays;
  */
 public class AntRunActionDefinition extends AbstractActionDefinition<AntRunAction> {
 
+    /**
+     * Constructor using action field.
+     * @param action
+     */
 	public AntRunActionDefinition(AntRunAction action) {
 	    super(action);
+    }
+
+    /**
+     * Default constructor.
+     */
+    public AntRunActionDefinition() {
+        super(new AntRunAction());
     }
 
     public AntRunActionDefinition buildFilePath(String buildFilePath) {

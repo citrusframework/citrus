@@ -35,9 +35,20 @@ import java.util.List;
  */
 public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<ExecutePLSQLAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public ExecutePLSQLActionDefinition(ExecutePLSQLAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public ExecutePLSQLActionDefinition() {
+		super(new ExecutePLSQLAction());
+	}
 
 	/**
 	 * Sets the Spring JDBC template to use.

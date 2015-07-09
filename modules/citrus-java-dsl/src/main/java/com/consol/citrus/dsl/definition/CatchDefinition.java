@@ -24,8 +24,19 @@ import com.consol.citrus.container.Catch;
  */
 public class CatchDefinition extends AbstractActionContainerDefinition<Catch> {
 
+    /**
+     * Constructor using action field.
+     * @param action
+     */
     public CatchDefinition(Catch action) {
         super(action);
+    }
+
+    /**
+     * Default constructor.
+     */
+    public CatchDefinition() {
+        super(new Catch());
     }
 
     /**

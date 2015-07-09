@@ -28,9 +28,20 @@ import com.consol.citrus.endpoint.Endpoint;
  */
 public class ReceiveTimeoutActionDefinition extends AbstractActionDefinition<ReceiveTimeoutAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public ReceiveTimeoutActionDefinition(ReceiveTimeoutAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public ReceiveTimeoutActionDefinition() {
+		super(new ReceiveTimeoutAction());
+	}
 
 	/**
 	 * Sets the message endpoint to receive a timeout with.

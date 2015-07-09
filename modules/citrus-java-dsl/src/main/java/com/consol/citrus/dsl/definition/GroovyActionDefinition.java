@@ -31,10 +31,21 @@ import java.io.IOException;
  */
 public class GroovyActionDefinition extends AbstractActionDefinition<GroovyAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public GroovyActionDefinition(GroovyAction action) {
 	    super(action);
     }
-	
+
+	/**
+	 * Default constructor.
+	 */
+	public GroovyActionDefinition() {
+		super(new GroovyAction());
+	}
+
 	/**
      * Use a script template from file path.
      * @param scriptTemplatePath the scriptTemplate to set

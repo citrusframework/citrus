@@ -41,6 +41,13 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
         super(action);
     }
 
+    /**
+     * Default constructor.
+     */
+    public SendSoapFaultActionDefinition() {
+        super(new SendSoapFaultAction());
+    }
+
     @Override
     public SendSoapFaultActionDefinition endpoint(Endpoint messageEndpoint) {
         return (SendSoapFaultActionDefinition) super.endpoint(messageEndpoint);

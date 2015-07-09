@@ -43,7 +43,14 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
 	public PurgeMessageChannelActionDefinition(PurgeMessageChannelAction action) {
 	    super(action);
     }
-	
+
+	/**
+	 * Default constructor.
+	 */
+	public PurgeMessageChannelActionDefinition() {
+		super(new PurgeMessageChannelAction());
+	}
+
 	/**
      * Sets the messageSelector.
      * @param messageSelector the messageSelector to set

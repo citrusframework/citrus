@@ -34,7 +34,11 @@ import java.io.IOException;
 public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition<AssertSoapFault> {
 
     private XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-    
+
+    /**
+     * Constructor using action field.
+     * @param action
+     */
 	public AssertSoapFaultDefinition(AssertSoapFault action) {
 	    super(action);
 
@@ -43,8 +47,15 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
 	    soapFaultDetailValidationContext.addValidationContext(validationContext);
 	    action.setValidationContext(soapFaultDetailValidationContext);
     }
-	
-	/**
+
+    /**
+     * Default constructor
+     */
+    public AssertSoapFaultDefinition() {
+        this(new AssertSoapFault());
+    }
+
+    /**
 	 * Expect fault code in SOAP fault message.
 	 * @param code
 	 * @return
