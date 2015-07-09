@@ -17,10 +17,12 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseMetaInfo.Status;
+import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
@@ -32,29 +34,22 @@ import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
+ * @since 1.3
  */
-public class DefaultTestDesignerTest {
-
+public class ReceiveTimeoutTestDesignerTest extends AbstractTestNGUnitTest {
+    
+    private Endpoint messageEndpoint = EasyMock.createMock(Endpoint.class);
+    
     private ApplicationContext applicationContextMock = EasyMock.createMock(ApplicationContext.class);
 
     @Test
-    public void testCitrusTestDesigner() {
-        reset(applicationContextMock);
-
-        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
-        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
-
-        replay(applicationContextMock);
-
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+    public void testReceiveTimeoutBuilder() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                description("This is a Test");
-                author("Christoph");
-                status(Status.FINAL);
-
-                echo("Hello Citrus!");
+                receiveTimeout(messageEndpoint)
+                    .timeout(5000)
+                    .selector("TestMessageSelectorString");
             }
         };
 
@@ -62,15 +57,42 @@ public class DefaultTestDesignerTest {
 
         TestCase test = builder.build();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getName(), "");
-        Assert.assertEquals(test.getPackageName(), "com.consol.citrus.dsl.design");
-        
-        Assert.assertEquals(test.getDescription(), "This is a Test");
-        
-        Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
-        Assert.assertEquals(test.getMetaInfo().getStatus(), Status.FINAL);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveTimeoutAction.class);
+         
+        ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "receive-timeout");
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getMessageSelector(),"TestMessageSelectorString"); 
+        Assert.assertEquals(action.getTimeout(), 5000);
+    }
+    
+    @Test
+    public void testReceiveTimeoutBuilderWithEndpointName() {
+        reset(applicationContextMock);
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+        replay(applicationContextMock);
 
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+            @Override
+            public void configure() {
+                receiveTimeout("fooMessageEndpoint")
+                    .timeout(500);
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveTimeoutAction.class);
+         
+        ReceiveTimeoutAction action = (ReceiveTimeoutAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "receive-timeout");
+        Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
+        Assert.assertEquals(action.getTimeout(), 500);
+        
         verify(applicationContextMock);
     }
-
 }
