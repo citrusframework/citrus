@@ -17,8 +17,7 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.AssertDefinition;
@@ -30,6 +29,28 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
+
+    @Test
+    public void testAssertDefaultExceptionBuilder() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                assertException().when(fail("Error!"));
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Assert.class);
+        assertEquals(test.getActions().get(0).getName(), "assert");
+
+        Assert container = (Assert)(test.getTestAction(0));
+
+        assertEquals(container.getActionCount(), 1);
+        assertEquals(container.getAction().getClass(), FailAction.class);
+        assertEquals(container.getException(), CitrusRuntimeException.class);
+    }
+
     @Test
     public void testAssertBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {

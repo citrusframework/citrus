@@ -241,8 +241,18 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
+    public ExceptionContainerRunner assertException() {
+        return testRunner.assertException();
+    }
+
+    @Override
     public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         return testRunner.assertException(configurer);
+    }
+
+    @Override
+    public ExceptionContainerRunner catchException() {
+        return testRunner.assertException();
     }
 
     @Override

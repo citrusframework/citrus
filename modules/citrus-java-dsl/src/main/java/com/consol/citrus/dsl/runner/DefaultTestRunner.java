@@ -346,12 +346,30 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public ExceptionContainerRunner assertException() {
+        return assertException(new TestActionConfigurer<AssertDefinition>() {
+            @Override
+            public void configure(AssertDefinition definition) {
+            }
+        });
+    }
+
+    @Override
     public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         AssertDefinition definition = new AssertDefinition();
         configurer.configure(definition);
         containers.push(definition.getAction());
 
         return new DefaultContainerRunner(definition.getAction(), this);
+    }
+
+    @Override
+    public ExceptionContainerRunner catchException() {
+        return catchException(new TestActionConfigurer<CatchDefinition>() {
+            @Override
+            public void configure(CatchDefinition definition) {
+            }
+        });
     }
 
     @Override

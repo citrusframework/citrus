@@ -44,10 +44,10 @@ public class QueryDatabaseRetriesJavaITest extends TestNGCitrusTestDesigner {
                     query(dataSource)
                         .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
                         .validate("CUSTOMER_CNT", "0")
-                ).autoSleep(1000).index("i").until("i = 5")
+                ).autoSleep(100).index("i").until("i = 5")
             ),
             sequential(
-                sleep(3000),
+                sleep(300),
                 sql(dataSource)
                     .statement("DELETE FROM CUSTOMERS")
             )

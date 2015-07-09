@@ -305,12 +305,25 @@ public interface TestRunner extends ApplicationContextAware {
     TransformAction transform(TestActionConfigurer<TransformActionDefinition> configurer);
 
     /**
+     * Assert default exception to happen in nested test action.
+     *
+     * @return
+     */
+    ExceptionContainerRunner assertException();
+
+    /**
      * Assert exception to happen in nested test action.
      *
      * @param configurer
      * @return
      */
     ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer);
+
+    /**
+     * Catch default exception when thrown in nested test action.
+     * @return
+     */
+    ExceptionContainerRunner catchException();
 
     /**
      * Catch exception when thrown in nested test action.

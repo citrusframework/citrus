@@ -26,13 +26,13 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class ValidateValuesWithNamespacesJavaITest extends TestNGCitrusTestDesigner {
+public class ValidateXpathJavaITest extends TestNGCitrusTestDesigner {
     
     @Autowired
     private NamespaceContextBuilder namespaceContextBuilder;
     
     @CitrusTest
-    public void ValidateValuesWithNamespacesJavaITest() {
+    public void ValidateXpathJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

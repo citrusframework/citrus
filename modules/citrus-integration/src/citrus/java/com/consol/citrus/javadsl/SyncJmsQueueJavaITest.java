@@ -24,10 +24,10 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class SyncJmsCommunicationJavaITest extends TestNGCitrusTestDesigner {
+public class SyncJmsQueueJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SyncJmsCommunicationJavaITest() {
+    public void SyncJmsQueueJavaITest() {
         variable("correlationId", "citrus:randomNumber(10)");      
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");

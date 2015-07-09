@@ -25,10 +25,10 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 @Test
-public class SendSoapMessageWithAttachmentJavaITest extends TestNGCitrusTestDesigner {
+public class SendSoapAttachmentJavaITest extends TestNGCitrusTestDesigner {
     
     @CitrusTest
-    public void SendSoapMessageWithAttachmentJavaITest() {
+    public void SendSoapAttachmentJavaITest() {
         parallel(
             send("webServiceClient")
                 .soap()

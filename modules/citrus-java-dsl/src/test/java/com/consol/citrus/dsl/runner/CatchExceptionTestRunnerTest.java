@@ -29,6 +29,25 @@ import static org.testng.Assert.assertEquals;
 
 public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
+    public void testCatchDefaultExceptionBuilder() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                catchException().when(fail("Error"));
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Catch.class);
+        assertEquals(test.getActions().get(0).getName(), "catch");
+
+        Catch container = (Catch)test.getActions().get(0);
+        assertEquals(container.getActionCount(), 1);
+        assertEquals(container.getException(), CitrusRuntimeException.class.getName());
+    }
+
+    @Test
     public void testCatchBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override

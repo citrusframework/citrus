@@ -87,10 +87,10 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
                 testRunner.start();
 
                 if (parameters != null) {
-                    ReflectionUtils.invokeMethod(method, this,
+                    handleTestParameters(testResult.getMethod(),
                             parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
 
-                    handleTestParameters(testResult.getMethod(),
+                    ReflectionUtils.invokeMethod(method, this,
                             parameters[testResult.getMethod().getCurrentInvocationCount() % parameters.length]);
                 } else {
                     ReflectionUtils.invokeMethod(method, this);
@@ -304,8 +304,18 @@ public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements 
     }
 
     @Override
+    public ExceptionContainerRunner assertException() {
+        return testRunner.assertException();
+    }
+
+    @Override
     public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
         return testRunner.assertException(configurer);
+    }
+
+    @Override
+    public ExceptionContainerRunner catchException() {
+        return testRunner.catchException();
     }
 
     @Override

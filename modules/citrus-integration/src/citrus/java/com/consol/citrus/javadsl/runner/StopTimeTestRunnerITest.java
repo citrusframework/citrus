@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.javadsl;
+package com.consol.citrus.javadsl.runner;
 
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class StopTimeJavaITest extends TestNGCitrusTestDesigner {
+public class StopTimeTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
-    public void StopTimeJavaITest() {
+    public void StopTimeTestRunnerITest() {
         stopTime();
         stopTime("watchId");
         sleep(100L);

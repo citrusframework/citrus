@@ -30,9 +30,9 @@ public class ParallelJavaITest extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void ParallelJavaITest() {
         parallel(
-            sleep(1500),
+            sleep(150),
             sequential(
-                sleep(1000),
+                sleep(100),
                 echo("1")
             ),
             echo("2"),
@@ -44,9 +44,9 @@ public class ParallelJavaITest extends TestNGCitrusTestDesigner {
         
         assertException(
             parallel(
-                sleep(1500),
+                sleep(150),
                 sequential(
-                    sleep(1000),
+                    sleep(100),
                     fail("This went wrong too"),
                     echo("1")
                 ),
