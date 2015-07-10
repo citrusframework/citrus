@@ -685,7 +685,7 @@
               </property>
             </systemProperties>
             <forkMode>once</forkMode>
-            <failIfNoTests>true</failIfNoTests>
+            <failIfNoTests>false</failIfNoTests>
             <excludes>
               <exclude>**/integration/**/*.java</exclude>
             </excludes>
