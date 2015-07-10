@@ -27,4 +27,8 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
  */
 public class TestNGCitrusTestBuilder extends TestNGCitrusTestDesigner implements TestBuilder {
 
+    @Override
+    public void applyBehavior(TestBehavior behavior) {
+        applyBehavior((com.consol.citrus.dsl.design.TestBehavior) behavior);
+    }
 }

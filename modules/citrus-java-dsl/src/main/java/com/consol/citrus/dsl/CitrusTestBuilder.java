@@ -41,4 +41,8 @@ public class CitrusTestBuilder extends DefaultTestDesigner implements TestBuilde
         super(applicationContext);
     }
 
+    @Override
+    public void applyBehavior(TestBehavior behavior) {
+        applyBehavior((com.consol.citrus.dsl.design.TestBehavior) behavior);
+    }
 }

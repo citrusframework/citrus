@@ -27,4 +27,9 @@ import com.consol.citrus.dsl.design.*;
  * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.AbstractTestBehavior}
  */
 public abstract class CitrusTestBehavior extends AbstractTestBehavior implements TestBuilder, TestBehavior {
+
+    @Override
+    public void applyBehavior(TestBehavior behavior) {
+        applyBehavior((com.consol.citrus.dsl.design.TestBehavior) behavior);
+    }
 }

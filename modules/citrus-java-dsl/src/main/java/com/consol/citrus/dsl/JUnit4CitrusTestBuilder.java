@@ -28,4 +28,8 @@ import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
  */
 public class JUnit4CitrusTestBuilder extends JUnit4CitrusTestDesigner implements TestBuilder {
 
+    @Override
+    public void applyBehavior(TestBehavior behavior) {
+        applyBehavior((com.consol.citrus.dsl.design.TestBehavior) behavior);
+    }
 }
