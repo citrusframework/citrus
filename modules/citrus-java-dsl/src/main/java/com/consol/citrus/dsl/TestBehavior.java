@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2012 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
 
 package com.consol.citrus.dsl;
 
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-
 /**
- * TestNG Citrus test provides Java DSL access to builder pattern methods in
- * CitrusTestBuilder by simple method delegation.
+ * Test apply interface applies to test builder classes adding all builder
+ * methods to a test builder instance.
  *
  * @author Christoph Deppisch
- * @deprecated since 2.2.1 in favor of {@link com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner}
+ * @since 1.3.1
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.design.TestBehavior}
  */
-public class TestNGCitrusTestBuilder extends TestNGCitrusTestDesigner implements TestBuilder {
-
+public interface TestBehavior extends com.consol.citrus.dsl.design.TestBehavior {
 }

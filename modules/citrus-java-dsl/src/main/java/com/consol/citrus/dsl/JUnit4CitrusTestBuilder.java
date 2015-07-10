@@ -26,6 +26,6 @@ import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
  * @since 1.3.1
  * @deprecated since 2.2.1 in favor of {@link com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner}
  */
-public class JUnit4CitrusTestBuilder extends JUnit4CitrusTestDesigner {
+public class JUnit4CitrusTestBuilder extends JUnit4CitrusTestDesigner implements TestBuilder {
 
 }

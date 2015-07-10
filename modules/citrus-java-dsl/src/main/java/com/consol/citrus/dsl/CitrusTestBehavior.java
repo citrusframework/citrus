@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl;
 
-import com.consol.citrus.dsl.design.AbstractTestBehavior;
+import com.consol.citrus.dsl.design.*;
 
 /**
  * Abstract Citrus test behavior provides interface method implementations for
@@ -26,5 +26,5 @@ import com.consol.citrus.dsl.design.AbstractTestBehavior;
  * @since 1.3.1
  * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.AbstractTestBehavior}
  */
-public abstract class CitrusTestBehavior extends AbstractTestBehavior {
+public abstract class CitrusTestBehavior extends AbstractTestBehavior implements TestBuilder, TestBehavior {
 }

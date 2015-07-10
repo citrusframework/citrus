@@ -5,7 +5,7 @@ package com.consol.citrus.dsl.design;
  * methods to a test builder instance.
  *
  * @author Christoph Deppisch
- * @since 1.3.1
+ * @since 2.2.1
  */
 public interface TestBehavior extends TestDesigner {
 
