@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
@@ -33,10 +33,10 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
     public void HttpServerStandaloneTestRunnerITest() {
         variable("custom_header_id", "123456789");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new TestActionConfigurer<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("httpStandaloneClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("httpStandaloneClient")
                         .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                                 "</testRequestMessage>")
@@ -44,10 +44,10 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpStandaloneClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpStandaloneClient")
                         .payload("<testResponseMessage>" +
                                 "<text>Hello TestFramework</text>" +
                                 "</testResponseMessage>")
@@ -57,10 +57,10 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new TestActionConfigurer<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("httpStandaloneClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("httpStandaloneClient")
                         .payload("<moreRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                                 "</moreRequestMessage>")
@@ -68,10 +68,10 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpStandaloneClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpStandaloneClient")
                         .payload("<testResponseMessage>" +
                                 "<text>Hello TestFramework</text>" +
                                 "</testResponseMessage>")

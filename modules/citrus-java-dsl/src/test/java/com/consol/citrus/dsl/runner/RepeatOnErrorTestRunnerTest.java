@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
-import com.consol.citrus.dsl.definition.RepeatOnErrorUntilTrueDefinition;
+import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
@@ -33,18 +33,18 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorUntilTrueDefinition>() {
+                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
                     @Override
-                    public void configure(RepeatOnErrorUntilTrueDefinition definition) {
-                        definition.autoSleep(250)
+                    public void configure(RepeatOnErrorBuilder builder) {
+                        builder.autoSleep(250)
                                 .until("i gt 5");
                     }
                 }).actions(echo("${var}"), sleep(50), echo("${var}"));
 
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorUntilTrueDefinition>() {
+                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
                     @Override
-                    public void configure(RepeatOnErrorUntilTrueDefinition definition) {
-                        definition.autoSleep(200)
+                    public void configure(RepeatOnErrorBuilder builder) {
+                        builder.autoSleep(200)
                                 .index("k")
                                 .startsWith(2)
                                 .until("k gt= 5");

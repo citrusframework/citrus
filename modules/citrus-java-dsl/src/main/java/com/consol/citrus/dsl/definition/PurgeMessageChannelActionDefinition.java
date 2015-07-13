@@ -33,6 +33,7 @@ import java.util.List;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.PurgeChannelsBuilder}
  */
 public class PurgeMessageChannelActionDefinition extends AbstractActionDefinition<PurgeMessageChannelAction> {
 
@@ -77,7 +78,7 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
         action.setChannelResolver(channelResolver);
         return this;
     }
-	
+
 	/**
      * Adds list of channel names to purge in this action.
      * @param channelNames the channelNames to set
@@ -86,18 +87,18 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
 		action.getChannelNames().addAll(channelNames);
 		return this;
 	}
-	
+
 	/**
-	 * Adds several channel names to the list of channels to purge in this action. 
+	 * Adds several channel names to the list of channels to purge in this action.
 	 * @param channelNames
 	 * @return
 	 */
 	public PurgeMessageChannelActionDefinition channelNames(String... channelNames) {
 		return channelNames(Arrays.asList(channelNames));
 	}
-	
+
 	/**
-     * Adds a channel name to the list of channels to purge in this action. 
+     * Adds a channel name to the list of channels to purge in this action.
      * @param name
      * @return
      */
@@ -105,7 +106,7 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
         action.getChannelNames().add(name);
         return this;
     }
-	
+
 	/**
      * Adds list of channels to purge in this action.
      * @param channels the channels to set
@@ -114,7 +115,7 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
 		action.getChannels().addAll(channels);
 		return this;
 	}
-	
+
 	/**
 	 * Sets several channels to purge in this action.
 	 * @param channels
@@ -123,7 +124,7 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
 	public PurgeMessageChannelActionDefinition channels(MessageChannel... channels) {
 		return channels(Arrays.asList(channels));
 	}
-	
+
 	/**
      * Adds a channel to the list of channels to purge in this action.
      * @param channel
@@ -132,6 +133,6 @@ public class PurgeMessageChannelActionDefinition extends AbstractActionDefinitio
     public PurgeMessageChannelActionDefinition channel(MessageChannel channel) {
         action.getChannels().add(channel);
         return this;
-    }
+	}
 
 }

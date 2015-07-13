@@ -16,13 +16,13 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.dsl.definition.AbstractActionDefinition;
+import com.consol.citrus.dsl.builder.AbstractTestActionBuilder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public interface TestActionConfigurer<T extends AbstractActionDefinition> {
+public interface TestActionConfigurer<T extends AbstractTestActionBuilder> {
 
-    void configure(T definition);
+    void configure(T builder);
 }

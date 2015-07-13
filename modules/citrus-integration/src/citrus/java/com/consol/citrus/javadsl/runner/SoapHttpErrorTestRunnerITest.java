@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
@@ -35,17 +35,17 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-            assertException(new TestActionConfigurer<AssertDefinition>() {
+            assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
                 @Override
-                public void configure(AssertDefinition definition) {
-                    definition.exception(org.springframework.ws.client.WebServiceTransportException.class)
+                public void configure(AssertExceptionBuilder builder) {
+                    builder.exception(org.springframework.ws.client.WebServiceTransportException.class)
                             .message("Server Error [500]");
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                    send(new TestActionConfigurer<SendMessageBuilder>() {
                         @Override
-                        public void configure(SendMessageActionDefinition definition) {
-                            definition.endpoint("webServiceClient")
+                        public void configure(SendMessageBuilder builder) {
+                            builder.endpoint("webServiceClient")
                                     .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                             "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                             "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -59,10 +59,10 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("webServiceRequestReceiver")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("webServiceRequestReceiver")
                                 .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                         "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -76,10 +76,10 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new TestActionConfigurer<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("webServiceResponseSender")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("webServiceResponseSender")
                                 .header("citrus_http_status_code", "500")
                                 .header("citrus_jms_correlationId", "${internal_correlation_id}");
                     }

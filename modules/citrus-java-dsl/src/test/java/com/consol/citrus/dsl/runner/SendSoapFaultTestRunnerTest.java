@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.SendSoapFaultActionDefinition;
+import com.consol.citrus.dsl.builder.SendSoapFaultBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
@@ -77,10 +77,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultActionDefinition>() {
+                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
                     @Override
-                    public void configure(SendSoapFaultActionDefinition definition) {
-                        definition.endpoint(soapEndpoint)
+                    public void configure(SendSoapFaultBuilder builder) {
+                        builder.endpoint(soapEndpoint)
                                 .faultActor("faultActor")
                                 .faultCode(FAULT_CODE)
                                 .faultString(FAULT_STRING);
@@ -135,10 +135,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultActionDefinition>() {
+                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
                     @Override
-                    public void configure(SendSoapFaultActionDefinition definition) {
-                        definition.endpoint("soapEndpoint")
+                    public void configure(SendSoapFaultBuilder builder) {
+                        builder.endpoint("soapEndpoint")
                                 .faultCode(FAULT_CODE)
                                 .faultString(FAULT_STRING);
                     }
@@ -191,10 +191,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultActionDefinition>() {
+                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
                     @Override
-                    public void configure(SendSoapFaultActionDefinition definition) {
-                        definition.endpoint(soapEndpoint)
+                    public void configure(SendSoapFaultBuilder builder) {
+                        builder.endpoint(soapEndpoint)
                                 .faultCode(FAULT_CODE)
                                 .faultDetailResource(resource)
                                 .faultString(FAULT_STRING);
@@ -247,10 +247,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultActionDefinition>() {
+                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
                     @Override
-                    public void configure(SendSoapFaultActionDefinition definition) {
-                        definition.endpoint(soapEndpoint)
+                    public void configure(SendSoapFaultBuilder builder) {
+                        builder.endpoint(soapEndpoint)
                                 .faultCode(FAULT_CODE)
                                 .faultDetail("DETAIL")
                                 .faultString(FAULT_STRING);
@@ -302,10 +302,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultActionDefinition>() {
+                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
                     @Override
-                    public void configure(SendSoapFaultActionDefinition definition) {
-                        definition.endpoint(soapEndpoint)
+                    public void configure(SendSoapFaultBuilder builder) {
+                        builder.endpoint(soapEndpoint)
                                 .faultCode(FAULT_CODE)
                                 .faultDetailResource("classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml")
                                 .faultString(FAULT_STRING);
@@ -359,10 +359,10 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultActionDefinition>() {
+                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
                     @Override
-                    public void configure(SendSoapFaultActionDefinition definition) {
-                        definition.endpoint(soapEndpoint)
+                    public void configure(SendSoapFaultBuilder builder) {
+                        builder.endpoint(soapEndpoint)
                                 .faultCode(FAULT_CODE)
                                 .faultDetail("DETAIL1")
                                 .faultDetail("DETAIL2")

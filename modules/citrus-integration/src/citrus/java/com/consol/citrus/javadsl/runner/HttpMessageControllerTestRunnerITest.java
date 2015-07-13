@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.http.message.HttpMessage;
@@ -39,10 +39,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
         echo("First request without query parameter and context path variables.");
         
         parallel().actions(
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new TestActionConfigurer<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("httpClient")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("httpClient")
                                 .http()
                                 .uri("http://localhost:8072")
                                 .message(new HttpMessage()
@@ -53,10 +53,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
                 }),
 
                 sequential().actions(
-                        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                             @Override
-                            public void configure(ReceiveMessageActionDefinition definition) {
-                                definition.endpoint("httpServerRequestEndpoint")
+                            public void configure(ReceiveMessageBuilder builder) {
+                                builder.endpoint("httpServerRequestEndpoint")
                                         .message(new HttpMessage()
                                                 .method(HttpMethod.GET)
                                                 .contentType("text/html")
@@ -67,10 +67,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
                         }))
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .timeout(2000L)
                         .http()
                         .status(HttpStatus.OK)
@@ -81,10 +81,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
         echo("Use context path variables.");
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("httpClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("httpClient")
                             .http()
                             .uri("http://localhost:8072/test/user/${id}")
                             .message(new HttpMessage()
@@ -95,10 +95,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
             }),
 
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpServerRequestEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpServerRequestEndpoint")
                                 .http()
                                 .message(new HttpMessage()
                                         .contentType("text/html")
@@ -111,10 +111,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
                 }))
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .timeout(2000L)
                         .http()
                         .status(HttpStatus.OK)
@@ -125,10 +125,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
         echo("Use query parameter and context path variables.");
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("httpClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("httpClient")
                             .http()
                             .uri("http://localhost:8072/test")
                             .message(new HttpMessage()
@@ -142,10 +142,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
             }),
 
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpServerRequestEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpServerRequestEndpoint")
                                 .http()
                                 .message(new HttpMessage()
                                         .method(HttpMethod.GET)
@@ -161,10 +161,10 @@ public class HttpMessageControllerTestRunnerITest extends TestNGCitrusTestRunner
             )
         );
 
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .timeout(2000L)
                         .http()
                         .status(HttpStatus.OK)

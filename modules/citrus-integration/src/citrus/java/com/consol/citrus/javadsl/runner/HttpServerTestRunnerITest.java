@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
@@ -36,10 +36,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Send Http message and respond with 200 OK");
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("httpClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("httpClient")
                             .payload("<testRequestMessage>" +
                                     "<text>Hello HttpServer</text>" +
                                     "</testRequestMessage>")
@@ -51,10 +51,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
             }),
             
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpServerRequestEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpServerRequestEndpoint")
                                 .payload("<testRequestMessage>" +
                                         "<text>Hello HttpServer</text>" +
                                         "</testRequestMessage>")
@@ -68,10 +68,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }),
                     
-               send(new TestActionConfigurer<SendMessageActionDefinition>() {
+               send(new TestActionConfigurer<SendMessageBuilder>() {
                    @Override
-                   public void configure(SendMessageActionDefinition definition) {
-                       definition.endpoint("httpServerResponseEndpoint")
+                   public void configure(SendMessageBuilder builder) {
+                       builder.endpoint("httpServerResponseEndpoint")
                                .payload("<testResponseMessage>" +
                                        "<text>Hello Citrus</text>" +
                                        "</testResponseMessage>")
@@ -86,10 +86,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                                 "</testResponseMessage>")
@@ -103,10 +103,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Send Http request and respond with 404 status code");
 
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("httpClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("httpClient")
                             .payload("<testRequestMessage>" +
                                     "<text>Hello HttpServer</text>" +
                                     "</testRequestMessage>")
@@ -118,10 +118,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
             }),
             
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpServerRequestEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpServerRequestEndpoint")
                                 .payload("<testRequestMessage>" +
                                         "<text>Hello HttpServer</text>" +
                                         "</testRequestMessage>")
@@ -135,10 +135,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }),
                     
-               send(new TestActionConfigurer<SendMessageActionDefinition>() {
+               send(new TestActionConfigurer<SendMessageBuilder>() {
                    @Override
-                   public void configure(SendMessageActionDefinition definition) {
-                       definition.endpoint("httpServerResponseEndpoint")
+                   public void configure(SendMessageBuilder builder) {
+                       builder.endpoint("httpServerResponseEndpoint")
                                .payload("<testResponseMessage>" +
                                        "<text>Hello Citrus</text>" +
                                        "</testResponseMessage>")
@@ -153,10 +153,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .payload("<testResponseMessage>" +
                                 "<text>Hello Citrus</text>" +
                                 "</testResponseMessage>")
@@ -169,10 +169,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Skip response and use fallback endpoint adapter");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new TestActionConfigurer<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .payload("<testRequestMessage>" +
                                 "<text>Hello HttpServer</text>" +
                                 "</testRequestMessage>")
@@ -183,10 +183,10 @@ public class HttpServerTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .timeout(2000L)
                         .header("citrus_http_status_code", "200")
                         .header("citrus_http_version", "HTTP/1.1")

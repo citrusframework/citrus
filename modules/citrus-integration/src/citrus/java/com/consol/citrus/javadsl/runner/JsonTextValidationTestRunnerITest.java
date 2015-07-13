@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
@@ -33,10 +33,10 @@ public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
     @CitrusTest
     public void JsonTextValidationTestRunnerITest() {
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("httpClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("httpClient")
                             .payload("{" +
                                     "\"type\" : \"read\"," +
                                     "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -46,10 +46,10 @@ public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpServerRequestEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpServerRequestEndpoint")
                                 .messageType(MessageType.JSON)
                                 .payload("{" +
                                         "\"type\" : \"read\"," +
@@ -60,10 +60,10 @@ public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "correlation_id");
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new TestActionConfigurer<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("httpServerResponseEndpoint")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("httpServerResponseEndpoint")
                                 .payload("{" +
                                         "\"timestamp\" : \"2011-01-01\"," +
                                         "\"status\" : 200," +
@@ -85,10 +85,10 @@ public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .messageType(MessageType.JSON)
                         .payload("{" +
                                 "\"timestamp\" : \"@matchesDatePattern('yyyy-MM-dd')@\"," +
@@ -108,10 +108,10 @@ public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new TestActionConfigurer<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .payload("{" +
                                 "\"type\" : \"read\"," +
                                 "\"mbean\" : \"java.lang:type=Memory\"," +
@@ -123,10 +123,10 @@ public class JsonTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
         
         sleep(2000);
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .messageType(MessageType.JSON)
                         .header("citrus_http_status_code", "200")
                         .header("citrus_http_version", "HTTP/1.1")

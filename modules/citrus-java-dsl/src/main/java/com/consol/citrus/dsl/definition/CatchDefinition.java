@@ -20,7 +20,8 @@ import com.consol.citrus.container.Catch;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.CatchExceptionBuilder}
  */
 public class CatchDefinition extends AbstractActionContainerDefinition<Catch> {
 

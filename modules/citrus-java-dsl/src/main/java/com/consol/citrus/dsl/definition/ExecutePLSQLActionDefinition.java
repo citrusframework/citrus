@@ -32,6 +32,7 @@ import java.util.List;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ExecutePLSQLBuilder}
  */
 public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<ExecutePLSQLAction> {
 
@@ -71,14 +72,14 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 	}
 
 	/**
-     * Adds a list of statements to execute. 
+     * Adds a list of statements to execute.
      * @param statements
      */
 	public ExecutePLSQLActionDefinition statements(List<String> statements) {
 	    action.getStatements().addAll(statements);
 		return this;
 	}
-	
+
 	/**
 	 * Adds a new statement tp the list of SQL executions.
 	 * @param sql
@@ -88,7 +89,7 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 	    action.getStatements().add(sql);
 		return this;
 	}
-	
+
 	/**
      * Setter for external file resource containing the SQL statements to execute.
      * @param filePath
@@ -97,7 +98,7 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 		action.setSqlResourcePath(filePath);
 		return this;
 	}
-	
+
 	/**
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
@@ -110,7 +111,7 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
         }
         return this;
     }
-    
+
 	/**
      * Setter for inline script.
      * @param script
@@ -119,7 +120,7 @@ public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<Execu
 		action.setScript(script);
 		return this;
 	}
-	
+
 	/**
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set

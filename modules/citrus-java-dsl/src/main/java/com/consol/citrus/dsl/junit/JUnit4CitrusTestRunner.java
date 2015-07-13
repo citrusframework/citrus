@@ -20,7 +20,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.Template;
-import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.*;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
@@ -111,7 +111,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
+    public AntRunAction antrun(TestActionConfigurer<AntRunBuilder> configurer) {
         return testRunner.antrun(configurer);
     }
 
@@ -121,22 +121,22 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
+    public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLBuilder> configurer) {
         return testRunner.plsql(configurer);
     }
 
     @Override
-    public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
+    public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLBuilder> configurer) {
         return testRunner.sql(configurer);
     }
 
     @Override
-    public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
+    public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryBuilder> configurer) {
         return testRunner.query(configurer);
     }
 
     @Override
-    public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
+    public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutBuilder> configurer) {
         return testRunner.receiveTimeout(configurer);
     }
 
@@ -146,7 +146,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public InputAction input(TestActionConfigurer<InputActionDefinition> configurer) {
+    public InputAction input(TestActionConfigurer<InputActionBuilder> configurer) {
         return testRunner.input(configurer);
     }
 
@@ -156,27 +156,27 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
+    public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueuesBuilder> configurer) {
         return testRunner.purgeQueues(configurer);
     }
 
     @Override
-    public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
+    public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeChannelsBuilder> configurer) {
         return testRunner.purgeChannels(configurer);
     }
 
     @Override
-    public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
+    public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageBuilder> configurer) {
         return testRunner.receive(configurer);
     }
 
     @Override
-    public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
+    public SendMessageAction send(TestActionConfigurer<SendMessageBuilder> configurer) {
         return testRunner.send(configurer);
     }
 
     @Override
-    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer) {
+    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultBuilder> configurer) {
         return testRunner.sendSoapFault(configurer);
     }
 
@@ -231,12 +231,12 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public GroovyAction groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
+    public GroovyAction groovy(TestActionConfigurer<GroovyActionBuilder> configurer) {
         return testRunner.groovy(configurer);
     }
 
     @Override
-    public TransformAction transform(TestActionConfigurer<TransformActionDefinition> configurer) {
+    public TransformAction transform(TestActionConfigurer<TransformActionBuilder> configurer) {
         return testRunner.transform(configurer);
     }
 
@@ -246,7 +246,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
+    public ExceptionContainerRunner assertException(TestActionConfigurer<AssertExceptionBuilder> configurer) {
         return testRunner.assertException(configurer);
     }
 
@@ -256,22 +256,22 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
+    public ExceptionContainerRunner catchException(TestActionConfigurer<CatchExceptionBuilder> configurer) {
         return testRunner.catchException(configurer);
     }
 
     @Override
-    public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultDefinition> configurer) {
+    public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultBuilder> configurer) {
         return testRunner.assertSoapFault(configurer);
     }
 
     @Override
-    public ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer) {
+    public ContainerRunner conditional(TestActionConfigurer<ConditionalBuilder> configurer) {
         return testRunner.conditional(configurer);
     }
 
     @Override
-    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
+    public ContainerRunner iterate(TestActionConfigurer<IterateBuilder> configurer) {
         return testRunner.iterate(configurer);
     }
 
@@ -281,12 +281,12 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorUntilTrueDefinition> configurer) {
+    public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorBuilder> configurer) {
         return testRunner.repeatOnError(configurer);
     }
 
     @Override
-    public ContainerRunner repeat(TestActionConfigurer<RepeatUntilTrueDefinition> configurer) {
+    public ContainerRunner repeat(TestActionConfigurer<RepeatBuilder> configurer) {
         return testRunner.repeat(configurer);
     }
 
@@ -296,7 +296,7 @@ public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements 
     }
 
     @Override
-    public Template applyTemplate(TestActionConfigurer<TemplateDefinition> configurer) {
+    public Template applyTemplate(TestActionConfigurer<TemplateBuilder> configurer) {
         return testRunner.applyTemplate(configurer);
     }
 

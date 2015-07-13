@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.TransformActionDefinition;
+import com.consol.citrus.dsl.builder.TransformActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -33,10 +33,10 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                transform(new TestActionConfigurer<TransformActionDefinition>() {
+                transform(new TestActionConfigurer<TransformActionBuilder>() {
                     @Override
-                    public void configure(TransformActionDefinition definition) {
-                        definition.source("<TestRequest>" +
+                    public void configure(TransformActionBuilder builder) {
+                        builder.source("<TestRequest>" +
                                             "<Message>Hello World!</Message>" +
                                         "</TestRequest>")
                                 .xslt("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
@@ -81,10 +81,10 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                transform(new TestActionConfigurer<TransformActionDefinition>() {
+                transform(new TestActionConfigurer<TransformActionBuilder>() {
                     @Override
-                    public void configure(TransformActionDefinition definition) {
-                        definition.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))
+                    public void configure(TransformActionBuilder builder) {
+                        builder.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))
 								.xslt(new ClassPathResource("com/consol/citrus/dsl/runner/transform.xslt"))
                                 .result("result");
                     }

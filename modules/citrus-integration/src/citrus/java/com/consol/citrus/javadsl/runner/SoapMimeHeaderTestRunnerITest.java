@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
@@ -35,10 +35,10 @@ public class SoapMimeHeaderTestRunnerITest extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new TestActionConfigurer<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("webServiceClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("webServiceClient")
                         .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -53,10 +53,10 @@ public class SoapMimeHeaderTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("webServiceRequestReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("webServiceRequestReceiver")
                         .payload("<ns0:HelloRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -71,10 +71,10 @@ public class SoapMimeHeaderTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
             
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new TestActionConfigurer<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("webServiceResponseSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("webServiceResponseSender")
                         .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +
@@ -87,10 +87,10 @@ public class SoapMimeHeaderTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("webServiceClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("webServiceClient")
                         .payload("<ns0:HelloResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                 "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +

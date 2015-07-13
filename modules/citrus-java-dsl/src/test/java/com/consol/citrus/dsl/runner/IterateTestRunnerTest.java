@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.IterateDefinition;
+import com.consol.citrus.dsl.builder.IterateBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,10 +33,10 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateDefinition>() {
+                iterate(new TestActionConfigurer<IterateBuilder>() {
                     @Override
-                    public void configure(IterateDefinition definition) {
-                        definition.index("i")
+                    public void configure(IterateBuilder builder) {
+                        builder.index("i")
                                 .startsWith(0)
                                 .step(1)
                                 .condition("i lt 5");
@@ -63,10 +63,10 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateDefinition>() {
+                iterate(new TestActionConfigurer<IterateBuilder>() {
                     @Override
-                    public void configure(IterateDefinition definition) {
-                        definition.index("i")
+                    public void configure(IterateBuilder builder) {
+                        builder.index("i")
                                 .startsWith(1)
                                 .step(1)
                                 .condition("i lt 5");

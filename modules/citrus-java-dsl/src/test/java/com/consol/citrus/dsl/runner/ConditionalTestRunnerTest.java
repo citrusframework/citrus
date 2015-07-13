@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.ConditionalDefinition;
+import com.consol.citrus.dsl.builder.ConditionalBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,10 +34,10 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 5);
 
-                conditional(new TestActionConfigurer<ConditionalDefinition>() {
+                conditional(new TestActionConfigurer<ConditionalBuilder>() {
                     @Override
-                    public void configure(ConditionalDefinition definition) {
-                        definition.when("${var} = 5");
+                    public void configure(ConditionalBuilder builder) {
+                        builder.when("${var} = 5");
                     }
                 }).actions(echo("${var}"), createVariable("execution", "true"));
             }
@@ -64,10 +64,10 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 0);
 
-                conditional(new TestActionConfigurer<ConditionalDefinition>() {
+                conditional(new TestActionConfigurer<ConditionalBuilder>() {
                     @Override
-                    public void configure(ConditionalDefinition definition) {
-                        definition.when("${var} = 5");
+                    public void configure(ConditionalBuilder builder) {
+                        builder.when("${var} = 5");
                     }
                 }).actions(echo("${var}"), createVariable("execution", "true"));
             }

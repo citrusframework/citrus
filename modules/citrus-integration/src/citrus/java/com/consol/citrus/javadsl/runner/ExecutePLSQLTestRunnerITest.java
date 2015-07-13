@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ExecutePLSQLActionDefinition;
+import com.consol.citrus.dsl.builder.ExecutePLSQLBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,19 +38,19 @@ public class ExecutePLSQLTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void ExecutePLSQLTestRunnerITest() {
-        plsql(new TestActionConfigurer<ExecutePLSQLActionDefinition>() {
+        plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
             @Override
-            public void configure(ExecutePLSQLActionDefinition definition) {
-                definition.dataSource(dataSource)
+            public void configure(ExecutePLSQLBuilder builder) {
+                builder.dataSource(dataSource)
                         .sqlResource("classpath:com/consol/citrus/actions/plsql.sql")
                         .ignoreErrors(true);
             }
         });
         
-        plsql(new TestActionConfigurer<ExecutePLSQLActionDefinition>() {
+        plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
             @Override
-            public void configure(ExecutePLSQLActionDefinition definition) {
-                definition.dataSource(dataSource)
+            public void configure(ExecutePLSQLBuilder builder) {
+                builder.dataSource(dataSource)
                         .sqlScript("BEGIN\n" +
                                 "EXECUTE IMMEDIATE 'create or replace function test (v_id in number) return number is\n" +
                                 "begin\n" +

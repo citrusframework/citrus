@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatUntilTrue;
-import com.consol.citrus.dsl.definition.RepeatUntilTrueDefinition;
+import com.consol.citrus.dsl.builder.RepeatBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
@@ -33,10 +33,10 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeat(new TestActionConfigurer<RepeatUntilTrueDefinition>() {
+                repeat(new TestActionConfigurer<RepeatBuilder>() {
                     @Override
-                    public void configure(RepeatUntilTrueDefinition definition) {
-                        definition.index("i")
+                    public void configure(RepeatBuilder builder) {
+                        builder.index("i")
                                 .startsWith(2)
                                 .until("i lt 5");
                     }

@@ -34,6 +34,7 @@ import java.util.List;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder}
  */
 public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<PurgeJmsQueuesAction> {
 
@@ -60,7 +61,7 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
 		action.setConnectionFactory(connectionFactory);
 		return this;
 	}
-	
+
 	/**
      * List of queues to purge in this action.
      * @param queues The queues which are to be purged.
@@ -69,7 +70,7 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
 		action.getQueues().addAll(queues);
 		return this;
 	}
-	
+
 	/**
 	 * List of queues to purge in this action.
 	 * @param queues
@@ -78,7 +79,7 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
 	public PurgeJmsQueueActionDefinition queues(Queue... queues) {
 		return queues(Arrays.asList(queues));
 	}
-	
+
 	/**
      * Adds a new queue to the list of queues to purge in this action.
      * @param queue
@@ -88,16 +89,16 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
         action.getQueues().add(queue);
         return this;
     }
-	
+
 	/**
-     * List of queue names to purge in this action. 
+     * List of queue names to purge in this action.
      * @param names the queueNames to set
      */
 	public PurgeJmsQueueActionDefinition queueNames(List<String> names) {
 		action.getQueueNames().addAll(names);
 		return this;
 	}
-	
+
 	/**
 	 * List of queue names to purge in this action.
 	 * @param names
@@ -106,7 +107,7 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
 	public PurgeJmsQueueActionDefinition queueNames(String... names) {
 		return queueNames(Arrays.asList(names));
 	}
-	
+
 	/**
      * Adds a queue name to the list of queues to purge in this action.
      * @param name
@@ -116,7 +117,7 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
         action.getQueueNames().add(name);
         return this;
     }
-	
+
 	/**
      * Receive timeout for reading message from a destination.
      * @param receiveTimeout the receiveTimeout to set
@@ -125,7 +126,7 @@ public class PurgeJmsQueueActionDefinition extends AbstractActionDefinition<Purg
 		action.setReceiveTimeout(receiveTimeout);
 		return this;
 	}
-	
+
 	/**
      * Sets the sleepTime.
      * @param millis the sleepTime to set

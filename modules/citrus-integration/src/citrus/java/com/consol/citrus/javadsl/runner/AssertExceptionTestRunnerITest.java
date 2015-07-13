@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.AssertDefinition;
+import com.consol.citrus.dsl.builder.AssertExceptionBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -40,86 +40,86 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
         
         assertException().when(fail("Fail once"));
 
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(CitrusRuntimeException.class)
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(CitrusRuntimeException.class)
                         .message("Fail again");
             }
         }).when(fail("Fail again"));
 
         
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(CitrusRuntimeException.class)
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(CitrusRuntimeException.class)
                         .message("${failMessage}");
             }
         }).when(fail("${failMessage}"));
 
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(CitrusRuntimeException.class)
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(CitrusRuntimeException.class)
                         .message("@contains('wrong')@");
             }
         }).when(fail("${failMessage}"));
 
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(ValidationException.class);
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertDefinition>() {
+        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
                     @Override
-                    public void configure(AssertDefinition definition) {
-                        definition.exception(IOException.class);
+                    public void configure(AssertExceptionBuilder builder) {
+                        builder.exception(IOException.class);
                     }
                 }).when(fail("Fail another time")));
         
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(ValidationException.class);
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertDefinition>() {
+        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
                     @Override
-                    public void configure(AssertDefinition definition) {
-                        definition.exception(CitrusRuntimeException.class)
+                    public void configure(AssertExceptionBuilder builder) {
+                        builder.exception(CitrusRuntimeException.class)
                                 .message("Fail again");
                     }
                 }).when(fail("Fail with nice error message")));
 
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(ValidationException.class);
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertDefinition>() {
+        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
                     @Override
-                    public void configure(AssertDefinition definition) {
-                        definition.exception(CitrusRuntimeException.class);
+                    public void configure(AssertExceptionBuilder builder) {
+                        builder.exception(CitrusRuntimeException.class);
                     }
                 }).when(echo("Nothing fails here")));
 
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(ValidationException.class);
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertDefinition>() {
+        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
                     @Override
-                    public void configure(AssertDefinition definition) {
-                        definition.exception(CitrusRuntimeException.class)
+                    public void configure(AssertExceptionBuilder builder) {
+                        builder.exception(CitrusRuntimeException.class)
                                 .message("Must be failing");
                     }
                 }).when(echo("Nothing fails here either")));
 
 
-        assertException(new TestActionConfigurer<AssertDefinition>() {
+        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
-                definition.exception(CitrusRuntimeException.class)
+            public void configure(AssertExceptionBuilder builder) {
+                builder.exception(CitrusRuntimeException.class)
                         .message("Unknown variable 'foo'");
             }
         }).when(new AbstractTestAction() {

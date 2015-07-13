@@ -21,6 +21,7 @@ import com.consol.citrus.container.Iterate;
 /**
  * @author Christoph Deppisch
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.IterateBuilder}
  */
 public class IterateDefinition extends AbstractActionContainerDefinition<Iterate> {
 
@@ -48,7 +49,7 @@ public class IterateDefinition extends AbstractActionContainerDefinition<Iterate
         action.setCondition(condition);
         return this;
     }
-    
+
     /**
      * Sets the index variable name.
      * @param name
@@ -58,7 +59,7 @@ public class IterateDefinition extends AbstractActionContainerDefinition<Iterate
         action.setIndexName(name);
         return this;
     }
-    
+
     /**
      * Sets the index start value.
      * @param index
@@ -68,7 +69,7 @@ public class IterateDefinition extends AbstractActionContainerDefinition<Iterate
         action.setStart(index);
         return this;
     }
-    
+
     /**
      * Sets the step for each iteration.
      * @param step

@@ -30,6 +30,7 @@ import java.io.IOException;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.TransformActionBuilder}
  */
 public class TransformActionDefinition extends AbstractActionDefinition<TransformAction> {
 
@@ -56,7 +57,7 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
 		action.setTargetVariable(variable);
 		return this;
 	}
-	
+
 	/**
 	 * Set the XML document
 	 * @param xmlData the xmlData to set
@@ -65,7 +66,7 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
 		action.setXmlData(xmlData);
 		return this;
 	}
-	
+
 	/**
 	 * Set the XML document as resource
 	 * @param xmlResource the xmlResource to set
@@ -78,7 +79,7 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
         }
 		return this;
 	}
-	
+
 	/**
 	 * Set the XSLT document
 	 * @param xsltData the xsltData to set
@@ -87,7 +88,7 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
 		action.setXsltData(xsltData);
 		return this;
 	}
-	
+
 	/**
 	 * Set the XSLT document as resource
 	 * @param xsltResource the xsltResource to set
@@ -98,7 +99,7 @@ public class TransformActionDefinition extends AbstractActionDefinition<Transfor
 	    } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read xstl resource", e);
         }
-	    
+
 		return this;
 	}
 }

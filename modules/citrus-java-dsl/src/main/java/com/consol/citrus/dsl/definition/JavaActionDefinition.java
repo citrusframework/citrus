@@ -16,22 +16,28 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.util.Arrays;
 
 import com.consol.citrus.actions.JavaAction;
+
+import java.util.Arrays;
 
 /**
  * Action to enable class invocation through java reflection
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.JavaActionBuilder}
  */
 public class JavaActionDefinition extends AbstractActionDefinition<JavaAction> {
 
+	/**
+	 * Default constructor using action container.
+	 * @param action
+	 */
 	public JavaActionDefinition(JavaAction action) {
 	    super(action);
     }
-	
+
 	/**
      * Method to call via reflection.
      * @param methodName
@@ -40,7 +46,7 @@ public class JavaActionDefinition extends AbstractActionDefinition<JavaAction> {
 		action.setMethodName(methodName);
 		return this;
 	}
-	
+
 	/**
      * Constructor arguments.
      * @param constructorArgs
@@ -49,7 +55,7 @@ public class JavaActionDefinition extends AbstractActionDefinition<JavaAction> {
 		action.setConstructorArgs(Arrays.asList(constructorArgs));
 		return this;
 	}
-	
+
 	/**
      * Setter for method arguments
      * @param methodArgs

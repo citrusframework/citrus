@@ -21,7 +21,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.AssertSoapFaultDefinition;
+import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -82,10 +82,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR);
                     }
                 }).when(new AbstractTestAction() {
@@ -141,10 +141,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR);
                     }
                 }).when(new AbstractTestAction() {
@@ -198,10 +198,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><message>Something went wrong</message></ErrorDetail>");
                     }
@@ -259,10 +259,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetail("<MessageDetail><message>Something went wrong</message></MessageDetail>");
@@ -322,10 +322,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource(resource);
                     }
@@ -382,10 +382,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource("classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml");
                     }
@@ -445,10 +445,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetailResource(resource);
@@ -509,10 +509,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .validator(soapFaultValidator);
                     }
@@ -565,10 +565,10 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
                     @Override
-                    public void configure(AssertSoapFaultDefinition definition) {
-                        definition.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                    public void configure(AssertSoapFaultBuilder builder) {
+                        builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultActor("MyActor");
                     }

@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.dsl.definition.ExecuteSQLActionDefinition;
+import com.consol.citrus.dsl.builder.ExecuteSQLBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.core.io.Resource;
@@ -54,10 +54,10 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sql(new TestActionConfigurer<ExecuteSQLActionDefinition>() {
+                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("TEST_STMT_1")
                                 .statement("TEST_STMT_2")
                                 .statement("TEST_STMT_3")
@@ -98,10 +98,10 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sql(new TestActionConfigurer<ExecuteSQLActionDefinition>() {
+                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .sqlResource(resource)
                                 .ignoreErrors(true);
                     }
@@ -137,10 +137,10 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sql(new TestActionConfigurer<ExecuteSQLActionDefinition>() {
+                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .sqlResource("classpath:com/consol/citrus/dsl/runner/script.sql");
                     }
                 });

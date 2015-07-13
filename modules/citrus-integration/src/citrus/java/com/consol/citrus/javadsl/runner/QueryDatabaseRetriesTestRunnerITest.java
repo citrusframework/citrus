@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,23 +40,23 @@ public class QueryDatabaseRetriesTestRunnerITest extends TestNGCitrusTestRunner 
     public void QueryDatabaseRetriesTestRunnerITest() {
         parallel().actions(
             sequential().actions(
-                sql(new TestActionConfigurer<ExecuteSQLActionDefinition>() {
+                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLActionDefinition definition) {
-                        definition.dataSource(dataSource)
+                    public void configure(ExecuteSQLBuilder builder) {
+                        builder.dataSource(dataSource)
                                 .sqlResource("classpath:com/consol/citrus/actions/script.sql");
                     }
                 }),
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorUntilTrueDefinition>() {
+                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
                     @Override
-                    public void configure(RepeatOnErrorUntilTrueDefinition definition) {
-                        definition.autoSleep(100).index("i").until("i = 5");
+                    public void configure(RepeatOnErrorBuilder builder) {
+                        builder.autoSleep(100).index("i").until("i = 5");
                     }
                 }).actions(
-                        query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
                             @Override
-                            public void configure(ExecuteSQLQueryActionDefinition definition) {
-                                definition.dataSource(dataSource)
+                            public void configure(ExecuteSQLQueryBuilder builder) {
+                                builder.dataSource(dataSource)
                                         .statement("select COUNT(*) as customer_cnt from CUSTOMERS")
                                         .validate("CUSTOMER_CNT", "0");
                             }
@@ -65,10 +65,10 @@ public class QueryDatabaseRetriesTestRunnerITest extends TestNGCitrusTestRunner 
             ),
             sequential().actions(
                 sleep(300),
-                sql(new TestActionConfigurer<ExecuteSQLActionDefinition>() {
+                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLActionDefinition definition) {
-                        definition.dataSource(dataSource)
+                    public void configure(ExecuteSQLBuilder builder) {
+                        builder.dataSource(dataSource)
                                 .statement("DELETE FROM CUSTOMERS");
                     }
                 })

@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.PurgeJmsQueueActionDefinition;
+import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +51,10 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void PurgeJmsQueuesTestRunnerITest() {
-        purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
+        purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
             @Override
-            public void configure(PurgeJmsQueueActionDefinition definition) {
-                definition.queue("Citrus.Queue.Dummy")
+            public void configure(PurgeJmsQueuesBuilder builder) {
+                builder.queue("Citrus.Queue.Dummy")
                         .queue("Citrus.Queue.Dummy.One.In")
                         .queue("Citrus.Queue.Dummy.One.Out")
                         .queue("Citrus.Queue.Dummy.One.In")
@@ -64,10 +64,10 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
+        purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
             @Override
-            public void configure(PurgeJmsQueueActionDefinition definition) {
-                definition.connectionFactory(connectionFactory)
+            public void configure(PurgeJmsQueuesBuilder builder) {
+                builder.connectionFactory(connectionFactory)
                         .timeout(150L)
                         .queue("Citrus.Queue.Dummy")
                         .queue("Citrus.Queue.Dummy.One.In")
@@ -79,10 +79,10 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
+        purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
             @Override
-            public void configure(PurgeJmsQueueActionDefinition definition) {
-                definition.queue(queue1)
+            public void configure(PurgeJmsQueuesBuilder builder) {
+                builder.queue(queue1)
                         .queue(queue2)
                         .queue(queue3)
                         .queue("Citrus.Queue.Dummy.One.In")

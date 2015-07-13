@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.GroovyActionDefinition;
+import com.consol.citrus.dsl.builder.GroovyActionBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -37,24 +37,24 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
         variable("date", "citrus:currentDate()");
         variable("greetingText", "Hello Citrus!");
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("println 'Hello Citrus'");
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("println 'Hello Citrus'");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("println 'Current date is ${date}!'");
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("println 'Current date is ${date}!'");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("import com.consol.citrus.*" + NEWLINE +
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("import com.consol.citrus.*" + NEWLINE +
                         "import com.consol.citrus.variable.*" + NEWLINE +
                         "import com.consol.citrus.context.TestContext" + NEWLINE +
                         "import com.consol.citrus.script.GroovyAction.ScriptExecutor" + NEWLINE +
@@ -68,47 +68,47 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("println context.getVariable(\"date\")" + NEWLINE +
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("println context.getVariable(\"date\")" + NEWLINE +
                         "assert context.getVariable(\"greetingText\").equals(\"Hello Citrus!\")" + NEWLINE +
                         "assert context.getVariable(\"greetingText\").equals(\"${greetingText}\")");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("println 'Hello Citrus'")
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("println 'Hello Citrus'")
                         .skipTemplate();
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
                         "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
                         "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")")
                         .template("classpath:com/consol/citrus/script/custom-script-template.groovy");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("import org.testng.Assert" + NEWLINE +
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("import org.testng.Assert" + NEWLINE +
                         "Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
                         "Assert.assertEquals(context.getVariable(\"greetingText\"), \"Hello Citrus!\")" + NEWLINE +
                         "Assert.assertEquals(context.getVariable(\"greetingText\"), \"${greetingText}\")");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("public class MyCustomClass {" + NEWLINE +
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("public class MyCustomClass {" + NEWLINE +
                         "public void run() {" + NEWLINE +
                         "println 'Just executed a custom class with run method!'" + NEWLINE +
                         "}" + NEWLINE +
@@ -116,10 +116,10 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script(new ClassPathResource("com/consol/citrus/script/example.groovy"));
+            public void configure(GroovyActionBuilder builder) {
+                builder.script(new ClassPathResource("com/consol/citrus/script/example.groovy"));
             }
         });
     }

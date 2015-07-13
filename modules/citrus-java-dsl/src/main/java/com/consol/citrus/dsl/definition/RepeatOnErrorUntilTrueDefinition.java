@@ -21,6 +21,7 @@ import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 /**
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.RepeatOnErrorBuilder}
  */
 public class RepeatOnErrorUntilTrueDefinition extends AbstractActionContainerDefinition<RepeatOnErrorUntilTrue> {
 
@@ -48,7 +49,7 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionContainerDef
 		action.setCondition(condition);
 		return this;
 	}
-	
+
 	/**
      * Sets the index variable name.
      * @param indexName
@@ -58,7 +59,7 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionContainerDef
 		action.setIndexName(indexName);
 		return this;
 	}
-	
+
 	/**
      * Sets the index start value.
      * @param index
@@ -68,7 +69,7 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionContainerDef
 		action.setStart(index);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the auto sleep time in between repeats in milliseconds.
 	 * @param autoSleep

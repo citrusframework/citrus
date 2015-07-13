@@ -29,6 +29,7 @@ import java.io.IOException;
  * Special SOAP receive message action definition adds SOAP specific properties.
  * 
  * @author Christoph Deppisch
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveSoapMessageBuilder}
  */
 public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefinition<ReceiveSoapMessageAction, ReceiveSoapMessageActionDefinition> {
 
@@ -39,7 +40,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
     public ReceiveSoapMessageActionDefinition(ReceiveSoapMessageAction action) {
         super(action);
     }
-    
+
     /**
      * Sets the control attachment with string content.
      * @param contentId
@@ -57,7 +58,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
 
         return this;
     }
-    
+
     /**
      * Sets the control attachment with content resource.
      * @param contentId
@@ -77,10 +78,10 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
         }
 
         getAction().getAttachments().add(attachment);
-        
+
         return this;
     }
-    
+
     /**
      * Sets the charset name for this send action definition's control attachment.
      * @param charsetName
@@ -92,7 +93,7 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
         }
         return this;
     }
-    
+
     /**
      * Sets the control attachment from Java object instance.
      * @param attachment
@@ -110,10 +111,10 @@ public class ReceiveSoapMessageActionDefinition extends ReceiveMessageActionDefi
      */
     public ReceiveSoapMessageActionDefinition attachmentValidator(SoapAttachmentValidator validator) {
         getAction().setAttachmentValidator(validator);
-        
+
         return this;
     }
-    
+
     @Override
     public ReceiveSoapMessageActionDefinition soap() {
         return this;

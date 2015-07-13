@@ -28,6 +28,7 @@ import org.springframework.http.HttpMethod;
  *
  * @author roland
  * @since 1.4
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendHttpMessageBuilder}
  */
 public class SendHttpMessageActionDefinition extends SendMessageActionDefinition<SendMessageAction, SendHttpMessageActionDefinition> {
 

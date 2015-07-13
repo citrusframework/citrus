@@ -17,7 +17,7 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.GroovyActionDefinition;
+import com.consol.citrus.dsl.builder.GroovyActionBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
@@ -40,10 +40,10 @@ public class LoadPropertiesTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Verify variables support (replacement in properties)");
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("import com.consol.citrus.*\n" +
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("import com.consol.citrus.*\n" +
                         "import com.consol.citrus.variable.*\n" +
                         "import com.consol.citrus.context.TestContext\n" +
                         "import com.consol.citrus.script.GroovyAction.ScriptExecutor\n" +

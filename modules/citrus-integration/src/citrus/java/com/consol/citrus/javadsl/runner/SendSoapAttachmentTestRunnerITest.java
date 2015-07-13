@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -33,10 +33,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
     @CitrusTest
     public void SendSoapAttachmentTestRunnerITest() {
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("webServiceClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("webServiceClient")
                             .soap()
                             .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
@@ -45,10 +45,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("webServiceRequestReceiver")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("webServiceRequestReceiver")
                                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
@@ -59,10 +59,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                                 .timeout(5000L);
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new TestActionConfigurer<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("webServiceResponseSender")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("webServiceResponseSender")
                                 .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "<ns0:Success>true</ns0:Success>" +
@@ -73,10 +73,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("webServiceClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("webServiceClient")
                         .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "<ns0:Success>true</ns0:Success>" +
@@ -86,10 +86,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
         });
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new TestActionConfigurer<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("webServiceClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("webServiceClient")
                             .soap()
                             .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                     "<ns0:Operation>Read the attachment</ns0:Operation>" +
@@ -98,10 +98,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("webServiceRequestReceiver")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("webServiceRequestReceiver")
                                 .payload("<ns0:SoapMessageWithAttachmentRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
@@ -112,10 +112,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                                 .timeout(5000L);
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new TestActionConfigurer<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("webServiceResponseSender")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("webServiceResponseSender")
                                 .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "<ns0:Success>true</ns0:Success>" +
@@ -126,10 +126,10 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("webServiceClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("webServiceClient")
                         .payload("<ns0:SoapMessageWithAttachmentResponse xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                 "<ns0:Success>true</ns0:Success>" +

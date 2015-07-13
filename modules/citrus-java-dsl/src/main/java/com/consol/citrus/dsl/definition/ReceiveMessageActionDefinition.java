@@ -49,6 +49,7 @@ import java.util.Map;
  * include construction of control message payload and headers as well as value extraction.
  * 
  * @author Christoph Deppisch
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveMessageBuilder}
  */
 public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T extends ReceiveMessageActionDefinition> extends AbstractActionDefinition<A> {
 
@@ -60,20 +61,20 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
     /** Validation context used in this action definition */
     private ControlMessageValidationContext validationContext;
-    
+
     /** Script validation context used in this action definition */
     private ScriptValidationContext scriptValidationContext;
-    
+
     /** Variable extractors filled within this action definition */
     private MessageHeaderVariableExtractor headerExtractor;
     private XpathPayloadVariableExtractor xpathExtractor;
-    
+
     /** Basic application context */
     private ApplicationContext applicationContext;
 
     /** Handle for test action position in test case sequence use when switching to SOAP specific definition */
     private PositionHandle positionHandle;
-    
+
     /**
      * Default constructor using test action, basic application context and position handle.
      * @param action
@@ -119,9 +120,9 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         this.positionHandle = positionHandle;
         return this;
     }
-    
+
     /**
-     * Adds a custom timeout to this message receiving action. 
+     * Adds a custom timeout to this message receiving action.
      * @param receiveTimeout
      * @return
      */
@@ -129,7 +130,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         action.setReceiveTimeout(receiveTimeout);
         return self;
     }
-    
+
     /**
      * Expect a control message in this receive action.
      * @param controlMessage
@@ -140,12 +141,12 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
             throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
         }
         initializeValidationContext();
-        
+
         validationContext.setControlMessage(controlMessage);
-        
+
         return self;
     }
-    
+
     /**
      * Expect this message payload data in received message.
      * @param payload
@@ -155,7 +156,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getPayloadTemplateMessageBuilder().setPayloadData(payload);
         return self;
     }
-    
+
     /**
      * Expect this message payload data in received message.
      * @param payloadResource
@@ -218,7 +219,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
         return payload(payload, applicationContext.getBean(marshallerName, Marshaller.class));
     }
-    
+
     /**
      * Expect this message header entry in received message.
      * @param name
@@ -229,9 +230,9 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getMessageContentBuilder().getMessageHeaders().put(name, value);
         return self;
     }
-    
+
     /**
-     * Expect this message header data in received message. Message header data is used in 
+     * Expect this message header data in received message. Message header data is used in
      * SOAP messages as XML fragment for instance.
      * @param data
      * @return
@@ -242,7 +243,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     }
 
     /**
-     * Expect this message header data in received message from file resource. Message header data is used in 
+     * Expect this message header data in received message from file resource. Message header data is used in
      * SOAP messages as XML fragment for instance.
      * @param resource
      * @return
@@ -256,7 +257,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
         return self;
     }
-    
+
     /**
      * Adds script validation.
      * @param validationScript
@@ -268,7 +269,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
         return self;
     }
-    
+
     /**
      * Adds script validation by file resource.
      * @param scriptResource
@@ -276,7 +277,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public T validateScript(Resource scriptResource) {
         initializeScriptValidationContext();
-        
+
         try {
             scriptValidationContext.setValidationScriptResourcePath(scriptResource.getFile().getAbsolutePath());
         } catch (IOException e) {
@@ -285,7 +286,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
         return self;
     }
-    
+
     /**
      * Adds custom validation script type.
      * @param type
@@ -297,7 +298,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
         return self;
     }
-    
+
     /**
      * Sets a explicit message type for this receive action.
      * @param messageType
@@ -308,7 +309,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         action.setMessageType(messageType.toString());
         return self;
     }
-    
+
     /**
      * Sets schema validation enabled/disabled for this message.
      * @param enabled
@@ -329,7 +330,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().getControlNamespaces().put(prefix, namespaceUri);
         return self;
     }
-    
+
     /**
      * Adds message element validation.
      * @param path
@@ -340,7 +341,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().getPathValidationExpressions().put(path, controlValue);
         return self;
     }
-    
+
     /**
      * Adds ignore path expression for message element.
      * @param path
@@ -350,7 +351,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().getIgnoreExpressions().add(path);
         return self;
     }
-    
+
     /**
      * Adds XPath message element validation.
      * @param xPathExpression
@@ -361,7 +362,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         validate(xPathExpression, controlValue);
         return self;
     }
-    
+
     /**
      * Sets explicit schema instance name to use for schema validation.
      * @param schemaName
@@ -371,7 +372,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().setSchema(schemaName);
         return self;
     }
-    
+
     /**
      * Sets explicit xsd schema repository instance to use for validation.
      * @param schemaRepository
@@ -381,7 +382,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().setSchemaRepository(schemaRepository);
         return self;
     }
-    
+
     /**
      * Adds explicit namespace declaration for later path validation expressions.
      * @param prefix
@@ -395,7 +396,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().getNamespaces().put(prefix, namespaceUri);
         return self;
     }
-    
+
     /**
      * Sets default namespace declarations on this action definition.
      * @param namespaceMappings
@@ -408,7 +409,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         getXmlValidationContext().getNamespaces().putAll(namespaceMappings);
         return self;
     }
-    
+
     /**
      * Sets message selector string.
      * @param messageSelector
@@ -419,7 +420,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
         return self;
     }
-    
+
     /**
      * Sets message selector elements.
      * @param messageSelector
@@ -430,7 +431,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
         return self;
     }
-    
+
     /**
      * Sets explicit message validator for this receive action.
      * @param validator
@@ -440,7 +441,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         action.setValidator(validator);
         return self;
     }
-    
+
     /**
      * Sets explicit message validator by name.
      * @param validatorName
@@ -450,11 +451,11 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     public T validator(String validatorName) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
         MessageValidator<? extends ValidationContext> validator = applicationContext.getBean(validatorName, MessageValidator.class);
-        
+
         action.setValidator(validator);
         return self;
     }
-    
+
     /**
      * Extract message header entry as variable.
      * @param headerName
@@ -464,14 +465,14 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     public T extractFromHeader(String headerName, String variable) {
         if (headerExtractor == null) {
             headerExtractor = new MessageHeaderVariableExtractor();
-            
+
             action.getVariableExtractors().add(headerExtractor);
         }
-        
+
         headerExtractor.getHeaderMappings().put(headerName, variable);
         return self;
     }
-    
+
     /**
      * Extract message element via XPath from message payload as new test variable.
      * @param xpath
@@ -483,9 +484,9 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         xpathExtractor.getxPathExpressions().put(xpath, variable);
         return self;
     }
-    
+
     /**
-     * Adds validation callback to the receive action for validating 
+     * Adds validation callback to the receive action for validating
      * the received message with Java code.
      * @param callback
      * @return
@@ -511,7 +512,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     public ReceiveSoapMessageActionDefinition soap() {
         ReceiveSoapMessageAction receiveSoapMessageAction = new ReceiveSoapMessageAction();
-        
+
         receiveSoapMessageAction.setActor(action.getActor());
         receiveSoapMessageAction.setDescription(action.getDescription());
         receiveSoapMessageAction.setEndpoint(action.getEndpoint());

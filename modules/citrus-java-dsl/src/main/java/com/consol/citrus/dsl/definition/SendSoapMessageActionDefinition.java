@@ -30,6 +30,7 @@ import java.io.IOException;
  * fork mode.
  * 
  * @author Christoph Deppisch
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendSoapMessageBuilder}
  */
 public class SendSoapMessageActionDefinition extends SendMessageActionDefinition<SendSoapMessageAction, SendSoapMessageActionDefinition> {
 
@@ -50,7 +51,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
         header(SoapMessageHeaders.SOAP_ACTION, soapAction);
         return this;
     }
-    
+
     /**
      * Sets the attachment with string content.
      * @param contentId
@@ -67,7 +68,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
         getAction().getAttachments().add(attachment);
         return this;
     }
-    
+
     /**
      * Sets the attachment with content resource.
      * @param contentId
@@ -79,7 +80,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId(contentId);
         attachment.setContentType(contentType);
-        
+
         try {
             attachment.setContent(FileUtils.readToString(contentResource));
         } catch (IOException e) {
@@ -87,10 +88,10 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
         }
 
         getAction().getAttachments().add(attachment);
-        
+
         return this;
     }
-    
+
     /**
      * Sets the charset name for this send action definition's attachment.
      * @param charsetName
@@ -102,7 +103,7 @@ public class SendSoapMessageActionDefinition extends SendMessageActionDefinition
         }
         return this;
     }
-    
+
     /**
      * Sets the attachment from Java object instance.
      * @param attachment

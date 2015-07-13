@@ -30,6 +30,7 @@ import java.io.IOException;
 /**
  * @author Christoph Deppisch
  * since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AssertSoapFaultBuilder}
  */
 public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition<AssertSoapFault> {
 
@@ -64,7 +65,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
 	    action.setFaultCode(code);
 	    return this;
 	}
-	
+
 	/**
      * Expect fault string in SOAP fault message.
      * @param faultString
@@ -74,7 +75,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         action.setFaultString(faultString);
         return this;
     }
-    
+
     /**
      * Expect fault actor in SOAP fault message.
      * @param faultActor
@@ -84,7 +85,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         action.setFaultActor(faultActor);
         return this;
     }
-    
+
     /**
      * Expect fault detail in SOAP fault message.
      * @param faultDetail
@@ -94,7 +95,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         action.getFaultDetails().add(faultDetail);
         return this;
     }
-    
+
     /**
      * Expect fault detail from file resource.
      * @param resource
@@ -108,7 +109,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         }
         return this;
     }
-    
+
     /**
      * Expect fault detail from file resource.
      * @param filePath
@@ -118,7 +119,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         action.getFaultDetailResourcePaths().add(filePath);
         return this;
     }
-    
+
     /**
      * Set explicit SOAP fault validator implementation.
      * @param validator
@@ -128,7 +129,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         action.setValidator(validator);
         return this;
     }
-    
+
     /**
      * Set explicit SOAP fault validator implementation by bean name.
      * @param validatorName
@@ -139,7 +140,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         action.setValidator(applicationContext.getBean(validatorName, SoapFaultValidator.class));
         return this;
     }
-    
+
     /**
      * Sets schema validation enabled/disabled for this SOAP fault assertion.
      * @param enabled
@@ -149,7 +150,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         validationContext.setSchemaValidation(enabled);
         return this;
     }
-    
+
     /**
      * Sets explicit schema instance name to use for schema validation.
      * @param schemaName
@@ -159,7 +160,7 @@ public class AssertSoapFaultDefinition extends AbstractActionContainerDefinition
         validationContext.setSchema(schemaName);
         return this;
     }
-    
+
     /**
      * Sets explicit xsd schema repository instance to use for validation.
      * @param schemaRepository

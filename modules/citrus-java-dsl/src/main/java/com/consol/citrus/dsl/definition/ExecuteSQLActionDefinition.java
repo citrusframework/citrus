@@ -32,6 +32,7 @@ import java.util.List;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ExecuteSQLBuilder}
  */
 public class ExecuteSQLActionDefinition extends AbstractActionDefinition<ExecuteSQLAction> {
 
@@ -71,14 +72,14 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
 	}
 
 	/**
-     * List of statements to execute. Declared inline in the test case. 
+     * List of statements to execute. Declared inline in the test case.
      * @param statements
      */
 	public ExecuteSQLActionDefinition statements(List<String> statements) {
 		action.getStatements().addAll(statements);
 		return this;
 	}
-	
+
 	/**
 	 * Adds a new statement to the list of SQL executions.
 	 * @param sql
@@ -88,7 +89,7 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
 	    action.getStatements().add(sql);
 		return this;
 	}
-	
+
 	/**
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
@@ -101,7 +102,7 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
         }
 		return this;
 	}
-	
+
 	/**
      * Setter for external file resource containing the SQL statements to execute.
      * @param filePath
@@ -110,7 +111,7 @@ public class ExecuteSQLActionDefinition extends AbstractActionDefinition<Execute
         action.setSqlResourcePath(filePath);
         return this;
     }
-	
+
 	/**
      * Ignore errors during execution.
      * @param ignoreErrors boolean flag to set
