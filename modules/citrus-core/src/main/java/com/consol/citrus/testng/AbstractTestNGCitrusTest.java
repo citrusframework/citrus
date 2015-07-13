@@ -256,7 +256,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                     " parameter names defined with " + parameterValues.length + " parameter values available");
         }
 
-
         testCase.setParameters(parameterNames, parameterValues);
     }
 

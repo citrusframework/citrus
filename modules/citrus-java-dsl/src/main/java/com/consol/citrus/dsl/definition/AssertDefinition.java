@@ -24,10 +24,21 @@ import com.consol.citrus.container.Assert;
  */
 public class AssertDefinition extends AbstractActionContainerDefinition<Assert> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public AssertDefinition(Assert action) {
 	    super(action);
     }
-	
+
+	/**
+	 * Default constructor.
+	 */
+	public AssertDefinition() {
+		super(new Assert());
+	}
+
 	/**
 	 * Expected exception during execution.
 	 * @param exception

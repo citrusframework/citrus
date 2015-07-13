@@ -44,7 +44,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
         
-        testcase.setVariableDefinitions(Collections.singletonMap("test1Var", "456"));
+        testcase.setVariableDefinitions(Collections.<String, Object>singletonMap("test1Var", "456"));
 
         TestContext testContext = createTestContext();
         testcase.execute(testContext);
@@ -60,7 +60,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         testcase2.setName("MyTestCase2");
         testcase2.setPackageName("com.consol.citrus");
         
-        testcase2.setVariableDefinitions(Collections.singletonMap("test2Var", "456"));
+        testcase2.setVariableDefinitions(Collections.<String, Object>singletonMap("test2Var", "456"));
 
         testContext = createTestContext();
         testcase2.execute(testContext);

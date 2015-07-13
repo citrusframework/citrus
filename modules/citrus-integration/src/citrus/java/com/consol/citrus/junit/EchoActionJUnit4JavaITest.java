@@ -1,13 +1,13 @@
 package com.consol.citrus.junit;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.JUnit4CitrusTestBuilder;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
 import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class EchoActionJUnit4JavaITest extends JUnit4CitrusTestBuilder {
+public class EchoActionJUnit4JavaITest extends JUnit4CitrusTestDesigner {
 
     @Override
     protected void configure() {

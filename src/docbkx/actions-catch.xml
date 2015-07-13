@@ -24,7 +24,8 @@
     <para><emphasis>Java DSL</emphasis></para>
     <programlisting language="java">@CitrusTest
 public void catchTest() {
-    catchException(CitrusRuntimeException.class, echo("Current date is: ${date}"));
+    catchException(echo("Current date is: ${date}"))
+        .exception(CitrusRuntimeException.class);
 }</programlisting>
 
     <important>

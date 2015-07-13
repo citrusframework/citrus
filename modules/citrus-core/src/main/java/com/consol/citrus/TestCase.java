@@ -42,7 +42,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private List<TestAction> finalActions = new ArrayList<>();
 
     /** Tests variables */
-    private Map<String, ?> variableDefinitions = new LinkedHashMap<String, Object>();
+    private Map<String, Object> variableDefinitions = new LinkedHashMap<>();
 
     /** Meta-Info */
     private TestCaseMetaInfo metaInfo = new TestCaseMetaInfo();
@@ -82,7 +82,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
            /* build up the global test variables in TestContext by
             * getting the names and the current values of all variables */
-            for (Entry<String, ?> entry : variableDefinitions.entrySet()) {
+            for (Entry<String, Object> entry : variableDefinitions.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
 
@@ -197,7 +197,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param action
      * @param context
      */
-    protected void executeAction(TestAction action, TestContext context) {
+    public void executeAction(TestAction action, TestContext context) {
         if (!action.isDisabled(context)) {
             testActionListeners.onTestActionStart(this, action);
             setLastExecutedAction(action);
@@ -225,6 +225,10 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                     action.execute(context);
                 }
             }
+
+            if (testResult == null) {
+                testResult=  TestResult.success(getName());
+            }
         } catch (Exception e) {
             testResult = TestResult.failed(getName(), e);
             throw new TestCaseFailedException(e);
@@ -246,7 +250,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Setter for variables.
      * @param variableDefinitions
      */
-    public void setVariableDefinitions(Map<String, ?> variableDefinitions) {
+    public void setVariableDefinitions(Map<String, Object> variableDefinitions) {
         this.variableDefinitions = variableDefinitions;
     }
 
@@ -254,7 +258,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Gets the variable definitions.
      * @return
      */
-    public Map<String, ?> getVariableDefinitions() {
+    public Map<String, Object> getVariableDefinitions() {
         return variableDefinitions;
     }
 
@@ -272,7 +276,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         buf.append("[testVariables:");
 
-        for (Entry<String, ?> entry : variableDefinitions.entrySet()) {
+        for (Entry<String, Object> entry : variableDefinitions.entrySet()) {
             buf.append(entry.getKey()).append("=").append(entry.getValue().toString()).append(";");
         }
 

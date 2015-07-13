@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.definition;
 
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
@@ -39,7 +40,24 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
     public SendSoapFaultActionDefinition(SendSoapFaultAction action) {
         super(action);
     }
-    
+
+    /**
+     * Default constructor.
+     */
+    public SendSoapFaultActionDefinition() {
+        super(new SendSoapFaultAction());
+    }
+
+    @Override
+    public SendSoapFaultActionDefinition endpoint(Endpoint messageEndpoint) {
+        return (SendSoapFaultActionDefinition) super.endpoint(messageEndpoint);
+    }
+
+    @Override
+    public SendSoapFaultActionDefinition endpoint(String messageEndpointUri) {
+        return (SendSoapFaultActionDefinition) super.endpoint(messageEndpointUri);
+    }
+
     /**
      * Adds custom SOAP fault code definition.
      * @param code

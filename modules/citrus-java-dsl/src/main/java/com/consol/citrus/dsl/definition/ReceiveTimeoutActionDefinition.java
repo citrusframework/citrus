@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.definition;
 
 import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.endpoint.Endpoint;
 
 /**
  * Action expecting a timeout on a message destination, this means that no message 
@@ -27,9 +28,40 @@ import com.consol.citrus.actions.ReceiveTimeoutAction;
  */
 public class ReceiveTimeoutActionDefinition extends AbstractActionDefinition<ReceiveTimeoutAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public ReceiveTimeoutActionDefinition(ReceiveTimeoutAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public ReceiveTimeoutActionDefinition() {
+		super(new ReceiveTimeoutAction());
+	}
+
+	/**
+	 * Sets the message endpoint to receive a timeout with.
+	 * @param messageEndpoint
+	 * @return
+	 */
+	public ReceiveTimeoutActionDefinition endpoint(Endpoint messageEndpoint) {
+		action.setEndpoint(messageEndpoint);
+		return this;
+	}
+
+	/**
+	 * Sets the message endpoint uri to receive a timeout with.
+	 * @param messageEndpointUri
+	 * @return
+	 */
+	public ReceiveTimeoutActionDefinition endpoint(String messageEndpointUri) {
+		action.setEndpointUri(messageEndpointUri);
+		return this;
+	}
 
 	/**
      * Sets time to wait for messages on destination.

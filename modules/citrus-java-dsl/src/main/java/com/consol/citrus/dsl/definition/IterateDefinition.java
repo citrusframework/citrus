@@ -31,7 +31,14 @@ public class IterateDefinition extends AbstractActionContainerDefinition<Iterate
     public IterateDefinition(Iterate action) {
         super(action);
     }
-    
+
+    /**
+     * Default constructor.
+     */
+    public IterateDefinition() {
+        super(new Iterate());
+    }
+
     /**
      * Adds a condition to this iterate container.
      * @param condition

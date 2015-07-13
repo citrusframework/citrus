@@ -16,19 +16,17 @@
 
 package com.consol.citrus.jms.actions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.jms.*;
-
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import javax.jms.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action to purge JMS queue destinations by simply consuming 
@@ -201,7 +199,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /**
      * Connection factory.
-     * @param queueConnectionFactory the queueConnectionFactory to set
+     * @param connectionFactory the connectionFactory to set
      */
     public void setConnectionFactory(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;

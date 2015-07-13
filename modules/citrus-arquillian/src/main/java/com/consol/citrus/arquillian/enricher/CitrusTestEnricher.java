@@ -19,7 +19,8 @@ package com.consol.citrus.arquillian.enricher;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.*;
+import com.consol.citrus.dsl.design.DefaultTestDesigner;
+import com.consol.citrus.dsl.design.TestDesigner;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
@@ -78,15 +79,15 @@ public class CitrusTestEnricher implements TestEnricher {
                     CitrusTest citrusTestAnnotation = (CitrusTest) annotation;
                     Class<?> clazz = parameterTypes[i];
                     if (isSupportedParameter(clazz)) {
-                        TestBuilder testBuilder = new DefaultTestBuilder(citrusInstance.get().getApplicationContext());
+                        TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().getApplicationContext());
 
                         if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                            testBuilder.name(citrusTestAnnotation.name());
+                            testDesigner.name(citrusTestAnnotation.name());
                         } else {
-                            testBuilder.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+                            testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
                         }
 
-                        values[i] = testBuilder;
+                        values[i] = testDesigner;
                     } else {
                         throw new RuntimeException("Not able to provide a client injection for type " + clazz);
                     }
@@ -98,6 +99,6 @@ public class CitrusTestEnricher implements TestEnricher {
     }
 
     private boolean isSupportedParameter(Class<?> clazz) {
-        return TestBuilder.class.isAssignableFrom(clazz);
+        return TestDesigner.class.isAssignableFrom(clazz);
     }
 }

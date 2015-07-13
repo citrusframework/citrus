@@ -16,14 +16,15 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Creates an ExecutePLSQLAction, which executes PLSQL statements either declared inline as 
@@ -34,9 +35,40 @@ import com.consol.citrus.util.FileUtils;
  */
 public class ExecutePLSQLActionDefinition extends AbstractActionDefinition<ExecutePLSQLAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public ExecutePLSQLActionDefinition(ExecutePLSQLAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public ExecutePLSQLActionDefinition() {
+		super(new ExecutePLSQLAction());
+	}
+
+	/**
+	 * Sets the Spring JDBC template to use.
+	 * @param jdbcTemplate
+	 * @return
+	 */
+	public ExecutePLSQLActionDefinition jdbcTemplate(JdbcTemplate jdbcTemplate) {
+		action.setJdbcTemplate(jdbcTemplate);
+		return this;
+	}
+
+	/**
+	 * Sets the SQL data source.
+	 * @param dataSource
+	 * @return
+	 */
+	public ExecutePLSQLActionDefinition dataSource(DataSource dataSource) {
+		action.setDataSource(dataSource);
+		return this;
+	}
 
 	/**
      * Adds a list of statements to execute. 

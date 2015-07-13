@@ -16,13 +16,12 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 /**
  * Action transforms a XML document(specified inline or from external file resource)
@@ -33,9 +32,20 @@ import com.consol.citrus.util.FileUtils;
  * @since 1.3
  */
 public class TransformActionDefinition extends AbstractActionDefinition<TransformAction> {
-	
+
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public TransformActionDefinition(TransformAction action) {
 		super(action);
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public TransformActionDefinition() {
+		super(new TransformAction());
 	}
 
 	/**

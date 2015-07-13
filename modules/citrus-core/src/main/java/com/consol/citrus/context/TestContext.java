@@ -173,15 +173,19 @@ public class TestContext {
      * @param map optionally having variable entries.
      * @return the constructed map without variable entries.
      */
-    public Map<String, Object> resolveDynamicValuesInMap(final Map<String, ?> map) {
-        Map<String, Object> target = new HashMap<String, Object>(map.size());
+    public Map<String, Object> resolveDynamicValuesInMap(final Map<String, Object> map) {
+        Map<String, Object> target = new HashMap<>(map.size());
 
-        for (Entry<String, ?> entry : map.entrySet()) {
+        for (Entry<String, Object> entry : map.entrySet()) {
             String key = entry.getKey();
-            String value = (String) entry.getValue();
+            Object value = entry.getValue();
 
-            //put value into target map, but check if value is variable or function first
-            target.put(key, replaceDynamicContentInString(value));
+            if (value instanceof String) {
+                //put value into target map, but check if value is variable or function first
+                target.put(key, replaceDynamicContentInString((String) value));
+            } else {
+                target.put(key, value);
+            }
         }
         return target;
     }

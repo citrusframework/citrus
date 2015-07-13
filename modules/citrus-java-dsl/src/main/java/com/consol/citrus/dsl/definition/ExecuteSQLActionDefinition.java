@@ -16,13 +16,14 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Test action executes SQL statements. Use this action when executing
@@ -34,9 +35,40 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class ExecuteSQLActionDefinition extends AbstractActionDefinition<ExecuteSQLAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public ExecuteSQLActionDefinition(ExecuteSQLAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public ExecuteSQLActionDefinition() {
+		super(new ExecuteSQLAction());
+	}
+
+	/**
+	 * Sets the Spring JDBC template to use.
+	 * @param jdbcTemplate
+	 * @return
+	 */
+	public ExecuteSQLActionDefinition jdbcTemplate(JdbcTemplate jdbcTemplate) {
+		action.setJdbcTemplate(jdbcTemplate);
+		return this;
+	}
+
+	/**
+	 * Sets the SQL data source.
+	 * @param dataSource
+	 * @return
+	 */
+	public ExecuteSQLActionDefinition dataSource(DataSource dataSource) {
+		action.setDataSource(dataSource);
+		return this;
+	}
 
 	/**
      * List of statements to execute. Declared inline in the test case. 

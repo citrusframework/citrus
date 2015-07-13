@@ -1260,7 +1260,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
         
-        Map<String, String> messageSelector = new HashMap<String, String>();
+        Map<String, Object> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
         receiveAction.setMessageSelector(messageSelector);
         
@@ -1299,7 +1299,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         receiveAction.setReceiveTimeout(5000L);
         
-        Map<String, String> messageSelector = new HashMap<String, String>();
+        Map<String, Object> messageSelector = new HashMap<>();
         messageSelector.put("Operation", "sayHello");
         receiveAction.setMessageSelector(messageSelector);
         

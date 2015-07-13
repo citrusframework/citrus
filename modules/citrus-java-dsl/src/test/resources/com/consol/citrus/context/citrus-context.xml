@@ -11,5 +11,14 @@
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 	 
     <!-- Empty test context used in unit tests -->
+    <citrus:schema-repository id="customSchemaRepository">
+      <citrus:schemas>
+             <citrus:ref schema="testSchema"/>
+      </citrus:schemas>
+    </citrus:schema-repository>
+
+    <bean id="testSchema" class="org.easymock.EasyMock" factory-method="createMock">
+      <constructor-arg value="org.springframework.xml.xsd.XsdSchema"/>
+    </bean>
 
 </beans>

@@ -27,11 +27,22 @@ import com.consol.citrus.container.Conditional;
  */
 public class ConditionalDefinition extends AbstractActionContainerDefinition<Conditional> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public ConditionalDefinition(Conditional action) {
 	    super(action);
     }
-	
-    /**
+
+	/**
+	 * Default constructor.
+	 */
+	public ConditionalDefinition() {
+		super(new Conditional());
+	}
+
+	/**
      * Condition which allows execution if true.
      * @param expression
      */

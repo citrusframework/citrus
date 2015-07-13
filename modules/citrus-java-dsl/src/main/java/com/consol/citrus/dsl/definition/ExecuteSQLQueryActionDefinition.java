@@ -16,18 +16,19 @@
 
 package com.consol.citrus.dsl.definition;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.core.io.Resource;
-
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -40,8 +41,39 @@ import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
  */
 public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<ExecuteSQLQueryAction> {
 
+    /**
+     * Constructor using action field.
+     * @param action
+     */
 	public ExecuteSQLQueryActionDefinition(ExecuteSQLQueryAction action) {
 	    super(action);
+    }
+
+    /**
+     * Default constructor.
+     */
+    public ExecuteSQLQueryActionDefinition() {
+        super(new ExecuteSQLQueryAction());
+    }
+
+    /**
+     * Sets the Spring JDBC template to use.
+     * @param jdbcTemplate
+     * @return
+     */
+    public ExecuteSQLQueryActionDefinition jdbcTemplate(JdbcTemplate jdbcTemplate) {
+        action.setJdbcTemplate(jdbcTemplate);
+        return this;
+    }
+
+    /**
+     * Sets the SQL data source.
+     * @param dataSource
+     * @return
+     */
+    public ExecuteSQLQueryActionDefinition dataSource(DataSource dataSource) {
+        action.setDataSource(dataSource);
+        return this;
     }
 
 	/**

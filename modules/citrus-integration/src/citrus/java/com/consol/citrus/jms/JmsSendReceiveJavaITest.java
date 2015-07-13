@@ -26,7 +26,7 @@ import java.util.Collections;
  * @author Christoph Deppisch
  */
 @Test
-public class JmsSendReceiveJavaITest extends AbstractJmsTestBuilder {
+public class JmsSendReceiveJavaITest extends AbstractJmsTestDesigner {
     
     @CitrusTest
     public void JmsSendReceiveJavaITest() {

@@ -16,14 +16,13 @@
 
 package com.consol.citrus.actions;
 
-import static org.easymock.EasyMock.*;
-
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
@@ -114,7 +113,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "BEGIN\n" +
                 "    EXECUTE IMMEDIATE \"\n" +
                     "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
-             "END;\n";
+             "END;";
         
         reset(jdbcTemplate);
         
@@ -176,7 +175,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "BEGIN\n" +
                 "    EXECUTE IMMEDIATE \"\n" +
                     "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
-             "END;\n";
+             "END;";
         
         reset(jdbcTemplate);
         
@@ -241,7 +240,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "BEGIN\n" +
                 "    EXECUTE IMMEDIATE \"\n" +
                     "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
-             "END;\n";
+             "END;";
         
         reset(jdbcTemplate);
         

@@ -33,6 +33,13 @@ public class RepeatOnErrorUntilTrueDefinition extends AbstractActionContainerDef
     }
 
 	/**
+	 * Default constructor.
+	 */
+	public RepeatOnErrorUntilTrueDefinition() {
+		super(new RepeatOnErrorUntilTrue());
+	}
+
+	/**
      * Adds a condition to this iterate container.
      * @param condition
      * @return

@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,9 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
     @Override
     public void doExecute(TestContext context) {
-        if (script != null) {
+        if (StringUtils.hasText(script)) {
             statements = createStatementsFromScript(context);
-        } else {
+        } else if (StringUtils.hasText(sqlResourcePath)) {
             statements = createStatementsFromFileResource(context);
         }
 
@@ -80,7 +81,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
      * @return list of SQL statements.
      */
     private List<String> createStatementsFromScript(TestContext context) {
-        List<String> stmts = new ArrayList<String>();
+        List<String> stmts = new ArrayList<>();
         
         script = context.replaceDynamicContentInString(script);
         if (log.isDebugEnabled()) {
@@ -89,7 +90,10 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
 
         StringTokenizer tok = new StringTokenizer(script, getStatemendEndingCharacter());
         while (tok.hasMoreTokens()) {
-            stmts.add(tok.nextToken().trim());
+            String next = tok.nextToken().trim();
+            if (StringUtils.hasText(next)) {
+                stmts.add(next);
+            }
         }
         
         return stmts;
@@ -102,7 +106,7 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     
     @Override
     protected String decorateLastScriptLine(String line) {
-        return line.trim().substring(0, (line.trim().length()-1));
+        return line.trim().substring(0, (line.trim().length() - 1));
     }
 
     /**

@@ -30,9 +30,20 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  */
 public class InputActionDefinition extends AbstractActionDefinition<InputAction> {
 
+	/**
+	 * Constructor using action field.
+	 * @param action
+	 */
 	public InputActionDefinition(InputAction action) {
 	    super(action);
     }
+
+	/**
+	 * Default constructor.
+	 */
+	public InputActionDefinition() {
+		super(new InputAction());
+	}
 
 	/**
      * Sets the message displayed to the user.
@@ -54,7 +65,7 @@ public class InputActionDefinition extends AbstractActionDefinition<InputAction>
 	
 	 /**
      * Sets the valid answers.
-     * @param validAnswers the validAnswers to set
+     * @param answers the validAnswers to set
      */
 	public InputActionDefinition answers(String... answers) {
 	    if (answers.length == 0) {

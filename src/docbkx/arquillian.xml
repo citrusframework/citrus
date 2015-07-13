@@ -80,31 +80,31 @@ public class EmployeeResourceTest {
     * Test adding new employees and getting list of all employees.
     */
     @Test
-    public void testCreateEmployeeAndGet(@CitrusTest CitrusTestBuilder citrus) {
-        citrus.send(serviceUri)
+    public void testCreateEmployeeAndGet(@CitrusTest TestDesigner testDesigner) {
+        testDesigner.send(serviceUri)
             .message(new HttpMessage(&quot;name=Penny&amp;age=20&quot;)
             .method(HttpMethod.POST)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED));
 
-        citrus.receive(serviceUri)
+        testDesigner.receive(serviceUri)
             .message(new HttpMessage()
             .statusCode(HttpStatus.NO_CONTENT));
 
-        citrus.send(serviceUri)
+        testDesigner.send(serviceUri)
             .message(new HttpMessage()
             .method(HttpMethod.GET)
             .accept(MediaType.APPLICATION_XML));
 
-        citrus.receive(serviceUri)
-        .message(new HttpMessage(&quot;<employees>&quot; +
-            &quot;<employee>&quot; +
-              &quot;<age>20</age>&quot; +
-              &quot;<name>Penny</name>&quot; +
-              &quot;</employee>&quot; +
-            &quot;</employees>&quot;)
-        .statusCode(HttpStatus.OK));
+        testDesigner.receive(serviceUri)
+            .message(new HttpMessage(&quot;<employees>&quot; +
+                &quot;<employee>&quot; +
+                  &quot;<age>20</age>&quot; +
+                  &quot;<name>Penny</name>&quot; +
+                  &quot;</employee>&quot; +
+                &quot;</employees>&quot;)
+            .statusCode(HttpStatus.OK));
 
-        citrusFramework.run(citrus.build());
+        citrusFramework.run(testDesigner.build());
     }
 }</programlisting>
 
@@ -168,18 +168,18 @@ public class EchoServiceTest {
       }
 
       @Test
-      public void shouldBeAbleToSendMessage(@CitrusTest CitrusTestBuilder citrus) throws Exception {
+      public void shouldBeAbleToSendMessage(@CitrusTest TestDesigner testDesigner) throws Exception {
           String messageBody = &quot;ping&quot;;
 
-          citrus.send(jmsSyncEndpoint)
+          testDesigner.send(jmsSyncEndpoint)
                 .messageType(MessageType.PLAINTEXT)
                 .message(new JmsMessage(messageBody));
 
-          citrus.receive(jmsSyncEndpoint)
+          testDesigner.receive(jmsSyncEndpoint)
                 .messageType(MessageType.PLAINTEXT)
                 .message(new JmsMessage(messageBody));
 
-          citrusFramework.run(citrus.build());
+          citrusFramework.run(testDesigner.build());
       }
 
       private void closeConnections() {

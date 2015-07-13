@@ -1,0 +1,121 @@
+/*
+ * Copyright 2006-2012 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.dsl.design;
+
+import com.consol.citrus.TestCase;
+import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.easymock.EasyMock;
+import org.springframework.core.io.Resource;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import static org.easymock.EasyMock.*;
+
+/**
+ * @author Christoph Deppisch
+ * @since 1.3
+ */
+public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
+    private DataSource dataSource = EasyMock.createMock(DataSource.class);
+    private Resource sqlResource = EasyMock.createMock(Resource.class);
+    
+    @Test
+    public void testExecutePLSQLBuilderWithStatement() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                plsql(dataSource)
+                    .statement("TEST_STMT_1")
+                    .statement("TEST_STMT_2")
+                    .statement("TEST_STMT_3");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
+          
+        ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "plsql");
+        Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
+        Assert.assertNull(action.getScript());
+        Assert.assertNull(action.getSqlResourcePath());
+        Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+    
+    @Test
+    public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                plsql(dataSource)
+                    .sqlResource(sqlResource);
+            }
+        };
+        
+        reset(sqlResource);
+        expect(sqlResource.getInputStream()).andReturn(new ByteArrayInputStream("testScript".getBytes())).once();
+        replay(sqlResource);
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
+
+        ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "plsql");
+        Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertEquals(action.getStatements().size(), 0L);
+        Assert.assertEquals(action.getScript(), "testScript");
+        Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+    
+    @Test
+    public void testExecutePLSQLBuilderWithInlineScript() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                plsql(dataSource)
+                    .ignoreErrors(true)
+                    .sqlScript("testScript");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
+
+        ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "plsql");
+        Assert.assertEquals(action.isIgnoreErrors(), true);
+        Assert.assertEquals(action.getStatements().size(), 0L);
+        Assert.assertNull(action.getSqlResourcePath());
+        Assert.assertEquals(action.getScript(), "testScript");
+        Assert.assertEquals(action.getDataSource(), dataSource);
+    }
+}

@@ -34,7 +34,7 @@ import java.util.Map;
 public class StopTimeAction extends AbstractTestAction {
 
     /** Static member to hold all time stamps */
-    private static Map<String, Long> timeStamps = new HashMap<String, Long>();
+    private static Map<String, Long> timeStamps = new HashMap<>();
 
     /** Current time line id */
     private String id = "CITRUS_TIMELINE";

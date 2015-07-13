@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.definition;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.util.PositionHandle;
+import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
@@ -80,6 +81,33 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     public ReceiveMessageActionDefinition(A action) {
         super(action);
         this.self = (T) this;
+    }
+
+    /**
+     * Default constructor.
+     */
+    public ReceiveMessageActionDefinition() {
+        this((A) new ReceiveMessageAction());
+    }
+
+    /**
+     * Sets the message endpoint to receive messages from.
+     * @param messageEndpoint
+     * @return
+     */
+    public ReceiveMessageActionDefinition endpoint(Endpoint messageEndpoint) {
+        action.setEndpoint(messageEndpoint);
+        return this;
+    }
+
+    /**
+     * Sets the message endpoint uri to receive messages from.
+     * @param messageEndpointUri
+     * @return
+     */
+    public ReceiveMessageActionDefinition endpoint(String messageEndpointUri) {
+        action.setEndpointUri(messageEndpointUri);
+        return this;
     }
 
     /**
@@ -397,7 +425,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @param messageSelector
      * @return
      */
-    public T selector(Map<String, String> messageSelector) {
+    public T selector(Map<String, Object> messageSelector) {
         action.setMessageSelector(messageSelector);
 
         return self;
@@ -496,9 +524,13 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         receiveSoapMessageAction.setValidationContexts(action.getValidationContexts());
         receiveSoapMessageAction.setValidator(action.getValidator());
         receiveSoapMessageAction.setVariableExtractors(action.getVariableExtractors());
-        
-        positionHandle.switchTestAction(receiveSoapMessageAction);
-        
+
+        if (positionHandle != null) {
+            positionHandle.switchTestAction(receiveSoapMessageAction);
+        } else {
+            action = (A) receiveSoapMessageAction;
+        }
+
         ReceiveSoapMessageActionDefinition soapMessageActionDefinition = new ReceiveSoapMessageActionDefinition(receiveSoapMessageAction);
         soapMessageActionDefinition.withApplicationContext(applicationContext);
         soapMessageActionDefinition.setMessageType(messageType);
@@ -653,4 +685,8 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         this.validationContext = validationContext;
     }
 
+    @Override
+    public A getAction() {
+        return super.getAction();
+    }
 }

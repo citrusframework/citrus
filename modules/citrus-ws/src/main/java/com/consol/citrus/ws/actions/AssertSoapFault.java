@@ -28,12 +28,12 @@ import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Asserting SOAP fault exception in embedded test action.
@@ -144,7 +144,7 @@ public class AssertSoapFault extends AbstractActionContainer {
      * @param action the action to set
      */
     public void setAction(TestAction action) {
-        this.action = action;
+        addTestAction(action);
     }
 
 	/**
@@ -170,37 +170,13 @@ public class AssertSoapFault extends AbstractActionContainer {
         this.validator = validator;
     }
 
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#addTestAction(com.consol.citrus.TestAction)
-     */
+    @Override
     public void addTestAction(TestAction action) {
         this.action = action;
+        super.addTestAction(action);
     }
 
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getActionCount()
-     */
-    public long getActionCount() {
-        return 1;
-    }
-
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getActionIndex(com.consol.citrus.TestAction)
-     */
-    public int getActionIndex(TestAction action) {
-        return 0;
-    }
-
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getActions()
-     */
-    public List<TestAction> getActions() {
-        return Collections.singletonList(action);
-    }
-
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#getTestAction(int)
-     */
+    @Override
     public TestAction getTestAction(int index) {
         if (index == 0) {
             return action;
@@ -209,13 +185,14 @@ public class AssertSoapFault extends AbstractActionContainer {
         }
     }
 
-    /**
-     * @see com.consol.citrus.container.TestActionContainer#setActions(java.util.List)
-     */
+    @Override
     public void setActions(List<TestAction> actions) {
-        if (!CollectionUtils.isEmpty(actions)) {
-            action = actions.get(0); 
+        if (actions.size() > 1) {
+            throw new CitrusRuntimeException("Invalid number of nested test actions - only one single nested action is allowed");
         }
+
+        action = actions.get(0);
+        super.setActions(actions);
     }
 
     /**

@@ -77,7 +77,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.setName("MyTestCase");
         
         final String message = "Hello TestFramework!";
-        testcase.setVariableDefinitions(Collections.singletonMap("text", message));
+        testcase.setVariableDefinitions(Collections.<String, Object>singletonMap("text", message));
         
         testcase.addTestAction(new AbstractTestAction() {
             @Override

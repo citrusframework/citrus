@@ -16,14 +16,15 @@
 
 package com.consol.citrus.dsl;
 
+import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import org.springframework.context.ApplicationContext;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
- * @deprecated in favour of using {@link com.consol.citrus.dsl.DefaultTestBuilder}
+ * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.DefaultTestDesigner}
  */
-public class CitrusTestBuilder extends DefaultTestBuilder {
+public class CitrusTestBuilder extends DefaultTestDesigner implements TestBuilder {
 
     /**
      * Default constructor.
@@ -40,4 +41,8 @@ public class CitrusTestBuilder extends DefaultTestBuilder {
         super(applicationContext);
     }
 
+    @Override
+    public void applyBehavior(TestBehavior behavior) {
+        applyBehavior((com.consol.citrus.dsl.design.TestBehavior) behavior);
+    }
 }
