@@ -16,7 +16,9 @@
 
 package com.consol.citrus.http.config.handler;
 
-import com.consol.citrus.http.config.xml.*;
+import com.consol.citrus.http.config.xml.HttpClientParser;
+import com.consol.citrus.http.config.xml.HttpServerParser;
+import com.consol.citrus.http.socket.xml.WebSocketEndpointParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -29,6 +31,7 @@ public class CitrusHttpConfigNamespaceHandler extends NamespaceHandlerSupport {
     public void init() {
         registerBeanDefinitionParser("server", new HttpServerParser());
         registerBeanDefinitionParser("client", new HttpClientParser());
+        registerBeanDefinitionParser("websocket", new WebSocketEndpointParser());
     }
 
 }

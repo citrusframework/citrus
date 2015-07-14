@@ -25,6 +25,20 @@
         <xs:documentation>Http server implementation accepts client connections and receives messages via Http transport protocol.</xs:documentation>
       </xs:annotation>
       <xs:complexType>
+        <xs:sequence>
+          <xs:element name="web-sockets" minOccurs="0">
+            <xs:complexType>
+              <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="ref">
+                  <xs:complexType>
+                    <xs:attribute name="websocket" type="xs:string" use="required" />
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="web-socket" type="WebSocketType"/>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="required"/>
         <xs:attribute name="port" type="xs:string"/>
         <xs:attribute name="auto-start" type="xs:boolean"/>
@@ -45,7 +59,21 @@
       </xs:complexType>
     </xs:element>
 
-    <xs:element name="client">
+  <xs:element name="websocket" type="WebSocketType">
+    <xs:annotation>
+      <xs:documentation>Websocket server implementation... TODO MM</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="WebSocketType">
+    <xs:annotation>
+      <xs:documentation>Web Socket resource properties... TODO MM</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+    <xs:attribute name="path" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:element name="client">
       <xs:annotation>
         <xs:documentation>Http client component sends messages to some Http server instance and receives synchronous response message.</xs:documentation>
       </xs:annotation>

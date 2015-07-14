@@ -111,6 +111,33 @@
         </header>
       </receive>
 
+      <receive endpoint="wsEndpoint" timeout="120000">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "inbound message",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <send endpoint="wsEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+            {
+            "event" : "outbound message",
+            "timestamp" : "2001-12-17T09:30:47.0Z"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+<!-- TODO MM complete int. test -->
+      <sleep seconds="120" />
     </actions>
   </testcase>
 </spring:beans>

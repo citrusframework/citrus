@@ -20,6 +20,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -93,6 +94,17 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Message converter */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
+
+    /**
+     * Captures all websocket-endpoints [socket-id, web-socket path]
+     * TODO MM remove me
+     */
+    private Map<String,String> webSocketEndpoints = new HashMap<>();
+
+    /**
+     * Captures all websocket-endpoints [socket-id, web-socket path]
+     */
+    private List<WebSocketEndpoint> webSockets = new ArrayList<>();
 
     @Override
     protected void shutdown() {
@@ -537,5 +549,37 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setMessageConverter(HttpMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+    }
+
+    /**
+     * Gets the web-socket endpoints (id, uri)
+     */
+    public Map<String, String> getWebSocketEndpoints() {
+        //return null;
+        return webSocketEndpoints;
+    }
+
+    /**
+     * Sets the web-socket endpoints (id, uri)
+     * @param webSocketEndpoints
+     */
+    public void setWebSocketEndpoints(Map<String, String> webSocketEndpoints) {
+        this.webSocketEndpoints = webSocketEndpoints;
+    }
+
+    /**
+     * Gets the web-socket endpoints (id, uri)
+     */
+    public List<WebSocketEndpoint> getWebSockets() {
+        //return null;
+        return webSockets;
+    }
+
+    /**
+     * Sets the web-socket endpoints (id, uri)
+     * @param websockets
+     */
+    public void setWebSockets(List<WebSocketEndpoint> websockets) {
+        this.webSockets = websockets;
     }
 }
