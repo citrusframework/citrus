@@ -25,7 +25,7 @@ import com.consol.citrus.container.RepeatUntilTrue;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class RepeatBuilder extends AbstractTestActionBuilder<RepeatUntilTrue> {
+public class RepeatBuilder extends AbstractTestActionContainerBuilder<RepeatUntilTrue> {
 
 	/**
 	 * Constructor using action field.

@@ -36,7 +36,7 @@ import java.util.HashMap;
 
 import static org.easymock.EasyMock.*;
 
-public class AssertSoapFaultDefinitionTest extends AbstractTestNGUnitTest {
+public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
     public static final String SOAP_FAULT_VALIDATOR = "soapFaultValidator";
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";

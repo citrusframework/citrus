@@ -392,10 +392,10 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
             action = (A) sendSoapMessageAction;
         }
 
-        SendSoapMessageBuilder sendSoapMessageActionDefinition = new SendSoapMessageBuilder(sendSoapMessageAction);
-        sendSoapMessageActionDefinition.withApplicationContext(applicationContext);
+        SendSoapMessageBuilder builder = new SendSoapMessageBuilder(sendSoapMessageAction);
+        builder.withApplicationContext(applicationContext);
 
-        return sendSoapMessageActionDefinition;
+        return builder;
     }
 
     /**
@@ -411,11 +411,11 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      * @return HTTP specific builder.
      */
     public SendHttpMessageBuilder http() {
-        SendHttpMessageBuilder sendHttpMessageActionDefinition = new SendHttpMessageBuilder(action);
-        sendHttpMessageActionDefinition.position(positionHandle);
-        sendHttpMessageActionDefinition.withApplicationContext(applicationContext);
+        SendHttpMessageBuilder builder = new SendHttpMessageBuilder(action);
+        builder.position(positionHandle);
+        builder.withApplicationContext(applicationContext);
 
-        return sendHttpMessageActionDefinition;
+        return builder;
     }
 
     @Override

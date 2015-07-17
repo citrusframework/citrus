@@ -33,7 +33,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                iterate(variables().add("index", "${i}"))
+                iterate(createVariable("index", "${i}"))
                     .index("i")
                     .startsWith(0)
                     .step(1)
@@ -71,7 +71,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
                     }
                 };
 
-                iterate(variables().add("index", "${i}"), anonymous)
+                iterate(createVariable("index", "${i}"), anonymous)
                         .index("i")
                         .startsWith(0)
                         .step(1)

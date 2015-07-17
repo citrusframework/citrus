@@ -33,8 +33,8 @@ public class CreateVariablesJavaITest extends TestNGCitrusTestDesigner {
         
         echo("Current variable value: ${myVariable}");
         
-        variables().add("myVariable", "${newValue}");
-        variables().add("new", "This is a test");
+        createVariable("myVariable", "${newValue}");
+        createVariable("new", "This is a test");
         
         echo("Current variable value: ${myVariable}");
         

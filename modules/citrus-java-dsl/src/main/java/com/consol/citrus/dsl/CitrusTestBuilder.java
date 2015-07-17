@@ -178,8 +178,8 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean {
         List<TestAction> actions = null;
         if (testAction instanceof AbstractActionContainerDefinition) {
             actions = ((AbstractActionContainerDefinition) testAction).getActions();
-        } else if (testAction instanceof AbstractActionContainer) {
-            actions = ((AbstractActionContainer) testAction).getActions();
+        } else if (testAction instanceof TestActionContainer) {
+            actions = ((TestActionContainer) testAction).getActions();
         }
 
         if (!CollectionUtils.isEmpty(actions)) {

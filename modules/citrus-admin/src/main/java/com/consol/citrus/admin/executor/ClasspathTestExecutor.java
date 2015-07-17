@@ -21,6 +21,7 @@ import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import com.consol.citrus.admin.websocket.WebSocketLoggingAppender;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.report.TestReporter;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,9 +67,9 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
                 applicationContextHolder.loadApplicationContext();
             }
 
-            if (TestNGCitrusTestDesigner.class.isAssignableFrom(testClass)) {
-                runTestDesigner(testClassName, methodName, testClass);
-            } else if (AbstractTestNGCitrusTest.class.isAssignableFrom(testClass)) {
+            if (TestNGCitrusTestDesigner.class.isAssignableFrom(testClass) ||
+                    TestNGCitrusTestRunner.class.isAssignableFrom(testClass) ||
+                    AbstractTestNGCitrusTest.class.isAssignableFrom(testClass)) {
                 runTest(testClassName, methodName, testClass);
             }
         } catch (ClassNotFoundException e) {
@@ -140,15 +141,4 @@ public class ClasspathTestExecutor implements TestExecutor<ClasspathRunConfigura
 
         throw new CitrusAdminRuntimeException("Could not find method with name or Citrus annotation name: " + methodName);
     }
-
-    /**
-     * Instantiates and runs Citrus Java DSL test builder class.
-     * @param testName
-     * @param methodName
-     * @param testClass
-     */
-    private void runTestDesigner(String testName, String methodName, Class<?> testClass) {
-        runTest(testName, methodName, testClass);
-    }
-
 }

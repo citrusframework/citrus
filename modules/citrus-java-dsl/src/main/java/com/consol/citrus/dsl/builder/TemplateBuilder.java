@@ -22,7 +22,7 @@ import org.springframework.context.ApplicationContext;
 import java.util.Map;
 
 /**
- * Definition defines call template action with global context and parameters.
+ * Builder defines call template action with global context and parameters.
  * 
  * @author Christoph Deppisch
  * @since 2.2.1

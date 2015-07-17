@@ -22,7 +22,7 @@ import com.consol.citrus.container.Assert;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class AssertExceptionBuilder extends AbstractTestActionBuilder<Assert> {
+public class AssertExceptionBuilder extends AbstractTestActionContainerBuilder<Assert> {
 
 	/**
 	 * Constructor using action field.

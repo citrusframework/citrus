@@ -55,6 +55,6 @@ public class IterateJavaITest extends TestNGCitrusTestDesigner {
             }
         };
 
-        iterate(variables().add("index", "${i}"), anonymous).condition("i lt 5").index("i");
+        iterate(createVariable("index", "${i}"), anonymous).condition("i lt 5").index("i");
     }
 }

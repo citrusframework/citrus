@@ -22,7 +22,7 @@ import com.consol.citrus.container.RepeatOnErrorUntilTrue;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class RepeatOnErrorBuilder extends AbstractTestActionBuilder<RepeatOnErrorUntilTrue> {
+public class RepeatOnErrorBuilder extends AbstractTestActionContainerBuilder<RepeatOnErrorUntilTrue> {
 
 	/**
      * Default constructor using action container.

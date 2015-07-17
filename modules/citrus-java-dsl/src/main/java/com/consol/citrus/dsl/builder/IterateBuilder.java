@@ -22,7 +22,7 @@ import com.consol.citrus.container.Iterate;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class IterateBuilder extends AbstractTestActionBuilder<Iterate> {
+public class IterateBuilder extends AbstractTestActionContainerBuilder<Iterate> {
 
     /**
      * Default constructor using action container.

@@ -532,15 +532,15 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             action = (A) receiveSoapMessageAction;
         }
 
-        ReceiveSoapMessageBuilder soapMessageActionDefinition = new ReceiveSoapMessageBuilder(receiveSoapMessageAction);
-        soapMessageActionDefinition.withApplicationContext(applicationContext);
-        soapMessageActionDefinition.setMessageType(messageType);
-        soapMessageActionDefinition.setValidationContext(validationContext);
-        soapMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
-        soapMessageActionDefinition.setHeaderExtractor(headerExtractor);
-        soapMessageActionDefinition.setXpathExtractor(xpathExtractor);
+        ReceiveSoapMessageBuilder builder = new ReceiveSoapMessageBuilder(receiveSoapMessageAction);
+        builder.withApplicationContext(applicationContext);
+        builder.setMessageType(messageType);
+        builder.setValidationContext(validationContext);
+        builder.setScriptValidationContext(scriptValidationContext);
+        builder.setHeaderExtractor(headerExtractor);
+        builder.setXpathExtractor(xpathExtractor);
 
-        return soapMessageActionDefinition;
+        return builder;
     }
 
     /**
@@ -548,16 +548,16 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public ReceiveHttpMessageBuilder http() {
-        ReceiveHttpMessageBuilder httpMessageActionDefinition = new ReceiveHttpMessageBuilder(action);
-        httpMessageActionDefinition.position(positionHandle);
-        httpMessageActionDefinition.withApplicationContext(applicationContext);
-        httpMessageActionDefinition.setMessageType(messageType);
-        httpMessageActionDefinition.setValidationContext(validationContext);
-        httpMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
-        httpMessageActionDefinition.setHeaderExtractor(headerExtractor);
-        httpMessageActionDefinition.setXpathExtractor(xpathExtractor);
+        ReceiveHttpMessageBuilder builder = new ReceiveHttpMessageBuilder(action);
+        builder.position(positionHandle);
+        builder.withApplicationContext(applicationContext);
+        builder.setMessageType(messageType);
+        builder.setValidationContext(validationContext);
+        builder.setScriptValidationContext(scriptValidationContext);
+        builder.setHeaderExtractor(headerExtractor);
+        builder.setXpathExtractor(xpathExtractor);
 
-        return httpMessageActionDefinition;
+        return builder;
     }
 
     /**
