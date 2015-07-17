@@ -24,5 +24,10 @@ package com.consol.citrus.dsl;
  * @since 1.3.1
  * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.design.TestBehavior}
  */
-public interface TestBehavior extends com.consol.citrus.dsl.design.TestBehavior {
+public interface TestBehavior extends TestBuilder {
+
+    /**
+     * Behavior building method.
+     */
+    void apply(TestBuilder target);
 }

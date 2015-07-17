@@ -16,7 +16,8 @@
 
 package com.consol.citrus.dsl;
 
-import com.consol.citrus.dsl.design.*;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.dsl.util.PositionHandle;
 
 /**
  * Abstract Citrus test behavior provides interface method implementations for
@@ -26,10 +27,40 @@ import com.consol.citrus.dsl.design.*;
  * @since 1.3.1
  * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.AbstractTestBehavior}
  */
-public abstract class CitrusTestBehavior extends AbstractTestBehavior implements TestBuilder, TestBehavior {
+public abstract class CitrusTestBehavior extends CitrusTestBuilder implements TestBehavior {
+
+    /** Target test builder to add actions and variables on */
+    private TestBuilder target;
+
+    /**
+     * Subclasses must overwrite this apply building method in order
+     * to add test action logic.
+     */
+    public abstract void apply();
 
     @Override
-    public void applyBehavior(TestBehavior behavior) {
-        applyBehavior((com.consol.citrus.dsl.design.TestBehavior) behavior);
+    public void apply(TestBuilder target) {
+        this.target = target;
+        apply();
+    }
+
+    @Override
+    public void variable(String name, Object value) {
+        target.variable(name, value);
+    }
+
+    @Override
+    public void action(TestAction testAction) {
+        target.action(testAction);
+    }
+
+    @Override
+    public void doFinally(TestAction... actions) {
+        target.doFinally(actions);
+    }
+
+    @Override
+    public PositionHandle positionHandle() {
+        return target.positionHandle();
     }
 }
