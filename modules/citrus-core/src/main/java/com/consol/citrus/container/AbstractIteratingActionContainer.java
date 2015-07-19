@@ -27,6 +27,9 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
     /** Boolean expression string */
     protected String condition;
 
+    /** Optional condition expression evaluates to true or false */
+    protected IteratingConditionExpression conditionExpression;
+
     /** Name of index variable */
     protected String indexName = "i";
 
@@ -66,6 +69,10 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      * @return
      */
     protected boolean checkCondition(TestContext context) {
+        if (conditionExpression != null) {
+            return conditionExpression.evaluate(index, context);
+        }
+
         // replace dynamic content with each iteration
         String conditionString = context.replaceDynamicContentInString(condition);
 
@@ -82,6 +89,14 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      */
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    /**
+     * Aborting condition expression.
+     * @param conditionExpression
+     */
+    public void setConditionExpression(IteratingConditionExpression conditionExpression) {
+        this.conditionExpression = conditionExpression;
     }
 
     /**
@@ -114,6 +129,14 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
      */
     public String getCondition() {
         return condition;
+    }
+
+    /**
+     * Gets the condition.
+     * @return the conditionExpression
+     */
+    public IteratingConditionExpression getConditionExpression() {
+        return conditionExpression;
     }
 
     /**

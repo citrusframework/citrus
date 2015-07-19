@@ -168,4 +168,32 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
         verify(action);
     }
+
+    @Test
+    public void testIterationConditionExpression() {
+        Iterate iterate = new Iterate();
+
+        reset(action);
+
+        action.execute(context);
+        expectLastCall().times(5);
+
+        replay(action);
+
+        iterate.setActions(Collections.singletonList(action));
+
+        iterate.setConditionExpression(new IteratingConditionExpression() {
+            @Override
+            public boolean evaluate(int index, TestContext context) {
+                return index <= 5;
+            }
+        });
+
+        iterate.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "5");
+
+        verify(action);
+    }
 }

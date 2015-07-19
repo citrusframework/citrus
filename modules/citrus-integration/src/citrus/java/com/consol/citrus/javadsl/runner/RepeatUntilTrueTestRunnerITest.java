@@ -17,9 +17,12 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.IteratingConditionExpression;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.RepeatBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
 /**
@@ -36,6 +39,18 @@ public class RepeatUntilTrueTestRunnerITest extends TestNGCitrusTestRunner {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("i gt citrus:randomNumber(1)").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+
+        repeat(new TestActionConfigurer<RepeatBuilder>() {
+            @Override
+            public void configure(RepeatBuilder builder) {
+                builder.until(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return index >= 5 && StringUtils.hasText(context.getVariable("max")) ;
+                    }
+                });
             }
         }).actions(echo("index is: ${i}"));
         
@@ -71,6 +86,18 @@ public class RepeatUntilTrueTestRunnerITest extends TestNGCitrusTestRunner {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("${max} lt i").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+
+        repeat(new TestActionConfigurer<RepeatBuilder>() {
+            @Override
+            public void configure(RepeatBuilder builder) {
+                builder.until(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return Integer.valueOf(context.getVariable("max")) > index;
+                    }
+                });
             }
         }).actions(echo("index is: ${i}"));
     }

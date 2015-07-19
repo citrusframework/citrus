@@ -17,6 +17,7 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
 import org.testng.Assert;
@@ -77,6 +78,34 @@ public class RepeatUntilTrueTest extends AbstractTestNGUnitTest {
         
         Assert.assertNotNull(context.getVariable("${i}"));
         Assert.assertEquals(context.getVariable("${i}"), "1");
+
+        verify(action);
+    }
+
+    @Test
+    public void testRepeatConditionExpression() {
+        RepeatUntilTrue repeatUntilTrue = new RepeatUntilTrue();
+
+        reset(action);
+
+        action.execute(context);
+        expectLastCall().times(4);
+
+        replay(action);
+
+        repeatUntilTrue.setActions(Collections.singletonList(action));
+
+        repeatUntilTrue.setConditionExpression(new IteratingConditionExpression() {
+            @Override
+            public boolean evaluate(int index, TestContext context) {
+                return index == 5;
+            }
+        });
+
+        repeatUntilTrue.execute(context);
+
+        Assert.assertNotNull(context.getVariable("${i}"));
+        Assert.assertEquals(context.getVariable("${i}"), "4");
 
         verify(action);
     }

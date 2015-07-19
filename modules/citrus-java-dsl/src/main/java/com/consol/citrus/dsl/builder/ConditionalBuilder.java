@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
 
 /**
@@ -47,7 +48,16 @@ public class ConditionalBuilder extends AbstractTestActionContainerBuilder<Condi
      * @param expression
      */
 	public ConditionalBuilder when(String expression) {
-		action.setExpression(expression);
+		action.setCondition(expression);
+		return this;
+	}
+
+	/**
+	 * Condition which allows execution if evaluates to true.
+	 * @param expression
+	 */
+	public ConditionalBuilder when(ConditionExpression expression) {
+		action.setConditionExpression(expression);
 		return this;
 	}
 }

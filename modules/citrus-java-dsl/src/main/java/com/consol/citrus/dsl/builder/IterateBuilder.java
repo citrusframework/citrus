@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.IteratingConditionExpression;
 
 /**
  * @author Christoph Deppisch
@@ -46,6 +47,16 @@ public class IterateBuilder extends AbstractTestActionContainerBuilder<Iterate> 
      */
     public IterateBuilder condition(String condition) {
         action.setCondition(condition);
+        return this;
+    }
+
+    /**
+     * Adds a condition expression to this iterate container.
+     * @param condition
+     * @return
+     */
+    public IterateBuilder condition(IteratingConditionExpression condition) {
+        action.setConditionExpression(condition);
         return this;
     }
     

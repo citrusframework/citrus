@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatUntilTrue;
 
 /**
@@ -66,6 +67,15 @@ public class RepeatBuilder extends AbstractTestActionContainerBuilder<RepeatUnti
      */
 	public RepeatBuilder until(String condition) {
 		action.setCondition(condition);
+		return this;
+	}
+
+	/**
+	 * Aborting condition expression.
+	 * @param condition
+	 */
+	public RepeatBuilder until(IteratingConditionExpression condition) {
+		action.setConditionExpression(condition);
 		return this;
 	}
 }

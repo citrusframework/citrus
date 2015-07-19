@@ -18,6 +18,7 @@ package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -76,6 +77,35 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
         repeat.setCondition("i = 5");
         repeat.setAutoSleep(0L);
         
+        repeat.execute(context);
+    }
+
+    @Test(expectedExceptions=CitrusRuntimeException.class)
+    public void testRepeatOnErrorNoSuccessConditionExpression() {
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
+
+        List<TestAction> actions = new ArrayList<TestAction>();
+
+        reset(action);
+
+        action.execute(context);
+        expectLastCall().times(4);
+
+        replay(action);
+
+        actions.add(action);
+        actions.add(new FailAction());
+
+        repeat.setActions(actions);
+
+        repeat.setConditionExpression(new IteratingConditionExpression() {
+            @Override
+            public boolean evaluate(int index, TestContext context) {
+                return index == 5;
+            }
+        });
+        repeat.setAutoSleep(0L);
+
         repeat.execute(context);
     }
 }

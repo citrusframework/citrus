@@ -17,6 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.IteratingConditionExpression;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
@@ -42,7 +44,12 @@ public class RepeatOnErrorTestRunnerITest extends TestNGCitrusTestRunner {
         repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
             @Override
             public void configure(RepeatOnErrorBuilder builder) {
-                builder.until("i = 5").index("i").autoSleep(500);
+                builder.until(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return index == 5;
+                    }
+                }).autoSleep(500);
             }
         }).actions(echo("${i}. Versuch: ${message}"));
         

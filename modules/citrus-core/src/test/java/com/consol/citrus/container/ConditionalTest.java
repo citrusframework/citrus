@@ -39,7 +39,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     public void testConditionFalse() {
 
         final Conditional conditionalAction = new Conditional();
-        conditionalAction.setExpression("1 = 0");
+        conditionalAction.setCondition("1 = 0");
 
         reset(action);
 
@@ -62,7 +62,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     public void testSingleAction() {
 
         final Conditional conditionalAction = new Conditional();
-        conditionalAction.setExpression("1 = 1");
+        conditionalAction.setCondition("1 = 1");
 
         final TestAction action = EasyMock.createMock(TestAction.class);
 
@@ -87,7 +87,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     public void testMultipleActions() {
 
         final Conditional conditionalAction = new Conditional();
-        conditionalAction.setExpression("1 = 1");
+        conditionalAction.setCondition("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -120,7 +120,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     public void testFirstActionFailing() {
 
         final Conditional conditionalAction = new Conditional();
-        conditionalAction.setExpression("1 = 1");
+        conditionalAction.setCondition("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -147,7 +147,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     public void testLastActionFailing() {
 
         final Conditional conditionalAction = new Conditional();
-        conditionalAction.setExpression("1 = 1");
+        conditionalAction.setCondition("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);
@@ -181,7 +181,7 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
     public void testFailingAction() {
 
         final Conditional conditionalAction = new Conditional();
-        conditionalAction.setExpression("1 = 1");
+        conditionalAction.setCondition("1 = 1");
 
         final TestAction action1 = EasyMock.createMock(TestAction.class);
         final TestAction action2 = EasyMock.createMock(TestAction.class);

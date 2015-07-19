@@ -17,11 +17,12 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
 
 public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
@@ -36,12 +37,38 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Conditional.class);
-        assertEquals(test.getActions().get(0).getName(), "conditional");
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
         
         Conditional container = (Conditional)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 1);
-        assertEquals(container.getExpression(), "${var} = 5");
+        Assert.assertEquals(container.getActionCount(), 1);
+        Assert.assertEquals(container.getCondition(), "${var} = 5");
+    }
+
+    @Test
+    public void testConditionalBuilderConditionExpression() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                conditional(echo("${var}")).when(new ConditionExpression() {
+                    @Override
+                    public boolean evaluate(TestContext context) {
+                        return context.getVariable("var").equals("Hello");
+                    }
+                });
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
+
+        Conditional container = (Conditional)test.getActions().get(0);
+        Assert.assertEquals(container.getActionCount(), 1);
+        Assert.assertNotNull(container.getConditionExpression());
     }
 }

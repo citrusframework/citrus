@@ -18,16 +18,19 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatUntilTrue;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.RepeatBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
 public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
-    public void testRepeatUntilTrueBuilder() {
+    public void testRepeatBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
@@ -44,6 +47,10 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("i"));
+        Assert.assertEquals(context.getVariable("i"), "2");
+
         TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
@@ -52,6 +59,45 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
         RepeatUntilTrue container = (RepeatUntilTrue)test.getActions().get(0);
         assertEquals(container.getActionCount(), 3);
         assertEquals(container.getCondition(), "i lt 5");
+        assertEquals(container.getStart(), 2);
+        assertEquals(container.getIndexName(), "i");
+        assertEquals(container.getTestAction(0).getClass(), EchoAction.class);
+    }
+
+    @Test
+    public void testRepeatBuilderWithConditionExpression() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                variable("var", "foo");
+
+                repeat(new TestActionConfigurer<RepeatBuilder>() {
+                    @Override
+                    public void configure(RepeatBuilder builder) {
+                        builder.index("i")
+                                .startsWith(2)
+                                .until(new IteratingConditionExpression() {
+                                    @Override
+                                    public boolean evaluate(int index, TestContext context) {
+                                        return index > 5;
+                                    }
+                                });
+                    }
+                }).actions(echo("${var}"), sleep(100), echo("${var}"));
+            }
+        };
+
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("i"));
+        Assert.assertEquals(context.getVariable("i"), "5");
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
+        assertEquals(test.getActions().get(0).getName(), "repeat");
+
+        RepeatUntilTrue container = (RepeatUntilTrue)test.getActions().get(0);
+        assertEquals(container.getActionCount(), 3);
         assertEquals(container.getStart(), 2);
         assertEquals(container.getIndexName(), "i");
         assertEquals(container.getTestAction(0).getClass(), EchoAction.class);

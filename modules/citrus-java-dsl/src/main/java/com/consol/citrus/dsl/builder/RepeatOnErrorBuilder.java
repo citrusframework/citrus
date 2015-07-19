@@ -16,6 +16,7 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 
 /**
@@ -46,6 +47,16 @@ public class RepeatOnErrorBuilder extends AbstractTestActionContainerBuilder<Rep
      */
 	public RepeatOnErrorBuilder until(String condition) {
 		action.setCondition(condition);
+		return this;
+	}
+
+	/**
+	 * Adds a condition expression to this iterate container.
+	 * @param condition
+	 * @return
+	 */
+	public RepeatOnErrorBuilder until(IteratingConditionExpression condition) {
+		action.setConditionExpression(condition);
 		return this;
 	}
 	

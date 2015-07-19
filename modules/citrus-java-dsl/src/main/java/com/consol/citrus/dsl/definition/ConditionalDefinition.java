@@ -48,7 +48,7 @@ public class ConditionalDefinition extends AbstractActionContainerDefinition<Con
      * @param expression
      */
 	public ConditionalDefinition when(String expression) {
-		action.setExpression(expression);
+		action.setCondition(expression);
 		return this;
 	}
 }

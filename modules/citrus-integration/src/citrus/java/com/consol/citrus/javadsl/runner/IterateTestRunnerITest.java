@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.IterateBuilder;
 import com.consol.citrus.dsl.runner.TestActionConfigurer;
@@ -38,6 +39,18 @@ public class IterateTestRunnerITest extends TestNGCitrusTestRunner {
             @Override
             public void configure(IterateBuilder builder) {
                 builder.condition("i lt= citrus:randomNumber(1)").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+
+        iterate(new TestActionConfigurer<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return index < 20;
+                    }
+                });
             }
         }).actions(echo("index is: ${i}"));
         
@@ -80,6 +93,20 @@ public class IterateTestRunnerITest extends TestNGCitrusTestRunner {
             @Override
             public void configure(IterateBuilder builder) {
                 builder.condition("i lt= 50").index("i")
+                        .startsWith(0)
+                        .step(5);
+            }
+        }).actions(echo("index is: ${i}"));
+
+        iterate(new TestActionConfigurer<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                        builder.condition(new IteratingConditionExpression() {
+                            @Override
+                            public boolean evaluate(int index, TestContext context) {
+                                return index < 50;
+                            }
+                        })
                         .startsWith(0)
                         .step(5);
             }

@@ -17,14 +17,13 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.ConditionalBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
 
 public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
@@ -48,13 +47,13 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(context.getVariable("execution"), "true");
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Conditional.class);
-        assertEquals(test.getActions().get(0).getName(), "conditional");
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
 
         Conditional container = (Conditional)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 2);
-        assertEquals(container.getExpression(), "${var} = 5");
+        Assert.assertEquals(container.getActionCount(), 2);
+        Assert.assertEquals(container.getCondition(), "${var} = 5");
     }
 
     @Test
@@ -77,12 +76,47 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(context.getVariables().get("execution"));
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 1);
-        assertEquals(test.getActions().get(0).getClass(), Conditional.class);
-        assertEquals(test.getActions().get(0).getName(), "conditional");
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
 
         Conditional container = (Conditional)test.getActions().get(0);
-        assertEquals(container.getActionCount(), 2);
-        assertEquals(container.getExpression(), "${var} = 5");
+        Assert.assertEquals(container.getActionCount(), 2);
+        Assert.assertEquals(container.getCondition(), "${var} = 5");
+    }
+
+    @Test
+    public void testConditionalBuilderConditionExpression() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                variable("var", 5);
+
+                conditional(new TestActionConfigurer<ConditionalBuilder>() {
+                    @Override
+                    public void configure(ConditionalBuilder builder) {
+                        builder.when(new ConditionExpression() {
+                            @Override
+                            public boolean evaluate(TestContext context) {
+                                return context.getVariable("var").equals("5");
+                            }
+                        });
+                    }
+                }).actions(echo("${var}"), createVariable("execution", "true"));
+            }
+        };
+
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("execution"));
+        Assert.assertEquals(context.getVariable("execution"), "true");
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Conditional.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "conditional");
+
+        Conditional container = (Conditional)test.getActions().get(0);
+        Assert.assertEquals(container.getActionCount(), 2);
+        Assert.assertNotNull(container.getConditionExpression());
     }
 }
