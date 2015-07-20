@@ -21,6 +21,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
@@ -72,7 +73,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint(httpClient)
@@ -128,7 +129,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint(httpClient)
@@ -177,7 +178,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("httpClient")

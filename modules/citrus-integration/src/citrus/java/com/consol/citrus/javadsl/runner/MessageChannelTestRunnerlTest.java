@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
 import org.testng.annotations.Test;
@@ -34,7 +34,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void MessageChannelTestRunnerlTest() {
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -43,7 +43,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -52,7 +52,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -63,7 +63,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -76,7 +76,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         
         echo("Test root qname message selector");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -85,7 +85,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -94,7 +94,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -105,7 +105,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -118,7 +118,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         
         echo("Test root qname message selector with namespaces");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -127,7 +127,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -136,7 +136,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -147,7 +147,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -160,7 +160,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         
         echo("Test xpath message selector");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -179,7 +179,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -198,7 +198,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -225,7 +225,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         selectorMap.put("xpath://ns:HelloMessage/ns:text[@language='de']/ns:value", "Hallo Citrus");
         selectorMap.put("xpath://ns:HelloMessage/ns:text[@language='esp']/ns:value", "Hola Citrus");
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -246,7 +246,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -265,7 +265,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("channelRequestSender")
@@ -284,7 +284,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")
@@ -305,7 +305,7 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("channelResponseReceiver")

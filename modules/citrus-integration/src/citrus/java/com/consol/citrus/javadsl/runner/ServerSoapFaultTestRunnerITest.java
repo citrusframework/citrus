@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +42,14 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-            assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                 @Override
                 public void configure(AssertSoapFaultBuilder builder) {
                     builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
                             .faultString("Invalid request");
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -63,7 +63,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -77,7 +77,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -98,7 +98,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test Soap fault actor support");
         
         parallel().actions(
-            assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                 @Override
                 public void configure(AssertSoapFaultBuilder builder) {
                     builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
@@ -106,7 +106,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                             .faultActor("SERVER");
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -120,7 +120,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -134,7 +134,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -156,7 +156,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test XML Soap fault validation");
         
         parallel().actions(
-            assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                 @Override
                 public void configure(AssertSoapFaultBuilder builder) {
                     builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
@@ -170,7 +170,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                             .validator(soapFaultValidator);
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -184,7 +184,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -198,7 +198,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -219,7 +219,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test XML schema validation skip");
         
         parallel().actions(
-            assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                 @Override
                 public void configure(AssertSoapFaultBuilder builder) {
                     builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
@@ -233,7 +233,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                             .schemaValidation(false);
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -247,7 +247,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -261,7 +261,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -282,7 +282,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test explicit XML schema repository");
         
         parallel().actions(
-            assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                 @Override
                 public void configure(AssertSoapFaultBuilder builder) {
                     builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
@@ -298,7 +298,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                             .xsdSchemaRepository("helloSchemaRepository");
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -312,7 +312,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -326,7 +326,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -348,7 +348,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         echo("Test explicit XML schema instance");
         
         parallel().actions(
-            assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+            assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                 @Override
                 public void configure(AssertSoapFaultBuilder builder) {
                     builder.faultCode("{http://www.citrusframework.org/faults}TEC-1000")
@@ -364,7 +364,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                             .xsd("helloSchemaExtended");
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -378,7 +378,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -392,7 +392,7 @@ public class ServerSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("webServiceResponseSender")

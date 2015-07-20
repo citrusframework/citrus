@@ -20,6 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.SendSoapFaultBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
@@ -77,7 +78,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint(soapEndpoint)
@@ -135,7 +136,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint("soapEndpoint")
@@ -191,7 +192,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint(soapEndpoint)
@@ -247,7 +248,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint(soapEndpoint)
@@ -302,7 +303,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint(soapEndpoint)
@@ -359,7 +360,7 @@ public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sendSoapFault(new TestActionConfigurer<SendSoapFaultBuilder>() {
+                sendSoapFault(new BuilderSupport<SendSoapFaultBuilder>() {
                     @Override
                     public void configure(SendSoapFaultBuilder builder) {
                         builder.endpoint(soapEndpoint)

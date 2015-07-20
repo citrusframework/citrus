@@ -20,7 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,14 +34,14 @@ public class RepeatOnErrorTestRunnerITest extends TestNGCitrusTestRunner {
     public void RepeatOnErrorTestRunnerITest() {
         variable("message", "Hello TestFramework");
         
-        repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+        repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
             @Override
             public void configure(RepeatOnErrorBuilder builder) {
                 builder.until("i = 5").index("i");
             }
         }).actions(echo("${i}. Versuch: ${message}"));
         
-        repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+        repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
             @Override
             public void configure(RepeatOnErrorBuilder builder) {
                 builder.until(new IteratingConditionExpression() {
@@ -54,7 +54,7 @@ public class RepeatOnErrorTestRunnerITest extends TestNGCitrusTestRunner {
         }).actions(echo("${i}. Versuch: ${message}"));
         
         assertException().when(
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
                     public void configure(RepeatOnErrorBuilder builder) {
                         builder.until("i = 3").index("i").autoSleep(200);

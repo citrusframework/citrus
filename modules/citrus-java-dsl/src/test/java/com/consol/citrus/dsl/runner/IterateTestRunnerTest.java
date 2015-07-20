@@ -21,6 +21,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.IterateBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -34,7 +35,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateBuilder>() {
+                iterate(new BuilderSupport<IterateBuilder>() {
                     @Override
                     public void configure(IterateBuilder builder) {
                         builder.index("i")
@@ -68,7 +69,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateBuilder>() {
+                iterate(new BuilderSupport<IterateBuilder>() {
                     @Override
                     public void configure(IterateBuilder builder) {
                         builder.index("i")
@@ -107,7 +108,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateBuilder>() {
+                iterate(new BuilderSupport<IterateBuilder>() {
                     @Override
                     public void configure(IterateBuilder builder) {
                         builder.startsWith(0)

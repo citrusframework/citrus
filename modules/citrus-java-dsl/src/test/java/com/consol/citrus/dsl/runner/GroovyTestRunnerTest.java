@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.GroovyActionBuilder;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -44,7 +45,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+                groovy(new BuilderSupport<GroovyActionBuilder>() {
                     @Override
                     public void configure(GroovyActionBuilder builder) {
                         builder.script(scriptResource)
@@ -71,7 +72,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+                groovy(new BuilderSupport<GroovyActionBuilder>() {
                     @Override
                     public void configure(GroovyActionBuilder builder) {
                         builder.script("println 'Groovy!'")
@@ -100,7 +101,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+                groovy(new BuilderSupport<GroovyActionBuilder>() {
                     @Override
                     public void configure(GroovyActionBuilder builder) {
                         builder.script("context.setVariable('message', 'Groovy!')")
@@ -128,7 +129,7 @@ public class GroovyTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+                groovy(new BuilderSupport<GroovyActionBuilder>() {
                     @Override
                     public void configure(GroovyActionBuilder builder) {
                         builder.script("context.setVariable('message', 'Groovy!')")

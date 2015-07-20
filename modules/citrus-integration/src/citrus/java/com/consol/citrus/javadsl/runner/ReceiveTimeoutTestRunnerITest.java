@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveTimeoutBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class ReceiveTimeoutTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void ReceiveTimeoutTestRunnerITest() {
-        receiveTimeout(new TestActionConfigurer<ReceiveTimeoutBuilder>() {
+        receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
             @Override
             public void configure(ReceiveTimeoutBuilder builder) {
                 builder.endpoint(messageEndpoint).timeout(500);

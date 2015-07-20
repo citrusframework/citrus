@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -63,7 +64,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
+                purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
                     @Override
                     public void configure(PurgeJmsQueuesBuilder builder) {
                         builder.connectionFactory(connectionFactory)
@@ -112,7 +113,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
+                purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
                     @Override
                     public void configure(PurgeJmsQueuesBuilder builder) {
                         builder.connectionFactory(connectionFactory)

@@ -21,6 +21,7 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -36,7 +37,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
                     public void configure(RepeatOnErrorBuilder builder) {
                         builder.autoSleep(250)
@@ -44,7 +45,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 }).actions(echo("${var}"), sleep(50), echo("${var}"));
 
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
                     public void configure(RepeatOnErrorBuilder builder) {
                         builder.autoSleep(200)
@@ -91,7 +92,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
                     public void configure(RepeatOnErrorBuilder builder) {
                         builder.autoSleep(250)
@@ -99,7 +100,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 }).actions(echo("${var}"), sleep(50), echo("${var}"));
 
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
                     public void configure(RepeatOnErrorBuilder builder) {
                         builder.autoSleep(200)

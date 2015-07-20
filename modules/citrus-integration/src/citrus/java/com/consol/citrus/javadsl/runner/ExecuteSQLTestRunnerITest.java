@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ExecuteSQLBuilder;
 import com.consol.citrus.dsl.builder.ExecuteSQLQueryBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +42,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
         variable("rowsCount", "0");
         variable("customerId", "1");
         
-        sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+        sql(new BuilderSupport<ExecuteSQLBuilder>() {
             @Override
             public void configure(ExecuteSQLBuilder builder) {
                 builder.dataSource(dataSource)
@@ -50,7 +50,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
             @Override
             public void configure(ExecuteSQLQueryBuilder builder) {
                 builder.dataSource(dataSource)
@@ -65,7 +65,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
             @Override
             public void configure(ExecuteSQLQueryBuilder builder) {
                 builder.dataSource(dataSource)
@@ -77,7 +77,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
             @Override
             public void configure(ExecuteSQLQueryBuilder builder) {
                 builder.dataSource(dataSource)
@@ -90,7 +90,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+        sql(new BuilderSupport<ExecuteSQLBuilder>() {
             @Override
             public void configure(ExecuteSQLBuilder builder) {
                 builder.dataSource(dataSource)
@@ -98,7 +98,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
             @Override
             public void configure(ExecuteSQLQueryBuilder builder) {
                 builder.dataSource(dataSource)
@@ -107,7 +107,7 @@ public class ExecuteSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
             @Override
             public void configure(ExecuteSQLQueryBuilder builder) {
                 builder.dataSource(dataSource)

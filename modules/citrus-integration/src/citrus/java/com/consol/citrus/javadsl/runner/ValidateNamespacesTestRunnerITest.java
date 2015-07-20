@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.ValidationException;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
     public void ValidateNamespacesTestRunnerITest() {
         echo("Test: Success with single namespace validation");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("testMessageSender")
@@ -43,7 +43,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("testMessageReceiver")
@@ -58,7 +58,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Success with multiple namespace validations");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("testMessageSender")
@@ -68,7 +68,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("testMessageReceiver")
@@ -84,7 +84,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Success with multiple nested namespace validations");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("testMessageSender")
@@ -94,7 +94,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("testMessageReceiver")
@@ -110,7 +110,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Failure because of missing namespace");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("testMessageSender")
@@ -120,13 +120,13 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
         }).when(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("testMessageReceiver")
@@ -143,7 +143,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Failure because of wrong namespace prefix");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("testMessageSender")
@@ -153,13 +153,13 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
         }).when(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("testMessageReceiver")
@@ -175,7 +175,7 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Failure because of wrong namespace uri");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("testMessageSender")
@@ -185,13 +185,13 @@ public class ValidateNamespacesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
         }).when(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("testMessageReceiver")

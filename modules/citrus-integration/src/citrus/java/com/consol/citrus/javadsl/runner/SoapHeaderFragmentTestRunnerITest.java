@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -35,7 +35,7 @@ public class SoapHeaderFragmentTestRunnerITest extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("webServiceClient")
@@ -59,7 +59,7 @@ public class SoapHeaderFragmentTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("webServiceRequestReceiver")
@@ -86,7 +86,7 @@ public class SoapHeaderFragmentTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
             
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("webServiceResponseSender")
@@ -108,7 +108,7 @@ public class SoapHeaderFragmentTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("webServiceClient")

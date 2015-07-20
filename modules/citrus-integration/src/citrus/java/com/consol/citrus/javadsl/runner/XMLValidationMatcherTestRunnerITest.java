@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,7 +34,7 @@ public class XMLValidationMatcherTestRunnerITest extends TestNGCitrusTestRunner 
         variable("greetingText", "Hello Citrus");      
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageBuilder>() {
+            send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
                 public void configure(SendMessageBuilder builder) {
                     builder.endpoint("httpClient")
@@ -50,7 +50,7 @@ public class XMLValidationMatcherTestRunnerITest extends TestNGCitrusTestRunner 
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("httpServerRequestEndpoint")
@@ -68,7 +68,7 @@ public class XMLValidationMatcherTestRunnerITest extends TestNGCitrusTestRunner 
                                 .extractFromHeader("citrus_jms_messageId", "correlation_id");
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageBuilder>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("httpServerResponseEndpoint")
@@ -85,7 +85,7 @@ public class XMLValidationMatcherTestRunnerITest extends TestNGCitrusTestRunner 
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("httpClient")

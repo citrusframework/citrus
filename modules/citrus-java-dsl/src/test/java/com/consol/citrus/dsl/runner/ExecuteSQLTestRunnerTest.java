@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ExecuteSQLBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -54,7 +55,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+                sql(new BuilderSupport<ExecuteSQLBuilder>() {
                     @Override
                     public void configure(ExecuteSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -98,7 +99,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+                sql(new BuilderSupport<ExecuteSQLBuilder>() {
                     @Override
                     public void configure(ExecuteSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -137,7 +138,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+                sql(new BuilderSupport<ExecuteSQLBuilder>() {
                     @Override
                     public void configure(ExecuteSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)

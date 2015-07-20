@@ -21,6 +21,7 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.RepeatBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -36,7 +37,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeat(new TestActionConfigurer<RepeatBuilder>() {
+                repeat(new BuilderSupport<RepeatBuilder>() {
                     @Override
                     public void configure(RepeatBuilder builder) {
                         builder.index("i")
@@ -71,7 +72,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", "foo");
 
-                repeat(new TestActionConfigurer<RepeatBuilder>() {
+                repeat(new BuilderSupport<RepeatBuilder>() {
                     @Override
                     public void configure(RepeatBuilder builder) {
                         builder.index("i")

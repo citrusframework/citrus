@@ -20,6 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.container.ConditionExpression;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ConditionalBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -33,7 +34,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 5);
 
-                conditional(new TestActionConfigurer<ConditionalBuilder>() {
+                conditional(new BuilderSupport<ConditionalBuilder>() {
                     @Override
                     public void configure(ConditionalBuilder builder) {
                         builder.when("${var} = 5");
@@ -63,7 +64,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 0);
 
-                conditional(new TestActionConfigurer<ConditionalBuilder>() {
+                conditional(new BuilderSupport<ConditionalBuilder>() {
                     @Override
                     public void configure(ConditionalBuilder builder) {
                         builder.when("${var} = 5");
@@ -92,7 +93,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("var", 5);
 
-                conditional(new TestActionConfigurer<ConditionalBuilder>() {
+                conditional(new BuilderSupport<ConditionalBuilder>() {
                     @Override
                     public void configure(ConditionalBuilder builder) {
                         builder.when(new ConditionExpression() {

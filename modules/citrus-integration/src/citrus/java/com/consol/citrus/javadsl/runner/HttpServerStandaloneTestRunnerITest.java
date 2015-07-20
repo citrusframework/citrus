@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -33,7 +33,7 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
     public void HttpServerStandaloneTestRunnerITest() {
         variable("custom_header_id", "123456789");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("httpStandaloneClient")
@@ -44,7 +44,7 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("httpStandaloneClient")
@@ -57,7 +57,7 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("httpStandaloneClient")
@@ -68,7 +68,7 @@ public class HttpServerStandaloneTestRunnerITest extends TestNGCitrusTestRunner 
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("httpStandaloneClient")

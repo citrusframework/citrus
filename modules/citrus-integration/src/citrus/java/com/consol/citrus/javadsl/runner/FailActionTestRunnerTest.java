@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.AssertExceptionBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ public class FailActionTestRunnerTest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void FailActionTestRunnerTest() {
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class)
@@ -39,7 +39,7 @@ public class FailActionTestRunnerTest extends TestNGCitrusTestRunner {
             }
         }).when(fail("Failing ITest"));
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class)

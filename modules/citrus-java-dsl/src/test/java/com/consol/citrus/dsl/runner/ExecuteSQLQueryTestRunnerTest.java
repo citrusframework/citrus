@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ExecuteSQLQueryBuilder;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -65,7 +66,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("episodeId", "citrus:randomNumber(5)");
 
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -121,7 +122,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -178,7 +179,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -222,7 +223,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -265,7 +266,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -310,7 +311,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -356,7 +357,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
                     public void configure(ExecuteSQLQueryBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)

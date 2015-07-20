@@ -184,7 +184,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public AntRunAction antrun(TestActionConfigurer<AntRunBuilder> configurer) {
+    public AntRunAction antrun(BuilderSupport<AntRunBuilder> configurer) {
         AntRunBuilder builder = new AntRunBuilder();
         configurer.configure(builder);
         return run(builder.build());
@@ -198,21 +198,21 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLBuilder> configurer) {
+    public ExecutePLSQLAction plsql(BuilderSupport<ExecutePLSQLBuilder> configurer) {
         ExecutePLSQLBuilder builder = new ExecutePLSQLBuilder();
         configurer.configure(builder);
         return run(builder.build());
     }
 
     @Override
-    public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLBuilder> configurer) {
+    public ExecuteSQLAction sql(BuilderSupport<ExecuteSQLBuilder> configurer) {
         ExecuteSQLBuilder builder = new ExecuteSQLBuilder();
         configurer.configure(builder);
         return run(builder.build());
     }
 
     @Override
-    public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryBuilder> configurer) {
+    public ExecuteSQLQueryAction query(BuilderSupport<ExecuteSQLQueryBuilder> configurer) {
         ExecuteSQLQueryBuilder builder = new ExecuteSQLQueryBuilder();
         configurer.configure(builder);
         return run(builder.build());
@@ -226,14 +226,14 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public InputAction input(TestActionConfigurer<InputActionBuilder> configurer) {
+    public InputAction input(BuilderSupport<InputActionBuilder> configurer) {
         InputActionBuilder builder = new InputActionBuilder();
         configurer.configure(builder);
         return run(builder.build());
     }
 
     @Override
-    public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutBuilder> configurer) {
+    public ReceiveTimeoutAction receiveTimeout(BuilderSupport<ReceiveTimeoutBuilder> configurer) {
         ReceiveTimeoutBuilder builder = new ReceiveTimeoutBuilder();
         configurer.configure(builder);
         return run(builder.build());
@@ -247,7 +247,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueuesBuilder> configurer) {
+    public PurgeJmsQueuesAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
         PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder();
         configurer.configure(builder);
 
@@ -258,7 +258,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeChannelsBuilder> configurer) {
+    public PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer) {
         PurgeChannelsBuilder builder = new PurgeChannelsBuilder();
         builder.channelResolver(applicationContext);
         configurer.configure(builder);
@@ -266,7 +266,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageBuilder> configurer) {
+    public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
         ReceiveMessageBuilder builder = new ReceiveMessageBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
@@ -274,7 +274,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public SendMessageAction send(TestActionConfigurer<SendMessageBuilder> configurer) {
+    public SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer) {
         SendMessageBuilder builder = new SendMessageBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
@@ -282,7 +282,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultBuilder> configurer) {
+    public SendSoapFaultAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
         SendSoapFaultBuilder builder = new SendSoapFaultBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
@@ -354,14 +354,14 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public GroovyAction groovy(TestActionConfigurer<GroovyActionBuilder> configurer) {
+    public GroovyAction groovy(BuilderSupport<GroovyActionBuilder> configurer) {
         GroovyActionBuilder builder = new GroovyActionBuilder();
         configurer.configure(builder);
         return run(builder.build());
     }
 
     @Override
-    public TransformAction transform(TestActionConfigurer<TransformActionBuilder> configurer) {
+    public TransformAction transform(BuilderSupport<TransformActionBuilder> configurer) {
         TransformActionBuilder builder = new TransformActionBuilder();
         configurer.configure(builder);
         return run(builder.build());
@@ -369,7 +369,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ExceptionContainerRunner assertException() {
-        return assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        return assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
             }
@@ -377,7 +377,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ExceptionContainerRunner assertException(TestActionConfigurer<AssertExceptionBuilder> configurer) {
+    public ExceptionContainerRunner assertException(BuilderSupport<AssertExceptionBuilder> configurer) {
         AssertExceptionBuilder builder = new AssertExceptionBuilder();
         configurer.configure(builder);
         containers.push(builder.build());
@@ -387,7 +387,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ExceptionContainerRunner catchException() {
-        return catchException(new TestActionConfigurer<CatchExceptionBuilder>() {
+        return catchException(new BuilderSupport<CatchExceptionBuilder>() {
             @Override
             public void configure(CatchExceptionBuilder builder) {
             }
@@ -395,7 +395,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ExceptionContainerRunner catchException(TestActionConfigurer<CatchExceptionBuilder> configurer) {
+    public ExceptionContainerRunner catchException(BuilderSupport<CatchExceptionBuilder> configurer) {
         CatchExceptionBuilder builder = new CatchExceptionBuilder();
         configurer.configure(builder);
         containers.push(builder.build());
@@ -404,7 +404,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultBuilder> configurer) {
+    public ExceptionContainerRunner assertSoapFault(BuilderSupport<AssertSoapFaultBuilder> configurer) {
         AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder();
 
         if (applicationContext.containsBean("soapFaultValidator")) {
@@ -418,7 +418,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner conditional(TestActionConfigurer<ConditionalBuilder> configurer) {
+    public ContainerRunner conditional(BuilderSupport<ConditionalBuilder> configurer) {
         ConditionalBuilder builder = new ConditionalBuilder();
         configurer.configure(builder);
         containers.push(builder.build());
@@ -427,7 +427,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner iterate(TestActionConfigurer<IterateBuilder> configurer) {
+    public ContainerRunner iterate(BuilderSupport<IterateBuilder> configurer) {
         IterateBuilder builder = new IterateBuilder();
         configurer.configure(builder);
         containers.push(builder.build());
@@ -444,7 +444,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorBuilder> configurer) {
+    public ContainerRunner repeatOnError(BuilderSupport<RepeatOnErrorBuilder> configurer) {
         RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder();
         configurer.configure(builder);
         containers.push(builder.build());
@@ -453,7 +453,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner repeat(TestActionConfigurer<RepeatBuilder> configurer) {
+    public ContainerRunner repeat(BuilderSupport<RepeatBuilder> configurer) {
         RepeatBuilder builder = new RepeatBuilder();
         configurer.configure(builder);
         containers.push(builder.build());
@@ -470,7 +470,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public Template applyTemplate(TestActionConfigurer<TemplateBuilder> configurer) {
+    public Template applyTemplate(BuilderSupport<TemplateBuilder> configurer) {
         TemplateBuilder builder = new TemplateBuilder();
         configurer.configure(builder);
         builder.load(applicationContext);

@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageHeaders;
 import org.testng.annotations.Test;
@@ -36,7 +36,7 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
         variable("conversationId", "123456789");
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageBuilder>() {
+            send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
                 public void configure(SendMessageBuilder builder) {
                     builder.endpoint("syncGetDateRequestSender")
@@ -56,7 +56,7 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
             }),
                 
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("syncGetDateRequestReceiver")
@@ -75,7 +75,7 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }),
                     
-                send(new TestActionConfigurer<SendMessageBuilder>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("syncGetDateRequestReceiver")
@@ -93,7 +93,7 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }),
                     
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("syncGetDateRequestSender")

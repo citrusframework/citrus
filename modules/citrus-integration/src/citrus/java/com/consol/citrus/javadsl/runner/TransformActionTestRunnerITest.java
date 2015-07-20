@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.TransformActionBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ public class TransformActionTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void TransformActionTestRunnerITest() {
-        transform(new TestActionConfigurer<TransformActionBuilder>() {
+        transform(new BuilderSupport<TransformActionBuilder>() {
             @Override
             public void configure(TransformActionBuilder builder) {
                 builder.source("<TestRequest>" +
@@ -53,7 +53,7 @@ public class TransformActionTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("${result}");
         
-        transform(new TestActionConfigurer<TransformActionBuilder>() {
+        transform(new BuilderSupport<TransformActionBuilder>() {
             @Override
             public void configure(TransformActionBuilder builder) {
                 builder.source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))

@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.CatchExceptionBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.annotations.Test;
@@ -33,14 +33,14 @@ public class CatchExceptionTestRunnerITest extends TestNGCitrusTestRunner {
     public void CatchExceptionTestRunnerITest() {
         catchException().when(fail("Fail!"));
         
-        catchException(new TestActionConfigurer<CatchExceptionBuilder>() {
+        catchException(new BuilderSupport<CatchExceptionBuilder>() {
             @Override
             public void configure(CatchExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class.getName());
             }
         }).when(fail("Fail!"));
 
-        catchException(new TestActionConfigurer<CatchExceptionBuilder>() {
+        catchException(new BuilderSupport<CatchExceptionBuilder>() {
             @Override
             public void configure(CatchExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class);

@@ -20,7 +20,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.AssertExceptionBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -40,7 +40,7 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
         
         assertException().when(fail("Fail once"));
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class)
@@ -49,7 +49,7 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
         }).when(fail("Fail again"));
 
         
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class)
@@ -57,7 +57,7 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         }).when(fail("${failMessage}"));
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class)
@@ -65,24 +65,24 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         }).when(fail("${failMessage}"));
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
                     @Override
                     public void configure(AssertExceptionBuilder builder) {
                         builder.exception(IOException.class);
                     }
                 }).when(fail("Fail another time")));
         
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
                     @Override
                     public void configure(AssertExceptionBuilder builder) {
                         builder.exception(CitrusRuntimeException.class)
@@ -90,24 +90,24 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }).when(fail("Fail with nice error message")));
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
                     @Override
                     public void configure(AssertExceptionBuilder builder) {
                         builder.exception(CitrusRuntimeException.class);
                     }
                 }).when(echo("Nothing fails here")));
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(ValidationException.class);
             }
-        }).when(assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        }).when(assertException(new BuilderSupport<AssertExceptionBuilder>() {
                     @Override
                     public void configure(AssertExceptionBuilder builder) {
                         builder.exception(CitrusRuntimeException.class)
@@ -116,7 +116,7 @@ public class AssertExceptionTestRunnerITest extends TestNGCitrusTestRunner {
                 }).when(echo("Nothing fails here either")));
 
 
-        assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+        assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
             public void configure(AssertExceptionBuilder builder) {
                 builder.exception(CitrusRuntimeException.class)

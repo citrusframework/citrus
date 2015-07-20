@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ExecuteSQLBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,14 +41,14 @@ public class FinalActionsTestRunnerITest extends TestNGCitrusTestRunner {
         variable("orderId", "citrus:randomNumber(5)");
 
         doFinally()
-            .actions(sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+            .actions(sql(new BuilderSupport<ExecuteSQLBuilder>() {
                 @Override
                 public void configure(ExecuteSQLBuilder builder) {
                     builder.dataSource(dataSource).statement("DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'");
                 }
             }));
 
-        sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+        sql(new BuilderSupport<ExecuteSQLBuilder>() {
             @Override
             public void configure(ExecuteSQLBuilder builder) {
                 builder.dataSource(dataSource)

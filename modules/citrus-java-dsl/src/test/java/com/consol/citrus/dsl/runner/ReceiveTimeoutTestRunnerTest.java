@@ -21,6 +21,7 @@ import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ReceiveTimeoutBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -65,7 +66,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receiveTimeout(new TestActionConfigurer<ReceiveTimeoutBuilder>() {
+                receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
                     @Override
                     public void configure(ReceiveTimeoutBuilder builder) {
                         builder.endpoint(messageEndpoint)
@@ -112,7 +113,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receiveTimeout(new TestActionConfigurer<ReceiveTimeoutBuilder>() {
+                receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
                     @Override
                     public void configure(ReceiveTimeoutBuilder builder) {
                         builder.endpoint("fooMessageEndpoint")
@@ -152,7 +153,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             new MockTestRunner(getClass().getSimpleName(), applicationContext) {
                 @Override
                 public void execute() {
-                    receiveTimeout(new TestActionConfigurer<ReceiveTimeoutBuilder>() {
+                    receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
                         @Override
                         public void configure(ReceiveTimeoutBuilder builder) {
                             builder.endpoint(messageEndpoint)

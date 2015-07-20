@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
     @CitrusTest
     public void SendSoapAttachmentTestRunnerITest() {
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageBuilder>() {
+            send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
                 public void configure(SendMessageBuilder builder) {
                     builder.endpoint("webServiceClient")
@@ -45,7 +45,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -59,7 +59,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                                 .timeout(5000L);
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageBuilder>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -73,7 +73,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("webServiceClient")
@@ -86,7 +86,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
         });
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageBuilder>() {
+            send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
                 public void configure(SendMessageBuilder builder) {
                     builder.endpoint("webServiceClient")
@@ -98,7 +98,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -112,7 +112,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
                                 .timeout(5000L);
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageBuilder>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("webServiceResponseSender")
@@ -126,7 +126,7 @@ public class SendSoapAttachmentTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("webServiceClient")

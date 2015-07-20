@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.runner;
-
-import com.consol.citrus.dsl.builder.AbstractTestActionBuilder;
+package com.consol.citrus.dsl.builder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public interface TestActionConfigurer<T extends AbstractTestActionBuilder> {
+public interface BuilderSupport<T extends AbstractTestActionBuilder> {
 
     void configure(T builder);
 }

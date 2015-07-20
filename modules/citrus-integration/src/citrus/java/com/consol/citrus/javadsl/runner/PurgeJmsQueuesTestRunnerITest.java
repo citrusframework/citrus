@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,7 +51,7 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void PurgeJmsQueuesTestRunnerITest() {
-        purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
+        purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
             @Override
             public void configure(PurgeJmsQueuesBuilder builder) {
                 builder.queue("Citrus.Queue.Dummy")
@@ -64,7 +64,7 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
+        purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
             @Override
             public void configure(PurgeJmsQueuesBuilder builder) {
                 builder.connectionFactory(connectionFactory)
@@ -79,7 +79,7 @@ public class PurgeJmsQueuesTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        purgeQueues(new TestActionConfigurer<PurgeJmsQueuesBuilder>() {
+        purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
             @Override
             public void configure(PurgeJmsQueuesBuilder builder) {
                 builder.queue(queue1)

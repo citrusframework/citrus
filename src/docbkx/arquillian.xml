@@ -258,7 +258,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestDesigner designer) thro
     <programlisting>@Test
 @CitrusTest
 public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws Exception {
-    runner.send(new TestActionConfigurer&lt;SendMessageBuilder&gt;() {
+    runner.send(new BuilderSupport&lt;SendMessageBuilder&gt;() {
         @Override
         public void configure(SendMessageBuilder builder) {
             builder.endpoint(serviceUri)
@@ -268,7 +268,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
         }
     });
 
-    runner.receive(new TestActionConfigurer&lt;ReceiveMessageBuilder&gt;() {
+    runner.receive(new BuilderSupport&lt;ReceiveMessageBuilder&gt;() {
         @Override
         public void configure(ReceiveMessageBuilder builder) {
           builder.endpoint(serviceUri)
@@ -280,7 +280,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
     Employee testEmployee = employeeService.findEmployee("Penny");
     employeeService.addJob(testEmployee, "waitress");
 
-    runner.send(new TestActionConfigurer&lt;SendMessageBuilder&gt;() {
+    runner.send(new BuilderSupport&lt;SendMessageBuilder&gt;() {
         @Override
         public void configure(SendMessageBuilder builder) {
             builder.endpoint(serviceUri)
@@ -290,7 +290,7 @@ public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws E
         }
     });
 
-    runner.receive(new TestActionConfigurer&lt;ReceiveMessageBuilder&gt;() {
+    runner.receive(new BuilderSupport&lt;ReceiveMessageBuilder&gt;() {
         @Override
         public void configure(ReceiveMessageBuilder builder) {
         builder.endpoint(serviceUri)

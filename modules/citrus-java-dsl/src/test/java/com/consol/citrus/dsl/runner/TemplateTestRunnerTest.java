@@ -22,6 +22,7 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.TemplateBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -61,7 +62,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                applyTemplate(new TestActionConfigurer<TemplateBuilder>() {
+                applyTemplate(new BuilderSupport<TemplateBuilder>() {
                     @Override
                     public void configure(TemplateBuilder builder) {
                         builder.name("fooTemplate")
@@ -109,7 +110,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                applyTemplate(new TestActionConfigurer<TemplateBuilder>() {
+                applyTemplate(new BuilderSupport<TemplateBuilder>() {
                     @Override
                     public void configure(TemplateBuilder builder) {
                         builder.name("fooTemplate")

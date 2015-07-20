@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AntRunAction;
 import com.consol.citrus.dsl.builder.AntRunBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
@@ -38,7 +39,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                antrun(new TestActionConfigurer<AntRunBuilder>() {
+                antrun(new BuilderSupport<AntRunBuilder>() {
                     @Override
                     public void configure(AntRunBuilder builder) {
                         builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
@@ -64,7 +65,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                antrun(new TestActionConfigurer<AntRunBuilder>() {
+                antrun(new BuilderSupport<AntRunBuilder>() {
                     @Override
                     public void configure(AntRunBuilder builder) {
                         builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
@@ -91,7 +92,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                antrun(new TestActionConfigurer<AntRunBuilder>() {
+                antrun(new BuilderSupport<AntRunBuilder>() {
                     @Override
                     public void configure(AntRunBuilder builder) {
                         builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
@@ -124,7 +125,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("checked", true);
 
-                antrun(new TestActionConfigurer<AntRunBuilder>() {
+                antrun(new BuilderSupport<AntRunBuilder>() {
                     @Override
                     public void configure(AntRunBuilder builder) {
                         builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
@@ -168,7 +169,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                antrun(new TestActionConfigurer<AntRunBuilder>() {
+                antrun(new BuilderSupport<AntRunBuilder>() {
                     @Override
                     public void configure(AntRunBuilder builder) {
                         builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")

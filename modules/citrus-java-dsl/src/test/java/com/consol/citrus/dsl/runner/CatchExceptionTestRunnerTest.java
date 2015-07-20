@@ -20,6 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.CatchExceptionBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -52,7 +53,7 @@ public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                catchException(new TestActionConfigurer<CatchExceptionBuilder>() {
+                catchException(new BuilderSupport<CatchExceptionBuilder>() {
                     @Override
                     public void configure(CatchExceptionBuilder builder) {
                         builder.exception(CitrusRuntimeException.class.getName());
@@ -60,7 +61,7 @@ public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
                 }).when(echo("${var}"));
 
                 
-                catchException(new TestActionConfigurer<CatchExceptionBuilder>() {
+                catchException(new BuilderSupport<CatchExceptionBuilder>() {
                     @Override
                     public void configure(CatchExceptionBuilder builder) {
                         builder.exception(CitrusRuntimeException.class);

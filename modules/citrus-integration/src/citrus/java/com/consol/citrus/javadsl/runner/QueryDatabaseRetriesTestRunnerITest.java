@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,20 +40,20 @@ public class QueryDatabaseRetriesTestRunnerITest extends TestNGCitrusTestRunner 
     public void QueryDatabaseRetriesTestRunnerITest() {
         parallel().actions(
             sequential().actions(
-                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+                sql(new BuilderSupport<ExecuteSQLBuilder>() {
                     @Override
                     public void configure(ExecuteSQLBuilder builder) {
                         builder.dataSource(dataSource)
                                 .sqlResource("classpath:com/consol/citrus/actions/script.sql");
                     }
                 }),
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorBuilder>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
                     public void configure(RepeatOnErrorBuilder builder) {
                         builder.autoSleep(100).index("i").until("i = 5");
                     }
                 }).actions(
-                        query(new TestActionConfigurer<ExecuteSQLQueryBuilder>() {
+                        query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                             @Override
                             public void configure(ExecuteSQLQueryBuilder builder) {
                                 builder.dataSource(dataSource)
@@ -65,7 +65,7 @@ public class QueryDatabaseRetriesTestRunnerITest extends TestNGCitrusTestRunner 
             ),
             sequential().actions(
                 sleep(300),
-                sql(new TestActionConfigurer<ExecuteSQLBuilder>() {
+                sql(new BuilderSupport<ExecuteSQLBuilder>() {
                     @Override
                     public void configure(ExecuteSQLBuilder builder) {
                         builder.dataSource(dataSource)

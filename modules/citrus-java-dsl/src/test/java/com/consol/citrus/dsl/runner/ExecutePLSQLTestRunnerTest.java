@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ExecutePLSQLBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -53,7 +54,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
+                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
                     @Override
                     public void configure(ExecutePLSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -102,7 +103,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
+                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
                     @Override
                     public void configure(ExecutePLSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -147,7 +148,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
+                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
                     @Override
                     public void configure(ExecutePLSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)
@@ -186,7 +187,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
+                plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
                     @Override
                     public void configure(ExecutePLSQLBuilder builder) {
                         builder.jdbcTemplate(jdbcTemplate)

@@ -22,6 +22,7 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -82,7 +83,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -141,7 +142,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -198,7 +199,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -259,7 +260,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -322,7 +323,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -382,7 +383,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -445,7 +446,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -509,7 +510,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -565,7 +566,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                assertSoapFault(new TestActionConfigurer<AssertSoapFaultBuilder>() {
+                assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
                     @Override
                     public void configure(AssertSoapFaultBuilder builder) {
                         builder.faultCode(SoapFaultDefinition.SERVER.getLocalPart())

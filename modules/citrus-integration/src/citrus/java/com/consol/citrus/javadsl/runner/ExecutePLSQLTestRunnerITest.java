@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ExecutePLSQLBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +38,7 @@ public class ExecutePLSQLTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void ExecutePLSQLTestRunnerITest() {
-        plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
+        plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
             @Override
             public void configure(ExecutePLSQLBuilder builder) {
                 builder.dataSource(dataSource)
@@ -47,7 +47,7 @@ public class ExecutePLSQLTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        plsql(new TestActionConfigurer<ExecutePLSQLBuilder>() {
+        plsql(new BuilderSupport<ExecutePLSQLBuilder>() {
             @Override
             public void configure(ExecutePLSQLBuilder builder) {
                 builder.dataSource(dataSource)

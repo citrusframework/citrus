@@ -20,7 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.RepeatBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
@@ -35,14 +35,14 @@ public class RepeatUntilTrueTestRunnerITest extends TestNGCitrusTestRunner {
     public void RepeatUntilTrueTestRunnerITest() {
         variable("max", "3");
         
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("i gt citrus:randomNumber(1)").index("i");
             }
         }).actions(echo("index is: ${i}"));
 
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until(new IteratingConditionExpression() {
@@ -54,42 +54,42 @@ public class RepeatUntilTrueTestRunnerITest extends TestNGCitrusTestRunner {
             }
         }).actions(echo("index is: ${i}"));
         
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("i gt= 5").index("i");
             }
         }).actions(echo("index is: ${i}"));
         
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("(i gt 5) or (i = 5)").index("i");
             }
         }).actions(echo("index is: ${i}"));
         
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("(i gt 5) and (i gt 3)").index("i");
             }
         }).actions(echo("index is: ${i}"));
         
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("i gt 0").index("i");
             }
         }).actions(echo("index is: ${i}"));
         
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until("${max} lt i").index("i");
             }
         }).actions(echo("index is: ${i}"));
 
-        repeat(new TestActionConfigurer<RepeatBuilder>() {
+        repeat(new BuilderSupport<RepeatBuilder>() {
             @Override
             public void configure(RepeatBuilder builder) {
                 builder.until(new IteratingConditionExpression() {

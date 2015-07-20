@@ -19,7 +19,7 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.dsl.builder.SendMessageBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,7 +34,7 @@ public class PropagateSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("webServiceFaultClient")
@@ -44,7 +44,7 @@ public class PropagateSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("webServiceFaultClient")

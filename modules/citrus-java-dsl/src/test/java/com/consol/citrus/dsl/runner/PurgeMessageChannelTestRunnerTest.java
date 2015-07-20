@@ -21,6 +21,7 @@ import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.PurgeChannelsBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -72,7 +73,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeChannels(new TestActionConfigurer<PurgeChannelsBuilder>() {
+                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
                     @Override
                     public void configure(PurgeChannelsBuilder builder) {
                         builder.channels(channel1, channel2)
@@ -121,7 +122,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                purgeChannels(new TestActionConfigurer<PurgeChannelsBuilder>() {
+                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
                     @Override
                     public void configure(PurgeChannelsBuilder builder) {
                         builder.channelNames("ch1", "ch2", "ch3")
@@ -163,7 +164,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                purgeChannels(new TestActionConfigurer<PurgeChannelsBuilder>() {
+                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
                     @Override
                     public void configure(PurgeChannelsBuilder builder) {
                         builder.channel("ch1")

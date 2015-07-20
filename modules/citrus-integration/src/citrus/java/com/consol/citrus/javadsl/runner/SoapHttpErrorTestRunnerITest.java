@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -35,14 +35,14 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-            assertException(new TestActionConfigurer<AssertExceptionBuilder>() {
+            assertException(new BuilderSupport<AssertExceptionBuilder>() {
                 @Override
                 public void configure(AssertExceptionBuilder builder) {
                     builder.exception(org.springframework.ws.client.WebServiceTransportException.class)
                             .message("Server Error [500]");
                 }
             }).when(
-                    send(new TestActionConfigurer<SendMessageBuilder>() {
+                    send(new BuilderSupport<SendMessageBuilder>() {
                         @Override
                         public void configure(SendMessageBuilder builder) {
                             builder.endpoint("webServiceClient")
@@ -59,7 +59,7 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
                     })
             ),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
                     public void configure(ReceiveMessageBuilder builder) {
                         builder.endpoint("webServiceRequestReceiver")
@@ -76,7 +76,7 @@ public class SoapHttpErrorTestRunnerITest extends TestNGCitrusTestRunner {
                                 .extractFromHeader("citrus_jms_messageId", "internal_correlation_id");
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageBuilder>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
                     public void configure(SendMessageBuilder builder) {
                         builder.endpoint("webServiceResponseSender")

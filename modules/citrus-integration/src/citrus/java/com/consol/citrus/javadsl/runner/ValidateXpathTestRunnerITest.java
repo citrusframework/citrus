@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -54,7 +54,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -67,7 +67,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -82,7 +82,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -95,7 +95,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -110,7 +110,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -124,7 +124,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Now using xpath validation elements");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -139,7 +139,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -152,7 +152,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -167,7 +167,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -180,7 +180,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -195,7 +195,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -209,7 +209,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Default namespace mapping");
         
-        send(new TestActionConfigurer<SendMessageBuilder>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
             public void configure(SendMessageBuilder builder) {
                 builder.endpoint("helloRequestSender")
@@ -224,7 +224,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageBuilder>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
             public void configure(ReceiveMessageBuilder builder) {
                 builder.endpoint("helloResponseReceiver")
@@ -238,7 +238,7 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("assert context.getVariable('extractedText') == 'Hello ${user}'");

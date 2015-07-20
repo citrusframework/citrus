@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.AntRunBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -33,7 +33,7 @@ public class AntRunTestRunnerITest extends TestNGCitrusTestRunner {
         variable("welcomeText", "Hello Citrus today is citrus:currentDate()!");
         variable("checked", "true");
         
-        antrun(new TestActionConfigurer<AntRunBuilder>() {
+        antrun(new BuilderSupport<AntRunBuilder>() {
             @Override
             public void configure(AntRunBuilder builder) {
                 builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
@@ -41,7 +41,7 @@ public class AntRunTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        antrun(new TestActionConfigurer<AntRunBuilder>() {
+        antrun(new BuilderSupport<AntRunBuilder>() {
             @Override
             public void configure(AntRunBuilder builder) {
                 builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
@@ -49,7 +49,7 @@ public class AntRunTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        antrun(new TestActionConfigurer<AntRunBuilder>() {
+        antrun(new BuilderSupport<AntRunBuilder>() {
             @Override
             public void configure(AntRunBuilder builder) {
                 builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")
@@ -59,7 +59,7 @@ public class AntRunTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
 
-        antrun(new TestActionConfigurer<AntRunBuilder>() {
+        antrun(new BuilderSupport<AntRunBuilder>() {
             @Override
             public void configure(AntRunBuilder builder) {
                 builder.buildFilePath("classpath:com/consol/citrus/actions/build.xml")

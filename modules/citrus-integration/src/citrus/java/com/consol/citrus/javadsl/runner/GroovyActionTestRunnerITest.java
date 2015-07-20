@@ -18,7 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.builder.GroovyActionBuilder;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -37,21 +37,21 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
         variable("date", "citrus:currentDate()");
         variable("greetingText", "Hello Citrus!");
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("println 'Hello Citrus'");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("println 'Current date is ${date}!'");
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("import com.consol.citrus.*" + NEWLINE +
@@ -68,7 +68,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("println context.getVariable(\"date\")" + NEWLINE +
@@ -77,7 +77,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("println 'Hello Citrus'")
@@ -85,7 +85,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("Assert.assertEquals(context.getVariable(\"scriptTemplateVar\"), \"It works!\")" + NEWLINE +
@@ -95,7 +95,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("import org.testng.Assert" + NEWLINE +
@@ -105,7 +105,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script("public class MyCustomClass {" + NEWLINE +
@@ -116,7 +116,7 @@ public class GroovyActionTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionBuilder>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
             public void configure(GroovyActionBuilder builder) {
                 builder.script(new ClassPathResource("com/consol/citrus/script/example.groovy"));

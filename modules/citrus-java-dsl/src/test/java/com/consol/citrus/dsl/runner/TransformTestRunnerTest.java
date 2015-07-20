@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.TransformActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
@@ -33,7 +34,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                transform(new TestActionConfigurer<TransformActionBuilder>() {
+                transform(new BuilderSupport<TransformActionBuilder>() {
                     @Override
                     public void configure(TransformActionBuilder builder) {
                         builder.source("<TestRequest>" +
@@ -81,7 +82,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                transform(new TestActionConfigurer<TransformActionBuilder>() {
+                transform(new BuilderSupport<TransformActionBuilder>() {
                     @Override
                     public void configure(TransformActionBuilder builder) {
                         builder.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))

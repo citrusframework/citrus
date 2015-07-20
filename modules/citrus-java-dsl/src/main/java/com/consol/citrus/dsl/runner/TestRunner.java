@@ -94,7 +94,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    AntRunAction antrun(TestActionConfigurer<AntRunBuilder> configurer);
+    AntRunAction antrun(BuilderSupport<AntRunBuilder> configurer);
 
     /**
      * Creates and executes a new echo action.
@@ -110,7 +110,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLBuilder> configurer);
+    ExecutePLSQLAction plsql(BuilderSupport<ExecutePLSQLBuilder> configurer);
 
     /**
      * Creates a new executeSQL action definition
@@ -119,7 +119,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLBuilder> configurer);
+    ExecuteSQLAction sql(BuilderSupport<ExecuteSQLBuilder> configurer);
 
     /**
      * Creates a new executesqlquery action definition
@@ -128,7 +128,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryBuilder> configurer);
+    ExecuteSQLQueryAction query(BuilderSupport<ExecuteSQLQueryBuilder> configurer);
 
     /**
      * Creates a new receive timeout action definition
@@ -137,7 +137,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutBuilder> configurer);
+    ReceiveTimeoutAction receiveTimeout(BuilderSupport<ReceiveTimeoutBuilder> configurer);
 
     /**
      * Creates a new fail action.
@@ -153,7 +153,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    InputAction input(TestActionConfigurer<InputActionBuilder> configurer);
+    InputAction input(BuilderSupport<InputActionBuilder> configurer);
 
     /**
      * Creates a new load properties action.
@@ -169,7 +169,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueuesBuilder> configurer);
+    PurgeJmsQueuesAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer);
 
     /**
      * Creates a new purge message channel action definition
@@ -178,7 +178,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeChannelsBuilder> configurer);
+    PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer);
 
     /**
      * Creates receive message action definition with message endpoint instance.
@@ -186,7 +186,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageBuilder> configurer);
+    ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer);
 
     /**
      * Create send message action definition with message endpoint instance.
@@ -194,7 +194,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    SendMessageAction send(TestActionConfigurer<SendMessageBuilder> configurer);
+    SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer);
 
     /**
      * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
@@ -203,7 +203,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultBuilder> configurer);
+    SendSoapFaultAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer);
 
     /**
      * Add sleep action with default delay time.
@@ -293,7 +293,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    GroovyAction groovy(TestActionConfigurer<GroovyActionBuilder> configurer);
+    GroovyAction groovy(BuilderSupport<GroovyActionBuilder> configurer);
 
     /**
      * Creates a new transform action definition
@@ -302,7 +302,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    TransformAction transform(TestActionConfigurer<TransformActionBuilder> configurer);
+    TransformAction transform(BuilderSupport<TransformActionBuilder> configurer);
 
     /**
      * Assert default exception to happen in nested test action.
@@ -317,7 +317,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExceptionContainerRunner assertException(TestActionConfigurer<AssertExceptionBuilder> configurer);
+    ExceptionContainerRunner assertException(BuilderSupport<AssertExceptionBuilder> configurer);
 
     /**
      * Catch default exception when thrown in nested test action.
@@ -331,7 +331,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExceptionContainerRunner catchException(TestActionConfigurer<CatchExceptionBuilder> configurer);
+    ExceptionContainerRunner catchException(BuilderSupport<CatchExceptionBuilder> configurer);
 
     /**
      * Assert SOAP fault during action execution.
@@ -339,7 +339,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultBuilder> configurer);
+    ExceptionContainerRunner assertSoapFault(BuilderSupport<AssertSoapFaultBuilder> configurer);
 
     /**
      * Adds conditional container with nested test actions.
@@ -347,14 +347,14 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ContainerRunner conditional(TestActionConfigurer<ConditionalBuilder> configurer);
+    ContainerRunner conditional(BuilderSupport<ConditionalBuilder> configurer);
 
     /**
      * Run nested test actions in iteration.
      * @param configurer
      * @return
      */
-    ContainerRunner iterate(TestActionConfigurer<IterateBuilder> configurer);
+    ContainerRunner iterate(BuilderSupport<IterateBuilder> configurer);
 
     /**
      * Run nested test actions in parallel to each other using multiple threads.
@@ -368,7 +368,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorBuilder> configurer);
+    ContainerRunner repeatOnError(BuilderSupport<RepeatOnErrorBuilder> configurer);
 
     /**
      * Adds repeat until true container with nested test actions.
@@ -376,7 +376,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ContainerRunner repeat(TestActionConfigurer<RepeatBuilder> configurer);
+    ContainerRunner repeat(BuilderSupport<RepeatBuilder> configurer);
 
     /**
      * Run nested test actions in sequence.
@@ -390,7 +390,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    Template applyTemplate(TestActionConfigurer<TemplateBuilder> configurer);
+    Template applyTemplate(BuilderSupport<TemplateBuilder> configurer);
 
     /**
      * Adds sequence of test actions to finally block.
