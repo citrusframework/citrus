@@ -39,16 +39,16 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
                         builder.source("<TestRequest>" +
                                             "<Message>Hello World!</Message>" +
                                         "</TestRequest>")
-                                .xslt("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                                    "<xsl:template match=\"/\">\n" +
-                                        "<html>\n" +
-											"<body>\n" +
-												"<h2>Test Request</h2>\n" +
-												"<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>\n" +
-											"</body>\n" +
-                                        "</html>\n" +
-                                        "</xsl:template>\n" +
-                                    "</xsl:stylesheet>")
+                                .xslt(String.format("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">%n" +
+                                        "<xsl:template match=\"/\">%n" +
+                                        "<html>%n" +
+                                        "<body>%n" +
+                                        "<h2>Test Request</h2>%n" +
+                                        "<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>%n" +
+                                        "</body>%n" +
+                                        "</html>%n" +
+                                        "</xsl:template>%n" +
+                                        "</xsl:stylesheet>"))
                                 .result("result");
                     }
                 });
@@ -57,12 +57,12 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestContext context = builder.createTestContext();
         Assert.assertNotNull(context.getVariable("result"));
-        Assert.assertEquals(context.getVariable("result"), "<html>\n" +
-					"<body>\n" +
-						"<h2>Test Request</h2>\n" +
-						"<p>Message: Hello World!</p>\n" +
-					"</body>\n" +
-				"</html>\n");
+        Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
+					"<body>%n" +
+						"<h2>Test Request</h2>%n" +
+						"<p>Message: Hello World!</p>%n" +
+					"</body>%n" +
+				"</html>%n"));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -94,12 +94,12 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 
 		TestContext context = builder.createTestContext();
 		Assert.assertNotNull(context.getVariable("result"));
-		Assert.assertEquals(context.getVariable("result"), "<html>\n" +
-					"<body>\n" +
-						"<h2>Test Request</h2>\n" +
-						"<p>Message: Hello World!</p>\n" +
-					"</body>\n" +
-				"</html>\n");
+		Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
+					"<body>%n" +
+						"<h2>Test Request</h2>%n" +
+						"<p>Message: Hello World!</p>%n" +
+					"</body>%n" +
+				"</html>%n"));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

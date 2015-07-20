@@ -94,9 +94,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
-        Iterator iterator = action.getControlResultSet().entrySet().iterator();
-        Assert.assertEquals(iterator.next().toString(), "NAME=[Leonard]");
-        Assert.assertEquals(iterator.next().toString(), "CNT_EPISODES=[100000]");
+        Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
+        Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Leonard]");
+        Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[100000]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "NAME=actorName");
         Assert.assertNull(action.getScriptValidationContext());
@@ -151,9 +151,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
-        Iterator iterator = action.getControlResultSet().entrySet().iterator();
-        Assert.assertEquals(iterator.next().toString(), "NAME=[Penny, Sheldon]");
-        Assert.assertEquals(iterator.next().toString(), "CNT_EPISODES=[9999]");
+        Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
+        Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Penny, Sheldon]");
+        Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[9999]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "CNT_EPISODES=cntEpisodes");
         Assert.assertEquals(action.getStatements().size(), 2);
@@ -164,7 +164,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         verify(jdbcTemplate);
     }
-    
+
     @Test
     public void testValidationScript() {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -386,5 +386,21 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidator(), validator);
 
         verify(jdbcTemplate, validator);
+    }
+
+    /**
+     * Gets row from result set with given column name.
+     * @param columnName
+     * @param rows
+     * @return
+     */
+    private Map.Entry<String, List<String>> getRow(String columnName, Set<Map.Entry<String, List<String>>> rows) {
+        for (Map.Entry<String, List<String>> row : rows) {
+            if (row.getKey().equals(columnName)) {
+                return row;
+            }
+        }
+
+        throw new AssertionError(String.format("Missing column in result set for name '%s'", columnName));
     }
 }
