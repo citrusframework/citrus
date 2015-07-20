@@ -118,6 +118,8 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         Assert.assertTrue(action.isForkMode());
+
+        verify(httpClient, messageProducer);
     }
 
     @Test

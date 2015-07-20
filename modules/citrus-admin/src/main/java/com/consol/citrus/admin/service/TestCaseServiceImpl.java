@@ -24,6 +24,7 @@ import com.consol.citrus.admin.model.*;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -253,10 +254,11 @@ public class TestCaseServiceImpl extends AbstractTestCaseService {
         List<TestCaseData> tests = new ArrayList<TestCaseData>();
 
         try {
-            Class<?> testDesignerClass = Class.forName(testPackage + "." + testName);
+            Class<?> testClass = Class.forName(testPackage + "." + testName);
 
-            if (TestDesigner.class.isAssignableFrom(testDesignerClass)) {
-                List<String> methods = getTestMethods(testDesignerClass);
+            if (TestDesigner.class.isAssignableFrom(testClass) ||
+                    TestRunner.class.isAssignableFrom(testClass)) {
+                List<String> methods = getTestMethods(testClass);
                 for (String method : methods) {
                     TestCaseData testCase = new TestCaseData();
                     testCase.setType(TestCaseType.JAVA);
