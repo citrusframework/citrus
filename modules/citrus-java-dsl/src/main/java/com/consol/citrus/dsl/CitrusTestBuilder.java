@@ -595,6 +595,14 @@ public class CitrusTestBuilder implements TestBuilder, InitializingBean, Executa
     }
 
     /**
+     * Gets the test case.
+     * @return
+     */
+    public TestCase getTestCase() {
+        return build();
+    }
+
+    /**
      * Get the test variables.
      * @return
      */
