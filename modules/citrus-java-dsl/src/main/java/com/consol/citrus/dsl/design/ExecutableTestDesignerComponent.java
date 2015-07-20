@@ -17,22 +17,17 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.context.ApplicationContext;
+import com.consol.citrus.dsl.endpoint.Executable;
 
 /**
+ * Test builder component usually used in Spring bean application context as bean definition or as
+ * {@link org.springframework.stereotype.Component} annotated bean loaded with Spring's annotation scan support. Adds execution
+ * methods to the builder so component is executable as a test case.
+ *
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class DefaultExecutableTestDesigner extends DefaultTestDesigner implements ExecutableTestDesigner {
-
-    /**
-     * Constructor using Spring bean application context.
-     * @param applicationContext
-     */
-    public DefaultExecutableTestDesigner(ApplicationContext applicationContext) {
-        super(applicationContext);
-    }
-
+public class ExecutableTestDesignerComponent extends TestDesignerComponent implements Executable {
     @Override
     public void execute() {
         execute(createTestContext());
@@ -43,6 +38,7 @@ public class DefaultExecutableTestDesigner extends DefaultTestDesigner implement
      * @param context
      */
     public void execute(TestContext context) {
+        configure();
         build().execute(context);
     }
 

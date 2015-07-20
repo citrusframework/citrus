@@ -17,15 +17,17 @@
 package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.design.ExecutableTestDesigner;
+import com.consol.citrus.dsl.TestBuilder;
+import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.endpoint.adapter.XmlTestExecutingEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 /**
- * Test executing endpoint adapter specialization which executes a Java DSL test builder instead of
- * a Xml test case.
+ * Test executing endpoint adapter specialization executes a Java DSL test designer or test runner loaded from
+ * Spring application context by bean name mapping.
  *
  * @author Christoph Deppisch
  * @since 1.3.1
@@ -34,10 +36,10 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
 
     @Override
     public Message dispatchMessage(final Message request, String mappingName) {
-        final ExecutableTestDesigner testDesigner;
+        final Executable executable;
 
         try {
-            testDesigner = getApplicationContext().getBean(mappingName, ExecutableTestDesigner.class);
+            executable = getApplicationContext().getBean(mappingName, Executable.class);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +
                     mappingName + "' in Spring bean context", e);
@@ -45,8 +47,15 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
 
         getTaskExecutor().execute(new Runnable() {
             public void run() {
-                prepareExecution(request, testDesigner);
-                testDesigner.execute();
+                if (executable instanceof TestRunner) {
+                    prepareExecution(request, (TestRunner) executable);
+                } else if (executable instanceof TestDesigner) {
+                    prepareExecution(request, (TestDesigner) executable);
+                } else if (executable instanceof TestBuilder) {
+                    prepareExecution(request, (TestBuilder) executable);
+                }
+
+                executable.execute();
             }
         });
 
@@ -64,6 +73,24 @@ public class TestExecutingEndpointAdapter extends XmlTestExecutingEndpointAdapte
      * @param request the triggering request message.
      * @param testDesigner the found test builder.
      */
-    protected void prepareExecution(Message request, ExecutableTestDesigner testDesigner) {
+    protected void prepareExecution(Message request, TestDesigner testDesigner) {
+    }
+
+    /**
+     * Prepares the test builder instance before execution. Subclasses may add custom properties to test builder
+     * here.
+     * @param request the triggering request message.
+     * @param testDesigner the found test builder.
+     */
+    protected void prepareExecution(Message request, TestRunner testDesigner) {
+    }
+
+    /**
+     * Prepares the test builder instance before execution. Subclasses may add custom properties to test builder
+     * here.
+     * @param request the triggering request message.
+     * @param testDesigner the found test builder.
+     */
+    protected void prepareExecution(Message request, TestBuilder testDesigner) {
     }
 }

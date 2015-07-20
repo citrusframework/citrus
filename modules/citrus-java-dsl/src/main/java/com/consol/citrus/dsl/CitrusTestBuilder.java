@@ -21,6 +21,7 @@ import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.endpoint.Executable;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -48,7 +49,7 @@ import java.util.*;
  * @since 1.3.1
  * @deprecated since 2.2.1 in favour of using {@link com.consol.citrus.dsl.design.DefaultTestDesigner}
  */
-public class CitrusTestBuilder implements TestBuilder, InitializingBean {
+public class CitrusTestBuilder implements TestBuilder, InitializingBean, Executable {
 
     /** This builders test case */
     private final TestCase testCase = new TestCase();
