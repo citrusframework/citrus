@@ -54,7 +54,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testFork() {
         reset(httpClient, messageProducer);
-        expect(httpClient.createProducer()).andReturn(messageProducer).times(2);
+        expect(httpClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(httpClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
