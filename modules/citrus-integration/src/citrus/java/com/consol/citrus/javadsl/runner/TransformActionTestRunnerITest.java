@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.TransformActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.TransformActionBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
@@ -31,10 +31,10 @@ public class TransformActionTestRunnerITest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void TransformActionTestRunnerITest() {
-        transform(new TestActionConfigurer<TransformActionDefinition>() {
+        transform(new BuilderSupport<TransformActionBuilder>() {
             @Override
-            public void configure(TransformActionDefinition definition) {
-                definition.source("<TestRequest>" +
+            public void configure(TransformActionBuilder builder) {
+                builder.source("<TestRequest>" +
                         "<Message>Hello World!</Message>" +
                         "</TestRequest>")
                         .xslt("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
@@ -53,10 +53,10 @@ public class TransformActionTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("${result}");
         
-        transform(new TestActionConfigurer<TransformActionDefinition>() {
+        transform(new BuilderSupport<TransformActionBuilder>() {
             @Override
-            public void configure(TransformActionDefinition definition) {
-                definition.source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))
+            public void configure(TransformActionBuilder builder) {
+                builder.source(new ClassPathResource("com/consol/citrus/actions/transform-source.xml"))
                         .xslt(new ClassPathResource("com/consol/citrus/actions/transform.xslt"))
                         .result("result");
             }

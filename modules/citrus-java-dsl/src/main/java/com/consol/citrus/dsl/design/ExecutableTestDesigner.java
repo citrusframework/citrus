@@ -16,15 +16,47 @@
 
 package com.consol.citrus.dsl.design;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.endpoint.Executable;
+import org.springframework.context.ApplicationContext;
+
 /**
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public interface ExecutableTestDesigner extends TestDesigner {
+public class ExecutableTestDesigner extends DefaultTestDesigner implements Executable {
 
     /**
-     * Builds and executes test case. Automatically creates new test context
-     * with help of Spring bean application context.
+     * Constructor using Spring bean application context.
+     * @param applicationContext
      */
-    void execute();
+    public ExecutableTestDesigner(ApplicationContext applicationContext) {
+        super(applicationContext);
+    }
+
+    @Override
+    public void execute() {
+        execute(createTestContext());
+    }
+
+    /**
+     * Builds and executes test case with given test context.
+     * @param context
+     */
+    public void execute(TestContext context) {
+        build().execute(context);
+    }
+
+    /**
+     * Creates new test context from Spring bean application context.
+     * If no Spring bean application context is set an exception is raised. Users may want to create proper test context
+     * instance themselves in case Spring application context is not present.
+     * @return
+     */
+    protected TestContext createTestContext() {
+        TestContext context = getApplicationContext().getBean(TestContext.class);
+        context.setApplicationContext(getApplicationContext());
+
+        return context;
+    }
 }

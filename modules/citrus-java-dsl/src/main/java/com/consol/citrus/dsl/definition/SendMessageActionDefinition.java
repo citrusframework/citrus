@@ -44,6 +44,7 @@ import java.util.Map;
  * constructing build methods.
  * 
  * @author Christoph Deppisch
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendMessageBuilder}
  */
 public class SendMessageActionDefinition<A extends SendMessageAction, T extends SendMessageActionDefinition> extends AbstractActionDefinition<A> {
 
@@ -121,7 +122,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         getAction().setForkMode(forkMode);
         return self;
     }
-    
+
     /**
      * Sets the message instance to send.
      * @param message
@@ -148,7 +149,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
         return self;
     }
-    
+
     /**
      * Adds message payload data to this definition.
      * @param payload
@@ -158,7 +159,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         getPayloadTemplateMessageBuilder().setPayloadData(payload);
         return self;
     }
-    
+
     /**
      * Adds message payload resource to this definition.
      * @param payloadResource
@@ -170,10 +171,10 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read payload resource", e);
         }
-    
+
         return self;
     }
-    
+
     /**
      * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper.
      * @param payload
@@ -182,7 +183,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
      */
     public T payload(Object payload, Marshaller marshaller) {
         StringResult result = new StringResult();
-        
+
         try {
             marshaller.marshal(payload, result);
         } catch (XmlMappingException e) {
@@ -190,16 +191,16 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
         }
-        
+
         if (action.getMessageBuilder() != null && action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder) {
             ((PayloadTemplateMessageBuilder)action.getMessageBuilder()).setPayloadData(result.toString());
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
             messageBuilder.setPayloadData(result.toString());
-            
+
             action.setMessageBuilder(messageBuilder);
         }
-        
+
         return self;
     }
 
@@ -313,14 +314,14 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     public T extractFromHeader(String headerName, String variable) {
         if (headerExtractor == null) {
             headerExtractor = new MessageHeaderVariableExtractor();
-            
+
             action.getVariableExtractors().add(headerExtractor);
         }
-        
+
         headerExtractor.getHeaderMappings().put(headerName, variable);
         return self;
     }
-    
+
     /**
      * Extract message element via XPath from payload before message is sent.
      * @param xpath
@@ -330,10 +331,10 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     public T extractFromPayload(String xpath, String variable) {
         if (xpathExtractor == null) {
             xpathExtractor = new XpathPayloadVariableExtractor();
-            
+
             action.getVariableExtractors().add(xpathExtractor);
         }
-        
+
         xpathExtractor.getxPathExpressions().put(xpath, variable);
         return self;
     }

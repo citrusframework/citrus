@@ -25,7 +25,8 @@ import java.util.Map;
  * Definition defines call template action with global context and parameters.
  * 
  * @author Max Argyo, Giulia DelBravo
- * @since 1.3 
+ * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.TemplateBuilder}
  */
 public class TemplateDefinition extends AbstractActionDefinition<Template> {
 
@@ -70,7 +71,7 @@ public class TemplateDefinition extends AbstractActionDefinition<Template> {
 
         return this;
     }
-	
+
 	/**
      * Boolean flag marking the template variables should also affect
      * variables in test case.
@@ -89,7 +90,7 @@ public class TemplateDefinition extends AbstractActionDefinition<Template> {
 		action.getParameter().putAll(parameters);
 		return this;
 	}
-	
+
 	/**
      * Set parameter before execution.
      * @param name

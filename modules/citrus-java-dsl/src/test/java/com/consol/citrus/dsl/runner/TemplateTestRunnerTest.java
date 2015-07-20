@@ -18,10 +18,12 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.*;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.TemplateDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.TemplateBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -60,10 +62,10 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                applyTemplate(new TestActionConfigurer<TemplateDefinition>() {
+                applyTemplate(new BuilderSupport<TemplateBuilder>() {
                     @Override
-                    public void configure(TemplateDefinition definition) {
-                        definition.name("fooTemplate")
+                    public void configure(TemplateBuilder builder) {
+                        builder.name("fooTemplate")
                                 .parameter("param", "foo")
                                 .parameter("text", "Citrus rocks!");
                     }
@@ -108,10 +110,10 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                applyTemplate(new TestActionConfigurer<TemplateDefinition>() {
+                applyTemplate(new BuilderSupport<TemplateBuilder>() {
                     @Override
-                    public void configure(TemplateDefinition definition) {
-                        definition.name("fooTemplate")
+                    public void configure(TemplateBuilder builder) {
+                        builder.name("fooTemplate")
                                 .globalContext(false);
                     }
                 });

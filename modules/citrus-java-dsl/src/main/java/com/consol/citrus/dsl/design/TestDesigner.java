@@ -18,8 +18,9 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.container.*;
-import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.Sequence;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.server.Server;
@@ -112,24 +113,6 @@ public interface TestDesigner extends ApplicationContextAware {
     void applyBehavior(TestBehavior behavior);
 
     /**
-     * Action creating new test variables during a test.
-     *
-     * @return
-     * @deprecated since 2.2.1 use {@link #createVariable(String, String)}
-     */
-    CreateVariablesActionDefinition variables();
-
-    /**
-     * Action creating a new test variable during a test.
-     *
-     * @param variableName
-     * @param value
-     * @return
-     * @deprecated since 2.2.1 use {@link #createVariable(String, String)}
-     */
-    CreateVariablesAction setVariable(String variableName, String value);
-
-    /**
      * Action creating a new test variable during a test.
      *
      * @param variableName
@@ -145,7 +128,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param buildFilePath
      * @return
      */
-    AntRunActionDefinition antrun(String buildFilePath);
+    AntRunBuilder antrun(String buildFilePath);
 
     /**
      * Creates a new echo action.
@@ -162,7 +145,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param dataSource
      * @return
      */
-    ExecutePLSQLActionDefinition plsql(DataSource dataSource);
+    ExecutePLSQLBuilder plsql(DataSource dataSource);
 
     /**
      * Creates a new executeSQL action definition
@@ -171,7 +154,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param dataSource
      * @return
      */
-    ExecuteSQLActionDefinition sql(DataSource dataSource);
+    ExecuteSQLBuilder sql(DataSource dataSource);
 
     /**
      * Creates a new executesqlquery action definition
@@ -180,7 +163,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param dataSource
      * @return
      */
-    ExecuteSQLQueryActionDefinition query(DataSource dataSource);
+    ExecuteSQLQueryBuilder query(DataSource dataSource);
 
     /**
      * Creates a new receive timeout action definition
@@ -190,7 +173,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      * @deprecated since 2.2.1 use {@link #receiveTimeout(com.consol.citrus.endpoint.Endpoint)}
      */
-    ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint);
+    ReceiveTimeoutBuilder expectTimeout(Endpoint messageEndpoint);
 
     /**
      * Creates a new receive timeout action definition from message endpoint name as String.
@@ -199,7 +182,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      * @deprecated since 2.2.1 use {@link #receiveTimeout(String)}
      */
-    ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName);
+    ReceiveTimeoutBuilder expectTimeout(String messageEndpointName);
 
     /**
      * Creates a new receive timeout action definition
@@ -208,7 +191,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpoint
      * @return
      */
-    ReceiveTimeoutActionDefinition receiveTimeout(Endpoint messageEndpoint);
+    ReceiveTimeoutBuilder receiveTimeout(Endpoint messageEndpoint);
 
     /**
      * Creates a new receive timeout action definition from message endpoint name as String.
@@ -216,7 +199,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpointName
      * @return
      */
-    ReceiveTimeoutActionDefinition receiveTimeout(String messageEndpointName);
+    ReceiveTimeoutBuilder receiveTimeout(String messageEndpointName);
 
     /**
      * Creates a new fail action.
@@ -231,7 +214,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @return
      */
-    InputActionDefinition input();
+    InputActionBuilder input();
 
     /**
      * Creates a new Java action definition from class name.
@@ -239,7 +222,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param className
      * @return
      */
-    JavaActionDefinition java(String className);
+    JavaActionBuilder java(String className);
 
     /**
      * Creates a new Java action definition from Java class.
@@ -247,7 +230,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param clazz
      * @return
      */
-    JavaActionDefinition java(Class<?> clazz);
+    JavaActionBuilder java(Class<?> clazz);
 
     /**
      * Creates a new Java action definition from Java object instance.
@@ -255,7 +238,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param instance
      * @return
      */
-    JavaActionDefinition java(Object instance);
+    JavaActionBuilder java(Object instance);
 
     /**
      * Creates a new load properties action.
@@ -272,14 +255,14 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param connectionFactory
      * @return
      */
-    PurgeJmsQueueActionDefinition purgeQueues(ConnectionFactory connectionFactory);
+    PurgeJmsQueuesBuilder purgeQueues(ConnectionFactory connectionFactory);
 
     /**
      * Purge queues using default connection factory.
      *
      * @return
      */
-    PurgeJmsQueueActionDefinition purgeQueues();
+    PurgeJmsQueuesBuilder purgeQueues();
 
     /**
      * Creates a new purge message channel action definition
@@ -287,7 +270,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @return
      */
-    PurgeMessageChannelActionDefinition purgeChannels();
+    PurgeChannelsBuilder purgeChannels();
 
     /**
      * Creates special SOAP receive message action definition with web service server instance.
@@ -295,7 +278,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param server
      * @return
      */
-    ReceiveSoapMessageActionDefinition receive(WebServiceServer server);
+    ReceiveSoapMessageBuilder receive(WebServiceServer server);
 
     /**
      * Creates receive message action definition with message endpoint instance.
@@ -303,7 +286,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpoint
      * @return
      */
-    ReceiveMessageActionDefinition receive(Endpoint messageEndpoint);
+    ReceiveMessageBuilder receive(Endpoint messageEndpoint);
 
     /**
      * Creates receive message action definition with messsage endpoint name.
@@ -311,7 +294,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpointName
      * @return
      */
-    ReceiveMessageActionDefinition receive(String messageEndpointName);
+    ReceiveMessageBuilder receive(String messageEndpointName);
 
     /**
      * Create special SOAP send message action definition with web service client instance.
@@ -319,7 +302,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param client
      * @return
      */
-    SendSoapMessageActionDefinition send(WebServiceClient client);
+    SendSoapMessageBuilder send(WebServiceClient client);
 
     /**
      * Create send message action definition with message endpoint instance.
@@ -327,7 +310,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpoint
      * @return
      */
-    SendMessageActionDefinition send(Endpoint messageEndpoint);
+    SendMessageBuilder send(Endpoint messageEndpoint);
 
     /**
      * Create send message action definition with message endpoint name. According to message endpoint type
@@ -336,7 +319,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpointName
      * @return
      */
-    SendMessageActionDefinition send(String messageEndpointName);
+    SendMessageBuilder send(String messageEndpointName);
 
     /**
      * Create SOAP fault send message action definition with message endpoint name. Returns SOAP fault definition with
@@ -345,7 +328,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpointName
      * @return
      */
-    SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName);
+    SendSoapFaultBuilder sendSoapFault(String messageEndpointName);
 
     /**
      * Create SOAP fault send message action definition with message endpoint instance. Returns SOAP fault definition with
@@ -354,7 +337,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param messageEndpoint
      * @return
      */
-    SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint);
+    SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint);
 
     /**
      * Add sleep action with default delay time.
@@ -453,7 +436,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param script
      * @return
      */
-    GroovyActionDefinition groovy(String script);
+    GroovyActionBuilder groovy(String script);
 
     /**
      * Creates a new groovy action definition with
@@ -462,7 +445,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param scriptResource
      * @return
      */
-    GroovyActionDefinition groovy(Resource scriptResource);
+    GroovyActionBuilder groovy(Resource scriptResource);
 
     /**
      * Creates a new transform action definition
@@ -470,7 +453,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @return
      */
-    TransformActionDefinition transform();
+    TransformActionBuilder transform();
 
     /**
      * Assert exception to happen in nested test action.
@@ -478,7 +461,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param testAction the nested testAction
      * @return
      */
-    AssertDefinition assertException(TestAction testAction);
+    AssertExceptionBuilder assertException(TestAction testAction);
 
     /**
      * Action catches possible exceptions in nested test actions.
@@ -486,7 +469,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    CatchDefinition catchException(TestAction... actions);
+    CatchExceptionBuilder catchException(TestAction... actions);
 
     /**
      * Assert SOAP fault during action execution.
@@ -494,7 +477,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param testAction
      * @return
      */
-    AssertSoapFaultDefinition assertSoapFault(TestAction testAction);
+    AssertSoapFaultBuilder assertSoapFault(TestAction testAction);
 
     /**
      * Adds conditional container with nested test actions.
@@ -502,7 +485,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    ConditionalDefinition conditional(TestAction... actions);
+    ConditionalBuilder conditional(TestAction... actions);
 
     /**
      * Adds iterate container with nested test actions.
@@ -510,7 +493,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    IterateDefinition iterate(TestAction... actions);
+    IterateBuilder iterate(TestAction... actions);
 
     /**
      * Adds parallel container with nested test actions.
@@ -526,7 +509,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions);
+    RepeatOnErrorBuilder repeatOnError(TestAction... actions);
 
     /**
      * Adds repeat until true container with nested test actions.
@@ -534,7 +517,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param actions
      * @return
      */
-    RepeatUntilTrueDefinition repeat(TestAction... actions);
+    RepeatBuilder repeat(TestAction... actions);
 
     /**
      * Adds sequential container with nested test actions.
@@ -551,7 +534,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @return
      * @deprecated since 2.2.1 use {@link #applyTemplate(String)}
      */
-    TemplateDefinition template(String name);
+    TemplateBuilder template(String name);
 
     /**
      * Adds template container with nested test actions.
@@ -559,7 +542,7 @@ public interface TestDesigner extends ApplicationContextAware {
      * @param name
      * @return
      */
-    TemplateDefinition applyTemplate(String name);
+    TemplateBuilder applyTemplate(String name);
 
     /**
      * Adds sequence of test actions to finally block.

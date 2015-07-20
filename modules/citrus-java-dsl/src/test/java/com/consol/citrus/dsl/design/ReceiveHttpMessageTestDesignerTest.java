@@ -122,7 +122,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+            expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testReceiveBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();

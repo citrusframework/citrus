@@ -19,12 +19,11 @@ package com.consol.citrus.dsl.junit;
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.*;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.Sequence;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.design.TestBehavior;
-import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.builder.*;
+import com.consol.citrus.dsl.design.*;
 import com.consol.citrus.dsl.util.PositionHandle;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
@@ -142,16 +141,6 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public CreateVariablesActionDefinition variables() {
-        return testDesigner.variables();
-    }
-
-    @Override
-    public CreateVariablesAction setVariable(String variableName, String value) {
-        return testDesigner.setVariable(variableName, value);
-    }
-
-    @Override
     public CreateVariablesAction createVariable(String variableName, String value) {
         return testDesigner.createVariable(variableName, value);
     }
@@ -167,7 +156,7 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public AntRunActionDefinition antrun(String buildFilePath) {
+    public AntRunBuilder antrun(String buildFilePath) {
         return testDesigner.antrun(buildFilePath);
     }
 
@@ -177,37 +166,37 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public ExecutePLSQLActionDefinition plsql(DataSource dataSource) {
+    public ExecutePLSQLBuilder plsql(DataSource dataSource) {
         return testDesigner.plsql(dataSource);
     }
 
     @Override
-    public ExecuteSQLActionDefinition sql(DataSource dataSource) {
+    public ExecuteSQLBuilder sql(DataSource dataSource) {
         return testDesigner.sql(dataSource);
     }
 
     @Override
-    public ExecuteSQLQueryActionDefinition query(DataSource dataSource) {
+    public ExecuteSQLQueryBuilder query(DataSource dataSource) {
         return testDesigner.query(dataSource);
     }
 
     @Override
-    public ReceiveTimeoutActionDefinition expectTimeout(Endpoint messageEndpoint) {
+    public ReceiveTimeoutBuilder expectTimeout(Endpoint messageEndpoint) {
         return testDesigner.expectTimeout(messageEndpoint);
     }
 
     @Override
-    public ReceiveTimeoutActionDefinition expectTimeout(String messageEndpointName) {
+    public ReceiveTimeoutBuilder expectTimeout(String messageEndpointName) {
         return testDesigner.expectTimeout(messageEndpointName);
     }
 
     @Override
-    public ReceiveTimeoutActionDefinition receiveTimeout(Endpoint messageEndpoint) {
+    public ReceiveTimeoutBuilder receiveTimeout(Endpoint messageEndpoint) {
         return testDesigner.receiveTimeout(messageEndpoint);
     }
 
     @Override
-    public ReceiveTimeoutActionDefinition receiveTimeout(String messageEndpointName) {
+    public ReceiveTimeoutBuilder receiveTimeout(String messageEndpointName) {
         return testDesigner.receiveTimeout(messageEndpointName);
     }
 
@@ -217,22 +206,22 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public InputActionDefinition input() {
+    public InputActionBuilder input() {
         return testDesigner.input();
     }
 
     @Override
-    public JavaActionDefinition java(String className) {
+    public JavaActionBuilder java(String className) {
         return testDesigner.java(className);
     }
 
     @Override
-    public JavaActionDefinition java(Class<?> clazz) {
+    public JavaActionBuilder java(Class<?> clazz) {
         return testDesigner.java(clazz);
     }
 
     @Override
-    public JavaActionDefinition java(Object instance) {
+    public JavaActionBuilder java(Object instance) {
         return testDesigner.java(instance);
     }
 
@@ -242,57 +231,57 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public PurgeJmsQueueActionDefinition purgeQueues(ConnectionFactory connectionFactory) {
+    public PurgeJmsQueuesBuilder purgeQueues(ConnectionFactory connectionFactory) {
         return testDesigner.purgeQueues(connectionFactory);
     }
 
     @Override
-    public PurgeJmsQueueActionDefinition purgeQueues() {
+    public PurgeJmsQueuesBuilder purgeQueues() {
         return testDesigner.purgeQueues();
     }
 
     @Override
-    public PurgeMessageChannelActionDefinition purgeChannels() {
+    public PurgeChannelsBuilder purgeChannels() {
         return testDesigner.purgeChannels();
     }
 
     @Override
-    public ReceiveSoapMessageActionDefinition receive(WebServiceServer server) {
+    public ReceiveSoapMessageBuilder receive(WebServiceServer server) {
         return testDesigner.receive(server);
     }
 
     @Override
-    public ReceiveMessageActionDefinition receive(Endpoint messageEndpoint) {
+    public ReceiveMessageBuilder receive(Endpoint messageEndpoint) {
         return testDesigner.receive(messageEndpoint);
     }
 
     @Override
-    public ReceiveMessageActionDefinition receive(String messageEndpointName) {
+    public ReceiveMessageBuilder receive(String messageEndpointName) {
         return testDesigner.receive(messageEndpointName);
     }
 
     @Override
-    public SendSoapMessageActionDefinition send(WebServiceClient client) {
+    public SendSoapMessageBuilder send(WebServiceClient client) {
         return testDesigner.send(client);
     }
 
     @Override
-    public SendMessageActionDefinition send(Endpoint messageEndpoint) {
+    public SendMessageBuilder send(Endpoint messageEndpoint) {
         return testDesigner.send(messageEndpoint);
     }
 
     @Override
-    public SendMessageActionDefinition send(String messageEndpointName) {
+    public SendMessageBuilder send(String messageEndpointName) {
         return testDesigner.send(messageEndpointName);
     }
 
     @Override
-    public SendSoapFaultActionDefinition sendSoapFault(String messageEndpointName) {
+    public SendSoapFaultBuilder sendSoapFault(String messageEndpointName) {
         return testDesigner.sendSoapFault(messageEndpointName);
     }
 
     @Override
-    public SendSoapFaultActionDefinition sendSoapFault(Endpoint messageEndpoint) {
+    public SendSoapFaultBuilder sendSoapFault(Endpoint messageEndpoint) {
         return testDesigner.sendSoapFault(messageEndpoint);
     }
 
@@ -352,42 +341,42 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public GroovyActionDefinition groovy(String script) {
+    public GroovyActionBuilder groovy(String script) {
         return testDesigner.groovy(script);
     }
 
     @Override
-    public GroovyActionDefinition groovy(Resource scriptResource) {
+    public GroovyActionBuilder groovy(Resource scriptResource) {
         return testDesigner.groovy(scriptResource);
     }
 
     @Override
-    public TransformActionDefinition transform() {
+    public TransformActionBuilder transform() {
         return testDesigner.transform();
     }
 
     @Override
-    public AssertDefinition assertException(TestAction testAction) {
+    public AssertExceptionBuilder assertException(TestAction testAction) {
         return testDesigner.assertException(testAction);
     }
 
     @Override
-    public CatchDefinition catchException(TestAction ... actions) {
+    public CatchExceptionBuilder catchException(TestAction ... actions) {
         return testDesigner.catchException(actions);
     }
 
     @Override
-    public AssertSoapFaultDefinition assertSoapFault(TestAction testAction) {
+    public AssertSoapFaultBuilder assertSoapFault(TestAction testAction) {
         return testDesigner.assertSoapFault(testAction);
     }
 
     @Override
-    public ConditionalDefinition conditional(TestAction ... actions) {
+    public ConditionalBuilder conditional(TestAction ... actions) {
         return testDesigner.conditional(actions);
     }
 
     @Override
-    public IterateDefinition iterate(TestAction ... actions) {
+    public IterateBuilder iterate(TestAction ... actions) {
         return testDesigner.iterate(actions);
     }
 
@@ -397,12 +386,12 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public RepeatOnErrorUntilTrueDefinition repeatOnError(TestAction... actions) {
+    public RepeatOnErrorBuilder repeatOnError(TestAction... actions) {
         return testDesigner.repeatOnError(actions);
     }
 
     @Override
-    public RepeatUntilTrueDefinition repeat(TestAction... actions) {
+    public RepeatBuilder repeat(TestAction... actions) {
         return testDesigner.repeat(actions);
     }
 
@@ -412,12 +401,12 @@ public class JUnit4CitrusTestDesigner extends AbstractJUnit4CitrusTest implement
     }
 
     @Override
-    public TemplateDefinition template(String name) {
+    public TemplateBuilder template(String name) {
         return testDesigner.template(name);
     }
 
     @Override
-    public TemplateDefinition applyTemplate(String name) {
+    public TemplateBuilder applyTemplate(String name) {
         return testDesigner.applyTemplate(name);
     }
 

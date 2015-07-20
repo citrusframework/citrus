@@ -20,7 +20,8 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
-import com.consol.citrus.dsl.definition.CatchDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.CatchExceptionBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
@@ -52,18 +53,18 @@ public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                catchException(new TestActionConfigurer<CatchDefinition>() {
+                catchException(new BuilderSupport<CatchExceptionBuilder>() {
                     @Override
-                    public void configure(CatchDefinition definition) {
-                        definition.exception(CitrusRuntimeException.class.getName());
+                    public void configure(CatchExceptionBuilder builder) {
+                        builder.exception(CitrusRuntimeException.class.getName());
                     }
                 }).when(echo("${var}"));
 
                 
-                catchException(new TestActionConfigurer<CatchDefinition>() {
+                catchException(new BuilderSupport<CatchExceptionBuilder>() {
                     @Override
-                    public void configure(CatchDefinition definition) {
-                        definition.exception(CitrusRuntimeException.class);
+                    public void configure(CatchExceptionBuilder builder) {
+                        builder.exception(CitrusRuntimeException.class);
                     }
                 }).when(echo("${var}"), sleep(100L));
             }

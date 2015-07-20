@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.InputActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.InputActionBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -36,37 +36,37 @@ public class InputActionTestRunnerITest extends TestNGCitrusTestRunner {
         variable("userinput3", "yes");
         variable("userinput4", "");
         
-        input(new TestActionConfigurer<InputActionDefinition>() {
+        input(new BuilderSupport<InputActionBuilder>() {
             @Override
-            public void configure(InputActionDefinition definition) {
+            public void configure(InputActionBuilder builder) {
             }
         });
         echo("user input was: ${userinput}");
-        input(new TestActionConfigurer<InputActionDefinition>() {
+        input(new BuilderSupport<InputActionBuilder>() {
             @Override
-            public void configure(InputActionDefinition definition) {
-                definition.message("Now press enter:").result("userinput1");
+            public void configure(InputActionBuilder builder) {
+                builder.message("Now press enter:").result("userinput1");
             }
         });
         echo("user input was: ${userinput1}");
-        input(new TestActionConfigurer<InputActionDefinition>() {
+        input(new BuilderSupport<InputActionBuilder>() {
             @Override
-            public void configure(InputActionDefinition definition) {
-                definition.message("Do you want to continue?").answers("y", "n").result("userinput2");
+            public void configure(InputActionBuilder builder) {
+                builder.message("Do you want to continue?").answers("y", "n").result("userinput2");
             }
         });
         echo("user input was: ${userinput2}");
-        input(new TestActionConfigurer<InputActionDefinition>() {
+        input(new BuilderSupport<InputActionBuilder>() {
             @Override
-            public void configure(InputActionDefinition definition) {
-                definition.message("Do you want to continue?").answers("yes", "no").result("userinput3");
+            public void configure(InputActionBuilder builder) {
+                builder.message("Do you want to continue?").answers("yes", "no").result("userinput3");
             }
         });
         echo("user input was: ${userinput3}");
-        input(new TestActionConfigurer<InputActionDefinition>() {
+        input(new BuilderSupport<InputActionBuilder>() {
             @Override
-            public void configure(InputActionDefinition definition) {
-                definition.result("userinput4");
+            public void configure(InputActionBuilder builder) {
+                builder.result("userinput4");
             }
         });
         echo("user input was: ${userinput4}");

@@ -16,12 +16,11 @@
 
 package com.consol.citrus.container;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class executes nested test actions if condition expression evaluates to true.
@@ -37,8 +36,11 @@ public class Conditional extends AbstractActionContainer {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Conditional.class);
 
-    /** Boolean expression string */
-    protected String expression;
+    /** Boolean condition expression string */
+    protected String condition;
+
+    /** Optional condition expression evaluates to true or false */
+    private ConditionExpression conditionExpression;
 
     /**
      * Default constructor.
@@ -49,37 +51,61 @@ public class Conditional extends AbstractActionContainer {
 
     @Override
     public void doExecute(final TestContext context) {
-
-        final String conditionString = context.replaceDynamicContentInString(this.expression);
-
-        if (BooleanExpressionParser.evaluate(conditionString)) {
-            log.debug("Condition [ {} ] evaluates to true, executing nested actions", expression);
+        if (checkCondition(context)) {
+            log.debug("Condition [ {} ] evaluates to true, executing nested actions", condition);
 
             for (final TestAction action : actions) {
                 setLastExecutedAction(action);
                 action.execute(context);
             }
         } else {
-            log.debug("Condition [ {} ] evaluates to false, not executing nested actions", expression);
+            log.debug("Condition [ {} ] evaluates to false, not executing nested actions", condition);
+        }
+    }
+
+    /**
+     * Evaluates condition expression and returns boolean representation.
+     * @param context
+     * @return
+     */
+    private boolean checkCondition(TestContext context) {
+        if (conditionExpression != null) {
+            return conditionExpression.evaluate(context);
+        } else {
+            return BooleanExpressionParser.evaluate(context.replaceDynamicContentInString(this.condition));
         }
     }
 
     /**
      * Condition which allows execution if true.
-     *
-     * @param expressionIn
+     * @param condition
      */
-    public void setExpression(final String expressionIn) {
-        this.expression = expressionIn;
+    public void setCondition(final String condition) {
+        this.condition = condition;
     }
 
     /**
-     * Gets the expression.
-     *
+     * Gets the condition expression.
      * @return the expression
      */
-    public String getExpression() {
-        return this.expression;
+    public String getCondition() {
+        return this.condition;
+    }
+
+    /**
+     * Condition expression allows container execution if evaluates to true.
+     * @param conditionExpression
+     */
+    public void setConditionExpression(ConditionExpression conditionExpression) {
+        this.conditionExpression = conditionExpression;
+    }
+
+    /**
+     * Gets the condition expression.
+     * @return the conditionExpression
+     */
+    public ConditionExpression getConditionExpression() {
+        return conditionExpression;
     }
 
 }

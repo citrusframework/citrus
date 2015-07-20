@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -38,10 +38,10 @@ public class SyncJmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
         parallel().actions(
             sequential().actions(
                 sleep(1000L),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("syncJmsTopicEndpoint")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("syncJmsTopicEndpoint")
                                 .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<MessageId>${messageId}</MessageId>" +
                                         "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -55,10 +55,10 @@ public class SyncJmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
             ),
             sequential().actions(
                 parallel().actions(
-                    receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
                         @Override
-                        public void configure(ReceiveMessageActionDefinition definition) {
-                            definition.endpoint("syncJmsTopicSubscriberEndpoint")
+                        public void configure(ReceiveMessageBuilder builder) {
+                            builder.endpoint("syncJmsTopicSubscriberEndpoint")
                                     .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                             "<MessageId>${messageId}</MessageId>" +
                                             "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -69,10 +69,10 @@ public class SyncJmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
                                     .header("CorrelationId", "${correlationId}");
                         }
                     }),
-                    receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
                         @Override
-                        public void configure(ReceiveMessageActionDefinition definition) {
-                            definition.endpoint("syncJmsTopicSubscriberEndpoint")
+                        public void configure(ReceiveMessageBuilder builder) {
+                            builder.endpoint("syncJmsTopicSubscriberEndpoint")
                                     .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                             "<MessageId>${messageId}</MessageId>" +
                                             "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -84,10 +84,10 @@ public class SyncJmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
                         }
                     })
                 ),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("syncJmsTopicSubscriberEndpoint")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("syncJmsTopicSubscriberEndpoint")
                                 .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<MessageId>${messageId}</MessageId>" +
                                         "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -101,10 +101,10 @@ public class SyncJmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("syncJmsTopicEndpoint")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("syncJmsTopicEndpoint")
                         .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +

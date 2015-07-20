@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
  * method and request params.
  *
  * @author Christoph Deppisch
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ReceiveHttpMessageBuilder}
  */
 public class ReceiveHttpMessageActionDefinition extends ReceiveMessageActionDefinition<ReceiveMessageAction, ReceiveHttpMessageActionDefinition> {
 

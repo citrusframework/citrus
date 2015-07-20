@@ -19,7 +19,8 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.ExecuteSQLQueryActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.ExecuteSQLQueryBuilder;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -65,10 +66,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 variable("episodeId", "citrus:randomNumber(5)");
 
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .sqlResource(resource)
                                 .validate("NAME", "Leonard")
                                 .validate("CNT_EPISODES", "100000")
@@ -94,9 +95,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
-        Iterator iterator = action.getControlResultSet().entrySet().iterator();
-        Assert.assertEquals(iterator.next().toString(), "NAME=[Leonard]");
-        Assert.assertEquals(iterator.next().toString(), "CNT_EPISODES=[100000]");
+        Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
+        Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Leonard]");
+        Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[100000]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "NAME=actorName");
         Assert.assertNull(action.getScriptValidationContext());
@@ -121,10 +122,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("SELECT NAME FROM ACTORS")
                                 .statement("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")
                                 .validate("NAME", "Penny", "Sheldon")
@@ -151,9 +152,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
-        Iterator iterator = action.getControlResultSet().entrySet().iterator();
-        Assert.assertEquals(iterator.next().toString(), "NAME=[Penny, Sheldon]");
-        Assert.assertEquals(iterator.next().toString(), "CNT_EPISODES=[9999]");
+        Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
+        Assert.assertEquals(getRow("NAME", rows).toString(), "NAME=[Penny, Sheldon]");
+        Assert.assertEquals(getRow("CNT_EPISODES", rows).toString(), "CNT_EPISODES=[9999]");
         Assert.assertEquals(action.getExtractVariables().size(), 1);
         Assert.assertEquals(action.getExtractVariables().entrySet().iterator().next().toString(), "CNT_EPISODES=cntEpisodes");
         Assert.assertEquals(action.getStatements().size(), 2);
@@ -164,7 +165,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         verify(jdbcTemplate);
     }
-    
+
     @Test
     public void testValidationScript() {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -178,10 +179,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("SELECT NAME FROM ACTORS")
                                 .validateScript("assert rows[0].NAME == 'Penny'\n" +
                                         "assert rows[1].NAME == 'Sheldon'", ScriptTypes.GROOVY);
@@ -222,10 +223,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("SELECT NAME FROM ACTORS")
                                 .validateScript(resource, ScriptTypes.GROOVY);
                     }
@@ -265,10 +266,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("SELECT NAME FROM ACTORS")
                                 .groovy("assert rows[0].NAME == 'Howard'");
                     }
@@ -310,10 +311,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("SELECT NAME FROM ACTORS")
                                 .groovy(resource);
                     }
@@ -356,10 +357,10 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                query(new TestActionConfigurer<ExecuteSQLQueryActionDefinition>() {
+                query(new BuilderSupport<ExecuteSQLQueryBuilder>() {
                     @Override
-                    public void configure(ExecuteSQLQueryActionDefinition definition) {
-                        definition.jdbcTemplate(jdbcTemplate)
+                    public void configure(ExecuteSQLQueryBuilder builder) {
+                        builder.jdbcTemplate(jdbcTemplate)
                                 .statement("SELECT NAME FROM ACTORS")
                                 .groovy("assert rows[0].NAME == 'Howard'")
                                 .validator(validator);
@@ -386,5 +387,21 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidator(), validator);
 
         verify(jdbcTemplate, validator);
+    }
+
+    /**
+     * Gets row from result set with given column name.
+     * @param columnName
+     * @param rows
+     * @return
+     */
+    private Map.Entry<String, List<String>> getRow(String columnName, Set<Map.Entry<String, List<String>>> rows) {
+        for (Map.Entry<String, List<String>> row : rows) {
+            if (row.getKey().equals(columnName)) {
+                return row;
+            }
+        }
+
+        throw new AssertionError(String.format("Missing column in result set for name '%s'", columnName));
     }
 }

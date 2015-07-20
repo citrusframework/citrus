@@ -24,6 +24,7 @@ import com.consol.citrus.container.Conditional;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ConditionalBuilder}
  */
 public class ConditionalDefinition extends AbstractActionContainerDefinition<Conditional> {
 
@@ -47,7 +48,7 @@ public class ConditionalDefinition extends AbstractActionContainerDefinition<Con
      * @param expression
      */
 	public ConditionalDefinition when(String expression) {
-		action.setExpression(expression);
+		action.setCondition(expression);
 		return this;
 	}
 }

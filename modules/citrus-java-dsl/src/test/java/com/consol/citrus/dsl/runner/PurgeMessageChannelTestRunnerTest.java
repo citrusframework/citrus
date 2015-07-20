@@ -21,7 +21,8 @@ import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.PurgeMessageChannelActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.PurgeChannelsBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -38,7 +39,8 @@ import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.easymock.EasyMock.*;
 
@@ -71,10 +73,10 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeChannels(new TestActionConfigurer<PurgeMessageChannelActionDefinition>() {
+                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
                     @Override
-                    public void configure(PurgeMessageChannelActionDefinition definition) {
-                        definition.channels(channel1, channel2)
+                    public void configure(PurgeChannelsBuilder builder) {
+                        builder.channels(channel1, channel2)
                                 .channel(channel3);
                     }
                 });
@@ -120,10 +122,10 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                purgeChannels(new TestActionConfigurer<PurgeMessageChannelActionDefinition>() {
+                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
                     @Override
-                    public void configure(PurgeMessageChannelActionDefinition definition) {
-                        definition.channelNames("ch1", "ch2", "ch3")
+                    public void configure(PurgeChannelsBuilder builder) {
+                        builder.channelNames("ch1", "ch2", "ch3")
                                 .channel("ch4")
                                 .selector(messageSelector);
                     }
@@ -162,10 +164,10 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                purgeChannels(new TestActionConfigurer<PurgeMessageChannelActionDefinition>() {
+                purgeChannels(new BuilderSupport<PurgeChannelsBuilder>() {
                     @Override
-                    public void configure(PurgeMessageChannelActionDefinition definition) {
-                        definition.channel("ch1")
+                    public void configure(PurgeChannelsBuilder builder) {
+                        builder.channel("ch1")
                                 .channelResolver(channelResolver);
                     }
                 });

@@ -48,7 +48,7 @@ public class ConditionalParser implements BeanDefinitionParser {
         builder.addPropertyValue("name", element.getLocalName());
 
         // set condition, which is mandatory
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("expression"), "expression");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("expression"), "condition");
 
         // get all internal actions
         ActionContainerParser.doParse(element, parserContext, builder);

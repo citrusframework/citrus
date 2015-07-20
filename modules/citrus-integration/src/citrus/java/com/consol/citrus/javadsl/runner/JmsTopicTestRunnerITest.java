@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -36,10 +36,10 @@ public class JmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
         variable("user", "Christoph");
         
         parallel().actions(
-           receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+           receive(new BuilderSupport<ReceiveMessageBuilder>() {
                @Override
-               public void configure(ReceiveMessageActionDefinition definition) {
-                   definition.endpoint("helloTopicRequestReceiver")
+               public void configure(ReceiveMessageBuilder builder) {
+                   builder.endpoint("helloTopicRequestReceiver")
                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -52,10 +52,10 @@ public class JmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
                            .description("Receive asynchronous hello response: HelloService -> TestFramework");
                }
            }),
-           receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+           receive(new BuilderSupport<ReceiveMessageBuilder>() {
                @Override
-               public void configure(ReceiveMessageActionDefinition definition) {
-                   definition.endpoint("helloTopicRequestReceiver")
+               public void configure(ReceiveMessageBuilder builder) {
+                   builder.endpoint("helloTopicRequestReceiver")
                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
                                    "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -70,10 +70,10 @@ public class JmsTopicTestRunnerITest extends TestNGCitrusTestRunner {
            }),
            sequential().actions(
                sleep(1000L),
-               send(new TestActionConfigurer<SendMessageActionDefinition>() {
+               send(new BuilderSupport<SendMessageBuilder>() {
                    @Override
-                   public void configure(SendMessageActionDefinition definition) {
-                       definition.endpoint("helloTopicRequestSender")
+                   public void configure(SendMessageBuilder builder) {
+                       builder.endpoint("helloTopicRequestSender")
                                .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                        "<MessageId>${messageId}</MessageId>" +
                                        "<CorrelationId>${correlationId}</CorrelationId>" +

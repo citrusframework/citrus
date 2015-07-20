@@ -21,7 +21,8 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
@@ -54,7 +55,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testFork() {
         reset(httpClient, messageProducer);
-        expect(httpClient.createProducer()).andReturn(messageProducer).times(2);
+        expect(httpClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(httpClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -70,20 +71,20 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .http()
                                 .messageType(MessageType.PLAINTEXT)
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
                     }
                 });
 
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                                 .messageType(MessageType.PLAINTEXT)
                                 .http()
@@ -118,6 +119,8 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
         Assert.assertTrue(action.isForkMode());
+
+        verify(httpClient, messageProducer);
     }
 
     @Test
@@ -140,10 +143,10 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .http()
                                 .method(HttpMethod.GET)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -191,10 +194,10 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .http()
                                 .uri("http://localhost:8080/")
                                 .path("/test")
@@ -244,10 +247,10 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .http()
                                 .uri("http://localhost:8080/")
                                 .queryParam("param1", "value1")
@@ -278,7 +281,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+            expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testSendBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
@@ -290,10 +293,10 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("httpClient")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("httpClient")
                                 .http()
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "soapOperation")

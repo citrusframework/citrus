@@ -21,6 +21,7 @@ import com.consol.citrus.container.Assert;
 /**
  * @author Christoph Deppisch
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AssertExceptionBuilder}
  */
 public class AssertDefinition extends AbstractActionContainerDefinition<Assert> {
 
@@ -48,7 +49,7 @@ public class AssertDefinition extends AbstractActionContainerDefinition<Assert> 
 	    action.setException(exception);
 	    return this;
 	}
-	
+
     /**
      * Expect error message in exception.
      * @param message

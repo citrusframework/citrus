@@ -19,8 +19,10 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.IterateDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.IterateBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,10 +35,10 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateDefinition>() {
+                iterate(new BuilderSupport<IterateBuilder>() {
                     @Override
-                    public void configure(IterateDefinition definition) {
-                        definition.index("i")
+                    public void configure(IterateBuilder builder) {
+                        builder.index("i")
                                 .startsWith(0)
                                 .step(1)
                                 .condition("i lt 5");
@@ -44,6 +46,10 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
                 }).actions(createVariable("index", "${i}"));
             }
         };
+
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("i"));
+        Assert.assertEquals(context.getVariable("i"), "4");
 
         TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
@@ -63,13 +69,13 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                iterate(new TestActionConfigurer<IterateDefinition>() {
+                iterate(new BuilderSupport<IterateBuilder>() {
                     @Override
-                    public void configure(IterateDefinition definition) {
-                        definition.index("i")
+                    public void configure(IterateBuilder builder) {
+                        builder.index("i")
                                 .startsWith(1)
                                 .step(1)
-                                .condition("i lt 5");
+                                .condition("i lt= 3");
                     }
                 }).actions(createVariable("index", "${i}"), new AbstractTestAction() {
                     @Override
@@ -80,6 +86,10 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
 
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("i"));
+        Assert.assertEquals(context.getVariable("i"), "3");
+
         TestCase test = builder.getTestCase();
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Iterate.class);
@@ -88,8 +98,45 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         Iterate container = (Iterate)test.getActions().get(0);
         assertEquals(container.getActionCount(), 2);
         assertEquals(container.getIndexName(), "i");
-        assertEquals(container.getCondition(), "i lt 5");
+        assertEquals(container.getCondition(), "i lt= 3");
         assertEquals(container.getStep(), 1);
         assertEquals(container.getStart(), 1);
+    }
+
+    @Test
+    public void testIterateBuilderWithConditionExpression() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                iterate(new BuilderSupport<IterateBuilder>() {
+                    @Override
+                    public void configure(IterateBuilder builder) {
+                        builder.startsWith(0)
+                                .step(1)
+                                .condition(new IteratingConditionExpression() {
+                                    @Override
+                                    public boolean evaluate(int index, TestContext context) {
+                                        return index < 5;
+                                    }
+                                });
+                    }
+                }).actions(createVariable("index", "${i}"));
+            }
+        };
+
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("i"));
+        Assert.assertEquals(context.getVariable("i"), "4");
+
+        TestCase test = builder.getTestCase();
+        assertEquals(test.getActionCount(), 1);
+        assertEquals(test.getActions().get(0).getClass(), Iterate.class);
+        assertEquals(test.getActions().get(0).getName(), "iterate");
+
+        Iterate container = (Iterate)test.getActions().get(0);
+        assertEquals(container.getActionCount(), 1);
+        assertEquals(container.getIndexName(), "i");
+        assertEquals(container.getStep(), 1);
+        assertEquals(container.getStart(), 0);
     }
 }

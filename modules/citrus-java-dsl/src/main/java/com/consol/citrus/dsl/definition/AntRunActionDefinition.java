@@ -27,6 +27,7 @@ import java.util.Arrays;
  * 
  * @author Christoph Deppisch
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AntRunBuilder}
  */
 public class AntRunActionDefinition extends AbstractActionDefinition<AntRunAction> {
 
@@ -49,7 +50,7 @@ public class AntRunActionDefinition extends AbstractActionDefinition<AntRunActio
         action.setBuildFilePath(buildFilePath);
         return this;
     }
-	
+
 	/**
      * Build target name to call.
      * @param target
@@ -58,7 +59,7 @@ public class AntRunActionDefinition extends AbstractActionDefinition<AntRunActio
 		action.setTarget(target);
 		return this;
 	}
-	
+
 	/**
      * Multiple build target names to call.
      * @param targets
@@ -67,7 +68,7 @@ public class AntRunActionDefinition extends AbstractActionDefinition<AntRunActio
         action.setTargets(StringUtils.collectionToCommaDelimitedString(Arrays.asList(targets)));
         return this;
     }
-    
+
     /**
      * Adds a build property by name and value.
      * @param name
@@ -77,7 +78,7 @@ public class AntRunActionDefinition extends AbstractActionDefinition<AntRunActio
         action.getProperties().put(name, value);
         return this;
     }
-    
+
     /**
      * Adds a build property file reference by file path.
      * @param filePath
@@ -86,7 +87,7 @@ public class AntRunActionDefinition extends AbstractActionDefinition<AntRunActio
         action.setPropertyFilePath(filePath);
         return this;
     }
-    
+
     /**
      * Adds custom build listener implementation.
      * @param buildListener

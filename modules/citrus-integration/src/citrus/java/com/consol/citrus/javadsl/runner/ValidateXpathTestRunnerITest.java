@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.*;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.*;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
         variable("messageId", "citrus:randomNumber(10)");
         variable("user", "Christoph");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -54,10 +54,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .validate("//ns0:HelloResponse/ns0:MessageId", "${messageId}")
                         .validate("//ns0:HelloResponse/ns0:CorrelationId", "${correlationId}")
                         .validate("//ns0:HelloResponse/ns0:Text", "citrus:concat('Hello ', ${user})")
@@ -67,10 +67,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -82,10 +82,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .validate("//ns1:HelloResponse/ns1:MessageId", "${messageId}")
                         .validate("//ns1:HelloResponse/ns1:CorrelationId", "${correlationId}")
                         .validate("//ns1:HelloResponse/ns1:Text", "citrus:concat('Hello ', ${user})")
@@ -95,10 +95,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -110,10 +110,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .validate("//:HelloResponse/:MessageId", "${messageId}")
                         .validate("//:HelloResponse/:CorrelationId", "${correlationId}")
                         .validate("//:HelloResponse/:Text", "citrus:concat('Hello ', ${user})")
@@ -124,10 +124,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Now using xpath validation elements");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -139,10 +139,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .xpath("//ns0:HelloResponse/ns0:MessageId", "${messageId}")
                         .xpath("//ns0:HelloResponse/ns0:CorrelationId", "${correlationId}")
                         .xpath("//ns0:HelloResponse/ns0:Text", "citrus:concat('Hello ', ${user})")
@@ -152,10 +152,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -167,10 +167,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .xpath("//ns1:HelloResponse/ns1:MessageId", "${messageId}")
                         .xpath("//ns1:HelloResponse/ns1:CorrelationId", "${correlationId}")
                         .xpath("//ns1:HelloResponse/ns1:Text", "citrus:concat('Hello ', ${user})")
@@ -180,10 +180,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -195,10 +195,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .xpath("//:HelloResponse/:MessageId", "${messageId}")
                         .xpath("//:HelloResponse/:CorrelationId", "${correlationId}")
                         .xpath("//:HelloResponse/:Text", "citrus:concat('Hello ', ${user})")
@@ -209,10 +209,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
         
         echo("Test: Default namespace mapping");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("helloRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("helloRequestSender")
                         .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<MessageId>${messageId}</MessageId>" +
                                 "<CorrelationId>${correlationId}</CorrelationId>" +
@@ -224,10 +224,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("helloResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("helloResponseReceiver")
                         .validate("//def:HelloResponse/def:MessageId", "${messageId}")
                         .validate("//def:HelloResponse/def:CorrelationId", "${correlationId}")
                         .validate("//def:HelloResponse/def:Text", "citrus:concat('Hello ', ${user})")
@@ -238,10 +238,10 @@ public class ValidateXpathTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        groovy(new TestActionConfigurer<GroovyActionDefinition>() {
+        groovy(new BuilderSupport<GroovyActionBuilder>() {
             @Override
-            public void configure(GroovyActionDefinition definition) {
-                definition.script("assert context.getVariable('extractedText') == 'Hello ${user}'");
+            public void configure(GroovyActionBuilder builder) {
+                builder.script("assert context.getVariable('extractedText') == 'Hello ${user}'");
             }
         });
     }

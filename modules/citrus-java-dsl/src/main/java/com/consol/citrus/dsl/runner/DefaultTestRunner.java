@@ -21,8 +21,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.TestActions;
-import com.consol.citrus.dsl.definition.*;
+import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.report.TestActionListeners;
@@ -36,6 +35,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 
 import javax.jms.ConnectionFactory;
+import java.util.Arrays;
 import java.util.Stack;
 
 /**
@@ -178,239 +178,261 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public CreateVariablesAction createVariable(String variableName, String value) {
-        return run(TestActions.createVariable(variableName, value));
+        CreateVariablesAction action = new CreateVariablesAction();
+        action.getVariables().put(variableName, value);
+        return run(action);
     }
 
     @Override
-    public AntRunAction antrun(TestActionConfigurer<AntRunActionDefinition> configurer) {
-        AntRunActionDefinition definition = new AntRunActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public AntRunAction antrun(BuilderSupport<AntRunBuilder> configurer) {
+        AntRunBuilder builder = new AntRunBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
     public EchoAction echo(String message) {
-        return run(TestActions.echo(message));
+        EchoAction action = new EchoAction();
+        action.setMessage(message);
+        return run(action);
     }
 
     @Override
-    public ExecutePLSQLAction plsql(TestActionConfigurer<ExecutePLSQLActionDefinition> configurer) {
-        ExecutePLSQLActionDefinition definition = new ExecutePLSQLActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public ExecutePLSQLAction plsql(BuilderSupport<ExecutePLSQLBuilder> configurer) {
+        ExecutePLSQLBuilder builder = new ExecutePLSQLBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public ExecuteSQLAction sql(TestActionConfigurer<ExecuteSQLActionDefinition> configurer) {
-        ExecuteSQLActionDefinition definition = new ExecuteSQLActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public ExecuteSQLAction sql(BuilderSupport<ExecuteSQLBuilder> configurer) {
+        ExecuteSQLBuilder builder = new ExecuteSQLBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public ExecuteSQLQueryAction query(TestActionConfigurer<ExecuteSQLQueryActionDefinition> configurer) {
-        ExecuteSQLQueryActionDefinition definition = new ExecuteSQLQueryActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public ExecuteSQLQueryAction query(BuilderSupport<ExecuteSQLQueryBuilder> configurer) {
+        ExecuteSQLQueryBuilder builder = new ExecuteSQLQueryBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
     public FailAction fail(String message) {
-        return run(TestActions.fail(message));
+        FailAction action = new FailAction();
+        action.setMessage(message);
+        return run(action);
     }
 
     @Override
-    public InputAction input(TestActionConfigurer<InputActionDefinition> configurer) {
-        InputActionDefinition definition = new InputActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public InputAction input(BuilderSupport<InputActionBuilder> configurer) {
+        InputActionBuilder builder = new InputActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public ReceiveTimeoutAction receiveTimeout(TestActionConfigurer<ReceiveTimeoutActionDefinition> configurer) {
-        ReceiveTimeoutActionDefinition definition = new ReceiveTimeoutActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public ReceiveTimeoutAction receiveTimeout(BuilderSupport<ReceiveTimeoutBuilder> configurer) {
+        ReceiveTimeoutBuilder builder = new ReceiveTimeoutBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
     public LoadPropertiesAction load(String filePath) {
-        return run(TestActions.load(filePath));
+        LoadPropertiesAction action = new LoadPropertiesAction();
+        action.setFilePath(filePath);
+        return run(action);
     }
 
     @Override
-    public PurgeJmsQueuesAction purgeQueues(TestActionConfigurer<PurgeJmsQueueActionDefinition> configurer) {
-        PurgeJmsQueueActionDefinition definition = new PurgeJmsQueueActionDefinition();
-        configurer.configure(definition);
+    public PurgeJmsQueuesAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
+        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder();
+        configurer.configure(builder);
 
-        if (!definition.hasConnectionFactory()) {
-            definition.connectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
+        if (!builder.hasConnectionFactory()) {
+            builder.connectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
         }
-        return run(definition.getAction());
+        return run(builder.build());
     }
 
     @Override
-    public PurgeMessageChannelAction purgeChannels(TestActionConfigurer<PurgeMessageChannelActionDefinition> configurer) {
-        PurgeMessageChannelActionDefinition definition = new PurgeMessageChannelActionDefinition();
-        definition.channelResolver(applicationContext);
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer) {
+        PurgeChannelsBuilder builder = new PurgeChannelsBuilder();
+        builder.channelResolver(applicationContext);
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public ReceiveMessageAction receive(TestActionConfigurer<ReceiveMessageActionDefinition> configurer) {
-        ReceiveMessageActionDefinition definition = new ReceiveMessageActionDefinition();
-        definition.withApplicationContext(applicationContext);
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
+        ReceiveMessageBuilder builder = new ReceiveMessageBuilder();
+        builder.withApplicationContext(applicationContext);
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public SendMessageAction send(TestActionConfigurer<SendMessageActionDefinition> configurer) {
-        SendMessageActionDefinition definition = new SendMessageActionDefinition();
-        definition.withApplicationContext(applicationContext);
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer) {
+        SendMessageBuilder builder = new SendMessageBuilder();
+        builder.withApplicationContext(applicationContext);
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public SendSoapFaultAction sendSoapFault(TestActionConfigurer<SendSoapFaultActionDefinition> configurer) {
-        SendSoapFaultActionDefinition definition = new SendSoapFaultActionDefinition();
-        definition.withApplicationContext(applicationContext);
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public SendSoapFaultAction sendSoapFault(BuilderSupport<SendSoapFaultBuilder> configurer) {
+        SendSoapFaultBuilder builder = new SendSoapFaultBuilder();
+        builder.withApplicationContext(applicationContext);
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
     public SleepAction sleep() {
-        return run(TestActions.sleep());
+        return run(new SleepAction());
     }
 
     @Override
     public SleepAction sleep(long milliseconds) {
-        return run(TestActions.sleep(milliseconds));
+        SleepAction action = new SleepAction();
+        action.setMilliseconds(String.valueOf(milliseconds));
+        return run(action);
     }
 
     @Override
     public StartServerAction start(Server... servers) {
-        return (StartServerAction) run(TestActions.start(servers));
+        StartServerAction action = new StartServerAction();
+        action.getServerList().addAll(Arrays.asList(servers));
+        return run(action);
     }
 
     @Override
     public StartServerAction start(Server server) {
-        return run(TestActions.start(server));
+        StartServerAction action = new StartServerAction();
+        action.setServer(server);
+        return run(action);
     }
 
     @Override
     public StopServerAction stop(Server... servers) {
-        return run(TestActions.stop(servers));
+        StopServerAction action = new StopServerAction();
+        action.getServerList().addAll(Arrays.asList(servers));
+        return run(action);
     }
 
     @Override
     public StopServerAction stop(Server server) {
-        return run(TestActions.stop(server));
+        StopServerAction action = new StopServerAction();
+        action.setServer(server);
+        return run(action);
     }
 
     @Override
     public StopTimeAction stopTime() {
-        return (StopTimeAction) run(TestActions.stopTime());
+        return run(new StopTimeAction());
     }
 
     @Override
     public StopTimeAction stopTime(String id) {
-        return run(TestActions.stopTime(id));
+        StopTimeAction action = new StopTimeAction();
+        action.setId(id);
+        return run(action);
     }
 
     @Override
     public TraceVariablesAction traceVariables() {
-        return run(TestActions.traceVariables());
+        return run(new TraceVariablesAction());
     }
 
     @Override
     public TraceVariablesAction traceVariables(String... variables) {
-        return run(TestActions.traceVariables(variables));
+        TraceVariablesAction action = new TraceVariablesAction();
+        action.setVariableNames(Arrays.asList(variables));
+        return run(action);
     }
 
     @Override
-    public GroovyAction groovy(TestActionConfigurer<GroovyActionDefinition> configurer) {
-        GroovyActionDefinition definition = new GroovyActionDefinition();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public GroovyAction groovy(BuilderSupport<GroovyActionBuilder> configurer) {
+        GroovyActionBuilder builder = new GroovyActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
-    public TransformAction transform(TestActionConfigurer<TransformActionDefinition> configurer) {
-        TransformActionDefinition definition = TestActions.transform();
-        configurer.configure(definition);
-        return run(definition.getAction());
+    public TransformAction transform(BuilderSupport<TransformActionBuilder> configurer) {
+        TransformActionBuilder builder = new TransformActionBuilder();
+        configurer.configure(builder);
+        return run(builder.build());
     }
 
     @Override
     public ExceptionContainerRunner assertException() {
-        return assertException(new TestActionConfigurer<AssertDefinition>() {
+        return assertException(new BuilderSupport<AssertExceptionBuilder>() {
             @Override
-            public void configure(AssertDefinition definition) {
+            public void configure(AssertExceptionBuilder builder) {
             }
         });
     }
 
     @Override
-    public ExceptionContainerRunner assertException(TestActionConfigurer<AssertDefinition> configurer) {
-        AssertDefinition definition = new AssertDefinition();
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+    public ExceptionContainerRunner assertException(BuilderSupport<AssertExceptionBuilder> configurer) {
+        AssertExceptionBuilder builder = new AssertExceptionBuilder();
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
     public ExceptionContainerRunner catchException() {
-        return catchException(new TestActionConfigurer<CatchDefinition>() {
+        return catchException(new BuilderSupport<CatchExceptionBuilder>() {
             @Override
-            public void configure(CatchDefinition definition) {
+            public void configure(CatchExceptionBuilder builder) {
             }
         });
     }
 
     @Override
-    public ExceptionContainerRunner catchException(TestActionConfigurer<CatchDefinition> configurer) {
-        CatchDefinition definition = new CatchDefinition();
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+    public ExceptionContainerRunner catchException(BuilderSupport<CatchExceptionBuilder> configurer) {
+        CatchExceptionBuilder builder = new CatchExceptionBuilder();
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
-    public ExceptionContainerRunner assertSoapFault(TestActionConfigurer<AssertSoapFaultDefinition> configurer) {
-        AssertSoapFaultDefinition definition = new AssertSoapFaultDefinition();
+    public ExceptionContainerRunner assertSoapFault(BuilderSupport<AssertSoapFaultBuilder> configurer) {
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder();
 
         if (applicationContext.containsBean("soapFaultValidator")) {
-            definition.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+            builder.validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
         }
 
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
-    public ContainerRunner conditional(TestActionConfigurer<ConditionalDefinition> configurer) {
-        ConditionalDefinition definition = new ConditionalDefinition();
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+    public ContainerRunner conditional(BuilderSupport<ConditionalBuilder> configurer) {
+        ConditionalBuilder builder = new ConditionalBuilder();
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
-    public ContainerRunner iterate(TestActionConfigurer<IterateDefinition> configurer) {
-        IterateDefinition definition = new IterateDefinition();
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+    public ContainerRunner iterate(BuilderSupport<IterateBuilder> configurer) {
+        IterateBuilder builder = new IterateBuilder();
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
@@ -422,21 +444,21 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ContainerRunner repeatOnError(TestActionConfigurer<RepeatOnErrorUntilTrueDefinition> configurer) {
-        RepeatOnErrorUntilTrueDefinition definition = new RepeatOnErrorUntilTrueDefinition();
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+    public ContainerRunner repeatOnError(BuilderSupport<RepeatOnErrorBuilder> configurer) {
+        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder();
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
-    public ContainerRunner repeat(TestActionConfigurer<RepeatUntilTrueDefinition> configurer) {
-        RepeatUntilTrueDefinition definition = new RepeatUntilTrueDefinition();
-        configurer.configure(definition);
-        containers.push(definition.getAction());
+    public ContainerRunner repeat(BuilderSupport<RepeatBuilder> configurer) {
+        RepeatBuilder builder = new RepeatBuilder();
+        configurer.configure(builder);
+        containers.push(builder.build());
 
-        return new DefaultContainerRunner(definition.getAction(), this);
+        return new DefaultContainerRunner(builder.build(), this);
     }
 
     @Override
@@ -448,13 +470,13 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public Template applyTemplate(TestActionConfigurer<TemplateDefinition> configurer) {
-        TemplateDefinition definition = new TemplateDefinition();
-        configurer.configure(definition);
-        definition.load(applicationContext);
-        configurer.configure(definition);
+    public Template applyTemplate(BuilderSupport<TemplateBuilder> configurer) {
+        TemplateBuilder builder = new TemplateBuilder();
+        configurer.configure(builder);
+        builder.load(applicationContext);
+        configurer.configure(builder);
 
-        return run(definition.getAction());
+        return run(builder.build());
     }
 
     @Override

@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.AssertSoapFaultDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,17 +34,17 @@ public class WsAddressingTestRunnerITest extends TestNGCitrusTestRunner {
         variable("messageId", "123456789");
         variable("correlationId", "CORR123456789");
         
-        assertSoapFault(new TestActionConfigurer<AssertSoapFaultDefinition>() {
+        assertSoapFault(new BuilderSupport<AssertSoapFaultBuilder>() {
             @Override
-            public void configure(AssertSoapFaultDefinition definition) {
-                definition.faultString("One or more mandatory SOAP header blocks not understood")
+            public void configure(AssertSoapFaultBuilder builder) {
+                builder.faultString("One or more mandatory SOAP header blocks not understood")
                         .faultCode("{http://schemas.xmlsoap.org/soap/envelope/}SOAP-ENV:MustUnderstand");
             }
         }).when(
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("wsAddressingHelloClient")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("wsAddressingHelloClient")
                                 .payload("<ns0:HelloStandaloneRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                         "<ns0:MessageId>${messageId}</ns0:MessageId>" +
                                         "<ns0:CorrelationId>${correlationId}</ns0:CorrelationId>" +

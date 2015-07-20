@@ -22,7 +22,8 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestRequest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.*;
@@ -93,10 +94,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint);
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint);
                     }
                 });
             }
@@ -129,10 +130,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
                     }
@@ -183,10 +184,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payloadModel(new TestRequest("Hello Citrus!"));
                     }
                 });
@@ -229,10 +230,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload(new TestRequest("Hello Citrus!"), marshaller);
                     }
                 });
@@ -280,10 +281,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload(new TestRequest("Hello Citrus!"), "myMarshaller");
                     }
                 });
@@ -325,10 +326,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
                 });
@@ -372,10 +373,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload(resource);
                     }
                 });
@@ -423,10 +424,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("fooMessageEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("fooMessageEndpoint")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
                 });
@@ -458,10 +459,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .timeout(1000L);
                     }
@@ -498,20 +499,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "sayHello")
                                 .header("foo", "bar");
                     }
                 });
 
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .header("operation", "sayHello")
                                 .header("foo", "bar")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -570,19 +571,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                     }
                 });
 
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                                 .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                     }
@@ -643,20 +644,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                                 .header("<Header><Name>operation</Name><Value>foo2</Value></Header>");
                     }
                 });
 
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                                 .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                                 .header("<Header><Name>operation</Name><Value>foo2</Value></Header>");
@@ -727,19 +728,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header(resource);
                     }
                 });
 
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                                 .header(resource);
                     }
@@ -804,10 +805,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
                                 .header(resource)
@@ -815,10 +816,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                                 .header("<Header><Name>operation</Name><Value>sayHello</Value></Header>")
                                 .header(resource)
@@ -881,10 +882,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
@@ -936,10 +937,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
@@ -989,10 +990,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .selector(messageSelector);
                     }
@@ -1032,10 +1033,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .selector("operation = 'sayHello'");
                     }
@@ -1080,10 +1081,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromPayload("/TestRequest/Message", "text")
                                 .extractFromPayload("/TestRequest/Message/@lang", "language");
@@ -1133,10 +1134,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromHeader("operation", "operationHeader")
                                 .extractFromHeader("requestId", "id");
@@ -1186,10 +1187,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromHeader("operation", "operationHeader")
                                 .extractFromHeader("requestId", "id")
@@ -1253,10 +1254,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("TestMessage")
                                 .header("operation", "sayHello")
@@ -1308,10 +1309,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScript("assert json.message == 'Hello Citrus!'")
                                 .validator("groovyMessageValidator");
@@ -1366,10 +1367,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScript(resource)
                                 .validator("groovyMessageValidator");
@@ -1420,10 +1421,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .validateScript("assert json.message == 'Hello Citrus!'")
                                 .validator("groovyMessageValidator")
@@ -1477,10 +1478,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
                                 .validateNamespace("pfx", "http://www.consol.de/schemas/test");
                     }
@@ -1526,10 +1527,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
                                 .validate("TestRequest.Message", "Hello World!")
                                 .validate("TestRequest.Operation", "SayHello");
@@ -1576,10 +1577,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>?</Message></TestRequest>")
                                 .ignore("TestRequest.Message");
                     }
@@ -1636,10 +1637,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
                                 .xsd("testSchema");
                     }
@@ -1699,10 +1700,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
                                 .xsdSchemaRepository("customSchemaRepository");
                     }

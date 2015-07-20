@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.runner;
-
-import com.consol.citrus.dsl.definition.AbstractActionDefinition;
+package com.consol.citrus.dsl.endpoint;
 
 /**
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public interface TestActionConfigurer<T extends AbstractActionDefinition> {
+public interface Executable {
 
-    void configure(T definition);
+    /**
+     * Builds and executes test case. Automatically creates new test context
+     * with help of Spring bean application context.
+     */
+    void execute();
 }

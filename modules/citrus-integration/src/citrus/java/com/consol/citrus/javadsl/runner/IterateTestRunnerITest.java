@@ -18,9 +18,10 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.IterateDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.IterateBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,52 +35,78 @@ public class IterateTestRunnerITest extends TestNGCitrusTestRunner {
     public void IterateTestRunnerITest() {
         variable("max", "3");
         
-        iterate(new TestActionConfigurer<IterateDefinition>() {
+        iterate(new BuilderSupport<IterateBuilder>() {
             @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("i lt= citrus:randomNumber(1)").index("i");
-            }
-        }).actions(echo("index is: ${i}"));
-        
-        iterate(new TestActionConfigurer<IterateDefinition>() {
-            @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("i lt 20").index("i");
-            }
-        }).actions(echo("index is: ${i}"));
-        
-        iterate(new TestActionConfigurer<IterateDefinition>() {
-            @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("(i lt 5) or (i = 5)").index("i");
-            }
-        }).actions(echo("index is: ${i}"));
-        
-        iterate(new TestActionConfigurer<IterateDefinition>() {
-            @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("(i lt 5) and (i lt 3)").index("i");
-            }
-        }).actions(echo("index is: ${i}"));
-        
-        iterate(new TestActionConfigurer<IterateDefinition>() {
-            @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("i = 0").index("i");
-            }
-        }).actions(echo("index is: ${i}"));
-        
-        iterate(new TestActionConfigurer<IterateDefinition>() {
-            @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("${max} gt= i").index("i");
+            public void configure(IterateBuilder builder) {
+                builder.condition("i lt= citrus:randomNumber(1)").index("i");
             }
         }).actions(echo("index is: ${i}"));
 
-        iterate(new TestActionConfigurer<IterateDefinition>() {
+        iterate(new BuilderSupport<IterateBuilder>() {
             @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("i lt= 50").index("i")
+            public void configure(IterateBuilder builder) {
+                builder.condition(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return index < 20;
+                    }
+                });
+            }
+        }).actions(echo("index is: ${i}"));
+        
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition("i lt 20").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+        
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition("(i lt 5) or (i = 5)").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+        
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition("(i lt 5) and (i lt 3)").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+        
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition("i = 0").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+        
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition("${max} gt= i").index("i");
+            }
+        }).actions(echo("index is: ${i}"));
+
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                builder.condition("i lt= 50").index("i")
+                        .startsWith(0)
+                        .step(5);
+            }
+        }).actions(echo("index is: ${i}"));
+
+        iterate(new BuilderSupport<IterateBuilder>() {
+            @Override
+            public void configure(IterateBuilder builder) {
+                        builder.condition(new IteratingConditionExpression() {
+                            @Override
+                            public boolean evaluate(int index, TestContext context) {
+                                return index < 50;
+                            }
+                        })
                         .startsWith(0)
                         .step(5);
             }
@@ -92,10 +119,10 @@ public class IterateTestRunnerITest extends TestNGCitrusTestRunner {
             }
         };
 
-        iterate(new TestActionConfigurer<IterateDefinition>() {
+        iterate(new BuilderSupport<IterateBuilder>() {
             @Override
-            public void configure(IterateDefinition definition) {
-                definition.condition("i lt 5").index("i");
+            public void configure(IterateBuilder builder) {
+                builder.condition("i lt 5").index("i");
             }
         }).actions(createVariable("index", "${i}"), anonymous);
     }

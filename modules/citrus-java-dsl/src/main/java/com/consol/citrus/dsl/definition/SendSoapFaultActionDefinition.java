@@ -30,6 +30,7 @@ import java.io.IOException;
  * constructing build methods.
  * 
  * @author Christoph Deppisch
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.SendSoapFaultBuilder}
  */
 public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefinition {
 
@@ -67,7 +68,7 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
         getAction().setFaultCode(code);
         return this;
     }
-    
+
     /**
      * Add custom fault string to SOAP fault message.
      * @param faultString
@@ -77,7 +78,7 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
         getAction().setFaultString(faultString);
         return this;
     }
-    
+
     /**
      * Add custom fault string to SOAP fault message.
      * @param faultActor
@@ -87,7 +88,7 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
         getAction().setFaultActor(faultActor);
         return this;
     }
-    
+
     /**
      * Adds a fault detail to SOAP fault message.
      * @param faultDetail
@@ -97,7 +98,7 @@ public class SendSoapFaultActionDefinition extends SendSoapMessageActionDefiniti
         getAction().getFaultDetails().add(faultDetail);
         return this;
     }
-    
+
     /**
      * Adds a fault detail from file resource.
      * @param resource

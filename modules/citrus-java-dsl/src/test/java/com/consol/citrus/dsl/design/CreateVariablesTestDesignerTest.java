@@ -30,8 +30,8 @@ public class CreateVariablesTestDesignerTest extends AbstractTestNGUnitTest {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
-                variables().add("foo", "bar")
-                           .add("text", "Hello Citrus!");
+                createVariable("foo", "bar");
+                createVariable("text", "Hello Citrus!");
 
                 createVariable("foobar", "bars");
             }
@@ -40,15 +40,20 @@ public class CreateVariablesTestDesignerTest extends AbstractTestNGUnitTest {
         builder.configure();
 
         TestCase test = builder.build();
-        Assert.assertEquals(test.getActionCount(), 2);
+        Assert.assertEquals(test.getActionCount(), 3);
         Assert.assertEquals(test.getActions().get(0).getClass(), CreateVariablesAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), CreateVariablesAction.class);
+        Assert.assertEquals(test.getActions().get(2).getClass(), CreateVariablesAction.class);
 
         CreateVariablesAction action = (CreateVariablesAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "create-variables");
-        Assert.assertEquals(action.getVariables().toString(), "{foo=bar, text=Hello Citrus!}");
+        Assert.assertEquals(action.getVariables().toString(), "{foo=bar}");
 
         action = (CreateVariablesAction)test.getActions().get(1);
+        Assert.assertEquals(action.getName(), "create-variables");
+        Assert.assertEquals(action.getVariables().toString(), "{text=Hello Citrus!}");
+
+        action = (CreateVariablesAction)test.getActions().get(2);
         Assert.assertEquals(action.getName(), "create-variables");
         Assert.assertEquals(action.getVariables().toString(), "{foobar=bars}");
     }

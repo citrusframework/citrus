@@ -17,8 +17,8 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.IterateDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.IterateBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -38,10 +38,10 @@ public class ParallelTestRunnerITest extends TestNGCitrusTestRunner {
                 ),
                 echo("2"),
                 echo("3"),
-                iterate(new TestActionConfigurer<IterateDefinition>() {
+                iterate(new BuilderSupport<IterateBuilder>() {
                     @Override
-                    public void configure(IterateDefinition definition) {
-                        definition.condition("i lt= 5").index("i");
+                    public void configure(IterateBuilder builder) {
+                        builder.condition("i lt= 5").index("i");
                     }
                 }).actions(
                         echo("10")
@@ -59,10 +59,10 @@ public class ParallelTestRunnerITest extends TestNGCitrusTestRunner {
                         echo("2"),
                         fail("This went wrong too"),
                         echo("3"),
-                        iterate(new TestActionConfigurer<IterateDefinition>() {
+                        iterate(new BuilderSupport<IterateBuilder>() {
                             @Override
-                            public void configure(IterateDefinition definition) {
-                                definition.condition("i lt= 5").index("i");
+                            public void configure(IterateBuilder builder) {
+                                builder.condition("i lt= 5").index("i");
                             }
                         }).actions(
                                 echo("10")

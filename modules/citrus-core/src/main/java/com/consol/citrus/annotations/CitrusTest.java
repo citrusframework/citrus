@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * @since 1.3.1
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.PARAMETER })
+@Target({ ElementType.METHOD })
 public @interface CitrusTest {
     /** Test name optional -  by default method name is used as test name */
     String name() default "";

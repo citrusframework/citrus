@@ -21,7 +21,8 @@ import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
@@ -72,7 +73,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testFork() {
         reset(soapClient, messageProducer);
-        expect(soapClient.createProducer()).andReturn(messageProducer).times(2);
+        expect(soapClient.createProducer()).andReturn(messageProducer).atLeastOnce();
         expect(soapClient.getActor()).andReturn(null).atLeastOnce();
         messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
@@ -88,19 +89,19 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .soap()
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
                     }
                 });
                 
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .soap()
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                                 .fork(true);
@@ -158,10 +159,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .soap()
                                 .soapAction("TestService/sayHello")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -209,10 +210,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap()
                                 .attachment(testAttachment);
@@ -266,10 +267,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap()
                                 .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
@@ -324,10 +325,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap()
                                 .attachment(testAttachment.getContentId() + 1, testAttachment.getContentType(), testAttachment.getContent() + 1)
@@ -389,10 +390,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(soapClient)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(soapClient)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap()
                                 .attachment(testAttachment.getContentId(), testAttachment.getContentType(), resource);
@@ -461,10 +462,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("soapClient")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("soapClient")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "soapOperation")
                                 .soap()
@@ -472,10 +473,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
                     }
                 });
 
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("otherClient")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("otherClient")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap();
                     }
@@ -505,7 +506,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
-          expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+          expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testSendBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
@@ -517,10 +518,10 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("soapClient")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("soapClient")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "soapOperation")
                                 .soap()

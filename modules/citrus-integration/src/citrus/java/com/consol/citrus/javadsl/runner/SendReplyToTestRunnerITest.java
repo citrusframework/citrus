@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageHeaders;
 import org.testng.annotations.Test;
@@ -36,10 +36,10 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
         variable("conversationId", "123456789");
         
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("syncGetDateRequestSender")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("syncGetDateRequestSender")
                             .payload("<GetDateRequestMessage>" +
                                     "<MessageHeader>" +
                                     "<ConversationId>${conversationId}</ConversationId>" +
@@ -56,10 +56,10 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
             }),
                 
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("syncGetDateRequestReceiver")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("syncGetDateRequestReceiver")
                                 .payload("<GetDateRequestMessage>" +
                                         "<MessageHeader>" +
                                         "<ConversationId>${conversationId}</ConversationId>" +
@@ -75,10 +75,10 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }),
                     
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("syncGetDateRequestReceiver")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("syncGetDateRequestReceiver")
                                 .payload("<GetDateResponseMessage>" +
                                         "<MessageHeader>" +
                                         "<ConversationId>${conversationId}</ConversationId>" +
@@ -93,10 +93,10 @@ public class SendReplyToTestRunnerITest extends TestNGCitrusTestRunner {
                     }
                 }),
                     
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("syncGetDateRequestSender")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("syncGetDateRequestSender")
                                 .selector("citrus_message_id = '${syncRequestCorrelatorId}'")
                                 .payload("<GetDateResponseMessage>" +
                                         "<MessageHeader>" +

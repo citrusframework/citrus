@@ -17,8 +17,10 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.RepeatOnErrorUntilTrueDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.container.IteratingConditionExpression;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.builder.RepeatOnErrorBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -32,25 +34,30 @@ public class RepeatOnErrorTestRunnerITest extends TestNGCitrusTestRunner {
     public void RepeatOnErrorTestRunnerITest() {
         variable("message", "Hello TestFramework");
         
-        repeatOnError(new TestActionConfigurer<RepeatOnErrorUntilTrueDefinition>() {
+        repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
             @Override
-            public void configure(RepeatOnErrorUntilTrueDefinition definition) {
-                definition.until("i = 5").index("i");
+            public void configure(RepeatOnErrorBuilder builder) {
+                builder.until("i = 5").index("i");
             }
         }).actions(echo("${i}. Versuch: ${message}"));
         
-        repeatOnError(new TestActionConfigurer<RepeatOnErrorUntilTrueDefinition>() {
+        repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
             @Override
-            public void configure(RepeatOnErrorUntilTrueDefinition definition) {
-                definition.until("i = 5").index("i").autoSleep(500);
+            public void configure(RepeatOnErrorBuilder builder) {
+                builder.until(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return index == 5;
+                    }
+                }).autoSleep(500);
             }
         }).actions(echo("${i}. Versuch: ${message}"));
         
         assertException().when(
-                repeatOnError(new TestActionConfigurer<RepeatOnErrorUntilTrueDefinition>() {
+                repeatOnError(new BuilderSupport<RepeatOnErrorBuilder>() {
                     @Override
-                    public void configure(RepeatOnErrorUntilTrueDefinition definition) {
-                        definition.until("i = 3").index("i").autoSleep(200);
+                    public void configure(RepeatOnErrorBuilder builder) {
+                        builder.until("i = 3").index("i").autoSleep(200);
                     }
                 }).actions(
                         echo("${i}. Versuch: ${message}"),

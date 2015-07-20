@@ -21,7 +21,8 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
@@ -72,10 +73,10 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .http()
                                 .method(HttpMethod.GET)
                                 .uri("/test")
@@ -128,10 +129,10 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(httpClient)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(httpClient)
                                 .http()
                                 .method(HttpMethod.GET)
                                 .status(HttpStatus.OK)
@@ -165,7 +166,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+            expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testReceiveBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
         expect(applicationContextMock.getBean(TestContext.class)).andReturn(applicationContext.getBean(TestContext.class)).once();
@@ -177,10 +178,10 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpClient")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpClient")
                                 .http()
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "soapOperation")

@@ -21,7 +21,8 @@ import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.ReceiveTimeoutActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.ReceiveTimeoutBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
@@ -65,10 +66,10 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receiveTimeout(new TestActionConfigurer<ReceiveTimeoutActionDefinition>() {
+                receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
                     @Override
-                    public void configure(ReceiveTimeoutActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(ReceiveTimeoutBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .timeout(250)
                                 .selector("TestMessageSelectorString");
                     }
@@ -112,10 +113,10 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receiveTimeout(new TestActionConfigurer<ReceiveTimeoutActionDefinition>() {
+                receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
                     @Override
-                    public void configure(ReceiveTimeoutActionDefinition definition) {
-                        definition.endpoint("fooMessageEndpoint")
+                    public void configure(ReceiveTimeoutBuilder builder) {
+                        builder.endpoint("fooMessageEndpoint")
                                 .timeout(500);
                     }
                 });
@@ -152,10 +153,10 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             new MockTestRunner(getClass().getSimpleName(), applicationContext) {
                 @Override
                 public void execute() {
-                    receiveTimeout(new TestActionConfigurer<ReceiveTimeoutActionDefinition>() {
+                    receiveTimeout(new BuilderSupport<ReceiveTimeoutBuilder>() {
                         @Override
-                        public void configure(ReceiveTimeoutActionDefinition definition) {
-                            definition.endpoint(messageEndpoint)
+                        public void configure(ReceiveTimeoutBuilder builder) {
+                            builder.endpoint(messageEndpoint)
                                     .timeout(250)
                                     .selector("TestMessageSelectorString");
                         }

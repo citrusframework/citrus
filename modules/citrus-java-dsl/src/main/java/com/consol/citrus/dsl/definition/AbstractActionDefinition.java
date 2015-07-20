@@ -25,12 +25,13 @@ import com.consol.citrus.context.TestContext;
  * 
  * @author Christoph Deppisch
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AbstractTestActionBuilder}
  */
 public class AbstractActionDefinition<T extends TestAction> implements TestAction {
 
     /** The test action observed by this definition */
     protected T action;
-    
+
     /**
      * Default constructor with test action.
      * @param action
@@ -38,7 +39,7 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     public AbstractActionDefinition(T action) {
         this.action = action;
     }
-    
+
     public AbstractActionDefinition<T> description(String description) {
         action.setDescription(description);
         return this;
@@ -58,7 +59,7 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     public final void execute(TestContext context) {
         throw new IllegalStateException("Test action definition must not be executed");
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -93,5 +94,5 @@ public class AbstractActionDefinition<T extends TestAction> implements TestActio
     public final void setDescription(String description) {
         action.setDescription(description);
     }
-    
+
 }

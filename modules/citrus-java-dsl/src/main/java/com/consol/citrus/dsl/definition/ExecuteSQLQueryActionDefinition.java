@@ -38,6 +38,7 @@ import java.util.List;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.ExecuteSQLQueryBuilder}
  */
 public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<ExecuteSQLQueryAction> {
 
@@ -77,14 +78,14 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
     }
 
 	/**
-     * List of statements to execute. Declared inline in the test case. 
+     * List of statements to execute. Declared inline in the test case.
      * @param statements
      */
 	public ExecuteSQLQueryActionDefinition statements(List<String> statements) {
 		action.getStatements().addAll(statements);
 		return this;
 	}
-	
+
 	/**
 	 * Adds a new statement to the list of SQL executions.
 	 * @param statements
@@ -94,7 +95,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 	    action.getStatements().add(statements);
 		return this;
 	}
-	
+
 	/**
      * Setter for external file resource containing the SQL statements to execute.
      * @param sqlResource
@@ -107,7 +108,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
         }
 		return this;
 	}
-	
+
 	/**
      * Setter for external file resource containing the SQL statements to execute.
      * @param filePath
@@ -116,7 +117,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
         action.setSqlResourcePath(filePath);
         return this;
     }
-	
+
 	/**
      * Set expected control result set. Keys represent the column names, values
      * the expected values.
@@ -127,7 +128,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 		action.getControlResultSet().put(column, Arrays.asList(values));
 		return this;
 	}
-	
+
 	/**
      * Validate SQL result set via validation script, for instance Groovy.
      * @param script
@@ -139,7 +140,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
         action.setScriptValidationContext(scriptValidationContext);
         return this;
     }
-    
+
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      * @param scriptResource
@@ -155,7 +156,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
         action.setScriptValidationContext(scriptValidationContext);
         return this;
     }
-    
+
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      * @param script
@@ -163,7 +164,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
     public ExecuteSQLQueryActionDefinition groovy(String script) {
         return validateScript(script, ScriptTypes.GROOVY);
     }
-    
+
     /**
      * Validate SQL result set via validation script, for instance Groovy.
      * @param scriptResource
@@ -171,7 +172,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
     public ExecuteSQLQueryActionDefinition groovy(Resource scriptResource) {
         return validateScript(scriptResource, ScriptTypes.GROOVY);
     }
-	
+
 	 /**
      * User can extract column values to test variables. Map holds column names (keys) and
      * respective target variable names (values).
@@ -183,7 +184,7 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 		action.getExtractVariables().put(columnName, variableName);
 		return this;
 	}
-	
+
 	/**
      * Sets an explicit validator implementation for this action.
      * @param validator the validator to set
@@ -191,5 +192,5 @@ public class ExecuteSQLQueryActionDefinition extends AbstractActionDefinition<Ex
 	public ExecuteSQLQueryActionDefinition validator(SqlResultSetScriptValidator validator) {
 		action.setValidator(validator);
 		return this;
-	}
+    }
 }

@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
 import org.testng.annotations.Test;
@@ -33,27 +33,27 @@ public class PlainTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
     @CitrusTest
     public void PlainTextValidationTestRunnerITest() {
         parallel().actions(
-            send(new TestActionConfigurer<SendMessageActionDefinition>() {
+            send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
-                public void configure(SendMessageActionDefinition definition) {
-                    definition.endpoint("httpClient")
+                public void configure(SendMessageBuilder builder) {
+                    builder.endpoint("httpClient")
                             .payload("Hello, World!");
                 }
             }),
             sequential().actions(
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("httpServerRequestEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("httpServerRequestEndpoint")
                                 .messageType(MessageType.PLAINTEXT)
                                 .payload("Hello, World!")
                                 .extractFromHeader("citrus_jms_messageId", "correlation_id");
                     }
                 }),
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("httpServerResponseEndpoint")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("httpServerResponseEndpoint")
                                 .payload("Hello, Citrus!")
                                 .header("citrus_http_status_code", "200")
                                 .header("citrus_http_version", "HTTP/1.1")
@@ -64,10 +64,10 @@ public class PlainTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
             )
         );
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .messageType(MessageType.PLAINTEXT)
                         .payload("Hello, Citrus!")
                         .header("citrus_http_status_code", "200")
@@ -76,20 +76,20 @@ public class PlainTextValidationTestRunnerITest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .payload("Hello, World!");
             }
         });
         
         sleep(2000);
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("httpClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("httpClient")
                         .messageType(MessageType.PLAINTEXT)
                         .header("citrus_http_status_code", "200")
                         .header("citrus_http_version", "HTTP/1.1")

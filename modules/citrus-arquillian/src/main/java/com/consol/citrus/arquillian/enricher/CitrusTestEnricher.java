@@ -18,14 +18,15 @@ package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
-import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.runner.DefaultTestRunner;
+import com.consol.citrus.dsl.runner.TestRunner;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -75,30 +76,25 @@ public class CitrusTestEnricher implements TestEnricher {
         for (int i = 0; i < parameterTypes.length; i++) {
             final Annotation[] parameterAnnotations = method.getParameterAnnotations()[i];
             for (Annotation annotation : parameterAnnotations) {
-                if (annotation instanceof CitrusTest) {
-                    CitrusTest citrusTestAnnotation = (CitrusTest) annotation;
-                    Class<?> clazz = parameterTypes[i];
-                    if (isSupportedParameter(clazz)) {
+                if (annotation instanceof CitrusResource) {
+                    Class<?> type = parameterTypes[i];
+                    if (TestDesigner.class.isAssignableFrom(type)) {
                         TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().getApplicationContext());
-
-                        if (StringUtils.hasText(citrusTestAnnotation.name())) {
-                            testDesigner.name(citrusTestAnnotation.name());
-                        } else {
-                            testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-                        }
+                        testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                         values[i] = testDesigner;
+                    } else if (TestRunner.class.isAssignableFrom(type)) {
+                        TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().getApplicationContext());
+                        testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+
+                        values[i] = testRunner;
                     } else {
-                        throw new RuntimeException("Not able to provide a client injection for type " + clazz);
+                        throw new RuntimeException("Not able to provide a Citrus resource injection for type " + type);
                     }
                 }
             }
         }
 
         return values;
-    }
-
-    private boolean isSupportedParameter(Class<?> clazz) {
-        return TestDesigner.class.isAssignableFrom(clazz);
     }
 }

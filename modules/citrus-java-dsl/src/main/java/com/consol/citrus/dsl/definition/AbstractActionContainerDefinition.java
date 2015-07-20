@@ -24,6 +24,7 @@ import java.util.List;
 /**
  * @author Christoph Deppisch
  * @since 2.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.AbstractTestActionContainerBuilder}
  */
 public class AbstractActionContainerDefinition<T extends TestActionContainer> extends AbstractActionDefinition<T> {
 

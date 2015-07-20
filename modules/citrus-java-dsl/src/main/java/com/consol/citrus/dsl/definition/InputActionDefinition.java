@@ -27,6 +27,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * 
  * @author Max Argyo, Giulia DelBravo
  * @since 1.3
+ * @deprecated since 2.2.1 in favor of using {@link com.consol.citrus.dsl.builder.InputActionBuilder}
  */
 public class InputActionDefinition extends AbstractActionDefinition<InputAction> {
 
@@ -53,7 +54,7 @@ public class InputActionDefinition extends AbstractActionDefinition<InputAction>
 		action.setMessage(message);
 		return this;
 	}
-	
+
 	/**
      * Stores the result to a test variable.
      * @param variable the variable to set
@@ -62,7 +63,7 @@ public class InputActionDefinition extends AbstractActionDefinition<InputAction>
 		action.setVariable(variable);
 		return this;
 	}
-	
+
 	 /**
      * Sets the valid answers.
      * @param answers the validAnswers to set
@@ -71,14 +72,14 @@ public class InputActionDefinition extends AbstractActionDefinition<InputAction>
 	    if (answers.length == 0) {
 	        throw new CitrusRuntimeException("Please specify proper answer possibilities for input action");
 	    }
-	    
+
 		StringBuilder validAnswers = new StringBuilder();
-		
+
 		for (String answer : answers) {
 		    validAnswers.append(InputAction.ANSWER_SEPARATOR);
 		    validAnswers.append(answer);
         }
-		
+
 		action.setValidAnswers(validAnswers.toString().substring(1));
 		return this;
 	}

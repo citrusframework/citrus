@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
@@ -34,20 +34,20 @@ public class PropagateSoapFaultTestRunnerITest extends TestNGCitrusTestRunner {
         variable("soapFaultCode", "TEC-1001");
         variable("soapFaultString", "Invalid request");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("webServiceFaultClient")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("webServiceFaultClient")
                         .payload("<ns0:SoapFaultForcingRequest xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                 "<ns0:Message>This is invalid</ns0:Message>" +
                                 "</ns0:SoapFaultForcingRequest>");
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("webServiceFaultClient")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("webServiceFaultClient")
                         .payload("<SOAP-ENV:Fault xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                                 "<faultcode xmlns:CITRUS=\"http://www.citrusframework.org/faults\">CITRUS:${soapFaultCode}</faultcode>" +
                                 "<faultstring xml:lang=\"en\">${soapFaultString}</faultstring>" +

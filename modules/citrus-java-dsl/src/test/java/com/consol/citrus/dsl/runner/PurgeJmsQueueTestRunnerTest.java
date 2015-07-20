@@ -17,7 +17,8 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.definition.PurgeJmsQueueActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.PurgeJmsQueuesBuilder;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.easymock.EasyMock;
@@ -63,10 +64,10 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
+                purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
                     @Override
-                    public void configure(PurgeJmsQueueActionDefinition definition) {
-                        definition.connectionFactory(connectionFactory)
+                    public void configure(PurgeJmsQueuesBuilder builder) {
+                        builder.connectionFactory(connectionFactory)
                                 .queueNames("q1", "q2", "q3")
                                 .queue("q4")
                                 .timeout(200L)
@@ -112,10 +113,10 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                purgeQueues(new TestActionConfigurer<PurgeJmsQueueActionDefinition>() {
+                purgeQueues(new BuilderSupport<PurgeJmsQueuesBuilder>() {
                     @Override
-                    public void configure(PurgeJmsQueueActionDefinition definition) {
-                        definition.connectionFactory(connectionFactory)
+                    public void configure(PurgeJmsQueuesBuilder builder) {
+                        builder.connectionFactory(connectionFactory)
                                 .queues(queue1, queue2)
                                 .queue(queue3)
                                 .timeout(200L)

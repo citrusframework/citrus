@@ -22,7 +22,8 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestRequest;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Producer;
@@ -88,10 +89,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"));
                     }
                 });
@@ -138,10 +139,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(message);
                     }
                 });
@@ -197,10 +198,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(message)
                                 .header("additional", "new");
                     }
@@ -259,10 +260,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payloadModel(new TestRequest("Hello Citrus!"));
                     }
                 });
@@ -306,10 +307,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload(new TestRequest("Hello Citrus!"), marshaller);
                     }
                 });
@@ -358,10 +359,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload(new TestRequest("Hello Citrus!"), "myMarshaller");
                     }
                 });
@@ -405,10 +406,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
                 });
@@ -453,10 +454,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload(resource);
                     }
                 });
@@ -506,10 +507,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint("fooMessageEndpoint")
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint("fooMessageEndpoint")
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
                 });
@@ -551,10 +552,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "foo")
                                 .header("language", "eng");
@@ -605,19 +606,19 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                              .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                              .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                     }
                 });
                 
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                             .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                             .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
                     }
@@ -683,20 +684,20 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                 @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                    builder.endpoint(messageEndpoint)
                              .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                              .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                              .header("<Header><Name>operation</Name><Value>foo2</Value></Header>");
                     }
                 });
 
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                             .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                             .header("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                             .header("<Header><Name>operation</Name><Value>foo2</Value></Header>");
@@ -779,19 +780,19 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header(resource);
                     }
                 });
 
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                                 .header(resource);
                     }
@@ -853,10 +854,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .extractFromPayload("/TestRequest/Message", "text")
                                 .extractFromPayload("/TestRequest/Message/@lang", "language");
@@ -908,10 +909,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                                 .header("operation", "sayHello")
                                 .header("requestId", "123456")
@@ -966,10 +967,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                send(new TestActionConfigurer<SendMessageActionDefinition>() {
+                send(new BuilderSupport<SendMessageBuilder>() {
                     @Override
-                    public void configure(SendMessageActionDefinition definition) {
-                        definition.endpoint(messageEndpoint)
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">?</Message></TestRequest>")
                                 .xpath("/TestRequest/Message", "Hello World!");
                     }

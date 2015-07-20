@@ -17,9 +17,9 @@
 package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
-import com.consol.citrus.dsl.definition.SendMessageActionDefinition;
-import com.consol.citrus.dsl.runner.TestActionConfigurer;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
+import com.consol.citrus.dsl.builder.SendMessageBuilder;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.message.MessageType;
 import org.testng.annotations.Test;
@@ -34,28 +34,28 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
     
     @CitrusTest
     public void MessageChannelTestRunnerlTest() {
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("Hello Citrus")
                         .header("Operation", "sayHello");
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("Goodbye Citrus")
                         .header("Operation", "sayGoodBye");
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("Operation", "sayGoodBye"))
                         .messageType(MessageType.PLAINTEXT)
                         .payload("Goodbye Citrus")
@@ -63,10 +63,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("Operation", "sayHello"))
                         .messageType(MessageType.PLAINTEXT)
                         .payload("Hello Citrus")
@@ -76,28 +76,28 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         
         echo("Test root qname message selector");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<HelloMessage xmlns=\"http://citrusframework.org/schema\">Hello Citrus</HelloMessage>")
                         .header("Operation", "sayHello");
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<GoodbyeMessage xmlns=\"http://citrusframework.org/schema\">Goodbye Citrus</GoodbyeMessage>")
                         .header("Operation", "sayGoodBye");
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("root-qname", "GoodbyeMessage"))
                         .schemaValidation(false)
                         .payload("<GoodbyeMessage xmlns=\"http://citrusframework.org/schema\">Goodbye Citrus</GoodbyeMessage>")
@@ -105,10 +105,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("root-qname", "HelloMessage"))
                         .schemaValidation(false)
                         .payload("<HelloMessage xmlns=\"http://citrusframework.org/schema\">Hello Citrus</HelloMessage>")
@@ -118,28 +118,28 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         
         echo("Test root qname message selector with namespaces");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<HelloMessage xmlns=\"http://citrusframework.org/helloschema\">Hello Citrus</HelloMessage>")
                         .header("Operation", "sayHello");
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<GoodbyeMessage xmlns=\"http://citrusframework.org/goodbyeschema\">Goodbye Citrus</GoodbyeMessage>")
                         .header("Operation", "sayGoodBye");
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("root-qname", "{http://citrusframework.org/goodbyeschema}GoodbyeMessage"))
                         .schemaValidation(false)
                         .payload("<GoodbyeMessage xmlns=\"http://citrusframework.org/goodbyeschema\">Goodbye Citrus</GoodbyeMessage>")
@@ -147,10 +147,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("root-qname", "{http://citrusframework.org/helloschema}HelloMessage"))
                         .schemaValidation(false)
                         .payload("<HelloMessage xmlns=\"http://citrusframework.org/helloschema\">Hello Citrus</HelloMessage>")
@@ -160,10 +160,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         
         echo("Test xpath message selector");
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<ns:HelloMessage xmlns:ns=\"http://citrusframework.org/helloschema\">" +
                                 "<ns:text language=\"eng\">" +
                                 "<ns:value>Hello Citrus</ns:value>" +
@@ -179,10 +179,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<ns:GoodbyeMessage xmlns:ns=\"http://citrusframework.org/goodbyeschema\">" +
                                 "<ns:text language=\"eng\">" +
                                 "<ns:value>Goodbye Citrus</ns:value>" +
@@ -198,10 +198,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(Collections.singletonMap("xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value",
                                 "Goodbye Citrus"))
                         .schemaValidation(false)
@@ -225,10 +225,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
         selectorMap.put("xpath://ns:HelloMessage/ns:text[@language='de']/ns:value", "Hallo Citrus");
         selectorMap.put("xpath://ns:HelloMessage/ns:text[@language='esp']/ns:value", "Hola Citrus");
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector(selectorMap)
                         .schemaValidation(false)
                         .payload("<ns:HelloMessage xmlns:ns=\"http://citrusframework.org/helloschema\">" +
@@ -246,10 +246,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<ns:HelloMessage xmlns:ns=\"http://citrusframework.org/helloschema\">" +
                                 "<ns:text language=\"eng\">" +
                                 "<ns:value>Hello Citrus</ns:value>" +
@@ -265,10 +265,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        send(new TestActionConfigurer<SendMessageActionDefinition>() {
+        send(new BuilderSupport<SendMessageBuilder>() {
             @Override
-            public void configure(SendMessageActionDefinition definition) {
-                definition.endpoint("channelRequestSender")
+            public void configure(SendMessageBuilder builder) {
+                builder.endpoint("channelRequestSender")
                         .payload("<ns:GoodbyeMessage xmlns:ns=\"http://citrusframework.org/goodbyeschema\">" +
                                 "<ns:text language=\"eng\">" +
                                 "<ns:value>Goodbye Citrus</ns:value>" +
@@ -284,10 +284,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector("xpath://ns:GoodbyeMessage/ns:text[@language='eng']/ns:value='Goodbye Citrus'")
                         .schemaValidation(false)
                         .payload("<ns:GoodbyeMessage xmlns:ns=\"http://citrusframework.org/goodbyeschema\">" +
@@ -305,10 +305,10 @@ public class MessageChannelTestRunnerlTest extends TestNGCitrusTestRunner {
             }
         });
         
-        receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+        receive(new BuilderSupport<ReceiveMessageBuilder>() {
             @Override
-            public void configure(ReceiveMessageActionDefinition definition) {
-                definition.endpoint("channelResponseReceiver")
+            public void configure(ReceiveMessageBuilder builder) {
+                builder.endpoint("channelResponseReceiver")
                         .selector("xpath://ns:HelloMessage/ns:text[@language='eng']/ns:value='Hello Citrus'")
                         .schemaValidation(false)
                         .payload("<ns:HelloMessage xmlns:ns=\"http://citrusframework.org/helloschema\">" +

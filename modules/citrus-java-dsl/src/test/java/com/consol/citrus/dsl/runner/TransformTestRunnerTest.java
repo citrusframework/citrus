@@ -19,7 +19,8 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.TransformActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.TransformActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -33,22 +34,22 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                transform(new TestActionConfigurer<TransformActionDefinition>() {
+                transform(new BuilderSupport<TransformActionBuilder>() {
                     @Override
-                    public void configure(TransformActionDefinition definition) {
-                        definition.source("<TestRequest>" +
+                    public void configure(TransformActionBuilder builder) {
+                        builder.source("<TestRequest>" +
                                             "<Message>Hello World!</Message>" +
                                         "</TestRequest>")
-                                .xslt("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                                    "<xsl:template match=\"/\">\n" +
-                                        "<html>\n" +
-											"<body>\n" +
-												"<h2>Test Request</h2>\n" +
-												"<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>\n" +
-											"</body>\n" +
-                                        "</html>\n" +
-                                        "</xsl:template>\n" +
-                                    "</xsl:stylesheet>")
+                                .xslt(String.format("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">%n" +
+                                        "<xsl:template match=\"/\">%n" +
+                                        "<html>%n" +
+                                        "<body>%n" +
+                                        "<h2>Test Request</h2>%n" +
+                                        "<p>Message: <xsl:value-of select=\"TestRequest/Message\"/></p>%n" +
+                                        "</body>%n" +
+                                        "</html>%n" +
+                                        "</xsl:template>%n" +
+                                        "</xsl:stylesheet>"))
                                 .result("result");
                     }
                 });
@@ -57,12 +58,12 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestContext context = builder.createTestContext();
         Assert.assertNotNull(context.getVariable("result"));
-        Assert.assertEquals(context.getVariable("result"), "<html>\n" +
-					"<body>\n" +
-						"<h2>Test Request</h2>\n" +
-						"<p>Message: Hello World!</p>\n" +
-					"</body>\n" +
-				"</html>\n");
+        Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
+					"<body>%n" +
+						"<h2>Test Request</h2>%n" +
+						"<p>Message: Hello World!</p>%n" +
+					"</body>%n" +
+				"</html>%n"));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -81,10 +82,10 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                transform(new TestActionConfigurer<TransformActionDefinition>() {
+                transform(new BuilderSupport<TransformActionBuilder>() {
                     @Override
-                    public void configure(TransformActionDefinition definition) {
-                        definition.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))
+                    public void configure(TransformActionBuilder builder) {
+                        builder.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))
 								.xslt(new ClassPathResource("com/consol/citrus/dsl/runner/transform.xslt"))
                                 .result("result");
                     }
@@ -94,12 +95,12 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 
 		TestContext context = builder.createTestContext();
 		Assert.assertNotNull(context.getVariable("result"));
-		Assert.assertEquals(context.getVariable("result"), "<html>\n" +
-					"<body>\n" +
-						"<h2>Test Request</h2>\n" +
-						"<p>Message: Hello World!</p>\n" +
-					"</body>\n" +
-				"</html>\n");
+		Assert.assertEquals(context.getVariable("result"), String.format("<html>%n" +
+					"<body>%n" +
+						"<h2>Test Request</h2>%n" +
+						"<p>Message: Hello World!</p>%n" +
+					"</body>%n" +
+				"</html>%n"));
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);

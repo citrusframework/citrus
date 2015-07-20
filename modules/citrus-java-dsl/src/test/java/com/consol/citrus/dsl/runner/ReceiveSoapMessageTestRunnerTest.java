@@ -20,7 +20,8 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.definition.ReceiveMessageActionDefinition;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -89,10 +90,10 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(server)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(server)
                                 .messageType(MessageType.PLAINTEXT)
                                 .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                                 .soap()
@@ -145,10 +146,10 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(server)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(server)
                                 .soap()
                                 .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>").setHeader("operation", "foo"))
                                 .attachment(testAttachment);
@@ -200,10 +201,10 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(server)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(server)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap()
                                 .attachment(testAttachment.getContentId(), testAttachment.getContentType(), testAttachment.getContent());
@@ -260,10 +261,10 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(server)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(server)
                                 .payload(resource)
                             .soap()
                                 .attachment(testAttachment.getContentId(), testAttachment.getContentType(), attachmentResource);
@@ -325,10 +326,10 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(server)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(server)
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .soap()
                                 .attachment(attachment1.getContentId(), attachment1.getContentType(), attachment1.getContent())
@@ -394,19 +395,19 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("replyMessageEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("replyMessageEndpoint")
                                 .soap()
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
                 });
 
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint("fooMessageEndpoint")
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint("fooMessageEndpoint")
                                 .soap()
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
                     }
@@ -433,7 +434,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
-            expectedExceptionsMessageRegExp = "Invalid use of http and soap action definition")
+            expectedExceptionsMessageRegExp = "Invalid use of http and soap action builder")
     public void testReceiveBuilderWithSoapAndHttpMixed() {
         reset(applicationContextMock);
 
@@ -447,10 +448,10 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         new MockTestRunner(getClass().getSimpleName(), applicationContextMock) {
             @Override
             public void execute() {
-                receive(new TestActionConfigurer<ReceiveMessageActionDefinition>() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
                     @Override
-                    public void configure(ReceiveMessageActionDefinition definition) {
-                        definition.endpoint(server)
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(server)
                                 .soap()
                                 .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .header("operation", "soapOperation")

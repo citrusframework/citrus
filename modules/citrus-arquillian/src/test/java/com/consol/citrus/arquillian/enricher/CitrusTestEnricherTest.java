@@ -21,6 +21,8 @@ import com.consol.citrus.arquillian.helper.InjectionHelper;
 import com.consol.citrus.config.CitrusBaseConfig;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.dsl.runner.DefaultTestRunner;
+import com.consol.citrus.dsl.runner.TestRunner;
 import org.easymock.EasyMock;
 import org.jboss.arquillian.core.api.Instance;
 import org.springframework.util.ReflectionUtils;
@@ -75,6 +77,20 @@ public class CitrusTestEnricherTest {
         resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestDesigner.class, URL.class));
         Assert.assertEquals(resolvedParameter.length, 2L);
         Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestDesigner.class);
+        Assert.assertNull(resolvedParameter[1]);
+
+        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestRunner.class));
+        Assert.assertEquals(resolvedParameter.length, 1L);
+        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestRunner.class);
+
+        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", URL.class, TestRunner.class));
+        Assert.assertEquals(resolvedParameter.length, 2L);
+        Assert.assertNull(resolvedParameter[0]);
+        Assert.assertEquals(resolvedParameter[1].getClass(), DefaultTestRunner.class);
+
+        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestRunner.class, URL.class));
+        Assert.assertEquals(resolvedParameter.length, 2L);
+        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestRunner.class);
         Assert.assertNull(resolvedParameter[1]);
 
         resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", URL.class));
