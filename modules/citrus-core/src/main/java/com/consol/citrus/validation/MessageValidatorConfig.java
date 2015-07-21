@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Configuration;
 public class MessageValidatorConfig {
 
     private final DomXmlMessageValidator defaultXmlMessageValidator = new DomXmlMessageValidator();
-    private final XpathMessageValidator defaultXPathMessageValidator = new XpathMessageValidator();
+    private final XpathMessageValidator defaultXpathMessageValidator = new XpathMessageValidator();
     private final JsonTextMessageValidator defaultJsonMessageValidator = new JsonTextMessageValidator();
     private final PlainTextMessageValidator defaultPlaintextMessageValidator = new PlainTextMessageValidator();
 
@@ -48,9 +48,9 @@ public class MessageValidatorConfig {
         return defaultXmlMessageValidator;
     }
 
-    @Bean(name = "defaultXPathMessageValidator")
-    public XpathMessageValidator getDefaultXPathMessageValidator() {
-        return defaultXPathMessageValidator;
+    @Bean(name = "defaultXpathMessageValidator")
+    public XpathMessageValidator getDefaultXpathMessageValidator() {
+        return defaultXpathMessageValidator;
     }
 
     @Bean(name = "defaultJsonMessageValidator")
@@ -83,7 +83,7 @@ public class MessageValidatorConfig {
         MessageValidatorRegistry citrusMessageValidatorRegistry = new MessageValidatorRegistry();
 
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultXmlMessageValidator);
-        citrusMessageValidatorRegistry.getMessageValidators().add(defaultXPathMessageValidator);
+        citrusMessageValidatorRegistry.getMessageValidators().add(defaultXpathMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGroovyXmlMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultJsonMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultPlaintextMessageValidator);

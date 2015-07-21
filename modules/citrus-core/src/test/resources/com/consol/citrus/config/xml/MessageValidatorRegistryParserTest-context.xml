@@ -12,7 +12,7 @@
   <!-- Default message validators -->
   <citrus:message-validators>
     <citrus:validator ref="defaultXmlMessageValidator"/>
-    <citrus:validator ref="defaultXPathMessageValidator"/>
+    <citrus:validator ref="defaultXpathMessageValidator"/>
     <citrus:validator ref="defaultGroovyXmlMessageValidator"/>
     <citrus:validator class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
     <citrus:validator ref="defaultJsonMessageValidator"/>
@@ -21,7 +21,7 @@
   </citrus:message-validators>
 
   <bean id="defaultXmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-  <bean id="defaultXPathMessageValidator" class="com.consol.citrus.validation.xml.XpathMessageValidator"/>
+  <bean id="defaultXpathMessageValidator" class="com.consol.citrus.validation.xml.XpathMessageValidator"/>
   <bean id="defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
   <bean id="defaultXhtmlMessageValidator" class="com.consol.citrus.validation.xhtml.XhtmlMessageValidator"/>
 

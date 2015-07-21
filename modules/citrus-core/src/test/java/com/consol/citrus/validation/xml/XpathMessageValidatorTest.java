@@ -33,7 +33,7 @@ import java.util.*;
 public class XpathMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Autowired
-    @Qualifier("defaultXPathMessageValidator")
+    @Qualifier("defaultXpathMessageValidator")
     private XpathMessageValidator validator;
 
     @Test
