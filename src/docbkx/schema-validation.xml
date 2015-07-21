@@ -50,11 +50,13 @@
             
             <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema-validation=&quot;false&quot;&gt;
-        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
+      &lt;validate&gt;
+        &lt;xpath expression=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
              value=&quot;${messageId}&quot;/&gt;
-        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
+        &lt;xpath expression=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
              value=&quot;${correlationId}&quot;/&gt;
         &lt;namespace prefix=&quot;ns1&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
+      &lt;/validate&gt;
     &lt;/message&gt;
     &lt;header&gt;
         &lt;element name=&quot;Operation&quot; value=&quot;sayHello&quot;/&gt;
@@ -247,11 +249,13 @@
         
         <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema=&quot;helloSchema&quot;&gt;
-        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
-        value=&quot;${messageId}&quot;/&gt;
-        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
-        value=&quot;${correlationId}&quot;/&gt;
+      &lt;validate&gt;
+        &lt;xpath expression=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
+                  value=&quot;${messageId}&quot;/&gt;
+        &lt;xpath expression=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
+                  value=&quot;${correlationId}&quot;/&gt;
         &lt;namespace prefix=&quot;ns1&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
+      &lt;/validate&gt;
     &lt;/message&gt;
 &lt;/receive&gt;
 
@@ -267,11 +271,13 @@
         
         <programlisting>&lt;receive endpoint=&quot;httpMessageEndpoint&quot;&gt;
     &lt;message schema-repository=&quot;mySpecialSchemaRepository&quot;&gt;
-        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
-        value=&quot;${messageId}&quot;/&gt;
-        &lt;validate path=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
-        value=&quot;${correlationId}&quot;/&gt;
+      &lt;validate&gt;
+        &lt;xpath expression=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:MessageId&quot;
+                  value=&quot;${messageId}&quot;/&gt;
+        &lt;xpath expression=&quot;//ns1:TestMessage/ns1:MessageHeader/ns1:CorrelationId&quot;
+                  value=&quot;${correlationId}&quot;/&gt;
         &lt;namespace prefix=&quot;ns1&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
+      &lt;/validate&gt;
     &lt;/message&gt;
 &lt;/receive&gt;</programlisting>
 

@@ -29,6 +29,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -62,6 +63,9 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
 
     /** Validation context used in this action builder */
     private ControlMessageValidationContext validationContext;
+
+    /** JSON validation context used in this action builder */
+    private JsonPathMessageValidationContext jsonPathValidationContext;
 
     /** Script validation context used in this action builder */
     private ScriptValidationContext scriptValidationContext;
@@ -334,7 +338,16 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T validate(String path, String controlValue) {
-        getXPathValidationContext().getXpathExpressions().put(path, controlValue);
+        if (path.startsWith("$.")) {
+            if (!messageType.equals(MessageType.JSON)) {
+                throw new CitrusRuntimeException(String.format("Failed to set JSONPath validation expression on message type '%s' - please use JSON message type", messageType));
+            }
+
+            getJsonPathValidationContext().getJsonPathExpressions().put(path, controlValue);
+        } else {
+            getXPathValidationContext().getXpathExpressions().put(path, controlValue);
+        }
+
         return self;
     }
     
@@ -529,6 +542,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         builder.setMessageType(messageType);
         builder.setValidationContext(validationContext);
         builder.setScriptValidationContext(scriptValidationContext);
+        builder.setJsonPathValidationContext(jsonPathValidationContext);
         builder.setHeaderExtractor(headerExtractor);
         builder.setXpathExtractor(xpathExtractor);
 
@@ -546,6 +560,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         builder.setMessageType(messageType);
         builder.setValidationContext(validationContext);
         builder.setScriptValidationContext(scriptValidationContext);
+        builder.setJsonPathValidationContext(jsonPathValidationContext);
         builder.setHeaderExtractor(headerExtractor);
         builder.setXpathExtractor(xpathExtractor);
 
@@ -680,6 +695,19 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
+     * Creates new JSONPath validation context if not done before and gets the validation context.
+     */
+    private JsonPathMessageValidationContext getJsonPathValidationContext() {
+        if (jsonPathValidationContext == null) {
+            jsonPathValidationContext = new JsonPathMessageValidationContext();
+
+            action.getValidationContexts().add(jsonPathValidationContext);
+        }
+
+        return jsonPathValidationContext;
+    }
+
+    /**
      * Sets the message type.
      * @param messageType
      */
@@ -709,6 +737,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      */
     protected void setScriptValidationContext(ScriptValidationContext scriptValidationContext) {
         this.scriptValidationContext = scriptValidationContext;
+    }
+
+    /**
+     * Sets the script message validator.
+     * @param jsonPathValidationContext
+     */
+    protected void setJsonPathValidationContext(JsonPathMessageValidationContext jsonPathValidationContext) {
+        this.jsonPathValidationContext = jsonPathValidationContext;
     }
 
     /**

@@ -26,10 +26,9 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.easymock.EasyMock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,10 +40,6 @@ import static org.easymock.EasyMock.*;
  * @author Christoph Deppisch
  */
 public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
-    @Autowired
-    @Qualifier("defaultXmlMessageValidator")
-    private DomXmlMessageValidator validator;
-
     private Endpoint endpoint = EasyMock.createMock(Endpoint.class);
     private Consumer consumer = EasyMock.createMock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
@@ -76,8 +71,6 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
         
         receiveMessageBean = new ReceiveMessageAction();
         receiveMessageBean.setEndpoint(endpoint);
-
-        receiveMessageBean.setValidator(validator);
     }
 
     @Test

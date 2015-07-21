@@ -17,15 +17,12 @@
 package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.CitrusConstants;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.ValidationUtils;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 
 import javax.xml.namespace.NamespaceContext;
@@ -45,44 +42,6 @@ public abstract class XmlValidationUtils {
      */
     private XmlValidationUtils() {
         super();
-    }
-
-    /**
-     * Validates actual against expected value of element
-     * @param actualValue
-     * @param expectedValue
-     * @param elementPath
-     * @param context
-     * @throws com.consol.citrus.exceptions.ValidationException if validation fails
-     */
-    public static void validateElementValues(String actualValue, String expectedValue, String elementPath, TestContext context)
-            throws ValidationException {
-        try {
-            if (actualValue != null) {
-                Assert.isTrue(expectedValue != null,
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                                "Values not equal for element '" + elementPath + "'", null, actualValue));
-
-                //check if validation matcher on element is specified
-                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
-                    ValidationMatcherUtils.resolveValidationMatcher(elementPath,
-                            actualValue,
-                            expectedValue,
-                            context);
-                }
-                else {
-                    Assert.isTrue(actualValue.equals(expectedValue),
-                            ValidationUtils.buildValueMismatchErrorMessage(
-                                    "Values not equal for element '" + elementPath + "'", expectedValue, actualValue));
-                }
-            } else {
-                Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                                "Values not equal for element '" + elementPath + "'", expectedValue, null));
-            }
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException("Validation failed:", e);
-        }
     }
 
     /**

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation;
 
+import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
@@ -36,6 +37,7 @@ public class MessageValidatorConfig {
     private final DomXmlMessageValidator defaultXmlMessageValidator = new DomXmlMessageValidator();
     private final XpathMessageValidator defaultXpathMessageValidator = new XpathMessageValidator();
     private final JsonTextMessageValidator defaultJsonMessageValidator = new JsonTextMessageValidator();
+    private final JsonPathMessageValidator defaultJsonPathMessageValidator = new JsonPathMessageValidator();
     private final PlainTextMessageValidator defaultPlaintextMessageValidator = new PlainTextMessageValidator();
 
     private final XhtmlMessageValidator defaultXhtmlMessageValidator = new XhtmlMessageValidator();
@@ -56,6 +58,11 @@ public class MessageValidatorConfig {
     @Bean(name = "defaultJsonMessageValidator")
     public JsonTextMessageValidator getDefaultJsonTextMessageValidator() {
         return defaultJsonMessageValidator;
+    }
+
+    @Bean(name = "defaultJsonPathMessageValidator")
+    public JsonPathMessageValidator getDefaultJsonPathMessageValidator() {
+        return defaultJsonPathMessageValidator;
     }
 
     @Bean(name = "defaultPlaintextMessageValidator")
@@ -86,6 +93,7 @@ public class MessageValidatorConfig {
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultXpathMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGroovyXmlMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultJsonMessageValidator);
+        citrusMessageValidatorRegistry.getMessageValidators().add(defaultJsonPathMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultPlaintextMessageValidator);
 
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGroovyJsonMessageValidator);

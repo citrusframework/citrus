@@ -17,6 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.testng.Assert;
@@ -38,7 +39,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
     @Test
     public void testReceiveMessageActionParser() {
-        assertActionCount(10);
+        assertActionCount(13);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
         
         ControlMessageValidationContext validationContext;
@@ -187,14 +188,30 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         XpathMessageValidationContext xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
-        
+
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
-        
+
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 2);
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
         // 9th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
+        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
+
+        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 2);
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
+
+        // 10th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
@@ -214,7 +231,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScript().trim(), "assert true");
 
-        // 10th action
+        // 11th action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
@@ -228,5 +245,37 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:com/consol/citrus/actions/test-validation-script.groovy");
+
+        // 12th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonPathMessageValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
+        JsonPathMessageValidationContext jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
+
+        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+
+        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().size(), 2);
+        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
+        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
+
+        // 13th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof JsonPathMessageValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
+        jsonPathValidationContext = (JsonPathMessageValidationContext)action.getValidationContexts().get(1);
+        Assert.assertNull(action.getEndpoint());
+        Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
+
+        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+
+        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().size(), 2);
+        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
+        Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
     }
 }

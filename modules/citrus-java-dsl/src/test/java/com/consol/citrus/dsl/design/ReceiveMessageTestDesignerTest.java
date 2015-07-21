@@ -22,6 +22,7 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.dsl.TestRequest;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
@@ -32,6 +33,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
@@ -1128,6 +1130,57 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
         Assert.assertEquals(validationContext.getXpathExpressions().get("Foo.operation"), "foo");
         Assert.assertEquals(validationContext.getXpathExpressions().get("Foo.message"), "control");
+    }
+
+    @Test
+    public void testReceiveBuilderWithJsonPathExpressions() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .messageType(MessageType.JSON)
+                        .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .validate("$.person.name", "foo")
+                        .validate("$.text", "Hello World!");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), ControlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonPathMessageValidationContext.class);
+
+        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "foo");
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
+    }
+
+    @Test(expectedExceptions = CitrusRuntimeException.class)
+    public void testReceiveBuilderWithJsonPathExpressionsInvalidMessageType() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .messageType(MessageType.XML)
+                        .payload("{\"text\":\"Hello World!\"}")
+                        .validate("$.text", "Hello World!");
+            }
+        };
+
+        builder.configure();
     }
     
     @Test

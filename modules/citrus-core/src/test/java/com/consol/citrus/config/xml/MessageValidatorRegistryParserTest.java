@@ -18,6 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
@@ -50,13 +51,14 @@ public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionPa
         Assert.assertEquals(messageValidators.size(), 1L);
 
         MessageValidatorRegistry messageValidatorBean = messageValidators.values().iterator().next();
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 7L);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 8L);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(0).getClass(), DomXmlMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(1).getClass(), XpathMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(2).getClass(), GroovyXmlMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(3).getClass(), PlainTextMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(4).getClass(), JsonTextMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(5).getClass(), GroovyJsonMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(6).getClass(), XhtmlMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(5).getClass(), JsonPathMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(6).getClass(), GroovyJsonMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(7).getClass(), XhtmlMessageValidator.class);
     }
 }

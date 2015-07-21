@@ -29,9 +29,10 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
@@ -63,7 +64,10 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     /** Validation context used in this action definition */
     private ControlMessageValidationContext validationContext;
 
-    /** Script validation context used in this action definition */
+    /** JSON validation context used in this action builder */
+    private JsonPathMessageValidationContext jsonPathValidationContext;
+
+    /** Script validation context used in this action builder */
     private ScriptValidationContext scriptValidationContext;
 
     /** Variable extractors filled within this action definition */
@@ -334,7 +338,16 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validate(String path, String controlValue) {
-        getXPathValidationContext().getXpathExpressions().put(path, controlValue);
+        if (path.startsWith("$.")) {
+            if (!messageType.equals(MessageType.JSON)) {
+                throw new CitrusRuntimeException(String.format("Failed to set JSONPath validation expression on message type '%s' - please use JSON message type", messageType));
+            }
+
+            getJsonPathValidationContext().getJsonPathExpressions().put(path, controlValue);
+        } else {
+            getXPathValidationContext().getXpathExpressions().put(path, controlValue);
+        }
+
         return self;
     }
 
@@ -529,6 +542,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         soapMessageActionDefinition.setMessageType(messageType);
         soapMessageActionDefinition.setValidationContext(validationContext);
         soapMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
+        soapMessageActionDefinition.setJsonPathValidationContext(jsonPathValidationContext);
         soapMessageActionDefinition.setHeaderExtractor(headerExtractor);
         soapMessageActionDefinition.setXpathExtractor(xpathExtractor);
 
@@ -546,6 +560,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         httpMessageActionDefinition.setMessageType(messageType);
         httpMessageActionDefinition.setValidationContext(validationContext);
         httpMessageActionDefinition.setScriptValidationContext(scriptValidationContext);
+        httpMessageActionDefinition.setJsonPathValidationContext(jsonPathValidationContext);
         httpMessageActionDefinition.setHeaderExtractor(headerExtractor);
         httpMessageActionDefinition.setXpathExtractor(xpathExtractor);
 
@@ -680,6 +695,19 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     }
 
     /**
+     * Creates new JSONPath validation context if not done before and gets the validation context.
+     */
+    private JsonPathMessageValidationContext getJsonPathValidationContext() {
+        if (jsonPathValidationContext == null) {
+            jsonPathValidationContext = new JsonPathMessageValidationContext();
+
+            action.getValidationContexts().add(jsonPathValidationContext);
+        }
+
+        return jsonPathValidationContext;
+    }
+
+    /**
      * Sets the message type.
      * @param messageType
      */
@@ -709,6 +737,14 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     protected void setScriptValidationContext(ScriptValidationContext scriptValidationContext) {
         this.scriptValidationContext = scriptValidationContext;
+    }
+
+    /**
+     * Sets the script message validator.
+     * @param jsonPathValidationContext
+     */
+    protected void setJsonPathValidationContext(JsonPathMessageValidationContext jsonPathValidationContext) {
+        this.jsonPathValidationContext = jsonPathValidationContext;
     }
 
     /**

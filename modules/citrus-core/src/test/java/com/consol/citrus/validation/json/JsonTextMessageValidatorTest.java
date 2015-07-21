@@ -394,16 +394,11 @@ public class JsonTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         receivedMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"index\":5, \"id\":\"x123456789x\"}");
         controlMessage = new DefaultMessage("");
-        
-        try {
-            ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
-            validationContext.setControlMessage(controlMessage);
 
-            validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
-            Assert.fail("Missing validation exception due to validation error");
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().contains("expected empty message content"));
-        }
+        ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.PLAINTEXT.toString());
+        validationContext.setControlMessage(controlMessage);
+
+        validator.validateMessagePayload(receivedMessage, controlMessage, validationContext, context);
     }
     
     @Test

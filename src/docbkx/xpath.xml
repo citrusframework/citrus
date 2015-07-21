@@ -15,24 +15,26 @@
             <para>&lt;message&gt;&lt;element path="[XPath-Expression]"&gt;&lt;/message&gt;</para>
         </listitem>
         <listitem>
+            <para>&lt;validate&gt;&lt;xpath expression="[XPath-Expression]"/&gt;&lt;/validate&gt;</para>
+        </listitem>
+        <listitem>
             <para>&lt;extract&gt;&lt;message path="[XPath-Expression]"&gt;&lt;/extract&gt;</para>
         </listitem>
         <listitem>
             <para>&lt;ignore path="[XPath-Expression]"/&gt;</para>
-        </listitem>
-        <listitem>
-            <para>&lt;validate path="[XPath-Expression]"/&gt;</para>
         </listitem>
     </itemizedlist>
     
     <para>The next program listing indicates the power in using XPath with Citrus:</para>
     
     <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//User/Name&quot; value=&quot;John&quot;&gt;&lt;/validate&gt;
-    &lt;validate path=&quot;//User/Address[@type='office']/Street&quot; value=&quot;Companystreet 21&quot;&gt;&lt;/validate&gt;
-    &lt;validate path =&quot;//User/Name&quot; value=&quot;${userName}&quot;&gt;&lt;/validate&gt;
-    &lt;validate path =&quot;//User/@isAdmin&quot; value=&quot;${isAdmin}&quot;&gt;&lt;/validate&gt;
-    &lt;validate path =&quot;//*[.='search-for']&quot; value=&quot;searched-for&quot;&gt;&lt;/validate&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;//User/Name&quot; value=&quot;John&quot;/&gt;
+    &lt;xpath expression=&quot;//User/Address[@type='office']/Street&quot; value=&quot;Companystreet 21&quot;/&gt;
+    &lt;xpath expression=&quot;//User/Name&quot; value=&quot;${userName}&quot;/&gt;
+    &lt;xpath expression=&quot;//User/@isAdmin&quot; value=&quot;${isAdmin}&quot;/&gt;
+    &lt;xpath expression=&quot;//*[.='search-for']&quot; value=&quot;searched-for&quot;/&gt;
+  &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
     
     <section id="xpath-namespace">
@@ -57,8 +59,10 @@
         <para>Now we would like to validate some elements in this message using XPath</para>
         
         <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//TestMessage/TestHeader/VersionId&quot; value=&quot;2&quot;/&gt;
-    &lt;validate path=&quot;//TestMessage/TestHeader/CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;//TestMessage/TestHeader/VersionId&quot; value=&quot;2&quot;/&gt;
+    &lt;xpath expression=&quot;//TestMessage/TestHeader/CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
         
         <para>The validation will fail although the XPath expression looks correct regarding the XML tree. Because the message 
@@ -67,8 +71,9 @@
         in the message.</para>
         
         <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//ns1:TestMessage/ns1:TestHeader/ns1:VersionId&quot; value=&quot;2&quot;/&gt;
-    &lt;validate path=&quot;//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;//ns1:TestMessage/ns1:TestHeader/ns1:VersionId&quot; value=&quot;2&quot;/&gt;
+    &lt;xpath expression=&quot;//ns1:TestMessage/ns1:TestHeader/ns1:CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
 &lt;/message&gt;</programlisting>
         
         <para>Now the expressions work fine and the validation is successful. But this is quite error prone. This is because the test is now 
@@ -78,9 +83,11 @@
         <para>You can avoid this effect when specifying your own namespace context and your own namespace prefix during validation.</para>
         
         <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//pfx:TestMessage/pfx:TestHeader/pfx:VersionId&quot; value=&quot;2&quot;/&gt;
-    &lt;validate path=&quot;//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;//pfx:TestMessage/pfx:TestHeader/pfx:VersionId&quot; value=&quot;2&quot;/&gt;
+    &lt;xpath expression=&quot;//pfx:TestMessage/pfx:TestHeader/pfx:CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
     &lt;namespace prefix=&quot;pfx&quot; value=&quot;http://citrus.com/namespace&quot;/&gt;
+  &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
         
         <para>Now the test in independent from any namespace prefix in the received message. The namespace context will resolve the namespaces and
@@ -123,16 +130,20 @@
         <para>The message uses default namespaces. The following approach in XPath will fail due to namespace problems.</para>
         
         <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//TestMessage/TestHeader/VersionId&quot; value=&quot;2&quot;/&gt;
-    &lt;validate path=&quot;//TestMessage/TestHeader/CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;//TestMessage/TestHeader/VersionId&quot; value=&quot;2&quot;/&gt;
+    &lt;xpath expression=&quot;//TestMessage/TestHeader/CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
-        
+
         <para>Even default namespaces need to be specified in the XPath expressions. Look at the following code listing that
         works fine with default namespaces:</para>
         
         <programlisting>&lt;message&gt;
-    &lt;validate path=&quot;//:TestMessage/:TestHeader/:VersionId&quot; value=&quot;2&quot;/&gt;
-    &lt;validate path=&quot;//:TestMessage/:TestHeader/:CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;//:TestMessage/:TestHeader/:VersionId&quot; value=&quot;2&quot;/&gt;
+    &lt;xpath expression=&quot;//:TestMessage/:TestHeader/:CorrelationId&quot; value=&quot;${correlationId}&quot;/&gt;
+  &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
         
         <tip>

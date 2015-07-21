@@ -201,6 +201,12 @@
                                             </xs:attribute>
                                         </xs:complexType>
                                     </xs:element>
+                                    <xs:element name="json-path" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:attribute name="expression" type="xs:string" use="required"/>
+                                            <xs:attribute name="value" type="xs:string" use="required"/>
+                                        </xs:complexType>
+                                    </xs:element>
                                     <xs:element name="namespace" minOccurs="0" maxOccurs="unbounded">
                                         <xs:complexType>
                                             <xs:attribute name="prefix" type="xs:string" use="required"/>

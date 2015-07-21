@@ -21,8 +21,8 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -31,6 +31,7 @@ import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.*;
@@ -51,8 +52,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     private SelectiveConsumer consumer = EasyMock.createMock(SelectiveConsumer.class);
     private EndpointConfiguration endpointConfiguration = EasyMock.createMock(EndpointConfiguration.class);
     
-    private DomXmlMessageValidator validator = new DomXmlMessageValidator();
-    
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testReceiveMessageWithMessagePayloadData() {
@@ -64,7 +63,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         
         receiveAction.setActor(testActor);
         
-		receiveAction.setValidator(validator);
 		PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -95,7 +93,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
         
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -126,13 +123,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         StringBuilder sb = new StringBuilder();
         sb.append("markupBuilder.TestRequest(){\n");
         sb.append("Message('Hello World!')\n");
         sb.append("}");
         
-        receiveAction.setValidator(validator);
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -165,13 +160,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         StringBuilder sb = new StringBuilder();
         sb.append("markupBuilder.TestRequest(){\n");
         sb.append("Message('${text}')\n");
         sb.append("}");
         
-        receiveAction.setValidator(validator);
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -202,8 +195,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        receiveAction.setValidator(validator);
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -234,7 +225,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -267,8 +257,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -301,8 +289,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -333,7 +319,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -370,7 +355,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -407,8 +391,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -449,8 +432,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -491,8 +472,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -532,7 +511,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -569,7 +547,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -608,7 +585,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -650,7 +626,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -686,7 +661,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -731,7 +705,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -765,7 +738,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -802,7 +774,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -839,7 +810,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -876,7 +846,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -917,7 +886,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -958,8 +926,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1003,8 +969,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
-
-        receiveAction.setValidator(validator);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -1050,8 +1014,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1096,8 +1058,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1139,6 +1099,114 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         verify(endpoint, consumer, endpointConfiguration);
     }
+
+    @Test
+    public void testReceiveMessageWithJsonPathValidation() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpoint(endpoint);
+        receiveAction.setMessageType(MessageType.JSON.toString());
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+
+        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        jsonPathExpressions.put("$..text", "Hello World!");
+        jsonPathExpressions.put("$.person.name", "John");
+        jsonPathExpressions.put("$.person.surname", "Doe");
+        jsonPathExpressions.put("$.index", "5");
+        validationContext.setJsonPathExpressions(jsonPathExpressions);
+
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+
+        verify(endpoint, consumer, endpointConfiguration);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testReceiveMessageWithJsonPathValidationFailure() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpoint(endpoint);
+        receiveAction.setMessageType(MessageType.JSON.toString());
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+
+        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        jsonPathExpressions.put("$..text", "Hello Citrus!");
+        validationContext.setJsonPathExpressions(jsonPathExpressions);
+
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+
+        try {
+            receiveAction.execute(context);
+        } finally {
+            verify(endpoint, consumer, endpointConfiguration);
+        }
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testReceiveMessageWithJsonPathValidationNoPathResult() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpoint(endpoint);
+        receiveAction.setMessageType(MessageType.JSON.toString());
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+
+        Map<String, String> jsonPathExpressions = new HashMap<String, String>();
+        jsonPathExpressions.put("$.person.age", "50");
+        validationContext.setJsonPathExpressions(jsonPathExpressions);
+
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+
+        try {
+            receiveAction.execute(context);
+        } finally {
+            verify(endpoint, consumer, endpointConfiguration);
+        }
+    }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -1146,7 +1214,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1179,7 +1246,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1215,7 +1281,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1253,7 +1318,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1290,7 +1354,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1328,7 +1391,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
         
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1363,7 +1425,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1394,7 +1455,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
@@ -1540,8 +1600,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
         
-        receiveAction.setValidator(validator);
-        
+
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
         receiveAction.setActor(disabledActor);
@@ -1574,8 +1633,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestCase testCase = new TestCase();
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
-        
-        receiveAction.setValidator(validator);
         
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);

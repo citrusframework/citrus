@@ -23,6 +23,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
+import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
@@ -54,20 +55,11 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
     @Override
     public void validateMessage(Message receivedMessage, TestContext context, XpathMessageValidationContext validationContext) throws ValidationException {
-        validateXpath(receivedMessage, validationContext, context);
-    }
-
-    /**
-     * Validate message payload XML elements.
-     *
-     * @param receivedMessage
-     * @param validationContext
-     * @param context
-     */
-    protected void validateXpath(Message receivedMessage,
-                                 XpathMessageValidationContext validationContext, TestContext context) {
         if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
-        assertPayloadExists(receivedMessage);
+
+        if (receivedMessage.getPayload() == null || !StringUtils.hasText(receivedMessage.getPayload().toString())) {
+            throw new ValidationException("Unable to validate message elements - receive message payload was empty");
+        }
 
         log.info("Start XPath element validation");
 
@@ -117,7 +109,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             expectedValue = context.replaceDynamicContentInString(expectedValue);
 
             //do the validation of actual and expected value for element
-            XmlValidationUtils.validateElementValues(actualValue, expectedValue, xPathExpression, context);
+            ValidationUtils.validateValues(actualValue, expectedValue, xPathExpression, context);
 
             if (log.isDebugEnabled()) {
                 log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
@@ -153,17 +145,6 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             return node.getFirstChild().getNodeValue();
         } else {
             return node.getNodeValue();
-        }
-    }
-
-    /**
-     * Asserts that a message contains payload
-     * @param message the message to check for payload
-     * @throws ValidationException if message does not contain payload
-     */
-    private void assertPayloadExists(Message message) throws ValidationException {
-        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
-            throw new ValidationException("Unable to validate message elements - receive message payload was empty");
         }
     }
 }

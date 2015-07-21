@@ -98,6 +98,15 @@
             <receive endpoint="channel:myMessageEndpoint">
                 <message>
                     <validate>
+                        <xpath expression="/TestMessage/text" value="Hello Citrus"/>
+                        <xpath expression="/TestMessage/foo" value="true" result-type="boolean"/>
+                    </validate>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate>
                         <script type="groovy">
                             assert true
                         </script>
@@ -110,6 +119,22 @@
                 <message>
                     <validate>
                         <script type="groovy" file="classpath:com/consol/citrus/actions/test-validation-script.groovy"/>
+                    </validate>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message type="json">
+                    <validate path="$.json.text" value="Hello Citrus"/>
+                    <validate path="$..foo.bar" value="true"/>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message type="json">
+                    <validate>
+                        <json-path expression="$.json.text" value="Hello Citrus"/>
+                        <json-path expression="$..foo.bar" value="true"/>
                     </validate>
                 </message>
             </receive>

@@ -40,9 +40,11 @@
             
             <receive endpoint="helloResponseReceiver">
                 <message>
-                    <validate path="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
-                    <validate path="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
-                    <validate path="//ns0:HelloResponse/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
+                    <validate>
+                        <xpath expression="//ns0:HelloResponse/ns0:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns0:HelloResponse/ns0:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns0:HelloResponse/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
                     <namespace prefix="ns0" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
@@ -75,9 +77,11 @@
             
             <receive endpoint="helloResponseReceiver">
                 <message>
-                    <validate path="//ns1:HelloResponse/ns1:MessageId" value="${messageId}"/>
-                    <validate path="//ns1:HelloResponse/ns1:CorrelationId" value="${correlationId}"/>
-                    <validate path="//ns1:HelloResponse/ns1:Text" value="citrus:concat('Hello ', ${user})"/>
+                    <validate>
+                        <xpath expression="//ns1:HelloResponse/ns1:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns1:HelloResponse/ns1:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns1:HelloResponse/ns1:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
                     <namespace prefix="ns1" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
                 </message>
                 <header>
@@ -110,10 +114,12 @@
             
             <receive endpoint="helloResponseReceiver">
                 <message>
-                    <validate path="//:HelloResponse/:MessageId" value="${messageId}"/>
-                    <validate path="//:HelloResponse/:CorrelationId" value="${correlationId}"/>
-                    <validate path="//:HelloResponse/:Text" value="citrus:concat('Hello ', ${user})"/>
-                    <namespace prefix="" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                    <validate>
+                        <xpath expression="//:HelloResponse/:MessageId" value="${messageId}"/>
+                        <xpath expression="//:HelloResponse/:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//:HelloResponse/:Text" value="citrus:concat('Hello ', ${user})"/>
+                        <namespace prefix="" value="http://www.consol.de/schemas/samples/sayHello.xsd"/>
+                    </validate>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>

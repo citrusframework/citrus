@@ -62,14 +62,13 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
             log.debug("Control message:\n" + controlMessage);
         }
 
-        String receivedJsonText = receivedMessage.getPayload().toString();
-        String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload().toString());
+        String receivedJsonText = receivedMessage.getPayload(String.class);
+        String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload(String.class));
         
         try {
             if (!StringUtils.hasText(controlJsonText)) {
-                Assert.isTrue(!StringUtils.hasText(receivedJsonText), "Validation failed - " +
-                		"expected empty message content, but was: " + receivedJsonText);
-                return; // empty message contents as expected - validation finished
+                log.info("Skip message payload validation as no control message was defined");
+                return;
             } else {
                 Assert.isTrue(StringUtils.hasText(receivedJsonText), "Validation failed - " +
                 		"expected message contents, but received empty message!");

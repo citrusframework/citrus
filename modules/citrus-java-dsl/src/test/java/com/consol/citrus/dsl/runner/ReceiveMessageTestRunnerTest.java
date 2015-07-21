@@ -26,6 +26,7 @@ import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.builder.ReceiveMessageBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -37,6 +38,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
@@ -1513,7 +1515,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithXPpathExpressions() {
+    public void testReceiveBuilderWithXpathExpressions() {
         reset(messageEndpoint, messageConsumer, configuration);
         expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
         expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
@@ -1560,6 +1562,126 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getXpathExpressions().get("TestRequest.Operation"), "SayHello");
 
         verify(messageEndpoint, messageConsumer, configuration);
+    }
+
+    @Test
+    public void testReceiveBuilderWithJsonPathExpressions() {
+        reset(messageEndpoint, messageConsumer, configuration);
+        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
+        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
+        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
+        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
+        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .setHeader("operation", "sayHello")).atLeastOnce();
+
+        replay(messageEndpoint, messageConsumer, configuration);
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                    @Override
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .validate("$.person.name", "John")
+                                .validate("$.text", "Hello World!");
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), ControlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonPathMessageValidationContext.class);
+
+        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.person.name"), "John");
+        Assert.assertEquals(validationContext.getJsonPathExpressions().get("$.text"), "Hello World!");
+
+        verify(messageEndpoint, messageConsumer, configuration);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testReceiveBuilderWithJsonPathExpressionsFailure() {
+        reset(messageEndpoint, messageConsumer, configuration);
+        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
+        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
+        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
+        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
+        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .setHeader("operation", "sayHello")).atLeastOnce();
+
+        replay(messageEndpoint, messageConsumer, configuration);
+
+        try {
+            new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+                @Override
+                public void execute() {
+                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                        @Override
+                        public void configure(ReceiveMessageBuilder builder) {
+                            builder.endpoint(messageEndpoint)
+                                    .messageType(MessageType.JSON)
+                                    .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                    .validate("$.person.name", "John")
+                                    .validate("$.text", "Hello Citrus!");
+                        }
+                    });
+                }
+            };
+        } finally {
+            verify(messageEndpoint, messageConsumer, configuration);
+        }
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testReceiveBuilderWithJsonValidationFailure() {
+        reset(messageEndpoint, messageConsumer, configuration);
+        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
+        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
+        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
+        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
+        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .setHeader("operation", "sayHello")).atLeastOnce();
+
+        replay(messageEndpoint, messageConsumer, configuration);
+
+        try {
+            new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+                @Override
+                public void execute() {
+                    receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                        @Override
+                        public void configure(ReceiveMessageBuilder builder) {
+                            builder.endpoint(messageEndpoint)
+                                    .messageType(MessageType.JSON)
+                                    .payload("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                    .validate("$.person.name", "John")
+                                    .validate("$.text", "Hello World!");
+                        }
+                    });
+                }
+            };
+        } finally {
+            verify(messageEndpoint, messageConsumer, configuration);
+        }
     }
     
     @Test

@@ -445,8 +445,10 @@ public void receiveMessageTest() {
         
         <para><emphasis>XML DSL</emphasis></para>
         <programlisting>&lt;message&gt;
-  &lt;validate path=&quot;/TestRequest/MessageId&quot; value=&quot;${messageId}&quot;/&gt;
-  &lt;validate path=&quot;/TestRequest/VersionId&quot; value=&quot;2&quot;/&gt;
+  &lt;validate&gt;
+    &lt;xpath expression=&quot;/TestRequest/MessageId&quot; value=&quot;${messageId}&quot;/&gt;
+    &lt;xpath expression=&quot;/TestRequest/VersionId&quot; value=&quot;2&quot;/&gt;
+  &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
 
         <para><emphasis>Java DSL</emphasis></para>
@@ -458,7 +460,7 @@ public void receiveMessageTest() {
         .header("Operation", "sayHello");
 }</programlisting>
         
-        <para>Instead of comparing the whole message some message elements are validated explicitly over XPath. Citrus evaluates the XPath expression on the received message and
+        <para>Instead of comparing the whole message some message elements are validated explicitly via XPath. Citrus evaluates the XPath expression on the received message and
         compares the result value to the control value. The basic message structure as well as all other message elements are not included into this explicit validation.</para> 
         
         <note>

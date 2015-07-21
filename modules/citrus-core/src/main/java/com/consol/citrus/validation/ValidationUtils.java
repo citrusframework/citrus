@@ -16,6 +16,11 @@
 
 package com.consol.citrus.validation;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.springframework.util.Assert;
+
 /**
  * Utility class provides helper methods for validation work in Citrus.
  * 
@@ -28,6 +33,45 @@ public abstract class ValidationUtils {
      * Prevent instantiation.
      */
     private ValidationUtils() {
+        super();
+    }
+
+    /**
+     * Validates actual against expected value of element
+     * @param actualValue
+     * @param expectedValue
+     * @param pathExpression
+     * @param context
+     * @throws com.consol.citrus.exceptions.ValidationException if validation fails
+     */
+    public static void validateValues(String actualValue, String expectedValue, String pathExpression, TestContext context)
+            throws ValidationException {
+        try {
+            if (actualValue != null) {
+                Assert.isTrue(expectedValue != null,
+                        ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not equal for element '" + pathExpression + "'", null, actualValue));
+
+                //check if validation matcher on element is specified
+                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
+                    ValidationMatcherUtils.resolveValidationMatcher(pathExpression,
+                            actualValue,
+                            expectedValue,
+                            context);
+                }
+                else {
+                    Assert.isTrue(actualValue.equals(expectedValue),
+                            ValidationUtils.buildValueMismatchErrorMessage(
+                                    "Values not equal for element '" + pathExpression + "'", expectedValue, actualValue));
+                }
+            } else {
+                Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
+                        ValidationUtils.buildValueMismatchErrorMessage(
+                                "Values not equal for element '" + pathExpression + "'", expectedValue, null));
+            }
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("Validation failed:", e);
+        }
     }
     
     /**
