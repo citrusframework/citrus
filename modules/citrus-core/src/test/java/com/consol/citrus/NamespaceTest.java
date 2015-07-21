@@ -28,7 +28,7 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XpathXmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.easymock.EasyMock;
 import org.testng.annotations.BeforeMethod;
@@ -934,7 +934,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -976,7 +976,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -1018,7 +1018,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         

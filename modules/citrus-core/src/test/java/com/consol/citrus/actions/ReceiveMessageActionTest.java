@@ -733,7 +733,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
@@ -767,7 +767,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
@@ -804,7 +804,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
@@ -841,7 +841,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
 
         Map<String, String> messageElements = new HashMap<String, String>();
@@ -878,7 +878,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         receiveAction.setValidator(validator);
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         
         Map<String, String> messageElements = new HashMap<String, String>();

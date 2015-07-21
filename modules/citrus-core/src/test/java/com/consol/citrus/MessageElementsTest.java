@@ -29,7 +29,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XpathXmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
@@ -85,7 +85,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -121,7 +121,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB", "");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -158,7 +158,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//root/element/sub-elementC/@attribute", "");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -194,7 +194,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB", "null");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -230,7 +230,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB/@attribute", "B");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -266,7 +266,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-element-wrong", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -302,7 +302,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB", "text-value-wrong");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -338,7 +338,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB/@attribute", "wrong-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -374,7 +374,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB/@attribute-wrong", "B");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -496,7 +496,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         replay(endpoint, consumer, endpointConfiguration);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         
         controlMessageBuilder.setPayloadData("<root>"

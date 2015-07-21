@@ -22,7 +22,7 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XpathXmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
@@ -85,7 +85,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyValue("messageType", messageType);
             }
 
-            XpathXmlMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
+            XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
             if (!xPathMessageValidationContext.getPathValidationExpressions().isEmpty()) {
                 validationContexts.add(xPathMessageValidationContext);
             }
@@ -244,8 +244,8 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param messageElement
      * @return
      */
-    private XpathXmlMessageValidationContext getXPathMessageValidationContext(Element messageElement, XmlMessageValidationContext parentContext) {
-        XpathXmlMessageValidationContext context = new XpathXmlMessageValidationContext();
+    private XpathMessageValidationContext getXPathMessageValidationContext(Element messageElement, XmlMessageValidationContext parentContext) {
+        XpathMessageValidationContext context = new XpathMessageValidationContext();
         
         parseXPathValidationElements(messageElement, context);
 
@@ -338,7 +338,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @param messageElement the message DOM element.
      * @param context the message validation context.
      */
-    private void parseXPathValidationElements(Element messageElement, XpathXmlMessageValidationContext context) {
+    private void parseXPathValidationElements(Element messageElement, XpathMessageValidationContext context) {
         //check for validate elements, these elements can either have script, xpath or namespace validation information
         //for now we only handle xpath validation
         Map<String, String> validateXpathExpressions = new HashMap<String, String>();

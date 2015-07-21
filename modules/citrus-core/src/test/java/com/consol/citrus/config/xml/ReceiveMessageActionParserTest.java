@@ -18,7 +18,7 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XpathXmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -182,9 +182,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathXmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
         xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        XpathXmlMessageValidationContext xPathValidationContext = (XpathXmlMessageValidationContext)action.getValidationContexts().get(1);
+        XpathMessageValidationContext xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
         
@@ -198,10 +198,10 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
-        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathXmlMessageValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(1) instanceof XpathMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof ScriptValidationContext);
         xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
-        xPathValidationContext = (XpathXmlMessageValidationContext)action.getValidationContexts().get(1);
+        xPathValidationContext = (XpathMessageValidationContext)action.getValidationContexts().get(1);
         ScriptValidationContext scriptValidationContext = (ScriptValidationContext)action.getValidationContexts().get(2);
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
