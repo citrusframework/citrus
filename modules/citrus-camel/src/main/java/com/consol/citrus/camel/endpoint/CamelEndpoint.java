@@ -26,6 +26,10 @@ import com.consol.citrus.messaging.Producer;
  */
 public class CamelEndpoint extends AbstractEndpoint {
 
+    /** Cached producer or consumer */
+    private CamelConsumer camelConsumer;
+    private CamelProducer camelProducer;
+
     /**
      * Default constructor initializes endpoint configuration;
      */
@@ -44,12 +48,20 @@ public class CamelEndpoint extends AbstractEndpoint {
 
     @Override
     public Producer createProducer() {
-        return new CamelProducer(getProducerName(), getEndpointConfiguration());
+        if (camelProducer == null) {
+            camelProducer = new CamelProducer(getProducerName(), getEndpointConfiguration());
+        }
+
+        return camelProducer;
     }
 
     @Override
     public Consumer createConsumer() {
-        return new CamelConsumer(getConsumerName(), getEndpointConfiguration());
+        if (camelConsumer == null) {
+            camelConsumer = new CamelConsumer(getConsumerName(), getEndpointConfiguration());
+        }
+
+        return camelConsumer;
     }
 
     @Override

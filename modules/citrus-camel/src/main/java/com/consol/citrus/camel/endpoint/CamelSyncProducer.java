@@ -18,11 +18,11 @@ package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.message.*;
-import com.consol.citrus.message.correlation.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.correlation.CorrelationManager;
+import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyConsumer;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.apache.camel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,13 +68,12 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was successfully sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
-
-        Exchange response = endpointConfiguration.getCamelContext().createProducerTemplate()
+        Exchange response = getProducerTemplate()
                 .request(endpointConfiguration.getEndpointUri(), new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration);
+                        log.info("Message was successfully sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
                     }
                 });
 

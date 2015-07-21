@@ -97,7 +97,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         reset(camelContext, consumerTemplate);
 
-        expect(camelContext.createConsumerTemplate()).andReturn(consumerTemplate).times(2);
+        expect(camelContext.createConsumerTemplate()).andReturn(consumerTemplate).once();
         expect(camelContext.getUuidGenerator()).andReturn(new JavaUuidGenerator()).once();
         expect(consumerTemplate.receive(endpointUri, endpointConfiguration.getTimeout())).andReturn(exchange).once();
         consumerTemplate.doneUoW(exchange);

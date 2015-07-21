@@ -62,7 +62,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
     public Message receive(TestContext context, long timeout) {
         log.info("Receiving message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        Exchange exchange = endpointConfiguration.getCamelContext().createConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
+        Exchange exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
 
         if (exchange == null) {
             throw new ActionTimeoutException("Action timed out while receiving message from camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
@@ -94,7 +94,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
 
         log.info("Sending reply message to camel endpoint: '" + exchange.getFromEndpoint() + "'");
 
-        endpointConfiguration.getCamelContext().createConsumerTemplate().doneUoW(exchange);
+        getConsumerTemplate().doneUoW(exchange);
 
         context.onOutboundMessage(message);
 

@@ -20,8 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import org.apache.camel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +35,9 @@ public class CamelProducer implements Producer {
 
     /** Endpoint configuration */
     private final CamelEndpointConfiguration endpointConfiguration;
+
+    /** Cached producer template - only created once for this producer */
+    private ProducerTemplate producerTemplate;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CamelProducer.class);
@@ -54,7 +56,7 @@ public class CamelProducer implements Producer {
     public void send(final Message message, TestContext context) {
         log.info("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        Exchange camelExchange = endpointConfiguration.getCamelContext().createProducerTemplate()
+        Exchange camelExchange = getProducerTemplate()
                 .send(endpointConfiguration.getEndpointUri(), new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
@@ -69,6 +71,19 @@ public class CamelProducer implements Producer {
         context.onOutboundMessage(message);
 
         log.info("Message was successfully sent to camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
+    }
+
+    /**
+     * Creates new producer template if not present yet. Create producer template only once which is
+     * mandatory for direct endpoints that do only support one single producer at a time.
+     * @return
+     */
+    protected ProducerTemplate getProducerTemplate() {
+        if (producerTemplate == null) {
+            producerTemplate = endpointConfiguration.getCamelContext().createProducerTemplate();
+        }
+
+        return producerTemplate;
     }
 
     @Override

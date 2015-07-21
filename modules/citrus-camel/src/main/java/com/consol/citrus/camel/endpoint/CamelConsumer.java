@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
+import org.apache.camel.ConsumerTemplate;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ public class CamelConsumer implements Consumer {
 
     /** The consumer name */
     private final String name;
+
+    /** Cached consumer template - only created once for this consumer */
+    private ConsumerTemplate consumerTemplate;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CamelConsumer.class);
@@ -57,7 +61,7 @@ public class CamelConsumer implements Consumer {
     public Message receive(TestContext context, long timeout) {
         log.info("Receiving message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
 
-        Exchange exchange = endpointConfiguration.getCamelContext().createConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
+        Exchange exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
 
         if (exchange == null) {
             throw new ActionTimeoutException("Action timed out while receiving message from camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
@@ -69,6 +73,19 @@ public class CamelConsumer implements Consumer {
         context.onInboundMessage(message);
 
         return message;
+    }
+
+    /**
+     * Creates new consumer template if not present yet. Create consumer template only once which is
+     * mandatory for direct endpoints that do only support one single consumer at a time.
+     * @return
+     */
+    protected ConsumerTemplate getConsumerTemplate() {
+        if (consumerTemplate == null) {
+            consumerTemplate = endpointConfiguration.getCamelContext().createConsumerTemplate();
+        }
+
+        return consumerTemplate;
     }
 
     @Override
