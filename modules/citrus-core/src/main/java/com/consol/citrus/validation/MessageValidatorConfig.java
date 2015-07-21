@@ -22,7 +22,7 @@ import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XPathMessageValidator;
+import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Configuration;
 public class MessageValidatorConfig {
 
     private final DomXmlMessageValidator defaultXmlMessageValidator = new DomXmlMessageValidator();
-    private final XPathMessageValidator defaultXPathMessageValidator = new XPathMessageValidator();
+    private final XpathMessageValidator defaultXPathMessageValidator = new XpathMessageValidator();
     private final JsonTextMessageValidator defaultJsonMessageValidator = new JsonTextMessageValidator();
     private final PlainTextMessageValidator defaultPlaintextMessageValidator = new PlainTextMessageValidator();
 
@@ -49,7 +49,7 @@ public class MessageValidatorConfig {
     }
 
     @Bean(name = "defaultXPathMessageValidator")
-    public XPathMessageValidator getDefaultXPathMessageValidator() {
+    public XpathMessageValidator getDefaultXPathMessageValidator() {
         return defaultXPathMessageValidator;
     }
 

@@ -34,7 +34,7 @@ public class XPathMessageValidatorTest extends AbstractTestNGUnitTest {
 
     @Autowired
     @Qualifier("defaultXPathMessageValidator")
-    private XPathMessageValidator validator;
+    private XpathMessageValidator validator;
 
     @Test
     public void testValidateMessageElementsWithXPathSuccessful() {

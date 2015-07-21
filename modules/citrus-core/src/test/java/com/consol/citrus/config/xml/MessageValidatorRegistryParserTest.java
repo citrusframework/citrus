@@ -24,7 +24,7 @@ import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XPathMessageValidator;
+import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -52,7 +52,7 @@ public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionPa
         MessageValidatorRegistry messageValidatorBean = messageValidators.values().iterator().next();
         Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 7L);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(0).getClass(), DomXmlMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(1).getClass(), XPathMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(1).getClass(), XpathMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(2).getClass(), GroovyXmlMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(3).getClass(), PlainTextMessageValidator.class);
         Assert.assertEquals(messageValidatorBean.getMessageValidators().get(4).getClass(), JsonTextMessageValidator.class);
