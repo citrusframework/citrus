@@ -15,8 +15,22 @@
   </properties>
   
   <body>
-    <release version="2.2.1" date="01.07.2015" description="2.2.1 release">
-
+    <release version="2.2.1" date="01.08.2015" description="2.2.1 release">
+        <action dev="christophd" type="add">
+          CITRUS-196 JSONPath support
+        </action>
+        <action dev="christophd" type="update">
+          CITRUS-262 Boolean expression evaluation in Java DSL
+        </action>
+        <action dev="maherm" type="add">
+          CITRUS-248 Websocket support
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-255 Refactor Java DSL test action execution (TestRunner)
+        </action>
+        <action dev="maherm" type="update">
+          CITRUS-253 Update Jetty version
+        </action>
     </release>
 
     <release version="2.2" date="26.06.2015" description="2.2 release">
