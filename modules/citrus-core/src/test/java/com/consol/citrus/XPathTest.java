@@ -95,7 +95,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -138,7 +138,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//*[.='search-for']", "search-for");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -177,7 +177,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -216,7 +216,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//ns1:ns-element", "namespace");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -271,7 +271,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         

@@ -167,7 +167,7 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
     @Test
     public void testIgnoreElementsAndValidate() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"

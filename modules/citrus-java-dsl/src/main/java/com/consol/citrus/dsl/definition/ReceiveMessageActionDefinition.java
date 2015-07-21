@@ -30,7 +30,7 @@ import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XPathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathXmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
@@ -636,17 +636,17 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * not a XML validation context.
      * @return
      */
-    private XPathMessageValidationContext getXPathValidationContext() {
+    private XpathXmlMessageValidationContext getXPathValidationContext() {
         if (validationContext == null) {
             validationContext = new XmlMessageValidationContext();
 
             action.getValidationContexts().add(validationContext);
         }
 
-        if (validationContext instanceof XPathMessageValidationContext) {
-            return ((XPathMessageValidationContext)validationContext);
+        if (validationContext instanceof XpathXmlMessageValidationContext) {
+            return ((XpathXmlMessageValidationContext)validationContext);
         } else if (validationContext instanceof XmlMessageValidationContext) {
-            XPathMessageValidationContext xPathContext = new XPathMessageValidationContext();
+            XpathXmlMessageValidationContext xPathContext = new XpathXmlMessageValidationContext();
             xPathContext.setMessageBuilder(validationContext.getMessageBuilder());
             xPathContext.setNamespaces(((XmlMessageValidationContext) validationContext).getNamespaces());
             xPathContext.setControlNamespaces(((XmlMessageValidationContext) validationContext).getControlNamespaces());

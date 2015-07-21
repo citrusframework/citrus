@@ -29,7 +29,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XPathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathXmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
@@ -85,7 +85,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-elementB", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -120,7 +120,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-elementB", "");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -155,7 +155,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-elementB.attribute", "B");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -190,7 +190,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-element-wrong", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -226,7 +226,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-elementB", "text-value-wrong");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -261,7 +261,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-elementB.attribute", "wrong-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -296,7 +296,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("sub-elementB.attribute-wrong", "B");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -415,7 +415,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         replay(endpoint, consumer, endpointConfiguration);
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"

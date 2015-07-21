@@ -44,7 +44,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class XpathMessageValidator extends AbstractMessageValidator<XPathMessageValidationContext> {
+public class XpathMessageValidator extends AbstractMessageValidator<XpathXmlMessageValidationContext> {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathMessageValidator.class);
@@ -53,7 +53,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XPathMessage
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     @Override
-    public void validateMessage(Message receivedMessage, TestContext context, XPathMessageValidationContext validationContext) throws ValidationException {
+    public void validateMessage(Message receivedMessage, TestContext context, XpathXmlMessageValidationContext validationContext) throws ValidationException {
         validateXpath(receivedMessage, validationContext, context);
     }
 
@@ -65,7 +65,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XPathMessage
      * @param context
      */
     protected void validateXpath(Message receivedMessage,
-                                 XPathMessageValidationContext validationContext, TestContext context) {
+                                 XpathXmlMessageValidationContext validationContext, TestContext context) {
         if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
         assertPayloadExists(receivedMessage);
 
@@ -128,10 +128,10 @@ public class XpathMessageValidator extends AbstractMessageValidator<XPathMessage
     }
 
     @Override
-    public XPathMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+    public XpathXmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
-            if (validationContext instanceof XPathMessageValidationContext) {
-                return (XPathMessageValidationContext) validationContext;
+            if (validationContext instanceof XpathXmlMessageValidationContext) {
+                return (XpathXmlMessageValidationContext) validationContext;
             }
         }
 

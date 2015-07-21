@@ -24,7 +24,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.2.1
  */
-public class XPathMessageValidationContext extends XmlMessageValidationContext {
+public class XpathXmlMessageValidationContext extends XmlMessageValidationContext {
 
     /** Map holding xpath expressions as key and expected values as values */
     private Map<String, String> pathValidationExpressions = new HashMap<String, String>();

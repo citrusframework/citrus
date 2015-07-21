@@ -92,7 +92,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB", "${variable}");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -130,7 +130,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("//sub-elementB", "citrus:concat(${text}, '-', 'value')");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -166,7 +166,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("${expression}", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
@@ -203,7 +203,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         validateMessageElements.put("citrus:concat('//sub-element', ${variable})", "text-value");
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XPathMessageValidationContext validationContext = new XPathMessageValidationContext();
+        XpathXmlMessageValidationContext validationContext = new XpathXmlMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         validationContext.setPathValidationExpressions(validateMessageElements);
         
