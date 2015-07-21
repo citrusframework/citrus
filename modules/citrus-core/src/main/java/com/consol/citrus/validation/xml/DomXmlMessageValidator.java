@@ -18,17 +18,18 @@ package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.*;
+import com.consol.citrus.validation.ControlMessageValidator;
+import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
-import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,10 +66,8 @@ import java.util.Map.Entry;
  * @author Christoph Deppisch
  * @since 2007
  */
-public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> implements ApplicationContextAware {
-    /**
-     * Logger
-     */
+public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageValidationContext> implements ApplicationContextAware {
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
     
     @Autowired(required = false)
@@ -83,15 +82,9 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
     /** Transformer factory */
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-    /**
-     * Validates the message with test context and xml validation context.
-     * @param receivedMessage the message to validate
-     * @param context the current test context
-     * @param validationContext the validation context
-     * @throws ValidationException if validation fails
-     */
-    public void validateMessage(Message receivedMessage, TestContext context,
-            XmlMessageValidationContext validationContext) throws ValidationException {
+    @Override
+    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
+                                       XmlMessageValidationContext validationContext, TestContext context) throws ValidationException {
         log.info("Start XML message validation");
 
         try {
@@ -101,10 +94,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
 
             validateNamespaces(validationContext.getControlNamespaces(), receivedMessage);
-            validateMessagePayload(receivedMessage, validationContext, context);
-            validateMessageElements(receivedMessage, validationContext, context);
+            validateMessageContent(receivedMessage, controlMessage, validationContext, context);
 
-            Message controlMessage = validationContext.getControlMessage(context);
             if (controlMessage != null) {
                 Assert.isTrue(controlMessage.getHeaderData().size() <= receivedMessage.getHeaderData().size(),
                         "Failed to validate header data XML fragments - found " +
@@ -115,7 +106,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                             controlMessage.getHeaderData().get(i), validationContext, context);
                 }
 
-                validateMessageHeader(controlMessage.copyHeaders(), receivedMessage.copyHeaders(), context);
             }
 
             log.info("XML message validation successful: All values OK");
@@ -132,94 +122,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             log.error("Failed to validate:\n" + XMLUtils.prettyPrint(receivedMessage.getPayload().toString()));
             throw ex;
         }
-    }
-
-    /**
-     * Validates the message header comparing a control set of header
-     * elements with the actual message header.
-     *
-     * @param controlHeaders
-     * @param receivedHeaders
-     * @param context
-     */
-    protected void validateMessageHeader(Map<String, Object> controlHeaders,
-            Map<String, Object> receivedHeaders,
-            TestContext context) {
-        
-        ControlMessageValidator validatorDelegate = new ControlMessageValidator();
-        validatorDelegate.validateMessageHeader(controlHeaders, receivedHeaders, context);
-    }
-
-    /**
-     * Validate message payload XML elements.
-     *
-     * @param receivedMessage
-     * @param validationContext
-     * @param context
-     */
-    protected void validateMessageElements(Message receivedMessage,
-            XmlMessageValidationContext validationContext, TestContext context) {
-        if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
-        assertPayloadExists(receivedMessage);
-
-        log.info("Start XML elements validation");
-
-        Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload().toString());
-        NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(
-                receivedMessage, validationContext.getNamespaces());
-
-        for (Entry<String, String> entry : validationContext.getPathValidationExpressions().entrySet()) {
-            String elementPathExpression = entry.getKey();
-            String expectedValue = entry.getValue();
-            String actualValue;
-
-            elementPathExpression = context.replaceDynamicContentInString(elementPathExpression);
-
-            if (XPathUtils.isXPathExpression(elementPathExpression)) {
-                XPathExpressionResult resultType = XPathExpressionResult.fromString(
-                        elementPathExpression, XPathExpressionResult.NODE);
-                elementPathExpression = XPathExpressionResult.cutOffPrefix(elementPathExpression);
-
-                //Give ignore elements the chance to prevent the validation in case result type is node
-                if (resultType.equals(XPathExpressionResult.NODE) &&
-                        isNodeIgnored(XPathUtils.evaluateAsNode(received,
-                                elementPathExpression,
-                                namespaceContext),
-                                validationContext,
-                                namespaceContext)) {
-                    continue;
-                }
-
-                actualValue = XPathUtils.evaluate(received,
-                            elementPathExpression,
-                            namespaceContext,
-                            resultType);
-            } else {
-                Node node = XMLUtils.findNodeByName(received, elementPathExpression);
-
-                if (node == null) {
-                    throw new UnknownElementException(
-                            "Element ' " + elementPathExpression + "' could not be found in DOM tree");
-                }
-
-                if (isNodeIgnored(node, validationContext, namespaceContext)) {
-                    continue;
-                }
-
-                actualValue = getNodeValue(node);
-            }
-            //check if expected value is variable or function (and resolve it, if yes)
-            expectedValue = context.replaceDynamicContentInString(expectedValue);
-
-            //do the validation of actual and expected value for element
-            validateExpectedActualElements(actualValue, expectedValue, elementPathExpression, context);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Validating element: " + elementPathExpression + "='" + expectedValue + "': OK.");
-            }
-        }
-
-        log.info("Validation of XML elements finished successfully: All elements OK");
     }
 
     /**
@@ -423,10 +325,8 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param validationContext
      * @param context
      */
-    protected void validateMessagePayload(Message receivedMessage, XmlMessageValidationContext validationContext,
+    protected void validateMessageContent(Message receivedMessage, Message controlMessage, XmlMessageValidationContext validationContext,
             TestContext context) {
-        Message controlMessage = validationContext.getControlMessage(context);
-
         if (controlMessage == null || controlMessage.getPayload() == null) {
             log.info("Skip message payload validation as no control message was defined");
             return;
@@ -599,7 +499,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         doElementNamespaceValidation(received, source);
 
         //check if element is ignored either by xpath or by ignore placeholder in source message
-        if(isElementNodeIgnored(source, received, validationContext, namespaceContext)) {
+        if(XmlValidationUtils.isIgnored(source, received, validationContext.getIgnoreExpressions(), namespaceContext)) {
             return;
         }
 
@@ -852,89 +752,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         return false;
     }
 
-    /**
-     * Checks if given element node is either on ignore list or
-     * contains @ignore@ tag inside control message
-     * @param source
-     * @param received
-     * @param validationContext
-     * @param namespaceContext
-     * @return
-     */
-    private boolean isElementNodeIgnored(Node source, Node received, XmlMessageValidationContext validationContext,
-            NamespaceContext namespaceContext) {
-        if (isNodeIgnored(received, validationContext, namespaceContext)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
-            }
-            return true;
-        } else if (source.getFirstChild() != null &&
-                    StringUtils.hasText(source.getFirstChild().getNodeValue()) &&
-                    source.getFirstChild().getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" +
-                        CitrusConstants.IGNORE_PLACEHOLDER + "'");
-            }
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Checks whether the node is ignored by node path expression or xpath expression.
-     * @param node
-     * @param validationContext
-     * @return
-     */
-    private boolean isNodeIgnored(final Node node, XmlMessageValidationContext validationContext,
-            NamespaceContext namespaceContext) {
-        Set<String> ignoreMessageElements = validationContext.getIgnoreExpressions();
-
-        if (CollectionUtils.isEmpty(ignoreMessageElements)) {
-            return false;
-        }
-
-        /** This is the faster version, but then the ignoreValue name must be
-         * the full path name like: Numbers.NumberItem.AreaCode
-         */
-        if (ignoreMessageElements.contains(XMLUtils.getNodesPathName(node))) {
-            return true;
-        }
-
-        /** This is the slower version, but here the ignoreValues can be
-         * the short path name like only: AreaCode
-         *
-         * If there are more nodes with the same short name,
-         * the first one will match, eg. if there are:
-         *      Numbers1.NumberItem.AreaCode
-         *      Numbers2.NumberItem.AreaCode
-         * And ignoreValues contains just: AreaCode
-         * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
-         */
-        for (String expression : ignoreMessageElements) {
-            if (node == XMLUtils.findNodeByName(node.getOwnerDocument(), expression)) {
-                return true;
-            }
-        }
-
-        /** This is the XPath version using XPath expressions in
-         * ignoreValues to identify nodes to be ignored
-         */
-        for (String expression : ignoreMessageElements) {
-            if (XPathUtils.isXPathExpression(expression)) {
-                Node foundNode = XPathUtils.evaluateAsNode(node.getOwnerDocument(),
-                            expression, 
-                            namespaceContext);
-
-                if (foundNode != null && foundNode.isSameNode(node)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     @Override
     public XmlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
@@ -944,68 +761,6 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         }
 
         return null;
-    }
-
-    /**
-     * Asserts that a message contains payload
-     * @param message the message to check for payload
-     * @throws ValidationException if message does not contain payload
-     */
-    private void assertPayloadExists(Message message) throws ValidationException {
-        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
-            throw new ValidationException("Unable to validate message elements - receive message payload was empty");
-        }
-    }
-
-    /**
-     * Resolves an XML node's value
-     * @param node
-     * @return node's string value
-     */
-    private String getNodeValue(Node node) {
-        if (node.getNodeType() == Node.ELEMENT_NODE && node.getFirstChild() != null) {
-            return node.getFirstChild().getNodeValue();
-        } else {
-            return node.getNodeValue();
-        }
-    }
-
-    /**
-     * Validates actual against expected value of element
-     * @param actualValue
-     * @param expectedValue
-     * @param elementPathExpression
-     * @param context
-     * @throws ValidationException if validation fails
-     */
-    private void validateExpectedActualElements(String actualValue, String expectedValue, String elementPathExpression, TestContext context)
-            throws ValidationException {
-        try {
-            if (actualValue != null) {
-                Assert.isTrue(expectedValue != null,
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                        "Values not equal for element '" + elementPathExpression + "'", null, actualValue));
-
-                //check if validation matcher on element is specified
-                if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
-                    ValidationMatcherUtils.resolveValidationMatcher(elementPathExpression,
-                            actualValue,
-                            expectedValue,
-                            context);
-                }
-                else {
-                    Assert.isTrue(actualValue.equals(expectedValue),
-                            ValidationUtils.buildValueMismatchErrorMessage(
-                                    "Values not equal for element '" + elementPathExpression + "'", expectedValue, actualValue));
-                }
-            } else {
-                Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                        "Values not equal for element '" + elementPathExpression + "'", expectedValue, null));
-            }
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException("Validation failed:", e);
-        }
     }
 
     /**

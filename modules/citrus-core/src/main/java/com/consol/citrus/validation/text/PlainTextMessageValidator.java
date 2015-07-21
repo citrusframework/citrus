@@ -17,6 +17,7 @@
 package com.consol.citrus.validation.text;
 
 import com.consol.citrus.message.Message;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 import org.springframework.util.Assert;
 
 import com.consol.citrus.context.TestContext;
@@ -32,9 +33,8 @@ import com.consol.citrus.validation.ControlMessageValidator;
 public class PlainTextMessageValidator extends ControlMessageValidator {
 
     @Override
-    public void validateMessagePayload(Message receivedMessage,
-            Message controlMessage,
-            TestContext context) throws ValidationException {
+    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
+                                       ControlMessageValidationContext validationContext, TestContext context) throws ValidationException {
         log.info("Start plain text message validation");
         
         if (log.isDebugEnabled()) {

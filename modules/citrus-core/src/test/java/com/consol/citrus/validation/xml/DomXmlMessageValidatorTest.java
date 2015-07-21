@@ -475,171 +475,6 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testValidateMessageElementsWithXPathSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                        + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>"
-                    + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setPathValidationExpressions(Collections.singletonMap("//element/sub-element", "text-value"));
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test
-    public void testValidateMessageElementsWithValidationMatcherSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-
-        Map<String, String> validationExpressions = new HashMap<String, String>();
-        validationExpressions.put("//element/@attributeA", "@startsWith('attribute-')@");
-        validationExpressions.put("//element/@attributeB", "@endsWith('-value')@");
-        validationExpressions.put("//element/sub-element", "@equalsIgnoreCase('TEXT-VALUE')@");
-
-        validationContext.setPathValidationExpressions(validationExpressions);
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test(expectedExceptions = {ValidationException.class})
-    public void testValidateMessageElementsWithValidationMatcherNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-
-        Map<String, String> validationExpressions = new HashMap<String, String>();
-        validationExpressions.put("//element/@attributeA", "@startsWith('attribute-')@");
-        validationExpressions.put("//element/@attributeB", "@endsWith('-value')@");
-        validationExpressions.put("//element/sub-element", "@contains('FAIL')@");
-
-        validationContext.setPathValidationExpressions(validationExpressions);
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test(expectedExceptions = {ValidationException.class})
-    public void testValidateMessageElementsWithXPathNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                        + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>"
-                    + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setPathValidationExpressions(Collections.singletonMap(
-                "//element/sub-element", "false-value"));
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test
-    public void testValidateMessageElementsWithDotNotationSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                        + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>"
-                    + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setPathValidationExpressions(Collections.singletonMap(
-                "root.element.sub-element", "text-value"));
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test
-    public void testValidateMessageElementsWithDotNotationValidationMatcherSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setPathValidationExpressions(Collections.singletonMap(
-                "root.element.sub-element", "@contains('ext-val')@"));
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test(expectedExceptions = {ValidationException.class})
-    public void testValidateMessageElementsWithDotNotationValidationMatcherNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                + "<sub-element attribute='A'>text-value</sub-element>"
-                + "</element>"
-                + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setPathValidationExpressions(Collections.singletonMap(
-                "root.element.sub-element", "@contains(false-value)@"));
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test(expectedExceptions = {ValidationException.class})
-    public void testValidateMessageElementsWithDotNotationNotSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                        + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>"
-                    + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setPathValidationExpressions(Collections.singletonMap(
-                "root.element.sub-element", "false-value"));
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test
-    public void testValidateMessageElementsWithMixedNotationsSuccessful() {
-        Message message = new DefaultMessage("<root>"
-                        + "<element attributeA='attribute-value' attributeB='attribute-value'>"
-                        + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>"
-                    + "</root>");
-
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        //mix of xpath and dot-notation
-        Map<String, String> validationExpressions = new HashMap<String, String>();
-        validationExpressions.put("//element/sub-element", "text-value");
-        validationExpressions.put("root.element.sub-element", "text-value");
-        validationContext.setPathValidationExpressions(validationExpressions);
-
-        DomXmlMessageValidator validator = new DomXmlMessageValidator();
-
-        validator.validateMessageElements(message, validationContext, context);
-    }
-
-    @Test
     public void testValidateMessagePayloadSuccess() {
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
@@ -657,7 +492,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setControlMessage(controlMessage);
 
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
     
     @Test
@@ -678,15 +513,15 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                         + "</element>"
                     + "</root>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
         Set<String> ignoreExpressions = new HashSet<String>();
         ignoreExpressions.add("//root/element/sub-element1");
 
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         validationContext.setControlMessage(controlMessage);
         validationContext.setIgnoreExpressions(ignoreExpressions);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -707,7 +542,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -728,7 +563,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
     
     @Test(expectedExceptions = {ValidationException.class})
@@ -749,7 +584,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
     @Test
@@ -770,7 +605,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
     @Test
@@ -791,7 +626,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
     @Test
@@ -812,7 +647,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
     @Test
@@ -833,7 +668,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
     @Test
@@ -854,10 +689,10 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
-    @Test(expectedExceptions = {IllegalArgumentException.class})
+    @Test(expectedExceptions = {ValidationException.class})
     public void testNamespaceQualifiedAttributeValueFails() {
         Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
@@ -875,10 +710,10 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
-    @Test(expectedExceptions = {IllegalArgumentException.class})
+    @Test(expectedExceptions = {ValidationException.class})
     public void testNamespaceQualifiedAttributeValueUriMismatch() {
         Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='ns1:attribute-value' attributeB='attribute-value'>"
@@ -896,10 +731,10 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
-    @Test(expectedExceptions = {IllegalArgumentException.class})
+    @Test(expectedExceptions = {ValidationException.class})
     public void testNamespaceQualifiedAttributeMissingPrefix() {
         Message message = new DefaultMessage("<root xmlns='http://citrusframework.org/default' xmlns:ns1='http://citrusframework.org/ns1' xmlns:ns2='http://citrusframework.org/ns2' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>"
                 + "<element xsi:type='attribute-value' attributeB='attribute-value'>"
@@ -917,7 +752,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
     @Test(expectedExceptions = {ValidationException.class})
@@ -938,7 +773,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
 
         validationContext.setControlMessage(controlMessage);
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
-        validator.validateMessagePayload(message, validationContext, context);
+        validator.validateMessage(message, context, validationContext);
     }
 
 }

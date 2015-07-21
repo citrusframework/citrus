@@ -22,8 +22,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.ControlMessageValidator;
-import com.consol.citrus.validation.ValidationUtils;
+import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -54,9 +53,8 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void validateMessagePayload(Message receivedMessage,
-            Message controlMessage,
-            TestContext context) throws ValidationException {
+    public void validateMessagePayload(Message receivedMessage, Message controlMessage,
+                                       ControlMessageValidationContext validationContext, TestContext context) throws ValidationException {
         log.info("Start JSON message validation");
         
         if (log.isDebugEnabled()) {

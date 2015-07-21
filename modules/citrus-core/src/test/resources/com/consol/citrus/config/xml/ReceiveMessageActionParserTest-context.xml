@@ -94,6 +94,25 @@
                     <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
                 </message>
             </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate>
+                        <script type="groovy">
+                            assert true
+                        </script>
+                    </validate>
+                    <validate path="/TestMessage/foo" value="true" result-type="boolean"/>
+                </message>
+            </receive>
+
+            <receive endpoint="channel:myMessageEndpoint">
+                <message>
+                    <validate>
+                        <script type="groovy" file="classpath:com/consol/citrus/actions/test-validation-script.groovy"/>
+                    </validate>
+                </message>
+            </receive>
         </actions>
     </testcase>
     

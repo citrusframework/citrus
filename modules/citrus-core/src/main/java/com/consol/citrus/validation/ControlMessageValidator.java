@@ -36,7 +36,7 @@ import java.util.Map.Entry;
  * 
  * @author Christoph Deppisch
  */
-public class ControlMessageValidator extends AbstractMessageValidator<ControlMessageValidationContext> {
+public class ControlMessageValidator<T extends ControlMessageValidationContext> extends AbstractMessageValidator<T> {
 
     /**
      * Logger
@@ -48,17 +48,24 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * payload validation.
      */
     public void validateMessage(Message receivedMessage, TestContext context,
-            ControlMessageValidationContext validationContext) {
-        
+            T validationContext) {
+        log.info("Start message validation ...");
+
         Message controlMessage = validationContext.getControlMessage(context);
-        
+
         // validate message payload first
-        validateMessagePayload(receivedMessage, controlMessage, context);
-        
+        validateMessagePayload(receivedMessage,
+                controlMessage,
+                validationContext,
+                context);
+
         // validate message headers
         validateMessageHeader(controlMessage.copyHeaders(),
                 receivedMessage.copyHeaders(),
+                validationContext,
                 context);
+
+        log.info("Message validation successful: All values OK");
     }
     
     /**
@@ -67,10 +74,11 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      * 
      * @param receivedMessage the received message to check.
      * @param controlMessage the expected control message.
+     * @param validationContext the current validation context
      * @param context the current test context with all variables.
      */
     public void validateMessagePayload(Message receivedMessage,
-            Message controlMessage, TestContext context) throws ValidationException {
+            Message controlMessage, T validationContext, TestContext context) throws ValidationException {
     }
     
     
@@ -79,9 +87,11 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
      *
      * @param controlHeaders the expected control headers.
      * @param receivedHeaders the actual headers from message received.
+     * @param validationContext the current validation context
      * @param context the current test context.
      */
-    public void validateMessageHeader(Map<String, Object> controlHeaders, Map<String, Object> receivedHeaders, TestContext context) {
+    public void validateMessageHeader(Map<String, Object> controlHeaders, Map<String, Object> receivedHeaders,
+                                      T validationContext, TestContext context) {
         if (CollectionUtils.isEmpty(controlHeaders)) { return; }
 
         log.info("Start message header validation");
@@ -148,10 +158,10 @@ public class ControlMessageValidator extends AbstractMessageValidator<ControlMes
     }
 
     @Override
-    public ControlMessageValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+    public T findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (validationContext instanceof ControlMessageValidationContext) {
-                return (ControlMessageValidationContext) validationContext;
+                return (T) validationContext;
             }
         }
         

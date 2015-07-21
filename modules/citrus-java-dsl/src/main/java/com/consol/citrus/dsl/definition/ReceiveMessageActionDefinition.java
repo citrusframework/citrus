@@ -30,6 +30,7 @@ import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
+import com.consol.citrus.validation.xml.XPathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
@@ -140,9 +141,8 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         if (validationContext != null) {
             throw new CitrusRuntimeException("Unable to set control message object when header and/or payload was set before");
         }
-        initializeValidationContext();
 
-        validationContext.setControlMessage(controlMessage);
+        getValidationContext().setControlMessage(controlMessage);
 
         return self;
     }
@@ -264,8 +264,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validateScript(String validationScript) {
-        initializeScriptValidationContext();
-        scriptValidationContext.setValidationScript(validationScript);
+        getScriptValidationContext().setValidationScript(validationScript);
 
         return self;
     }
@@ -276,10 +275,8 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validateScript(Resource scriptResource) {
-        initializeScriptValidationContext();
-
         try {
-            scriptValidationContext.setValidationScriptResourcePath(scriptResource.getFile().getAbsolutePath());
+            getScriptValidationContext().setValidationScriptResourcePath(scriptResource.getFile().getAbsolutePath());
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read script resource file", e);
         }
@@ -293,8 +290,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validateScriptType(String type) {
-        initializeScriptValidationContext();
-        scriptValidationContext.setScriptType(type);
+        getScriptValidationContext().setScriptType(type);
 
         return self;
     }
@@ -338,7 +334,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validate(String path, String controlValue) {
-        getXmlValidationContext().getPathValidationExpressions().put(path, controlValue);
+        getXPathValidationContext().getPathValidationExpressions().put(path, controlValue);
         return self;
     }
 
@@ -390,9 +386,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T namespace(String prefix, String namespaceUri) {
-        initializeXpathVariableExtractor();
-        xpathExtractor.getNamespaces().put(prefix, namespaceUri);
-
+        getXpathVariableExtractor().getNamespaces().put(prefix, namespaceUri);
         getXmlValidationContext().getNamespaces().put(prefix, namespaceUri);
         return self;
     }
@@ -403,8 +397,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T namespaces(Map<String, String> namespaceMappings) {
-        initializeXpathVariableExtractor();
-        xpathExtractor.getNamespaces().putAll(namespaceMappings);
+        getXpathVariableExtractor().getNamespaces().putAll(namespaceMappings);
 
         getXmlValidationContext().getNamespaces().putAll(namespaceMappings);
         return self;
@@ -480,8 +473,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T extractFromPayload(String xpath, String variable) {
-        initializeXpathVariableExtractor();
-        xpathExtractor.getxPathExpressions().put(xpath, variable);
+        getXpathVariableExtractor().getxPathExpressions().put(xpath, variable);
         return self;
     }
 
@@ -565,15 +557,11 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     protected AbstractMessageContentBuilder getMessageContentBuilder() {
-        if (validationContext == null) {
-            initializeValidationContext();
-        }
-
-        if (validationContext.getMessageBuilder() instanceof AbstractMessageContentBuilder) {
-            return (AbstractMessageContentBuilder) validationContext.getMessageBuilder();
+        if (getValidationContext().getMessageBuilder() instanceof AbstractMessageContentBuilder) {
+            return (AbstractMessageContentBuilder) getValidationContext().getMessageBuilder();
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            validationContext.setMessageBuilder(messageBuilder);
+            getValidationContext().setMessageBuilder(messageBuilder);
             return messageBuilder;
         }
     }
@@ -589,7 +577,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
             return (PayloadTemplateMessageBuilder) messageContentBuilder;
         } else {
             PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-            validationContext.setMessageBuilder(messageBuilder);
+            getValidationContext().setMessageBuilder(messageBuilder);
             return messageBuilder;
         }
     }
@@ -597,7 +585,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     /**
      * Creates new validation context according to message type.
      */
-    private void initializeValidationContext() {
+    private ControlMessageValidationContext getValidationContext() {
         if (validationContext == null) {
             if (messageType.equals(MessageType.XML)) {
                 validationContext = new XmlMessageValidationContext();
@@ -607,28 +595,21 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
 
             action.getValidationContexts().add(validationContext);
         }
-    }
 
-    /**
-     * Creates new script validation context.
-     */
-    private void initializeScriptValidationContext() {
-        if (scriptValidationContext == null) {
-            scriptValidationContext = new ScriptValidationContext(messageType.toString());
-
-            action.getValidationContexts().add(scriptValidationContext);
-        }
+        return validationContext;
     }
 
     /**
      * Creates new variable extractor and adds it to test action.
      */
-    private void initializeXpathVariableExtractor() {
+    private XpathPayloadVariableExtractor getXpathVariableExtractor() {
         if (xpathExtractor == null) {
             xpathExtractor = new XpathPayloadVariableExtractor();
 
             action.getVariableExtractors().add(xpathExtractor);
         }
+
+        return xpathExtractor;
     }
 
     /**
@@ -637,13 +618,65 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     private XmlMessageValidationContext getXmlValidationContext() {
-        initializeValidationContext();
+        if (validationContext == null) {
+            validationContext = new XmlMessageValidationContext();
+
+            action.getValidationContexts().add(validationContext);
+        }
 
         if (validationContext instanceof XmlMessageValidationContext) {
             return ((XmlMessageValidationContext)validationContext);
         } else {
             throw new CitrusRuntimeException("Unable to set XML property on validation context type " + validationContext);
         }
+    }
+
+    /**
+     * Gets the validation context as XML validation context an raises exception if existing validation context is
+     * not a XML validation context.
+     * @return
+     */
+    private XPathMessageValidationContext getXPathValidationContext() {
+        if (validationContext == null) {
+            validationContext = new XmlMessageValidationContext();
+
+            action.getValidationContexts().add(validationContext);
+        }
+
+        if (validationContext instanceof XPathMessageValidationContext) {
+            return ((XPathMessageValidationContext)validationContext);
+        } else if (validationContext instanceof XmlMessageValidationContext) {
+            XPathMessageValidationContext xPathContext = new XPathMessageValidationContext();
+            xPathContext.setMessageBuilder(validationContext.getMessageBuilder());
+            xPathContext.setNamespaces(((XmlMessageValidationContext) validationContext).getNamespaces());
+            xPathContext.setControlNamespaces(((XmlMessageValidationContext) validationContext).getControlNamespaces());
+            xPathContext.setIgnoreExpressions(((XmlMessageValidationContext) validationContext).getIgnoreExpressions());
+            xPathContext.setSchema(((XmlMessageValidationContext) validationContext).getSchema());
+            xPathContext.setSchemaRepository(((XmlMessageValidationContext) validationContext).getSchemaRepository());
+            xPathContext.setSchemaValidation(((XmlMessageValidationContext) validationContext).isSchemaValidationEnabled());
+            xPathContext.setDTDResource(((XmlMessageValidationContext) validationContext).getDTDResource());
+
+            action.getValidationContexts().remove(validationContext);
+            action.getValidationContexts().add(xPathContext);
+
+            validationContext = xPathContext;
+            return xPathContext;
+        } else {
+            throw new CitrusRuntimeException("Unable to set XML property on validation context type " + validationContext);
+        }
+    }
+
+    /**
+     * Creates new script validation context if not done before and gets the script validation context.
+     */
+    private ScriptValidationContext getScriptValidationContext() {
+        if (scriptValidationContext == null) {
+            scriptValidationContext = new ScriptValidationContext(messageType.toString());
+
+            action.getValidationContexts().add(scriptValidationContext);
+        }
+
+        return scriptValidationContext;
     }
 
     /**

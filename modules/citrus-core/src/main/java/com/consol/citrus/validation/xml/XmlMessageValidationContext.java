@@ -29,9 +29,6 @@ import java.util.*;
  * @author Christoph Deppisch
  */
 public class XmlMessageValidationContext extends ControlMessageValidationContext {
-    /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> pathValidationExpressions = new HashMap<String, String>();
-    
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<String>();
 
@@ -58,23 +55,6 @@ public class XmlMessageValidationContext extends ControlMessageValidationContext
      */
     public XmlMessageValidationContext() {
         super(MessageType.XML.toString());
-    }
-
-    /**
-     * Get the control message elements that have to be present in
-     * the received message. Message element values are compared as well.
-     * @return the pathValidationExpressions
-     */
-    public Map<String, String> getPathValidationExpressions() {
-        return pathValidationExpressions;
-    }
-
-    /**
-     * Set the control message elements explicitly validated XPath expression validation.
-     * @param pathValidationExpressions the pathValidationExpressions to set
-     */
-    public void setPathValidationExpressions(Map<String, String> pathValidationExpressions) {
-        this.pathValidationExpressions = pathValidationExpressions;
     }
 
     /**
