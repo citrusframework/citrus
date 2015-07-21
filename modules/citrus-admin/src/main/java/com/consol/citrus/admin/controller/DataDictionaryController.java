@@ -19,7 +19,7 @@ package com.consol.citrus.admin.controller;
 import com.consol.citrus.admin.jackson.JsonHelper;
 import com.consol.citrus.admin.service.*;
 import com.consol.citrus.model.config.core.*;
-import org.json.simple.JSONObject;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

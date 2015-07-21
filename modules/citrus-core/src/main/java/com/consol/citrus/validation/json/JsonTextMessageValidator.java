@@ -20,14 +20,14 @@ import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -74,7 +74,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                 		"expected message contents, but received empty message!");
             }
             
-            JSONParser parser = new JSONParser();
+            JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
         
             Object receivedJson = parser.parse(receivedJsonText);
             Object controlJson = parser.parse(controlJsonText);

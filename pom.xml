@@ -400,9 +400,9 @@
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.googlecode.json-simple</groupId>
-        <artifactId>json-simple</artifactId>
-        <version>1.1.1</version>
+        <groupId>net.minidev</groupId>
+        <artifactId>json-smart</artifactId>
+        <version>2.1.1</version>
       </dependency>
       <dependency>
         <groupId>com.jayway.jsonpath</groupId>

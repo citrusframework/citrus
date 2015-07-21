@@ -18,7 +18,7 @@ package com.consol.citrus.admin.websocket;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.json.simple.JSONObject;
+import net.minidev.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

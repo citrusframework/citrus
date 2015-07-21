@@ -21,7 +21,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.ControlMessageValidationContext;
-import org.json.simple.parser.ParseException;
+import net.minidev.json.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

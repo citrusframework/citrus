@@ -18,7 +18,7 @@ package com.consol.citrus.admin.jackson;
 
 import com.consol.citrus.admin.exception.CitrusAdminRuntimeException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.json.simple.JSONObject;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

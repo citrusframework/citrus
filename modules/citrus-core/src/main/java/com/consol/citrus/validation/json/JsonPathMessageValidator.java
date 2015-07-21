@@ -26,8 +26,8 @@ import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.jayway.jsonpath.*;
 import net.minidev.json.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import net.minidev.json.parser.JSONParser;
+import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -57,7 +57,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
 
         ReadContext jsonReaderContext;
         try {
-            JSONParser parser = new JSONParser();
+            JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
             Object receivedJson = parser.parse(receivedMessage.getPayload(String.class));
             jsonReaderContext = JsonPath.parse(receivedJson);
         } catch (ParseException e) {

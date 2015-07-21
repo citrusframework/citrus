@@ -16,7 +16,7 @@
 
 package com.consol.citrus.admin.websocket;
 
-import org.json.simple.JSONObject;
+import net.minidev.json.JSONObject;
 
 /**
  * All socket event types with proper JSON data generation.

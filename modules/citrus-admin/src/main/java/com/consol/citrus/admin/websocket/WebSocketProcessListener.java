@@ -17,7 +17,7 @@
 package com.consol.citrus.admin.websocket;
 
 import com.consol.citrus.admin.launcher.ProcessListener;
-import org.json.simple.JSONObject;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

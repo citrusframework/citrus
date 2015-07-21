@@ -21,7 +21,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.*;
-import org.json.simple.JSONObject;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
