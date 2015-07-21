@@ -190,9 +190,9 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
         
-        Assert.assertEquals(xPathValidationContext.getPathValidationExpressions().size(), 2);
-        Assert.assertEquals(xPathValidationContext.getPathValidationExpressions().get("/TestMessage/text"), "Hello Citrus");
-        Assert.assertEquals(xPathValidationContext.getPathValidationExpressions().get("boolean:/TestMessage/foo"), "true");
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 2);
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
         // 9th action
         action = getNextTestActionFromTest();
@@ -208,8 +208,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
 
-        Assert.assertEquals(xPathValidationContext.getPathValidationExpressions().size(), 1);
-        Assert.assertEquals(xPathValidationContext.getPathValidationExpressions().get("boolean:/TestMessage/foo"), "true");
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 1);
+        Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
 
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScript().trim(), "assert true");

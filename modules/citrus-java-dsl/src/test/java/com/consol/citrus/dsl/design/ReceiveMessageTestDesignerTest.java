@@ -1097,7 +1097,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderWithPathValidationExpressions() {
+    public void testReceiveBuilderWithXpathExpressions() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -1125,9 +1125,9 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(0);
         
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(validationContext.getPathValidationExpressions().size(), 2L);
-        Assert.assertEquals(validationContext.getPathValidationExpressions().get("Foo.operation"), "foo");
-        Assert.assertEquals(validationContext.getPathValidationExpressions().get("Foo.message"), "control");
+        Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getXpathExpressions().get("Foo.operation"), "foo");
+        Assert.assertEquals(validationContext.getXpathExpressions().get("Foo.message"), "control");
     }
     
     @Test

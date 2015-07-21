@@ -94,7 +94,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -132,7 +132,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -168,7 +168,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -205,7 +205,7 @@ public class VariableSupportTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);

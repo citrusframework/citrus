@@ -66,7 +66,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
      */
     protected void validateXpath(Message receivedMessage,
                                  XpathMessageValidationContext validationContext, TestContext context) {
-        if (CollectionUtils.isEmpty(validationContext.getPathValidationExpressions())) { return; }
+        if (CollectionUtils.isEmpty(validationContext.getXpathExpressions())) { return; }
         assertPayloadExists(receivedMessage);
 
         log.info("Start XPath element validation");
@@ -75,7 +75,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
         NamespaceContext namespaceContext = namespaceContextBuilder.buildContext(
                 receivedMessage, validationContext.getNamespaces());
 
-        for (Map.Entry<String, String> entry : validationContext.getPathValidationExpressions().entrySet()) {
+        for (Map.Entry<String, String> entry : validationContext.getXpathExpressions().entrySet()) {
             String xPathExpression = entry.getKey();
             String expectedValue = entry.getValue();
             String actualValue;

@@ -936,7 +936,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://citrus/default");
@@ -978,7 +978,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrus/default");
@@ -1020,7 +1020,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrus/wrong");

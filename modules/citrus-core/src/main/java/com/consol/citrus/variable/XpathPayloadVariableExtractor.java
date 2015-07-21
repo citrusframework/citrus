@@ -96,12 +96,12 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     if (node.getFirstChild() != null) {
-                        context.setVariable((String)xPathExpressions.get(pathExpression), node.getFirstChild().getNodeValue());
+                        context.setVariable(xPathExpressions.get(pathExpression), node.getFirstChild().getNodeValue());
                     } else {
-                        context.setVariable((String)xPathExpressions.get(pathExpression), "");
+                        context.setVariable(xPathExpressions.get(pathExpression), "");
                     }
                 } else {
-                    context.setVariable((String)xPathExpressions.get(pathExpression), node.getNodeValue());
+                    context.setVariable(xPathExpressions.get(pathExpression), node.getNodeValue());
                 }
             }
         }

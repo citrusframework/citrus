@@ -97,7 +97,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         validationContext.setSchemaValidation(false);
         
@@ -140,7 +140,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         validationContext.setSchemaValidation(false);
         
@@ -179,7 +179,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         validationContext.setSchemaValidation(false);
         
@@ -218,7 +218,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://citrus");
@@ -273,7 +273,7 @@ public class XPathTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         validationContext.setSchemaValidation(false);
         

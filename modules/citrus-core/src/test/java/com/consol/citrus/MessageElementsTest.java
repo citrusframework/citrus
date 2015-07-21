@@ -87,7 +87,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -123,7 +123,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -160,7 +160,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -196,7 +196,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -232,7 +232,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -268,7 +268,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -304,7 +304,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -340,7 +340,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -376,7 +376,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
-        validationContext.setPathValidationExpressions(validateMessageElements);
+        validationContext.setXpathExpressions(validateMessageElements);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
@@ -521,7 +521,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         validateElements.put("//root/element/sub-elementA", "text-value");
         validateElements.put("//sub-elementB", "text-value");
         
-        validationContext.setPathValidationExpressions(validateElements);
+        validationContext.setXpathExpressions(validateElements);
         
         receiveMessageBean.execute(context);
     }

@@ -27,22 +27,22 @@ import java.util.Map;
 public class XpathMessageValidationContext extends XmlMessageValidationContext {
 
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, String> pathValidationExpressions = new HashMap<String, String>();
+    private Map<String, String> xPathExpressions = new HashMap<String, String>();
 
     /**
      * Get the control message elements that have to be present in
      * the received message. Message element values are compared as well.
-     * @return the pathValidationExpressions
+     * @return the xPathExpressions
      */
-    public Map<String, String> getPathValidationExpressions() {
-        return pathValidationExpressions;
+    public Map<String, String> getXpathExpressions() {
+        return xPathExpressions;
     }
 
     /**
      * Set the control message elements explicitly validated XPath expression validation.
-     * @param pathValidationExpressions the pathValidationExpressions to set
+     * @param xPathExpressions the xPathExpressions to set
      */
-    public void setPathValidationExpressions(Map<String, String> pathValidationExpressions) {
-        this.pathValidationExpressions = pathValidationExpressions;
+    public void setXpathExpressions(Map<String, String> xPathExpressions) {
+        this.xPathExpressions = xPathExpressions;
     }
 }

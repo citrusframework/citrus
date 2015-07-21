@@ -86,7 +86,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             }
 
             XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
-            if (!xPathMessageValidationContext.getPathValidationExpressions().isEmpty()) {
+            if (!xPathMessageValidationContext.getXpathExpressions().isEmpty()) {
                 validationContexts.add(xPathMessageValidationContext);
             }
 
@@ -350,7 +350,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 extractXPathValidateExpressions(validateElement, validateXpathExpressions);
             }
 
-            context.setPathValidationExpressions(validateXpathExpressions);
+            context.setXpathExpressions(validateXpathExpressions);
         }
     }
 

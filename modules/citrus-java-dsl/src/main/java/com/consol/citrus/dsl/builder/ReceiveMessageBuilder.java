@@ -334,7 +334,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T validate(String path, String controlValue) {
-        getXPathValidationContext().getPathValidationExpressions().put(path, controlValue);
+        getXPathValidationContext().getXpathExpressions().put(path, controlValue);
         return self;
     }
     

@@ -1513,7 +1513,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithPathValidationExpressions() {
+    public void testReceiveBuilderWithXPpathExpressions() {
         reset(messageEndpoint, messageConsumer, configuration);
         expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
         expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
@@ -1555,9 +1555,9 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(0);
 
         Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertEquals(validationContext.getPathValidationExpressions().size(), 2L);
-        Assert.assertEquals(validationContext.getPathValidationExpressions().get("TestRequest.Message"), "Hello World!");
-        Assert.assertEquals(validationContext.getPathValidationExpressions().get("TestRequest.Operation"), "SayHello");
+        Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
+        Assert.assertEquals(validationContext.getXpathExpressions().get("TestRequest.Message"), "Hello World!");
+        Assert.assertEquals(validationContext.getXpathExpressions().get("TestRequest.Operation"), "SayHello");
 
         verify(messageEndpoint, messageConsumer, configuration);
     }

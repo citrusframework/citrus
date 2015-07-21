@@ -256,7 +256,7 @@ public class IgnoreElementsTest extends AbstractTestNGUnitTest {
         Map<String, String> validateElements = new HashMap<String, String>();
         validateElements.put("//root/element/sub-elementA", "wrong value");
         validateElements.put("//sub-elementB", "wrong value");
-        validationContext.setPathValidationExpressions(validateElements);
+        validationContext.setXpathExpressions(validateElements);
         
         receiveMessageBean.execute(context);
     }
