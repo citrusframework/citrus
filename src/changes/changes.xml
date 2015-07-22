@@ -15,21 +15,30 @@
   </properties>
   
   <body>
-    <release version="2.2.1" date="01.08.2015" description="2.2.1 release">
+    <release version="2.3" date="01.08.2015" description="2.3 release">
+        <action dev="christophd" type="fix">
+          GITHUB-45 Assertion error in parallel not causing test case to fail
+        </action>
+        <action dev="christophd" type="fix">
+          CITRUS-264 Camel direct endpoint consumer caching
+        </action>
         <action dev="christophd" type="add">
-          CITRUS-196 JSONPath support
+          CITRUS-263 Customize message validators
         </action>
         <action dev="christophd" type="update">
           CITRUS-262 Boolean expression evaluation in Java DSL
-        </action>
-        <action dev="maherm" type="add">
-          CITRUS-248 Websocket support
         </action>
         <action dev="christophd" type="add">
           CITRUS-255 Refactor Java DSL test action execution (TestRunner)
         </action>
         <action dev="maherm" type="update">
           CITRUS-253 Update Jetty version
+        </action>
+        <action dev="maherm" type="add">
+          CITRUS-248 Websocket support
+        </action>
+        <action dev="christophd" type="add">
+          CITRUS-196 JSONPath support
         </action>
     </release>
 
