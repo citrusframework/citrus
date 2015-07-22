@@ -65,6 +65,38 @@
 					</echo>
 				</iterate>
 			</iterate>
+
+			<create-variables>
+				<variable name="outerLoop" value="0"/>
+				<variable name="innerLoop" value="0"/>
+			</create-variables>
+
+			<iterate condition="i lt= 5" index="i">
+				<create-variables>
+					<variable name="outerLoop">
+						<value>
+							<script type="groovy">(${outerLoop} + 1)</script>
+						</value>
+					</variable>
+				</create-variables>
+				<iterate condition="j lt= 3" index="j">
+					<create-variables>
+						<variable name="innerLoop">
+							<value>
+								<script type="groovy">(${innerLoop} + 1)</script>
+							</value>
+						</variable>
+					</create-variables>
+					<echo>
+						<message>i=${i} j=${j}</message>
+					</echo>
+				</iterate>
+			</iterate>
+
+			<groovy>
+				assert context.getVariable("outerLoop").equals("5")
+				assert context.getVariable("innerLoop").equals("15")
+			</groovy>
     </actions>
   </testcase>
 </spring:beans>
