@@ -17,8 +17,7 @@
 package com.consol.citrus.validation.json;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
@@ -55,44 +54,42 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
 
         log.info("Start JSONPath element validation");
 
-        ReadContext jsonReaderContext;
+        String jsonPathExpression = null;
         try {
             JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
             Object receivedJson = parser.parse(receivedMessage.getPayload(String.class));
-            jsonReaderContext = JsonPath.parse(receivedJson);
+            ReadContext readerContext = JsonPath.parse(receivedJson);
+
+            for (Map.Entry<String, String> entry : validationContext.getJsonPathExpressions().entrySet()) {
+                jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
+                String expectedValue = context.replaceDynamicContentInString(entry.getValue());
+                String actualValue;
+
+                if (JsonPath.isPathDefinite(jsonPathExpression)) {
+                    actualValue = readerContext.read(jsonPathExpression).toString();
+                } else {
+                    JSONArray values = readerContext.read(jsonPathExpression);
+                    if (values.size() == 1) {
+                        actualValue = values.get(0).toString();
+                    } else {
+                        actualValue = values.toJSONString();
+                    }
+                }
+
+                //do the validation of actual and expected value for element
+                ValidationUtils.validateValues(actualValue, expectedValue, jsonPathExpression, context);
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Validating element: " + jsonPathExpression + "='" + expectedValue + "': OK.");
+                }
+            }
+
+            log.info("JSONPath element validation finished successfully: All elements OK");
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
+        } catch (PathNotFoundException e) {
+            throw new ValidationException(String.format("Failed to validate JSON element for path: %s", jsonPathExpression), e);
         }
-
-        for (Map.Entry<String, String> entry : validationContext.getJsonPathExpressions().entrySet()) {
-            String jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
-            String expectedValue = context.replaceDynamicContentInString(entry.getValue());
-            String actualValue;
-
-            if (JsonPath.isPathDefinite(jsonPathExpression)) {
-                try {
-                    actualValue = jsonReaderContext.read(jsonPathExpression).toString();
-                } catch (PathNotFoundException e) {
-                    throw new ValidationException(String.format("Failed to validate JSON element for path: %s", jsonPathExpression), e);
-                }
-            } else {
-                JSONArray values = jsonReaderContext.read(jsonPathExpression);
-                if (values.size() == 1) {
-                    actualValue = values.get(0).toString();
-                } else {
-                    actualValue = values.toJSONString();
-                }
-            }
-
-            //do the validation of actual and expected value for element
-            ValidationUtils.validateValues(actualValue, expectedValue, jsonPathExpression, context);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Validating element: " + jsonPathExpression + "='" + expectedValue + "': OK.");
-            }
-        }
-
-        log.info("JSONPath element validation finished successfully: All elements OK");
     }
 
     @Override

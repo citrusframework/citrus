@@ -151,6 +151,20 @@
                 </message>
             </receive>
 
+            <receive endpoint="myMessageEndpoint">
+                <message type="json">
+                    <data>
+                        <![CDATA[
+                            { "message": { "text": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                </message>
+                <extract>
+                    <header name="operation" variable="operation"/>
+                    <message path="$.message.text" variable="text"/>
+                </extract>
+            </receive>
+
         </actions>
     </testcase>
     

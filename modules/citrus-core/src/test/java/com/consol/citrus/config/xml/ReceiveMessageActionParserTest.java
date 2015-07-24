@@ -19,7 +19,7 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,9 +27,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.*;
 
 /**
@@ -39,7 +37,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
     @Test
     public void testReceiveMessageActionParser() {
-        assertActionCount(14);
+        assertActionCount(15);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
         
         ControlMessageValidationContext validationContext;
@@ -147,8 +145,8 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(variableExtractor.getNamespaces().size(), 0L);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
-        Assert.assertEquals(variableExtractor.getxPathExpressions().size(), 1);
-        Assert.assertEquals(variableExtractor.getxPathExpressions().get("/TestMessage/text()"), "text");
+        Assert.assertEquals(variableExtractor.getXpathExpressions().size(), 1);
+        Assert.assertEquals(variableExtractor.getXpathExpressions().get("/TestMessage/text()"), "text");
 
         Assert.assertNotNull(action.getDataDictionary());
 
@@ -300,5 +298,18 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().iterator().next(), "$.FooMessage.bar");
+
+        // 15th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof JsonPathVariableExtractor);
+        JsonPathVariableExtractor jsonVariableExtractor = (JsonPathVariableExtractor)action.getVariableExtractors().get(1);
+
+        Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
+        Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
+        Assert.assertEquals(jsonVariableExtractor.getJsonPathExpressions().size(), 1);
+        Assert.assertEquals(jsonVariableExtractor.getJsonPathExpressions().get("$.message.text"), "text");
     }
 }

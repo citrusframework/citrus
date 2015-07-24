@@ -31,9 +31,10 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.springframework.context.ApplicationContext;
@@ -836,7 +837,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderExtractFromPayload() {
+    public void testSendBuilderExtractFromPayload() {
         reset(messageEndpoint, messageProducer);
         expect(messageEndpoint.createProducer()).andReturn(messageProducer).once();
         expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
@@ -884,14 +885,70 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
+
+        verify(messageEndpoint, messageProducer);
+    }
+
+    @Test
+    public void testSendBuilderExtractJsonPathFromPayload() {
+        reset(messageEndpoint, messageProducer);
+        expect(messageEndpoint.createProducer()).andReturn(messageProducer).once();
+        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
+        messageProducer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
+            public Object answer() throws Throwable {
+                Message message = (Message) getCurrentArguments()[0];
+                Assert.assertEquals(message.getPayload(String.class), "{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+                return null;
+            }
+        }).atLeastOnce();
+
+        replay(messageEndpoint, messageProducer);
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                send(new BuilderSupport<SendMessageBuilder>() {
+                    @Override
+                    public void configure(SendMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                                .extractFromPayload("$.text", "text")
+                                .extractFromPayload("$.person", "person");
+                    }
+                });
+            }
+        };
+
+        TestContext context = builder.createTestContext();
+        Assert.assertNotNull(context.getVariable("text"));
+        Assert.assertNotNull(context.getVariable("person"));
+        Assert.assertEquals(context.getVariable("text"), "Hello World!");
+        Assert.assertEquals(context.getVariable("person"), "{\"name\":\"John\",\"surname\":\"Doe\"}");
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
         verify(messageEndpoint, messageProducer);
     }
     
     @Test
-    public void testReceiveBuilderExtractFromHeader() {
+    public void testSendBuilderExtractFromHeader() {
         reset(messageEndpoint, messageProducer);
         expect(messageEndpoint.createProducer()).andReturn(messageProducer).once();
         expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();

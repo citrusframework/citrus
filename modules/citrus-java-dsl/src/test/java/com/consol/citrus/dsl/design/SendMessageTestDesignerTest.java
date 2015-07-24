@@ -28,9 +28,10 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -569,8 +570,38 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
+    }
+
+    @Test
+    public void testReceiveBuilderExtractJsonPathFromPayload() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .messageType(MessageType.JSON)
+                        .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .extractFromPayload("$.text", "text")
+                        .extractFromPayload("$.person", "language");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
     }
     
     @Test

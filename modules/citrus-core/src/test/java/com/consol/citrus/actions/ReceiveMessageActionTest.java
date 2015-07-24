@@ -915,6 +915,50 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         verify(endpoint, consumer, endpointConfiguration);
     }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testReceiveMessageWithExtractVariablesFromMessageJsonPath() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpoint(endpoint);
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+
+        Map<String, String> extractMessageElements = new HashMap<String, String>();
+        extractMessageElements.put("$.text", "messageVar");
+        extractMessageElements.put("$.person", "person");
+
+        JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor();
+        variableExtractor.setJsonPathExpressions(extractMessageElements);
+        receiveAction.addVariableExtractors(variableExtractor);
+
+        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+
+        Assert.assertNotNull(context.getVariable("messageVar"));
+        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
+
+        Assert.assertNotNull(context.getVariable("person"));
+        Assert.assertEquals(context.getVariable("person"), "{\"name\":\"John\",\"surname\":\"Doe\"}");
+
+        verify(endpoint, consumer, endpointConfiguration);
+    }
     
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -931,7 +975,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("/TestRequest/Message", "messageVar");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -955,7 +999,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         verify(endpoint, consumer, endpointConfiguration);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
@@ -972,7 +1016,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("/:TestRequest/:Message", "messageVar");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
         Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
@@ -1016,7 +1060,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
 
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -1060,7 +1104,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -1104,7 +1148,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         receiveAction.addVariableExtractors(variableExtractor);
         
         Map<String, String> namespaces = new HashMap<String, String>();

@@ -33,15 +33,14 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -798,8 +797,49 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
+
+        verify(applicationContextMock);
+    }
+
+    @Test
+    public void testReceiveBuilderExtractJsonPathFromPayload() {
+        reset(applicationContextMock);
+
+        expect(applicationContextMock.getBean(TestActionListeners.class)).andReturn(new TestActionListeners()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).andReturn(new HashMap<String, SequenceBeforeTest>()).once();
+        expect(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).andReturn(new HashMap<String, SequenceAfterTest>()).once();
+
+        replay(applicationContextMock);
+
+        MockTestDesigner builder = new MockTestDesigner(applicationContextMock) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .messageType(MessageType.JSON)
+                        .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .extractFromPayload("$.text", "text")
+                        .extractFromPayload("$.person", "person");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
         verify(applicationContextMock);
     }
@@ -874,8 +914,8 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
         
         Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getxPathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
         verify(applicationContextMock);
     }

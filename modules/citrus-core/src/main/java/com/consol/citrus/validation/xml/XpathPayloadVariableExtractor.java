@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.variable;
+package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.xml.xpath.XPathExpressionResult;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
@@ -36,7 +37,6 @@ import java.util.Map.Entry;
 
 /**
  * Class reads message elements via XPath expressions and saves the text values as new test variables.
- * 
  * Implementation parsed the message payload as DOM document, so XML message payload is needed here.
  *  
  * @author Christoph Deppisch
@@ -49,9 +49,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Namespace definitions used in xpath expressions */
     private Map<String, String> namespaces = new HashMap<String, String>();
     
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
     
     /**
@@ -61,7 +59,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
         if (CollectionUtils.isEmpty(xPathExpressions)) {return;}
 
         if (log.isDebugEnabled()) {
-            log.debug("Reading XML elements from document");
+            log.debug("Reading XML elements with XPath");
         }
         
         NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
@@ -71,7 +69,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             String variableName = entry.getValue();
 
             if (log.isDebugEnabled()) {
-                log.debug("Reading element: " + pathExpression);
+                log.debug("Evaluating XPath expression: " + pathExpression);
             }
             
             Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
@@ -111,7 +109,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * Set the xPath expressions to identify the message elements and variable names.
      * @param xPathExpressions the xPathExpressions to set
      */
-    public void setxPathExpressions(Map<String, String> xPathExpressions) {
+    public void setXpathExpressions(Map<String, String> xPathExpressions) {
         this.xPathExpressions = xPathExpressions;
     }
     
@@ -127,7 +125,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * Gets the xPathExpressions.
      * @return the xPathExpressions
      */
-    public Map<String, String> getxPathExpressions() {
+    public Map<String, String> getXpathExpressions() {
         return xPathExpressions;
     }
 

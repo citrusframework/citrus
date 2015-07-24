@@ -24,10 +24,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.*;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -58,6 +58,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     /** Variable extractors filled within this definition */
     private MessageHeaderVariableExtractor headerExtractor;
     private XpathPayloadVariableExtractor xpathExtractor;
+    private JsonPathVariableExtractor jsonPathExtractor;
 
     /** Message constructing interceptor */
     private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
@@ -325,19 +326,17 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
     }
 
     /**
-     * Extract message element via XPath from payload before message is sent.
-     * @param xpath
+     * Extract message element via XPath or JSONPath from payload before message is sent.
+     * @param path
      * @param variable
      * @return
      */
-    public T extractFromPayload(String xpath, String variable) {
-        if (xpathExtractor == null) {
-            xpathExtractor = new XpathPayloadVariableExtractor();
-
-            action.getVariableExtractors().add(xpathExtractor);
+    public T extractFromPayload(String path, String variable) {
+        if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
+            getJsonPathVariableExtractor().getJsonPathExpressions().put(path, variable);
+        } else {
+            getXpathVariableExtractor().getXpathExpressions().put(path, variable);
         }
-
-        xpathExtractor.getxPathExpressions().put(xpath, variable);
         return self;
     }
 
@@ -387,6 +386,32 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
         jsonPathMessageConstructionInterceptor.getJsonPathExpressions().put(expression, value);
         return self;
+    }
+
+    /**
+     * Creates new variable extractor and adds it to test action.
+     */
+    private XpathPayloadVariableExtractor getXpathVariableExtractor() {
+        if (xpathExtractor == null) {
+            xpathExtractor = new XpathPayloadVariableExtractor();
+
+            action.getVariableExtractors().add(xpathExtractor);
+        }
+
+        return xpathExtractor;
+    }
+
+    /**
+     * Creates new variable extractor and adds it to test action.
+     */
+    private JsonPathVariableExtractor getJsonPathVariableExtractor() {
+        if (jsonPathExtractor == null) {
+            jsonPathExtractor = new JsonPathVariableExtractor();
+
+            action.getVariableExtractors().add(jsonPathExtractor);
+        }
+
+        return jsonPathExtractor;
     }
 
     /**

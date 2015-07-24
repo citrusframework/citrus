@@ -267,7 +267,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
-        ReceiveMessageBuilder builder = new ReceiveMessageBuilder();
+        ReceiveMessageBuilder<ReceiveMessageAction, ReceiveMessageBuilder> builder = new ReceiveMessageBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build());
@@ -275,7 +275,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer) {
-        SendMessageBuilder builder = new SendMessageBuilder();
+        SendMessageBuilder<SendMessageAction, SendMessageBuilder> builder = new SendMessageBuilder();
         builder.withApplicationContext(applicationContext);
         configurer.configure(builder);
         return run(builder.build());

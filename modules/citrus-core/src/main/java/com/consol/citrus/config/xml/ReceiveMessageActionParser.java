@@ -23,17 +23,17 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -76,7 +76,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         
         parseMessageSelector(element, builder);
 
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        List<ValidationContext> validationContexts = new ArrayList<>();
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
@@ -174,7 +174,8 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         parseExtractHeaderElements(element, variableExtractors);
         
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> extractMessageValues = new HashMap<String, String>();
+        Map<String, String> extractXpath = new HashMap<>();
+        Map<String, String> extractJsonPath = new HashMap<>();
         if (extractElement != null) {
             List<?> messageValueElements = DomUtils.getChildElementsByTagName(extractElement, "message");
             for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
@@ -185,27 +186,40 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 if (messageValue.hasAttribute("result-type")) {
                     pathExpression = messageValue.getAttribute("result-type") + ":" + pathExpression;
                 }
-                
-                extractMessageValues.put(pathExpression, messageValue.getAttribute("variable"));
-            }
-            
-            XpathPayloadVariableExtractor payloadVariableExtractor = new XpathPayloadVariableExtractor();
-            payloadVariableExtractor.setxPathExpressions(extractMessageValues);
-            
-            Map<String, String> namespaces = new HashMap<String, String>();
-            Element messageElement = DomUtils.getChildElementByTagName(element, "message");
-            if (messageElement != null) {
-                List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
-                if (namespaceElements.size() > 0) {
-                    for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext();) {
-                        Element namespaceElement = (Element) iter.next();
-                        namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
-                    }
-                    payloadVariableExtractor.setNamespaces(namespaces);
+
+                if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+                    extractJsonPath.put(pathExpression, messageValue.getAttribute("variable"));
+                } else {
+                    extractXpath.put(pathExpression, messageValue.getAttribute("variable"));
                 }
             }
-            
-            variableExtractors.add(payloadVariableExtractor);
+
+            if (!CollectionUtils.isEmpty(extractJsonPath)) {
+                JsonPathVariableExtractor payloadVariableExtractor = new JsonPathVariableExtractor();
+                payloadVariableExtractor.setJsonPathExpressions(extractJsonPath);
+
+                variableExtractors.add(payloadVariableExtractor);
+            }
+
+            if (!CollectionUtils.isEmpty(extractXpath)) {
+                XpathPayloadVariableExtractor payloadVariableExtractor = new XpathPayloadVariableExtractor();
+                payloadVariableExtractor.setXpathExpressions(extractXpath);
+
+                Map<String, String> namespaces = new HashMap<>();
+                Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+                if (messageElement != null) {
+                    List<?> namespaceElements = DomUtils.getChildElementsByTagName(messageElement, "namespace");
+                    if (namespaceElements.size() > 0) {
+                        for (Iterator<?> iter = namespaceElements.iterator(); iter.hasNext();) {
+                            Element namespaceElement = (Element) iter.next();
+                            namespaces.put(namespaceElement.getAttribute("prefix"), namespaceElement.getAttribute("value"));
+                        }
+                        payloadVariableExtractor.setNamespaces(namespaces);
+                    }
+                }
+
+                variableExtractors.add(payloadVariableExtractor);
+            }
         }
         
         return variableExtractors;
@@ -433,7 +447,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             Element validateElement, Map<String, String> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
+        if (StringUtils.hasText(pathExpression) && !JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.hasAttribute("result-type")) {
                 pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;

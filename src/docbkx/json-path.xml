@@ -87,7 +87,8 @@
 }</programlisting>
 
       <para>The JSONPath expressions have set the user name to <emphasis>Admin</emphasis>. The <emphasis>admin</emphasis> boolean property was set to <emphasis>true</emphasis> and
-      all project status values were set to <emphasis>closed</emphasis>. Now the message is ready to be sent out.</para>
+      all project status values were set to <emphasis>closed</emphasis>. Now the message is ready to be sent out. In case a JSONPath expression should fail to find a matching element within
+      the message structure the test case will fail.</para>
 
       <para>With this JSONPath mechanism ou are able to manipulate message content before it is sent or received within Citrus. This makes life very easy when using message resource files
       that are reused across multiple test cases.</para>
@@ -103,14 +104,15 @@
     &lt;json-path expression=&quot;$.user.name&quot; value=&quot;Penny&quot;/&gt;
     &lt;json-path expression=&quot;$['user']['name']&quot; value=&quot;${userName}&quot;/&gt;
     &lt;json-path expression=&quot;$.user.aliases&quot; value=&quot;[&quot;penny&quot;,&quot;jenny&quot;,&quot;nanny&quot;]&quot;/&gt;
-    &lt;json-path expression=&quot;$.user[?(@.isAdmin)].password&quot; value=&quot;@startsWith('$%00')@&quot;/&gt;
+    &lt;json-path expression=&quot;$.user[?(@.admin)].password&quot; value=&quot;@startsWith('$%00')@&quot;/&gt;
     &lt;json-path expression=&quot;$.user.address[?(@.type='office')]&quot;
         value=&quot;{&quot;city&quot;:&quot;Munich&quot;,&quot;street&quot;:&quot;Company Street&quot;,&quot;type&quot;:&quot;office&quot;}&quot;/&gt;
   &lt;/validate&gt;
 &lt;/message&gt;</programlisting>
 
       <para>The above JSONPath expressions will be evaluated when Citrus validates the received message. The expression result is compared to the
-      expected value where expectations can be static values as well as test variables and validation matcher expressions.</para>
+      expected value where expectations can be static values as well as test variables and validation matcher expressions. In case a JSONPath expression should not be able
+      to find any elements the test case will also fail.</para>
 
       <para>JSON is a pretty simple yet powerful message format. Simplified a JSON message just knows JSONObject, JSONArray and JSONValue items. The
       handling of JSONObject and JSONValue items in JSONPath expressions is straight forward. We just use a dot notated syntax for walking through the JSONObject hierarchy.
@@ -121,7 +123,40 @@
         data and therefore the XML validation mechanisms do apply by default. With the message type attribute set to <emphasis>json</emphasis> we make sure that Citrus enables JSON specific
         features on the message validation such as JSONPath support.</para>
       </important>
+    </section>
 
+    <section id="json-path-extract">
+      <title>Extract variables with JSONPath</title>
+
+      <para>Citrus is able to save message content to test variables at test runtime. When an incoming message is passing the message validation the user can extract some values of that received
+      message to new test variables for later use in the test. This is especially handsome when having to send back some dynamic values. So lets save some values using JSONPath:</para>
+
+      <programlisting>&lt;message type=&quot;json&quot;&gt;
+  &lt;data&gt;
+    { user:
+      {
+        &quot;name&quot;: &quot;Admin&quot;,
+        &quot;password&quot;: &quot;secret&quot;,
+        &quot;admin&quot;: &quot;true&quot;,
+        &quot;aliases&quot;: [&quot;penny&quot;,&quot;chef&quot;,&quot;master&quot;]
+      }
+    }
+  &lt;/data&gt;
+  &lt;extract&gt;
+    &lt;message path=&quot;$.user.name&quot; variable=&quot;userName&quot;/&gt;
+    &lt;message path=&quot;$.user.aliases&quot; variable=&quot;userAliases&quot;/&gt;
+    &lt;message path=&quot;$.user[?(@.admin)].password&quot; variable=&quot;adminPassword&quot;/&gt;
+  &lt;/extract&gt;
+&lt;/message&gt;</programlisting>
+
+      <para>With this example we have extracted three new test variables via JSONPath expression evaluation. The three test variables will be available to all upcoming test actions.
+      The variable values are:</para>
+
+      <programlisting>userName=Admin
+userAliases=[&quot;penny&quot;,&quot;chef&quot;,&quot;master&quot;]
+adminPassword=secret</programlisting>
+
+      <para>As you can see we can also extract complex JSONObject items or JSONArray items. The test variable value is a String representation of the complex object.</para>
     </section>
 
     <section id="json-path-ignore">

@@ -31,7 +31,7 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -656,7 +656,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("root.element.sub-elementB", "${valueB}");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
 
@@ -707,7 +707,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("root.element.sub-elementB.attribute", "${valueB}");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
 
@@ -758,7 +758,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("element.sub-element-wrong", "${valueB}");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
 
@@ -806,7 +806,7 @@ public class MessageElementsLegacyTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("root.element.sub-elementA.attribute-wrong", "${attributeA}");
         
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setxPathExpressions(extractMessageElements);
+        variableExtractor.setXpathExpressions(extractMessageElements);
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         

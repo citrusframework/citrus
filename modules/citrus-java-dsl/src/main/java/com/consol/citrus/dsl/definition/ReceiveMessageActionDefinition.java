@@ -29,13 +29,10 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -74,6 +71,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     /** Variable extractors filled within this action definition */
     private MessageHeaderVariableExtractor headerExtractor;
     private XpathPayloadVariableExtractor xpathExtractor;
+    private JsonPathVariableExtractor jsonPathExtractor;
 
     /** Basic application context */
     private ApplicationContext applicationContext;
@@ -485,13 +483,17 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     }
 
     /**
-     * Extract message element via XPath from message payload as new test variable.
-     * @param xpath
+     * Extract message element via XPath or JSONPath from message payload as new test variable.
+     * @param path
      * @param variable
      * @return
      */
-    public T extractFromPayload(String xpath, String variable) {
-        getXpathVariableExtractor().getxPathExpressions().put(xpath, variable);
+    public T extractFromPayload(String path, String variable) {
+        if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
+            getJsonPathVariableExtractor().getJsonPathExpressions().put(path, variable);
+        } else {
+            getXpathVariableExtractor().getXpathExpressions().put(path, variable);
+        }
         return self;
     }
 
@@ -550,6 +552,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         soapMessageActionDefinition.setJsonPathValidationContext(jsonPathValidationContext);
         soapMessageActionDefinition.setHeaderExtractor(headerExtractor);
         soapMessageActionDefinition.setXpathExtractor(xpathExtractor);
+        soapMessageActionDefinition.setJsonPathExtractor(jsonPathExtractor);
 
         return soapMessageActionDefinition;
     }
@@ -568,6 +571,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         httpMessageActionDefinition.setJsonPathValidationContext(jsonPathValidationContext);
         httpMessageActionDefinition.setHeaderExtractor(headerExtractor);
         httpMessageActionDefinition.setXpathExtractor(xpathExtractor);
+        httpMessageActionDefinition.setJsonPathExtractor(jsonPathExtractor);
 
         return httpMessageActionDefinition;
     }
@@ -632,6 +636,19 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         }
 
         return xpathExtractor;
+    }
+
+    /**
+     * Creates new variable extractor and adds it to test action.
+     */
+    private JsonPathVariableExtractor getJsonPathVariableExtractor() {
+        if (jsonPathExtractor == null) {
+            jsonPathExtractor = new JsonPathVariableExtractor();
+
+            action.getVariableExtractors().add(jsonPathExtractor);
+        }
+
+        return jsonPathExtractor;
     }
 
     /**
@@ -747,6 +764,14 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      */
     protected void setXpathExtractor(XpathPayloadVariableExtractor xpathExtractor) {
         this.xpathExtractor = xpathExtractor;
+    }
+
+    /**
+     * Sets the jsonPath extractor.
+     * @param jsonPathExtractor
+     */
+    protected void setJsonPathExtractor(JsonPathVariableExtractor jsonPathExtractor) {
+        this.jsonPathExtractor = jsonPathExtractor;
     }
 
     /**
