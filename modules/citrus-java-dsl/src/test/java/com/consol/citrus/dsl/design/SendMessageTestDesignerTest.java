@@ -27,7 +27,8 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.*;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
@@ -627,6 +628,34 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
         Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
         Assert.assertEquals(((XpathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
+    }
+
+    @Test
+    public void testJsonPathSupport() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                send(messageEndpoint)
+                        .payload("{ \"TestRequest\": { \"Message\": \"?\" }}")
+                        .jsonPath("$.TestRequest.Message", "Hello World!");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+
+        Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
+        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
+        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
+        Assert.assertEquals(((JsonPathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
     }
 
 }

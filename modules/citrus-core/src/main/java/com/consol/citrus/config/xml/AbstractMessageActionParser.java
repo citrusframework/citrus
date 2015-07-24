@@ -19,7 +19,8 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
@@ -114,15 +115,27 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         }
         
         if (messageBuilder != null) {
-            Map<String, String> overwriteMessageValues = new HashMap<String, String>();
+            Map<String, String> overwriteXpath = new HashMap<>();
+            Map<String, String> overwriteJsonPath = new HashMap<>();
             List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
             for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
                 Element messageValue = (Element) iter.next();
-                overwriteMessageValues.put(messageValue.getAttribute("path"), messageValue.getAttribute("value"));
+                String pathExpression = messageValue.getAttribute("path");
+
+                if (pathExpression.startsWith("$.")) {
+                    overwriteJsonPath.put(pathExpression, messageValue.getAttribute("value"));
+                } else {
+                    overwriteXpath.put(pathExpression, messageValue.getAttribute("value"));
+                }
             }
             
-            if (!overwriteMessageValues.isEmpty()) {
-                XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteMessageValues);
+            if (!overwriteXpath.isEmpty()) {
+                XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteXpath);
+                messageBuilder.add(interceptor);
+            }
+
+            if (!overwriteJsonPath.isEmpty()) {
+                JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteJsonPath);
                 messageBuilder.add(interceptor);
             }
         } 

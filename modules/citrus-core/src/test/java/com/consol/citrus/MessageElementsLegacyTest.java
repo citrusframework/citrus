@@ -28,7 +28,7 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;

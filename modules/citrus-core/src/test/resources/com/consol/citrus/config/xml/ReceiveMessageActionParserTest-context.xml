@@ -138,6 +138,19 @@
                     </validate>
                 </message>
             </receive>
+
+            <receive endpoint="myMessageEndpoint">
+                <message type="json">
+                    <data>
+                        <![CDATA[
+                            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                    <element path="$.FooMessage.foo" value="newValue"/>
+                    <ignore path="$.FooMessage.bar"/>
+                </message>
+            </receive>
+
         </actions>
     </testcase>
     

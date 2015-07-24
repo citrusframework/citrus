@@ -26,11 +26,11 @@ import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.xml.*;
@@ -342,6 +342,43 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         replay(endpoint, consumer, endpointConfiguration);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>(); 
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+
+        verify(endpoint, consumer, endpointConfiguration);
+    }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testReceiveMessageOverwriteMessageElementsJsonPath() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setMessageType(MessageType.JSON.toString());
+        receiveAction.setEndpoint(endpoint);
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.JSON.toString());
+        validationContext.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
+
+        Map<String, String> overwriteElements = new HashMap<String, String>();
+        overwriteElements.put("$.TestRequest.Message", "Hello World!");
+
+        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteElements);
+        controlMessageBuilder.add(interceptor);
+
+        Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");
+
+        reset(endpoint, consumer, endpointConfiguration);
+        expect(endpoint.createConsumer()).andReturn(consumer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+        expect(endpointConfiguration.getTimeout()).andReturn(5000L).anyTimes();
+
+        expect(consumer.receive(anyObject(TestContext.class), anyLong())).andReturn(controlMessage).once();
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+        replay(endpoint, consumer, endpointConfiguration);
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
         validationContexts.add(validationContext);
         receiveAction.setValidationContexts(validationContexts);
         receiveAction.execute(context);

@@ -92,7 +92,7 @@ public class JsonTextMessageValidator extends ControlMessageValidator {
                 throw new CitrusRuntimeException("Unsupported json type " + receivedJson.getClass());
             }
         } catch (IllegalArgumentException e) {
-            throw new ValidationException("Failed to validate JSON text:\n" + receivedJsonText, e);
+            throw new ValidationException(String.format("Failed to validate JSON text:%n%s", receivedJsonText), e);
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }

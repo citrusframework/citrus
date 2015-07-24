@@ -17,6 +17,7 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
@@ -27,7 +28,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.*;
@@ -39,7 +40,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
     @Test
     public void testReceiveMessageActionParser() {
-        assertActionCount(13);
+        assertActionCount(14);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
         
         ControlMessageValidationContext validationContext;
@@ -277,5 +278,28 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().size(), 2);
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$.json.text"), "Hello Citrus");
         Assert.assertEquals(jsonPathValidationContext.getJsonPathExpressions().get("$..foo.bar"), "true");
+
+        // 14th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof XmlMessageValidationContext);
+        xmlValidationContext = (XmlMessageValidationContext)action.getValidationContexts().get(0);
+
+        Assert.assertTrue(xmlValidationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        messageBuilder = (PayloadTemplateMessageBuilder)xmlValidationContext.getMessageBuilder();
+
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertNotNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
+
+        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 1);
+        Assert.assertTrue(messageBuilder.getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
+        JsonPathMessageConstructionInterceptor jsonMessageConstructionInterceptor = (JsonPathMessageConstructionInterceptor)messageBuilder.getMessageInterceptors().get(0);
+
+        Assert.assertEquals(jsonMessageConstructionInterceptor.getJsonPathExpressions().size(), 1);
+        Assert.assertEquals(jsonMessageConstructionInterceptor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");
+
+        Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().size(), 1);
+        Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().iterator().next(), "$.FooMessage.bar");
     }
 }

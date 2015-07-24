@@ -24,7 +24,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.*;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
@@ -60,6 +61,7 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
     /** Message constructing interceptor */
     private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
+    private JsonPathMessageConstructionInterceptor jsonPathMessageConstructionInterceptor;
 
     /** Basic application context */
     private ApplicationContext applicationContext;
@@ -360,6 +362,30 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
         }
 
         xpathMessageConstructionInterceptor.getXPathExpressions().put(expression, value);
+        return self;
+    }
+
+    /**
+     * Adds JSONPath manipulating expression that evaluates to message payload before sending.
+     * @param expression
+     * @param value
+     * @return
+     */
+    public T jsonPath(String expression, String value) {
+        if (jsonPathMessageConstructionInterceptor == null) {
+            jsonPathMessageConstructionInterceptor = new JsonPathMessageConstructionInterceptor();
+
+            if (action.getMessageBuilder() != null) {
+                (action.getMessageBuilder()).add(jsonPathMessageConstructionInterceptor);
+            } else {
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder.getMessageInterceptors().add(jsonPathMessageConstructionInterceptor);
+
+                action.setMessageBuilder(messageBuilder);
+            }
+        }
+
+        jsonPathMessageConstructionInterceptor.getJsonPathExpressions().put(expression, value);
         return self;
     }
 

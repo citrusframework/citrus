@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.interceptor;
+package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -22,6 +22,7 @@ import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,11 +74,11 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      */
     @Override
     public Message interceptMessage(Message message, String messageType, TestContext context) {
-        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload().toString())) {
+        if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
 
-        Document doc = XMLUtils.parseMessagePayload(message.getPayload().toString());
+        Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
 
         if (doc == null) {
             throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
@@ -90,15 +91,10 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
             //check if value expr is variable or function (and resolve it if yes)
             valueExpression = context.replaceDynamicContentInString(valueExpression);
 
-            if (valueExpression == null) {
-                throw new CitrusRuntimeException(
-                        "Can not set null values in XML document - path expression is " + pathExpression);
-            }
-
             Node node;
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 SimpleNamespaceContext nsContext = new SimpleNamespaceContext();
-                nsContext.setBindings(XMLUtils.lookupNamespaces(message.getPayload().toString()));
+                nsContext.setBindings(XMLUtils.lookupNamespaces(message.getPayload(String.class)));
                 node = XPathUtils.evaluateAsNode(doc, pathExpression, nsContext);
             } else {
                 node = XMLUtils.findNodeByName(doc, pathExpression);

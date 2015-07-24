@@ -79,6 +79,18 @@
                     <element name="stringValue" value="Hello Citrus" type="string"/>
                 </header>
             </send>
+
+            <send endpoint="myMessageEndpoint">
+                <message type="json">
+                    <data>
+                        <![CDATA[
+                            { "FooMessage": { "foo": "Hello World!" }, { "bar": "@ignore@" }}
+                        ]]>
+                    </data>
+                    <element path="$.FooMessage.foo" value="newValue"/>
+                </message>
+            </send>
+
         </actions>
     </testcase>
     

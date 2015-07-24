@@ -21,7 +21,8 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
@@ -34,7 +35,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
     @Test
     public void testSendMessageActionParser() {
-        assertActionCount(6);
+        assertActionCount(7);
         assertActionClassAndName(SendMessageAction.class, "send");
         
         PayloadTemplateMessageBuilder messageBuilder;
@@ -137,5 +138,23 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
         
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+
+        // 7th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
+        Assert.assertNull(action.getEndpointUri());
+
+        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+
+        Assert.assertNull(messageBuilder.getPayloadResourcePath());
+        Assert.assertNotNull(messageBuilder.getPayloadData());
+        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
+
+        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 1);
+        Assert.assertTrue(messageBuilder.getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
+        JsonPathMessageConstructionInterceptor jsonMessageConstructionInterceptor = (JsonPathMessageConstructionInterceptor)messageBuilder.getMessageInterceptors().get(0);
+
+        Assert.assertEquals(jsonMessageConstructionInterceptor.getJsonPathExpressions().size(), 1);
+        Assert.assertEquals(jsonMessageConstructionInterceptor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");
     }
 }

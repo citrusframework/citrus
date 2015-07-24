@@ -25,8 +25,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.interceptor.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -413,6 +416,51 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         replay(endpoint, producer, endpointConfiguration);
         
+        sendAction.execute(context);
+
+        verify(endpoint, producer, endpointConfiguration);
+    }
+
+    @Test
+    @SuppressWarnings("rawtypes")
+    public void testSendMessageOverwriteMessageElementsJsonPath() {
+        SendMessageAction sendAction = new SendMessageAction();
+        sendAction.setMessageType(MessageType.JSON.toString());
+        sendAction.setEndpoint(endpoint);
+
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
+
+        Map<String, String> overwriteElements = new HashMap<String, String>();
+        overwriteElements.put("$.TestRequest.Message", "Hello World!");
+
+        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteElements);
+        messageBuilder.add(interceptor);
+
+        sendAction.setMessageBuilder(messageBuilder);
+
+        final Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");
+
+        reset(endpoint, producer, endpointConfiguration);
+        expect(endpoint.createProducer()).andReturn(producer).anyTimes();
+        expect(endpoint.getEndpointConfiguration()).andReturn(endpointConfiguration).anyTimes();
+
+        producer.send(anyObject(Message.class), anyObject(TestContext.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                JsonTextMessageValidator validator = new JsonTextMessageValidator();
+                ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.JSON.toString());
+                validationContext.setControlMessage(controlMessage);
+
+                validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);
+                return null;
+            }
+        }).once();
+
+        expect(endpoint.getActor()).andReturn(null).anyTimes();
+
+        replay(endpoint, producer, endpointConfiguration);
+
         sendAction.execute(context);
 
         verify(endpoint, producer, endpointConfiguration);

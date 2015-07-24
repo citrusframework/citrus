@@ -38,9 +38,17 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
         if (supportsMessageType(messageType)) {
             return interceptMessage(message, messageType, context);
         } else {
-            log.info(String.format("Message interceptor (%s) does not support message type: %s", getClass().getSimpleName(), messageType));
+            log.debug(String.format("Message interceptor type '%s' skipped for message type: %s", getName(), messageType));
             return message;
         }
+    }
+
+    /**
+     * Gets this interceptors name.
+     * @return
+     */
+    protected String getName() {
+        return getClass().getSimpleName();
     }
 
     /**
