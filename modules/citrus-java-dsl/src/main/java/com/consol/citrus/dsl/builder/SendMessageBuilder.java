@@ -443,9 +443,4 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
 
         return builder;
     }
-
-    @Override
-    public A build() {
-        return super.build();
-    }
 }

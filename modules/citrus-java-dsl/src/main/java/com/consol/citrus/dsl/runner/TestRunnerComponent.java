@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.runner;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
@@ -36,10 +35,5 @@ public class TestRunnerComponent extends DefaultTestRunner implements Applicatio
     @Override
     public final void afterPropertiesSet() throws Exception {
         initialize();
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        super.setApplicationContext(applicationContext);
     }
 }

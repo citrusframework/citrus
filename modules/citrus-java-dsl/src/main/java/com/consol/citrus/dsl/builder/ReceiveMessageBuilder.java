@@ -780,9 +780,4 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     protected void setValidationContext(ControlMessageValidationContext validationContext) {
         this.validationContext = validationContext;
     }
-
-    @Override
-    public A build() {
-        return super.build();
-    }
 }

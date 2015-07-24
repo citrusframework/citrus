@@ -443,9 +443,4 @@ public class SendMessageActionDefinition<A extends SendMessageAction, T extends 
 
         return sendHttpMessageActionDefinition;
     }
-
-    @Override
-    public A getAction() {
-        return super.getAction();
-    }
 }

@@ -780,9 +780,4 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
     protected void setValidationContext(ControlMessageValidationContext validationContext) {
         this.validationContext = validationContext;
     }
-
-    @Override
-    public A getAction() {
-        return super.getAction();
-    }
 }
