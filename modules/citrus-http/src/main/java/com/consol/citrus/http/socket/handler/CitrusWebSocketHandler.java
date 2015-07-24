@@ -22,18 +22,24 @@ import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 
 /**
+ * Web Socket Handler for handling incoming and sending outgoing Web Socket messages
+ *
  * @author Martin Maher
  * @since 2.2.1
- * TODO MM document me
  */
 public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger LOG = LoggerFactory.getLogger(CitrusWebSocketHandler.class);
 
-    private final Queue<AbstractWebSocketMessage<?>> messages = new LinkedList<>();
+    private final Queue<AbstractWebSocketMessage<?>> inboundMessages = new LinkedList<>();
 
     private final Map<String, WebSocketSession> sessions = new HashMap<>();
 
@@ -46,19 +52,19 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         LOG.debug(String.format("(%s) received text message", session.getId()));
-        messages.add(message);
+        inboundMessages.add(message);
     }
 
     @Override
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
         LOG.debug(String.format("(%s) received binary message", session.getId()));
-        messages.add(message);
+        inboundMessages.add(message);
     }
 
     @Override
     protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
         LOG.debug(String.format("(%s) received pong message", session.getId()));
-        messages.add(message);
+        inboundMessages.add(message);
     }
 
     @Override
@@ -73,18 +79,25 @@ public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
     }
 
     public AbstractWebSocketMessage<?> getMessage() {
-        return messages.poll();
+        return inboundMessages.poll();
     }
 
-    public void sendMessage(AbstractWebSocketMessage<?> message) {
-        for (WebSocketSession session : sessions.values()) {
-            if (session != null && session.isOpen()) {
-                try {
-                    session.sendMessage(message);
-                } catch (IOException e) {
-                    LOG.error(String.format("(%s) error sending message", session.getId()), e);
+    public boolean sendMessage(AbstractWebSocketMessage<?> message) {
+        boolean sentSuccessfully = false;
+        if (sessions.isEmpty()) {
+            LOG.warn("No Web Socket session exists - message cannot be sent");
+        } else {
+            for (WebSocketSession session : sessions.values()) {
+                if (session != null && session.isOpen()) {
+                    try {
+                        session.sendMessage(message);
+                        sentSuccessfully = true;
+                    } catch (IOException e) {
+                        LOG.error(String.format("(%s) error sending message", session.getId()), e);
+                    }
                 }
             }
         }
+        return sentSuccessfully;
     }
 }

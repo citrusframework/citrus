@@ -29,6 +29,7 @@ public class WebSocketUrlHandlerMapping extends SimpleUrlHandlerMapping {
     /**
      * Workaround for registering the WebSocket request handlers, after the spring context has been
      * initialised.
+     *
      * @param wsHandlers
      */
     public void postRegisterUrlHandlers(Map<String, Object> wsHandlers) {

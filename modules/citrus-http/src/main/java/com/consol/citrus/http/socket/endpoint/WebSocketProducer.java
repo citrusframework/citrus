@@ -29,7 +29,9 @@ import org.springframework.web.socket.AbstractWebSocketMessage;
  * @since 2.2.1
  */
 public class WebSocketProducer implements Producer {
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketProducer.class);
 
     private final String name;
@@ -37,6 +39,7 @@ public class WebSocketProducer implements Producer {
 
     /**
      * Default constructor using endpoint configuration.
+     *
      * @param name
      * @param endpointConfiguration
      */
@@ -51,11 +54,12 @@ public class WebSocketProducer implements Producer {
 
         LOG.info("Sending WebSocket message ...");
 
-        AbstractWebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
-        endpointConfiguration.getHandler().sendMessage(wsMessage);
         context.onOutboundMessage(message);
 
-        LOG.info("WebSocket Message was successfully sent");
+        AbstractWebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
+        if(endpointConfiguration.getHandler().sendMessage(wsMessage)) {
+            LOG.info("WebSocket Message was successfully sent");
+        }
     }
 
     @Override

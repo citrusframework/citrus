@@ -32,12 +32,11 @@ public class WebSocketMessageConverter implements MessageConverter<AbstractWebSo
     @Override
     public AbstractWebSocketMessage convertOutbound(Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
         Object payload = internalMessage.getPayload();
-        if(payload instanceof String) {
+        if (payload instanceof String) {
             return new TextMessage(payload.toString());
         } else if (payload instanceof byte[]) {
-            return new BinaryMessage((byte[])payload);
-        }
-        else {
+            return new BinaryMessage((byte[]) payload);
+        } else {
             throw new CitrusRuntimeException(String.format("Invalid payload - unsupported type: '%s'", payload.getClass().getCanonicalName()));
         }
     }

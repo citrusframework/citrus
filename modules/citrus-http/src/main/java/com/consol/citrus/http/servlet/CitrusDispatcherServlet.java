@@ -100,7 +100,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
 
             Map<String, Object> wsHandlers = new HashMap<>();
             for (WebSocketEndpoint webSocketEndpoint : webSocketEndpoints) {
-                String wsPath = webSocketEndpoint.getEndpointConfiguration().getPath();
+                String wsPath = webSocketEndpoint.getEndpointConfiguration().getEndpointUri();
                 String wsId = webSocketEndpoint.getName();
                 CitrusWebSocketHandler handler = new CitrusWebSocketHandler();
                 webSocketEndpoint.setWebSocketHandler(handler);

@@ -26,7 +26,9 @@ import com.consol.citrus.messaging.SelectiveConsumer;
  * @since 2.2.1
  */
 public class WebSocketEndpoint extends AbstractEndpoint {
-    /** Cached producer or consumer */
+    /**
+     * Cached producer or consumer
+     */
     private WebSocketProducer wsProducer;
     private WebSocketConsumer wsConsumer;
 

@@ -20,25 +20,25 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractEndpointParser;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.http.socket.endpoint.WebSocketClientEndpointConfiguration;
 import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
-import com.consol.citrus.http.socket.endpoint.WebSocketServerEndpointConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
 /**
- * Used for parsing Server WebSocket configurations
+ * Used for parsing Client WebSocket configurations
  *
  * @author Martin Maher
  * @since 2.2.1
  */
-public class WebSocketEndpointParser extends AbstractEndpointParser {
+public class WebSocketClientEndpointParser extends AbstractEndpointParser {
 
     @Override
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfigurationBuilder, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfigurationBuilder, element, parserContext);
-        String path = element.getAttribute("path");
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, path, "endpointUri");
+        String url = element.getAttribute("url");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfigurationBuilder, url, "endpointUri");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class WebSocketEndpointParser extends AbstractEndpointParser {
 
     @Override
     protected Class<? extends EndpointConfiguration> getEndpointConfigurationClass() {
-        return WebSocketServerEndpointConfiguration.class;
+        return WebSocketClientEndpointConfiguration.class;
     }
 
 }

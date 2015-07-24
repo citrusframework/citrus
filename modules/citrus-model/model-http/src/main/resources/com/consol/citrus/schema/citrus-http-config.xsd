@@ -69,6 +69,17 @@
     <xs:attribute name="path" type="xs:string" use="required"/>
   </xs:complexType>
 
+  <xs:element name="websocket-client" type="WebSocketClientType">
+    <xs:annotation>
+      <xs:documentation>WebSocket client component for sending and receiving asynchronous requests to and from WebSocket server</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="WebSocketClientType">
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+    <xs:attribute name="url" type="xs:string" use="required"/>
+  </xs:complexType>
+
   <xs:element name="client">
       <xs:annotation>
         <xs:documentation>Http client component sends messages to some Http server instance and receives synchronous response message.</xs:documentation>

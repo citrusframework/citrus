@@ -46,7 +46,7 @@
         </header>
       </send>
 
-      <receive endpoint="echoHttpServer">
+      <receive endpoint="echoHttpServer" timeout="3000">
         <message>
           <data>
             <![CDATA[
@@ -89,7 +89,7 @@
         </header>
       </send>
 
-      <receive endpoint="echoHttpClient">
+      <receive endpoint="echoHttpClient" timeout="3000">
         <message>
           <data>
             <![CDATA[
@@ -111,12 +111,25 @@
         </header>
       </receive>
 
-      <receive endpoint="wsEndpoint1" timeout="120000">
+      <send endpoint="wsClient1">
         <message type="json">
           <data>
             <![CDATA[
             {
-            "event" : "inbound message",
+            "event" : "client message 1",
+            "timestamp" : "2001-12-17T09:30:47.0Z"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="wsEndpoint1" timeout="3000">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client message 1",
             "timestamp" : "@ignore@"
             }
             ]]>
@@ -129,7 +142,7 @@
           <data>
             <![CDATA[
             {
-            "event" : "outbound message",
+            "event" : "server message 1",
             "timestamp" : "2001-12-17T09:30:47.0Z"
             }
             ]]>
@@ -137,12 +150,38 @@
         </message>
       </send>
 
-      <receive endpoint="wsEndpoint2" timeout="120000">
+      <receive endpoint="wsClient1" timeout="3000">
         <message type="json">
           <data>
             <![CDATA[
             {
-            "event" : "inbound message",
+            "event" : "server message 1",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <send endpoint="wsClient2">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client message 2",
+            "timestamp" : "2001-12-17T09:30:47.0Z"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="wsEndpoint2" timeout="3000">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "client message 2",
             "timestamp" : "@ignore@"
             }
             ]]>
@@ -155,13 +194,27 @@
           <data>
             <![CDATA[
             {
-            "event" : "outbound message",
+            "event" : "server message 2",
             "timestamp" : "2001-12-17T09:30:47.0Z"
             }
             ]]>
           </data>
         </message>
       </send>
+
+      <receive endpoint="wsClient2" timeout="3000">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "server message 2",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
     </actions>
   </testcase>
 </spring:beans>

@@ -30,13 +30,16 @@ import org.springframework.web.socket.AbstractWebSocketMessage;
  */
 public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
-    /** Logger */
+    /**
+     * Logger
+     */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketConsumer.class);
 
-    // TODO MM get this from WebSocketEndpointConfiguration
     private static final long POLL_INTERVAL = 500L;
 
-    /** Endpoint configuration */
+    /**
+     * Endpoint configuration
+     */
     private final WebSocketEndpointConfiguration endpointConfiguration;
 
     /**
@@ -67,13 +70,13 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         long timeLeft = timeout;
 
         AbstractWebSocketMessage<?> message = config.getHandler().getMessage();
-        String path = endpointConfiguration.getPath();
+        String path = endpointConfiguration.getEndpointUri();
         while (message == null && timeLeft > 0) {
             timeLeft -= POLL_INTERVAL;
             long sleep = timeLeft > 0 ? POLL_INTERVAL : POLL_INTERVAL + timeLeft;
             if (LOG.isDebugEnabled()) {
                 String msg = "Waiting for message on '%s' - retrying in %s ms";
-                LOG.debug(String.format(msg, path,(sleep)));
+                LOG.debug(String.format(msg, path, (sleep)));
             }
 
             try {

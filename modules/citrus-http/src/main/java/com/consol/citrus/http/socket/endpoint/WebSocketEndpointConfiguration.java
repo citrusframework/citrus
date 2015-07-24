@@ -24,15 +24,17 @@ import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
  * @author Martin Maher
  * @since 2.2.1
  */
-public class WebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
-    private String path;
-    private CitrusWebSocketHandler handler;
+public abstract class WebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
+    private String endpointUri;
 
-    /** The message converter */
+    /**
+     * The message converter
+     */
     private WebSocketMessageConverter messageConverter = new WebSocketMessageConverter();
 
     /**
      * Gets the message converter.
+     *
      * @return
      */
     public WebSocketMessageConverter getMessageConverter() {
@@ -41,25 +43,22 @@ public class WebSocketEndpointConfiguration extends AbstractEndpointConfiguratio
 
     /**
      * Sets the message converter.
+     *
      * @param messageConverter
      */
     public void setMessageConverter(WebSocketMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
     }
 
-    public String getPath() {
-        return path;
+    public abstract CitrusWebSocketHandler getHandler();
+
+    public abstract void setHandler(CitrusWebSocketHandler handler);
+
+    public String getEndpointUri() {
+        return endpointUri;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public CitrusWebSocketHandler getHandler() {
-        return handler;
-    }
-
-    public void setHandler(CitrusWebSocketHandler handler) {
-        this.handler = handler;
+    public void setEndpointUri(String endpointUri) {
+        this.endpointUri = endpointUri;
     }
 }
