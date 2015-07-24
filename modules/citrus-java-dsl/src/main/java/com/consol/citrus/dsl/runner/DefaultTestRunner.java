@@ -516,6 +516,6 @@ public class DefaultTestRunner implements TestRunner {
      * Helper sequence to mark actions as finally actions that should be
      * executed in finally block of test case.
      */
-    private class FinallySequence extends Sequence {
+    private static class FinallySequence extends Sequence {
     }
 }
