@@ -18,6 +18,7 @@ package com.consol.citrus.validation.json;
 
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.ControlMessageValidationContext;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,5 +55,14 @@ public class JsonPathMessageValidationContext extends ControlMessageValidationCo
      */
     public void setJsonPathExpressions(Map<String, String> jsonPathExpressions) {
         this.jsonPathExpressions = jsonPathExpressions;
+    }
+
+    /**
+     * Check wheather give path expression is a JSONPath expression.
+     * @param pathExpression
+     * @return
+     */
+    public static boolean isJsonPathExpression(String pathExpression) {
+        return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("$.") || pathExpression.startsWith("$["));
     }
 }

@@ -433,7 +433,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             Element validateElement, Map<String, String> validateXpathExpressions) {
         //check for xpath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (StringUtils.hasText(pathExpression) && !pathExpression.startsWith("$.")) {
+        if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
             //construct pathExpression with explicit result-type, like boolean:/TestMessage/Value
             if (validateElement.hasAttribute("result-type")) {
                 pathExpression = validateElement.getAttribute("result-type") + ":" + pathExpression;
@@ -469,7 +469,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             Element validateElement, Map<String, String> validateJsonPathExpressions) {
         //check for jsonPath validation - old style with direct attribute
         String pathExpression = validateElement.getAttribute("path");
-        if (StringUtils.hasText(pathExpression) && pathExpression.startsWith("$.")) {
+        if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
             validateJsonPathExpressions.put(pathExpression, validateElement.getAttribute("value"));
         }
 

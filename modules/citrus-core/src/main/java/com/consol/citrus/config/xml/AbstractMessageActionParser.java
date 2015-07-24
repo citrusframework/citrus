@@ -19,7 +19,7 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -122,7 +122,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 Element messageValue = (Element) iter.next();
                 String pathExpression = messageValue.getAttribute("path");
 
-                if (pathExpression.startsWith("$.")) {
+                if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
                     overwriteJsonPath.put(pathExpression, messageValue.getAttribute("value"));
                 } else {
                     overwriteXpath.put(pathExpression, messageValue.getAttribute("value"));

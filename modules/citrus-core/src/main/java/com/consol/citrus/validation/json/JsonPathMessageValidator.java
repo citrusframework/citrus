@@ -69,18 +69,18 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
             String expectedValue = context.replaceDynamicContentInString(entry.getValue());
             String actualValue;
 
-            if (jsonPathExpression.contains("..")) {
-                JSONArray values = jsonReaderContext.read(jsonPathExpression);
-                if (values.size() == 1) {
-                    actualValue = values.get(0).toString();
-                } else {
-                    actualValue = values.toString();
-                }
-            } else {
+            if (JsonPath.isPathDefinite(jsonPathExpression)) {
                 try {
                     actualValue = jsonReaderContext.read(jsonPathExpression).toString();
                 } catch (PathNotFoundException e) {
                     throw new ValidationException(String.format("Failed to validate JSON element for path: %s", jsonPathExpression), e);
+                }
+            } else {
+                JSONArray values = jsonReaderContext.read(jsonPathExpression);
+                if (values.size() == 1) {
+                    actualValue = values.get(0).toString();
+                } else {
+                    actualValue = values.toJSONString();
                 }
             }
 

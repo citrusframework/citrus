@@ -339,7 +339,7 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T validate(String path, String controlValue) {
-        if (path.startsWith("$.")) {
+        if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
             if (!messageType.equals(MessageType.JSON)) {
                 throw new CitrusRuntimeException(String.format("Failed to set JSONPath validation expression on message type '%s' - please use JSON message type", messageType));
             }
