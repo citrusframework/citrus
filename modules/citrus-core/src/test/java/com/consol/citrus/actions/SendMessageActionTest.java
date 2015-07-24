@@ -25,14 +25,10 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.easymock.EasyMock;
@@ -449,7 +445,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
                 JsonTextMessageValidator validator = new JsonTextMessageValidator();
-                ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.JSON.toString());
+                JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
                 validationContext.setControlMessage(controlMessage);
 
                 validator.validateMessage(((Message)EasyMock.getCurrentArguments()[0]), context, validationContext);

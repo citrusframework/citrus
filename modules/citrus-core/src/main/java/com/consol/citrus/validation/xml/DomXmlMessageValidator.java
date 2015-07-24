@@ -30,7 +30,6 @@ import com.consol.citrus.xml.XsdSchemaRepository;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.schema.MultiResourceXsdSchema;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
-import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -499,7 +498,7 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
         doElementNamespaceValidation(received, source);
 
         //check if element is ignored either by xpath or by ignore placeholder in source message
-        if(XmlValidationUtils.isIgnored(source, received, validationContext.getIgnoreExpressions(), namespaceContext)) {
+        if(XmlValidationUtils.isElementIgnored(source, received, validationContext.getIgnoreExpressions(), namespaceContext)) {
             return;
         }
 
@@ -603,24 +602,39 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
                         + receivedElement.getLocalName() + "', unknown attribute "
                         + receivedAttributeName + " (" + receivedAttribute.getNamespaceURI() + ")");
 
-        if ((StringUtils.hasText(sourceAttribute.getNodeValue()) && sourceAttribute.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER))
-                || isAttributeIgnored(receivedElement, receivedAttribute, validationContext, namespaceContext)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute '" + receivedAttributeName + "' is on ignore list - skipped value validation");
-            }
+        if (XmlValidationUtils.isAttributeIgnored(receivedElement, receivedAttribute, sourceAttribute, validationContext.getIgnoreExpressions(), namespaceContext)) {
             return;
-        } else if (isValidationMatcherExpression(sourceAttribute)) {
+        }
+
+        String receivedValue = receivedAttribute.getNodeValue();
+        String sourceValue = sourceAttribute.getNodeValue();
+        if (isValidationMatcherExpression(sourceAttribute)) {
             ValidationMatcherUtils.resolveValidationMatcher(sourceAttribute.getNodeName(),
                     receivedAttribute.getNodeValue().trim(),
                     sourceAttribute.getNodeValue().trim(),
                     context);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Attribute '" + receivedAttributeName + "'='" + sourceAttribute.getNodeValue() + "': OK");
-            }
-            return;
+        } else if (receivedValue.contains(":") && sourceValue.contains(":")) {
+            doNamespaceQualifiedAttributeValidation(receivedElement, receivedAttribute, sourceElement, sourceAttribute);
+        } else {
+            Assert.isTrue(receivedValue.equals(sourceValue),
+                    ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
+                            + receivedAttributeName + "'", sourceValue, receivedValue));
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug("Attribute '" + receivedAttributeName + "'='" + receivedValue + "': OK");
+        }
+    }
+
+    /**
+     * Perform validation on namespace qualified attribute values if present. This includes the validation of namespace presence
+     * and equality.
+     * @param receivedElement
+     * @param receivedAttribute
+     * @param sourceElement
+     * @param sourceAttribute
+     */
+    private void doNamespaceQualifiedAttributeValidation(Node receivedElement, Node receivedAttribute, Node sourceElement, Node sourceAttribute) {
         String receivedValue = receivedAttribute.getNodeValue();
         String sourceValue = sourceAttribute.getNodeValue();
 
@@ -645,7 +659,7 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
                     receivedValue = receivedValue.substring((receivedPrefix + ":").length());
                     sourceValue = sourceValue.substring((sourcePrefix + ":").length());
                 } else {
-                    throw new ValidationException("Received attribute value '" + receivedAttributeName + "' describes namespace qualified attribute value," +
+                    throw new ValidationException("Received attribute value '" + receivedAttribute.getLocalName() + "' describes namespace qualified attribute value," +
                             " control value '" + sourceValue + "' does not");
                 }
             }
@@ -653,11 +667,7 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
 
         Assert.isTrue(receivedValue.equals(sourceValue),
                 ValidationUtils.buildValueMismatchErrorMessage("Values not equal for attribute '"
-                    + receivedAttributeName + "'", sourceValue, receivedValue));
-
-        if (log.isDebugEnabled()) {
-            log.debug("Attribute '" + receivedAttributeName + "'='" + receivedValue + "': OK");
-        }
+                        + receivedAttribute.getLocalName() + "'", sourceValue, receivedValue));
     }
 
     /**
@@ -693,63 +703,6 @@ public class DomXmlMessageValidator extends ControlMessageValidator<XmlMessageVa
         }
 
         return cntAttributes;
-    }
-
-    /**
-     * Checks whether the current attribute is ignored.
-     * @param elementNode
-     * @param attributeNode
-     * @param validationContext
-     * @return
-     */
-    private boolean isAttributeIgnored(Node elementNode, Node attributeNode,
-            XmlMessageValidationContext validationContext, NamespaceContext namespaceContext) {
-        Set<String> ignoreMessageElements = validationContext.getIgnoreExpressions();
-
-        if (CollectionUtils.isEmpty(ignoreMessageElements)) {
-            return false;
-        }
-
-        /** This is the faster version, but then the ignoreValue name must be
-         * the full path name like: Numbers.NumberItem.AreaCode
-         */
-        if (ignoreMessageElements.contains(XMLUtils.getNodesPathName(elementNode) + "." + attributeNode.getNodeName())) {
-            return true;
-        }
-
-        /** This is the slower version, but here the ignoreValues can be
-         * the short path name like only: AreaCode
-         *
-         * If there are more nodes with the same short name,
-         * the first one will match, eg. if there are:
-         *      Numbers1.NumberItem.AreaCode
-         *      Numbers2.NumberItem.AreaCode
-         * And ignoreValues contains just: AreaCode
-         * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
-         */
-        for (String expression : ignoreMessageElements) {
-            Node foundAttributeNode = XMLUtils.findNodeByName(elementNode.getOwnerDocument(), expression);
-
-            if (foundAttributeNode != null && attributeNode.isSameNode(foundAttributeNode)) {
-                return true;
-            }
-        }
-
-        /** This is the XPath version using XPath expressions in
-         * ignoreValues to identify nodes to be ignored
-         */
-        for (String expression : ignoreMessageElements) {
-            if (XPathUtils.isXPathExpression(expression)) {
-                Node foundAttributeNode = XPathUtils.evaluateAsNode(elementNode.getOwnerDocument(),
-                        expression,
-                        namespaceContext);
-                if (foundAttributeNode != null && foundAttributeNode.isSameNode(attributeNode)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     @Override

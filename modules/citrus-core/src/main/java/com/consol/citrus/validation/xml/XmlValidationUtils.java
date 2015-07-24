@@ -53,9 +53,8 @@ public abstract class XmlValidationUtils {
      * @param namespaceContext
      * @return
      */
-    public static boolean isIgnored(Node source, Node received, Set<String> ignoreExpressions,
-                                         NamespaceContext namespaceContext) {
-        if (XmlValidationUtils.isIgnored(received, ignoreExpressions, namespaceContext)) {
+    public static boolean isElementIgnored(Node source, Node received, Set<String> ignoreExpressions, NamespaceContext namespaceContext) {
+        if (isElementIgnored(received, ignoreExpressions, namespaceContext)) {
             if (log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is on ignore list - skipped validation");
             }
@@ -74,13 +73,12 @@ public abstract class XmlValidationUtils {
 
     /**
      * Checks whether the node is ignored by node path expression or xpath expression.
-     * @param node
+     * @param received
      * @param ignoreExpressions
      * @param namespaceContext
      * @return
      */
-    public static boolean isIgnored(final Node node, Set<String> ignoreExpressions,
-                                  NamespaceContext namespaceContext) {
+    public static boolean isElementIgnored(final Node received, Set<String> ignoreExpressions, NamespaceContext namespaceContext) {
         if (CollectionUtils.isEmpty(ignoreExpressions)) {
             return false;
         }
@@ -88,7 +86,7 @@ public abstract class XmlValidationUtils {
         /** This is the faster version, but then the ignoreValue name must be
          * the full path name like: Numbers.NumberItem.AreaCode
          */
-        if (ignoreExpressions.contains(XMLUtils.getNodesPathName(node))) {
+        if (ignoreExpressions.contains(XMLUtils.getNodesPathName(received))) {
             return true;
         }
 
@@ -103,7 +101,7 @@ public abstract class XmlValidationUtils {
          * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
          */
         for (String expression : ignoreExpressions) {
-            if (node == XMLUtils.findNodeByName(node.getOwnerDocument(), expression)) {
+            if (received == XMLUtils.findNodeByName(received.getOwnerDocument(), expression)) {
                 return true;
             }
         }
@@ -113,11 +111,96 @@ public abstract class XmlValidationUtils {
          */
         for (String expression : ignoreExpressions) {
             if (XPathUtils.isXPathExpression(expression)) {
-                Node foundNode = XPathUtils.evaluateAsNode(node.getOwnerDocument(),
+                Node foundNode = XPathUtils.evaluateAsNode(received.getOwnerDocument(),
                         expression,
                         namespaceContext);
 
-                if (foundNode != null && foundNode.isSameNode(node)) {
+                if (foundNode != null && foundNode.isSameNode(received)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether the current attribute is ignored either by global ignore placeholder in source attribute value or
+     * by xpath ignore expressions.
+     *
+     * @param receivedElement
+     * @param receivedAttribute
+     * @param ignoreMessageElements
+     * @return
+     */
+    public static boolean isAttributeIgnored(Node receivedElement, Node receivedAttribute, Node sourceAttribute,
+                                             Set<String> ignoreMessageElements, NamespaceContext namespaceContext) {
+        if (isAttributeIgnored(receivedElement, receivedAttribute, ignoreMessageElements, namespaceContext)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Attribute '" + receivedAttribute.getLocalName() + "' is on ignore list - skipped value validation");
+            }
+
+            return true;
+        } else if ((StringUtils.hasText(sourceAttribute.getNodeValue()) &&
+                sourceAttribute.getNodeValue().trim().equals(CitrusConstants.IGNORE_PLACEHOLDER))) {
+            if (log.isDebugEnabled()) {
+                log.debug("Attribute: '" + receivedAttribute.getLocalName() + "' is ignored by placeholder '" +
+                        CitrusConstants.IGNORE_PLACEHOLDER + "'");
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether the current attribute is ignored.
+     * @param receivedElement
+     * @param receivedAttribute
+     * @param ignoreMessageElements
+     * @return
+     */
+    private static boolean isAttributeIgnored(Node receivedElement, Node receivedAttribute,
+                                             Set<String> ignoreMessageElements, NamespaceContext namespaceContext) {
+        if (CollectionUtils.isEmpty(ignoreMessageElements)) {
+            return false;
+        }
+
+        /** This is the faster version, but then the ignoreValue name must be
+         * the full path name like: Numbers.NumberItem.AreaCode
+         */
+        if (ignoreMessageElements.contains(XMLUtils.getNodesPathName(receivedElement) + "." + receivedAttribute.getNodeName())) {
+            return true;
+        }
+
+        /** This is the slower version, but here the ignoreValues can be
+         * the short path name like only: AreaCode
+         *
+         * If there are more nodes with the same short name,
+         * the first one will match, eg. if there are:
+         *      Numbers1.NumberItem.AreaCode
+         *      Numbers2.NumberItem.AreaCode
+         * And ignoreValues contains just: AreaCode
+         * the only first Node: Numbers1.NumberItem.AreaCode will be ignored.
+         */
+        for (String expression : ignoreMessageElements) {
+            Node foundAttributeNode = XMLUtils.findNodeByName(receivedElement.getOwnerDocument(), expression);
+
+            if (foundAttributeNode != null && receivedAttribute.isSameNode(foundAttributeNode)) {
+                return true;
+            }
+        }
+
+        /** This is the XPath version using XPath expressions in
+         * ignoreValues to identify nodes to be ignored
+         */
+        for (String expression : ignoreMessageElements) {
+            if (XPathUtils.isXPathExpression(expression)) {
+                Node foundAttributeNode = XPathUtils.evaluateAsNode(receivedElement.getOwnerDocument(),
+                        expression,
+                        namespaceContext);
+                if (foundAttributeNode != null && foundAttributeNode.isSameNode(receivedAttribute)) {
                     return true;
                 }
             }

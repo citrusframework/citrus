@@ -19,12 +19,15 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.CitrusConstants;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.validation.ControlMessageValidationContext;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
@@ -74,8 +77,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         parseMessageSelector(element, builder);
 
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(element);
-        validationContexts.add(xmlMessageValidationContext);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
@@ -86,14 +87,24 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyValue("messageType", messageType);
             }
 
-            XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
-            if (!xPathMessageValidationContext.getXpathExpressions().isEmpty()) {
-                validationContexts.add(xPathMessageValidationContext);
-            }
+            if (messageType.equalsIgnoreCase(MessageType.XML.toString())) {
+                XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(element);
+                validationContexts.add(xmlMessageValidationContext);
 
-            JsonPathMessageValidationContext jsonPathMessageValidationContext = getJsonPathMessageValidationContext(messageElement);
-            if (!jsonPathMessageValidationContext.getJsonPathExpressions().isEmpty()) {
-                validationContexts.add(jsonPathMessageValidationContext);
+                XpathMessageValidationContext xPathMessageValidationContext = getXPathMessageValidationContext(messageElement, xmlMessageValidationContext);
+                if (!xPathMessageValidationContext.getXpathExpressions().isEmpty()) {
+                    validationContexts.add(xPathMessageValidationContext);
+                }
+            } else if (messageType.equalsIgnoreCase(MessageType.JSON.toString())) {
+                JsonMessageValidationContext jsonMessageValidationContext = getJsonMessageValidationContext(element);
+                validationContexts.add(jsonMessageValidationContext);
+
+                JsonPathMessageValidationContext jsonPathMessageValidationContext = getJsonPathMessageValidationContext(messageElement);
+                if (!jsonPathMessageValidationContext.getJsonPathExpressions().isEmpty()) {
+                    validationContexts.add(jsonPathMessageValidationContext);
+                }
+            } else {
+                validationContexts.add(new ControlMessageValidationContext(messageType));
             }
 
             ScriptValidationContext scriptValidationContext = getScriptValidationContext(messageElement, messageType);
@@ -109,6 +120,17 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
             String dataDictionary = messageElement.getAttribute("data-dictionary");
             if (StringUtils.hasText(dataDictionary)) {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
+            }
+        } else {
+            validationContexts.add(new ControlMessageValidationContext(CitrusConstants.DEFAULT_MESSAGE_TYPE));
+        }
+
+        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
+        parseHeaderElements(element, messageBuilder);
+
+        for (ValidationContext validationContext : validationContexts) {
+            if (validationContext instanceof ControlMessageValidationContext) {
+                ((ControlMessageValidationContext) validationContext).setMessageBuilder(messageBuilder);
             }
         }
 
@@ -190,6 +212,28 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
     }
 
     /**
+     * Construct the basic Json message validation context.
+     * @param element
+     * @return
+     */
+    private JsonMessageValidationContext getJsonMessageValidationContext(Element element) {
+        JsonMessageValidationContext context = new JsonMessageValidationContext();
+
+        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+        if (messageElement != null) {
+            Set<String> ignoreExpressions = new HashSet<String>();
+            List<?> ignoreElements = DomUtils.getChildElementsByTagName(messageElement, "ignore");
+            for (Iterator<?> iter = ignoreElements.iterator(); iter.hasNext(); ) {
+                Element ignoreValue = (Element) iter.next();
+                ignoreExpressions.add(ignoreValue.getAttribute("path"));
+            }
+            context.setIgnoreExpressions(ignoreExpressions);
+        }
+
+        return context;
+    }
+
+    /**
      * Construct the basic Xml message validation context.
      * @param element
      * @return
@@ -236,11 +280,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 context.setNamespaces(namespaces);
             }
         }
-
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
-        parseHeaderElements(element, messageBuilder);
-
-        context.setMessageBuilder(messageBuilder);
 
         return context;
     }

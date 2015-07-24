@@ -29,9 +29,8 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.*;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.*;
@@ -357,7 +356,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.setEndpoint(endpoint);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        ControlMessageValidationContext validationContext = new ControlMessageValidationContext(MessageType.JSON.toString());
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         validationContext.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
 

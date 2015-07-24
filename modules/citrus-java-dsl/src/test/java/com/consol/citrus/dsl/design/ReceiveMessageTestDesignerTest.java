@@ -33,12 +33,13 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.XpathPayloadVariableExtractor;
 import org.easymock.EasyMock;
@@ -51,8 +52,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.easymock.EasyMock.*;
 
@@ -1157,7 +1157,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), ControlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonPathMessageValidationContext.class);
 
         JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
@@ -1184,7 +1184,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderWithIgnoreElements() {
+    public void testReceiveBuilderWithIgnoreElementsXpath() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext) {
             @Override
             public void configure() {
@@ -1214,6 +1214,42 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
         Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 1L);
         Assert.assertEquals(validationContext.getIgnoreExpressions().iterator().next(), "TestRequest.Message");
+    }
+
+    @Test
+    public void testReceiveBuilderWithIgnoreElementsJsonPath() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext) {
+            @Override
+            public void configure() {
+                receive(messageEndpoint)
+                        .messageType(MessageType.JSON)
+                        .payload("{\"text\":\"Hello World!\", \"person\": {\"name\": \"Penny\", age: 25}}")
+                        .ignore("$..text")
+                        .ignore("$.person.age");
+            }
+        };
+
+        builder.configure();
+
+        TestCase test = builder.build();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+
+        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder) validationContext.getMessageBuilder()).getPayloadData(), "{\"text\":\"Hello World!\", \"person\": {\"name\": \"Penny\", age: 25}}");
+        Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 2L);
+        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$..text"));
+        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.person.age"));
     }
     
     @Test

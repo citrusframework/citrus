@@ -81,7 +81,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
                 //Give ignore elements the chance to prevent the validation in case result type is node
                 if (resultType.equals(XPathExpressionResult.NODE) &&
-                        XmlValidationUtils.isIgnored(XPathUtils.evaluateAsNode(received, xPathExpression, namespaceContext),
+                        XmlValidationUtils.isElementIgnored(XPathUtils.evaluateAsNode(received, xPathExpression, namespaceContext),
                                 validationContext.getIgnoreExpressions(),
                                 namespaceContext)) {
                     continue;
@@ -99,7 +99,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
                             "Element ' " + xPathExpression + "' could not be found in DOM tree");
                 }
 
-                if (XmlValidationUtils.isIgnored(node, validationContext.getIgnoreExpressions(), namespaceContext)) {
+                if (XmlValidationUtils.isElementIgnored(node, validationContext.getIgnoreExpressions(), namespaceContext)) {
                     continue;
                 }
 

@@ -29,6 +29,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -357,7 +358,11 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
      * @return
      */
     public T ignore(String path) {
+        if (messageType.equals(MessageType.XML)) {
         getXmlValidationContext().getIgnoreExpressions().add(path);
+        } else if (messageType.equals(MessageType.JSON)) {
+            getJsonValidationContext().getIgnoreExpressions().add(path);
+        }
         return self;
     }
 
@@ -604,6 +609,8 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
         if (validationContext == null) {
             if (messageType.equals(MessageType.XML)) {
                 validationContext = new XmlMessageValidationContext();
+            } else if (messageType.equals(MessageType.JSON)) {
+                validationContext = new JsonMessageValidationContext();
             } else {
                 validationContext = new ControlMessageValidationContext(messageType.toString());
             }
@@ -643,6 +650,25 @@ public class ReceiveMessageActionDefinition<A extends ReceiveMessageAction, T ex
             return ((XmlMessageValidationContext)validationContext);
         } else {
             throw new CitrusRuntimeException("Unable to set XML property on validation context type " + validationContext);
+        }
+    }
+
+    /**
+     * Gets the validation context as XML validation context an raises exception if existing validation context is
+     * not a XML validation context.
+     * @return
+     */
+    private JsonMessageValidationContext getJsonValidationContext() {
+        if (validationContext == null) {
+            validationContext = new JsonMessageValidationContext();
+
+            action.getValidationContexts().add(validationContext);
+        }
+
+        if (validationContext instanceof JsonMessageValidationContext) {
+            return ((JsonMessageValidationContext)validationContext);
+        } else {
+            throw new CitrusRuntimeException("Unable to set JSON property on validation context type " + validationContext);
         }
     }
 

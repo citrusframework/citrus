@@ -38,6 +38,7 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -1603,7 +1604,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 2);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), ControlMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonPathMessageValidationContext.class);
 
         JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(1);
@@ -1685,7 +1686,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testReceiveBuilderWithIgnoreElements() {
+    public void testReceiveBuilderWithIgnoreElementsXpath() {
         reset(messageEndpoint, messageConsumer, configuration);
         expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
         expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
@@ -1729,6 +1730,60 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)validationContext.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
         Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 1L);
         Assert.assertEquals(validationContext.getIgnoreExpressions().iterator().next(), "TestRequest.Message");
+
+        verify(messageEndpoint, messageConsumer, configuration);
+    }
+
+    @Test
+    public void testReceiveBuilderWithIgnoreElementsJson() {
+        reset(messageEndpoint, messageConsumer, configuration);
+        expect(messageEndpoint.createConsumer()).andReturn(messageConsumer).once();
+        expect(messageEndpoint.getEndpointConfiguration()).andReturn(configuration).atLeastOnce();
+        expect(configuration.getTimeout()).andReturn(100L).atLeastOnce();
+        expect(messageEndpoint.getActor()).andReturn(null).atLeastOnce();
+        expect(messageConsumer.receive(anyObject(TestContext.class), anyLong())).andReturn(
+                new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
+                        .setHeader("operation", "sayHello")).atLeastOnce();
+
+        replay(messageEndpoint, messageConsumer, configuration);
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext) {
+            @Override
+            public void execute() {
+                receive(new BuilderSupport<ReceiveMessageBuilder>() {
+                    @Override
+                    public void configure(ReceiveMessageBuilder builder) {
+                        builder.endpoint(messageEndpoint)
+                                .messageType(MessageType.JSON)
+                                .payload("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
+                                .ignore("$..text")
+                                .ignore("$.person.surname")
+                                .ignore("$.index");
+                    }
+                });
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 1);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), JsonMessageValidationContext.class);
+
+        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(0);
+
+        Assert.assertTrue(validationContext.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
+        Assert.assertEquals(((PayloadTemplateMessageBuilder) validationContext.getMessageBuilder()).getPayloadData(), "{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}");
+        Assert.assertEquals(validationContext.getIgnoreExpressions().size(), 3L);
+        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$..text"));
+        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.person.surname"));
+        Assert.assertTrue(validationContext.getIgnoreExpressions().contains("$.index"));
 
         verify(messageEndpoint, messageConsumer, configuration);
     }
