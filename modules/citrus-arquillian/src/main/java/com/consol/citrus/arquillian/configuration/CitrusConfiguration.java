@@ -18,6 +18,7 @@ package com.consol.citrus.arquillian.configuration;
 
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.config.CitrusBaseConfig;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.slf4j.Logger;
@@ -143,7 +144,7 @@ public final class CitrusConfiguration implements Serializable {
             extensionProperties.store(outputStream, "arquillian-citrus-remote-configuration");
             return outputStream.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Could not write the properties file.", e);
+            throw new CitrusRuntimeException("Could not write the properties file.", e);
         }
     }
 

@@ -25,7 +25,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.1
  */
-public class Functions {
+public final class Functions {
 
     /**
      * Prevent instantiation.

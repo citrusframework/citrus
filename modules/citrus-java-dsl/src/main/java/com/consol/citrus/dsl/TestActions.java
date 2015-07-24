@@ -41,7 +41,7 @@ import java.util.Arrays;
  * @since 2.0
  * @deprecated since 2.2.1
  */
-public class TestActions {
+public final class TestActions {
 
     /**
      * Prevent instantiation.

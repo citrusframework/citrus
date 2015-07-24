@@ -26,7 +26,7 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class TestResult {
+public final class TestResult {
 
     /** Possible test results */
     private static enum RESULT {SUCCESS, FAILURE, SKIP};

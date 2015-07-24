@@ -23,6 +23,7 @@ import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
@@ -89,7 +90,7 @@ public class CitrusTestEnricher implements TestEnricher {
 
                         values[i] = testRunner;
                     } else {
-                        throw new RuntimeException("Not able to provide a Citrus resource injection for type " + type);
+                        throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
                     }
                 }
             }
