@@ -56,24 +56,20 @@ public class HttpServerParser extends AbstractServerParser {
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
 
-        ManagedList<RuntimeBeanReference> websocketReferences = new ManagedList<RuntimeBeanReference>();
+        ManagedList<RuntimeBeanReference> webSocketReferences = new ManagedList<>();
 
-        Element socketsElement = DomUtils.getChildElementByTagName(element, "web-sockets");
+        Element socketsElement = DomUtils.getChildElementByTagName(element, "websockets");
         if (socketsElement != null) {
-            Map<String,String> webSocketEndpoints = new HashMap<>();
             List<Element> socketElements = DomUtils.getChildElements(socketsElement);
             for (Element socketElement : socketElements) {
-                if (socketElement.hasAttribute("id") && socketElement.hasAttribute("path")) {
-                    webSocketEndpoints.put(socketElement.getAttribute("id"), socketElement.getAttribute("path"));
-                } else if (socketElement.hasAttribute("websocket")){
-                    websocketReferences.add(new RuntimeBeanReference(socketElement.getAttribute("websocket")));
+                if (socketElement.hasAttribute("websocket")){
+                    webSocketReferences.add(new RuntimeBeanReference(socketElement.getAttribute("websocket")));
                 } else {
-                    throw new CitrusRuntimeException("Invalid web-socket configuration - both id and path must be specified");
+                    throw new CitrusRuntimeException("Invalid '<websockets>..</websockets>' configuration - at least one '<websocket ref=\"..\" />' must be defined");
                 }
             }
-            builder.addPropertyValue("webSocketEndpoints", webSocketEndpoints);
-            if (websocketReferences.size() > 0) {
-                builder.addPropertyValue("webSockets", websocketReferences);
+            if (webSocketReferences.size() > 0) {
+                builder.addPropertyValue("webSockets", webSocketReferences);
             }
 
         }

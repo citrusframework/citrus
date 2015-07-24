@@ -23,8 +23,7 @@ import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.http.interceptor.DelegatingHandlerInterceptor;
 import com.consol.citrus.http.interceptor.MappedInterceptorAdapter;
 import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.http.socket.TextWebsocketEndpoint;
-import com.consol.citrus.http.socket.WebSocketUrlHandlerMapping;
+import com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping;
 import com.consol.citrus.http.socket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.http.socket.interceptor.SessionEnricherHandshakeInterceptor;
@@ -63,7 +62,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     private static final String HANDLER_INTERCEPTOR_BEAN_NAME = "citrusHandlerInterceptor";
     private static final String MESSAGE_CONTROLLER_BEAN_NAME = "citrusHttpMessageController";
 
-    /** Default bean names used in default configuration for supporting web-socket endpoints */
+    /** Default bean names used in default configuration for supporting WebSocket endpoints */
     private static final String URL_HANDLER_MAPPING_BEAN_NAME = "citrusUrlHandlerMapping";
     private static final String HANDSHAKE_HANDLER_BEAN_NAME = "citrusHandshakeHandler";
 
@@ -86,9 +85,8 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
     }
 
     private void configureWebSockerHandler(ApplicationContext context) {
-        Map<String, String> wsEndpoints = httpServer.getWebSocketEndpoints();
         List<WebSocketEndpoint> webSocketEndpoints = httpServer.getWebSockets();
-        if(CollectionUtils.isEmpty(wsEndpoints) && CollectionUtils.isEmpty(webSocketEndpoints)) {
+        if(CollectionUtils.isEmpty(webSocketEndpoints)) {
             return;
         }
 
@@ -101,16 +99,6 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
             }
 
             Map<String, Object> wsHandlers = new HashMap<>();
-            for (Map.Entry<String, String> entry : wsEndpoints.entrySet()) {
-                String wsPath = entry.getValue();
-                String wsId = entry.getKey();
-                System.out.println(wsId + "/" + wsPath);
-                WebSocketHttpRequestHandler wsRequestHandler = new WebSocketHttpRequestHandler(new TextWebsocketEndpoint(wsPath), handshakeHandler);
-                SessionEnricherHandshakeInterceptor handshakeInterceptor = new SessionEnricherHandshakeInterceptor(wsId, wsPath);
-                wsRequestHandler.getHandshakeInterceptors().add(handshakeInterceptor);
-                wsHandlers.put(wsPath, wsRequestHandler);
-            }
-
             for (WebSocketEndpoint webSocketEndpoint : webSocketEndpoints) {
                 String wsPath = webSocketEndpoint.getEndpointConfiguration().getPath();
                 String wsId = webSocketEndpoint.getName();

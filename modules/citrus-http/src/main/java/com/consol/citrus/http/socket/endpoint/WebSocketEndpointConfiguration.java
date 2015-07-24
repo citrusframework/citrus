@@ -19,17 +19,12 @@ package com.consol.citrus.http.socket.endpoint;
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import com.consol.citrus.http.socket.handler.CitrusWebSocketHandler;
 import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Martin Maher
  * @since 2.2.1
  */
 public class WebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(WebSocketEndpointConfiguration.class);
-
     private String path;
     private CitrusWebSocketHandler handler;
 

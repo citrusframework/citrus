@@ -54,15 +54,23 @@
                       auto-start="true"
                       root-parent-context="true"
                       resource-base="src/citrus/resources">
-    <citrus-http:web-sockets>
-      <!-- TODO MM remove embedded web-sockets (or check with CD if this should be supported) -->
-      <citrus-http:web-socket id="webSocket1" path="/abc" />
-      <citrus-http:web-socket id="webSocket2" path="/def" />
-      <!-- TODO MM test behavior of using same ref in multiple http-servers -->
-      <citrus-http:ref websocket="wsEndpoint" />
-    </citrus-http:web-sockets>
+    <citrus-http:websockets>
+      <citrus-http:ref websocket="wsEndpoint1" />
+      <citrus-http:ref websocket="wsEndpoint2" />
+    </citrus-http:websockets>
   </citrus-http:server>
   
-  <citrus-http:websocket id="wsEndpoint" path="/ghi"   />
+  <citrus-http:server id="echoHttpServer2"
+                      port="13080"
+                      auto-start="true"
+                      root-parent-context="true"
+                      resource-base="src/citrus/resources">
+    <citrus-http:websockets>
+      <citrus-http:ref websocket="wsEndpoint1" />
+    </citrus-http:websockets>
+  </citrus-http:server>
+
+  <citrus-http:websocket id="wsEndpoint1" path="/ws1"   />
+  <citrus-http:websocket id="wsEndpoint2" path="/ws2"   />
 
 </beans>

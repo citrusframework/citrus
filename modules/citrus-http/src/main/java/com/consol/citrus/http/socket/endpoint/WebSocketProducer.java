@@ -22,7 +22,7 @@ import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.AbstractWebSocketMessage;
 
 /**
  * @author Martin Maher
@@ -30,7 +30,7 @@ import org.springframework.web.socket.TextMessage;
  */
 public class WebSocketProducer implements Producer {
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(WebSocketProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebSocketProducer.class);
 
     private final String name;
     private final WebSocketEndpointConfiguration endpointConfiguration;
@@ -49,13 +49,13 @@ public class WebSocketProducer implements Producer {
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
 
-        log.info("Sending WebSocket message ...");
+        LOG.info("Sending WebSocket message ...");
 
-        TextMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
+        AbstractWebSocketMessage wsMessage = endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration);
         endpointConfiguration.getHandler().sendMessage(wsMessage);
         context.onOutboundMessage(message);
 
-        log.info("Web-Socket Message was successfully sent");
+        LOG.info("WebSocket Message was successfully sent");
     }
 
     @Override

@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http.socket;
+package com.consol.citrus.http.socket.handler;
 
-import org.springframework.web.socket.BinaryMessage;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.BinaryWebSocketHandler;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+
+import java.util.Map;
 
 /**
  * @author Martin Maher
  * @since 2.2.1
- * TODO MM required?
  */
-public class BinaryWebsocketEndpoint extends BinaryWebSocketHandler {
+public class WebSocketUrlHandlerMapping extends SimpleUrlHandlerMapping {
 
-    @Override
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
-        super.handleBinaryMessage(session, message);
+    /**
+     * Workaround for registering the WebSocket request handlers, after the spring context has been
+     * initialised.
+     * @param wsHandlers
+     */
+    public void postRegisterUrlHandlers(Map<String, Object> wsHandlers) {
+        registerHandlers(wsHandlers);
     }
 }

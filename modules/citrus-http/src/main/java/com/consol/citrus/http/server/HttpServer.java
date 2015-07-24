@@ -96,13 +96,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
 
     /**
-     * Captures all websocket-endpoints [socket-id, web-socket path]
-     * TODO MM remove me
-     */
-    private Map<String,String> webSocketEndpoints = new HashMap<>();
-
-    /**
-     * Captures all websocket-endpoints [socket-id, web-socket path]
+     * Captures all WebSocket endpoints
      */
     private List<WebSocketEndpoint> webSockets = new ArrayList<>();
 
@@ -552,34 +546,17 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
     }
 
     /**
-     * Gets the web-socket endpoints (id, uri)
-     */
-    public Map<String, String> getWebSocketEndpoints() {
-        //return null;
-        return webSocketEndpoints;
-    }
-
-    /**
-     * Sets the web-socket endpoints (id, uri)
-     * @param webSocketEndpoints
-     */
-    public void setWebSocketEndpoints(Map<String, String> webSocketEndpoints) {
-        this.webSocketEndpoints = webSocketEndpoints;
-    }
-
-    /**
-     * Gets the web-socket endpoints (id, uri)
+     * Gets the WebSocket endpoints (id, uri)
      */
     public List<WebSocketEndpoint> getWebSockets() {
-        //return null;
         return webSockets;
     }
 
     /**
-     * Sets the web-socket endpoints (id, uri)
-     * @param websockets
+     * Sets the WebSocket endpoints (id, uri)
+     * @param webSockets
      */
-    public void setWebSockets(List<WebSocketEndpoint> websockets) {
-        this.webSockets = websockets;
+    public void setWebSockets(List<WebSocketEndpoint> webSockets) {
+        this.webSockets = webSockets;
     }
 }

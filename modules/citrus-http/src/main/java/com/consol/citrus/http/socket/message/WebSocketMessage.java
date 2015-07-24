@@ -17,7 +17,7 @@
 package com.consol.citrus.http.socket.message;
 
 import com.consol.citrus.message.DefaultMessage;
-import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.AbstractWebSocketMessage;
 
 /**
  * @author Martin Maher
@@ -25,7 +25,7 @@ import org.springframework.web.socket.TextMessage;
  */
 public class WebSocketMessage extends DefaultMessage {
 
-    public WebSocketMessage(TextMessage externalMessage) {
+    public WebSocketMessage(AbstractWebSocketMessage externalMessage) {
         super(externalMessage.getPayload());
     }
 }

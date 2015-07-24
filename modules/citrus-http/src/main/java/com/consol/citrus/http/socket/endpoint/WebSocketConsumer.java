@@ -23,7 +23,6 @@ import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.AbstractWebSocketMessage;
-import org.springframework.web.socket.TextMessage;
 
 /**
  * @author Martin Maher
@@ -32,14 +31,13 @@ import org.springframework.web.socket.TextMessage;
 public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(WebSocketConsumer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebSocketConsumer.class);
 
     // TODO MM get this from WebSocketEndpointConfiguration
     private static final long POLL_INTERVAL = 500L;
 
     /** Endpoint configuration */
     private final WebSocketEndpointConfiguration endpointConfiguration;
-
 
     /**
      * Default constructor using receive timeout setting.
@@ -54,13 +52,12 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        log.info(String.format("Waiting %s for Web Socket message ...", timeout));
+        LOG.info(String.format("Waiting %s for Web Socket message ...", timeout));
 
         AbstractWebSocketMessage<?> message = receive(endpointConfiguration, timeout);
-        // TODO MM handle AbstractWebSocketMessage<?> (not just TextMessages)
-        Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound((TextMessage) message, endpointConfiguration);
+        Message receivedMessage = endpointConfiguration.getMessageConverter().convertInbound(message, endpointConfiguration);
 
-        log.info("Received Web Socket message");
+        LOG.info("Received Web Socket message");
         context.onInboundMessage(receivedMessage);
 
         return receivedMessage;
@@ -74,15 +71,15 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         while (message == null && timeLeft > 0) {
             timeLeft -= POLL_INTERVAL;
             long sleep = timeLeft > 0 ? POLL_INTERVAL : POLL_INTERVAL + timeLeft;
-            if (log.isDebugEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 String msg = "Waiting for message on '%s' - retrying in %s ms";
-                log.debug(String.format(msg, path,(sleep)));
+                LOG.debug(String.format(msg, path,(sleep)));
             }
 
             try {
                 Thread.sleep(sleep);
             } catch (InterruptedException e) {
-                log.warn(String.format("Thread interrupted while waiting for message on '%s'", path), e);
+                LOG.warn(String.format("Thread interrupted while waiting for message on '%s'", path), e);
             }
 
             message = config.getHandler().getMessage();

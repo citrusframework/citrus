@@ -20,25 +20,35 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.socket.endpoint.WebSocketEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
+import org.springframework.web.socket.AbstractWebSocketMessage;
+import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.TextMessage;
 
 /**
  * @author Martin Maher
  * @since 2.2.1
  */
-public class WebSocketMessageConverter implements MessageConverter<TextMessage, WebSocketEndpointConfiguration> {
+public class WebSocketMessageConverter implements MessageConverter<AbstractWebSocketMessage, WebSocketEndpointConfiguration> {
     @Override
-    public TextMessage convertOutbound(Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
-        return new TextMessage(internalMessage.getPayload().toString());
+    public AbstractWebSocketMessage convertOutbound(Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+        Object payload = internalMessage.getPayload();
+        if(payload instanceof String) {
+            return new TextMessage(payload.toString());
+        } else if (payload instanceof byte[]) {
+            return new BinaryMessage((byte[])payload);
+        }
+        else {
+            throw new CitrusRuntimeException(String.format("Invalid payload - unsupported type: '%s'", payload.getClass().getCanonicalName()));
+        }
     }
 
     @Override
-    public void convertOutbound(TextMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+    public void convertOutbound(AbstractWebSocketMessage externalMessage, Message internalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
         throw new CitrusRuntimeException("Not supported");
     }
 
     @Override
-    public Message convertInbound(TextMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
+    public Message convertInbound(AbstractWebSocketMessage externalMessage, WebSocketEndpointConfiguration endpointConfiguration) {
         return new WebSocketMessage(externalMessage);
     }
 }

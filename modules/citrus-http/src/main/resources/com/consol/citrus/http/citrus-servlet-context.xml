@@ -27,10 +27,9 @@
 
   <context:annotation-config/>
 
-  <!-- TODO MM when web-sockets not required, use other config? -->
   <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
 
-  <bean id="citrusUrlHandlerMapping" class="com.consol.citrus.http.socket.WebSocketUrlHandlerMapping">
+  <bean id="citrusUrlHandlerMapping" class="com.consol.citrus.http.socket.handler.WebSocketUrlHandlerMapping">
     <property name="order" value="1" />
   </bean>
 

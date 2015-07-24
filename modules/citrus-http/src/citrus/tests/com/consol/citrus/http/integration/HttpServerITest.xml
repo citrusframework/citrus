@@ -111,7 +111,7 @@
         </header>
       </receive>
 
-      <receive endpoint="wsEndpoint" timeout="120000">
+      <receive endpoint="wsEndpoint1" timeout="120000">
         <message type="json">
           <data>
             <![CDATA[
@@ -124,7 +124,7 @@
         </message>
       </receive>
 
-      <send endpoint="wsEndpoint">
+      <send endpoint="wsEndpoint1">
         <message>
           <data>
             <![CDATA[
@@ -136,8 +136,32 @@
           </data>
         </message>
       </send>
-<!-- TODO MM complete int. test -->
-      <sleep seconds="120" />
+
+      <receive endpoint="wsEndpoint2" timeout="120000">
+        <message type="json">
+          <data>
+            <![CDATA[
+            {
+            "event" : "inbound message",
+            "timestamp" : "@ignore@"
+            }
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <send endpoint="wsEndpoint2">
+        <message>
+          <data>
+            <![CDATA[
+            {
+            "event" : "outbound message",
+            "timestamp" : "2001-12-17T09:30:47.0Z"
+            }
+            ]]>
+          </data>
+        </message>
+      </send>
     </actions>
   </testcase>
 </spring:beans>
