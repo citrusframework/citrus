@@ -43,7 +43,7 @@ import java.lang.reflect.Method;
  * CitrusTestDesigner by simple method delegation.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class TestNGCitrusTestRunner extends AbstractTestNGCitrusTest implements TestRunner {
 

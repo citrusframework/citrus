@@ -26,7 +26,7 @@ import java.util.Arrays;
  * Action running ANT build targets during test.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class AntRunBuilder extends AbstractTestActionBuilder<AntRunAction> {
 

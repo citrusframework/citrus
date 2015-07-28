@@ -26,7 +26,7 @@ import java.util.Map;
  * Web Socket endpoint component is able to create Web Socket client endpoint from endpoint uri with parameters.
  *
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketEndpointComponent extends AbstractEndpointComponent {
 

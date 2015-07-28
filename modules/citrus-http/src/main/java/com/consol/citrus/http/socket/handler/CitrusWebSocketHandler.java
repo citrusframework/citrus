@@ -31,7 +31,7 @@ import java.util.Queue;
  * Web Socket Handler for handling incoming and sending outgoing Web Socket messages
  *
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class CitrusWebSocketHandler extends AbstractWebSocketHandler {
     /**

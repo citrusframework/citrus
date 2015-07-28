@@ -23,7 +23,7 @@ import com.consol.citrus.context.TestContext;
  * the iteration breaking condition.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public interface IteratingConditionExpression {
 

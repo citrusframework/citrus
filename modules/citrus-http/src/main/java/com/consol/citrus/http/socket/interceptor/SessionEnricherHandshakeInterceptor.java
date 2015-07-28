@@ -29,7 +29,7 @@ import java.util.Map;
  * citrus context.
  *
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class SessionEnricherHandshakeInterceptor implements HandshakeInterceptor {
     public static final String ID = "citrus_ws_id";

@@ -36,7 +36,7 @@ import java.util.Map;
  * values as new test variables. JSONObject and JSONArray items will be saved as String representation.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class JsonPathVariableExtractor implements VariableExtractor {
 

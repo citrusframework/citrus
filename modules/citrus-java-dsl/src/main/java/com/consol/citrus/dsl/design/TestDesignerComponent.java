@@ -27,7 +27,7 @@ import org.springframework.context.ApplicationContextAware;
  * Subclass may add custom logic in {@link TestDesignerComponent#configure()} method by calling builder methods.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class TestDesignerComponent extends DefaultTestDesigner implements ApplicationContextAware, InitializingBean {
 

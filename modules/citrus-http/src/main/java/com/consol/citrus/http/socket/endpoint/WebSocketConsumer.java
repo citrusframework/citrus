@@ -26,7 +26,7 @@ import org.springframework.web.socket.AbstractWebSocketMessage;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
 

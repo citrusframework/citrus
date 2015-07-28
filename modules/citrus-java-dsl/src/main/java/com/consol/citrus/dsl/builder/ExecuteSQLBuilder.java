@@ -31,7 +31,7 @@ import java.util.List;
  * embedded inline in the test case description or given by an external file resource.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ExecuteSQLBuilder extends AbstractTestActionBuilder<ExecuteSQLAction> {
 

@@ -42,7 +42,7 @@ import static org.easymock.EasyMock.*;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
     

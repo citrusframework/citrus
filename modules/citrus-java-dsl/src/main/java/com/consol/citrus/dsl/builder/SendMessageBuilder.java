@@ -45,7 +45,7 @@ import java.util.Map;
  * constructing build methods.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessageBuilder> extends AbstractTestActionBuilder<A> {
 

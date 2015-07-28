@@ -22,7 +22,7 @@ import java.util.Map;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketUrlHandlerMapping extends SimpleUrlHandlerMapping {
 

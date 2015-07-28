@@ -24,7 +24,7 @@ import com.consol.citrus.endpoint.Endpoint;
  * should arrive on the destination.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ReceiveTimeoutBuilder extends AbstractTestActionBuilder<ReceiveTimeoutAction> {
 

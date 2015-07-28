@@ -31,7 +31,7 @@ import java.util.List;
  * PLSQL statements or given by an external file resource.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ExecutePLSQLBuilder extends AbstractTestActionBuilder<ExecutePLSQLAction> {
 

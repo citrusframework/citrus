@@ -22,7 +22,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class DefaultContainerRunner implements ContainerRunner, ExceptionContainerRunner {
 

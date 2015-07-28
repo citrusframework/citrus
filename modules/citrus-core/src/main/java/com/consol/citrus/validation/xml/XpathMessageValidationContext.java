@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class XpathMessageValidationContext extends XmlMessageValidationContext {
 

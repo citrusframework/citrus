@@ -38,7 +38,7 @@ import java.util.Date;
  * Citrus test case.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public interface TestDesigner extends ApplicationContextAware {
 

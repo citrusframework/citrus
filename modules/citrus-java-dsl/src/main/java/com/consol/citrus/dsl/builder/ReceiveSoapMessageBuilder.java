@@ -29,7 +29,7 @@ import java.io.IOException;
  * Special SOAP receive message action builder adds SOAP specific properties.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ReceiveSoapMessageBuilder extends ReceiveMessageBuilder<ReceiveSoapMessageAction, ReceiveSoapMessageBuilder> {
 

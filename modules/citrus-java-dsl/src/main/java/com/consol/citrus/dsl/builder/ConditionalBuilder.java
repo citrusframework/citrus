@@ -24,7 +24,7 @@ import com.consol.citrus.container.Conditional;
  * if condition expression evaluates to true.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ConditionalBuilder extends AbstractTestActionContainerBuilder<Conditional> {
 

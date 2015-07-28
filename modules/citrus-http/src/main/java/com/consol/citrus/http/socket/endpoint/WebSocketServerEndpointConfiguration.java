@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketServerEndpointConfiguration extends WebSocketEndpointConfiguration {
     /**

@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Validation context holding JSON specific validation information.
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class JsonMessageValidationContext extends ControlMessageValidationContext {
 

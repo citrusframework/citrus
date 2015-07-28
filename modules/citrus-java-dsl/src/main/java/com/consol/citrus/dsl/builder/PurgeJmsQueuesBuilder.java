@@ -33,7 +33,7 @@ import java.util.List;
  * so no messages are left.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class PurgeJmsQueuesBuilder extends AbstractTestActionBuilder<PurgeJmsQueuesAction> {
 

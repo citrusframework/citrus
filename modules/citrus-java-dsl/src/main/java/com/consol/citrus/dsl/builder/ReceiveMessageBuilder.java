@@ -49,7 +49,7 @@ import java.util.Map;
  * include construction of control message payload and headers as well as value extraction.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends ReceiveMessageBuilder> extends AbstractTestActionBuilder<A> {
 

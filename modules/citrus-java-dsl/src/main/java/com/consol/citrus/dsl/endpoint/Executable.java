@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.endpoint;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public interface Executable {
 

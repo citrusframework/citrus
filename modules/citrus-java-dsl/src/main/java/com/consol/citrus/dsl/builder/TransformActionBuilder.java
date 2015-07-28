@@ -29,7 +29,7 @@ import java.io.IOException;
  * and puts the result in the specified variable.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class TransformActionBuilder extends AbstractTestActionBuilder<TransformAction> {
 

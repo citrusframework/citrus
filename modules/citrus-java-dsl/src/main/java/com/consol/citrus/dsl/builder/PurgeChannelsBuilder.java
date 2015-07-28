@@ -32,7 +32,7 @@ import java.util.List;
  * list of channel objects or a list of channel names that are resolved dynamically at runtime.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class PurgeChannelsBuilder extends AbstractTestActionBuilder<PurgeMessageChannelAction> {
 

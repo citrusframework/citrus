@@ -20,7 +20,7 @@ import com.consol.citrus.container.Catch;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class CatchExceptionBuilder extends AbstractTestActionContainerBuilder<Catch> {
 

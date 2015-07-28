@@ -21,7 +21,7 @@ import com.consol.citrus.context.TestContext;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public abstract class AbstractTestActionBuilder<T extends TestAction> implements TestAction, TestActionBuilder<T> {
 

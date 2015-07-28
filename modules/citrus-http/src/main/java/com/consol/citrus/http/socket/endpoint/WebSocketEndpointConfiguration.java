@@ -22,7 +22,7 @@ import com.consol.citrus.http.socket.message.WebSocketMessageConverter;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public abstract class WebSocketEndpointConfiguration extends AbstractEndpointConfiguration {
     private String endpointUri;

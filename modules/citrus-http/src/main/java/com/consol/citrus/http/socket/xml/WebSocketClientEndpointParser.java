@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * Used for parsing Client WebSocket configurations
  *
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketClientEndpointParser extends AbstractEndpointParser {
 

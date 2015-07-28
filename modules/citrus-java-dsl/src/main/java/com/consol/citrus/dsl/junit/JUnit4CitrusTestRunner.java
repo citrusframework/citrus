@@ -35,7 +35,7 @@ import org.springframework.util.ReflectionUtils;
  * CitrusTestDesigner by simple method delegation.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class JUnit4CitrusTestRunner extends AbstractJUnit4CitrusTest implements TestRunner {
 

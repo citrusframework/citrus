@@ -22,7 +22,7 @@ import java.lang.annotation.*;
  *
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })

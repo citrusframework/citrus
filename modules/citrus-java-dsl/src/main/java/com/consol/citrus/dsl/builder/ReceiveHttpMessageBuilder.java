@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  * method and request params.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ReceiveHttpMessageBuilder extends ReceiveMessageBuilder<ReceiveMessageAction, ReceiveHttpMessageBuilder> {
 

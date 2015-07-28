@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.builder;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public interface BuilderSupport<T extends AbstractTestActionBuilder> {
 

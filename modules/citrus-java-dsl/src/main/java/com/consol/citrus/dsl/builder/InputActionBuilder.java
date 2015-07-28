@@ -26,7 +26,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
  * Action can declare a set of valid answers, so user will be prompted until a valid 
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class InputActionBuilder extends AbstractTestActionBuilder<InputAction> {
 

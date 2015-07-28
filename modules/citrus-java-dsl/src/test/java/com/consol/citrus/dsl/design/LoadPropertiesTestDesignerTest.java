@@ -25,7 +25,7 @@ import com.consol.citrus.actions.LoadPropertiesAction;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class LoadPropertiesTestDesignerTest extends AbstractTestNGUnitTest {
     @Test

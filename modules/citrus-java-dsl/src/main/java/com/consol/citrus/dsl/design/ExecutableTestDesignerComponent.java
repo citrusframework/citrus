@@ -25,7 +25,7 @@ import com.consol.citrus.dsl.endpoint.Executable;
  * methods to the builder so component is executable as a test case.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ExecutableTestDesignerComponent extends TestDesignerComponent implements Executable {
     @Override

@@ -25,7 +25,7 @@ import java.util.Map;
  * Builder defines call template action with global context and parameters.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class TemplateBuilder extends AbstractTestActionBuilder<Template> {
 

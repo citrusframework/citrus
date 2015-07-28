@@ -28,7 +28,7 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
     @Test

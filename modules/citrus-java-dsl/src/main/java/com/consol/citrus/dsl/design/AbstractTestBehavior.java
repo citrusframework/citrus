@@ -24,7 +24,7 @@ import com.consol.citrus.dsl.util.PositionHandle;
  * behavior access and defines abstract apply method for subclasses to implement.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public abstract class AbstractTestBehavior extends DefaultTestDesigner implements TestBehavior {
 

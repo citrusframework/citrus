@@ -27,7 +27,7 @@ import org.springframework.http.HttpMethod;
  * meanings in a type safe manner.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class SendHttpMessageBuilder extends SendMessageBuilder<SendMessageAction, SendHttpMessageBuilder> {
 

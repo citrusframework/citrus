@@ -24,7 +24,7 @@ import com.consol.citrus.container.TestActionContainer;
  * test actions were constructed.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public interface ContainerRunner {
 

@@ -26,7 +26,7 @@ import org.springframework.web.socket.TextMessage;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketMessageConverter implements MessageConverter<AbstractWebSocketMessage, WebSocketEndpointConfiguration> {
     @Override

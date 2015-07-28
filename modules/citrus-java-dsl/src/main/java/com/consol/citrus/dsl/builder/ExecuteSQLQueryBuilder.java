@@ -37,7 +37,7 @@ import java.util.List;
  * database. Validation will happen on column basis inside the result set.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class ExecuteSQLQueryBuilder extends AbstractTestActionBuilder<ExecuteSQLQueryAction> {
 

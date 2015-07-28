@@ -46,7 +46,7 @@ import java.util.*;
  * test case with test actions, variables and properties.
  *
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class DefaultTestDesigner implements TestDesigner {
 

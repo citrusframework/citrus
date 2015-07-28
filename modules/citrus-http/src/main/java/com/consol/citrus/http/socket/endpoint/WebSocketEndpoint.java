@@ -23,7 +23,7 @@ import com.consol.citrus.messaging.SelectiveConsumer;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketEndpoint extends AbstractEndpoint {
     /**

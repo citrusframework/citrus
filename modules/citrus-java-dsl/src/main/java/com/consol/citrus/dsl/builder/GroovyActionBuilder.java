@@ -27,7 +27,7 @@ import java.io.IOException;
  * Action executes groovy scripts either specified inline or from external file resource.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class GroovyActionBuilder extends AbstractTestActionBuilder<GroovyAction> {
 

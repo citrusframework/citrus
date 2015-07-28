@@ -20,7 +20,7 @@ import com.consol.citrus.TestAction;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public abstract class AbstractTestBehavior extends DefaultTestRunner implements TestBehavior {
 

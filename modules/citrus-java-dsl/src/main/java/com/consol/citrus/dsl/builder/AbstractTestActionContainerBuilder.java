@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public abstract class AbstractTestActionContainerBuilder<T extends TestActionContainer> extends AbstractTestActionBuilder<T> implements TestActionContainerBuilder<T> {
 

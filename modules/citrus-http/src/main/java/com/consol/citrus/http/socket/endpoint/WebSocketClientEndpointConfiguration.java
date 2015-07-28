@@ -27,7 +27,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketClientEndpointConfiguration extends WebSocketEndpointConfiguration {
     /**

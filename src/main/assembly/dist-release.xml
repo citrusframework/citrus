@@ -285,7 +285,7 @@
   <files>
     <!-- PDF reference documentation -->
     <file>
-      <source>target/doc/pdf/citrus-reference-2.2.1-SNAPSHOT.pdf</source>
+      <source>target/doc/pdf/citrus-reference-2.3-SNAPSHOT.pdf</source>
       <outputDirectory>docs/reference/pdf</outputDirectory>
     </file>
   </files>

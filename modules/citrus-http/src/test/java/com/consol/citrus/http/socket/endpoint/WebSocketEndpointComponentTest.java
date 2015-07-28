@@ -28,7 +28,7 @@ import static org.easymock.EasyMock.verify;
 
 /**
  * @author Martin Maher
- * @since 2.2.1
+ * @since 2.3
  */
 public class WebSocketEndpointComponentTest {
     private ApplicationContext applicationContext = EasyMock.createMock(ApplicationContext.class);

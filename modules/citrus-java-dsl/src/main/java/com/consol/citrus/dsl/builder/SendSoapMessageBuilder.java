@@ -30,7 +30,7 @@ import java.io.IOException;
  * fork mode.
  * 
  * @author Christoph Deppisch
- * @since 2.2.1
+ * @since 2.3
  */
 public class SendSoapMessageBuilder extends SendMessageBuilder<SendSoapMessageAction, SendSoapMessageBuilder> {
 
